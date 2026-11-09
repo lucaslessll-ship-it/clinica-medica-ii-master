@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#f7fafb">
+  <meta name="description" content="MASTER P2, Clínica Médica II. Estude P2 prioritária e P1 completa: 54 aulas, 136 questões, casos, discursivas, Radar da Banca e 530 flashcards num ambiente hospitalar acessível.">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <title>MASTER Clínica Médica II — v7 · Radar da Banca · Lucas Lessa</title>
+  <link rel="icon" type="image/svg+xml" href="assets/app-icon.svg">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="hig.css">
+  <link rel="stylesheet" href="p1.css">
+  <link rel="stylesheet" href="evidence.css">
+  <link rel="stylesheet" href="banca.css">
+</head>
+<body data-theme="light" data-text-size="normal">
+  <a class="skip-link" href="#main-content">Pular para o conteúdo</a>
+  <div class="app-shell" id="app-shell">
+    <aside id="sidebar" class="sidebar" aria-label="Navegação principal">
+      <a href="#dashboard" class="brand" aria-label="MASTER P2, início" onclick="navigate('dashboard');return false">
+        <span class="brand-icon" aria-hidden="true"><svg width="31" height="31" viewBox="0 0 32 32" fill="none"><path d="M5 23V9l11 14L27 9v14" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        <span class="brand-text"><strong>MASTER<span> P2</span></strong><small>Clínica Médica II</small></span>
+      </a>
+      <div class="side-context"><span class="context-dot"></span> ESTAÇÃO MASTER 2.0</div>
+      <div class="side-label">ESTUDAR</div>
+      <nav id="sidebar-nav" class="nav-links" aria-label="Áreas do estudo"></nav>
+      <div class="sidebar-spacer"></div>
+      <div class="side-bottom">
+        <div class="side-goal"><div class="side-goal-head"><span>Minha evolução</span><strong id="side-pct">0%</strong></div><div class="progress-track" role="progressbar" aria-label="Domínio no banco de questões" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div id="side-fill" class="progress-fill"></div></div><small>Calculado pelas suas respostas, não por provas passadas</small></div>
+        <button class="side-settings" type="button" onclick="HIG.openSettings()" aria-label="Abrir preferências e acessibilidade"><span aria-hidden="true">⚙</span> Preferências</button>
+        <p class="developer">Desenvolvido por <strong>Lucas Lessa</strong></p>
+      </div>
+    </aside>
+    <div id="scrim" class="scrim" onclick="closeMobileNav()" aria-hidden="true"></div>
+    <div class="app-body">
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="icon-button menu-button" type="button" onclick="toggleMobileNav()" aria-label="Abrir menu de navegação" title="Abrir menu">☰</button>
+          <button class="icon-button desktop-sidebar-button" type="button" onclick="HIG.toggleSidebar()" aria-label="Recolher ou expandir navegação" title="Recolher ou expandir menu">☷</button>
+          <div class="top-context"><span class="top-context-title">Clínica Médica II</span><span class="top-context-sub">P2 principal · P1 completa</span></div>
+        </div>
+        <div class="topbar-right">
+          <button class="search-trigger" type="button" onclick="HIG.openSearch()" aria-label="Buscar temas, aulas e questões"><span class="search-symbol">⌕</span><span>Buscar conteúdo clínico</span><kbd>⌘ K</kbd></button>
+          <button class="icon-button focus-trigger" type="button" onclick="HIG.toggleFocus()" aria-label="Ativar ou desativar modo de concentração" title="Modo de concentração (F)">⛶</button>
+          <button class="icon-button" type="button" onclick="HIG.openSettings()" aria-label="Personalizar tema e acessibilidade" title="Aparência e acessibilidade">◐</button>
+          <span class="avatar" title="Desenvolvido por Lucas Lessa" aria-label="Lucas Lessa">LL</span>
+        </div>
+      </header>
+      <main id="main-content" tabindex="-1" aria-live="off"></main>
+      <footer class="footer"><span>Material de estudo • Não substitui diretrizes e supervisão médica</span><span>Design centrado no conteúdo • <strong>Lucas Lessa</strong></span></footer>
+    </div>
+  </div>
+  <nav class="mobile-tabbar" id="mobile-tabbar" aria-label="Navegação rápida no celular">
+    <button type="button" onclick="navigate('dashboard')" data-tab="dashboard"><span aria-hidden="true">⌂</span>Início</button>
+    <button type="button" onclick="navigate('topics')" data-tab="topics"><span aria-hidden="true">▤</span>Temas</button>
+    <button type="button" onclick="navigate('today')" data-tab="today"><span aria-hidden="true">◎</span>Hoje</button>
+    <button type="button" onclick="navigate('practice')" data-tab="practice"><span aria-hidden="true">◈</span>Questões</button>
+    <button type="button" onclick="HIG.openSearch()" data-tab="search"><span aria-hidden="true">⌕</span>Buscar</button>
+  </nav>
+  <div id="focus-exit" class="focus-exit"><span>Leitura sem distrações</span><button type="button" onclick="HIG.toggleFocus()">Sair do foco <kbd>F</kbd></button></div>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <div id="hig-overlay" class="hig-overlay" hidden>
+    <div class="hig-dim" onclick="HIG.closeOverlay()"></div>
+    <section class="hig-dialog" role="dialog" aria-modal="true" aria-labelledby="hig-dialog-title">
+      <div class="hig-dialog-heading"><h2 id="hig-dialog-title">Buscar</h2><button class="icon-button" type="button" onclick="HIG.closeOverlay()" aria-label="Fechar janela">×</button></div>
+      <div id="hig-dialog-content"></div>
+    </section>
+  </div>
+
+  <input id="progress-import-input" type="file" accept="application/json,.json" hidden onchange="HIG.importProgress(event)">
+  <script src="data.js"></script>
+  <script src="questions.js"></script>
+  <script src="banca_questions.js"></script>
+  <script src="cases.js"></script>
+  <script src="deep_content.js"></script>
+  <script src="extra_cards.js"></script>
+  <script src="priority_patch.js"></script>
+  <script src="p1_data.js"></script>
+  <script src="p1_questions.js"></script>
+  <script src="p1_cases.js"></script>
+  <script src="evidence.js"></script>
+  <script src="banca.js"></script>
+  <script src="app.js"></script>
+  <script src="p1_app.js"></script>
+  <script src="hig.js"></script>
+</body>
+</html>
