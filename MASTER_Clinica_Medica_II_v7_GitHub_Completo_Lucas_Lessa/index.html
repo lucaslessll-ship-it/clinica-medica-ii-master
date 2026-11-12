@@ -17,6 +17,7 @@
   <link rel="stylesheet" href="evidence.css">
   <link rel="stylesheet" href="banca.css">
   <link rel="stylesheet" href="auth.css">
+  <link rel="stylesheet" href="study.css">
 </head>
 <body data-theme="light" data-text-size="normal">
   <a class="skip-link" href="#main-content">Pular para o conteúdo</a>
@@ -54,6 +55,8 @@
               <strong id="master-profile-name">Sua conta</strong><p id="master-profile-email"></p>
               <p id="master-sync-status" role="status" aria-live="polite"></p>
               <button id="master-change-password" class="btn" type="button">Alterar senha</button>
+              <button class="btn" type="button" onclick="HIG.openSettings()">Preferências</button>
+              <button class="btn" type="button" onclick="MASTER_AUTH.exportConflict()">Exportar cópia de conflito</button>
               <button id="master-sync" class="btn" type="button">Sincronizar progresso</button>
               <button id="master-signout" class="btn danger" type="button">Sair da conta</button>
             </section>
@@ -98,6 +101,8 @@
   <script src="app.js"></script>
   <script src="p1_app.js"></script>
   <script src="hig.js"></script>
+<script src="study.js"></script>
+<script src="media-viewer.js"></script>
 <script src="auth-config.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.0/dist/umd/supabase.min.js"></script>
 <script src="auth.js"></script>

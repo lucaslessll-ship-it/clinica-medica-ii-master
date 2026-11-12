@@ -1,0 +1,13 @@
+#sidebar-nav>details{border-bottom:1px solid var(--line);padding:5px 0}#sidebar-nav>details>summary{cursor:pointer;min-height:44px;padding:12px;font-size:13px;font-weight:700;color:var(--ink)}
+#sidebar-nav .nav-btn{white-space:normal;height:auto;min-height:44px;padding-left:22px}
+.study-confidence{display:flex;gap:18px;flex-wrap:wrap;border:1px solid var(--line);border-radius:12px;padding:16px;margin:16px 0;color:var(--ink)}
+.study-confidence label{display:flex;align-items:center;gap:8px}select,input[type=datetime-local],input[type=number],input[name=intervals]{font:inherit;font-size:16px;min-height:44px;color:var(--ink);background:var(--white);border:1px solid var(--line);border-radius:8px;max-width:100%;padding:8px}
+.mastery-row{margin:12px 0}.mastery-row p{color:var(--muted);line-height:1.6}
+.image-dialog{width:min(1100px,96vw);max-height:94dvh;overflow:auto;border:1px solid var(--line);border-radius:18px;background:var(--white);color:var(--ink);padding:20px}.image-dialog::backdrop{background:#081921b8}
+.image-tools button{min-height:44px;border:1px solid var(--line);border-radius:8px;background:var(--white);color:var(--ink);padding:8px 12px;font:inherit;cursor:pointer}.image-tools button[aria-pressed=true]{background:var(--mint);border-color:var(--green)}
+.image-stage{height:55vh;min-height:220px;display:grid;place-items:center;overflow:hidden;touch-action:none;background:#dbe5e8;border:1px solid var(--line)}
+.image-layer{position:relative;max-width:100%;max-height:100%;transform-origin:center;user-select:none}.image-layer img{display:block;max-width:100%;max-height:55vh;object-fit:contain;pointer-events:none}.image-layer svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.image-dialog button:focus-visible{outline:3px solid var(--green);outline-offset:2px}.image-caption{overflow-wrap:anywhere}
+@media(max-width:600px){.image-dialog{padding:12px}.study-confidence{display:grid;gap:12px}}
+.study-breadcrumb{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:16px;font-size:13px;color:var(--muted)}
+body.side-collapsed #sidebar-nav>details>summary{font-size:10px;padding:8px 3px;overflow-wrap:anywhere}
