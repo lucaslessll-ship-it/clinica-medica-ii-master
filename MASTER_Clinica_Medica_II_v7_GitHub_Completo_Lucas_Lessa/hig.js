@@ -71,7 +71,7 @@ const HIG = (() => {
   function refreshSettings(){if(modalType==='settings')document.getElementById('hig-dialog-content').innerHTML=settingsMarkup()}
   function openHelp(){openOverlay('help',`<div class="shortcut-list">${[['⌘/Ctrl + K','Buscar todo o conteúdo'],['/','Buscar, quando fora de um campo'],['F','Ativar/desativar modo de concentração'],['?','Abrir estes atalhos'],['Esc','Fechar janela ou menu'],['↑ ↓ e Enter','Percorrer resultados da busca']].map(([key,what])=>`<div><kbd>${key}</kbd><span>${what}</span></div>`).join('')}</div><p class="dialog-footnote">Todos os comandos também podem ser acessados por botões, sem necessidade de teclado.</p>`)}
   function footerAndTabs(){document.querySelectorAll('#mobile-tabbar [data-tab]').forEach(b=>{const active=ui.route===b.dataset.tab||(ui.route==='topic'&&b.dataset.tab==='topics');b.classList.toggle('active',active);b.setAttribute('aria-current',active?'page':'false')});}
-  function afterRender(){footerAndTabs();if(ui.route==='topic'){preferences.lastTopic=ui.topic;preferences.lastChapter=ui.chapter;save()}const focusToggle=document.querySelector('.focus-trigger');if(focusToggle)focusToggle.setAttribute('aria-pressed',String(preferences.focus));}
+  function afterRender(){footerAndTabs();if(ui.route==='topic'){preferences.lastTopic=ui.topic;preferences.lastChapter=ui.chapter;preferences.lastStudy='P2';preferences.studyStarted=true;save()}else if(ui.route==='p1topic'){preferences.lastStudy='P1';preferences.studyStarted=true;save()}const focusToggle=document.querySelector('.focus-trigger');if(focusToggle)focusToggle.setAttribute('aria-pressed',String(preferences.focus));}
   function lessonToolbar(t,ci,c){
     const key=t.id+'_'+ci;const marked=!!preferences.bookmarks[key];const count=Object.values(c).join(' ').split(/\s+/).length;const minutes=Math.max(3,Math.ceil(count/180));
     return `<div class="lesson-toolbar"><span>◷ ${minutes} min de leitura estimada</span><div class="lesson-toolbar-actions"><button class="plain-pill" type="button" aria-pressed="${marked}" onclick="HIG.bookmark('${key}')">${marked?'★ Salvo na biblioteca':'☆ Salvar para revisão'}</button><button class="plain-pill" type="button" onclick="HIG.toggleFocus()">⛶ Leitura focada</button></div></div>`;
@@ -79,7 +79,16 @@ const HIG = (() => {
   function lessonNotes(t,idx){const key=t.id+'_'+idx,old=preferences.notes[key]||'';return `<div class="lesson-caderno"><details ${old?'open':''}><summary>✎ Meu caderno desta aula <span class="note-meta">${old?'Anotações salvas':'Adicionar anotações pessoais'}</span></summary><label for="chapter-note" class="field-label">O que eu preciso lembrar na P2?</label><textarea id="chapter-note" class="answer-box" rows="5" placeholder="Escreva com suas palavras: diagnóstico diferencial, critérios, exceções, conduta e armadilhas…" oninput="HIG.saveNote('${key}',this.value)">${escapeHtml(old)}</textarea><div class="note-tip">Salvamento automático neste navegador. Faça backup em Preferências.</div></details></div>`}
   function saveNote(key,val){preferences.notes[key]=val;save();const info=document.querySelector('.note-meta');if(info)info.textContent='Salvo automaticamente';}
   function bookmark(key){preferences.bookmarks[key]=!preferences.bookmarks[key];save();render();toast(preferences.bookmarks[key]?'Adicionado às revisões.':'Retirado das revisões.');}
-  function openLast(){openTopic(preferences.lastTopic||'neuro1');switchChapter(preferences.lastChapter||0)}
+  function resumeInfo(){
+    if(preferences.lastStudy==='P1'&&window.P1)return {...P1.resumeInfo(),started:true};
+    const t=getTopic(preferences.lastTopic),i=Math.max(0,Math.min(Number(preferences.lastChapter)||0,t.chapters.length-1));
+    return {title:t.title,chapter:`P2 · Aula ${i+1}: ${t.chapters[i].name}`,started:!!preferences.studyStarted||!!preferences.lastChapter||Object.values(store.completed).some(Boolean)};
+  }
+  function openLast(){
+    if(preferences.lastStudy==='P1'&&window.P1){P1.resume();return}
+    const t=getTopic(preferences.lastTopic),i=Math.max(0,Math.min(Number(preferences.lastChapter)||0,t.chapters.length-1));
+    ui.topic=t.id;ui.chapter=i;navigate('topic',t.id);
+  }
   function dueCards(){return FLASH_DECK.filter(flashDue).length}
   function focusTopic(){let ranks=TOPICS.map(t=>({t,perf:resultForTopic(t.id)}));let untouched=ranks.filter(o=>o.perf.done===0);if(untouched.length){let base=['neuro1','neuro2','reuma2','onco','reuma1','neuro3','gastro','hema'];return base.map(id=>untouched.find(o=>o.t.id===id)).find(Boolean)?.t||untouched[0].t;}return ranks.sort((a,b)=>a.perf.value-b.perf.value)[0].t}
   function viewToday(){let g=globalProgress(),low=focusTopic(),due=dueCards();let tasks=[{num:'01',tag:'Teoria',title:`Aprofundar ${low.short}`,detail:'Fisiopatologia → sinais de alarme → exame decisivo → conduta.',time:'30–40 min',act:`openTopic('${low.id}')`,button:'Abrir aula'},{num:'02',tag:'Recuperação',title:'Questões clínicas N2/N3',detail:'Responder antes de ver o gabarito e justificar por que as outras opções estão erradas.',time:'20 min',act:`startPractice('${low.id}')`,button:'Treinar'},{num:'03',tag:'Memorização',title:`${due} flashcards disponíveis`,detail:'Testar recordação antes de virar, depois classificar a revisão.',time:'15 min',act:"navigate('flashcards')",button:'Revisar'},{num:'04',tag:'Profundidade',title:'Resposta discursiva e prova oral',detail:'Usar roteiro: síndrome, mecanismo, dado discriminador, exames, conduta e exceção.',time:'20 min',act:"navigate('discursive')",button:'Praticar'}];
@@ -105,13 +114,15 @@ const HIG = (() => {
   function init(){applyPrefs();searchItems=makeSearchItems();if(!seconds)seconds=preferences.sessionMinutes*60;
     window.matchMedia('(prefers-color-scheme: dark)').addEventListener?.('change',()=>{if(preferences.theme==='system')applyPrefs()});
     document.addEventListener('keydown',e=>{
+      if(document.documentElement.classList.contains('master-auth-locked'))return;
       if(document.getElementById('hig-overlay').hidden===false){if(e.key==='Escape'){e.preventDefault();closeOverlay()}if(e.key==='Tab'){let el=Array.from(document.querySelectorAll('#hig-overlay button:not([disabled]),#hig-overlay input:not([disabled])'));if(el.length){let first=el[0],last=el[el.length-1];if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus()}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus()}}}return}
       if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==='k'){e.preventDefault();openSearch();return}
       if(e.target.closest('input,textarea,select,[contenteditable="true"]'))return;
       if(e.key==='/'){e.preventDefault();openSearch()}else if(e.key.toLowerCase()==='f'&&!e.metaKey&&!e.ctrlKey){e.preventDefault();toggleFocus()}else if(e.key==='?'&&!e.metaKey&&!e.ctrlKey){openHelp()}
     });
   }
-  return {init,afterRender,openSearch,searchInput,searchKeys,chooseResult,openSettings,openHelp,closeOverlay,setTheme,setFont,togglePref,toggleSidebar,toggleFocus,lessonToolbar,lessonNotes,saveNote,bookmark,viewToday,viewNotes,configureTimer,toggleTimer,resetTimer,exportNotes,exportBackup,importProgress,openLast};
+  function reload(){clearInterval(timer);timer=null;timerRunning=false;preferences=load();seconds=preferences.sessionMinutes*60;applyPrefs();}
+  return {reload,init,afterRender,openSearch,searchInput,searchKeys,chooseResult,openSettings,openHelp,closeOverlay,setTheme,setFont,togglePref,toggleSidebar,toggleFocus,lessonToolbar,lessonNotes,saveNote,bookmark,viewToday,viewNotes,configureTimer,toggleTimer,resetTimer,exportNotes,exportBackup,importProgress,openLast,resumeInfo,focusTopic,dueCards};
 })();
 window.HIG=HIG;
 window.addEventListener('DOMContentLoaded',HIG.init);

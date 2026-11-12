@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="pt-BR">
+<html lang="pt-BR" class="master-auth-locked">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -16,6 +16,7 @@
   <link rel="stylesheet" href="p1.css">
   <link rel="stylesheet" href="evidence.css">
   <link rel="stylesheet" href="banca.css">
+  <link rel="stylesheet" href="auth.css">
 </head>
 <body data-theme="light" data-text-size="normal">
   <a class="skip-link" href="#main-content">Pular para o conteúdo</a>
@@ -47,7 +48,16 @@
           <button class="search-trigger" type="button" onclick="HIG.openSearch()" aria-label="Buscar temas, aulas e questões"><span class="search-symbol">⌕</span><span>Buscar conteúdo clínico</span><kbd>⌘ K</kbd></button>
           <button class="icon-button focus-trigger" type="button" onclick="HIG.toggleFocus()" aria-label="Ativar ou desativar modo de concentração" title="Modo de concentração (F)">⛶</button>
           <button class="icon-button" type="button" onclick="HIG.openSettings()" aria-label="Personalizar tema e acessibilidade" title="Aparência e acessibilidade">◐</button>
-          <span class="avatar" title="Desenvolvido por Lucas Lessa" aria-label="Lucas Lessa">LL</span>
+          <div class="account-control">
+            <button id="master-avatar" class="avatar" type="button" aria-label="Abrir menu da conta" aria-expanded="false" aria-controls="master-profile" disabled>LL</button>
+            <section id="master-profile" class="profile-popover" aria-label="Sua conta" hidden>
+              <strong id="master-profile-name">Sua conta</strong><p id="master-profile-email"></p>
+              <p id="master-sync-status" role="status" aria-live="polite"></p>
+              <button id="master-change-password" class="btn" type="button">Alterar senha</button>
+              <button id="master-sync" class="btn" type="button">Sincronizar progresso</button>
+              <button id="master-signout" class="btn danger" type="button">Sair da conta</button>
+            </section>
+          </div>
         </div>
       </header>
       <main id="main-content" tabindex="-1" aria-live="off"></main>
@@ -89,7 +99,7 @@
   <script src="p1_app.js"></script>
   <script src="hig.js"></script>
 <script src="auth-config.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.0/dist/umd/supabase.min.js"></script>
 <script src="auth.js"></script>
 </body>
 </html>
