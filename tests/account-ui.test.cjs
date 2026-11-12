@@ -12,7 +12,7 @@ let server,browser,base;
 before(async()=>{
  await fs.mkdir('work',{recursive:true});
  server=http.createServer(async(req,res)=>{
-  try{const filename=path.join(process.cwd(),decodeURIComponent(new URL(req.url,'http://local').pathname));const data=await fs.readFile(filename.endsWith('/')?filename+'index.html':filename);res.setHeader('Content-Type',filename.endsWith('.js')?'text/javascript':filename.endsWith('.css')?'text/css':'text/html');res.end(data);}catch{res.writeHead(404);res.end();}
+  try{let filename=path.join(process.cwd(),decodeURIComponent(new URL(req.url,'http://local').pathname));if((await fs.stat(filename)).isDirectory())filename=path.join(filename,'index.html');const data=await fs.readFile(filename);res.setHeader('Content-Type',filename.endsWith('.js')?'text/javascript':filename.endsWith('.css')?'text/css':'text/html');res.end(data);}catch{res.writeHead(404);res.end();}
  });await new Promise(r=>server.listen(0,'127.0.0.1',r));base=`http://127.0.0.1:${server.address().port}`;
  browser=await chromium.launch({executablePath:process.env.CHROMIUM_PATH||'/usr/bin/chromium',headless:true});
 });
@@ -209,4 +209,50 @@ test('a second-device version is backed up before overwriting and can be exporte
  await p.waitForFunction(()=>Object.keys(localStorage).some(key=>key.startsWith('master_conflict_backup_')));
  assert.equal(await p.evaluate(()=>{const key=Object.keys(localStorage).find(key=>key.startsWith('master_conflict_backup_'));return JSON.parse(localStorage.getItem(key)).master_p2_lucas_v1.completed.gastro_0}),true);
  const download=p.waitForEvent('download');await p.evaluate(()=>MASTER_AUTH.exportConflict());assert.equal((await download).suggestedFilename(),'MASTER-copia-conflito.json');await t.close();
+});
+
+test('central hides feedback, shuffles safely, resumes snapshots and finalizes once',async()=>{
+ const t=await open({session:true}),p=t.page;await p.waitForFunction(()=>document.getElementById('master-auth').hidden);
+ await p.evaluate(()=>navigate('simulados'));await text(p,'#main-content',/Central de/);
+ await p.evaluate(()=>{ExamCenter.setConfig('count',10);ExamCenter.start();});
+ assert.equal(await p.locator('.central-feedback').count(),0);
+ await p.evaluate(()=>{const a=store.examCenter.active;ExamCenter.answer(a.questionSnapshots[0].a);ExamCenter.flag();ExamCenter.pause();});
+ const before=await p.evaluate(()=>JSON.stringify(store.examCenter.active.answers));
+ await p.evaluate(()=>ExamCenter.answer(2));assert.equal(await p.evaluate(()=>JSON.stringify(store.examCenter.active.answers)),before);
+ await p.reload();await p.waitForFunction(()=>document.getElementById('master-auth').hidden);await text(p,'#main-content',/pausado/);
+ await p.evaluate(()=>ExamCenter.pause());assert.equal(await p.locator('.central-feedback').count(),0);
+ p.on('dialog',d=>d.accept());await p.evaluate(()=>ExamCenter.finish());assert.equal(await p.evaluate(()=>store.examCenter.history.length),1);
+ await p.evaluate(()=>ExamCenter.finish());assert.equal(await p.evaluate(()=>store.examCenter.history.length),1);
+ assert.equal(await p.evaluate(()=>store.examCenter.history[0].score),1);assert.equal(await p.evaluate(()=>store.examCenter.history[0].total),10);
+ await p.locator('.central-result-item').first().locator('summary').first().click();await p.locator('.central-feedback').first().waitFor({state:'visible'});await t.close();
+});
+
+test('central legacy is train-only, explanation is locked until confirmation, data syncs existing key',async()=>{
+ const t=await open({session:true}),p=t.page;await p.waitForFunction(()=>document.getElementById('master-auth').hidden);
+ await p.evaluate(()=>{navigate('simulados');ExamCenter.setConfig('mode','train');ExamCenter.setConfig('includePending',true);ExamCenter.setConfig('count',10);ExamCenter.start();});
+ assert.equal(await p.locator('.central-feedback').count(),0);await p.evaluate(()=>{const q=store.examCenter.active.questionSnapshots[0];ExamCenter.answer(q.a);ExamCenter.confirmAnswer();});
+ await visible(p,'.central-feedback');const ans=await p.evaluate(()=>JSON.stringify(store.examCenter.active.answers));await p.evaluate(()=>ExamCenter.answer(3));assert.equal(await p.evaluate(()=>JSON.stringify(store.examCenter.active.answers)),ans);
+ await p.evaluate(()=>MASTER_AUTH.sync());assert.ok((await calls(p,'upsert')).some(c=>c.args.storage_key===keys[0]&&c.args.payload.examCenter?.active));
+ assert.ok((await calls(p,'upsert')).every(c=>keys.includes(c.args.storage_key)));
+ await t.close();
+});
+
+test('central pending P1 excluded in exam, available in train and mobile fits viewport',async()=>{
+ const t=await open({session:true}),p=t.page;await p.waitForFunction(()=>document.getElementById('master-auth').hidden);
+ await p.evaluate(()=>{navigate('simulados');ExamCenter.setConfig('module','P1');});
+ assert.equal(await p.getByRole('button',{name:'Iniciar simulado'}).isDisabled(),true);
+ await p.evaluate(()=>{ExamCenter.setConfig('mode','train');ExamCenter.setConfig('includePending',true);ExamCenter.setConfig('count',120);});await text(p,'.central-preview',/56/);
+ await p.emulateMedia({reducedMotion:'reduce'});await p.setViewportSize({width:390,height:844});await p.waitForFunction(()=>document.getElementById('sidebar').getBoundingClientRect().right<=0);await p.screenshot({path:'work/central-mobile.png',fullPage:true});
+ assert.ok(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));
+ await p.setViewportSize({width:1180,height:900});await p.evaluate(()=>{ExamCenter.setConfig('module','P2');});await p.screenshot({path:'work/central-desktop.png',fullPage:true});await t.close();
+});
+
+test('central session restores on a second device and is isolated after account change',async()=>{
+ const t=await open({session:true}),p=t.page;await p.waitForFunction(()=>document.getElementById('master-auth').hidden);
+ await p.evaluate(()=>{navigate('simulados');ExamCenter.start();const a=store.examCenter.active;ExamCenter.answer(a.questionSnapshots[0].a);ExamCenter.pause();});
+ const payload=await p.evaluate(()=>JSON.parse(JSON.stringify(store)));
+ const second=await open({session:true,remote:[{storage_key:keys[0],payload}]}),p2=second.page;await p2.waitForFunction(()=>document.getElementById('master-auth').hidden);await p2.evaluate(()=>navigate('simulados'));
+ assert.equal(await p2.evaluate(()=>store.examCenter.active.id),payload.examCenter.active.id);assert.equal(await p2.evaluate(()=>Object.keys(store.examCenter.active.answers).length),1);
+ await p2.evaluate(()=>{fixture.remote=[];const u={id:'user-b',email:'b@example.test',user_metadata:{}};__authTest.emit('SIGNED_IN',{user:u});});
+ await p2.waitForFunction(()=>!store.examCenter?.active);assert.equal(await p2.locator('.central-feedback').count(),0);await second.close();await t.close();
 });
