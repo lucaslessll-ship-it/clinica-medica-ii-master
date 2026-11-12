@@ -67,3 +67,9 @@ O HTML individual iPad é gerado localmente com `python3 scripts/build_standalon
 - Os dados de estudo ficam no `localStorage` do navegador; fazer backup regular. GitHub **não é banco de progresso do usuário**.
 
 **Desenvolvido por Lucas Lessa.**
+
+## Atualização de estudo
+
+As novas funções estão em `study.js`, `study.css` e `media-viewer.js`. Progresso individual sincroniza com Supabase após autenticação; alterações podem ficar pendentes quando offline. O menu da conta permite sincronizar, sair e exportar uma cópia de conflito quando disponível. Use também o backup completo nas Preferências.
+
+Execute `npm ci && npm test` na raiz do repositório. Consulte `../AUDITORIA_MASTER_NOVA.md` para escopo entregue, fontes efetivamente verificadas e pendências. GitHub Pages publica a `main`; confirme a conclusão do workflow antes de anunciar uma versão no ar. Não há backend novo, migração de framework ou alterações de esquema nesta entrega.

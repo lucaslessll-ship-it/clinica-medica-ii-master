@@ -183,3 +183,30 @@ test('expired session during password update can sign in again',async()=>{
 test('a progress load error can be retried without creating another session',async()=>{
  const t=await open({session:true,errors:{load:{message:'Failed to fetch'}}}),p=t.page;await visible(p,'#master-retry');await text(p,'#master-auth-message',/Não foi possível carregar/);assert.equal(await p.locator('#app-shell').getAttribute('aria-hidden'),'true');await p.evaluate(()=>fixture.errors={});await p.locator('#master-retry').click();await p.waitForFunction(()=>document.getElementById('master-auth').hidden);assert.equal((await calls(p,'login')).length,0);await t.close();
 });
+test('curriculum has eight checklist topics, oral has six and P1 six groups',async()=>{
+ const t=await open({session:true}),p=t.page;await p.waitForFunction(()=>document.getElementById('master-auth').hidden);
+ assert.deepEqual(await p.evaluate(()=>Study.curriculum().map(t=>t.id)),['reuma2','reuma1','neuro1','neuro2','neuro3','gastro','onco','hema']);await p.evaluate(()=>navigate('oral'));assert.equal(await p.locator('.topic-filter .topic-chip').count(),6);assert.equal(await p.locator('.topic-filter').innerText().then(s=>/Neoplasias|Emergências onco/.test(s)),false);
+ await p.evaluate(()=>{ui.oralIndex=CASE_BANK.findIndex(c=>c.t==='onco');render()});assert.ok(await p.evaluate(()=>Study.oralIds.includes(CASE_BANK[ui.oralIndex].t)));
+ await p.evaluate(()=>navigate('pocus'));await text(p,'#main-content',/escopo específico/);await p.locator('#pocus-note').fill('Roteiro de treino');await p.reload();await p.waitForFunction(()=>document.getElementById('master-auth').hidden);assert.equal(await p.locator('#pocus-note').inputValue(),'Roteiro de treino');await t.close();
+});
+test('question filters use old results, hide answers, record help and schedule with controlled dates',async()=>{
+ const t=await open({session:true}),p=t.page;await p.waitForFunction(()=>document.getElementById('master-auth').hidden);
+ const result=await p.evaluate(()=>{store.results={0:{correct:false},1:{correct:true}};const errors=Study.selectQuestions('errors'),unanswered=Study.selectQuestions('unanswered');Study.record(0,QUESTION_BANK[0].a,'Alta',true,new Date('2026-11-10T12:00:00'));const review=store.study.reviews[0];return {errors,unanswered,review,due:Study.due(new Date('2026-11-11T12:00:00'))}});
+ assert.deepEqual(result.errors,[0]);assert.ok(!result.unanswered.includes(0)&&!result.unanswered.includes(1));assert.equal(result.review.helped,true);assert.equal(result.review.due,'2026-11-11');assert.ok(result.due.includes(0));
+ await p.evaluate(()=>startPractice('errors'));assert.equal(await p.locator('.feedback').count(),0);await p.locator('.option-btn').first().click();await p.locator('select').selectOption('Baixa');await p.getByRole('button',{name:'Conferir resposta'}).click();await visible(p,'.feedback');assert.equal(await p.evaluate(()=>store.study.reviews[0].confidence),'Baixa');await t.close();
+});
+test('image viewer zoom, normalized annotations, undo, export, Escape and broken-image fallback',async()=>{
+ const t=await open({session:true}),p=t.page;await p.waitForFunction(()=>document.getElementById('master-auth').hidden);
+ await p.evaluate(()=>MediaViewer.open('data:image/svg+xml,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="600" height="400"><rect width="600" height="400" fill="white"/></svg>'),'Teste geométrico, não clínico'));
+ await p.locator('[data-action=in]').click();await text(p,'.image-status',/125%/);await p.locator('[data-mode=arrow]').click();const box=await p.locator('.image-layer img').boundingBox();await p.mouse.move(box.x+100,box.y+100);await p.mouse.down();await p.mouse.move(box.x+200,box.y+160);await p.mouse.up();assert.equal(await p.locator('.image-layer svg path').count(),1);
+ const before=await p.locator('.image-layer svg path').getAttribute('d');await p.locator('[data-action=in]').click();assert.equal(await p.locator('.image-layer svg path').getAttribute('d'),before);
+ const download=p.waitForEvent('download');await p.locator('[data-action=export]').click();assert.equal((await download).suggestedFilename(),'MASTER-imagem-anotada.png');await p.locator('[data-action=undo]').click();assert.equal(await p.locator('.image-layer svg path').count(),0);await p.keyboard.press('Escape');assert.equal(await p.locator('dialog').count(),0);
+ await p.evaluate(()=>MediaViewer.open('/missing-image.png'));await text(p,'.image-status',/Não foi possível abrir/);await p.keyboard.press('Escape');await t.close();
+});
+test('a second-device version is backed up before overwriting and can be exported',async()=>{
+ const t=await open({session:true,remote:[{storage_key:keys[0],payload:empty}]}),p=t.page;await p.waitForFunction(()=>document.getElementById('master-auth').hidden);
+ await p.evaluate(()=>{fixture.remote=[{storage_key:'master_p2_lucas_v1',payload:{results:{},completed:{gastro_0:true}}}];store.completed.neuro1_0=true;stateSave();});
+ await p.waitForFunction(()=>Object.keys(localStorage).some(key=>key.startsWith('master_conflict_backup_')));
+ assert.equal(await p.evaluate(()=>{const key=Object.keys(localStorage).find(key=>key.startsWith('master_conflict_backup_'));return JSON.parse(localStorage.getItem(key)).master_p2_lucas_v1.completed.gastro_0}),true);
+ const download=p.waitForEvent('download');await p.evaluate(()=>MASTER_AUTH.exportConflict());assert.equal((await download).suggestedFilename(),'MASTER-copia-conflito.json');await t.close();
+});

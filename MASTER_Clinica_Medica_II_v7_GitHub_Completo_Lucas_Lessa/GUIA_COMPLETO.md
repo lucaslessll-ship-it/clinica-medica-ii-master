@@ -46,7 +46,7 @@ Como a prova P2 antiga correspondente não foi confirmada no material recuperado
 
 ## Como preservar sua evolução
 
-Os dados são armazenados no `localStorage` deste navegador/dispositivo. Exportação JSON e caderno Markdown salvam arquivos locais; **não há sincronização automática** com Drive, Notion, Supabase ou ApexMed. Limpar dados de navegação ou mudar de dispositivo pode apagar seu progresso se não houver backup. Restaurar um backup substitui o progresso atual após confirmação.
+Os dados são armazenados no `localStorage` deste navegador/dispositivo. Exportação JSON e caderno Markdown salvam arquivos locais; o progresso é sincronizado com o Supabase após autenticação. Não há sincronização com Drive, Notion ou ApexMed. Falhas de rede podem deixar alterações pendentes neste dispositivo. Limpar dados de navegação ou mudar de dispositivo pode apagar seu progresso se não houver backup. Restaurar um backup substitui o progresso atual após confirmação.
 
 ## Observações sobre a avaliação
 

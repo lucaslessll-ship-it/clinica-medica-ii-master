@@ -7,7 +7,7 @@
   const recoveryKey = 'master_password_recovery';
   const originalSet = Storage.prototype.setItem;
   const $ = id => document.getElementById(id);
-  const status = {client:null, user:null, ready:false, busy:false, mode:'login', initializing:true, timers:new Map(), epoch:0, entering:null, recovery:false, consent:null};
+  const status = {client:null, user:null, ready:false, busy:false, mode:'login', initializing:true, timers:new Map(), epoch:0, entering:null, recovery:false, baseline:new Map(), consent:null};
   const read = key => {try{return JSON.parse(localStorage.getItem(key));}catch{return null;}};
   const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const errors = {
@@ -67,6 +67,7 @@
     }
     $('master-auth-title').textContent=title;$('master-auth-description').textContent=description;
     $('master-auth-fields').innerHTML=fields;
+    for(const input of $('master-auth-fields').querySelectorAll('input[type=password]')){const toggle=document.createElement('button');toggle.type='button';toggle.className='auth-link';toggle.textContent='Mostrar senha';toggle.setAttribute('aria-controls',input.id);toggle.setAttribute('aria-pressed','false');toggle.onclick=()=>{const visible=input.type==='password';input.type=visible?'text':'password';toggle.textContent=visible?'Ocultar senha':'Mostrar senha';toggle.setAttribute('aria-pressed',String(visible));};input.after(toggle);}
     $('master-submit').textContent=submit;$('master-submit').dataset.label=submit;
     $('master-auth-tabs').hidden=!['login','register'].includes(mode);
     $('master-login-tab').setAttribute('aria-pressed',String(mode==='login'));
@@ -193,9 +194,18 @@
     if(!status.ready||!status.user||!keys.includes(key))return;
     const raw=localStorage.getItem(key),value=read(key);if(value===null)return;
     const epoch=status.epoch,userId=status.user.id;
+    const {data:latest,error:readError}=await status.client.from('master_progress').select('storage_key,payload').eq('user_id',userId);
+    if(readError){syncNotice('Sincronização pendente. Seu progresso continua salvo neste dispositivo.');throw readError;}
+    if(epoch!==status.epoch)return;
+    const remote=latest?.find(row=>row.storage_key===key);
+    if(remote&&JSON.stringify(remote.payload)!==status.baseline.get(key)&&JSON.stringify(remote.payload)!==raw){
+      originalSet.call(localStorage,'master_conflict_backup_'+userId+'_'+Date.now(),JSON.stringify(Object.fromEntries(latest.map(row=>[row.storage_key,row.payload]))));
+      toast('Outro dispositivo alterou o progresso. Cópia da versão remota preservada; disponível no menu da conta.');
+    }
     const {error}=await status.client.from('master_progress').upsert({user_id:userId,storage_key:key,payload:value,updated_at:new Date().toISOString()},{onConflict:'user_id,storage_key'});
     if(error){if(epoch===status.epoch)syncNotice('Sincronização pendente. Seu progresso continua salvo neste dispositivo.');throw error;}
     if(epoch===status.epoch){
+      status.baseline.set(key,raw);
       const queued=pending(userId);
       if(queued[key]===raw){delete queued[key];originalSet.call(localStorage,pendingKey(userId),JSON.stringify(queued));}
       syncNotice(Object.keys(queued).length?'Há alterações aguardando sincronização.':'Progresso sincronizado.');
@@ -224,6 +234,7 @@
       if(epoch!==status.epoch)return;
       const {data:remote,error:loadError}=await status.client.from('master_progress').select('storage_key,payload').eq('user_id',user.id);if(loadError)throw loadError;
       if(epoch!==status.epoch)return;
+      status.baseline=new Map((remote||[]).map(row=>[row.storage_key,JSON.stringify(row.payload)]));
       let importLocal=!remote?.length&&previousOwner===user.id;
       if(!remote?.length&&!previousOwner&&keys.some(k=>read(k)&&Object.keys(read(k)).length)){
         importLocal=confirm('Encontramos progresso anterior neste navegador. Deseja vinculá-lo à sua conta? Cancelar inicia com progresso vazio e mantém uma cópia de segurança local.');
@@ -231,16 +242,25 @@
       }
       if(!importLocal){for(const key of keys)localStorage.removeItem(key);for(const row of remote||[])if(keys.includes(row.storage_key))originalSet.call(localStorage,row.storage_key,JSON.stringify(row.payload));}
       const queued=pending(user.id);
+      const conflicts=keys.filter(key=>queued[key]&&localStorage.getItem(key)&&queued[key]!==localStorage.getItem(key));
+      if(conflicts.length){originalSet.call(localStorage,'master_conflict_backup_'+user.id+'_'+Date.now(),JSON.stringify(Object.fromEntries(keys.map(key=>[key,read(key)]))));}
       for(const key of keys)if(typeof queued[key]==='string')originalSet.call(localStorage,key,queued[key]);
       originalSet.call(localStorage,ownerKey,user.id);status.ready=true;
       if(importLocal||Object.keys(queued).length){try{await syncAll();}catch{syncNotice('Sincronização pendente. Seu progresso continua salvo neste dispositivo.');}}
       if(epoch!==status.epoch)return;
       // Refresh every module before exposing any account data; no reload or stale user state.
       window.dispatchEvent(new Event('master-auth-ready'));
-      clearAuthUrl();hide();if(!Object.keys(pending(user.id)).length)syncNotice('Progresso carregado da sua conta.');
+      clearAuthUrl();hide();if(conflicts.length)toast('Alterações locais recuperadas. Uma cópia da versão do servidor foi preservada neste dispositivo.');if(!Object.keys(pending(user.id)).length)syncNotice('Progresso carregado da sua conta.');
     }catch(e){
       if(epoch!==status.epoch)return;status.ready=false;show('login','Não foi possível carregar seu progresso. '+errorText(e),true);$('master-retry').hidden=false;
     }finally{if(status.entering?.epoch===epoch)status.entering=null;}
+  }
+  function exportConflict(){
+    const id=status.user?.id;if(!id)return;
+    const prefix='master_conflict_backup_'+id+'_',name=Object.keys(localStorage).filter(key=>key.startsWith(prefix)).sort().at(-1);
+    if(!name){toast('Nenhuma cópia de conflito disponível para esta conta.');return;}
+    const copy=read(name),backup={app:'MASTER_P2_Lucas_Lessa',data:copy.master_p2_lucas_v1||{},experience:copy.master_p2_hig_v2,p1:copy.master_p1_lucas_v4};
+    const url=URL.createObjectURL(new Blob([JSON.stringify(backup,null,2)],{type:'application/json'})),a=document.createElement('a');a.href=url;a.download='MASTER-copia-conflito.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
   }
   function signedOut(message='Sua sessão terminou. Entre novamente para continuar.'){
     cancelSync();status.entering=null;status.consent?.(false);status.user=null;status.recovery=false;sessionStorage.removeItem(recoveryKey);
@@ -284,7 +304,7 @@
         if(event==='SIGNED_OUT')lock(true);
         setTimeout(()=>handleSession(event,session),0);
       });
-      window.MASTER_AUTH={user:()=>status.user,signOut,sync:syncAll,changePassword:()=>{if(status.ready)show('password');}};
+      window.MASTER_AUTH={user:()=>status.user,signOut,sync:syncAll,exportConflict,changePassword:()=>{if(status.ready)show('password');}};
       const {data,error}=await status.client.auth.getSession();status.initializing=false;if(error)throw error;
       if(callbackError){status.recovery=false;sessionStorage.removeItem(recoveryKey);clearAuthUrl();show('forgot','O link é inválido, expirou ou já foi utilizado. Solicite um novo e-mail.',true);}
       else if(data.session&&status.recovery){status.user=data.session.user;sessionStorage.setItem(recoveryKey,'yes');clearAuthUrl();show('recovery');}
