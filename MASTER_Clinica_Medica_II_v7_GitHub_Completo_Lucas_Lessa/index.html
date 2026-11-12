@@ -19,6 +19,7 @@
   <link rel="stylesheet" href="auth.css">
   <link rel="stylesheet" href="study.css">
   <link rel="stylesheet" href="clinical.css">
+  <link rel="stylesheet" href="focus-timer.css">
   <link rel="preload" href="assets/fonts/inter-latin-variable.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="interface.css">
 </head>
@@ -49,11 +50,12 @@
           <div class="top-context"><span class="top-context-title">Clínica Médica II</span><span class="top-context-sub">P2 principal · P1 completa</span></div>
         </div>
         <div class="topbar-right">
+          <button id="focus-top" class="focus-top" type="button" onclick="HIG.openTimer()" aria-label="Abrir pomodoro"><span aria-hidden="true">◷</span><span data-focus-time>25:00</span></button>
           <button class="search-trigger" type="button" onclick="HIG.openSearch()" aria-label="Buscar temas, aulas e questões"><span class="search-symbol">⌕</span><span>Buscar conteúdo clínico</span><kbd>⌘ K</kbd></button>
           <button class="icon-button focus-trigger" type="button" onclick="HIG.toggleFocus()" aria-label="Ativar ou desativar modo de concentração" title="Modo de concentração (F)">⛶</button>
           <button class="icon-button" type="button" onclick="HIG.openSettings()" aria-label="Personalizar tema e acessibilidade" title="Aparência e acessibilidade">◐</button>
           <div class="account-control">
-            <button id="master-avatar" class="avatar" type="button" aria-label="Abrir menu da conta" aria-expanded="false" aria-controls="master-profile" disabled>LL</button>
+            <button id="master-avatar" class="avatar" type="button" aria-label="Abrir menu da conta" aria-expanded="false" aria-controls="master-profile" disabled><svg viewBox="0 0 40 40" aria-hidden="true" focusable="false"><circle cx="20" cy="20" r="20" fill="currentColor" opacity=".1"/><circle cx="20" cy="15" r="7" fill="currentColor"/><path d="M7 36a13 13 0 0 1 26 0" fill="currentColor"/></svg></button>
             <section id="master-profile" class="profile-popover" aria-label="Sua conta" hidden>
               <strong id="master-profile-name">Sua conta</strong><p id="master-profile-email"></p>
               <p id="master-sync-status" role="status" aria-live="polite"></p>
@@ -70,6 +72,10 @@
       <footer class="footer"><span>Material de estudo • Não substitui diretrizes e supervisão médica</span><span>Design centrado no conteúdo • <strong>Lucas Lessa</strong></span></footer>
     </div>
   </div>
+  <aside id="focus-float" class="focus-float" aria-label="Pomodoro flutuante" hidden>
+    <button type="button" class="focus-float-clock" onclick="HIG.openTimer()" aria-label="Abrir controles do pomodoro"><span aria-hidden="true">◷</span><span data-focus-time>25:00</span></button>
+    <button type="button" class="focus-float-close" onclick="FocusTimer.floating(false)" aria-label="Ocultar pomodoro flutuante">×</button>
+  </aside>
   <nav class="mobile-tabbar" id="mobile-tabbar" aria-label="Navegação rápida no celular">
     <button type="button" onclick="navigate('dashboard')" data-tab="dashboard"><span aria-hidden="true">⌂</span>Início</button>
     <button type="button" onclick="navigate('topics')" data-tab="topics"><span aria-hidden="true">▤</span>Temas</button>
@@ -100,12 +106,15 @@
   <script src="p1_questions.js"></script>
   <script src="p1_cases.js"></script>
   <script src="evidence.js"></script>
+  <script src="decision-lab-cases.js"></script>
   <script src="banca.js"></script>
   <script src="app.js"></script>
   <script src="p1_app.js"></script>
   <script src="hig.js"></script>
+  <script src="focus-timer.js"></script>
 <script src="clinical-data.js"></script>
 <script src="prescription-data.js"></script>
+  <script src="prescription-calculations.js"></script>
 <script src="clinical.js"></script>
 <script src="study.js"></script>
 <script src="media-viewer.js"></script>

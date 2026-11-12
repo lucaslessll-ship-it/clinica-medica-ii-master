@@ -54,6 +54,7 @@ async function login(page){await page.locator('#master-email').fill(user.email);
 async function visible(page,selector){await page.locator(selector).waitFor({state:'visible'});}
 async function text(page,selector,match){await page.waitForFunction(({selector,source})=>new RegExp(source).test(document.querySelector(selector)?.textContent||''),{selector,source:match.source});}
 async function calls(page,name){return page.evaluate(name=>calls.filter(c=>c.name===name),name);}
+async function freezeTime(page,iso){await page.clock.install({time:new Date(Date.parse(iso)-1000)});await page.clock.pauseAt(new Date(iso));}
 test('login validates, blocks duplicate sends, and shows actionable errors',async()=>{
  const t=await open({delay:150,errors:{login:{code:'invalid_credentials'}}}),p=t.page;
  await p.locator('#master-email').fill('not-an-email');await p.locator('#master-password').fill('x');await p.locator('#master-submit').click();assert.equal((await calls(p,'login')).length,0);
@@ -70,7 +71,7 @@ test('forgot password validates email and retains a neutral success message',asy
 });
 test('login loads progress, menu belongs to user, Escape and outside click close it',async()=>{
  const t=await open({remote:[{storage_key:keys[0],payload:{...empty,completed:{neuro2_1:true}}}]}),p=t.page;
- await login(p);await text(p,'#master-avatar',/AL/);assert.equal(await p.evaluate(()=>store.completed.neuro2_1),true);
+ await login(p);assert.equal(await p.locator('#master-avatar svg').count(),1);assert.equal(await p.locator('#master-avatar').getAttribute('aria-label'),'Abrir menu da conta de Ana Lima');assert.equal(await p.evaluate(()=>store.completed.neuro2_1),true);
  await p.locator('#master-avatar').click();await text(p,'#master-profile-email',/ana@example.test/);await p.keyboard.press('Escape');assert.equal(await p.locator('#master-profile').isHidden(),true);
  await p.locator('#master-avatar').click();await p.locator('#main-content h1').click();assert.equal(await p.locator('#master-avatar').getAttribute('aria-expanded'),'false');await t.close();
 });
@@ -255,4 +256,83 @@ test('sidebar supports direct navigation, disclosure toggles and compact icons w
  const t=await open({session:true}),p=t.page;await p.waitForFunction(()=>document.getElementById('master-auth').hidden);assert.equal(await p.locator('#sidebar-nav summary').count(),0);
  await p.locator('[data-nav-toggle="3"]').click();assert.equal(await p.locator('[data-nav-toggle="3"]').getAttribute('aria-expanded'),'true');await p.locator('#nav-children-3').getByRole('button',{name:'Simulado de 20 questões',exact:true}).click();assert.equal(await p.evaluate(()=>ui.route),'exam');
  await p.locator('#sidebar-nav .nav-destination').filter({hasText:'Estudar P2'}).click();assert.equal(await p.evaluate(()=>ui.route),'topics');await p.evaluate(()=>HIG.toggleSidebar());assert.equal(await p.locator('#sidebar-nav .nav-destination>span').first().isVisible(),false);await p.evaluate(()=>HIG.toggleSidebar());await t.close();
+});
+test('account illustration is stable, changes with the account and never interpolates profile HTML',async()=>{
+ const t=await open({session:true}),p=t.page;await p.waitForFunction(()=>document.getElementById('master-auth').hidden);
+ const first=await p.locator('#master-avatar').innerHTML();assert.equal(await p.locator('#master-avatar').innerText(),'');assert.equal(await p.locator('#master-avatar svg').count(),1);
+ await p.reload();await p.waitForFunction(()=>document.getElementById('master-auth').hidden);assert.equal(await p.locator('#master-avatar').innerHTML(),first);
+ await p.evaluate(()=>__authTest.emit('SIGNED_IN',{user:{id:'user-b',email:'bia@example.test',user_metadata:{full_name:'<img src=x onerror=alert(1)>'}}}));
+ await p.waitForFunction(()=>document.getElementById('master-auth').hidden&&document.getElementById('master-profile-email').textContent==='bia@example.test');
+ assert.notEqual(await p.locator('#master-avatar').innerHTML(),first);assert.equal(await p.locator('#master-profile-name img').count(),0);assert.equal(await p.locator('#master-profile-name').textContent(),'<img src=x onerror=alert(1)>');await t.close();
+});
+test('all existing reference cards expose worked unit calculations in the manual and lesson',async()=>{
+ const t=await open({session:true,viewport:{width:390,height:844}}),p=t.page;await p.waitForFunction(()=>document.getElementById('master-auth').hidden);
+ await p.evaluate(()=>navigate('prescriptions'));assert.equal(await p.locator('.rx-card').count(),16);assert.equal(await p.locator('.rx-calculation').count(),16);
+ const ivig=p.locator('[data-drug=ivig]');await ivig.locator('summary').click();assert.match(await ivig.innerText(),/140 g/);assert.match(await ivig.innerText(),/280 mL/);
+ const atra=p.locator('[data-drug=tretinoin]');await atra.locator('summary').click();assert.match(await atra.innerText(),/90 mg\/dia/);
+ assert.ok(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));
+ await p.evaluate(()=>openTopic('neuro2'));await p.locator('.clinical-lab>summary').click();await p.getByRole('tab',{name:'Prescrição e seguimento'}).click();assert.equal(await p.locator('[role=tabpanel]:visible .rx-calculation').count(),1);await t.close();
+});
+test('pomodoro is global, dismissible and synchronizes active dedication without counting paused time',async()=>{
+ const t=await open({session:true}),p=t.page;await p.waitForFunction(()=>document.getElementById('master-auth').hidden);await freezeTime(p,'2026-11-11T12:00:00Z');
+ assert.equal(await p.locator('#focus-float').isVisible(),true);await p.locator('#focus-top').click();await p.locator('[data-focus-toggle]').click();await p.waitForFunction(()=>FocusTimer.status().running);await p.keyboard.press('Escape');
+ await p.clock.fastForward(65000);await p.evaluate(()=>openTopic('neuro2'));assert.equal(await p.locator('#focus-top [data-focus-time]').textContent(),'23:55');
+ await p.locator('#focus-float .focus-float-close').click();assert.equal(await p.locator('#focus-float').isVisible(),false);assert.equal(await p.evaluate(()=>FocusTimer.status().running),true);
+ await p.locator('#focus-top').click();await p.locator('[data-focus-toggle]').click();await p.clock.fastForward(60000);assert.equal(await p.evaluate(()=>Object.values(FocusTimer.status().days).reduce((n,d)=>n+d.ms,0)),65000);
+ const saved=await p.evaluate(()=>JSON.parse(localStorage.getItem('master_p2_hig_v2')));assert.equal(Object.values(saved.pomodoro.days).reduce((n,d)=>n+d.ms,0),65000);
+ await p.evaluate(()=>MASTER_AUTH.sync());assert.ok((await calls(p,'upsert')).some(c=>c.args.storage_key==='master_p2_hig_v2'&&Object.values(c.args.payload.pomodoro?.days||{}).some(d=>d.ms===65000)));
+ await p.locator('[data-focus-floating]').click();assert.equal(await p.locator('#focus-float').isVisible(),true);await p.screenshot({path:'work/pomodoro-desktop.png'});await t.close();
+});
+test('pomodoro completion is capped, counted once and restored paused after reload',async()=>{
+ const t=await open({session:true}),p=t.page;await p.waitForFunction(()=>document.getElementById('master-auth').hidden);await freezeTime(p,'2026-11-11T12:00:00Z');
+ await p.locator('#focus-top').click();await p.locator('[data-focus-toggle]').click();await p.waitForFunction(()=>FocusTimer.status().running);await p.clock.fastForward(1800000);
+ let data=await p.evaluate(()=>FocusTimer.status());assert.equal(data.running,false);assert.equal(data.remainingMs,0);assert.equal(data.days['2026-11-11'].ms,1500000);assert.equal(data.days['2026-11-11'].completed,1);
+ await p.clock.fastForward(60000);await p.reload();await p.waitForFunction(()=>document.getElementById('master-auth').hidden);data=await p.evaluate(()=>FocusTimer.status());assert.equal(data.running,false);assert.equal(data.days['2026-11-11'].completed,1);assert.equal(data.remainingMs,0);await t.close();
+});
+test('pomodoro splits midnight and keeps accounts isolated during a running session',async()=>{
+ const t=await open({session:true}),p=t.page;await p.waitForFunction(()=>document.getElementById('master-auth').hidden);await freezeTime(p,'2026-11-11T23:59:50Z');
+ await p.locator('#focus-top').click();await p.locator('[data-focus-toggle]').click();await p.waitForFunction(()=>FocusTimer.status().running);await p.clock.fastForward(30000);await p.keyboard.press('Escape');
+ let days=await p.evaluate(()=>FocusTimer.status().days);assert.equal(days['2026-11-11'].ms,10000);assert.equal(days['2026-11-12'].ms,20000);
+ await p.evaluate(()=>__authTest.emit('SIGNED_IN',{user:{id:'user-b',email:'bia@example.test',user_metadata:{}}}));await p.clock.runFor(1);await text(p,'#master-profile-email',/bia@example.test/);await p.waitForFunction(()=>document.getElementById('master-auth').hidden);
+ assert.equal(await p.evaluate(()=>FocusTimer.status().running),false);assert.deepEqual(await p.evaluate(()=>FocusTimer.status().days),{});await p.clock.fastForward(60000);assert.deepEqual(await p.evaluate(()=>FocusTimer.status().days),{});await t.close();
+});
+test('a second tab cannot double-count a running pomodoro for the same account',async()=>{
+ const t=await open({session:true}),p=t.page;await p.waitForFunction(()=>document.getElementById('master-auth').hidden);
+ await p.locator('#focus-top').click();await p.locator('[data-focus-toggle]').click();await p.waitForFunction(()=>FocusTimer.status().running);
+ const second=await t.context.newPage();await second.addInitScript(({user})=>{window.fixture={user,session:true,remote:[],consent:true};},{user});
+ await second.route('https://cdn.jsdelivr.net/**/supabase.min.js',r=>r.fulfill({contentType:'text/javascript',body:`(${mockSdk.toString()})()`}));
+ await second.goto(base+APP);await second.waitForFunction(()=>document.getElementById('master-auth').hidden);
+ await second.locator('#focus-top').click();await second.locator('[data-focus-toggle]').click();await text(second,'#toast',/outra aba/);
+ assert.equal(await second.evaluate(()=>FocusTimer.status().running),false);assert.equal(await p.evaluate(()=>FocusTimer.status().running),true);
+ await p.evaluate(()=>FocusTimer.pause());await second.locator('[data-focus-toggle]').click();await second.waitForFunction(()=>FocusTimer.status().running);await t.close();
+});
+test('dashboard shows all sixteen subjects directly and every card opens its own topic',async()=>{
+ const t=await open({session:true}),p=t.page;await p.waitForFunction(()=>document.getElementById('master-auth').hidden);
+ const subjects=await p.locator('[data-subject]').evaluateAll(nodes=>nodes.map(n=>({id:n.dataset.subject,period:n.dataset.period,title:n.querySelector('strong').textContent,hiddenInDetails:!!n.closest('details')})));
+ assert.equal(subjects.length,16);assert.equal(new Set(subjects.map(s=>s.id)).size,16);assert.ok(subjects.every(s=>!s.hiddenInDetails));
+ for(const s of subjects){await p.locator(`[data-subject="${s.id}"]`).click();assert.equal(await p.evaluate(()=>ui.route),s.period==='P2'?'topic':'p1topic');assert.ok((await p.locator('#main-content').innerText()).includes(s.title));await p.evaluate(()=>navigate('dashboard'));}
+ await p.setViewportSize({width:390,height:844});await p.evaluate(()=>{closeMobileNav();window.scrollTo(0,0);});assert.ok(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));await p.screenshot({path:'work/subjects-mobile.png',animations:'disabled'});await t.close();
+});
+test('Decision Lab has twenty P2 and two P1 cases with stable legacy IDs, feedback and saved progress',async()=>{
+ const previous={answers:{'neuro1:0':{picked:1,correct:true,at:'2026-11-10T12:00:00Z'}}};
+ const t=await open({session:true,local:{master_clinica_banca_v7:previous}}),p=t.page;await p.waitForFunction(()=>document.getElementById('master-auth').hidden);
+ const data=await p.evaluate(()=>({ids:BANCA.cases.map(c=>c.id),p2:BANCA.cases.filter(c=>c.period==='P2').length,p1:BANCA.cases.filter(c=>c.period==='P1').length,valid:BANCA.cases.every(c=>c.stages.length>=2&&c.stages.every(s=>s.o.length===3&&Number.isInteger(s.a)&&s.a>=0&&s.a<s.o.length&&s.why.length>60&&MASTER_REVIEW.sources[s.source||c.source]))}));
+ assert.equal(data.p2,20);assert.equal(data.p1,2);assert.equal(new Set(data.ids).size,22);assert.ok(data.valid);assert.deepEqual(data.ids.slice(0,10),['neuro1','neuro2','neuro3','reuma2','onco','hema','gastro','reuma1','p1dm','p1has']);
+ await p.evaluate(()=>navigate('banca'));assert.equal(await p.locator('.banca-case-tab').count(),20);
+ await p.evaluate(()=>BANCA.chooseCase('dl-status'));assert.equal(await p.locator('.banca-explain').count(),0);await p.locator('.banca-answer').nth(1).click();await visible(p,'.banca-explain');assert.match(await p.locator('.banca-explain').innerText(),/ABC/);await p.getByRole('button',{name:'O paciente mudou →'}).click();assert.match(await p.locator('.banca-case-stage').innerText(),/Etapa 2/);
+ await p.reload();await p.waitForFunction(()=>document.getElementById('master-auth').hidden);await p.evaluate(()=>navigate('banca'));assert.match(await p.locator('.banca-case-stage').innerText(),/Etapa 2/);
+ const saved=await p.evaluate(()=>JSON.parse(localStorage.getItem('master_clinica_banca_v7')));assert.equal(saved.answers['neuro1:0'].correct,true);assert.equal(saved.answers['dl-status:0'].correct,true);
+ await p.evaluate(()=>BANCA.chooseFilter('P1'));assert.equal(await p.locator('.banca-case-tab').count(),2);await p.setViewportSize({width:390,height:844});await p.evaluate(()=>{BANCA.chooseFilter('P2');closeMobileNav();document.activeElement?.blur();document.getElementById('banca-lab').scrollIntoView({block:'start'});});assert.ok(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));await p.screenshot({path:'work/decision-lab-mobile.png',animations:'disabled'});await t.close();
+});
+test('lessons omit the removed image/video block while prescription tabs remain available',async()=>{
+ const t=await open({session:true}),p=t.page;await p.waitForFunction(()=>document.getElementById('master-auth').hidden);
+ for(const topic of ['neuro1','reuma1','gastro']){await p.evaluate(id=>openTopic(id),topic);assert.equal(await p.getByRole('heading',{name:'Imagens, vídeos e farmacologia'}).count(),0);assert.equal(await p.getByRole('button',{name:'Estudar e marcar uma imagem local'}).count(),0);await p.locator('.clinical-lab>summary').click();assert.equal(await p.getByRole('tab',{name:'Prescrição e seguimento'}).count(),1);}
+ await p.evaluate(()=>P1.openTopic('p1dm'));await p.locator('.clinical-lab>summary').click();assert.equal(await p.getByRole('tab',{name:'Prescrição e seguimento'}).count(),1);await t.close();
+});
+test('pomodoro top bar remains visible while scrolling on mobile',async()=>{
+ const t=await open({session:true,viewport:{width:390,height:844}}),p=t.page;await p.waitForFunction(()=>document.getElementById('master-auth').hidden);
+ await p.evaluate(()=>{document.documentElement.style.scrollBehavior='auto';closeMobileNav();window.scrollTo(0,1000);});
+ const layout=await p.evaluate(()=>{const b=document.querySelector('.topbar').getBoundingClientRect();return {top:b.top,bottom:b.bottom,position:getComputedStyle(document.querySelector('.topbar')).position,scroll:scrollY,height:innerHeight,visual:visualViewport.height,focus:document.body.classList.contains('focus-mode')};});
+ assert.ok(layout.top>=-1&&layout.top<=1&&layout.bottom>40,JSON.stringify(layout));assert.equal(await p.locator('#focus-top').isVisible(),true);
+ await p.evaluate(()=>window.scrollTo(0,0));await p.screenshot({path:'work/subjects-mobile.png',animations:'disabled'});await t.close();
 });

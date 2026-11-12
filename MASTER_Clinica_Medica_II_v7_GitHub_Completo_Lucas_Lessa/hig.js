@@ -1,15 +1,19 @@
 /**
  * MASTER P2 / Experience Layer v2 — Lucas Lessa
  * Progressive enhancements inspired by Apple Human Interface Guidelines.
- * Original academic content and scoring remain in app.js; no data is transmitted.
+ * Preferences and dedication share the existing per-account progress synchronization.
  */
 'use strict';
 const HIG = (() => {
   const UX_KEY='master_p2_hig_v2';
   const defaults={theme:'light',font:'normal',contrast:false,motion:false,collapsed:false,focus:false,notes:{},bookmarks:{},lastTopic:'neuro1',lastChapter:0,sessionMinutes:25,sessionSpent:0};
-  let preferences=load(),modalType='',modalFocus=null,timer=null,seconds=0,timerRunning=false,searchItems=[],activeResult=0;
+  let preferences=load(),modalType='',modalFocus=null,searchItems=[],activeResult=0;
   function load(){try{let v=JSON.parse(localStorage.getItem(UX_KEY));return {...defaults,...(v&&typeof v==='object'?v:{}),notes:{...defaults.notes,...(v?.notes||{})},bookmarks:{...defaults.bookmarks,...(v?.bookmarks||{})}}}catch{return {...defaults}}}
   function save(){try{localStorage.setItem(UX_KEY,JSON.stringify(preferences))}catch{toast('O navegador não permitiu salvar esta preferência.') }}
+  function focusData(){return preferences.pomodoro||{minutes:preferences.sessionMinutes,legacyMinutes:preferences.sessionSpent};}
+  function saveFocus(data){preferences.pomodoro=JSON.parse(JSON.stringify(data));preferences.sessionMinutes=data.minutes;save();}
+  function refreshFocus(){const fresh=load();preferences.pomodoro=fresh.pomodoro;preferences.sessionSpent=fresh.sessionSpent;preferences.sessionMinutes=fresh.sessionMinutes;}
+  function openTimer(){openOverlay('pomodoro',FocusTimer.panel());FocusTimer.render();}
   function setTheme(mode){preferences.theme=mode;applyPrefs();save();refreshSettings();}
   function setFont(size){preferences.font=size;applyPrefs();save();refreshSettings();}
   function togglePref(key){preferences[key]=!preferences[key];applyPrefs();save();refreshSettings();}
@@ -28,7 +32,7 @@ const HIG = (() => {
   function openOverlay(name,content){
     modalType=name;modalFocus=document.activeElement;
     const overlay=document.getElementById('hig-overlay');
-    document.getElementById('hig-dialog-title').textContent=name==='search'?'Buscar conteúdo':name==='settings'?'Preferências': 'Atalhos de teclado';
+    document.getElementById('hig-dialog-title').textContent=name==='search'?'Buscar conteúdo':name==='settings'?'Preferências':name==='pomodoro'?'Pomodoro e dedicação':'Atalhos de teclado';
     document.getElementById('hig-dialog-content').innerHTML=content;
     overlay.hidden=false;document.body.classList.add('modal-open');
     requestAnimationFrame(()=>{let target=name==='search'?document.getElementById('global-search'):overlay.querySelector('.hig-dialog .icon-button');target?.focus()});
@@ -71,7 +75,7 @@ const HIG = (() => {
   function refreshSettings(){if(modalType==='settings')document.getElementById('hig-dialog-content').innerHTML=settingsMarkup()}
   function openHelp(){openOverlay('help',`<div class="shortcut-list">${[['⌘/Ctrl + K','Buscar todo o conteúdo'],['/','Buscar, quando fora de um campo'],['F','Ativar/desativar modo de concentração'],['?','Abrir estes atalhos'],['Esc','Fechar janela ou menu'],['↑ ↓ e Enter','Percorrer resultados da busca']].map(([key,what])=>`<div><kbd>${key}</kbd><span>${what}</span></div>`).join('')}</div><p class="dialog-footnote">Todos os comandos também podem ser acessados por botões, sem necessidade de teclado.</p>`)}
   function footerAndTabs(){document.querySelectorAll('#mobile-tabbar [data-tab]').forEach(b=>{const active=ui.route===b.dataset.tab||(ui.route==='topic'&&b.dataset.tab==='topics');b.classList.toggle('active',active);b.setAttribute('aria-current',active?'page':'false')});}
-  function afterRender(){footerAndTabs();if(ui.route==='topic'){preferences.lastTopic=ui.topic;preferences.lastChapter=ui.chapter;preferences.lastStudy='P2';preferences.studyStarted=true;save()}else if(ui.route==='p1topic'){preferences.lastStudy='P1';preferences.studyStarted=true;save()}const focusToggle=document.querySelector('.focus-trigger');if(focusToggle)focusToggle.setAttribute('aria-pressed',String(preferences.focus));}
+  function afterRender(){footerAndTabs();window.FocusTimer?.render();if(ui.route==='topic'){preferences.lastTopic=ui.topic;preferences.lastChapter=ui.chapter;preferences.lastStudy='P2';preferences.studyStarted=true;save()}else if(ui.route==='p1topic'){preferences.lastStudy='P1';preferences.studyStarted=true;save()}const focusToggle=document.querySelector('.focus-trigger');if(focusToggle)focusToggle.setAttribute('aria-pressed',String(preferences.focus));}
   function lessonToolbar(t,ci,c){
     const key=t.id+'_'+ci;const marked=!!preferences.bookmarks[key];const count=Object.values(c).join(' ').split(/\s+/).length;const minutes=Math.max(3,Math.ceil(count/180));
     return `<div class="lesson-toolbar"><span>◷ ${minutes} min de leitura estimada</span><div class="lesson-toolbar-actions"><button class="plain-pill" type="button" aria-pressed="${marked}" onclick="HIG.bookmark('${key}')">${marked?'★ Salvo na biblioteca':'☆ Salvar para revisão'}</button><button class="plain-pill" type="button" onclick="HIG.toggleFocus()">⛶ Leitura focada</button></div></div>`;
@@ -95,14 +99,14 @@ const HIG = (() => {
     return header('PLANO ADAPTATIVO · P2','Seu estudo de <em>hoje.</em>','Uma sequência simples, orientada pelo seu progresso real — sem previsão fictícia de incidência em provas.')+
       `<div class="daily-hero"><div><span class="kicker">ESTAÇÃO DO DIA · ${new Date().toLocaleDateString('pt-BR',{weekday:'long',day:'2-digit',month:'long'})}</span><h2>Uma aula bem aprendida é melhor que cinco apenas lidas.</h2><p>Pratique a decisão clínica, depois a justificativa. A ordem adapta-se às respostas guardadas no navegador.</p></div><div class="daily-score"><strong>${g.value}%</strong><span>domínio do banco</span></div></div>`+
       section('Sua trilha guiada',`<div class="daily-grid">${tasks.map(x=>`<article class="daily-card"><span class="daily-counter">${x.num} / ${x.tag} <small>${x.time}</small></span><h3>${escapeHtml(x.title)}</h3><p>${escapeHtml(x.detail)}</p><button class="btn secondary" type="button" onclick="${x.act}">${x.button} ↗</button></article>`).join('')}</div>`)+
-      section('Concentrar por blocos de tempo',`<div class="card pad"><div class="timer-wrap"><div><h3>Temporizador discreto</h3><p class="subtle">Escolha seu intervalo. O tempo é controlado no próprio navegador, sem notificações intrusivas.</p><div class="btn-row"><button class="btn" onclick="HIG.configureTimer(25)">25 min</button><button class="btn" onclick="HIG.configureTimer(45)">45 min</button><button class="btn" onclick="HIG.configureTimer(60)">60 min</button></div></div><div class="timer-control"><div id="timer-count" aria-live="off">${timeFormat(seconds||preferences.sessionMinutes*60)}</div><button id="timer-toggle" class="btn primary" onclick="HIG.toggleTimer()">${timerRunning?'Pausar':'Começar'}</button><button class="btn ghost" onclick="HIG.resetTimer()">Reiniciar</button></div></div></div>`)+
+      section('Concentrar por blocos de tempo',`<div class="card pad"><div class="timer-wrap"><div><h3>Temporizador discreto</h3><p class="subtle">O pomodoro continua nas outras páginas. A dedicação é guardada por dia na sua conta; pausar não apaga o tempo já registrado.</p><div class="btn-row"><button class="btn" onclick="HIG.configureTimer(25)">25 min</button><button class="btn" onclick="HIG.configureTimer(45)">45 min</button><button class="btn" onclick="HIG.configureTimer(60)">60 min</button></div></div><div class="timer-control"><div id="timer-count" aria-live="off">${timeFormat(Math.ceil((window.FocusTimer?.status().remainingMs??preferences.sessionMinutes*60000)/1000))}</div><button id="timer-toggle" class="btn primary" onclick="HIG.toggleTimer()">${window.FocusTimer?.status().running?'Pausar':'Começar'}</button><button class="btn ghost" onclick="HIG.resetTimer()">Reiniciar</button></div></div></div>`)+
+      (window.FocusTimer?FocusTimer.historyMarkup():'')+
       section('Como a prioridade foi calculada',`<div class="insight"><p>Selecionamos primeiro os módulos ainda não estudados e, depois, os que têm menor desempenho nas questões respondidas. A sequência inicial favorece síncope/crise convulsiva, Guillain-Barré e autoimunidade por seu valor pedagógico. <strong>Ela não representa um ranking de cobrança real da P2.</strong></p></div>`);
   }
   function timeFormat(s){let m=Math.floor(s/60),sec=s%60;return String(m).padStart(2,'0')+':'+String(sec).padStart(2,'0')}
-  function configureTimer(n){if(timerRunning){clearInterval(timer);timerRunning=false}preferences.sessionMinutes=n;seconds=n*60;save();updateTimer()}
-  function toggleTimer(){if(timerRunning){clearInterval(timer);timerRunning=false;updateTimer();return}if(seconds<=0)seconds=preferences.sessionMinutes*60;timerRunning=true;timer=setInterval(()=>{seconds--;if(seconds<=0){seconds=0;clearInterval(timer);timerRunning=false;preferences.sessionSpent+=preferences.sessionMinutes;save();toast('Ciclo de estudo concluído. Faça uma breve pausa.')}updateTimer()},1000);updateTimer()}
-  function resetTimer(){if(timerRunning)clearInterval(timer);timerRunning=false;seconds=preferences.sessionMinutes*60;updateTimer()}
-  function updateTimer(){let e=document.getElementById('timer-count'),b=document.getElementById('timer-toggle');if(e)e.textContent=timeFormat(seconds);if(b)b.textContent=timerRunning?'Pausar':'Começar'}
+  function configureTimer(n){FocusTimer.configure(n)}
+  function toggleTimer(){return FocusTimer.toggle()}
+  function resetTimer(){FocusTimer.reset()}
   function viewNotes(){let all=TOPICS.flatMap(t=>t.chapters.map((ch,i)=>({t,ch,i,key:t.id+'_'+i,note:preferences.notes[t.id+'_'+i]||'',bookmarked:!!preferences.bookmarks[t.id+'_'+i]})));const marked=all.filter(x=>x.bookmarked||x.note.trim());return header('BIBLIOTECA PESSOAL','Seu caderno <em>de revisão.</em>','Reúna suas anotações, aulas salvas e pontos que precisam de uma segunda leitura.')+
       `<div class="card pad" style="margin-bottom:18px"><div class="status-row"><span class="subtle">${marked.length} aulas com notas ou marcações • ${all.length} aulas disponíveis</span><button class="btn secondary" onclick="HIG.exportNotes()">↓ Exportar caderno em Markdown</button></div></div>`+
       (marked.length?`<div class="notes-grid">${marked.map(x=>`<article class="note-card"><div class="note-overline">${x.bookmarked?'★ SALVO PARA REVISÃO':'✎ ANOTAÇÕES'} · ${escapeHtml(x.t.area)}</div><h3>${escapeHtml(x.ch.name)}</h3><p>${escapeHtml((x.note||x.ch.memory).slice(0,240))}${(x.note||x.ch.memory).length>240?'…':''}</p><button class="btn" onclick="openTopic('${x.t.id}');switchChapter(${x.i})">Abrir aula ↗</button></article>`).join('')}</div>`:`<div class="empty-state"><strong>Seu caderno está pronto.</strong><p>Abra uma aula, marque ☆ Salvar para revisão ou escreva suas anotações.</p><button class="btn primary" onclick="navigate('topics')">Explorar as 22 aulas</button></div>`);
@@ -111,7 +115,7 @@ const HIG = (() => {
   function download(name,content,type){const blob=new Blob([content],{type});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),1500)}
   function exportBackup(){let obj={app:'MASTER_P2_Lucas_Lessa',version:'4.0-P2-P1',exportedAt:new Date().toISOString(),data:store,experience:preferences,p1:window.P1?.getBackup()};download('MASTER_P2_Backup_Completo.json',JSON.stringify(obj,null,2),'application/json');toast('Backup completo exportado.')}
   async function importProgress(event){const f=event?.target?.files?.[0];if(!f)return;if(f.size>3_000_000){toast('Arquivo muito grande para um backup de progresso.');return}try{let v=JSON.parse(await f.text());if(v.app!=='MASTER_P2_Lucas_Lessa'||!v.data||typeof v.data!=='object'||!v.data.results||!v.data.completed){throw new Error('Formato de backup incompatível')}if(!confirm('Substituir o progresso atual pelos dados deste backup? Exporte antes seus dados atuais, se quiser guardá-los.'))return;store={...store,...v.data};stateSave();if(v.p1&&window.P1)P1.restoreBackup(v.p1);if(v.experience&&typeof v.experience==='object'){preferences={...preferences,...v.experience,notes:{...preferences.notes,...(v.experience.notes||{})},bookmarks:{...preferences.bookmarks,...(v.experience.bookmarks||{})}};save();applyPrefs()}ui.exam=null;ui.practice=null;ui.flashDeck=[];closeOverlay();render();toast('Backup restaurado com sucesso.')}catch(e){toast('Não foi possível importar: '+e.message)}finally{event.target.value=''}}
-  function init(){applyPrefs();searchItems=makeSearchItems();if(!seconds)seconds=preferences.sessionMinutes*60;
+  function init(){applyPrefs();searchItems=makeSearchItems();
     window.matchMedia('(prefers-color-scheme: dark)').addEventListener?.('change',()=>{if(preferences.theme==='system')applyPrefs()});
     document.addEventListener('keydown',e=>{
       if(document.documentElement.classList.contains('master-auth-locked'))return;
@@ -121,8 +125,8 @@ const HIG = (() => {
       if(e.key==='/'){e.preventDefault();openSearch()}else if(e.key.toLowerCase()==='f'&&!e.metaKey&&!e.ctrlKey){e.preventDefault();toggleFocus()}else if(e.key==='?'&&!e.metaKey&&!e.ctrlKey){openHelp()}
     });
   }
-  function reload(){clearInterval(timer);timer=null;timerRunning=false;preferences=load();seconds=preferences.sessionMinutes*60;applyPrefs();}
-  return {reload,init,afterRender,openSearch,searchInput,searchKeys,chooseResult,openSettings,openHelp,closeOverlay,setTheme,setFont,togglePref,toggleSidebar,toggleFocus,lessonToolbar,lessonNotes,saveNote,bookmark,viewToday,viewNotes,configureTimer,toggleTimer,resetTimer,exportNotes,exportBackup,importProgress,openLast,resumeInfo,focusTopic,dueCards};
+  function reload(){preferences=load();applyPrefs();}
+  return {reload,init,afterRender,openSearch,searchInput,searchKeys,chooseResult,openSettings,openHelp,closeOverlay,setTheme,setFont,togglePref,toggleSidebar,toggleFocus,lessonToolbar,lessonNotes,saveNote,bookmark,viewToday,viewNotes,configureTimer,toggleTimer,resetTimer,exportNotes,exportBackup,importProgress,openLast,resumeInfo,focusTopic,dueCards,focusData,saveFocus,refreshFocus,openTimer};
 })();
 window.HIG=HIG;
 window.addEventListener('DOMContentLoaded',HIG.init);

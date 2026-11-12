@@ -1,0 +1,882 @@
+{
+  "commit": "399cbeb9cbc06c839b61995c2c21f77791840ef1",
+  "lessonCount": 54,
+  "topicCount": 16,
+  "selectedDrugCount": 16,
+  "workedCalculationCount": 16,
+  "completeFormulary": false,
+  "blockedSources": [
+    "dailymed.nlm.nih.gov",
+    "www.nice.org.uk",
+    "www.endocrinology.org"
+  ],
+  "lessons": [
+    {
+      "id": "P2:reuma1:0",
+      "period": "P2",
+      "topic": "Miopatias, Esclerose Sistêmica e Sjögren",
+      "lesson": "Miopatias inflamatórias",
+      "existingTreatment": "Estratificar primeiro disfagia, força respiratória e ILD. Corticoide sistêmico e poupador de corticoide conforme subtipo e gravidade, sob reumatologia; IVIG em cenários selecionados graves. Corpos de inclusão: suporte e reabilitação; não presumir benefício de corticoterapia.",
+      "topicReferences": [
+        {
+          "id": "pilocarpine",
+          "name": "Pilocarpina (cloridrato)",
+          "workedCalculation": true
+        }
+      ],
+      "scope": "Fichas compartilhadas pela matéria; revisão dos regimes de cada doença ainda pendente."
+    },
+    {
+      "id": "P2:reuma1:1",
+      "period": "P2",
+      "topic": "Miopatias, Esclerose Sistêmica e Sjögren",
+      "lesson": "Esclerose sistêmica",
+      "existingTreatment": "Crise renal esclerodérmica: iniciar IECA rapidamente mesmo com creatinina subindo inicialmente, sob vigilância estreita. Raynaud: bloqueador de canal de cálcio; refluxo: IBP; ILD: terapêutica imunomoduladora conforme extensão. Evitar doses altas de corticoide quando possível, por associação com crise renal.",
+      "topicReferences": [
+        {
+          "id": "pilocarpine",
+          "name": "Pilocarpina (cloridrato)",
+          "workedCalculation": true
+        }
+      ],
+      "scope": "Fichas compartilhadas pela matéria; revisão dos regimes de cada doença ainda pendente."
+    },
+    {
+      "id": "P2:reuma1:2",
+      "period": "P2",
+      "topic": "Miopatias, Esclerose Sistêmica e Sjögren",
+      "lesson": "Síndrome de Sjögren",
+      "existingTreatment": "Lubrificação ocular/oral, prevenção odontológica, secretagogos conforme indicação; tratar acometimento sistêmico por órgão. Parótida persistentemente aumentada, púrpura palpável, linfadenopatia e hipocomplementemia exigem investigação de linfoma.",
+      "topicReferences": [
+        {
+          "id": "pilocarpine",
+          "name": "Pilocarpina (cloridrato)",
+          "workedCalculation": true
+        }
+      ],
+      "scope": "Fichas compartilhadas pela matéria; revisão dos regimes de cada doença ainda pendente."
+    },
+    {
+      "id": "P2:reuma2:0",
+      "period": "P2",
+      "topic": "LES, SAAF e Vasculites",
+      "lesson": "Lúpus eritematoso sistêmico",
+      "existingTreatment": "Hidroxicloroquina para a maioria, salvo contraindicação; minimizar corticosteroides e instituir imunossupressão de acordo com gravidade/órgão. Nefrite proliferativa: glicocorticoide e micofenolato ou ciclofosfamida, com estratégias combinadas em casos selecionados.",
+      "topicReferences": [
+        {
+          "id": "hydroxychloroquine",
+          "name": "Hidroxicloroquina (sulfato)",
+          "workedCalculation": true
+        }
+      ],
+      "scope": "Fichas compartilhadas pela matéria; revisão dos regimes de cada doença ainda pendente."
+    },
+    {
+      "id": "P2:reuma2:1",
+      "period": "P2",
+      "topic": "LES, SAAF e Vasculites",
+      "lesson": "Síndrome antifosfolípide (SAAF)",
+      "existingTreatment": "Após trombose definida, anticoagulação de longo prazo frequentemente com varfarina (especialmente triplo-positivo ou evento arterial). Gestação: aspirina em baixa dose + heparina quando indicada, avaliando história obstétrica/trombótica.",
+      "topicReferences": [
+        {
+          "id": "hydroxychloroquine",
+          "name": "Hidroxicloroquina (sulfato)",
+          "workedCalculation": true
+        }
+      ],
+      "scope": "Fichas compartilhadas pela matéria; revisão dos regimes de cada doença ainda pendente."
+    },
+    {
+      "id": "P2:reuma2:2",
+      "period": "P2",
+      "topic": "LES, SAAF e Vasculites",
+      "lesson": "Vasculites sistêmicas",
+      "existingTreatment": "Comprometimento ameaçador à vida/órgão: glicocorticoides e rituximabe/ciclofosfamida conforme síndrome. Suspeita de arterite temporal com ameaça visual: iniciar corticoide imediatamente, antes de confirmação histológica.",
+      "topicReferences": [
+        {
+          "id": "hydroxychloroquine",
+          "name": "Hidroxicloroquina (sulfato)",
+          "workedCalculation": true
+        }
+      ],
+      "scope": "Fichas compartilhadas pela matéria; revisão dos regimes de cada doença ainda pendente."
+    },
+    {
+      "id": "P2:neuro1:0",
+      "period": "P2",
+      "topic": "Síncope e Crise Convulsiva",
+      "lesson": "Síncope: fisiopatologia e estratificação",
+      "existingTreatment": "Instabilidade e arritmia: ABC, monitorização e tratamento específico imediato. Síncope de risco exige observação/investigação hospitalar conforme contexto; vasovagal de baixo risco pode receber orientação e seguimento apropriados.",
+      "topicReferences": [
+        {
+          "id": "levetiracetam",
+          "name": "Levetiracetam",
+          "workedCalculation": true
+        }
+      ],
+      "scope": "Fichas compartilhadas pela matéria; revisão dos regimes de cada doença ainda pendente."
+    },
+    {
+      "id": "P2:neuro1:1",
+      "period": "P2",
+      "topic": "Síncope e Crise Convulsiva",
+      "lesson": "Crises epilépticas e diagnóstico diferencial",
+      "existingTreatment": "Proteção contra trauma, vias aéreas e glicemia. Tratar causa provocadora e decidir investigação neurológica; nem toda primeira crise requer anticonvulsivante crônico imediatamente.",
+      "topicReferences": [
+        {
+          "id": "levetiracetam",
+          "name": "Levetiracetam",
+          "workedCalculation": true
+        }
+      ],
+      "scope": "Fichas compartilhadas pela matéria; revisão dos regimes de cada doença ainda pendente."
+    },
+    {
+      "id": "P2:neuro1:2",
+      "period": "P2",
+      "topic": "Síncope e Crise Convulsiva",
+      "lesson": "Estado de mal epiléptico",
+      "existingTreatment": "Estabilização ABC em paralelo à primeira linha com benzodiazepínico adequadamente dosado; se persistir, fármaco de segunda linha como levetiracetam/fosfenitoína/valproato conforme cenário; refratário exige UTI, sedação e EEG.",
+      "topicReferences": [
+        {
+          "id": "levetiracetam",
+          "name": "Levetiracetam",
+          "workedCalculation": true
+        }
+      ],
+      "scope": "Fichas compartilhadas pela matéria; revisão dos regimes de cada doença ainda pendente."
+    },
+    {
+      "id": "P2:neuro2:0",
+      "period": "P2",
+      "topic": "Síndrome de Guillain-Barré",
+      "lesson": "SGB clássica: síndrome e testes",
+      "existingTreatment": "Internação, monitorização respiratória (CVF seriada, pressões inspiratórias), deglutição, ECG e PA. IVIG (0,4 g/kg/dia por 5 dias) ou plasmaférese conforme gravidade; suporte e prevenção de trombose. Corticoide isolado não acelera recuperação.",
+      "topicReferences": [
+        {
+          "id": "ivig",
+          "name": "Imunoglobulina humana intravenosa",
+          "workedCalculation": true
+        }
+      ],
+      "scope": "Fichas compartilhadas pela matéria; revisão dos regimes de cada doença ainda pendente."
+    },
+    {
+      "id": "P2:neuro2:1",
+      "period": "P2",
+      "topic": "Síndrome de Guillain-Barré",
+      "lesson": "Variantes: Miller Fisher e Bickerstaff",
+      "existingTreatment": "Admitir conforme gravidade, monitorar bulbar/respiratório e instituir tratamento imunomodulador em casos selecionados; reabilitação.",
+      "topicReferences": [
+        {
+          "id": "ivig",
+          "name": "Imunoglobulina humana intravenosa",
+          "workedCalculation": true
+        }
+      ],
+      "scope": "Fichas compartilhadas pela matéria; revisão dos regimes de cada doença ainda pendente."
+    },
+    {
+      "id": "P2:neuro3:0",
+      "period": "P2",
+      "topic": "Esclerose Múltipla e Miastenia Gravis",
+      "lesson": "Esclerose múltipla",
+      "existingTreatment": "Surto funcionalmente importante: altas doses de metilprednisolona conforme avaliação; terapia modificadora de doença orientada por atividade/risco. Reabilitação, vacinação e acompanhamento neurológico.",
+      "topicReferences": [
+        {
+          "id": "pyridostigmine",
+          "name": "Piridostigmina (brometo)",
+          "workedCalculation": true
+        },
+        {
+          "id": "methylprednisolone",
+          "name": "Metilprednisolona",
+          "workedCalculation": true
+        }
+      ],
+      "scope": "Fichas compartilhadas pela matéria; revisão dos regimes de cada doença ainda pendente."
+    },
+    {
+      "id": "P2:neuro3:1",
+      "period": "P2",
+      "topic": "Esclerose Múltipla e Miastenia Gravis",
+      "lesson": "Miastenia gravis",
+      "existingTreatment": "Piridostigmina para sintomas em muitos casos; imunoterapia conforme fenótipo. Crise miastênica: monitorar CVF/PImáx, suporte ventilatório, IVIG ou plasmaférese; pesquisar infecção/medicamentos precipitantes. Avaliar indicação de timectomia.",
+      "topicReferences": [
+        {
+          "id": "pyridostigmine",
+          "name": "Piridostigmina (brometo)",
+          "workedCalculation": true
+        },
+        {
+          "id": "methylprednisolone",
+          "name": "Metilprednisolona",
+          "workedCalculation": true
+        }
+      ],
+      "scope": "Fichas compartilhadas pela matéria; revisão dos regimes de cada doença ainda pendente."
+    },
+    {
+      "id": "P2:gastro:0",
+      "period": "P2",
+      "topic": "DII, Doença Celíaca e Neoplasia Colorretal",
+      "lesson": "Doença inflamatória intestinal",
+      "existingTreatment": "Tratamento de indução/manutenção conforme extensão e gravidade, incluindo terapias avançadas em casos moderados/graves. Colite aguda grave requer internação, descartar infecção, tromboprofilaxia e corticoterapia IV; resposta guiada por critérios.",
+      "topicReferences": [
+        {
+          "id": "mesalamine",
+          "name": "Mesalazina · liberação retardada 1,2 g",
+          "workedCalculation": true
+        }
+      ],
+      "scope": "Fichas compartilhadas pela matéria; revisão dos regimes de cada doença ainda pendente."
+    },
+    {
+      "id": "P2:gastro:1",
+      "period": "P2",
+      "topic": "DII, Doença Celíaca e Neoplasia Colorretal",
+      "lesson": "Doença celíaca",
+      "existingTreatment": "Dieta estrita sem glúten após confirmação, reposição de deficiências, avaliação nutricional e seguimento de resposta sorológica/sintomática.",
+      "topicReferences": [
+        {
+          "id": "mesalamine",
+          "name": "Mesalazina · liberação retardada 1,2 g",
+          "workedCalculation": true
+        }
+      ],
+      "scope": "Fichas compartilhadas pela matéria; revisão dos regimes de cada doença ainda pendente."
+    },
+    {
+      "id": "P2:gastro:2",
+      "period": "P2",
+      "topic": "DII, Doença Celíaca e Neoplasia Colorretal",
+      "lesson": "Neoplasia colorretal",
+      "existingTreatment": "Ressecção conforme estágio e características; equipe multidisciplinar define terapia adjuvante/neoadjuvante. Rastreamento depende de idade, risco e diretrizes locais, mas sintomas de alarme exigem investigação, não apenas teste fecal.",
+      "topicReferences": [
+        {
+          "id": "mesalamine",
+          "name": "Mesalazina · liberação retardada 1,2 g",
+          "workedCalculation": true
+        }
+      ],
+      "scope": "Fichas compartilhadas pela matéria; revisão dos regimes de cada doença ainda pendente."
+    },
+    {
+      "id": "P2:hema:0",
+      "period": "P2",
+      "topic": "Neoplasias Hematológicas",
+      "lesson": "Leucemias agudas e crônicas",
+      "existingTreatment": "Suspeita de LPA com coagulopatia: iniciar ATRA imediatamente e suporte hemostático enquanto confirma; LMC: inibidor de tirosinoquinase; abordagem das demais leucemias conforme risco/genética.",
+      "topicReferences": [
+        {
+          "id": "tretinoin",
+          "name": "Tretinoína oral (ATRA)",
+          "workedCalculation": true
+        }
+      ],
+      "scope": "Fichas compartilhadas pela matéria; revisão dos regimes de cada doença ainda pendente."
+    },
+    {
+      "id": "P2:hema:1",
+      "period": "P2",
+      "topic": "Neoplasias Hematológicas",
+      "lesson": "Linfomas",
+      "existingTreatment": "Tratamento por subtipo e estágio, muitas vezes quimioterapia/imunoterapia; avaliar risco de lise tumoral antes de terapia em doença volumosa/agressiva.",
+      "topicReferences": [
+        {
+          "id": "tretinoin",
+          "name": "Tretinoína oral (ATRA)",
+          "workedCalculation": true
+        }
+      ],
+      "scope": "Fichas compartilhadas pela matéria; revisão dos regimes de cada doença ainda pendente."
+    },
+    {
+      "id": "P2:hema:2",
+      "period": "P2",
+      "topic": "Neoplasias Hematológicas",
+      "lesson": "Mieloma múltiplo",
+      "existingTreatment": "Encaminhar a hematologia para terapia sistêmica conforme elegibilidade; tratar hipercalcemia, insuficiência renal e infecções de modo paralelo.",
+      "topicReferences": [
+        {
+          "id": "tretinoin",
+          "name": "Tretinoína oral (ATRA)",
+          "workedCalculation": true
+        }
+      ],
+      "scope": "Fichas compartilhadas pela matéria; revisão dos regimes de cada doença ainda pendente."
+    },
+    {
+      "id": "P2:onco:0",
+      "period": "P2",
+      "topic": "Emergências Onco-Hematológicas",
+      "lesson": "Neutropenia febril e sepse",
+      "existingTreatment": "Avaliar instabilidade, colher culturas prontamente e iniciar antibiótico IV antipseudomonas de amplo espectro sem demora; estratificar risco, hidratar e apoiar órgãos.",
+      "topicReferences": [
+        {
+          "id": "cefepime",
+          "name": "Cefepima",
+          "workedCalculation": true
+        }
+      ],
+      "scope": "Fichas compartilhadas pela matéria; revisão dos regimes de cada doença ainda pendente."
+    },
+    {
+      "id": "P2:onco:1",
+      "period": "P2",
+      "topic": "Emergências Onco-Hematológicas",
+      "lesson": "Síndrome de lise tumoral",
+      "existingTreatment": "Estratificar risco antes da quimioterapia, hidratação IV orientada e hipouricemiante (alopurinol ou rasburicase conforme risco). Tratar hipercalemia com prioridade; evitar reposição rotineira de cálcio assintomático e considerar diálise em casos graves.",
+      "topicReferences": [
+        {
+          "id": "cefepime",
+          "name": "Cefepima",
+          "workedCalculation": true
+        }
+      ],
+      "scope": "Fichas compartilhadas pela matéria; revisão dos regimes de cada doença ainda pendente."
+    },
+    {
+      "id": "P2:onco:2",
+      "period": "P2",
+      "topic": "Emergências Onco-Hematológicas",
+      "lesson": "Compressão medular, hipercalcemia e leucostase",
+      "existingTreatment": "Suspeita de compressão: dexametasona e avaliação urgente de RM/neurocirurgia/radioterapia. Hipercalcemia grave: hidratação e antirreabsortivo ± calcitonina conforme gravidade. Leucostase: hematologia urgente e citorredução.",
+      "topicReferences": [
+        {
+          "id": "cefepime",
+          "name": "Cefepima",
+          "workedCalculation": true
+        }
+      ],
+      "scope": "Fichas compartilhadas pela matéria; revisão dos regimes de cada doença ainda pendente."
+    },
+    {
+      "id": "P1:p1inf:0",
+      "period": "P1",
+      "topic": "Principais infecções na Clínica Médica",
+      "lesson": "Sepse e choque séptico",
+      "existingTreatment": "Coletar culturas sem retardar tratamento, iniciar antimicrobiano empírico apropriado rapidamente no choque e fazer controle do foco. Cristaloide com reavaliação contínua; noradrenalina é vasopressor de primeira escolha para choque persistente. Individualizar diante de IC, DRC e sobrecarga.",
+      "topicReferences": [
+        {
+          "id": "amoxicillin",
+          "name": "Amoxicilina",
+          "workedCalculation": true
+        },
+        {
+          "id": "cefepime",
+          "name": "Cefepima",
+          "workedCalculation": true
+        }
+      ],
+      "scope": "Fichas compartilhadas pela matéria; revisão dos regimes de cada doença ainda pendente."
+    },
+    {
+      "id": "P1:p1inf:1",
+      "period": "P1",
+      "topic": "Principais infecções na Clínica Médica",
+      "lesson": "Endocardite infecciosa e bacteremia por S. aureus",
+      "existingTreatment": "Após estabilização e coleta, iniciar esquema de acordo com válvula, epidemiologia e gravidade, depois adequar ao antibiograma. MSSA em valva nativa: preferir oxacilina/flucloxacilina ou cefazolina conforme disponibilidade, alergias e protocolo; avaliação precoce da equipe de endocardite para cirurgia se IC, infecção não controlada ou prevenção de embolia.",
+      "topicReferences": [
+        {
+          "id": "amoxicillin",
+          "name": "Amoxicilina",
+          "workedCalculation": true
+        },
+        {
+          "id": "cefepime",
+          "name": "Cefepima",
+          "workedCalculation": true
+        }
+      ],
+      "scope": "Fichas compartilhadas pela matéria; revisão dos regimes de cada doença ainda pendente."
+    },
+    {
+      "id": "P1:p1inf:2",
+      "period": "P1",
+      "topic": "Principais infecções na Clínica Médica",
+      "lesson": "Pneumonia comunitária, pneumonia grave e meningite",
+      "existingTreatment": "Antibiótico empírico guiado por local, gravidade, resistência e comorbidades; pneumonia grave requer suporte respiratório e eventual UTI. Suspeita de meningite bacteriana: iniciar antimicrobianos prontamente, com dexametasona em cenários elegíveis antes ou junto da primeira dose; adaptar faixa etária/risco.",
+      "topicReferences": [
+        {
+          "id": "amoxicillin",
+          "name": "Amoxicilina",
+          "workedCalculation": true
+        },
+        {
+          "id": "cefepime",
+          "name": "Cefepima",
+          "workedCalculation": true
+        }
+      ],
+      "scope": "Fichas compartilhadas pela matéria; revisão dos regimes de cada doença ainda pendente."
+    },
+    {
+      "id": "P1:p1inf:3",
+      "period": "P1",
+      "topic": "Principais infecções na Clínica Médica",
+      "lesson": "Infecção urinária, pielonefrite e infecções associadas à assistência",
+      "existingTreatment": "Antibioticoterapia conforme risco local/resistência, gravidade e sítio; ajustar à cultura e à função renal. Pielonefrite grave com obstrução requer desobstrução do trato e estabilização, não apenas antibiótico.",
+      "topicReferences": [
+        {
+          "id": "amoxicillin",
+          "name": "Amoxicilina",
+          "workedCalculation": true
+        },
+        {
+          "id": "cefepime",
+          "name": "Cefepima",
+          "workedCalculation": true
+        }
+      ],
+      "scope": "Fichas compartilhadas pela matéria; revisão dos regimes de cada doença ainda pendente."
+    },
+    {
+      "id": "P1:p1inf:4",
+      "period": "P1",
+      "topic": "Principais infecções na Clínica Médica",
+      "lesson": "Infecções gastrointestinais: diarreia, disenteria e C. difficile",
+      "existingTreatment": "Priorizar reidratação oral com solução de reidratação oral para desidratação leve-moderada, e cristaloide IV em choque/desidratação grave, com reavaliação. Dieta adequada após hidratar. Antibiótico empírico NÃO é indicado na maior parte das diarreias aquosas agudas sem sinais de gravidade; reservar a casos selecionados, epidemiologia e patógeno provável, ajustando a resultados. Em suspeita de STEC com toxina Shiga 2 ou genótipo não conhecido, evitar antimicrobianos pelo risco potencial de síndrome hemolítico-urêmica. C. difficile confirmado: tratar conforme gravidade e diretriz local (fidaxomicina preferida em situações selecionadas ou vancomicina oral, não vancomicina IV como monoterapia intestinal); casos fulminantes requerem avaliação urgente, suporte e cirurgia quando indicada.",
+      "topicReferences": [
+        {
+          "id": "amoxicillin",
+          "name": "Amoxicilina",
+          "workedCalculation": true
+        },
+        {
+          "id": "cefepime",
+          "name": "Cefepima",
+          "workedCalculation": true
+        }
+      ],
+      "scope": "Fichas compartilhadas pela matéria; revisão dos regimes de cada doença ainda pendente."
+    },
+    {
+      "id": "P1:p1inf:5",
+      "period": "P1",
+      "topic": "Principais infecções na Clínica Médica",
+      "lesson": "Infecções cutâneas e de partes moles: celulite, abscesso e fasciíte necrosante",
+      "existingTreatment": "Abscesso simples: incisão e drenagem são o tratamento central; antibiótico adicional conforme extensão, sinais sistêmicos, fatores de risco e epidemiologia de MRSA. Celulite não purulenta estável: antibiótico ativo contra estreptococos segundo gravidade, alergias e protocolo; considerar cobertura anti-MRSA em contextos específicos. Fasciíte necrosante: abordagem imediata por cirurgia para exploração e desbridamento, antimicrobiano empírico de amplo espectro contra gram-positivos (incluindo MRSA), gram-negativos e anaeróbios, suporte à sepse e debridamentos seriados conforme necessidade. Infecção necrosante confirmada por S. pyogenes: tratamento direcionado que inclui penicilina + clindamicina conforme recomendação IDSA e avaliação especializada.",
+      "topicReferences": [
+        {
+          "id": "amoxicillin",
+          "name": "Amoxicilina",
+          "workedCalculation": true
+        },
+        {
+          "id": "cefepime",
+          "name": "Cefepima",
+          "workedCalculation": true
+        }
+      ],
+      "scope": "Fichas compartilhadas pela matéria; revisão dos regimes de cada doença ainda pendente."
+    },
+    {
+      "id": "P1:p1arr:0",
+      "period": "P1",
+      "topic": "Arritmias cardíacas",
+      "lesson": "Fibrilação atrial: abordagem AF-CARE e anticoagulação",
+      "existingTreatment": "Instabilidade atribuível à FA: cardioversão elétrica sincronizada; paciente estável: controle de frequência/ritmo individualizado, manejo das comorbidades e anticoagulação conforme risco. ESC 2024: CHA₂DS₂-VA ≥2 favorece anticoagulação; 1 considerar. DOACs preferidos, salvo válvula mecânica/estenose mitral significativa.",
+      "topicReferences": [
+        {
+          "id": "apixaban",
+          "name": "Apixabana",
+          "workedCalculation": true
+        }
+      ],
+      "scope": "Fichas compartilhadas pela matéria; revisão dos regimes de cada doença ainda pendente."
+    },
+    {
+      "id": "P1:p1arr:1",
+      "period": "P1",
+      "topic": "Arritmias cardíacas",
+      "lesson": "Taquicardias supraventriculares e QRS estreito",
+      "existingTreatment": "Se estável e QRS estreito regular: manobras vagais e, em cenário monitorizado, adenosina conforme protocolo. Se instável: cardioversão sincronizada. Considerar bloqueadores nodais em situações selecionadas sem pré-excitação.",
+      "topicReferences": [
+        {
+          "id": "apixaban",
+          "name": "Apixabana",
+          "workedCalculation": true
+        }
+      ],
+      "scope": "Fichas compartilhadas pela matéria; revisão dos regimes de cada doença ainda pendente."
+    },
+    {
+      "id": "P1:p1arr:2",
+      "period": "P1",
+      "topic": "Arritmias cardíacas",
+      "lesson": "Taquicardia ventricular, torsades e parada",
+      "existingTreatment": "FV/TV sem pulso: RCP e desfibrilação imediatas; TV monomórfica instável com pulso: cardioversão sincronizada; TV polimórfica instável: choque não sincronizado devido à impossibilidade de sincronizar. Na torsades recorrente corrigir eletrólitos, suspender agentes e administrar magnésio conforme protocolo.",
+      "topicReferences": [
+        {
+          "id": "apixaban",
+          "name": "Apixabana",
+          "workedCalculation": true
+        }
+      ],
+      "scope": "Fichas compartilhadas pela matéria; revisão dos regimes de cada doença ainda pendente."
+    },
+    {
+      "id": "P1:p1arr:3",
+      "period": "P1",
+      "topic": "Arritmias cardíacas",
+      "lesson": "Bradicardias e bloqueios atrioventriculares",
+      "existingTreatment": "Bradicardia sintomática instável: suporte ABC, atropina quando indicada e preparo para marca-passo transcutâneo/transvenoso; infusões cronotrópicas podem ser ponte conforme protocolo. BAV avançado muitas vezes requer estimulação.",
+      "topicReferences": [
+        {
+          "id": "apixaban",
+          "name": "Apixabana",
+          "workedCalculation": true
+        }
+      ],
+      "scope": "Fichas compartilhadas pela matéria; revisão dos regimes de cada doença ainda pendente."
+    },
+    {
+      "id": "P1:p1has:0",
+      "period": "P1",
+      "topic": "Hipertensão em situações especiais",
+      "lesson": "HAS resistente, pseudorresistência e MRPA",
+      "existingTreatment": "Tratar estilo de vida, sódio, peso, apneia e otimizar IECA/BRA + BCC + diurético tiazídico apropriado, adicionando antagonista mineralocorticoide se elegível e monitorando K/creatinina; individualizar.",
+      "topicReferences": [
+        {
+          "id": "amlodipine",
+          "name": "Anlodipino",
+          "workedCalculation": true
+        }
+      ],
+      "scope": "Fichas compartilhadas pela matéria; revisão dos regimes de cada doença ainda pendente."
+    },
+    {
+      "id": "P1:p1has:1",
+      "period": "P1",
+      "topic": "Hipertensão em situações especiais",
+      "lesson": "Hiperaldosteronismo primário e hipocalemia",
+      "existingTreatment": "Tratamento por adrenalectomia em doença unilateral candidata, ou antagonista mineralocorticoide em bilateral/não cirúrgica, com metas de PA, K e avaliação renal. A escolha depende de teste confirmatório/TC/amostragem venosa quando indicados.",
+      "topicReferences": [
+        {
+          "id": "amlodipine",
+          "name": "Anlodipino",
+          "workedCalculation": true
+        }
+      ],
+      "scope": "Fichas compartilhadas pela matéria; revisão dos regimes de cada doença ainda pendente."
+    },
+    {
+      "id": "P1:p1has:2",
+      "period": "P1",
+      "topic": "Hipertensão em situações especiais",
+      "lesson": "Emergências hipertensivas e injúria aguda de órgão-alvo",
+      "existingTreatment": "Internação monitorizada, anti-hipertensivo IV titulável e redução gradual conforme síndrome; regras diferem radicalmente em dissecção aórtica, AVC isquêmico, gestação e encefalopatia.",
+      "topicReferences": [
+        {
+          "id": "amlodipine",
+          "name": "Anlodipino",
+          "workedCalculation": true
+        }
+      ],
+      "scope": "Fichas compartilhadas pela matéria; revisão dos regimes de cada doença ainda pendente."
+    },
+    {
+      "id": "P1:p1has:3",
+      "period": "P1",
+      "topic": "Hipertensão em situações especiais",
+      "lesson": "Hipertensão secundária: renal, renovascular, apneia e feocromocitoma",
+      "existingTreatment": "Tratar mecanismo: CPAP e comorbidades na apneia, nefroproteção e revascularização em casos selecionados; feocromocitoma exige bloqueio alfa antes de beta e abordagem cirúrgica especializada.",
+      "topicReferences": [
+        {
+          "id": "amlodipine",
+          "name": "Anlodipino",
+          "workedCalculation": true
+        }
+      ],
+      "scope": "Fichas compartilhadas pela matéria; revisão dos regimes de cada doença ainda pendente."
+    },
+    {
+      "id": "P1:p1dm:0",
+      "period": "P1",
+      "topic": "Diabetes em situações especiais",
+      "lesson": "Diagnóstico do diabetes e interpretação de exames discordantes",
+      "existingTreatment": "Confirmar diagnóstico antes de rotular quando não houver crise/hiperglicemia inequívoca; abordar risco CV, peso, doença renal, plano nutricional e terapia farmacológica individualizada.",
+      "topicReferences": [
+        {
+          "id": "metformin",
+          "name": "Metformina · liberação imediata",
+          "workedCalculation": true
+        }
+      ],
+      "scope": "Fichas compartilhadas pela matéria; revisão dos regimes de cada doença ainda pendente."
+    },
+    {
+      "id": "P1:p1dm:1",
+      "period": "P1",
+      "topic": "Diabetes em situações especiais",
+      "lesson": "DM2 com doença cardiovascular e doença renal: terapia protetora",
+      "existingTreatment": "Metformina conforme TFG/tolerância; iSGLT2 e/ou GLP-1 RA com benefício por comorbidade, mesmo quando HbA1c próxima da meta. Finerenona em subgrupos com DRC albuminúrica e K apropriado apesar de bloqueio SRAA, com vigilância de hipercalemia e TFG.",
+      "topicReferences": [
+        {
+          "id": "metformin",
+          "name": "Metformina · liberação imediata",
+          "workedCalculation": true
+        }
+      ],
+      "scope": "Fichas compartilhadas pela matéria; revisão dos regimes de cada doença ainda pendente."
+    },
+    {
+      "id": "P1:p1dm:2",
+      "period": "P1",
+      "topic": "Diabetes em situações especiais",
+      "lesson": "Cetoacidose diabética e estado hiperosmolar hiperglicêmico",
+      "existingTreatment": "Reposição de cristaloide e potássio conforme valores, insulina IV quando seguro e monitorização horária/frequente; corrigir desencadeante. Se K <3,5 mEq/L (segundo consensos recentes), corrigir K antes da insulina; evitar queda osmótica abrupta no EHH.",
+      "topicReferences": [
+        {
+          "id": "metformin",
+          "name": "Metformina · liberação imediata",
+          "workedCalculation": true
+        }
+      ],
+      "scope": "Fichas compartilhadas pela matéria; revisão dos regimes de cada doença ainda pendente."
+    },
+    {
+      "id": "P1:p1dm:3",
+      "period": "P1",
+      "topic": "Diabetes em situações especiais",
+      "lesson": "Hipoglicemia, diabetes hospitalar e medicamentos de alto risco",
+      "existingTreatment": "Se consciente e deglutição segura, carboidrato de absorção rápida; se rebaixado/incapaz de deglutir, glicose IV ou glucagon conforme disponibilidade e protocolo. Em hospital, preferir regime insulínico prescrito com monitorização, evitando correção isolada sem basal quando indicada.",
+      "topicReferences": [
+        {
+          "id": "metformin",
+          "name": "Metformina · liberação imediata",
+          "workedCalculation": true
+        }
+      ],
+      "scope": "Fichas compartilhadas pela matéria; revisão dos regimes de cada doença ainda pendente."
+    },
+    {
+      "id": "P1:p1tir1:0",
+      "period": "P1",
+      "topic": "Doenças da tireoide I",
+      "lesson": "Hipertireoidismo e doença de Graves",
+      "existingTreatment": "Betabloqueador para sintomas quando apropriado; antitireoidiano (metimazol/tiamazol como opção frequente), radioiodo ou cirurgia conforme etiologia, risco, gestação e decisão compartilhada. Monitorar toxicidade hematológica/hepática.",
+      "topicReferences": [
+        {
+          "id": "levothyroxine",
+          "name": "Levotiroxina sódica",
+          "workedCalculation": true
+        },
+        {
+          "id": "methimazole",
+          "name": "Tiamazol (metimazol)",
+          "workedCalculation": true
+        }
+      ],
+      "scope": "Fichas compartilhadas pela matéria; revisão dos regimes de cada doença ainda pendente."
+    },
+    {
+      "id": "P1:p1tir1:1",
+      "period": "P1",
+      "topic": "Doenças da tireoide I",
+      "lesson": "Hipotireoidismo clínico/subclínico e gestação",
+      "existingTreatment": "Levotiroxina é escolha no hipotireoidismo clínico; doses iniciais menores em idoso/coronariopata e monitorização de TSH em 6–8 semanas após ajustes, exceto central onde acompanha T4L. Subclínico requer seleção, não tratar automaticamente todos.",
+      "topicReferences": [
+        {
+          "id": "levothyroxine",
+          "name": "Levotiroxina sódica",
+          "workedCalculation": true
+        },
+        {
+          "id": "methimazole",
+          "name": "Tiamazol (metimazol)",
+          "workedCalculation": true
+        }
+      ],
+      "scope": "Fichas compartilhadas pela matéria; revisão dos regimes de cada doença ainda pendente."
+    },
+    {
+      "id": "P1:p1tir1:2",
+      "period": "P1",
+      "topic": "Doenças da tireoide I",
+      "lesson": "Tireoidites: subaguda, indolor, pós-parto e induzidas",
+      "existingTreatment": "Analgésicos/anti-inflamatórios e betabloqueio para sintomas, corticosteroide em subaguda intensa selecionada. Reposição hormonal apenas na fase hipotireoidea se sintomática/prolongada ou situação específica.",
+      "topicReferences": [
+        {
+          "id": "levothyroxine",
+          "name": "Levotiroxina sódica",
+          "workedCalculation": true
+        },
+        {
+          "id": "methimazole",
+          "name": "Tiamazol (metimazol)",
+          "workedCalculation": true
+        }
+      ],
+      "scope": "Fichas compartilhadas pela matéria; revisão dos regimes de cada doença ainda pendente."
+    },
+    {
+      "id": "P1:p1tir2:0",
+      "period": "P1",
+      "topic": "Doenças da tireoide II",
+      "lesson": "Nódulos tireoidianos: ultrassom e TI-RADS",
+      "existingTreatment": "Baixo risco e pequeno tamanho: vigilância ou nenhuma ação conforme categoria. Alta suspeita e limiares de tamanho: PAAF e seguimento conforme diretriz; citologia Bethesda direciona manejo.",
+      "topicReferences": [
+        {
+          "id": "levothyroxine",
+          "name": "Levotiroxina sódica",
+          "workedCalculation": true
+        },
+        {
+          "id": "methimazole",
+          "name": "Tiamazol (metimazol)",
+          "workedCalculation": true
+        }
+      ],
+      "scope": "Fichas compartilhadas pela matéria; revisão dos regimes de cada doença ainda pendente."
+    },
+    {
+      "id": "P1:p1tir2:1",
+      "period": "P1",
+      "topic": "Doenças da tireoide II",
+      "lesson": "Crise tireotóxica e emergências da tireoide",
+      "existingTreatment": "UTI, suporte hemodinâmico, controle de temperatura com antitérmicos apropriados, betabloqueio se seguro, tionamida, iodeto APÓS bloqueio de síntese e glicocorticoide conforme protocolo; tratar precipitante.",
+      "topicReferences": [
+        {
+          "id": "levothyroxine",
+          "name": "Levotiroxina sódica",
+          "workedCalculation": true
+        },
+        {
+          "id": "methimazole",
+          "name": "Tiamazol (metimazol)",
+          "workedCalculation": true
+        }
+      ],
+      "scope": "Fichas compartilhadas pela matéria; revisão dos regimes de cada doença ainda pendente."
+    },
+    {
+      "id": "P1:p1tir2:2",
+      "period": "P1",
+      "topic": "Doenças da tireoide II",
+      "lesson": "Síndrome do eutireoideo doente e alterações por amiodarona",
+      "existingTreatment": "Tratar doença de base em eutireoideo doente; reposição hormonal rotineira não é indicada sem outra causa. Na disfunção por amiodarona, terapia depende do tipo e necessidade cardíaca do medicamento.",
+      "topicReferences": [
+        {
+          "id": "levothyroxine",
+          "name": "Levotiroxina sódica",
+          "workedCalculation": true
+        },
+        {
+          "id": "methimazole",
+          "name": "Tiamazol (metimazol)",
+          "workedCalculation": true
+        }
+      ],
+      "scope": "Fichas compartilhadas pela matéria; revisão dos regimes de cada doença ainda pendente."
+    },
+    {
+      "id": "P1:p1tir2:3",
+      "period": "P1",
+      "topic": "Doenças da tireoide II",
+      "lesson": "Câncer de tireoide e citologia Bethesda",
+      "existingTreatment": "Conduta é guiada por tipo, extensão e risco: vigilância ativa em microcarcinomas selecionados, cirurgia em outros, radioiodo em grupos específicos, seguimento por Tg/anticorpos nos diferenciados; medular não responde a radioiodo.",
+      "topicReferences": [
+        {
+          "id": "levothyroxine",
+          "name": "Levotiroxina sódica",
+          "workedCalculation": true
+        },
+        {
+          "id": "methimazole",
+          "name": "Tiamazol (metimazol)",
+          "workedCalculation": true
+        }
+      ],
+      "scope": "Fichas compartilhadas pela matéria; revisão dos regimes de cada doença ainda pendente."
+    },
+    {
+      "id": "P1:p1neuro:0",
+      "period": "P1",
+      "topic": "Doenças neuroendócrinas",
+      "lesson": "Insuficiência adrenal e crise adrenal",
+      "existingTreatment": "Se crise suspeita: hidrocortisona IV imediata e cristaloide, glicose se necessária, correção da causa precipitante; não esperar confirmação laboratorial. Planejar reposição e educação para situações de estresse na alta.",
+      "topicReferences": [
+        {
+          "id": "hydrocortisone",
+          "name": "Hidrocortisona · crise adrenal",
+          "workedCalculation": true
+        }
+      ],
+      "scope": "Fichas compartilhadas pela matéria; revisão dos regimes de cada doença ainda pendente."
+    },
+    {
+      "id": "P1:p1neuro:1",
+      "period": "P1",
+      "topic": "Doenças neuroendócrinas",
+      "lesson": "Macroadenoma hipofisário e apoplexia",
+      "existingTreatment": "Estabilizar hemodinamicamente, oferecer hidrocortisona quando insuficiência corticotrófica/instabilidade suspeita, avaliação neurocirúrgica, endocrinológica e oftalmológica urgentes; descompressão quando indicada por deterioração visual/neurológica.",
+      "topicReferences": [
+        {
+          "id": "hydrocortisone",
+          "name": "Hidrocortisona · crise adrenal",
+          "workedCalculation": true
+        }
+      ],
+      "scope": "Fichas compartilhadas pela matéria; revisão dos regimes de cada doença ainda pendente."
+    },
+    {
+      "id": "P1:p1neuro:2",
+      "period": "P1",
+      "topic": "Doenças neuroendócrinas",
+      "lesson": "Síndrome de Cushing e investigação do hipercortisolismo",
+      "existingTreatment": "Tratar fonte (cirurgia hipofisária/adrenal ou tumor ectópico), reduzir complicações e considerar terapia medicamentosa de controle com endocrinologia quando necessário.",
+      "topicReferences": [
+        {
+          "id": "hydrocortisone",
+          "name": "Hidrocortisona · crise adrenal",
+          "workedCalculation": true
+        }
+      ],
+      "scope": "Fichas compartilhadas pela matéria; revisão dos regimes de cada doença ainda pendente."
+    },
+    {
+      "id": "P1:p1neuro:3",
+      "period": "P1",
+      "topic": "Doenças neuroendócrinas",
+      "lesson": "Hiperprolactinemia, acromegalia e distúrbios hipotálamo-hipofisários",
+      "existingTreatment": "Prolactinoma: agonista dopaminérgico (cabergolina frequentemente primeira escolha), monitorar tamanho e visão; acromegalia: cirurgia transesfenoidal em candidatos e terapias dirigidas. Distúrbio de AVP: manejo hídrico e desmopressina em casos selecionados.",
+      "topicReferences": [
+        {
+          "id": "hydrocortisone",
+          "name": "Hidrocortisona · crise adrenal",
+          "workedCalculation": true
+        }
+      ],
+      "scope": "Fichas compartilhadas pela matéria; revisão dos regimes de cada doença ainda pendente."
+    },
+    {
+      "id": "P1:p1tele:0",
+      "period": "P1",
+      "topic": "Conceitos básicos de telemedicina",
+      "lesson": "Teleconsulta, teletriagem e indicação de presencial",
+      "existingTreatment": "Conforme Resolução CFM 2.314/2022, profissional escolhe modalidade adequada, informa limitações e indica atendimento presencial quando necessário. Garantir continuidade de cuidado e instruções claras de retorno.",
+      "topicReferences": [],
+      "scope": "Modalidade de atendimento; sem medicamento padrão."
+    },
+    {
+      "id": "P1:p1tele:1",
+      "period": "P1",
+      "topic": "Conceitos básicos de telemedicina",
+      "lesson": "Sigilo, LGPD, prontuário eletrônico e consentimento",
+      "existingTreatment": "Usar plataformas seguras, limitar compartilhamento, preservar sigilo e cumprir políticas de retenção e incidentes. Resolução CFM 2.314/2022 e Lei 13.709/2018 são referências centrais.",
+      "topicReferences": [],
+      "scope": "Modalidade de atendimento; sem medicamento padrão."
+    },
+    {
+      "id": "P1:p1tele:2",
+      "period": "P1",
+      "topic": "Conceitos básicos de telemedicina",
+      "lesson": "Comunicação clínica remota, segurança e continuidade",
+      "existingTreatment": "Orientar sinais de retorno imediato, serviços de emergência, prazos de revisão e como compartilhar dados seguros. A assistência deve prever conversão para presencial quando o exame necessário não for possível.",
+      "topicReferences": [],
+      "scope": "Modalidade de atendimento; sem medicamento padrão."
+    }
+  ]
+}
