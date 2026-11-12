@@ -37,6 +37,7 @@ const P1=(()=>{
  sectionP('Ferramentas da P1',`<div class="p1-tools">${[['◈','Questões N2/N3','p1practice',qs.length+' itens autorais'],['◷','Simulado P1','p1exam','20 questões • 90 min'],['♧','Casos progressivos','p1cases','10 casos em 3 etapas'],['✎','Discursivas','p1discursive','10 rubricas + modelo'],['♩','Prova oral','p1oral','10 estações clínicas'],['▧','Flashcards','p1flashcards',cards.length+' cartões'],['◇','Fontes','p1sources','Diretrizes e plano de ensino']].map(([icon,label,route,sub])=>`<button class="p1-tool" onclick="P1.go('${route}')"><span class="p1-tool-icon">${icon}</span><b>${label}</b><small>${sub}</small><span aria-hidden="true">↗</span></button>`).join('')}</div>`)+
  `<div class="info-notice">${esc(data.examNote)} As questões e casos da P1 são autorais, não reproduções de provas oficiais.</div>`;}
  function lesson(t,index){const c=t.chapters[index];return `<div class="card pad p1-lesson"><div class="lesson-head"><div><span class="kicker">AULA ${index+1} DE ${t.chapters.length} · ${esc(t.area)} · P1</span><h2>${esc(c.name)}</h2><p class="subtle">Revisão de fundamentos + aplicação clínica N2/N3</p></div><span class="module-status">${state.completed[t.id+'_'+index]?'✓ Concluída':'Em estudo'}</span></div>
+ ${Clinical.lesson('P1',t.id,index)}
  <div class="lesson-sections">
  ${block('01 · Anatomia, fisiologia e fisiopatologia',c.mechanism,'full')}
  ${block('02 · Manifestações clínicas e sinais de alerta',c.clinical)}

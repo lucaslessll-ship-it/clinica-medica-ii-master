@@ -73,3 +73,9 @@ O HTML individual iPad é gerado localmente com `python3 scripts/build_standalon
 As novas funções estão em `study.js`, `study.css` e `media-viewer.js`. Progresso individual sincroniza com Supabase após autenticação; alterações podem ficar pendentes quando offline. O menu da conta permite sincronizar, sair e exportar uma cópia de conflito quando disponível. Use também o backup completo nas Preferências.
 
 Execute `npm ci && npm test` na raiz do repositório. Consulte `../AUDITORIA_MASTER_NOVA.md` para escopo entregue, fontes efetivamente verificadas e pendências. GitHub Pages publica a `main`; confirme a conclusão do workflow antes de anunciar uma versão no ar. Não há backend novo, migração de framework ou alterações de esquema nesta entrega.
+
+### Consulta, raciocínio e prescrição
+
+Dentro de cada aula, expanda **Da consulta à prescrição**. A aba **Consulta e raciocínio** organiza história, exame físico, investigação, decisões e retorno. **Prescrição e seguimento** oferece fichas selecionadas com fontes específicas. O acervo central fica em **Biblioteca → Manual de prescrição**; inclui filtro, busca e exercício de redação apenas nesta tela, sem envio ou salvamento do rascunho.
+
+São 16 guias de matéria ligados às 54 aulas e 16 fichas adultas selecionadas, não um formulário completo ou prescrição individual. Escopo, conferência documental e validação estão em `../MANUAL_CLINICO_VALIDACAO.md`.
