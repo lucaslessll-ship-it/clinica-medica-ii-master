@@ -59,3 +59,7 @@ Este documento contém os pontos de atenção **por aula**, para facilitar a ver
 ## Acréscimos de segurança v6
 - **P1:p1inf:4** — Não prescrever antibiótico empírico indiscriminadamente. Em C. difficile, confirmar sintomas e utilizar testes adequados; regime e via de tratamento dependem de gravidade e protocolo.
 - **P1:p1inf:5** — Na fasciíte necrosante, atrasar desbridamento por imagem ou escore pode ser grave. Antibiótico IV amplo e suporte hemodinâmico são adjuvantes fundamentais, mas não substituem cirurgia.
+
+## Camada adicional de consulta e prescrição — 12/11/2026
+
+Foram acrescentadas 16 fichas adultas selecionadas em `prescription-data.js`, cada uma com indicação delimitada, dose/via, cuidados e fonte específica. Elas aparecem nas abas das matérias e no manual central. Isso não altera o status das doses antigas acima nem constitui revisão clínica independente. Consulte `../MANUAL_CLINICO_VALIDACAO.md` para método, fontes efetivamente consultadas, limitações e testes.

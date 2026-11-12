@@ -210,3 +210,36 @@ test('a second-device version is backed up before overwriting and can be exporte
  assert.equal(await p.evaluate(()=>{const key=Object.keys(localStorage).find(key=>key.startsWith('master_conflict_backup_'));return JSON.parse(localStorage.getItem(key)).master_p2_lucas_v1.completed.gastro_0}),true);
  const download=p.waitForEvent('download');await p.evaluate(()=>MASTER_AUTH.exportConflict());assert.equal((await download).suggestedFilename(),'MASTER-copia-conflito.json');await t.close();
 });
+test('clinical data covers all sixteen topics and every reference regimen has traceable sources',async()=>{
+ const t=await open({session:true}),p=t.page;await p.waitForFunction(()=>document.getElementById('master-auth').hidden);
+ const audit=await p.evaluate(()=>{
+  const guides=window.MASTER_CLINICAL_GUIDES,rx=window.MASTER_RX;
+  return {topics:Object.keys(guides).length,drugs:Object.keys(rx.drugs).length,invalidGuides:Object.entries(guides).filter(([id,g])=>!g.note.includes('[')||g.history.length<3||g.exam.length<3||g.tests.length<3||g.drugs.some(key=>!rx.drugs[key])).map(([id])=>id),invalidDrugs:Object.entries(rx.drugs).filter(([,d])=>['name','context','mechanism','dose','course','care'].some(key=>!d[key])||!d.sources.length||d.sources.some(key=>!rx.sources[key]?.url.startsWith('https://'))).map(([id])=>id)};
+ });assert.equal(audit.topics,16);assert.equal(audit.drugs,16);assert.deepEqual(audit.invalidGuides,[]);assert.deepEqual(audit.invalidDrugs,[]);await t.close();
+});
+test('every P2 and P1 chapter keeps its original content and receives one clinical guide',async()=>{
+ const t=await open({session:true}),p=t.page;await p.waitForFunction(()=>document.getElementById('master-auth').hidden);
+ const report=await p.evaluate(()=>{
+  const result=[];
+  for(const t of TOPICS){ui.topic=t.id;ui.route='topic';for(let i=0;i<t.chapters.length;i++){ui.chapter=i;render();result.push({key:'P2:'+t.id+':'+i,labs:document.querySelectorAll('.clinical-lab').length,original:document.getElementById('main-content').textContent.includes(t.chapters[i].name)});}}
+  for(const t of P1.topics){P1.openTopic(t.id);for(let i=0;i<t.chapters.length;i++){P1.chapter(i);result.push({key:'P1:'+t.id+':'+i,labs:document.querySelectorAll('.clinical-lab').length,original:document.getElementById('main-content').textContent.includes(t.chapters[i].name)});}}
+  return result;
+ });assert.equal(report.length,54);assert.ok(report.every(r=>r.labs===1&&r.original));await t.close();
+});
+test('clinical tabs work with keyboard, keep chapter and link to filtered prescription manual',async()=>{
+ const t=await open({session:true}),p=t.page;await p.waitForFunction(()=>document.getElementById('master-auth').hidden);await p.evaluate(()=>{openTopic('neuro3');switchChapter(1)});
+ await p.locator('.clinical-lab>summary').click();await p.locator('.clinical-lab [role=tab]').first().focus();await p.keyboard.press('ArrowRight');assert.equal(await p.locator('.clinical-lab [role=tab]').last().getAttribute('aria-selected'),'true');await visible(p,'.clinical-lab [role=tabpanel]:not([hidden]) [data-drug=pyridostigmine]');assert.equal(await p.evaluate(()=>ui.chapter),1);
+ await p.locator('.clinical-lab').getByRole('button',{name:/manual central/}).click();assert.equal(await p.locator('#rx-topic').inputValue(),'neuro3');assert.equal(await p.locator('.rx-card').count(),2);await p.locator('#rx-search').fill('metilprednisolona');await p.getByRole('button',{name:'Buscar',exact:true}).click();assert.equal(await p.locator('.rx-card').count(),1);await text(p,'.rx-card',/Surto de EM|surto de EM/);await t.close();
+});
+test('prescription writing exercise checks structure without saving, uploading or authorizing a prescription',async()=>{
+ const t=await open({session:true}),p=t.page;await p.waitForFunction(()=>document.getElementById('master-auth').hidden);await p.evaluate(()=>Clinical.openManual('p1has'));await p.getByText('Treinar redação e revisar o próprio raciocínio',{exact:true}).click();await p.getByRole('button',{name:'Revisar estrutura do rascunho'}).click();await text(p,'#rx-draft-feedback',/Campos a desenvolver/);
+ const textValue='CENÁRIO FICTÍCIO <img src=x onerror="window.badRx=true">';await p.locator('#rx-indication').fill(textValue);await p.evaluate(()=>{for(const area of document.querySelectorAll('#rx-workshop textarea'))if(!area.value)area.value='Exercício fictício a revisar';});await p.getByRole('button',{name:'Revisar estrutura do rascunho'}).click();await text(p,'#rx-draft-feedback',/não confirma indicação/);
+ assert.equal(await p.evaluate(()=>window.badRx),undefined);assert.equal(await p.evaluate(value=>JSON.stringify({...localStorage}).includes(value),textValue),false);assert.equal(await p.locator('#rx-workshop img').count(),0);await p.getByRole('button',{name:'Limpar',exact:true}).click();assert.equal(await p.locator('#rx-indication').inputValue(),'');await t.close();
+});
+test('clinical guide and prescription manual reflow on phone/tablet and dark mode',async()=>{
+ for(const width of [375,820,1440]){
+  const t=await open({session:true,viewport:{width,height:1000},remote:[{storage_key:keys[2],payload:{theme:'dark',font:'large',contrast:true,motion:true}}]}),p=t.page;await p.waitForFunction(()=>document.getElementById('master-auth').hidden);await p.evaluate(()=>openTopic('reuma2'));await p.locator('.clinical-lab>summary').click();
+  assert.ok(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),`guide ${width}`);await p.locator('.clinical-lab [role=tab]').last().click();assert.ok(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),`drug ${width}`);await p.locator('.clinical-lab [role=tab]').last().scrollIntoViewIfNeeded();await p.screenshot({path:`work/clinical-${width}.png`});
+  await p.evaluate(()=>Clinical.openManual('p1has'));assert.ok(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),`manual ${width}`);await p.screenshot({path:`work/manual-${width}.png`});await t.close();
+ }
+});
