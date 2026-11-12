@@ -1,139 +1,298 @@
-/* MASTER Clínica Médica II — autenticação e progresso individual.
-   Requer auth-config.js e supabase-js v2 carregados antes deste arquivo.
-   A chave publishable é pública; NUNCA coloque secret/service_role aqui. */
+/* Account UI and per-user progress. Only the public Supabase client belongs here. */
 (() => {
   'use strict';
   const cfg = window.MASTER_AUTH_CONFIG;
   const keys = cfg?.progressKeys || [];
   const ownerKey = 'master_auth_local_owner';
-  const status = {client:null, user:null, ready:false, timers:new Map(), syncing:false};
+  const recoveryKey = 'master_password_recovery';
   const originalSet = Storage.prototype.setItem;
   const $ = id => document.getElementById(id);
-  const read = key => {try { return JSON.parse(localStorage.getItem(key)); } catch { return null; }};
-  const errorText = e => ({'Invalid login credentials':'E-mail ou senha incorretos.',
-    'Email not confirmed':'Confirme seu e-mail antes de entrar.',
-    'User already registered':'Esse e-mail já possui cadastro.',
-    'Email rate limit exceeded':'Muitas tentativas. Tente novamente depois.'})[e?.message] || e?.message || 'Não foi possível concluir. Tente novamente.';
-  function notice(text) { $('master-auth-message').textContent = text; }
-  function lock(on) { document.documentElement.classList.toggle('master-auth-locked',on); }
-  function interfaceHtml() {
-    const css = document.createElement('style');
-    css.textContent = `html.master-auth-locked #app-shell,html.master-auth-locked .mobile-tabbar,html.master-auth-locked #focus-exit{visibility:hidden!important}#master-auth{position:fixed;inset:0;z-index:2147483647;display:grid;place-items:center;padding:24px;background:linear-gradient(140deg,#edf4f8,#fff 65%,#eaf5f2);color:#1b2935;font:15px/1.5 -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}#master-auth[hidden]{display:none!important}#master-auth *{box-sizing:border-box}#master-auth .panel{width:min(100%,430px);padding:clamp(24px,5vw,42px);border-radius:26px;background:#fff;box-shadow:0 16px 55px #16314720;border:1px solid #e2e9ed}#master-auth h1{font-size:27px;letter-spacing:-.6px;margin:6px 0 8px}#master-auth p{color:#576978;font-size:13px}#master-auth label{display:block;font-weight:600;margin:15px 0 5px}#master-auth input{display:block;width:100%;border:1px solid #c7d2db;border-radius:11px;padding:12px;font:inherit}#master-auth button{font:inherit;cursor:pointer;border-radius:11px;padding:11px;border:1px solid #cbd7dd;background:#fff;color:#203240}#master-auth button.primary{width:100%;background:#144a57;color:#fff;border-color:#144a57;margin-top:18px}#master-auth button:focus-visible,#master-auth input:focus-visible{outline:3px solid #6da6b6;outline-offset:2px}#master-auth .row{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-top:13px}#master-auth .link{padding:2px;border:0;text-decoration:underline;text-underline-offset:3px}#master-auth .google{width:100%;margin-top:12px}#master-auth #master-auth-message{min-height:22px;color:#865326;font-weight:600}#master-auth small{font-size:12px;color:#617483}#master-auth .brand{font-weight:800;color:#176477;letter-spacing:1.5px}`;
-    document.head.appendChild(css);
-    const el = document.createElement('section');
-    el.id = 'master-auth'; el.setAttribute('aria-label','Acesso ao MASTER');
-    el.innerHTML = `<div class="panel"><div class="brand">✦ MASTER</div><h1>Seu estudo, no seu ritmo.</h1><p>Clínica Médica II — entre para sincronizar suas revisões e questões entre dispositivos.</p><form id="master-auth-form"><label for="master-email">E-mail</label><input id="master-email" type="email" autocomplete="email" required><label for="master-password">Senha</label><input id="master-password" type="password" autocomplete="current-password" minlength="6" required><button class="primary" type="submit">Entrar</button></form><button id="master-google" class="google" type="button">Continuar com Google</button><div class="row"><button id="master-register" class="link" type="button">Criar conta</button><button id="master-forgot" class="link" type="button">Esqueci a senha</button></div><p id="master-auth-message" role="status" aria-live="polite"></p><small>Privacidade: seu e-mail identifica sua conta; respostas e anotações são armazenadas para sincronização no Supabase. Você pode solicitar acesso ou exclusão dos seus dados ao responsável pela plataforma. <button id="master-privacy" class="link" type="button">Saiba mais</button>.</small></div>`;
+  const status = {client:null, user:null, ready:false, busy:false, mode:'login', initializing:true, timers:new Map(), epoch:0, entering:null, recovery:false, consent:null};
+  const read = key => {try{return JSON.parse(localStorage.getItem(key));}catch{return null;}};
+  const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const errors = {
+    invalid_credentials:'E-mail ou senha incorretos.', email_not_confirmed:'Confirme seu e-mail antes de entrar.',
+    user_already_exists:'Esse e-mail já possui cadastro.', over_email_send_rate_limit:'Muitas solicitações de e-mail. Aguarde antes de tentar novamente.',
+    over_request_rate_limit:'Muitas tentativas. Aguarde e tente novamente.', weak_password:'A senha não atende aos requisitos de segurança. Use uma senha mais longa com letras, números e símbolos.',
+    same_password:'Escolha uma senha diferente da atual.', reauthentication_not_valid:'Código inválido ou expirado. Confira o código ou solicite outro.',
+    session_not_found:'Sua sessão expirou. Entre novamente.', refresh_token_not_found:'Sua sessão expirou. Entre novamente.',
+    otp_expired:'O link expirou ou já foi utilizado. Solicite um novo e-mail de recuperação.',
+    current_password_invalid:'A senha atual está incorreta.', validation_failed:'Confira os campos e tente novamente.'
+  };
+  function errorText(e){
+    if(errors[e?.code])return errors[e.code];
+    if(/Invalid login credentials/i.test(e?.message))return errors.invalid_credentials;
+    if(/fetch|network|offline|Load failed/i.test(e?.message))return 'Não foi possível conectar. Verifique sua internet e tente novamente.';
+    return 'Não foi possível concluir. '+(e?.message || 'Tente novamente.');
+  }
+  function notice(text, error=false){$('master-auth-message').textContent=text;$('master-auth-message').dataset.error=String(error);}
+  function syncNotice(text){$('master-sync-status').textContent=text;}
+  function lock(on){
+    document.documentElement.classList.toggle('master-auth-locked',on);
+    for(const id of ['app-shell','mobile-tabbar','focus-exit','hig-overlay']){
+      const el=$(id);if(el){el.inert=on;if(on)el.setAttribute('aria-hidden','true');else el.removeAttribute('aria-hidden');}
+    }
+  }
+  function redirectUrl(recovery=false){const url=new URL(location.pathname,location.origin);if(recovery)url.searchParams.set('auth','recovery');return url.href;}
+  function setBusy(on, label){
+    status.busy=on;$('master-auth-form').setAttribute('aria-busy',String(on));
+    $('master-auth').querySelectorAll('button,input').forEach(el=>el.disabled=on||(el.tagName==='INPUT'&&!!el.closest('[hidden]')));
+    $('master-submit').textContent=on?label:$('master-submit').dataset.label;
+  }
+  async function run(label,action){
+    if(status.busy)return;
+    setBusy(true,label);notice(label);
+    try{await action();}catch(e){notice(errorText(e),true);if($('master-auth').hidden)syncNotice(errorText(e));}finally{setBusy(false);}
+  }
+  const field=(id,label,type,autocomplete,extra='')=>`<label for="${id}">${label}</label><input id="${id}" name="${id}" type="${type}" autocomplete="${autocomplete}" aria-describedby="master-auth-message" required ${extra}>`;
+  function show(mode, message='', error=false){
+    status.mode=mode;closeProfile();lock(true);$('master-auth').hidden=false;
+    let title,description,fields,submit;
+    const email=esc($('master-email')?.value||status.user?.email||'');
+    const emailField=()=>field('master-email','E-mail','email','email',`value="${email}" autocapitalize="none" spellcheck="false"`);
+    const newPasswords=()=>field('master-password','Nova senha','password','new-password','minlength="8"')+'<p class="auth-hint">Use pelo menos 8 caracteres. Prefira uma senha única com letras, números e símbolos.</p>'+field('master-confirm','Confirmar nova senha','password','new-password','minlength="8"');
+    if(mode==='register'){
+      title='Criar sua conta';description='Seu progresso e suas anotações, disponíveis nos seus dispositivos.';
+      fields=emailField()+field('master-password','Crie uma senha','password','new-password','minlength="8"')+'<p class="auth-hint">Pelo menos 8 caracteres; prefira letras, números e símbolos.</p>'+field('master-confirm','Confirme sua senha','password','new-password','minlength="8"');submit='Criar conta';
+    }else if(mode==='forgot'){
+      title='Recuperar senha';description='Informe seu e-mail para receber um link e definir uma nova senha.';fields=emailField();submit='Enviar link de recuperação';
+    }else if(mode==='password'||mode==='recovery'){
+      title=mode==='recovery'?'Definir nova senha':'Alterar senha';description=mode==='recovery'?'Escolha a nova senha da sua conta.':'Confirme sua nova senha. Podemos pedir uma verificação adicional da sua conta.';
+      fields='<div id="master-current-wrap" hidden>'+field('master-current','Senha atual','password','current-password','disabled')+'</div>'+newPasswords()+'<div id="master-nonce-wrap" hidden>'+field('master-nonce','Código recebido por e-mail ou SMS','text','one-time-code','disabled')+'<button id="master-resend" type="button" class="auth-link">Enviar outro código</button></div>';submit='Salvar nova senha';
+    }else if(mode==='consent'){
+      title='Seus dados de estudo';description='Para sincronizar, armazenamos seu e-mail, respostas, anotações e progresso no Supabase. O acesso ao progresso é vinculado à sua conta. Nunca inclua dados de pacientes identificáveis.';
+      fields='<label class="auth-consent"><input id="master-consent" type="checkbox" required> Li o aviso de privacidade e concordo em sincronizar meus dados de estudo.</label>';submit='Concordar e continuar';
+    }else{
+      title='Seu estudo, no seu ritmo.';description='Entre para retomar suas aulas e sincronizar seu progresso.';fields=emailField()+field('master-password','Senha','password','current-password');submit='Entrar';
+    }
+    $('master-auth-title').textContent=title;$('master-auth-description').textContent=description;
+    $('master-auth-fields').innerHTML=fields;
+    $('master-submit').textContent=submit;$('master-submit').dataset.label=submit;
+    $('master-auth-tabs').hidden=!['login','register'].includes(mode);
+    $('master-login-tab').setAttribute('aria-pressed',String(mode==='login'));
+    $('master-register-tab').setAttribute('aria-pressed',String(mode==='register'));
+    $('master-google').hidden=mode!=='login'||cfg?.googleEnabled!==true;$('master-forgot').hidden=mode!=='login';
+    $('master-back').hidden=mode==='login';$('master-back').textContent=mode==='password'?'Cancelar':mode==='consent'?'Sair sem aceitar':mode==='recovery'?'Cancelar recuperação':'Voltar para entrar';
+    notice(message,error);setBusy(status.busy,'Processando…');
+    requestAnimationFrame(()=>$('master-auth-title').focus());
+    $('master-resend')?.addEventListener('click',()=>run('Enviando código…',requestNonce));
+  }
+  function interfaceHtml(){
+    const el=document.createElement('section');el.id='master-auth';
+    el.setAttribute('role','dialog');el.setAttribute('aria-modal','true');el.setAttribute('aria-labelledby','master-auth-title');
+    el.innerHTML=`<div class="auth-panel"><div class="auth-brand">✦ MASTER</div><div id="master-auth-tabs" class="auth-tabs"><button id="master-login-tab" type="button" aria-pressed="true">Entrar</button><button id="master-register-tab" type="button" aria-pressed="false">Criar conta</button></div><h1 id="master-auth-title" tabindex="-1"></h1><p id="master-auth-description"></p><form id="master-auth-form"><div id="master-auth-fields"></div><button id="master-submit" class="btn primary" type="submit" data-label="Entrar">Entrar</button></form><button id="master-google" class="btn auth-google" type="button">Continuar com Google</button><div class="auth-links"><button id="master-forgot" class="auth-link" type="button">Esqueci a senha</button><button id="master-back" class="auth-link" type="button" hidden>Voltar para entrar</button></div><p id="master-auth-message" role="status" aria-live="polite" aria-atomic="true"></p><button id="master-retry" class="btn" type="button" hidden>Tentar carregar progresso novamente</button><details class="auth-privacy"><summary>Privacidade e seus dados</summary><p>Seu e-mail identifica sua conta; respostas e anotações são armazenadas no Supabase para sincronização. Nunca inclua dados de pacientes identificáveis. Para solicitar acesso ou exclusão dos seus dados, contate o responsável pela plataforma. Este aviso resumido não substitui uma Política de Privacidade completa.</p></details><noscript>Ative o JavaScript para acessar seu ambiente de estudo.</noscript></div>`;
     document.body.appendChild(el);
-    $('master-auth-form').addEventListener('submit',signIn);
-    $('master-register').addEventListener('click',register);
-    $('master-forgot').addEventListener('click',recover);
-    $('master-google').addEventListener('click',google);
-    $('master-privacy').addEventListener('click',()=>alert('MASTER Clínica Médica II — Informações de privacidade\n\nFinalidade: autenticar estudantes, registrar aceite de privacidade e sincronizar progresso, respostas e anotações.\n\nDados: e-mail, identificador da conta, registros de estudo e data do aceite.\n\nArmazenamento: Supabase, com acesso aos dados de progresso restrito à própria conta autenticada.\n\nNunca inclua dados de pacientes identificáveis nas anotações.\n\nPara exercer direitos previstos na LGPD, contate o responsável pela plataforma. Este aviso resumido não substitui uma Política de Privacidade completa.'));
+    $('master-auth-form').addEventListener('submit',submit);
+    $('master-login-tab').addEventListener('click',()=>show('login'));
+    $('master-register-tab').addEventListener('click',()=>show('register'));
+    $('master-forgot').addEventListener('click',()=>show('forgot'));
+    $('master-back').addEventListener('click',()=>{
+      if(status.mode==='password'){hide();return;}
+      if(status.mode==='consent'){status.consent?.(false);return;}
+      if(status.mode==='recovery'){signOut();return;}
+      show('login');
+    });
+    $('master-google').addEventListener('click',()=>run('Abrindo Google…',async()=>{
+      const {error}=await status.client.auth.signInWithOAuth({provider:'google',options:{redirectTo:redirectUrl()}});if(error)throw error;
+    }));
+    $('master-retry').addEventListener('click',()=>{if(!status.busy)enter(status.user);});
+    $('master-avatar').addEventListener('click',()=>{
+      const open=$('master-profile').hidden;$('master-profile').hidden=!open;$('master-avatar').setAttribute('aria-expanded',String(open));
+      if(open)$('master-change-password').focus();
+    });
+    $('master-change-password').addEventListener('click',()=>show('password'));
+    $('master-signout').addEventListener('click',signOut);
+    $('master-sync').addEventListener('click',async()=>{
+      if($('master-sync').disabled)return;$('master-sync').disabled=true;
+      try{await syncAll();}catch(e){syncNotice(errorText(e));}finally{$('master-sync').disabled=false;}
+    });
+    document.addEventListener('click',e=>{if(!e.target.closest('.account-control'))closeProfile();});
+    document.addEventListener('keydown',e=>{
+      if(!$('master-profile').hidden&&e.key==='Escape'){closeProfile();$('master-avatar').focus();}
+      if(el.hidden)return;
+      if(e.key==='Escape'&&status.mode==='password'&&!status.busy){hide();return;}
+      if(e.key==='Tab'){
+        const focusable=[...el.querySelectorAll('button,input,summary,a[href]')].filter(x=>!x.disabled&&x.getClientRects().length);
+        const first=focusable[0],last=focusable.at(-1);
+        if(e.shiftKey&&(document.activeElement===first||!focusable.includes(document.activeElement))){e.preventDefault();last?.focus();}
+        else if(!e.shiftKey&&(document.activeElement===last||!focusable.includes(document.activeElement))){e.preventDefault();first?.focus();}
+      }
+    });
   }
-  async function signIn(e) {
-    e.preventDefault(); notice('Entrando…');
-    const {error}=await status.client.auth.signInWithPassword({email:$('master-email').value.trim(),password:$('master-password').value});
-    if(error) notice(errorText(error)); else await enter();
+  function closeProfile(){if($('master-profile'))$('master-profile').hidden=true;$('master-avatar')?.setAttribute('aria-expanded','false');}
+  function updateProfile(){
+    const user=status.user,name=user?.user_metadata?.full_name||user?.user_metadata?.name||user?.email?.split('@')[0]||'Sua conta';
+    const initials=String(name).trim().split(/[\s._-]+/).slice(0,2).map(x=>x[0]||'').join('').toUpperCase().slice(0,2)||'LL';
+    $('master-avatar').textContent=initials;$('master-avatar').disabled=!status.ready;
+    $('master-avatar').setAttribute('aria-label',`Abrir menu da conta de ${name}`);
+    $('master-profile-name').textContent=name;$('master-profile-email').textContent=user?.email||'';
   }
-  async function register() {
-    const email=$('master-email').value.trim(), password=$('master-password').value;
-    if(!email || password.length<6){notice('Informe e-mail e uma senha com pelo menos 6 caracteres.');return;}
-    if(!confirm('Criar uma conta para armazenar suas respostas e anotações? Você concordará com o aviso de privacidade após o primeiro acesso.'))return;
-    notice('Criando conta…');
-    const {data,error}=await status.client.auth.signUp({email,password,options:{emailRedirectTo:location.origin+location.pathname}});
-    if(error)notice(errorText(error));else if(data.session)await enter();else notice('Verifique sua caixa de entrada para confirmar o cadastro.');
+  function hide(){
+    if(!status.ready){enter(status.user);return;}
+    $('master-auth-form').reset();$('master-auth').hidden=true;lock(false);updateProfile();$('master-avatar').focus();
   }
-  async function recover() {
-    const email=$('master-email').value.trim();
-    if(!email){notice('Digite seu e-mail para recuperar a senha.');return;}
-    const {error}=await status.client.auth.resetPasswordForEmail(email,{redirectTo:location.origin+location.pathname});
-    notice(error?errorText(error):'Se o endereço estiver cadastrado, você receberá um e-mail com instruções.');
+  async function submit(e){
+    e.preventDefault();if(status.busy)return;
+    if(!status.client){notice('O serviço de acesso não foi carregado. Verifique a conexão e recarregue a página.',true);return;}
+    const mode=status.mode,email=$('master-email')?.value.trim(),password=$('master-password')?.value;
+    if($('master-confirm')&&password!==$('master-confirm').value){notice('As senhas não coincidem. Confira a confirmação.',true);$('master-confirm').focus();return;}
+    if(mode==='consent'){status.consent?.(true);return;}
+    await run(mode==='forgot'?'Enviando e-mail…':mode==='login'?'Entrando…':mode==='register'?'Criando conta…':'Salvando senha…',async()=>{
+      if(mode==='forgot'){
+        const {error}=await status.client.auth.resetPasswordForEmail(email,{redirectTo:redirectUrl(true)});if(error)throw error;
+        notice('Se o endereço estiver cadastrado, você receberá um e-mail com instruções. Confira também o spam.');return;
+      }
+      if(mode==='login'||mode==='register'){
+        const result=mode==='login'?await status.client.auth.signInWithPassword({email,password}):await status.client.auth.signUp({email,password,options:{emailRedirectTo:redirectUrl()}});
+        if(result.error)throw result.error;
+        $('master-password').value='';if($('master-confirm'))$('master-confirm').value='';
+        if(result.data.session)setTimeout(()=>handleSession('SIGNED_IN',result.data.session),0);
+        else notice('Verifique sua caixa de entrada para confirmar o cadastro e depois entre na sua conta.');
+        return;
+      }
+      const attrs={password};
+      if($('master-nonce-wrap')&&!$('master-nonce-wrap').hidden)attrs.nonce=$('master-nonce').value.trim();
+      if($('master-current-wrap')&&!$('master-current-wrap').hidden)attrs.current_password=$('master-current').value;
+      const {error}=await status.client.auth.updateUser(attrs);
+      if(error){
+        if(error.code==='reauthentication_needed'){await requestNonce();return;}
+        if(error.code==='current_password_missing'){
+          $('master-current-wrap').hidden=false;$('master-current').disabled=false;notice('Informe a senha atual para confirmar a alteração.',true);$('master-current').focus();return;
+        }
+        if(error.status===401||error.code==='session_not_found'){
+          signedOut('Sua sessão expirou. Entre novamente ou solicite outro link de recuperação.');return;
+        }
+        throw error;
+      }
+      status.recovery=false;sessionStorage.removeItem(recoveryKey);clearAuthUrl();
+      if(status.ready){hide();toast('Senha atualizada com sucesso.');}
+      else{notice('Senha atualizada. Carregando seu progresso…');setTimeout(()=>enter(status.user),0);}
+    });
   }
-  async function google() {
-    notice('Abrindo acesso pelo Google…');
-    const {error}=await status.client.auth.signInWithOAuth({provider:'google',options:{redirectTo:location.origin+location.pathname}});
-    if(error)notice('O login Google precisa estar habilitado no Supabase. '+errorText(error));
+  async function requestNonce(){
+    const {error}=await status.client.auth.reauthenticate();if(error)throw error;
+    $('master-nonce-wrap').hidden=false;$('master-nonce').disabled=false;
+    notice('Enviamos um código de confirmação para seu e-mail ou telefone. Informe-o para salvar a senha.');$('master-nonce').focus();
   }
-  function hasLocalData() {return keys.some(k=>{const v=read(k);return v && typeof v==='object' && Object.keys(v).length>0;});}
-  async function consent(user) {
-    const {data,error}=await status.client.from('master_consents').select('policy_version').eq('user_id',user.id).maybeSingle();
-    if(error)throw error;
+  function clearAuthUrl(){
+    const url=new URL(location.href);for(const key of ['auth','code','error','error_code','error_description'])url.searchParams.delete(key);
+    if(/access_token=|refresh_token=|error=|type=recovery/.test(url.hash))url.hash='';history.replaceState(null,'',url);
+  }
+  async function consent(user){
+    const {data,error}=await status.client.from('master_consents').select('policy_version').eq('user_id',user.id).maybeSingle();if(error)throw error;
     if(data?.policy_version===cfg.privacyVersion)return true;
-    if(!confirm('Proteção de dados — MASTER\n\nSeu e-mail, suas respostas, anotações e progresso serão armazenados no Supabase para sincronização entre dispositivos. Nunca inclua dados de pacientes identificáveis.\n\nVocê concorda em prosseguir?'))return false;
-    const {error:writeError}=await status.client.from('master_consents').insert({user_id:user.id,policy_version:cfg.privacyVersion});
-    if(writeError)throw writeError;
+    show('consent');const agreed=await new Promise(resolve=>status.consent=resolve);status.consent=null;
+    if(!agreed)return false;
+    const {error:writeError}=await status.client.from('master_consents').insert({user_id:user.id,policy_version:cfg.privacyVersion});if(writeError)throw writeError;
     return true;
   }
-  async function syncKey(key) {
-    if(!status.ready || !status.user || !keys.includes(key))return;
-    const value=read(key);
-    if(value===null)return;
-    const {error}=await status.client.from('master_progress').upsert({user_id:status.user.id,storage_key:key,payload:value,updated_at:new Date().toISOString()},{onConflict:'user_id,storage_key'});
-    if(error)throw error;
+  const pendingKey=id=>'master_auth_pending_'+id;
+  function pending(id){return read(pendingKey(id))||{};}
+  function cancelSync(){status.ready=false;status.epoch++;for(const timer of status.timers.values())clearTimeout(timer);status.timers.clear();}
+  async function syncKey(key){
+    if(!status.ready||!status.user||!keys.includes(key))return;
+    const raw=localStorage.getItem(key),value=read(key);if(value===null)return;
+    const epoch=status.epoch,userId=status.user.id;
+    const {error}=await status.client.from('master_progress').upsert({user_id:userId,storage_key:key,payload:value,updated_at:new Date().toISOString()},{onConflict:'user_id,storage_key'});
+    if(error){if(epoch===status.epoch)syncNotice('Sincronização pendente. Seu progresso continua salvo neste dispositivo.');throw error;}
+    if(epoch===status.epoch){
+      const queued=pending(userId);
+      if(queued[key]===raw){delete queued[key];originalSet.call(localStorage,pendingKey(userId),JSON.stringify(queued));}
+      syncNotice(Object.keys(queued).length?'Há alterações aguardando sincronização.':'Progresso sincronizado.');
+    }
   }
-  function syncSoon(key) {
-    if(!status.ready)return;
-    clearTimeout(status.timers.get(key));
-    status.timers.set(key,setTimeout(()=>syncKey(key).catch(e=>console.warn('MASTER: sincronização pendente',e.message)),800));
+  async function syncAll(){syncNotice('Sincronizando…');await Promise.all(keys.map(syncKey));syncNotice('Progresso sincronizado.');}
+  function syncSoon(key){
+    if(!status.ready)return;clearTimeout(status.timers.get(key));syncNotice('Salvo neste dispositivo. Sincronizando…');
+    status.timers.set(key,setTimeout(()=>{status.timers.delete(key);syncKey(key).catch(()=>{});},800));
   }
-  Storage.prototype.setItem=function(key,value) {
-    originalSet.call(this,key,value);
-    if(this===localStorage && keys.includes(String(key)))syncSoon(String(key));
-  };
-  async function enter() {
-    try {
-      const {data:{user},error}=await status.client.auth.getUser();
-      if(error||!user){notice(errorText(error));return;}
-      if(!(await consent(user))){await status.client.auth.signOut();notice('Acesso não iniciado: é necessário aceitar o aviso de privacidade.');return;}
-      notice('Recuperando seu progresso…');
-      const {data:remote,error:loadError}=await status.client.from('master_progress').select('storage_key,payload').eq('user_id',user.id);
-      if(loadError)throw loadError;
-      const previousOwner=localStorage.getItem(ownerKey);
-      const remoteKeys=new Set((remote||[]).map(r=>r.storage_key));
-      let importLocal=false;
-      if(!remote?.length && previousOwner===user.id && hasLocalData()) importLocal=true;
-      if(!remote?.length && !previousOwner && hasLocalData()) {
-        importLocal=confirm('Encontramos progresso salvo neste navegador. Deseja vinculá-lo a esta conta?\n\nOK: importar para sua conta.\nCancelar: iniciar com progresso vazio (mantendo uma cópia de segurança local).');
-        if(!importLocal) {
-          const backup={};for(const k of keys)if(localStorage.getItem(k)!==null)backup[k]=read(k);
-          originalSet.call(localStorage,'master_guest_backup_'+Date.now(),JSON.stringify(backup));
-        }
+  Storage.prototype.setItem=function(key,value){originalSet.call(this,key,value);if(this===localStorage&&keys.includes(String(key))&&status.ready&&status.user){
+      const queued=pending(status.user.id);queued[String(key)]=String(value);
+      originalSet.call(localStorage,pendingKey(status.user.id),JSON.stringify(queued));syncSoon(String(key));
+    }};
+  async function enter(user){
+    if(!user||status.recovery||status.entering?.id===user.id||status.ready&&status.user?.id===user.id)return;
+    cancelSync();const epoch=status.epoch;status.user=user;status.entering={id:user.id,epoch};lock(true);$('master-auth').hidden=false;
+    $('master-retry').hidden=true;notice('Carregando sua conta e seu progresso…');
+    const previousOwner=localStorage.getItem(ownerKey);
+    try{
+      // The event provides a session, but validate the user with Auth before loading progress.
+      const {data,error}=await status.client.auth.getUser();if(error)throw error;
+      if(epoch!==status.epoch)return;
+      if(data.user?.id!==user.id)throw new Error('A conta mudou. Entre novamente.');
+      if(!await consent(user)){if(epoch===status.epoch)await signOut();return;}
+      if(epoch!==status.epoch)return;
+      const {data:remote,error:loadError}=await status.client.from('master_progress').select('storage_key,payload').eq('user_id',user.id);if(loadError)throw loadError;
+      if(epoch!==status.epoch)return;
+      let importLocal=!remote?.length&&previousOwner===user.id;
+      if(!remote?.length&&!previousOwner&&keys.some(k=>read(k)&&Object.keys(read(k)).length)){
+        importLocal=confirm('Encontramos progresso anterior neste navegador. Deseja vinculá-lo à sua conta? Cancelar inicia com progresso vazio e mantém uma cópia de segurança local.');
+        if(!importLocal){const backup=Object.fromEntries(keys.map(k=>[k,read(k)]));originalSet.call(localStorage,'master_guest_backup_'+Date.now(),JSON.stringify(backup));}
       }
-      if(!importLocal) {
-        for(const key of keys) localStorage.removeItem(key);
-        for(const row of remote||[]) if(keys.includes(row.storage_key)) originalSet.call(localStorage,row.storage_key,JSON.stringify(row.payload));
-      }
-      originalSet.call(localStorage,ownerKey,user.id);
-      status.user=user;status.ready=true;
-      if(importLocal)for(const key of keys)await syncKey(key);
-      $('master-auth').hidden=true;lock(false);
-      if(!sessionStorage.getItem('master_auth_reloaded')) {
-        sessionStorage.setItem('master_auth_reloaded','yes');
-        location.reload(); // Recria as telas existentes com o progresso da conta.
-      } else {
-        window.dispatchEvent(new Event('master-auth-ready'));
-      }
-    }catch(e){notice('Não foi possível carregar seu progresso. '+errorText(e));}
+      if(!importLocal){for(const key of keys)localStorage.removeItem(key);for(const row of remote||[])if(keys.includes(row.storage_key))originalSet.call(localStorage,row.storage_key,JSON.stringify(row.payload));}
+      const queued=pending(user.id);
+      for(const key of keys)if(typeof queued[key]==='string')originalSet.call(localStorage,key,queued[key]);
+      originalSet.call(localStorage,ownerKey,user.id);status.ready=true;
+      if(importLocal||Object.keys(queued).length){try{await syncAll();}catch{syncNotice('Sincronização pendente. Seu progresso continua salvo neste dispositivo.');}}
+      if(epoch!==status.epoch)return;
+      // Refresh every module before exposing any account data; no reload or stale user state.
+      window.dispatchEvent(new Event('master-auth-ready'));
+      clearAuthUrl();hide();if(!Object.keys(pending(user.id)).length)syncNotice('Progresso carregado da sua conta.');
+    }catch(e){
+      if(epoch!==status.epoch)return;status.ready=false;show('login','Não foi possível carregar seu progresso. '+errorText(e),true);$('master-retry').hidden=false;
+    }finally{if(status.entering?.epoch===epoch)status.entering=null;}
   }
-  async function start() {
-    lock(true); interfaceHtml();
-    if(!cfg || !window.supabase?.createClient){notice('A configuração de acesso ainda não foi carregada.');return;}
-    status.client=window.supabase.createClient(cfg.url,cfg.publishableKey);
-    const {data:{session}}=await status.client.auth.getSession();
-    if(session){await enter();}else{sessionStorage.removeItem('master_auth_reloaded');notice('Entre para acessar seu ambiente de estudos.');}
-    window.MASTER_AUTH={
-      signOut:async()=>{
-        if(!status.user)return;
-        try{for(const key of keys)await syncKey(key);}catch(e){alert('Não foi possível concluir a sincronização. Verifique sua internet e tente sair novamente.');return;}
-        await status.client.auth.signOut();status.ready=false;status.user=null;
-        for(const key of keys)localStorage.removeItem(key);
-        localStorage.removeItem(ownerKey);sessionStorage.removeItem('master_auth_reloaded');location.reload();
-      },
-      user:()=>status.user,
-      sync:()=>Promise.all(keys.map(syncKey))
-    };
-    window.addEventListener('online',()=>{if(status.ready)keys.forEach(syncSoon)});
-    document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden'&&status.ready)keys.forEach(syncSoon)});
+  function signedOut(message='Sua sessão terminou. Entre novamente para continuar.'){
+    cancelSync();status.entering=null;status.consent?.(false);status.user=null;status.recovery=false;sessionStorage.removeItem(recoveryKey);
+    window.dispatchEvent(new Event('master-auth-ended'));
+    closeProfile();updateProfile();window.HIG?.closeOverlay();show('login',message);
+  }
+  async function signOut(){
+    if(status.busy)return;
+    await run('Saindo da conta…',async()=>{
+      // Keep local data and ownership if sync is pending; another account never imports it.
+      if(status.ready){try{await syncAll();}catch{notice('Há progresso salvo apenas neste dispositivo. Tente sincronizar antes de sair.',true);if($('master-auth').hidden)toast('Não foi possível sincronizar. Tente novamente antes de sair.');return;}}
+      const leavingUserId=status.user?.id;
+      const {error}=await status.client.auth.signOut({scope:'local'});if(error)throw error;
+      if(leavingUserId&&localStorage.getItem(ownerKey)===leavingUserId&&!Object.keys(pending(leavingUserId)).length){for(const key of keys)localStorage.removeItem(key);localStorage.removeItem(ownerKey);localStorage.removeItem(pendingKey(leavingUserId));}
+      signedOut('Você saiu da conta.');
+    });
+  }
+  function handleSession(event,session){
+    if(event==='SIGNED_OUT'){signedOut();return;}
+    if(!session?.user)return;
+    if(event==='PASSWORD_RECOVERY'){
+      cancelSync();status.consent?.(false);status.entering=null;status.user=session.user;status.recovery=true;sessionStorage.setItem(recoveryKey,'yes');clearAuthUrl();show('recovery');return;
+    }
+    if(status.recovery){status.user=session.user;return;}
+    if(status.user&&status.user.id!==session.user.id){cancelSync();status.consent?.(false);}
+    status.user=session.user;updateProfile();
+    if(!status.ready)enter(session.user);
+  }
+  async function start(){
+    interfaceHtml();show('login','Verificando sessão…');
+    if(!cfg?.url||!cfg?.publishableKey||!window.supabase?.createClient){notice('O serviço de acesso não foi carregado. Verifique a conexão e recarregue a página.',true);$('master-submit').disabled=true;$('master-google').disabled=true;return;}
+    try{
+      const params=new URLSearchParams(location.search),hash=new URLSearchParams(location.hash.slice(1));
+      const callbackError=params.get('error_description')||hash.get('error_description');
+      status.recovery=!callbackError&&(params.get('auth')==='recovery'||hash.get('type')==='recovery'||sessionStorage.getItem(recoveryKey)==='yes');
+      status.client=window.supabase.createClient(cfg.url,cfg.publishableKey);
+      // Never await Supabase calls inside this callback: they can hold the Auth lock.
+      status.client.auth.onAuthStateChange((event,session)=>{
+        if(status.initializing){if(event==='PASSWORD_RECOVERY')status.recovery=true;return;}
+        if(event==='SIGNED_OUT')cancelSync(); // Lock immediately, before any deferred work.
+        if(event==='SIGNED_OUT')lock(true);
+        setTimeout(()=>handleSession(event,session),0);
+      });
+      window.MASTER_AUTH={user:()=>status.user,signOut,sync:syncAll,changePassword:()=>{if(status.ready)show('password');}};
+      const {data,error}=await status.client.auth.getSession();status.initializing=false;if(error)throw error;
+      if(callbackError){status.recovery=false;sessionStorage.removeItem(recoveryKey);clearAuthUrl();show('forgot','O link é inválido, expirou ou já foi utilizado. Solicite um novo e-mail.',true);}
+      else if(data.session&&status.recovery){status.user=data.session.user;sessionStorage.setItem(recoveryKey,'yes');clearAuthUrl();show('recovery');}
+      else if(data.session)handleSession('INITIAL_SESSION',data.session);
+      else{const recovery=status.recovery;status.recovery=false;sessionStorage.removeItem(recoveryKey);clearAuthUrl();show(recovery?'forgot':'login',recovery?'Não foi possível validar o link. Solicite um novo e-mail.':'Entre para acessar seu ambiente de estudos.',recovery);}
+    }catch(e){notice(errorText(e),true);}
+    window.addEventListener('online',()=>{if(status.ready)keys.forEach(syncSoon);});
+    document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden'&&status.ready)keys.forEach(syncSoon);});
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();
 })();

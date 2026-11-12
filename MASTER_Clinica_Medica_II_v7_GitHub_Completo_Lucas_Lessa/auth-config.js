@@ -5,6 +5,9 @@ window.MASTER_AUTH_CONFIG = {
 
   publishableKey: "sb_publishable_ItGeOul9CmUi9NIm9OPUlQ_vii7naej",
 
+  // O provedor Google está desabilitado no projeto; não ofereça um fluxo indisponível.
+  googleEnabled: false,
+
   progressKeys: [
     "master_p2_lucas_v1",
     "master_p1_lucas_v4",

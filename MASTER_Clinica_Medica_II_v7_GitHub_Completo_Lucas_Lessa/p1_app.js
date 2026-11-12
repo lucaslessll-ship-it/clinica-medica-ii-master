@@ -99,12 +99,15 @@ const P1=(()=>{
  function go(route){navigate(route);}
  function openTopic(id){selection=id;chapter=0;state.lastTopic=id;save();go('p1topic');}
  function setChapter(i){chapter=i;render();window.scrollTo({top:180,behavior:'smooth'});}
- function afterRender(route){if(route==='p1exam'&&exam&&!exam.done)examClock();else if(examTick){clearInterval(examTick);examTick=null;}}
+ function afterRender(route){if(route==='p1topic'){state.lastTopic=selection;state.lastChapter=chapter;save()}if(route==='p1exam'&&exam&&!exam.done)examClock();else if(examTick){clearInterval(examTick);examTick=null;}}
  function view(route){switch(route){case 'p1':return viewHub();case 'p1topic':return viewTopic();case 'p1practice':return viewPractice();case 'p1exam':return viewExam();case 'p1cases':return viewCases(false);case 'p1oral':return viewCases(true);case 'p1discursive':return viewDisc();case 'p1flashcards':return viewFlash();case 'p1sources':return viewSources();default:return viewHub()}}
  function searchItems(){return [...topics.flatMap(t=>[{type:'Módulo P1',label:t.title,sub:'P1 • '+t.focus,icon:'▦',action:()=>openTopic(t.id),text:[t.title,t.focus]},...t.chapters.map((c,i)=>({type:'Aula P1',label:c.name,sub:t.title,icon:'▧',action:()=>{openTopic(t.id);setChapter(i)},text:[c.name,c.mechanism,c.clinical,c.diagnostics,c.treatment,c.exam]}))]),...qs.map((q,i)=>({type:'Questão P1',label:'N'+q.level+' · '+topic(q.t).short,sub:q.q.slice(0,120),icon:'◈',action:()=>{practice={tid:q.t,ids:[i],step:0,chosen:null,revealed:false,order:orderFor(q)};go('p1practice')},text:[q.q,q.why]}))];}
  function getBackup(){return state;}function restoreBackup(o){if(o&&typeof o==='object'){state={...defaultState(),...o};save();}}
- function init(){selection=topics.some(t=>t.id===state.lastTopic)?state.lastTopic:'p1dm';}
+ function init(){selection=topics.some(t=>t.id===state.lastTopic)?state.lastTopic:'p1dm';chapter=Math.max(0,Math.min(Number(state.lastChapter)||0,topic(selection).chapters.length-1));}
  init();
- return {view,afterRender,openTopic,chapter:setChapter,nextChapter,toggleDone,saveNote,startPractice,answerPractice,nextPractice,startExam,answerExam,goExam,finishExam,selectCase,caseAnswer,caseNext,selectDisc,discFor,discCheck,flashSet,flashFlip,flashSkip,flashGrade,exportCSV,viewSources,go,searchItems,getBackup,restoreBackup,exportProgress,topics,qs,cases,cards,alloc,overall};
+ function resume(){init();go('p1topic')}
+ function resumeInfo(){const t=topic(state.lastTopic),i=Math.max(0,Math.min(Number(state.lastChapter)||0,t.chapters.length-1));return {title:t.title,chapter:`P1 · Aula ${i+1}: ${t.chapters[i].name}`}}
+ function reload(){clearInterval(examTick);examTick=null;state=load();practice=null;exam=null;flashDeck=[];flashPos=0;flashBack=false;activeCase=0;caseStage=0;caseReveal=false;activeDisc=0;discReveal=false;init();}
+ return {reload,resume,resumeInfo,view,afterRender,openTopic,chapter:setChapter,nextChapter,toggleDone,saveNote,startPractice,answerPractice,nextPractice,startExam,answerExam,goExam,finishExam,selectCase,caseAnswer,caseNext,selectDisc,discFor,discCheck,flashSet,flashFlip,flashSkip,flashGrade,exportCSV,viewSources,go,searchItems,getBackup,restoreBackup,exportProgress,topics,qs,cases,cards,alloc,overall};
 })();
 window.P1=P1;

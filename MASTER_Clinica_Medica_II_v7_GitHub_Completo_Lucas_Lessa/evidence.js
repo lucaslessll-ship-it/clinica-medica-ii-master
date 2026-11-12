@@ -41,5 +41,6 @@ function libraryItems(q){const needle=q.toLocaleLowerCase('pt-BR');let list=Obje
 function filterLibrary(q){const node=document.getElementById('ev-search-results');if(node)node.innerHTML=libraryItems(q)}
 function openGuide(){navigate('sources');setTimeout(()=>{document.getElementById('evidence-library')?.scrollIntoView({behavior:'smooth',block:'start'});document.getElementById('ev-search')?.focus({preventScroll:true})},30)}
 function quick(tid,period='P2'){const keys=Object.keys(DB.map).filter(key=>key.startsWith(period+':'+tid+':'));if(!keys.length)return '';const unique=[...new Set(keys.flatMap(k=>DB.map[k].guidelines))].slice(0,4);return `<div class="ev-inline"><b>Diretrizes relacionadas ao módulo:</b> ${unique.map(x=>`<a href="${esc(src[x].url)}" target="_blank" rel="noopener noreferrer">${esc(src[x].label.split(' · ')[0])} (${esc(src[x].year)}) ↗</a>`).join(' · ')}<span>Links temáticos para aprofundar; não constituem conferência individual de cada alternativa ou dose. Veja fontes específicas na aula.</span></div>`;}
-return {lesson,dashboard,library,chooseCase,nextCase,answerCase,resetCase,filterLibrary,openGuide,quick,sourceCount:Object.keys(src).length,lessonCount:Object.keys(DB.map).length};
+function reload(){flags={};try{flags=JSON.parse(localStorage.getItem(KEY)||'{}')||{}}catch{}picked=0;choice=null;}
+return {reload,lesson,dashboard,library,chooseCase,nextCase,answerCase,resetCase,filterLibrary,openGuide,quick,sourceCount:Object.keys(src).length,lessonCount:Object.keys(DB.map).length};
 })();

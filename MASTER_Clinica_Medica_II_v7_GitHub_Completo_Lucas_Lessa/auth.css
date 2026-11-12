@@ -1,0 +1,37 @@
+/* Account surfaces share the HIG theme, contrast and text-size preferences. */
+[hidden]{display:none!important}
+html.master-auth-locked{overflow:hidden}
+html.master-auth-locked #app-shell,html.master-auth-locked .mobile-tabbar,html.master-auth-locked #focus-exit,html.master-auth-locked #hig-overlay{visibility:hidden!important}
+#master-auth{position:fixed;inset:0;z-index:1000;overflow:auto;overscroll-behavior:contain;display:flex;align-items:safe center;justify-content:center;min-height:100vh;min-height:100dvh;padding:24px;padding: max(24px,env(safe-area-inset-top)) max(16px,env(safe-area-inset-right)) max(24px,env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left));background:var(--bg);color:var(--ink);font:inherit;-webkit-overflow-scrolling:touch}
+#master-auth *{box-sizing:border-box}
+.auth-panel{width:100%;max-width:460px;margin:auto;padding:clamp(24px,4vw,36px);border:1px solid var(--line);border-radius:var(--radius);background:var(--white);box-shadow:var(--shadow)}
+.auth-brand{font-weight:800;letter-spacing:2px;color:var(--green);margin-bottom:20px}
+#master-auth h1{font-size:clamp(24px,4vw,30px);line-height:1.2;letter-spacing:-.035em;margin:20px 0 12px;color:var(--ink)}
+#master-auth h1:focus{outline:none}
+#master-auth p{font-size:14px;line-height:1.6;color:var(--muted)}
+#master-auth label:not(.auth-consent){display:block;margin:18px 0 7px;font-size:14px;font-weight:650}
+#master-auth input:not([type=checkbox]){display:block;width:100%;min-height:48px;border:1px solid var(--surface-border,var(--line));border-radius:11px;padding:12px;font:inherit;font-size:16px;color:var(--ink);background:var(--bg)}
+#master-auth button{font:inherit;min-height:44px;touch-action:manipulation}
+#master-auth button:focus-visible,#master-auth input:focus-visible,.auth-privacy>summary:focus-visible,.avatar:focus-visible,.profile-popover button:focus-visible{outline:3px solid var(--focus,var(--green));outline-offset:3px}
+#master-auth .auth-hint{font-size:12px;margin:8px 0}
+#master-submit,.auth-google{width:100%;margin-top:20px;white-space:normal}
+.auth-tabs{display:flex;border:1px solid var(--line);border-radius:12px;padding:4px;gap:5px;background:var(--bg)}
+.auth-tabs button{flex:1;border:0;border-radius:8px;background:transparent;color:var(--muted);cursor:pointer}
+.auth-tabs button[aria-pressed=true]{background:var(--mint);color:var(--green2);font-weight:700}
+.auth-links{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.auth-link{padding:8px 0;border:0;background:transparent;color:var(--green2);text-align:left;text-decoration:underline;text-underline-offset:4px;cursor:pointer}
+#master-auth-message{min-height:24px;margin:16px 0;color:var(--green2)!important;font-weight:600;overflow-wrap:anywhere}
+#master-auth-message[data-error=true]{color:var(--danger)!important}
+.auth-privacy{border-top:1px solid var(--line);padding-top:16px;font-size:12px;color:var(--muted)}
+.auth-privacy>summary{cursor:pointer;min-height:44px;display:flex;align-items:center;text-decoration:underline;text-underline-offset:3px}
+#master-auth .auth-privacy p{font-size:12px}
+.auth-consent{display:flex;align-items:flex-start;gap:10px;font-size:14px;line-height:1.6;margin-top:20px}
+.auth-consent input{width:22px;height:22px;flex-shrink:0;margin-top:2px;accent-color:var(--green)}
+.account-control{position:relative}.account-control>.avatar{display:grid;place-items:center;width:44px;height:44px;border-radius:50%;cursor:pointer;flex-shrink:0}
+.profile-popover{position:absolute;top:calc(100% + 10px);right:0;width:min(320px,calc(100vw - 32px));padding:20px;box-shadow:var(--shadow);border:1px solid var(--line);border-radius:var(--radius);background:var(--white);color:var(--ink);overflow-wrap:anywhere;max-height:calc(100dvh - 100px);overflow:auto}
+.profile-popover p{margin:8px 0 14px;color:var(--muted);font-size:13px;line-height:1.5}
+.profile-popover .btn{width:100%;justify-content:flex-start;margin-top:8px;white-space:normal}
+body[data-theme=dark]{--danger:#ffb4ac}
+body.high-contrast .auth-panel,body.high-contrast .profile-popover,body.high-contrast #master-auth input{border-color:currentColor}
+@media(max-width:600px){#master-auth{padding-top:max(16px,env(safe-area-inset-top));padding-bottom:max(16px,env(safe-area-inset-bottom))}.auth-panel{padding:24px 20px}.auth-brand{margin-bottom:14px}}
+@media(prefers-reduced-motion:reduce){#master-auth *{scroll-behavior:auto!important;transition:none!important}}

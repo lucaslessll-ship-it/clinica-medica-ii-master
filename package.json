@@ -1,0 +1,11 @@
+{
+  "name": "clinica-medica-ii-master",
+  "private": true,
+  "scripts": {
+    "test": "node --test tests/account-ui.test.cjs"
+  },
+  "devDependencies": {
+    "@supabase/supabase-js": "2.119.0",
+    "playwright": "1.62.1"
+  }
+}
