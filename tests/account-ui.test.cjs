@@ -243,3 +243,16 @@ test('clinical guide and prescription manual reflow on phone/tablet and dark mod
   await p.evaluate(()=>Clinical.openManual('p1has'));assert.ok(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),`manual ${width}`);await p.screenshot({path:`work/manual-${width}.png`});await t.close();
  }
 });
+test('dashboard typography has no overlapping card text at phone, tablet and desktop widths',async()=>{
+ for(const width of [390,820,1440,1562]){
+  const t=await open({session:true,viewport:{width,height:1000}}),p=t.page;await p.waitForFunction(()=>document.getElementById('master-auth').hidden);await p.evaluate(()=>document.fonts.ready);
+  assert.equal(await p.evaluate(()=>document.fonts.check('400 16px Inter')),true);
+  const cards=await p.evaluate(()=>[...document.querySelectorAll('.study-tool')].map(card=>{const a=card.querySelector('strong').getBoundingClientRect(),b=card.querySelector('small').getBoundingClientRect();return {title:card.querySelector('strong').textContent,overlap:b.top<a.bottom-1,inside:b.right<=card.getBoundingClientRect().right,width:a.width}}));
+  assert.ok(cards.every(c=>!c.overlap&&c.inside&&c.width>60),JSON.stringify({width,cards}));assert.ok(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));await p.screenshot({path:`work/redesign-${width}.png`});await t.close();
+ }
+});
+test('sidebar supports direct navigation, disclosure toggles and compact icons without native markers',async()=>{
+ const t=await open({session:true}),p=t.page;await p.waitForFunction(()=>document.getElementById('master-auth').hidden);assert.equal(await p.locator('#sidebar-nav summary').count(),0);
+ await p.locator('[data-nav-toggle="3"]').click();assert.equal(await p.locator('[data-nav-toggle="3"]').getAttribute('aria-expanded'),'true');await p.locator('#nav-children-3').getByRole('button',{name:'Simulado de 20 questões',exact:true}).click();assert.equal(await p.evaluate(()=>ui.route),'exam');
+ await p.locator('#sidebar-nav .nav-destination').filter({hasText:'Estudar P2'}).click();assert.equal(await p.evaluate(()=>ui.route),'topics');await p.evaluate(()=>HIG.toggleSidebar());assert.equal(await p.locator('#sidebar-nav .nav-destination>span').first().isVisible(),false);await p.evaluate(()=>HIG.toggleSidebar());await t.close();
+});
