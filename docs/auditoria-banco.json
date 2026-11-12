@@ -1,0 +1,98 @@
+{
+  "source": "Executable audit of repository arrays; no patient or student data.",
+  "legacy": {
+    "total": 136,
+    "distinct": 136,
+    "counts": {
+      "module": {
+        "P2": 80,
+        "P1": 56
+      },
+      "topic": {
+        "reuma1": 10,
+        "reuma2": 10,
+        "neuro1": 10,
+        "neuro2": 10,
+        "neuro3": 10,
+        "gastro": 10,
+        "hema": 10,
+        "onco": 10,
+        "p1inf": 14,
+        "p1arr": 6,
+        "p1has": 6,
+        "p1dm": 6,
+        "p1tir1": 6,
+        "p1tir2": 6,
+        "p1neuro": 6,
+        "p1tele": 6
+      },
+      "level": {
+        "1": 12,
+        "2": 36,
+        "3": 88
+      },
+      "status": {
+        "pending": 136
+      }
+    },
+    "duplicateStems": [],
+    "invalid": []
+  },
+  "current": {
+    "total": 168,
+    "distinct": 168,
+    "counts": {
+      "module": {
+        "P2": 112,
+        "P1": 56
+      },
+      "topic": {
+        "reuma1": 14,
+        "reuma2": 14,
+        "neuro1": 14,
+        "neuro2": 14,
+        "neuro3": 14,
+        "gastro": 14,
+        "hema": 14,
+        "onco": 14,
+        "p1inf": 14,
+        "p1arr": 6,
+        "p1has": 6,
+        "p1dm": 6,
+        "p1tir1": 6,
+        "p1tir2": 6,
+        "p1neuro": 6,
+        "p1tele": 6
+      },
+      "level": {
+        "1": 12,
+        "2": 46,
+        "3": 110
+      },
+      "status": {
+        "pending": 136,
+        "released": 32
+      }
+    },
+    "duplicateStems": [],
+    "invalid": []
+  },
+  "legacyAnswerPositions": {
+    "0": 106,
+    "1": 16,
+    "2": 10,
+    "3": 4
+  },
+  "newItems": 32,
+  "cases": {
+    "p2": 8,
+    "p1": 10,
+    "discursiveP2": 8
+  },
+  "warnings": [
+    "A revisão técnica não comprova correção clínica.",
+    "Itens legados não possuem revisão clínica individual registrada nesta entrega.",
+    "Não há prova oficial íntegra nem gabarito oficial auditado nesta cópia do repositório.",
+    "Sem previsão de frequência ou probabilidade de aprovação."
+  ]
+}

@@ -1,0 +1,10 @@
+const fs=require('node:fs'),vm=require('node:vm'),path=require('node:path');
+const root=path.join(__dirname,'../MASTER_Clinica_Medica_II_v7_GitHub_Completo_Lucas_Lessa');
+const context={window:{}};vm.createContext(context);
+for(const file of ['questions.js','banca_questions.js','p1_questions.js','cases.js','p1_cases.js','expanded_questions.js','exam-engine.js'])if(fs.existsSync(path.join(root,file)))vm.runInContext(fs.readFileSync(path.join(root,file),'utf8'),context,{filename:file});
+const w=context.window,E=w.ExamEngine;
+const legacy=[...w.MASTER_QUESTIONS.map((q,i)=>E.normalize(q,'P2',i)),...w.MASTER_P1_QUESTIONS.map((q,i)=>E.normalize(q,'P1',i))];
+const tally=(items,key)=>items.reduce((a,q)=>(a[q[key]]=(a[q[key]]||0)+1,a),{});
+const report={source:'Executable audit of repository arrays; no patient or student data.',legacy:E.audit(legacy),current:E.audit(E.bank()),legacyAnswerPositions:tally(legacy,'a'),newItems:(w.MASTER_EXPANDED_QUESTIONS||[]).length,cases:{p2:w.MASTER_CASES.length,p1:w.MASTER_P1_CASES.length,discursiveP2:w.MASTER_DISCURSIVES.length},warnings:['A revisão técnica não comprova correção clínica.','Itens legados não possuem revisão clínica individual registrada nesta entrega.','Não há prova oficial íntegra nem gabarito oficial auditado nesta cópia do repositório.','Sem previsão de frequência ou probabilidade de aprovação.']};
+fs.mkdirSync(path.join(__dirname,'../docs'),{recursive:true});fs.writeFileSync(path.join(__dirname,'../docs/auditoria-banco.json'),JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify(report,null,2));
+if(report.current.invalid.length||report.current.duplicateStems.length)process.exitCode=1;
