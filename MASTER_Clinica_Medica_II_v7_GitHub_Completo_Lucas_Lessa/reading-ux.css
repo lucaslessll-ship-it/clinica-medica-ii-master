@@ -1,0 +1,25 @@
+/* Comfortable lesson reading; all colors inherit the active theme. */
+.reading-lesson{max-width:1050px;margin-inline:auto}
+.reading-lesson .lesson-sections{grid-template-columns:minmax(0,1fr);gap:16px}
+.reading-lesson .lesson-block{padding:clamp(18px,3vw,28px);border:1px solid var(--line);border-radius:16px;box-shadow:none;overflow-wrap:anywhere}
+.reading-lesson .lesson-block h3{font-size:clamp(1rem,1.2vw,1.125rem);line-height:1.5;letter-spacing:-.015em;margin-bottom:14px;scroll-margin-top:110px}
+.reading-lesson .lesson-block p{font-size:1rem;line-height:1.85;max-width:76ch;text-wrap:pretty}
+.reading-lesson .lesson-head h2{scroll-margin-top:110px}
+.reading-lesson .lesson-head h2:focus,.reading-lesson .lesson-block h3:focus{outline:2px solid var(--focus,var(--green));outline-offset:7px;border-radius:3px}
+.reading-outline{margin:22px 0;padding:16px 18px;border:1px solid var(--line);border-radius:14px;background:var(--soft);color:var(--ink);min-width:0}
+.reading-outline summary{min-height:44px;cursor:pointer;font-weight:650;line-height:1.6;overflow-wrap:anywhere}
+.reading-outline-count{display:inline-block;margin-left:12px;color:var(--muted);font-size:.8125rem;font-weight:400}
+.reading-outline-links{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;margin:12px 0 18px}
+.reading-outline-links button{min-height:44px;border:1px solid transparent;border-radius:9px;padding:9px 10px;background:var(--white);color:var(--ink);font:inherit;font-size:.875rem;text-align:left;line-height:1.55;cursor:pointer;overflow-wrap:anywhere}
+.reading-outline-links button:hover,.reading-outline-links button[aria-current=location]{border-color:var(--green);color:var(--green2);background:var(--mint)}
+.reading-outline summary:focus-visible,.reading-outline-links button:focus-visible,.reading-back:focus-visible{outline:3px solid var(--focus,var(--green));outline-offset:3px}
+.reading-progress-label{display:block;font-size:.75rem;color:var(--muted);margin-bottom:8px}
+.reading-progress{height:4px;border-radius:9px;background:var(--line);overflow:hidden}.reading-progress-fill{display:block;height:100%;width:0;background:var(--green);border-radius:inherit}
+.reading-back{position:fixed;right:max(18px,env(safe-area-inset-right));bottom:90px;z-index:53;width:44px;min-height:44px;border:1px solid var(--line);border-radius:50%;background:var(--white);color:var(--ink);font:inherit;font-size:22px;cursor:pointer;box-shadow:var(--shadow)}
+html.master-auth-locked .reading-back{display:none!important}
+body.high-contrast .reading-outline,body.high-contrast .reading-outline-links button,body.high-contrast .reading-back{border-color:currentColor}
+@media(max-width:800px){.reading-back{bottom:calc(144px + env(safe-area-inset-bottom))}}
+@media(max-width:600px){.reading-outline{padding:12px}.reading-outline-links{grid-template-columns:minmax(0,1fr)}.reading-lesson .lesson-block p{font-size:1rem}.reading-outline-count{font-size:.75rem}}
+@media(prefers-reduced-motion:reduce){.reading-lesson *{scroll-behavior:auto!important}}
+body.reduce-motion .reading-lesson *{scroll-behavior:auto!important}
+@media print{.reading-outline,.reading-back{display:none!important}.reading-lesson{max-width:none}}

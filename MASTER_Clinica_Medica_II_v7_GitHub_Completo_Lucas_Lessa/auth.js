@@ -28,6 +28,7 @@
   function notice(text, error=false){$('master-auth-message').textContent=text;$('master-auth-message').dataset.error=String(error);}
   function syncNotice(text){$('master-sync-status').textContent=text;}
   function lock(on){
+    if(on)window.closeMobileNav?.(false);
     if(on)window.FocusTimer?.pause();
     document.documentElement.classList.toggle('master-auth-locked',on);
     for(const id of ['app-shell','mobile-tabbar','focus-exit','hig-overlay','focus-float']){

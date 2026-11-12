@@ -7,7 +7,7 @@
 const HIG = (() => {
   const UX_KEY='master_p2_hig_v2';
   const defaults={theme:'light',font:'normal',contrast:false,motion:false,collapsed:false,focus:false,notes:{},bookmarks:{},lastTopic:'neuro1',lastChapter:0,sessionMinutes:25,sessionSpent:0};
-  let preferences=load(),modalType='',modalFocus=null,searchItems=[],activeResult=0;
+  let preferences=load(),modalType='',modalFocus=null,modalBackground=null,searchItems=[],activeResult=0;
   function load(){try{let v=JSON.parse(localStorage.getItem(UX_KEY));return {...defaults,...(v&&typeof v==='object'?v:{}),notes:{...defaults.notes,...(v?.notes||{})},bookmarks:{...defaults.bookmarks,...(v?.bookmarks||{})}}}catch{return {...defaults}}}
   function save(){try{localStorage.setItem(UX_KEY,JSON.stringify(preferences))}catch{toast('O navegador não permitiu salvar esta preferência.') }}
   function focusData(){return preferences.pomodoro||{minutes:preferences.sessionMinutes,legacyMinutes:preferences.sessionSpent};}
@@ -30,14 +30,34 @@ const HIG = (() => {
   function toggleSidebar(){preferences.collapsed=!preferences.collapsed;save();applyPrefs()}
   function toggleFocus(){preferences.focus=!preferences.focus;save();applyPrefs();toast(preferences.focus?'Concentração ativada. Pressione F para sair.':'Modo de concentração encerrado.');}
   function openOverlay(name,content){
+    if(document.documentElement.classList.contains('master-auth-locked'))return;
+    closeMobileNav(false);
     modalType=name;modalFocus=document.activeElement;
+    const profile=document.getElementById('master-profile');
+    if(profile?.contains(modalFocus)){profile.hidden=true;const avatar=document.getElementById('master-avatar');avatar?.setAttribute('aria-expanded','false');modalFocus=avatar;}
     const overlay=document.getElementById('hig-overlay');
     document.getElementById('hig-dialog-title').textContent=name==='search'?'Buscar conteúdo':name==='settings'?'Preferências':name==='pomodoro'?'Pomodoro e dedicação':'Atalhos de teclado';
     document.getElementById('hig-dialog-content').innerHTML=content;
+    if(!modalBackground){modalBackground=[...document.querySelectorAll('#app-shell,#mobile-tabbar,#focus-float,#focus-exit')].map(el=>[el,el.inert]);modalBackground.forEach(([el])=>el.inert=true);}
     overlay.hidden=false;document.body.classList.add('modal-open');
-    requestAnimationFrame(()=>{let target=name==='search'?document.getElementById('global-search'):overlay.querySelector('.hig-dialog .icon-button');target?.focus()});
+    requestAnimationFrame(()=>{if(overlay.hidden||document.documentElement.classList.contains('master-auth-locked'))return;let target=name==='search'?document.getElementById('global-search'):overlay.querySelector('.hig-dialog .icon-button');target?.focus()});
   }
-  function closeOverlay(){document.getElementById('hig-overlay').hidden=true;document.body.classList.remove('modal-open');modalType='';modalFocus?.focus();}
+  function closeOverlay(){
+    const overlay=document.getElementById('hig-overlay'),wasOpen=!overlay.hidden,locked=document.documentElement.classList.contains('master-auth-locked');
+    overlay.hidden=true;document.body.classList.remove('modal-open');modalType='';
+    if(modalBackground){for(const [el,inert]of modalBackground)el.inert=locked||inert;modalBackground=null;}
+    if(wasOpen&&!locked){const target=modalFocus?.isConnected&&modalFocus.getClientRects().length&&!modalFocus.closest('[inert]')?modalFocus:document.querySelector('.menu-button');target?.focus({preventScroll:true});}
+    modalFocus=null;
+  }
+  function dialogKeys(e){
+    if(e.key==='Escape'){e.preventDefault();closeOverlay();return;}
+    if(e.key!=='Tab')return;
+    const controls=[...document.querySelectorAll('#hig-overlay button:not([disabled]),#hig-overlay input:not([disabled]),#hig-overlay select:not([disabled]),#hig-overlay textarea:not([disabled]),#hig-overlay a[href],#hig-overlay summary,#hig-overlay [tabindex]:not([tabindex="-1"])')].filter(el=>el.tabIndex>=0&&el.getClientRects().length&&!el.closest('[inert]')&&getComputedStyle(el).visibility!=='hidden');
+    const first=controls[0],last=controls.at(-1);
+    if(!controls.length){e.preventDefault();return;}
+    if(e.shiftKey&&(document.activeElement===first||!controls.includes(document.activeElement))){e.preventDefault();last.focus();}
+    else if(!e.shiftKey&&(document.activeElement===last||!controls.includes(document.activeElement))){e.preventDefault();first.focus();}
+  }
   function makeSearchItems(){
     let arr=[];
     TOPICS.forEach(t=>{
@@ -55,11 +75,21 @@ const HIG = (() => {
     else filtered=searchItems.filter(x=>x.type==='Módulo');
     activeResult=0; window.__masterSearchResults=filtered;
     const summary=text?`${filtered.length} resultado(s) para sua busca`:'Sugestões para começar';
-    return `<div class="search-section-title">${summary}</div><div class="search-result-list" role="listbox" id="search-result-list" aria-label="Resultados da busca">${filtered.length?filtered.map((x,i)=>`<button role="option" aria-selected="${i===activeResult}" type="button" class="search-result ${i===activeResult?'selected':''}" onclick="HIG.chooseResult(${i})"><span class="result-icon" aria-hidden="true">${x.icon}</span><span><strong>${escapeHtml(x.label)}</strong><small>${escapeHtml(x.type+' · '+x.sub)}</small></span><span aria-hidden="true">↗</span></button>`).join(''):'<div class="search-empty">Nenhum resultado. Experimente “miastenia”, “nefrite”, “síncope” ou “quimioterapia”.</div>'}</div>`;
+    return `<div class="search-section-title">${summary}</div><div class="search-result-list" role="listbox" id="search-result-list" aria-label="Resultados da busca">${filtered.length?filtered.map((x,i)=>`<button role="option" id="global-search-option-${i}" tabindex="-1" aria-selected="${i===activeResult}" type="button" class="search-result ${i===activeResult?'selected':''}" onclick="HIG.chooseResult(${i})"><span class="result-icon" aria-hidden="true">${x.icon}</span><span><strong>${escapeHtml(x.label)}</strong><small>${escapeHtml(x.type+' · '+x.sub)}</small></span><span aria-hidden="true">↗</span></button>`).join(''):'<div class="search-empty">Nenhum resultado. Experimente “miastenia”, “nefrite”, “síncope” ou “quimioterapia”.</div>'}</div>`;
   }
-  function openSearch(){searchItems=makeSearchItems();openOverlay('search',`<div class="search-field-wrap"><span aria-hidden="true">⌕</span><input id="global-search" type="search" role="combobox" aria-expanded="true" aria-controls="search-result-list" aria-label="Termo clínico para pesquisar" placeholder="Diagnóstico, tema, exame ou conduta…" autocomplete="off" oninput="HIG.searchInput()" onkeydown="HIG.searchKeys(event)"/><kbd>ESC</kbd></div><div id="search-results">${searchMarkup('')}</div><div class="dialog-footnote">Busque nas ${TOPICS.reduce((n,t)=>n+t.chapters.length,0)+window.MASTER_P1_DATA.topics.reduce((n,t)=>n+t.chapters.length,0)} aulas, ${TOPICS.length+window.MASTER_P1_DATA.topics.length} módulos e ${QUESTION_BANK.length+window.MASTER_P1_QUESTIONS.length} questões. A busca acontece somente no seu dispositivo.</div>`);}
-  function searchInput(){const val=document.getElementById('global-search')?.value||'';document.getElementById('search-results').innerHTML=searchMarkup(val)}
-  function searchKeys(e){let list=window.__masterSearchResults||[];if(e.key==='ArrowDown'||e.key==='ArrowUp'){e.preventDefault();activeResult=(activeResult+(e.key==='ArrowDown'?1:-1)+list.length)%Math.max(list.length,1);document.querySelectorAll('.search-result').forEach((b,i)=>{b.classList.toggle('selected',i===activeResult);b.setAttribute('aria-selected',String(i===activeResult))});document.querySelectorAll('.search-result')[activeResult]?.scrollIntoView({block:'nearest'})}else if(e.key==='Enter'){e.preventDefault();chooseResult(activeResult)}}
+  function openSearch(){searchItems=makeSearchItems();openOverlay('search',`<div class="search-field-wrap"><span aria-hidden="true">⌕</span><input id="global-search" type="search" role="combobox" aria-autocomplete="list" aria-expanded="true" aria-controls="search-result-list" aria-label="Termo clínico para pesquisar" placeholder="Diagnóstico, tema, exame ou conduta…" autocomplete="off" oninput="HIG.searchInput()" onkeydown="HIG.searchKeys(event)"/><kbd>ESC</kbd></div><div id="search-results">${searchMarkup('')}</div><div class="dialog-footnote">Busque nas ${TOPICS.reduce((n,t)=>n+t.chapters.length,0)+window.MASTER_P1_DATA.topics.reduce((n,t)=>n+t.chapters.length,0)} aulas, ${TOPICS.length+window.MASTER_P1_DATA.topics.length} módulos e ${QUESTION_BANK.length+window.MASTER_P1_QUESTIONS.length} questões. A busca acontece somente no seu dispositivo.</div>`);updateSearchActive();}
+  function searchInput(){const val=document.getElementById('global-search')?.value||'';document.getElementById('search-results').innerHTML=searchMarkup(val);updateSearchActive()}
+  function updateSearchActive(){
+    const input=document.getElementById('global-search'),options=[...document.querySelectorAll('.search-result')];
+    options.forEach((option,i)=>{option.classList.toggle('selected',i===activeResult);option.setAttribute('aria-selected',String(i===activeResult));});
+    const selected=options[activeResult];if(selected)input?.setAttribute('aria-activedescendant',selected.id);else input?.removeAttribute('aria-activedescendant');
+    return selected;
+  }
+  function searchKeys(e){
+    const list=window.__masterSearchResults||[];
+    if(e.key==='ArrowDown'||e.key==='ArrowUp'){e.preventDefault();if(!list.length){activeResult=0;updateSearchActive();return;}activeResult=(activeResult+(e.key==='ArrowDown'?1:-1)+list.length)%list.length;updateSearchActive()?.scrollIntoView({block:'nearest'});}
+    else if(e.key==='Enter'){e.preventDefault();if(list.length)chooseResult(activeResult);}
+  }
   function chooseResult(i){let x=window.__masterSearchResults?.[i];if(!x)return;closeOverlay();x.action();}
   function settingsMarkup(){
     const groups=[['Aparência','Escolha o visual adequado ao seu dispositivo.',[['Clara','light'],['Escura','dark'],['Automática','system']]],['Tamanho de leitura','Amplie as aulas sem perder as informações clínicas.',[['Padrão','normal'],['Grande','large'],['Extra','xlarge'],['200%','xxlarge']]]];
@@ -119,7 +149,7 @@ const HIG = (() => {
     window.matchMedia('(prefers-color-scheme: dark)').addEventListener?.('change',()=>{if(preferences.theme==='system')applyPrefs()});
     document.addEventListener('keydown',e=>{
       if(document.documentElement.classList.contains('master-auth-locked'))return;
-      if(document.getElementById('hig-overlay').hidden===false){if(e.key==='Escape'){e.preventDefault();closeOverlay()}if(e.key==='Tab'){let el=Array.from(document.querySelectorAll('#hig-overlay button:not([disabled]),#hig-overlay input:not([disabled])'));if(el.length){let first=el[0],last=el[el.length-1];if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus()}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus()}}}return}
+      if(document.getElementById('hig-overlay').hidden===false){dialogKeys(e);return}
       if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==='k'){e.preventDefault();openSearch();return}
       if(e.target.closest('input,textarea,select,[contenteditable="true"]'))return;
       if(e.key==='/'){e.preventDefault();openSearch()}else if(e.key.toLowerCase()==='f'&&!e.metaKey&&!e.ctrlKey){e.preventDefault();toggleFocus()}else if(e.key==='?'&&!e.metaKey&&!e.ctrlKey){openHelp()}

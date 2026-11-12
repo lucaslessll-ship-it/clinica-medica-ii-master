@@ -336,3 +336,26 @@ test('pomodoro top bar remains visible while scrolling on mobile',async()=>{
  assert.ok(layout.top>=-1&&layout.top<=1&&layout.bottom>40,JSON.stringify(layout));assert.equal(await p.locator('#focus-top').isVisible(),true);
  await p.evaluate(()=>window.scrollTo(0,0));await p.screenshot({path:'work/subjects-mobile.png',animations:'disabled'});await t.close();
 });
+test('subject discovery supports accents, evaluation filters and clear empty states without changing progress',async()=>{
+ const t=await open({session:true,remote:[{storage_key:keys[0],payload:{...empty,completed:{neuro1_0:true}}},{storage_key:keys[1],payload:{completed:{p1arr_0:true}}}]}),p=t.page;await p.waitForFunction(()=>document.getElementById('master-auth').hidden);
+ assert.match(await p.locator('[data-subject=neuro1] .subject-meta').innerText(),/1 revisada/);assert.match(await p.locator('[data-subject=p1arr] .subject-meta').innerText(),/1 revisada/);
+ await p.locator('[data-subject-filter=P1]').click();assert.equal(await p.locator('[data-subject]:visible').count(),8);await p.locator('[data-subject-filter=all]').click();await p.locator('#subjects-search').fill('lupus');assert.equal(await p.locator('[data-subject]:visible').count(),1);assert.equal(await p.locator('[data-subject=reuma2]').isVisible(),true);assert.match(await p.locator('#subject-results').innerText(),/^1 matéria/);
+ await p.locator('#subjects-search').fill('nenhuma-materia-com-este-nome');assert.equal(await p.locator('#subject-empty').isVisible(),true);await p.getByRole('button',{name:'Limpar filtros'}).click();assert.equal(await p.locator('[data-subject]:visible').count(),16);assert.equal(await p.locator('#subjects-search').evaluate(el=>el===document.activeElement),true);assert.equal(await p.evaluate(()=>store.completed.neuro1_0),true);await t.close();
+});
+test('lesson section navigation and reading position preserve P2/P1 routes and clear on leaving',async()=>{
+ const t=await open({session:true}),p=t.page;await p.waitForFunction(()=>document.getElementById('master-auth').hidden);await p.emulateMedia({reducedMotion:'reduce'});
+ for(const period of ['P2','P1']){
+  await p.evaluate(period=>{if(period==='P2')openTopic('neuro1');else P1.openTopic('p1dm');},period);assert.equal(await p.locator('.reading-outline').count(),1);const hash=await p.evaluate(()=>location.hash);
+  await p.locator('.reading-outline summary').click();await p.locator('.reading-outline-links button').nth(1).click();assert.equal(await p.evaluate(()=>document.activeElement.tagName),'H3');assert.equal(await p.evaluate(()=>location.hash),hash);
+  await p.evaluate(()=>window.scrollTo({top:document.body.scrollHeight,behavior:'instant'}));await p.waitForFunction(()=>!document.querySelector('.reading-back').hidden);await p.waitForFunction(()=>Number(document.querySelector('.reading-progress').getAttribute('aria-valuenow'))>=90);
+  await p.getByRole('button',{name:'Voltar ao início da aula'}).click();assert.equal(await p.evaluate(()=>document.activeElement.tagName),'H2');await p.evaluate(()=>render());assert.equal(await p.locator('.reading-outline').count(),1);
+ }
+ await p.evaluate(()=>navigate('dashboard'));assert.equal(await p.locator('.reading-back').count(),0);assert.equal(await p.locator('.reading-outline').count(),0);await t.close();
+});
+test('refreshed library and lesson remain usable with 200 percent reading size on phone and tablet',async()=>{
+ for(const width of [320,390,820]){
+  const t=await open({session:true,viewport:{width,height:1000}}),p=t.page;await p.waitForFunction(()=>document.getElementById('master-auth').hidden);await p.evaluate(()=>{HIG.setFont('xxlarge');HIG.setTheme('dark');HIG.togglePref('contrast');});
+  assert.ok(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),`library overflow ${width}`);assert.equal(await p.locator('[data-subject]:visible').count(),16);
+  await p.locator('#subjects-search').fill('guillain');assert.equal(await p.locator('[data-subject]:visible').count(),1);await p.locator('[data-subject=neuro2]').click();await p.locator('.reading-outline summary').click();assert.ok(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),`lesson overflow ${width}`);await p.screenshot({path:`work/review-reading-${width}.png`,animations:'disabled'});await t.close();
+ }
+});
