@@ -23,3 +23,11 @@ body.high-contrast .reading-outline,body.high-contrast .reading-outline-links bu
 @media(prefers-reduced-motion:reduce){.reading-lesson *{scroll-behavior:auto!important}}
 body.reduce-motion .reading-lesson *{scroll-behavior:auto!important}
 @media print{.reading-outline,.reading-back{display:none!important}.reading-lesson{max-width:none}}
+
+/* 2026-11-13: lesson tabs as an even wrapping grid; fixes white-on-mint active tab */
+.chapter-nav{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:10px;overflow:visible;padding:8px 0 16px}
+.chapter-pill{display:flex;align-items:center;min-height:56px;padding:12px 16px;border-radius:14px;border:1px solid #cfe2dd;background:#fff;color:#173238;font-size:14px;font-weight:650;line-height:1.35;text-align:left;white-space:normal;overflow-wrap:anywhere;cursor:pointer;transition:border-color .15s,background-color .15s,box-shadow .15s}
+.chapter-pill:hover{border-color:#138578;box-shadow:0 4px 14px rgba(12,66,63,.08)}
+.chapter-pill.current{background:#0b6c66;border-color:#0b6c66;color:#fff;box-shadow:0 6px 18px rgba(11,108,102,.22)}
+body[data-theme="dark"] .chapter-pill{background:#20353a;color:#d9efeb;border-color:#3e5b5a}
+body[data-theme="dark"] .chapter-pill.current{background:#7fd6c3;border-color:#7fd6c3;color:#0c2a27}

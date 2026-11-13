@@ -1,0 +1,64 @@
+/* Curso POCUS */
+.pocus-progress-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:10px;font-size:15px}
+.pocus-grid{list-style:none;margin:16px 0 0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,320px),1fr));gap:14px}
+.pocus-card{display:flex;gap:14px;align-items:flex-start;width:100%;height:100%;padding:18px;border:1px solid var(--line);border-radius:18px;background:var(--white);color:var(--ink);font:inherit;text-align:left;cursor:pointer;transition:border-color .15s,box-shadow .15s,transform .15s}
+.pocus-card:hover{border-color:var(--green);box-shadow:0 8px 24px rgba(12,66,63,.1);transform:translateY(-1px)}
+.pocus-card:focus-visible,.pocus-q-opt:focus-visible{outline:3px solid var(--focus,var(--green));outline-offset:3px}
+.pocus-card-n{flex:none;display:grid;place-items:center;width:40px;height:40px;border-radius:12px;background:var(--mint);color:var(--green2);font-weight:800;font-size:17px}
+.pocus-card.done .pocus-card-n{background:var(--green2);color:#fff}
+.pocus-card-body{display:flex;flex-direction:column;gap:5px;min-width:0}
+.pocus-card-body small{font-size:12px;font-weight:700;color:var(--green2);letter-spacing:.02em}
+.pocus-card-body strong{font-size:16px;line-height:1.3}
+.pocus-card-body span{font-size:13.5px;line-height:1.5;color:#4c666b}
+.pocus-card-body em{font-style:normal;font-size:12.5px;color:#4c666b;margin-top:4px}
+.pocus-crumb{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:14px;color:#4c666b;font-size:13px}
+.pocus-crumb .btn{margin-top:0}
+.pocus-module{max-width:900px;margin-inline:auto}
+.pocus-title{font-size:clamp(24px,3.4vw,32px);line-height:1.15;letter-spacing:-.03em;margin:8px 0 8px;color:var(--ink)}
+.pocus-lead{font-size:16px;line-height:1.6;color:#4c666b;margin:0 0 18px}
+.pocus-goals{background:var(--soft);border:1px solid var(--line);border-radius:16px;padding:16px 20px;margin:18px 0}
+.pocus-sec{margin:28px 0 0}
+.pocus-sec h3,.pocus-goals h3{font-size:18px;line-height:1.3;margin:0 0 10px;color:var(--ink);letter-spacing:-.01em}
+.pocus-sec p,.pocus-sec li,.pocus-goals li{font-size:15px;line-height:1.75;max-width:74ch}
+.pocus-sec ul,.pocus-goals ul{margin:8px 0 0;padding-left:22px}.pocus-sec li+li,.pocus-goals li+li{margin-top:6px}
+.pocus-pitfalls{background:#fff6ed;border:1px solid #f1d6b8;border-radius:16px;padding:16px 20px}
+.pocus-pitfalls h3{color:#8a4b12}
+.pocus-fig{margin:18px 0 6px;border:1px solid var(--line);border-radius:16px;overflow:hidden;background:#05080a}
+.pocus-fig.light{background:#f4f9f8}
+.pocus-fig svg{display:block;width:100%;height:auto}
+.pocus-fig figcaption{background:var(--white);padding:14px 18px 16px;border-top:1px solid var(--line);color:var(--ink)}
+.pocus-fig figcaption strong{display:block;font-size:14.5px;margin-bottom:6px}
+.pocus-fig figcaption ol{margin:0;padding:0;list-style:none;counter-reset:pf}
+.pocus-fig figcaption li{counter-increment:pf;position:relative;padding-left:32px;margin:7px 0;font-size:14px;line-height:1.55;max-width:none}
+.pocus-fig figcaption li::before{content:counter(pf);position:absolute;left:0;top:1px;width:22px;height:22px;border-radius:50%;background:#ffd166;color:#1b1b1b;font-weight:800;font-size:12px;display:grid;place-items:center}
+.pocus-fig figcaption small{display:block;margin-top:10px;font-size:12px;color:#4c666b}
+.pocus-table-wrap{overflow-x:auto;margin:12px 0}
+.pocus-table{width:100%;border-collapse:collapse;font-size:14px;line-height:1.5;min-width:560px}
+.pocus-table th,.pocus-table td{border:1px solid var(--line);padding:10px 12px;text-align:left;vertical-align:top}
+.pocus-table thead th{background:var(--soft);font-size:13px}
+.pocus-case{border:1px solid var(--line);border-radius:14px;padding:14px 18px;margin:12px 0;background:var(--white)}
+.pocus-case h4{margin:0 0 6px;font-size:15px}.pocus-case summary{cursor:pointer;font-weight:700;color:var(--green2);padding:6px 0}
+.pocus-q{border:1px solid var(--line);border-radius:16px;padding:16px 18px;margin:14px 0;min-width:0}
+.pocus-q legend{font-size:15px;line-height:1.55;font-weight:650;padding:0 6px;color:var(--ink)}
+.pocus-q legend span{display:block;font-size:12px;font-weight:800;color:var(--green2);letter-spacing:.03em;text-transform:uppercase}
+.pocus-q-options{display:grid;gap:8px;margin-top:8px}
+.pocus-q-opt{display:flex;gap:12px;align-items:flex-start;width:100%;min-height:44px;padding:10px 14px;border:1px solid var(--line);border-radius:12px;background:var(--white);color:var(--ink);font:inherit;font-size:14.5px;line-height:1.5;text-align:left;cursor:pointer}
+.pocus-q-opt:hover{border-color:var(--green)}
+.pocus-q-opt b{flex:none;width:24px;height:24px;border-radius:50%;display:grid;place-items:center;background:var(--soft);font-size:12px}
+.pocus-q-opt.right{border-color:#1d8a5a;background:#e9f7ef}.pocus-q-opt.right b{background:#1d8a5a;color:#fff}
+.pocus-q-opt.wrong{border-color:#c2413a;background:#fdeeed}.pocus-q-opt.wrong b{background:#c2413a;color:#fff}
+.pocus-q-why{margin:12px 0 0;padding:12px 14px;border-radius:12px;background:var(--soft);font-size:14.5px;line-height:1.65}
+.pocus-refs li,.pocus-refs p{font-size:14px;line-height:1.6;overflow-wrap:anywhere}
+.pocus-refs a{color:var(--green2)}
+.pocus-done{display:flex;align-items:center;gap:10px;margin:24px 0 0;font-size:15px;font-weight:650;cursor:pointer}
+.pocus-done input{width:20px;height:20px;accent-color:var(--green2)}
+.pocus-pager{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:22px;padding-top:18px;border-top:1px solid var(--line)}
+.pocus-pager .btn{margin-top:0;font-size:13.5px}
+body[data-theme="dark"] .pocus-card-body span,body[data-theme="dark"] .pocus-card-body em,body[data-theme="dark"] .pocus-lead,body[data-theme="dark"] .pocus-crumb,body[data-theme="dark"] .pocus-fig figcaption small{color:#a9c4c0}
+body[data-theme="dark"] .pocus-card-body small,body[data-theme="dark"] .pocus-q legend span,body[data-theme="dark"] .pocus-refs a,body[data-theme="dark"] .pocus-case summary{color:#7fd6c3}
+body[data-theme="dark"] .pocus-card-n{background:#214d45;color:#c8f4e7}
+body[data-theme="dark"] .pocus-pitfalls{background:#3a2c1c;border-color:#6b5234}body[data-theme="dark"] .pocus-pitfalls h3{color:#ffcf99}
+body[data-theme="dark"] .pocus-q-opt.right{background:#173b2a;border-color:#3fae7b}body[data-theme="dark"] .pocus-q-opt.wrong{background:#472322;border-color:#e0635c}
+body[data-theme="dark"] .pocus-q-opt b{background:#20353a}
+body[data-theme="dark"] .pocus-fig.light{background:#f4f9f8}
+@media(max-width:600px){.pocus-sec p,.pocus-sec li,.pocus-goals li{font-size:15px}.pocus-card{padding:15px}.pocus-pager .btn{flex:1}}
