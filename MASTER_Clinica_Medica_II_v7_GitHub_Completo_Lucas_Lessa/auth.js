@@ -28,10 +28,13 @@
   function notice(text, error=false){$('master-auth-message').textContent=text;$('master-auth-message').dataset.error=String(error);}
   function syncNotice(text){$('master-sync-status').textContent=text;}
   function lock(on){
+    if(on)window.closeMobileNav?.(false);
+    if(on)window.FocusTimer?.pause();
     document.documentElement.classList.toggle('master-auth-locked',on);
-    for(const id of ['app-shell','mobile-tabbar','focus-exit','hig-overlay']){
+    for(const id of ['app-shell','mobile-tabbar','focus-exit','hig-overlay','focus-float']){
       const el=$(id);if(el){el.inert=on;if(on)el.setAttribute('aria-hidden','true');else el.removeAttribute('aria-hidden');}
     }
+    if(!on)window.FocusTimer?.render();
   }
   function redirectUrl(recovery=false){const url=new URL(location.pathname,location.origin);if(recovery)url.searchParams.set('auth','recovery');return url.href;}
   function setBusy(on, label){
@@ -121,10 +124,21 @@
     });
   }
   function closeProfile(){if($('master-profile'))$('master-profile').hidden=true;$('master-avatar')?.setAttribute('aria-expanded','false');}
+  function accountAvatar(id){
+    // Local, stable account illustration. Never send account identifiers to an image service.
+    let hash=2166136261;
+    for(const char of String(id||'guest'))hash=Math.imul(hash^char.codePointAt(0),16777619)>>>0;
+    const backgrounds=['#dcefe9','#e2e9fa','#f5e5ef','#f6ebd6','#dceef6','#ebe2f4'];
+    const shirts=['#17685e','#365b93','#854665','#895f25','#24667d','#66508e'];
+    const skins=['#f2c8a4','#deb08b','#bd8665','#875b45'];
+    const hair=['#302c32','#654331','#36363f','#4c352b'];
+    const style=(hash>>>12)%4,skin=skins[(hash>>>8)%skins.length],shirt=shirts[(hash>>>4)%shirts.length];
+    const hairline=['M12 18V14a8 8 0 0 1 16 0v4l-4-6-5 3-7-1Z','M12 18V14a8 8 0 0 1 16 0v4l-2-4H14Z','M12 18V14a8 8 0 0 1 16 0v4l-4-3-3-4-7 4Z','M12 18V14a8 8 0 0 1 16 0v4l-3-5-10-1Z'][style];
+    return `<svg viewBox="0 0 40 40" aria-hidden="true" focusable="false"><rect width="40" height="40" rx="20" fill="${backgrounds[hash%backgrounds.length]}"/><path d="M6 40v-3a14 14 0 0 1 28 0v3Z" fill="${shirt}"/><path d="M17 24h6v6a5 5 0 0 1-6 0Z" fill="${skin}"/><ellipse cx="20" cy="18" rx="8" ry="10" fill="${skin}"/><path d="${hairline}" fill="${hair[(hash>>>16)%hair.length]}"/><g fill="#28232a"><circle cx="17" cy="18" r="1"/><circle cx="23" cy="18" r="1"/></g><path d="M18 23q2 2 4 0" fill="none" stroke="#694436" stroke-width="1.2" stroke-linecap="round"/></svg>`;
+  }
   function updateProfile(){
     const user=status.user,name=user?.user_metadata?.full_name||user?.user_metadata?.name||user?.email?.split('@')[0]||'Sua conta';
-    const initials=String(name).trim().split(/[\s._-]+/).slice(0,2).map(x=>x[0]||'').join('').toUpperCase().slice(0,2)||'LL';
-    $('master-avatar').textContent=initials;$('master-avatar').disabled=!status.ready;
+    $('master-avatar').innerHTML=accountAvatar(user?.id);$('master-avatar').disabled=!status.ready;
     $('master-avatar').setAttribute('aria-label',`Abrir menu da conta de ${name}`);
     $('master-profile-name').textContent=name;$('master-profile-email').textContent=user?.email||'';
   }
@@ -263,12 +277,14 @@
     const url=URL.createObjectURL(new Blob([JSON.stringify(backup,null,2)],{type:'application/json'})),a=document.createElement('a');a.href=url;a.download='MASTER-copia-conflito.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
   }
   function signedOut(message='Sua sessão terminou. Entre novamente para continuar.'){
+    window.FocusTimer?.pause();
     cancelSync();status.entering=null;status.consent?.(false);status.user=null;status.recovery=false;sessionStorage.removeItem(recoveryKey);
     window.dispatchEvent(new Event('master-auth-ended'));
     closeProfile();updateProfile();window.HIG?.closeOverlay();show('login',message);
   }
   async function signOut(){
     if(status.busy)return;
+    window.FocusTimer?.pause();
     await run('Saindo da conta…',async()=>{
       // Keep local data and ownership if sync is pending; another account never imports it.
       if(status.ready){try{await syncAll();}catch{notice('Há progresso salvo apenas neste dispositivo. Tente sincronizar antes de sair.',true);if($('master-auth').hidden)toast('Não foi possível sincronizar. Tente novamente antes de sair.');return;}}
@@ -285,7 +301,7 @@
       cancelSync();status.consent?.(false);status.entering=null;status.user=session.user;status.recovery=true;sessionStorage.setItem(recoveryKey,'yes');clearAuthUrl();show('recovery');return;
     }
     if(status.recovery){status.user=session.user;return;}
-    if(status.user&&status.user.id!==session.user.id){cancelSync();status.consent?.(false);}
+    if(status.user&&status.user.id!==session.user.id){window.FocusTimer?.pause();cancelSync();status.consent?.(false);}
     status.user=session.user;updateProfile();
     if(!status.ready)enter(session.user);
   }

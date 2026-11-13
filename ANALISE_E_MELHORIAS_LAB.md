@@ -34,3 +34,9 @@ Reconsultados para decisões selecionadas: NICE NG217 (EEG normal não exclui ep
 ## Verificação
 
 Testes adicionados: 24 IDs únicos, 20 P2, referências existentes, alternativas válidas, preservação de resposta antiga igual a zero, bloqueio de segunda resposta, filtros e contadores. Os 24 casos são respondidos e corrigidos em viewport de 390 px, verificando ausência de overflow. Também foi testado o versionamento dos arquivos e o retorno de recuperação de senha. Validadores Python e sintaxe dos JS aprovados.
+
+## Conciliação com mudanças concorrentes da main
+
+Antes da integração, a `main` recebeu `8412e5d`, `f979a78` e `3579764`: novo painel/biblioteca, avatar, pomodoro, leitura e **20 casos P2 + dois P1 sequenciais** no Decision Lab do Radar. Essas alterações foram preservadas, incluindo seu workflow de publicação. A ampliação desta branch passa a ser identificada como **Microdecisões**: 24 itens curtos adicionais em `evidence.js`, separados dos 22 casos sequenciais em `banca.js`. Os dois formatos coexistem; seus totais não são somados como se fossem o mesmo banco.
+
+O nome global dos itens curtos é `MASTER_MICRO_DECISION_CASES`, para não sobrescrever `MASTER_DECISION_CASES` dos casos sequenciais. Os testes mais recentes da main também foram preservados. As recomendações de melhor integração por tema devem levar em conta o novo painel já implementado; a prioridade restante é consolidar revisão dos erros e feedback, não recriar a biblioteca.

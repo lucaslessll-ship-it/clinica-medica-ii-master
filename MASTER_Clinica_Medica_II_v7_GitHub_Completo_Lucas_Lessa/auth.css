@@ -28,6 +28,7 @@ html.master-auth-locked #app-shell,html.master-auth-locked .mobile-tabbar,html.m
 .auth-consent{display:flex;align-items:flex-start;gap:10px;font-size:14px;line-height:1.6;margin-top:20px}
 .auth-consent input{width:22px;height:22px;flex-shrink:0;margin-top:2px;accent-color:var(--green)}
 .account-control{position:relative}.account-control>.avatar{display:grid;place-items:center;width:44px;height:44px;border-radius:50%;cursor:pointer;flex-shrink:0}
+.account-control>.avatar{padding:2px;overflow:hidden}.avatar>svg{display:block;width:100%;height:100%;border-radius:50%}
 .profile-popover{position:absolute;top:calc(100% + 10px);right:0;width:min(320px,calc(100vw - 32px));padding:20px;box-shadow:var(--shadow);border:1px solid var(--line);border-radius:var(--radius);background:var(--white);color:var(--ink);overflow-wrap:anywhere;max-height:calc(100dvh - 100px);overflow:auto}
 .profile-popover p{margin:8px 0 14px;color:var(--muted);font-size:13px;line-height:1.5}
 .profile-popover .btn{width:100%;justify-content:flex-start;margin-top:8px;white-space:normal}

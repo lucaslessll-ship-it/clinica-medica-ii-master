@@ -1,0 +1,61 @@
+name: Publicar MASTER no GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: github-pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Obter o código
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+
+      - name: Validar os arquivos do site
+        shell: bash
+        run: |
+          set -euo pipefail
+          app_dir=MASTER_Clinica_Medica_II_v7_GitHub_Completo_Lucas_Lessa
+          python3 "$app_dir/scripts/validar.py"
+          python3 "$app_dir/scripts/validar_v7.py"
+          for file in "$app_dir"/*.js; do node --check "$file"; done
+
+      - name: Preparar GitHub Pages
+        uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b # v5
+
+      - name: Empacotar somente o site
+        shell: bash
+        run: |
+          set -euo pipefail
+          site_dir="$RUNNER_TEMP/master-site"
+          mkdir -p "$site_dir"
+          cp index.html "$site_dir/index.html"
+          cp -R MASTER_Clinica_Medica_II_v7_GitHub_Completo_Lucas_Lessa "$site_dir/"
+
+      - name: Enviar o pacote do site
+        uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa # v3
+        with:
+          path: ${{ runner.temp }}/master-site
+
+      - name: Publicar o site
+        id: deployment
+        uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e # v4
