@@ -45,3 +45,6 @@ body[data-theme=dark] .side-goal-head,body[data-theme=dark] .side-goal small{col
 .decision-progress{grid-column:1/-1;margin:0;color:var(--muted);font-size:13px}.decision-controls select:focus-visible{outline:3px solid var(--focus,var(--green));outline-offset:2px}
 .ev-lab-case h3:focus{outline:none}
 @media(max-width:600px){.decision-controls{grid-template-columns:minmax(0,1fr)}.decision-controls select{font-size:16px}.ev-lab-options .ev-feedback .btn{display:flex;margin:14px 0}}
+.ev-lab{background:var(--white);border-color:var(--line)}.ev-lab-heading p{color:var(--muted)}.ev-lab-heading h2 em{color:var(--green)}
+.ev-lab .ev-option{background:var(--white);color:var(--ink);border-color:var(--line)}.ev-lab .ev-option:disabled{opacity:1;cursor:default}.ev-lab .ev-option.is-correct{background:var(--mint);color:var(--green2);border-color:var(--green)}.ev-lab .ev-option.is-wrong{background:#fff0ef;color:#873c3c;border-color:#d79b98}
+.ev-lab .ev-feedback{animation:none;background:var(--mint);color:var(--ink);border-color:var(--line)}.ev-lab .ev-feedback p{color:var(--ink);font-size:14px}.ev-lab .ev-feedback a{color:var(--green2)}
