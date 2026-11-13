@@ -369,7 +369,7 @@ test('refreshed library and lesson remain usable with 200 percent reading size o
 
 test('release URL versions local assets and preserves recovery callbacks',async()=>{
  const t=await open({session:true,root:true,query:'?auth=recovery'}),p=t.page;await text(p,'#master-auth-title',/Definir nova senha/);
- assert.equal(new URL(p.url()).searchParams.get('v'),'20261113-cir2');
+ assert.equal(new URL(p.url()).searchParams.get('v'),'20261113-conexao');
  const unversioned=await p.evaluate(()=>[...document.querySelectorAll('script[src],link[rel=stylesheet]')].map(e=>e.src||e.href).filter(url=>new URL(url).origin===location.origin&&!new URL(url).searchParams.has('v')));assert.deepEqual(unversioned,[]);await t.close();
 });
 test('Decision Lab has 24 stable cases with 20 P2 items, valid answers and references',async()=>{
@@ -414,4 +414,9 @@ test('unchecked remember option stores auth only in the current tab and preserve
  const exported=await t.context.storageState();assert.ok(!exported.origins.some(o=>o.localStorage.some(item=>item.name===key)));
  await p.reload();await p.waitForFunction(()=>document.getElementById('master-auth').hidden);await p.locator('#master-avatar').click();await p.locator('#master-signout').click();await p.waitForFunction(()=>!document.getElementById('master-auth').hidden);
  assert.equal(await p.locator('#master-remember').isChecked(),false);assert.equal(await p.evaluate(key=>sessionStorage.getItem(key),key),null);await t.close();
+});
+test('site identity includes clinical medicine and surgery without changing legacy study keys',async()=>{
+ const t=await open({session:true}),p=t.page;await p.waitForFunction(()=>document.getElementById('master-auth').hidden);
+ assert.equal(await p.title(),'Clínica Médica e Cirurgia');assert.match(await p.locator('.brand-text').innerText(),/Clínica Médica\s+e Cirurgia/);assert.equal(await p.locator('.top-context-title').innerText(),'Clínica Médica e Cirurgia');
+ const manifest=await (await p.request.get(base+'/MASTER_Clinica_Medica_II_v7_GitHub_Completo_Lucas_Lessa/manifest.webmanifest')).json();assert.equal(manifest.name,'Clínica Médica e Cirurgia');assert.ok(await p.evaluate(()=>MASTER_AUTH_CONFIG.progressKeys.includes('master_p2_lucas_v1')));await t.close();
 });
