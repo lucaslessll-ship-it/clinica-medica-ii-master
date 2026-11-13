@@ -13,7 +13,7 @@ const FocusTimer=(()=>{
     return {version:1,minutes,remainingMs:Number.isFinite(raw.remainingMs)?Math.max(0,Math.min(minutes*60000,raw.remainingMs)):minutes*60000,floating:raw.floating!==false,legacyMinutes:Math.max(0,Number(raw.legacyMinutes)||0),days};
   }
   function release(){clearInterval(interval);interval=null;running=false;releaseLock?.();releaseLock=null;}
-  function reload(){release();owner=user();state=normalize(HIG.focusData());render();refreshHistory();}
+  function reload(){release();owner=user();state=normalize(HIG.focusData());loadFloat();render();refreshHistory();}
   function allowed(){return owner&&owner===user()&&!document.documentElement.classList.contains('master-auth-locked');}
   function persist(){if(owner&&owner===user())HIG.saveFocus(state);lastSave=performance.now();refreshHistory();}
   function credit(start,ms){
@@ -51,7 +51,7 @@ const FocusTimer=(()=>{
   function configure(minutes){if(!allowed()||![25,45,60].includes(minutes))return;pause();state.minutes=minutes;state.remainingMs=minutes*60000;persist();render();}
   function reset(){if(!allowed())return;pause();state.remainingMs=state.minutes*60000;persist();render();}
   function floating(show){if(!allowed())return;state.floating=!!show;persist();render();if(!show&&document.getElementById('hig-overlay').hidden)document.getElementById('focus-top')?.focus();}
-  function panel(){return `<p>Escolha um bloco de dedicação. O tempo é registrado enquanto o pomodoro estiver rodando, inclusive ao navegar entre aulas. Ao recarregar ou fechar, o bloco fica pausado; o tempo já salvo é preservado.</p><div class="btn-row">${[25,45,60].map(n=>`<button class="btn" data-focus-duration="${n}" onclick="FocusTimer.configure(${n})" type="button">${n} min</button>`).join('')}</div><p class="focus-panel-time" data-focus-time>${format(state.remainingMs)}</p><div class="btn-row"><button class="btn primary" data-focus-toggle onclick="FocusTimer.toggle()" type="button">${running?'Pausar':'Começar'}</button><button class="btn" onclick="FocusTimer.reset()" type="button">Reiniciar bloco</button><button class="btn" data-focus-floating onclick="FocusTimer.floating(!FocusTimer.status().floating)" type="button">${state.floating?'Ocultar':'Mostrar'} controle lateral</button></div>${historyMarkup()}`;}
+  function panel(){return `<p>Escolha um bloco de dedicação. O tempo é registrado enquanto o pomodoro estiver rodando, inclusive ao navegar entre aulas. Ao recarregar ou fechar, o bloco fica pausado; o tempo já salvo é preservado.</p><div class="btn-row">${[25,45,60].map(n=>`<button class="btn" data-focus-duration="${n}" onclick="FocusTimer.configure(${n})" type="button">${n} min</button>`).join('')}</div><p class="focus-panel-time" data-focus-time>${format(state.remainingMs)}</p><div class="btn-row"><button class="btn primary" data-focus-toggle onclick="FocusTimer.toggle()" type="button">${running?'Pausar':'Começar'}</button><button class="btn" onclick="FocusTimer.reset()" type="button">Reiniciar bloco</button><button class="btn" onclick="FocusTimer.resetFloat()" type="button">Recentralizar flutuante</button><button class="btn" data-focus-floating onclick="FocusTimer.floating(!FocusTimer.status().floating)" type="button">${state.floating?'Ocultar':'Mostrar'} controle lateral</button></div>${historyMarkup()}`;}
   function historyMarkup(){return `<section class="focus-history" data-focus-history aria-label="Histórico de dedicação">${historyContent()}</section>`;}
   function historyContent(){
     if(!state)return '';
@@ -70,11 +70,53 @@ const FocusTimer=(()=>{
     document.querySelectorAll('[data-focus-duration]').forEach(el=>el.setAttribute('aria-pressed',String(Number(el.dataset.focusDuration)===state.minutes)));
     document.querySelectorAll('[data-focus-floating]').forEach(el=>el.textContent=state.floating?'Ocultar controle lateral':'Mostrar controle lateral');
     const top=document.getElementById('focus-top');if(top){top.setAttribute('aria-label',`Abrir pomodoro: ${label}, ${running?'em andamento':'pausado'}`);top.dataset.running=String(running);}
-    const float=document.getElementById('focus-float');if(float)float.hidden=!state.floating||!allowed();
+    const float=document.getElementById('focus-float');if(float){float.hidden=!state.floating||!allowed();float.dataset.running=String(running);placeFloat();}
+    document.querySelectorAll('[data-focus-float-toggle]').forEach(el=>{el.textContent=running?'Pausar':'Começar';});
+  }
+  /* Floating control: position and size are device preferences, stored per account on this device only. */
+  const floatKey=()=>'master_focus_float_v1_'+(owner||'anon');
+  let floatPrefs={x:null,y:null,expanded:false};
+  function loadFloat(){floatPrefs={x:null,y:null,expanded:false};try{const raw=JSON.parse(localStorage.getItem(floatKey())||'null');if(raw&&typeof raw==='object')floatPrefs={x:Number.isFinite(raw.x)?raw.x:null,y:Number.isFinite(raw.y)?raw.y:null,expanded:!!raw.expanded};}catch{}}
+  function saveFloat(){try{if(owner)localStorage.setItem(floatKey(),JSON.stringify(floatPrefs));}catch{}}
+  function placeFloat(){
+    const el=document.getElementById('focus-float');if(!el)return;
+    el.dataset.expanded=String(floatPrefs.expanded);el.querySelector('.focus-float-size')?.setAttribute('aria-expanded',String(floatPrefs.expanded));
+    if(floatPrefs.x===null||el.hidden){if(floatPrefs.x===null){el.style.left=el.style.top=el.style.right=el.style.bottom='';}return;}
+    const box=el.getBoundingClientRect(),x=Math.max(8,Math.min(window.innerWidth-box.width-8,floatPrefs.x)),y=Math.max(8,Math.min(window.innerHeight-box.height-8,floatPrefs.y));
+    el.style.left=x+'px';el.style.top=y+'px';el.style.right='auto';el.style.bottom='auto';
+  }
+  function moveFloat(x,y){floatPrefs.x=x;floatPrefs.y=y;placeFloat();}
+  function expand(){floatPrefs.expanded=!floatPrefs.expanded;saveFloat();placeFloat();}
+  function resetFloat(){floatPrefs.x=floatPrefs.y=null;saveFloat();placeFloat();}
+  function cancel(button){
+    if(!allowed())return;
+    if(button&&button.dataset.confirm!=='true'){button.dataset.confirm='true';button.textContent='Confirmar';clearTimeout(cancel._timer);cancel._timer=setTimeout(()=>{button.dataset.confirm='false';button.textContent='Cancelar';},4000);return;}
+    clearTimeout(cancel._timer);if(button){button.dataset.confirm='false';button.textContent='Cancelar';}
+    reset();toast('Bloco cancelado. O tempo já registrado foi mantido.');
+  }
+  function initFloat(){
+    const el=document.getElementById('focus-float');if(!el)return;
+    let drag=null;
+    el.addEventListener('pointerdown',e=>{if(e.button)return;const box=el.getBoundingClientRect();drag={id:e.pointerId,sx:e.clientX,sy:e.clientY,ox:box.left,oy:box.top,moved:false};});
+    // Listen on window so the drag continues when the pointer leaves the small control.
+    window.addEventListener('pointermove',e=>{
+      if(!drag||e.pointerId!==drag.id)return;const dx=e.clientX-drag.sx,dy=e.clientY-drag.sy;
+      if(!drag.moved){if(Math.hypot(dx,dy)<6)return;drag.moved=true;el.classList.add('dragging');}
+      e.preventDefault();moveFloat(drag.ox+dx,drag.oy+dy);
+    },{passive:false});
+    const end=e=>{if(!drag||e.pointerId!==drag.id)return;const moved=drag.moved;drag=null;el.classList.remove('dragging');if(moved){saveFloat();const stop=ev=>{ev.stopPropagation();ev.preventDefault();};window.addEventListener('click',stop,{capture:true,once:true});setTimeout(()=>window.removeEventListener('click',stop,{capture:true}),0);}};
+    window.addEventListener('pointerup',end);window.addEventListener('pointercancel',end);
+    el.querySelector('.focus-float-grip')?.addEventListener('keydown',e=>{
+      const step={ArrowLeft:[-16,0],ArrowRight:[16,0],ArrowUp:[0,-16],ArrowDown:[0,16]}[e.key];
+      if(e.key==='Home'){e.preventDefault();resetFloat();return;}
+      if(!step)return;e.preventDefault();const box=el.getBoundingClientRect();moveFloat(box.left+step[0],box.top+step[1]);saveFloat();
+    });
+    el.querySelector('.focus-float-grip')?.addEventListener('dblclick',resetFloat);
+    window.addEventListener('resize',placeFloat);
   }
   function status(){return {...state,running};}
-  function init(){reload();document.addEventListener('visibilitychange',()=>{if(running)tick(true);});window.addEventListener('pagehide',pause);window.addEventListener('beforeunload',pause);window.addEventListener('master-auth-ready',reload);window.addEventListener('master-auth-ended',()=>{release();state=normalize();owner=null;render();refreshHistory();});window.addEventListener('storage',e=>{if(e.key==='master_p2_hig_v2'&&!running){HIG.refreshFocus();state=normalize(HIG.focusData());render();refreshHistory();}});}
-  return {init,reload,render,toggle,pause,configure,reset,floating,panel,historyMarkup,status};
+  function init(){initFloat();reload();document.addEventListener('visibilitychange',()=>{if(running)tick(true);});window.addEventListener('pagehide',pause);window.addEventListener('beforeunload',pause);window.addEventListener('master-auth-ready',reload);window.addEventListener('master-auth-ended',()=>{release();state=normalize();owner=null;render();refreshHistory();});window.addEventListener('storage',e=>{if(e.key==='master_p2_hig_v2'&&!running){HIG.refreshFocus();state=normalize(HIG.focusData());render();refreshHistory();}});}
+  return {init,reload,render,toggle,pause,configure,reset,floating,panel,historyMarkup,status,cancel,expand,resetFloat};
 })();
 window.FocusTimer=FocusTimer;
 window.addEventListener('DOMContentLoaded',FocusTimer.init);
