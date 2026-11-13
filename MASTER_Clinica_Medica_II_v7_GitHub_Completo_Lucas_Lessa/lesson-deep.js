@@ -124,6 +124,8 @@ const DATA={
 };
 
 function has(id,index){return !!DATA[id+'_'+index];}
+function add(entries){Object.assign(DATA,entries);}
+const refLink=r=>r.u||'https://pubmed.ncbi.nlm.nih.gov/?term='+encodeURIComponent(r.q||r.t);
 function table(t){return `<div class="deep-table-wrap"><table class="deep-table"><thead><tr>${t.head.map(h=>`<th scope="col">${h}</th>`).join('')}</tr></thead><tbody>${t.rows.map(r=>`<tr>${r.map((c,i)=>i?`<td>${c}</td>`:`<th scope="row">${c}</th>`).join('')}</tr>`).join('')}</tbody></table></div>`;}
 function flow(f){
   return `<section class="deep-block"><h4>Fluxograma: ${f.title}</h4><ol class="deep-flow">${f.nodes.map(n=>{
@@ -142,9 +144,9 @@ function render(id,index){
   <section class="deep-block deep-pitfalls"><h4>Erros que custam ponto e paciente</h4><ul>${d.pitfalls.map(x=>`<li>${x}</li>`).join('')}</ul></section>
   <section class="deep-block"><h4>Evocação ativa</h4><p class="subtle">Responda em voz alta ou por escrito antes de abrir a resposta. Volte a estas perguntas em 1, 3 e 7 dias.</p>${d.recall.map((r,i)=>`<details class="deep-recall"><summary><span>${i+1}</span>${r.q}</summary><p>${r.a}</p></details>`).join('')}</section>
   <section class="deep-block"><h4>Na prática</h4><ul>${d.practice.map(x=>`<li>${x}</li>`).join('')}</ul></section>
-  <section class="deep-block deep-refs"><h4>Referências</h4><ul>${d.refs.map(r=>`<li><a href="${r.u}" target="_blank" rel="noopener">${r.t}</a></li>`).join('')}</ul>${d.note?`<p class="subtle">${d.note} Revisado em ${d.updated}.</p>`:''}</section>
+  <section class="deep-block deep-refs"><h4>Referências</h4><ul>${d.refs.map(r=>`<li><a href="${refLink(r)}" target="_blank" rel="noopener">${r.t}</a></li>`).join('')}</ul>${d.note?`<p class="subtle">${d.note} Revisado em ${d.updated}.</p>`:''}</section>
   </section>`;
 }
-return {render,has,keys:()=>Object.keys(DATA)};
+return {render,has,add,keys:()=>Object.keys(DATA)};
 })();
 window.LessonDeep=LessonDeep;
