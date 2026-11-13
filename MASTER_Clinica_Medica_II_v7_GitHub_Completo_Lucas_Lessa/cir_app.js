@@ -19,6 +19,19 @@ const done=(t,i)=>!!state.completed[t+'_'+i];
 function isDue(id){const r=state.results[id];return !!r&&!!r.next&&Date.parse(r.next)<=Date.now();}
 function stats(tid){const qs=pool().filter(q=>tid==='all'||q.t===tid),ans=qs.filter(q=>state.results[q.id]),ok=ans.filter(q=>state.results[q.id].correct);return {total:qs.length,answered:ans.length,right:ok.length,pct:ans.length?Math.round(ok.length/ans.length*100):0};}
 function lessonPct(t){return Math.round(t.chapters.filter((_,i)=>done(t.id,i)).length/t.chapters.length*100);}
+function studyPlan(now=new Date()){return CirPlan.build({topics,completed:state.completed,questions:own,results:state.results,activity:state.plan?.days||{},now});}
+function planActivity(){if(!state.plan||typeof state.plan!=='object')state.plan={version:1,days:{}};state.plan.days=state.plan.days||{};const key=CirPlan.dayKey(new Date());return state.plan.days[key]||(state.plan.days[key]={lessons:[],questions:[]});}
+function openPlannedLesson(){const next=studyPlan().next;if(next)openTopic(next.topic,next.index);}
+function startPlannedQuestions(){const ids=studyPlan().days[0]?.questions||[];if(ids.length)startPractice({t:'all',src:'own',mode:'all',ids});}
+function planPanel(){
+ const plan=studyPlan();if(!plan.active)return '';
+ const today=plan.days[0],format=key=>{const [year,month,day]=key.split('-');return day+'/'+month;};
+ const dayRows=plan.days.map(day=>`<li data-plan-date="${day.date}"><details><summary>${format(day.date)}: ${day.review?'revisão e simulado':day.lessons.length+' aulas pendentes e '+day.questions.length+' questões novas'}</summary>${day.review?'<p>Rever erros e assuntos de maior dificuldade. Fazer um simulado e conferir os comentários.</p>':`<p>${day.completedLessons} aulas concluídas neste dia; ${day.completedQuestions} questões novas respondidas neste dia.</p><ul>${day.lessons.map(lesson=>`<li><button class="btn ghost" type="button" onclick="CIR.openTopic('${lesson.topic}',${lesson.index})">${esc(lesson.topicTitle)}: ${esc(lesson.title)}</button></li>`).join('')}</ul>`}</details></li>`).join('');
+ return `<section class="cir-study-plan" aria-labelledby="cir-plan-title"><span class="overview-label">ATÉ A PROVA ESCRITA</span><h3 id="cir-plan-title">Cirurgia: o que estudar hoje</h3>${today.review?`<p>19/11: revisão final e simulado. ${plan.pendingLessons?plan.pendingLessons+' aulas ainda pendentes no acervo.':''}</p><div class="btn-row"><button class="btn primary" type="button" onclick="CIR.go('cirexam')">Abrir simulado de Cirurgia</button><button class="btn" type="button" onclick="CIR.startPractice({t:'all',src:'all',mode:'wrong'})">Revisar erros</button></div>`:`<p><strong>${today.lessons.length} aulas</strong> e <strong>${today.questions.length} questões novas</strong> pendentes para hoje. Peso 5 primeiro.</p><p class="cir-plan-credit">Registrado no plano hoje: ${today.completedLessons} aulas e ${today.completedQuestions} questões novas.</p>${plan.next?`<p class="cir-plan-next">Próxima: ${esc(plan.next.title)}</p><button class="btn primary cir-next-lesson" type="button" onclick="CIR.openPlannedLesson()">Abrir próxima aula pendente</button>`:'<p>Tarefa de aulas do dia concluída. Você pode revisar ou adiantar o cronograma.</p>'}${today.questions.length?'<button class="btn secondary" type="button" onclick="CIR.startPlannedQuestions()">Treinar questões de hoje</button>':''}`}
+ <details class="cir-plan-calendar"><summary>Ver plano diário até 19/11</summary><p>O plano usa as ${plan.totalLessons} aulas e as ${plan.totalQuestions} questões autorais. As pendências são redistribuídas pelos dias restantes. As conclusões de hoje contam para a tarefa do dia. O último dia fica reservado para revisão e simulado.</p><ol>${dayRows}</ol></details></section>`;
+}
+function performance(){return topics.map((t,index)=>{const value=stats(t.id);return {id:t.id,title:t.title,answered:value.answered,right:value.right,percent:value.answered>=5?value.pct:null,index};}).sort((a,b)=>(a.percent===null)-(b.percent===null)||(a.percent===null?a.index-b.index:a.percent-b.percent||b.answered-a.answered||a.index-b.index));}
+function performancePanel(){return sec('Desempenho por tema',`<p class="subtle">Do menor para o maior percentual. Menos de 5 questões respondidas: poucos dados, sem percentual.</p><div class="cir-performance">${performance().map(row=>`<article class="card cir-performance-row" data-performance-topic="${row.id}"><div><h3>${esc(row.title)}</h3><p>${row.answered} respondidas</p></div><strong>${row.percent===null?'poucos dados':row.percent+'% de acertos'}</strong><button class="btn secondary" type="button" onclick="CIR.startPractice({t:'${row.id}',src:'all',mode:'all'})">Treinar este tema<span class="visually-hidden">: ${esc(row.title)}</span></button></article>`).join('')}</div>`);}
 function daysTo(iso){return Math.ceil((Date.parse(iso)-Date.now())/86400000);}
 function sec(title,html,extra=''){return `<section class="section-spaced"><div class="section-header"><h2 class="section-title">${title}</h2>${extra}</div>${html}</section>`;}
 
@@ -49,13 +62,13 @@ function countdown(){
  const part=(n,label)=>n>0?`<div><strong>${n}</strong><span>${n===1?'dia':'dias'} para a ${label}</span></div>`:n===0?`<div><strong>Hoje</strong><span>${label}</span></div>`:'';
  return `<div class="cir-countdown">${part(w,'prova escrita')}${part(p,'prova prática')}<div><strong>${pool().length}</strong><span>questões disponíveis</span></div><div><strong>${Object.keys(state.completed).filter(k=>state.completed[k]).length}<small>/${nLessons}</small></strong><span>aulas concluídas</span></div></div>`;
 }
-function topicCard(t){const s=stats(t.id),lp=lessonPct(t);return `<button type="button" class="topic-card cir-topic" onclick="CIR.openTopic('${t.id}')"><div class="topic-icon cir-icon" aria-hidden="true">${t.block==='RAD'?'◐':t.block==='URO'?'◒':'✂'}</div><strong>${esc(t.title)}</strong><small>${t.chapters.length} aulas · ${s.total} questões${s.answered?` · ${s.pct}% de acertos`:''}</small><div class="mini-bar" aria-hidden="true"><span style="width:${lp}%"></span></div><span class="visually-hidden">${lp}% das aulas concluídas</span></button>`;}
+function topicCard(t){const s=stats(t.id),lp=lessonPct(t);return `<button type="button" class="topic-card cir-topic" onclick="CIR.openTopic('${t.id}')"><div class="topic-icon cir-icon" aria-hidden="true">${t.block==='RAD'?'◐':t.block==='URO'?'◒':'✂'}</div><strong>${esc(t.title)}</strong><small>${t.chapters.length} aulas · ${s.total} questões${s.answered?` · ${s.answered<5?'poucos dados':s.pct+'% de acertos'}`:''}</small><div class="mini-bar" aria-hidden="true"><span style="width:${lp}%"></span></div><span class="visually-hidden">${lp}% das aulas concluídas</span></button>`;}
 function hub(){
  const due=pool().filter(q=>isDue(q.id)).length;
  return header('CIRURGIA · 8º PERÍODO','Cirurgia <em>completa para a P2.</em>','Aulas aprofundadas por tema, fluxogramas de conduta, revisão ativa e treino com questões comentadas. Organizado pelo checklist da disciplina.')+
  countdown()+
  `<div class="btn-row cir-main-actions"><button class="btn primary" type="button" onclick="CIR.resume()">Continuar de onde parei →</button><button class="btn secondary" type="button" onclick="CIR.startPractice({t:'all',src:'all',mode:'all'})">Treinar questões</button>${due?`<button class="btn" type="button" onclick="CIR.startPractice({t:'all',src:'all',mode:'due'})">Revisar ${due} ${due===1?'erro':'erros'} do dia</button>`:''}<button class="btn" type="button" onclick="CIR.go('cirexam')">Simulado</button></div>`+
- bankLine()+
+ bankLine()+performancePanel()+
  data.blocks.map(([b,title,sub])=>sec(esc(title),`<div class="topic-grid">${topics.filter(t=>t.block===b).map(topicCard).join('')}</div>`,`<span class="subtle small">${esc(sub)}</span>`)).join('')+
  `<p class="subtle small cir-foot">Conteúdo educativo para estudo. Condutas e doses seguem diretrizes citadas em cada aula e não substituem protocolo institucional nem supervisão.</p>`;
 }
@@ -70,7 +83,7 @@ function lesson(t,i){
 }
 function topicView(){
  const t=topic(sel);chap=Math.max(0,Math.min(chap,t.chapters.length-1));const s=stats(t.id);
- return LearnUX.topicHead({id:t.id,eyebrow:'Cirurgia · '+(data.blocks.find(b=>b[0]===t.block)||[])[1],title:t.title,subtitle:t.focus,stats:`${t.chapters.length} aulas · ${s.total} questões · ${s.answered?s.pct+'% de acertos':'nenhuma respondida'}`,pct:lessonPct(t),badges:[`Peso ${t.priority}/5`],actions:`<button type="button" class="btn ghost" onclick="CIR.go('cir')">← Cirurgia</button>`})+
+ return LearnUX.topicHead({id:t.id,eyebrow:'Cirurgia · '+(data.blocks.find(b=>b[0]===t.block)||[])[1],title:t.title,subtitle:t.focus,stats:`${t.chapters.length} aulas · ${s.total} questões · ${s.answered<5?'poucos dados':s.pct+'% de acertos'}`,pct:lessonPct(t),badges:[`Peso ${t.priority}/5`],actions:`<button type="button" class="btn ghost" onclick="CIR.go('cir')">← Cirurgia</button>`})+
  sec('Percurso do tema',`<div class="chapter-nav">${t.chapters.map((c,i)=>`<button type="button" class="chapter-pill ${i===chap?'current':''}" ${i===chap?'aria-current="step"':''} onclick="CIR.chapter(${i})">${done(t.id,i)?'✓ ':''}${i+1}. ${esc(c.name)}</button>`).join('')}</div>`)+lesson(t,chap);
 }
 
@@ -78,9 +91,10 @@ function topicView(){
 const shuffle=a=>{const o=[...a];for(let i=o.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[o[i],o[j]]=[o[j],o[i]]}return o;};
 const orderOf=q=>q.shuffle?shuffle(q.o.map((_,i)=>i)):q.o.map((_,i)=>i);
 function select(f){return pool().filter(q=>(f.t==='all'||q.t===f.t)&&(f.src==='all'||(f.src==='bank'?q.bank:!q.bank))&&(f.mode==='all'||(f.mode==='new'&&!state.results[q.id])||(f.mode==='wrong'&&state.results[q.id]&&!state.results[q.id].correct)||(f.mode==='due'&&isDue(q.id))));}
-function startPractice(f){filt={...filt,...(f||{})};const ids=shuffle(select(filt).map(q=>q.id));practice={ids,step:0,chosen:null,revealed:false,order:ids.length?orderOf(byId(ids[0])):[],hits:0};go('cirpractice');}
+function startPractice(f){const {ids:plannedIds,...filters}=f||{},allowed=Array.isArray(plannedIds)?new Set(plannedIds):null;filt={...filt,...filters};const ids=shuffle(select(filt).filter(q=>!allowed||allowed.has(q.id)).map(q=>q.id));practice={ids,step:0,chosen:null,revealed:false,order:ids.length?orderOf(byId(ids[0])):[],hits:0};go('cirpractice');}
 function record(q,a){
  const prev=state.results[q.id],ok=a===q.a;let box=ok?Math.min((prev?.box??-1)+1,LADDER.length-1):0;
+ if(!prev&&own.some(item=>item.id===q.id)){const day=planActivity();day.questions=day.questions||[];if(!day.questions.includes(q.id))day.questions.push(q.id);}
  const next=new Date();next.setDate(next.getDate()+(ok?LADDER[box]:1));
  state.results[q.id]={correct:ok,answer:a,attempts:(prev?.attempts||0)+1,date:new Date().toISOString(),box,next:ok&&box>=LADDER.length-1?null:next.toISOString()};
 }
@@ -120,7 +134,7 @@ function go(r){navigate(r);}
 function openTopic(id,i=0){sel=id;chap=i;state.lastTopic=id;state.lastChapter=i;save();go('cirtopic');}
 function setChapter(i){chap=i;state.lastChapter=i;save();render();window.scrollTo({top:160,behavior:'smooth'});}
 function nextChapter(){const t=topic(sel);if(chap<t.chapters.length-1)chap++;else{const k=topics.findIndex(x=>x.id===sel);sel=topics[(k+1)%topics.length].id;chap=0;}state.lastTopic=sel;state.lastChapter=chap;save();render();window.scrollTo({top:160,behavior:'smooth'});}
-function toggleDone(){const k=sel+'_'+chap;state.completed[k]=!state.completed[k];save();render();}
+function toggleDone(){const k=sel+'_'+chap;state.completed[k]=!state.completed[k];if(state.completed[k]){const day=planActivity();day.lessons=day.lessons||[];if(!day.lessons.includes(k))day.lessons.push(k);}else{for(const day of Object.values(state.plan?.days||{}))day.lessons=(day.lessons||[]).filter(key=>key!==k);}save();render();}
 function saveNote(){state.notes[sel+'_'+chap]=document.getElementById('cir-note')?.value||'';save();toast('Anotação salva.');}
 function resume(){openTopic(topics.some(t=>t.id===state.lastTopic)?state.lastTopic:'ciraa',state.lastChapter||0);}
 function view(r){switch(r){case 'cirtopic':return topicView();case 'cirpractice':return practiceView();case 'cirexam':return examView();default:return hub();}}
@@ -130,6 +144,6 @@ function reload(){clearInterval(tick);state=load();practice=null;exam=null;sel=s
 window.addEventListener('storage',e=>{if(e.key===KEY)state=load();});
 function dueCount(){return pool().filter(q=>isDue(q.id)).length;}
 function completed(){return state.completed;}
-return {view,afterRender,go,openTopic,chapter:setChapter,nextChapter,toggleDone,saveNote,resume,startPractice,applyFilters,answer,nextQ,startExam,exAnswer,exGo,finishExam,searchItems,reload,loadBank,dueCount,completed,topics,own,pool,KEY};
+return {view,afterRender,go,openTopic,chapter:setChapter,nextChapter,toggleDone,saveNote,resume,startPractice,applyFilters,answer,nextQ,startExam,exAnswer,exGo,finishExam,searchItems,reload,loadBank,dueCount,completed,topics,own,pool,KEY,studyPlan,planPanel,openPlannedLesson,startPlannedQuestions,performance};
 })();
 window.CIR=CIR;
