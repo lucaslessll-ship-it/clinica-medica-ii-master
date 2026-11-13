@@ -52,6 +52,7 @@ const P1=(()=>{
  ${block('11 · Como isso aparece na prova',c.exam,'exam')}
  ${block('12 · Aprofundamento para discursiva',c.discursive,'full')}
  <article class="lesson-block full"><h3>▦ Algoritmo de raciocínio clínico</h3><div class="flow-diagram"><div class="flow-node"><b>1 · SÍNDROME</b>Localizar e reconhecer gravidade</div><div class="flow-node"><b>2 · MECANISMO</b>Justificar fisiopatologia</div><div class="flow-node"><b>3 · EXAMES</b>Discriminar hipóteses</div><div class="flow-node"><b>4 · TERAPIA</b>Priorizar e reavaliar</div></div></article>
+ ${window.LessonDeep?LessonDeep.render(t.id,index):''}
  ${window.EVIDENCE?EVIDENCE.lesson('P1',t.id,index):''}
  </div><div class="p1-note-area"><label for="p1-note"><strong>✎ Meu caderno — ${esc(c.name)}</strong><small>Suas anotações são salvas neste dispositivo e não alteram as notas da P2.</small></label><textarea id="p1-note" rows="3" placeholder="Dúvidas, associação mnemônica, explicação com suas palavras…">${esc(state.notes[t.id+'_'+index]||'')}</textarea><button class="btn secondary" onclick="P1.saveNote()">Salvar anotação</button></div>
  <div class="module-actions"><button class="btn primary" onclick="P1.toggleDone()">${state.completed[t.id+'_'+index]?'↺ Desmarcar revisão':'✓ Marcar aula revisada'}</button><button class="btn" onclick="P1.startPractice('${t.id}')">◈ Questões deste módulo</button><button class="btn" onclick="P1.discFor('${t.id}')">✎ Discursiva</button><button class="btn" onclick="P1.nextChapter()">Próxima aula →</button></div></div>`;}

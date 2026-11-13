@@ -63,3 +63,10 @@ test('floating pomodoro can be dragged, expanded, cancelled with confirmation an
  await p.setViewportSize({width:390,height:700});await p.waitForTimeout(100);const small=await p.locator('#focus-float').boundingBox();assert.ok(small.x>=0&&small.x+small.width<=391,JSON.stringify(small));
  await p.locator('.focus-float-grip').focus();await p.keyboard.press('Home');await t.close();
 });
+test('deep study block renders on the pilot lesson with flowchart, recall and sources, and stays absent elsewhere',async()=>{
+ const t=await open(),p=t.page;await p.evaluate(()=>{navigate('p1');P1.openTopic('p1arr');});
+ assert.equal(await p.locator('.deep-lesson').count(),1);assert.ok(await p.locator('.deep-flow > li').count()>=6);assert.ok(await p.locator('.deep-recall').count()>=5);assert.ok(await p.locator('.deep-refs a[href^="https://doi.org/"]').count()>=2);
+ await p.locator('.deep-recall summary').first().click();assert.equal(await p.locator('.deep-recall').first().evaluate(el=>el.open),true);
+ await p.evaluate(()=>P1.chapter(1));assert.equal(await p.locator('.deep-lesson').count(),0);
+ await p.setViewportSize({width:390,height:844});await p.evaluate(()=>P1.chapter(0));assert.ok(await fits(p));await t.close();
+});
