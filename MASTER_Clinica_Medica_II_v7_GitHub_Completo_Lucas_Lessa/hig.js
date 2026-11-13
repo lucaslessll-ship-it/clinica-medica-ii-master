@@ -23,11 +23,14 @@ const HIG = (() => {
     body.dataset.textSize=preferences.font;
     body.classList.toggle('high-contrast',!!preferences.contrast);
     body.classList.toggle('reduce-motion',!!preferences.motion);
-    body.classList.toggle('side-collapsed',!!preferences.collapsed);
+    body.classList.toggle('side-collapsed',sideCollapsed());
     body.classList.toggle('focus-mode',!!preferences.focus);
     document.querySelector('meta[name="theme-color"]')?.setAttribute('content',body.dataset.theme==='dark'?'#111d23':'#f7fafb');
   }
-  function toggleSidebar(){preferences.collapsed=!preferences.collapsed;save();applyPrefs()}
+  const tabletMedia=window.matchMedia('(min-width: 801px) and (max-width: 1100px)');
+  function sideCollapsed(){return tabletMedia.matches?preferences.tabletCollapsed!==false:!!preferences.collapsed;}
+  tabletMedia.addEventListener('change',()=>applyPrefs());
+  function toggleSidebar(){if(tabletMedia.matches)preferences.tabletCollapsed=!sideCollapsed();else preferences.collapsed=!preferences.collapsed;save();applyPrefs()}
   function toggleFocus(){preferences.focus=!preferences.focus;save();applyPrefs();toast(preferences.focus?'Concentração ativada. Pressione F para sair.':'Modo de concentração encerrado.');}
   function openOverlay(name,content){
     if(document.documentElement.classList.contains('master-auth-locked'))return;
