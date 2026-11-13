@@ -144,7 +144,7 @@
   }
   function hide(){
     if(!status.ready){enter(status.user);return;}
-    $('master-auth-form').reset();$('master-auth').hidden=true;lock(false);updateProfile();$('master-avatar').focus();
+    $('master-auth-form').reset();$('master-auth').hidden=true;lock(false);updateProfile();(document.getElementById('main-content')||$('master-avatar')).focus({preventScroll:true});
   }
   async function submit(e){
     e.preventDefault();if(status.busy)return;

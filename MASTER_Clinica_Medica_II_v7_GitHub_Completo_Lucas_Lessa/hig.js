@@ -66,6 +66,7 @@ const HIG = (() => {
     });
     QUESTION_BANK.forEach((q,i)=>arr.push({type:'Questão',label:q.tag||'Questão clínica',sub:getTopic(q.t).short+' · N'+q.level+' · '+q.q.slice(0,100),icon:'◈',action:()=>{ui.practice={tid:q.t,ids:[i],step:0,chosen:null,revealed:false,optionOrders:{}};navigate('practice')},text:[q.q,q.tag,q.why]}));
     if(window.P1)arr.push(...P1.searchItems());
+    if(window.LearnUX)arr.push(...LearnUX.commands());
     return arr;
   }
   function norm(x){return String(x||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase()}
