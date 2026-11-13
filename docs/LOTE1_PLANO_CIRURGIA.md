@@ -27,7 +27,7 @@ As questões também seguem o peso do tema. A quantidade diária é distribuída
 
 ## Integrações
 
-- Hoje soma as revisões de evocação com `CIR.dueCount()`, com botões separados para cada atividade.
+- Hoje soma as revisões de evocação com `CIR.dueCount()`, com botões separados para cada atividade. O painel atualiza quando o carregamento do banco privado termina.
 - Todas as matérias passa a listar 30 temas, incluindo os 14 de Cirurgia. Os contadores são calculados a partir dos dados, com filtro Cirurgia.
 - A página inicial de Cirurgia mostra os resultados por tema em ordem crescente de acerto. Temas com menos de 5 questões respondidas aparecem como poucos dados, sem percentual. A contagem usa questões distintas e o resultado mais recente de cada questão, mantendo o comportamento existente.
 
@@ -37,7 +37,7 @@ Versão preparada: `20261113-plano1`, interface `2026.11.13.10`.
 
 As verificações cobrem integridade estática, sintaxe JavaScript, distribuição do plano, conclusões, dias perdidos, revisão final, virada de data, integração de revisões, desempenho e navegação. As telas de 320, 390 e 820 px são verificadas nos temas claro e escuro, além da cobertura de desktop da suíte existente.
 
-Resultado: 79 testes aprovados, nenhum teste falhou ou foi ignorado. Os dois validadores Python passaram, assim como `node --check` nos 52 arquivos JavaScript do app e `git diff --check`.
+Resultado: 80 testes aprovados, nenhum teste falhou ou foi ignorado. Os dois validadores Python passaram, assim como `node --check` nos 52 arquivos JavaScript do app e `git diff --check`.
 
 Nenhum conteúdo médico, dose ou imagem foi acrescentado neste lote. Os lotes de aprofundamento e imagens dependem da consulta às fontes e da comprovação das licenças. O proxy do ambiente retornou HTTP 403 ao acessar a API do GitHub, o PubMed Central, o Wikimedia Commons e o WJES. Um rascunho de configuração de rede foi salvo, mas ainda não está aplicado ao ambiente ativo.
 

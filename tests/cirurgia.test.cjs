@@ -68,6 +68,12 @@ test('Hoje soma evocação e revisões de Cirurgia e o botão usa o filtro devid
  await p.evaluate(()=>{const id=CIR.own[0].id;localStorage.setItem(CIR.KEY,JSON.stringify({results:{[id]:{correct:false,next:'2026-11-12T12:00:00Z'}}}));CIR.reload();store.study={deep:{recall:{'neuro1_0#0':{d:'2026-11-12',n:0}},days:{}}};render();});
  assert.equal(await p.locator('.dash-today-nums strong').nth(1).textContent(),'2');await p.getByRole('button',{name:'Revisar Cirurgia: 1',exact:true}).click();assert.equal(await p.evaluate(()=>ui.route),'cirpractice');assert.match(await p.locator('.cir-q .status-row').innerText(),/Questão 1 de 1/);await t.close();
 });
+test('Hoje atualiza revisões do banco privado quando o carregamento termina',async()=>{
+ const t=await open({width:1280,height:900},'2026-11-13T09:00:00-03:00'),p=t.page;await p.waitForFunction(()=>CIR.pool().some(q=>q.bank));
+ await p.evaluate(()=>{window.dispatchEvent(new Event('master-auth-ended'));localStorage.setItem(CIR.KEY,JSON.stringify({results:{'b:t1':{correct:false,next:'2026-11-12T12:00:00Z'}}}));CIR.reload();navigate('dashboard');});
+ assert.equal(await p.locator('.dash-today-nums strong').nth(1).textContent(),'0');await p.evaluate(()=>CIR.loadBank());
+ assert.equal(await p.locator('.dash-today-nums strong').nth(1).textContent(),'1');await p.getByRole('button',{name:'Revisar Cirurgia: 1',exact:true}).click();assert.match(await p.locator('.cir-q').innerText(),/Questão privada de teste/);await t.close();
+});
 test('desempenho ordena percentuais conhecidos e não mostra percentual com poucos dados',async()=>{
  const t=await open(),p=t.page;
  const ids=await p.evaluate(()=>{const ids=CIR.topics.slice(0,3).map(topic=>topic.id),results={};ids.forEach((id,k)=>CIR.own.filter(q=>q.t===id).slice(0,k===2?4:5).forEach((q,i)=>results[q.id]={correct:k===0?i===0:true}));localStorage.setItem(CIR.KEY,JSON.stringify({results}));CIR.reload();CIR.go('cir');return ids;});

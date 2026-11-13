@@ -46,7 +46,7 @@ async function loadBank(){
   bank=rows.map(r=>({id:'b:'+r.id,t:r.topic,q:r.stem,o:Array.isArray(r.options)?r.options:[],a:r.answer,why:r.comment||'',src:[r.source,r.year].filter(Boolean).join(' · ')||'Banco de questões',img:r.image_url||'',shuffle:false,bank:true}));
   bankStatus=rows.length?'ready':'empty';
  }catch(e){bank=[];bankStatus='error';}
- if(ui.route.startsWith('cir'))render();
+ if(ui.route==='dashboard'||ui.route.startsWith('cir'))render();
 }
 window.addEventListener('master-auth-ready',()=>loadBank());
 window.addEventListener('master-auth-ended',()=>{bank=[];bankStatus='signed-out';});
