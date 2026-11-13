@@ -5,40 +5,40 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="color-scheme" content="light dark">
   <meta name="theme-color" content="#f7fafb">
-  <meta name="description" content="MASTER P2, Clínica Médica II. Estude P2 prioritária e P1 completa: 54 aulas, 136 questões, casos, discursivas, Radar da Banca e 530 flashcards num ambiente hospitalar acessível.">
+  <meta name="description" content="Clínica Médica e Cirurgia: aulas, questões, casos clínicos, revisão e acompanhamento do estudo.">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <title>MASTER Clínica Médica II — v7 · Radar da Banca · Lucas Lessa</title>
+  <title>Clínica Médica e Cirurgia</title>
   <link rel="icon" type="image/svg+xml" href="assets/app-icon.svg">
   <link rel="manifest" href="manifest.webmanifest">
-  <link rel="stylesheet" href="tokens.css?v=20261113-cir1">
-  <link rel="stylesheet" href="style.css?v=20261113-cir1">
-  <link rel="stylesheet" href="hig.css?v=20261113-cir1">
-  <link rel="stylesheet" href="p1.css?v=20261113-cir1">
-  <link rel="stylesheet" href="evidence.css?v=20261113-cir1">
-  <link rel="stylesheet" href="banca.css?v=20261113-cir1">
-  <link rel="stylesheet" href="auth.css?v=20261113-cir1">
-  <link rel="stylesheet" href="study.css?v=20261113-cir1">
-  <link rel="stylesheet" href="clinical.css?v=20261113-cir1">
-  <link rel="stylesheet" href="focus-timer.css?v=20261113-cir1">
+  <link rel="stylesheet" href="tokens.css?v=20261113-conexao">
+  <link rel="stylesheet" href="style.css?v=20261113-conexao">
+  <link rel="stylesheet" href="hig.css?v=20261113-conexao">
+  <link rel="stylesheet" href="p1.css?v=20261113-conexao">
+  <link rel="stylesheet" href="evidence.css?v=20261113-conexao">
+  <link rel="stylesheet" href="banca.css?v=20261113-conexao">
+  <link rel="stylesheet" href="auth.css?v=20261113-conexao">
+  <link rel="stylesheet" href="study.css?v=20261113-conexao">
+  <link rel="stylesheet" href="clinical.css?v=20261113-conexao">
+  <link rel="stylesheet" href="focus-timer.css?v=20261113-conexao">
   <link rel="preload" href="assets/fonts/inter-latin-variable.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="interface.css?v=20261113-cir1">
-  <link rel="stylesheet" href="experience.css?v=20261113-cir1">
-  <link rel="stylesheet" href="reading-ux.css?v=20261113-cir1">
-  <link rel="stylesheet" href="pocus.css?v=20261113-cir1">
-  <link rel="stylesheet" href="lesson-deep.css?v=20261113-cir1">
-  <link rel="stylesheet" href="learn-ux.css?v=20261113-cir1">
+  <link rel="stylesheet" href="interface.css?v=20261113-conexao">
+  <link rel="stylesheet" href="experience.css?v=20261113-conexao">
+  <link rel="stylesheet" href="reading-ux.css?v=20261113-conexao">
+  <link rel="stylesheet" href="pocus.css?v=20261113-conexao">
+  <link rel="stylesheet" href="lesson-deep.css?v=20261113-conexao">
+  <link rel="stylesheet" href="learn-ux.css?v=20261113-conexao">
 </head>
 <body data-theme="light" data-text-size="normal">
   <a class="skip-link" href="#main-content">Pular para o conteúdo</a>
   <div class="app-shell" id="app-shell">
     <aside id="sidebar" class="sidebar" aria-label="Navegação principal">
       <button class="sidebar-close" type="button" onclick="closeMobileNav()" aria-label="Fechar menu de navegação">×</button>
-      <a href="#dashboard" class="brand" aria-label="MASTER P2, início" onclick="navigate('dashboard');return false">
+      <a href="#dashboard" class="brand" aria-label="Clínica Médica e Cirurgia, início" onclick="navigate('dashboard');return false">
         <span class="brand-icon" aria-hidden="true"><svg width="31" height="31" viewBox="0 0 32 32" fill="none"><path d="M5 23V9l11 14L27 9v14" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-        <span class="brand-text"><strong>MASTER<span> P2</span></strong><small>Clínica Médica II</small></span>
+        <span class="brand-text"><strong>Clínica Médica</strong><small>e Cirurgia</small></span>
       </a>
-      <div class="side-context"><span class="context-dot"></span> ESTAÇÃO MASTER 2.0</div>
+      <div class="side-context"><span class="context-dot"></span> ESPAÇO DE ESTUDO</div>
       <div class="side-label">PAINÉIS</div>
       <nav id="sidebar-nav" class="nav-links" aria-label="Áreas do estudo"></nav>
       <div class="sidebar-spacer"></div>
@@ -54,7 +54,7 @@
         <div class="topbar-left">
           <button class="icon-button menu-button" type="button" onclick="toggleMobileNav()" aria-controls="sidebar" aria-expanded="false" aria-label="Abrir menu de navegação" title="Abrir menu"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
           <button class="icon-button desktop-sidebar-button" type="button" onclick="HIG.toggleSidebar()" aria-label="Recolher ou expandir navegação" title="Recolher ou expandir menu"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M9 4v16"/></svg></button>
-          <div class="top-context"><span class="top-context-title">Clínica Médica II</span><span class="top-context-sub">P2 principal · P1 completa</span></div>
+          <div class="top-context"><span class="top-context-title">Clínica Médica e Cirurgia</span><span class="top-context-sub">Aprendizado clínico e cirúrgico</span></div>
         </div>
         <div class="topbar-right">
           <button id="focus-top" class="focus-top" type="button" onclick="HIG.openTimer()" aria-label="Abrir pomodoro" title="Pomodoro"><svg class="tomato" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false"><path d="M12 7.3c-4.7-1.7-8.6 1-8.6 5.8 0 4.4 3.7 7.9 8.6 7.9s8.6-3.5 8.6-7.9c0-4.8-3.9-7.5-8.6-5.8Z" fill="#e5484d"/><path d="M6.3 11.2c.5-1.2 1.500-2 2.700-2.3" stroke="#fff" stroke-opacity=".55" stroke-width="1.3" stroke-linecap="round" fill="none"/><path d="M12 7.4c-.2-1.700.4-3.100 1.700-4.100M12 7.3c-1.4-1.4-3.100-1.600-4.600-.9M12 7.3c1.4-1.4 3.100-1.600 4.600-.9" stroke="#2f9e5b" stroke-width="1.700" stroke-linecap="round" fill="none"/></svg><span class="focus-top-label">Pomodoro</span><span data-focus-time>25:00</span></button>
@@ -76,7 +76,7 @@
         </div>
       </header>
       <main id="main-content" tabindex="-1" aria-live="off"></main>
-      <footer class="footer" data-interface-version="20261113-cir1"><span>Material de estudo • Não substitui diretrizes e supervisão médica</span><span>Interface 2026.11.13.7 • <strong>Lucas Lessa</strong></span></footer>
+      <footer class="footer" data-interface-version="20261113-conexao"><span>Material de estudo • Não substitui diretrizes e supervisão médica</span><span>Interface 2026.11.13.7 • <strong>Lucas Lessa</strong></span></footer>
     </div>
   </div>
   <aside id="focus-float" class="focus-float" aria-label="Pomodoro flutuante" hidden>
@@ -108,54 +108,54 @@
   </div>
 
   <input id="progress-import-input" type="file" accept="application/json,.json" hidden onchange="HIG.importProgress(event)">
-  <script src="data.js?v=20261113-cir1"></script>
-  <script src="questions.js?v=20261113-cir1"></script>
-  <script src="banca_questions.js?v=20261113-cir1"></script>
-  <script src="cases.js?v=20261113-cir1"></script>
-  <script src="deep_content.js?v=20261113-cir1"></script>
-  <script src="extra_cards.js?v=20261113-cir1"></script>
-  <script src="priority_patch.js?v=20261113-cir1"></script>
-  <script src="p1_data.js?v=20261113-cir1"></script>
-  <script src="p1_questions.js?v=20261113-cir1"></script>
-  <script src="p1_cases.js?v=20261113-cir1"></script>
-  <script src="decision-cases.js?v=20261113-cir1"></script>
-  <script src="evidence.js?v=20261113-cir1"></script>
-  <script src="decision-lab-cases.js?v=20261113-cir1"></script>
-  <script src="banca.js?v=20261113-cir1"></script>
-  <script src="dashboard-ux.js?v=20261113-cir1"></script>
-  <script src="reading-ux.js?v=20261113-cir1"></script>
-  <script src="learn-ux.js?v=20261113-cir1"></script>
-  <script src="lesson-deep.js?v=20261113-cir1"></script>
-  <script src="lesson-deep-neuro.js?v=20261113-cir1"></script>
-  <script src="lesson-deep-reuma.js?v=20261113-cir1"></script>
-  <script src="lesson-deep-oncohema.js?v=20261113-cir1"></script>
-  <script src="lesson-deep-gastro.js?v=20261113-cir1"></script>
-  <script src="lesson-deep-p1-infeccoes.js?v=20261113-cir1"></script>
-  <script src="lesson-deep-p1-cardio.js?v=20261113-cir1"></script>
-  <script src="lesson-deep-p1-diabetes.js?v=20261113-cir1"></script>
-  <script src="lesson-deep-p1-tireoide.js?v=20261113-cir1"></script>
-  <script src="lesson-deep-p1-neuroendo-tele.js?v=20261113-cir1"></script>
-  <script src="lesson-deep-cir-1.js?v=20261113-cir1"></script>
-  <script src="lesson-deep-cir-2.js?v=20261113-cir1"></script>
-  <script src="lesson-deep-cir-3.js?v=20261113-cir1"></script>
-  <script src="cir_data.js?v=20261113-cir1"></script>
-  <script src="cir_questions.js?v=20261113-cir1"></script>
-  <script src="cir_app.js?v=20261113-cir1"></script>
-  <script src="app.js?v=20261113-cir1"></script>
-  <script src="p1_app.js?v=20261113-cir1"></script>
-  <script src="hig.js?v=20261113-cir1"></script>
-  <script src="focus-timer.js?v=20261113-cir1"></script>
-<script src="clinical-data.js?v=20261113-cir1"></script>
-<script src="prescription-data.js?v=20261113-cir1"></script>
-  <script src="prescription-calculations.js?v=20261113-cir1"></script>
-<script src="clinical.js?v=20261113-cir1"></script>
-<script src="study.js?v=20261113-cir1"></script>
-<script src="pocus-figures.js?v=20261113-cir1"></script>
-<script src="pocus-course.js?v=20261113-cir1"></script>
-<script src="media-viewer.js?v=20261113-cir1"></script>
-<script src="auth-config.js?v=20261113-cir1"></script>
+  <script src="data.js?v=20261113-conexao"></script>
+  <script src="questions.js?v=20261113-conexao"></script>
+  <script src="banca_questions.js?v=20261113-conexao"></script>
+  <script src="cases.js?v=20261113-conexao"></script>
+  <script src="deep_content.js?v=20261113-conexao"></script>
+  <script src="extra_cards.js?v=20261113-conexao"></script>
+  <script src="priority_patch.js?v=20261113-conexao"></script>
+  <script src="p1_data.js?v=20261113-conexao"></script>
+  <script src="p1_questions.js?v=20261113-conexao"></script>
+  <script src="p1_cases.js?v=20261113-conexao"></script>
+  <script src="decision-cases.js?v=20261113-conexao"></script>
+  <script src="evidence.js?v=20261113-conexao"></script>
+  <script src="decision-lab-cases.js?v=20261113-conexao"></script>
+  <script src="banca.js?v=20261113-conexao"></script>
+  <script src="dashboard-ux.js?v=20261113-conexao"></script>
+  <script src="reading-ux.js?v=20261113-conexao"></script>
+  <script src="learn-ux.js?v=20261113-conexao"></script>
+  <script src="lesson-deep.js?v=20261113-conexao"></script>
+  <script src="lesson-deep-neuro.js?v=20261113-conexao"></script>
+  <script src="lesson-deep-reuma.js?v=20261113-conexao"></script>
+  <script src="lesson-deep-oncohema.js?v=20261113-conexao"></script>
+  <script src="lesson-deep-gastro.js?v=20261113-conexao"></script>
+  <script src="lesson-deep-p1-infeccoes.js?v=20261113-conexao"></script>
+  <script src="lesson-deep-p1-cardio.js?v=20261113-conexao"></script>
+  <script src="lesson-deep-p1-diabetes.js?v=20261113-conexao"></script>
+  <script src="lesson-deep-p1-tireoide.js?v=20261113-conexao"></script>
+  <script src="lesson-deep-p1-neuroendo-tele.js?v=20261113-conexao"></script>
+  <script src="lesson-deep-cir-1.js?v=20261113-conexao"></script>
+  <script src="lesson-deep-cir-2.js?v=20261113-conexao"></script>
+  <script src="lesson-deep-cir-3.js?v=20261113-conexao"></script>
+  <script src="cir_data.js?v=20261113-conexao"></script>
+  <script src="cir_questions.js?v=20261113-conexao"></script>
+  <script src="cir_app.js?v=20261113-conexao"></script>
+  <script src="app.js?v=20261113-conexao"></script>
+  <script src="p1_app.js?v=20261113-conexao"></script>
+  <script src="hig.js?v=20261113-conexao"></script>
+  <script src="focus-timer.js?v=20261113-conexao"></script>
+<script src="clinical-data.js?v=20261113-conexao"></script>
+<script src="prescription-data.js?v=20261113-conexao"></script>
+  <script src="prescription-calculations.js?v=20261113-conexao"></script>
+<script src="clinical.js?v=20261113-conexao"></script>
+<script src="study.js?v=20261113-conexao"></script>
+<script src="pocus-figures.js?v=20261113-conexao"></script>
+<script src="pocus-course.js?v=20261113-conexao"></script>
+<script src="media-viewer.js?v=20261113-conexao"></script>
+<script src="auth-config.js?v=20261113-conexao"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.0/dist/umd/supabase.min.js"></script>
-<script src="auth-storage.js?v=20261113-remember"></script>
-<script src="auth.js?v=20261113-remember"></script>
+<script src="auth-storage.js?v=20261113-conexao"></script>
+<script src="auth.js?v=20261113-conexao"></script>
 </body>
 </html>
