@@ -63,11 +63,11 @@ test('floating pomodoro can be dragged, expanded, cancelled with confirmation an
  await p.setViewportSize({width:390,height:700});await p.waitForTimeout(100);const small=await p.locator('#focus-float').boundingBox();assert.ok(small.x>=0&&small.x+small.width<=391,JSON.stringify(small));
  await p.locator('.focus-float-grip').focus();await p.keyboard.press('Home');await t.close();
 });
-test('deep study block renders on the pilot lesson with flowchart, recall and sources, and stays absent elsewhere',async()=>{
+test('deep study block renders on the pilot lesson with flowchart, recall and sources',async()=>{
  const t=await open(),p=t.page;await p.evaluate(()=>{navigate('p1');P1.openTopic('p1arr');});
  assert.equal(await p.locator('.deep-lesson').count(),1);assert.ok(await p.locator('.deep-flow > li').count()>=6);assert.ok(await p.locator('.deep-recall').count()>=5);assert.ok(await p.locator('.deep-refs a[href^="https://doi.org/"]').count()>=2);
  await p.locator('.deep-recall summary').first().click();assert.equal(await p.locator('.deep-recall').first().evaluate(el=>el.open),true);
- await p.evaluate(()=>P1.chapter(1));assert.equal(await p.locator('.deep-lesson').count(),0);
+ await p.evaluate(()=>P1.chapter(1));assert.equal(await p.locator('.deep-lesson').count(),1);
  await p.setViewportSize({width:390,height:844});await p.evaluate(()=>P1.chapter(0));assert.ok(await fits(p));await t.close();
 });
 test('every P2 lesson has a complete deep study block that fits small screens',async()=>{
@@ -75,6 +75,16 @@ test('every P2 lesson has a complete deep study block that fits small screens',a
  const lessons=await p.evaluate(()=>TOPICS.flatMap(x=>x.chapters.map((_,i)=>[x.id,i])));assert.equal(lessons.length,22);
  for(const [id,i] of lessons){
   await p.evaluate(([id,i])=>{openTopic(id);switchChapter(i);},[id,i]);
+  const info=await p.evaluate(()=>{const d=document.querySelector('.deep-lesson');return d&&{pre:d.querySelectorAll('.deep-pretest li').length,flow:d.querySelectorAll('.deep-flow > li').length,recall:d.querySelectorAll('.deep-recall').length,refs:d.querySelectorAll('.deep-refs a[href^="https://"]').length,mn:d.querySelectorAll('.deep-mnemonics dt').length,fit:document.documentElement.scrollWidth<=innerWidth+1}});
+  assert.ok(info,`${id}_${i} missing`);assert.ok(info.pre>=4&&info.flow>=6&&info.recall>=5&&info.refs>=2&&info.mn>=3&&info.fit,`${id}_${i} ${JSON.stringify(info)}`);
+ }
+ await t.close();
+});
+test('every P1 lesson has a complete deep study block that fits small screens',async()=>{
+ const t=await open({width:390,height:844}),p=t.page;await p.evaluate(()=>navigate('p1'));
+ const lessons=await p.evaluate(()=>P1.topics.flatMap(x=>x.chapters.map((_,i)=>[x.id,i])));assert.equal(lessons.length,32);
+ for(const [id,i] of lessons){
+  await p.evaluate(([id,i])=>{P1.openTopic(id);P1.chapter(i);},[id,i]);
   const info=await p.evaluate(()=>{const d=document.querySelector('.deep-lesson');return d&&{pre:d.querySelectorAll('.deep-pretest li').length,flow:d.querySelectorAll('.deep-flow > li').length,recall:d.querySelectorAll('.deep-recall').length,refs:d.querySelectorAll('.deep-refs a[href^="https://"]').length,mn:d.querySelectorAll('.deep-mnemonics dt').length,fit:document.documentElement.scrollWidth<=innerWidth+1}});
   assert.ok(info,`${id}_${i} missing`);assert.ok(info.pre>=4&&info.flow>=6&&info.recall>=5&&info.refs>=2&&info.mn>=3&&info.fit,`${id}_${i} ${JSON.stringify(info)}`);
  }
