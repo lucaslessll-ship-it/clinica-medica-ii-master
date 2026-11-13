@@ -201,6 +201,8 @@
     const {error:writeError}=await status.client.from('master_consents').insert({user_id:user.id,policy_version:cfg.privacyVersion});if(writeError)throw writeError;
     return true;
   }
+  // Postgres jsonb returns object keys in its own order; compare payloads independent of key order.
+  const canon=value=>JSON.stringify(value,(k,x)=>x&&typeof x==='object'&&!Array.isArray(x)?Object.fromEntries(Object.keys(x).sort().map(name=>[name,x[name]])):x);
   const pendingKey=id=>'master_auth_pending_'+id;
   function pending(id){return read(pendingKey(id))||{};}
   function cancelSync(){status.ready=false;status.epoch++;for(const timer of status.timers.values())clearTimeout(timer);status.timers.clear();}
@@ -212,14 +214,15 @@
     if(readError){syncNotice('Sincronização pendente. Seu progresso continua salvo neste dispositivo.');throw readError;}
     if(epoch!==status.epoch)return;
     const remote=latest?.find(row=>row.storage_key===key);
-    if(remote&&JSON.stringify(remote.payload)!==status.baseline.get(key)&&JSON.stringify(remote.payload)!==raw){
+    const remoteCanon=remote?canon(remote.payload):null;
+    if(remote&&remoteCanon!==status.baseline.get(key)&&remoteCanon!==canon(value)){
       originalSet.call(localStorage,'master_conflict_backup_'+userId+'_'+Date.now(),JSON.stringify(Object.fromEntries(latest.map(row=>[row.storage_key,row.payload]))));
       toast('Outro dispositivo alterou o progresso. Cópia da versão remota preservada; disponível no menu da conta.');
     }
     const {error}=await status.client.from('master_progress').upsert({user_id:userId,storage_key:key,payload:value,updated_at:new Date().toISOString()},{onConflict:'user_id,storage_key'});
     if(error){if(epoch===status.epoch)syncNotice('Sincronização pendente. Seu progresso continua salvo neste dispositivo.');throw error;}
     if(epoch===status.epoch){
-      status.baseline.set(key,raw);
+      status.baseline.set(key,canon(value));
       const queued=pending(userId);
       if(queued[key]===raw){delete queued[key];originalSet.call(localStorage,pendingKey(userId),JSON.stringify(queued));}
       syncNotice(Object.keys(queued).length?'Há alterações aguardando sincronização.':'Progresso sincronizado.');
@@ -248,7 +251,7 @@
       if(epoch!==status.epoch)return;
       const {data:remote,error:loadError}=await status.client.from('master_progress').select('storage_key,payload').eq('user_id',user.id);if(loadError)throw loadError;
       if(epoch!==status.epoch)return;
-      status.baseline=new Map((remote||[]).map(row=>[row.storage_key,JSON.stringify(row.payload)]));
+      status.baseline=new Map((remote||[]).map(row=>[row.storage_key,canon(row.payload)]));
       let importLocal=!remote?.length&&previousOwner===user.id;
       if(!remote?.length&&!previousOwner&&keys.some(k=>read(k)&&Object.keys(read(k)).length)){
         importLocal=confirm('Encontramos progresso anterior neste navegador. Deseja vinculá-lo à sua conta? Cancelar inicia com progresso vazio e mantém uma cópia de segurança local.');

@@ -196,6 +196,13 @@ test('question filters use old results, hide answers, record help and schedule w
  assert.deepEqual(result.errors,[0]);assert.ok(!result.unanswered.includes(0)&&!result.unanswered.includes(1));assert.equal(result.review.helped,true);assert.equal(result.review.due,'2026-11-11');assert.ok(result.due.includes(0));
  await p.evaluate(()=>startPractice('errors'));assert.equal(await p.locator('.feedback').count(),0);await p.locator('.option-btn').first().click();await p.locator('select').selectOption('Baixa');await p.getByRole('button',{name:'Conferir resposta'}).click();await visible(p,'.feedback');assert.equal(await p.evaluate(()=>store.study.reviews[0].confidence),'Baixa');await t.close();
 });
+test('server copy with reordered keys after our own save is not reported as another device',async()=>{
+ const t=await open({session:true,remote:[{storage_key:keys[0],payload:empty}]}),p=t.page;await p.waitForFunction(()=>document.getElementById('master-auth').hidden);
+ await p.evaluate(()=>{store.completed.neuro1_0=true;stateSave();});await p.waitForTimeout(2500);
+ await p.evaluate(()=>{const reorder=v=>v&&typeof v==='object'&&!Array.isArray(v)?Object.fromEntries(Object.keys(v).reverse().map(k=>[k,reorder(v[k])])):v;fixture.remote=[{storage_key:'master_p2_lucas_v1',payload:reorder(JSON.parse(localStorage.getItem('master_p2_lucas_v1')))}];store.completed.neuro1_1=true;stateSave();});
+ await p.waitForTimeout(2500);
+ assert.equal(await p.evaluate(()=>Object.keys(localStorage).some(key=>key.startsWith('master_conflict_backup_'))),false);assert.doesNotMatch(await p.locator('#toast').textContent(),/Outro dispositivo/);await t.close();
+});
 test('image viewer zoom, normalized annotations, undo, export, Escape and broken-image fallback',async()=>{
  const t=await open({session:true}),p=t.page;await p.waitForFunction(()=>document.getElementById('master-auth').hidden);
  await p.evaluate(()=>MediaViewer.open('data:image/svg+xml,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="600" height="400"><rect width="600" height="400" fill="white"/></svg>'),'Teste geométrico, não clínico'));
