@@ -42,3 +42,12 @@ body[data-theme=dark] .side-goal-head,body[data-theme=dark] .side-goal small{col
 @media(min-width:801px){body.side-collapsed .nav-destination{justify-content:center;padding:12px 6px}body.side-collapsed .nav-destination>span,body.side-collapsed .nav-expand,body.side-collapsed .nav-children{display:none}body.side-collapsed .nav-group{padding:2px}}
 @media(max-width:600px){body .study-tool{padding:18px}body .study-tool:has(>span){grid-template-columns:minmax(0,1fr)}body .study-tool:has(>span)>strong,body .study-tool:has(>span)>small{grid-column:1}body .study-tool>span{grid-row:1}body .study-tool:has(>span)>strong{grid-row:2}body .study-tool:has(>span)>small{grid-row:3}}
 @media(prefers-reduced-motion:reduce){.nav-group,.nav-destination,.nav-expand svg{transition:none}}
+.decision-controls{display:grid;grid-template-columns:180px minmax(0,1fr);gap:16px;padding:18px 0;border-bottom:1px solid var(--line);margin-bottom:20px}
+.decision-controls label{font-weight:600;font-size:13px;display:grid;gap:8px;color:var(--ink)}
+.decision-controls select{width:100%;max-width:100%;min-width:0;min-height:46px;font:inherit;font-size:14px;color:var(--ink);background:var(--white);border:1px solid var(--line);border-radius:10px;padding:10px}
+.decision-progress{grid-column:1/-1;margin:0;color:var(--muted);font-size:13px}.decision-controls select:focus-visible{outline:3px solid var(--focus,var(--green));outline-offset:2px}
+.ev-lab-case h3:focus{outline:none}
+@media(max-width:600px){.decision-controls{grid-template-columns:minmax(0,1fr)}.decision-controls select{font-size:16px}.ev-lab-options .ev-feedback .btn{display:flex;margin:14px 0}}
+.ev-lab{background:var(--white);border-color:var(--line)}.ev-lab-heading p{color:var(--muted)}.ev-lab-heading h2 em{color:var(--green)}
+.ev-lab .ev-option{background:var(--white);color:var(--ink);border-color:var(--line)}.ev-lab .ev-option:disabled{opacity:1;cursor:default}.ev-lab .ev-option.is-correct{background:var(--mint);color:var(--green2);border-color:var(--green)}.ev-lab .ev-option.is-wrong{background:#fff0ef;color:#873c3c;border-color:#d79b98}
+.ev-lab .ev-feedback{animation:none;background:var(--mint);color:var(--ink);border-color:var(--line)}.ev-lab .ev-feedback p{color:var(--ink);font-size:14px}.ev-lab .ev-feedback a{color:var(--green2)}

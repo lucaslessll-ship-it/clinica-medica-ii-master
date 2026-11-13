@@ -2,16 +2,21 @@
 Não dispensa a hospedagem HTTPS no iPad para armazenamento mais confiável."""
 from pathlib import Path
 import re, base64
+from urllib.parse import urlsplit
 root=Path(__file__).resolve().parents[1]
 html=(root/'index.html').read_text(encoding='utf-8')
 
 def style_replace(match):
     name=match.group(1)
+    if name.startswith(('https:', 'http:')): return match.group(0)
+    name=urlsplit(name).path
     data=(root/name).read_text(encoding='utf-8')
     return '<style data-original-file="'+name+'">\n'+data+'\n</style>'
 
 def script_replace(match):
     name=match.group(1)
+    if name.startswith(('https:', 'http:')): return match.group(0)
+    name=urlsplit(name).path
     data=(root/name).read_text(encoding='utf-8')
     if '</script' in data.lower(): raise ValueError(f'Embedded script closing tag in {name}')
     if name=='hig.js':data=data.replace('Busque nas 52 aulas, 16 módulos e 88 questões.','Busque nas 54 aulas, 16 módulos e 136 questões.')

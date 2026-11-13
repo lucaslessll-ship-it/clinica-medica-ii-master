@@ -359,3 +359,24 @@ test('refreshed library and lesson remain usable with 200 percent reading size o
   await p.locator('#subjects-search').fill('guillain');assert.equal(await p.locator('[data-subject]:visible').count(),1);await p.locator('[data-subject=neuro2]').click();await p.locator('.reading-outline summary').click();assert.ok(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),`lesson overflow ${width}`);await p.screenshot({path:`work/review-reading-${width}.png`,animations:'disabled'});await t.close();
  }
 });
+
+test('release URL versions local assets and preserves recovery callbacks',async()=>{
+ const t=await open({session:true,root:true,query:'?auth=recovery'}),p=t.page;await text(p,'#master-auth-title',/Definir nova senha/);
+ assert.equal(new URL(p.url()).searchParams.get('v'),'20261112-lab1');
+ const unversioned=await p.evaluate(()=>[...document.querySelectorAll('script[src],link[rel=stylesheet]')].map(e=>e.src||e.href).filter(url=>new URL(url).origin===location.origin&&!new URL(url).searchParams.has('v')));assert.deepEqual(unversioned,[]);await t.close();
+});
+test('Decision Lab has 24 stable cases with 20 P2 items, valid answers and references',async()=>{
+ const t=await open({session:true}),p=t.page;await p.waitForFunction(()=>document.getElementById('master-auth').hidden);
+ const report=await p.evaluate(()=>({n:EVIDENCE.caseItems.length,p2:EVIDENCE.caseItems.filter(c=>c.period==='P2').length,ids:EVIDENCE.caseItems.map(c=>c.id),invalid:EVIDENCE.caseItems.filter(c=>!c.title||!c.question||c.options.length!==3||!Number.isInteger(c.correct)||c.correct<0||c.correct>2||!c.why||!c.short||!window.MASTER_REVIEW.sources[c.ref]||!c.topic).map(c=>c.id)}));
+ assert.equal(report.n,24);assert.equal(report.p2,20);assert.equal(new Set(report.ids).size,24);assert.deepEqual(report.ids.slice(0,3),['qrs','gb','lpa']);assert.deepEqual(report.invalid,[]);await t.close();
+});
+test('Decision Lab hides explanation, preserves old answers and filters/navigates without losing progress',async()=>{
+ const t=await open({session:true,remote:[{storage_key:keys[4],payload:{'case-qrs':0}}]}),p=t.page;await p.waitForFunction(()=>document.getElementById('master-auth').hidden);await p.evaluate(()=>navigate('decisionlab'));await text(p,'.decision-progress',/1\/24/);await visible(p,'.ev-feedback');
+ await p.locator('#decision-period').selectOption('P2');assert.equal(await p.locator('#decision-case option').count(),20);assert.equal(await p.locator('.ev-feedback').count(),0);await p.locator('.ev-option').first().click();await visible(p,'.ev-feedback');const saved=await p.evaluate(()=>JSON.parse(localStorage.getItem('MASTER_EVIDENCE_UI_v5')));assert.equal(saved['case-qrs'],0);
+ await p.evaluate(()=>EVIDENCE.answerCase(2));assert.deepEqual(await p.evaluate(()=>JSON.parse(localStorage.getItem('MASTER_EVIDENCE_UI_v5'))),saved);await p.getByRole('button',{name:'Próximo caso',exact:false}).click();assert.equal(await p.locator('.ev-feedback').count(),0);await p.locator('#decision-period').selectOption('P1');assert.equal(await p.locator('#decision-case option').count(),4);await t.close();
+});
+test('all Decision Lab cases render, answer and explain correctly on a narrow screen',async()=>{
+ const t=await open({session:true,viewport:{width:390,height:844}}),p=t.page;await p.waitForFunction(()=>document.getElementById('master-auth').hidden);await p.evaluate(()=>navigate('decisionlab'));
+ for(let i=0;i<24;i++){await p.evaluate(i=>EVIDENCE.chooseCase(i),i);const expected=await p.evaluate(i=>EVIDENCE.caseItems[i].correct,i);await p.locator('.ev-option').nth(expected).click();await text(p,'.ev-feedback',/Boa decisão/);assert.ok(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));}
+ await text(p,'.decision-progress',/24\/24 respondidos · 24 acertos/);await p.screenshot({path:'work/decision-lab-mobile.png'});await t.close();
+});

@@ -1,8 +1,11 @@
 from pathlib import Path
 import re
+from urllib.parse import urlsplit
 root=Path(__file__).resolve().parents[1]
 html=(root/'index.html').read_text()
-assert all((root/name).exists() for name in re.findall(r'(?:href|src)="([\w.\-/]+(?:\.css|\.js|\.svg|\.webmanifest))"',html))
+refs=re.findall(r'(?:href|src)="([^"]+)"',html)
+assert all((root/urlsplit(name).path).exists() for name in refs if not name.startswith(('https:','http:','#','data:')))
+
 q=(root/'banca_questions.js').read_text()
 assert q.count('level:')==40
 for x in ['neuro1','neuro2','neuro3','reuma2','onco','hema','gastro','reuma1']: assert q.count("t:'"+x+"'")==5
