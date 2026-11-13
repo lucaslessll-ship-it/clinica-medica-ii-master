@@ -68,7 +68,7 @@ const HIG = (() => {
       t.chapters.forEach((c,i)=>arr.push({type:'Aula',label:c.name,sub:t.short+' · '+c.anchor,icon:'▧',action:()=>{openTopic(t.id);switchChapter(i)},text:[c.name,c.anchor,c.why,c.clinic,c.patho,c.tests,c.strategy,c.memory,c.exam,...Object.values(DEEP.chapters[`${t.id}_${i}`]||{})]}))
     });
     QUESTION_BANK.forEach((q,i)=>arr.push({type:'Questão',label:q.tag||'Questão clínica',sub:getTopic(q.t).short+' · N'+q.level+' · '+q.q.slice(0,100),icon:'◈',action:()=>{ui.practice={tid:q.t,ids:[i],step:0,chosen:null,revealed:false,optionOrders:{}};navigate('practice')},text:[q.q,q.tag,q.why]}));
-    if(window.P1)arr.push(...P1.searchItems());
+    if(window.P1)arr.push(...P1.searchItems());if(window.CIR)arr.push(...CIR.searchItems());
     if(window.LearnUX)arr.push(...LearnUX.commands());
     return arr;
   }

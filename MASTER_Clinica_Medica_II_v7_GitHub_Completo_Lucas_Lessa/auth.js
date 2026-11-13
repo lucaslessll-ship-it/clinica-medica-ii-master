@@ -335,7 +335,7 @@
         if(event==='SIGNED_OUT')lock(true);
         setTimeout(()=>handleSession(event,session),0);
       });
-      window.MASTER_AUTH={user:()=>status.user,signOut,sync:syncAll,exportConflict,changePassword:()=>{if(status.ready)show('password');}};
+      window.MASTER_AUTH={user:()=>status.user,client:()=>status.client,signOut,sync:syncAll,exportConflict,changePassword:()=>{if(status.ready)show('password');}};
       const {data,error}=await status.client.auth.getSession();status.initializing=false;if(error)throw error;
       if(callbackError){status.recovery=false;sessionStorage.removeItem(recoveryKey);clearAuthUrl();show('forgot','O link é inválido, expirou ou já foi utilizado. Solicite um novo e-mail.',true);}
       else if(data.session&&status.recovery){status.user=data.session.user;sessionStorage.setItem(recoveryKey,'yes');clearAuthUrl();show('recovery');}

@@ -13,7 +13,8 @@ window.MASTER_AUTH_CONFIG = {
     "master_p1_lucas_v4",
     "master_p2_hig_v2",
     "master_clinica_banca_v7",
-    "MASTER_EVIDENCE_UI_v5"
+    "MASTER_EVIDENCE_UI_v5",
+    "master_cir_lucas_v1"
   ],
 
   privacyVersion: "2026-11-08"

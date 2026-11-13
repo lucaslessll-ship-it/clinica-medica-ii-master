@@ -14,7 +14,7 @@ window.LearnUX=(()=>{
     s.deep.recall=s.deep.recall||{};s.deep.days=s.deep.days||{};return s.deep;
   }
   function peek(){const d=store.study?.deep;return {recall:d?.recall||{},days:d?.days||{}};}
-  const AREAS=[['neuro','neuro'],['reuma','reuma'],['onco','onco'],['hema','hema'],['gastro','gastro'],['p1inf','infecto'],['p1arr','cardio'],['p1has','pressao'],['p1dm','diabetes'],['p1tir','tireoide'],['p1neuro','endocrino'],['p1tele','tele']];
+  const AREAS=[['neuro','neuro'],['reuma','reuma'],['onco','onco'],['hema','hema'],['gastro','gastro'],['p1inf','infecto'],['p1arr','cardio'],['p1has','pressao'],['p1dm','diabetes'],['p1tir','tireoide'],['p1neuro','endocrino'],['p1tele','tele'],['cir','cirurgia']];
   const area=id=>(AREAS.find(([k])=>String(id).startsWith(k))||[,'geral'])[1];
   const ICONS={
     neuro:'M9.5 4A2.5 2.5 0 0 0 7 6.5 3 3 0 0 0 4.5 11 3 3 0 0 0 6 16a3 3 0 0 0 6 1V6.5A2.5 2.5 0 0 0 9.5 4Zm5 0A2.5 2.5 0 0 1 17 6.5 3 3 0 0 1 19.5 11 3 3 0 0 1 18 16a3 3 0 0 1-6 1M8 10.5h1.5M14.5 13H16',
@@ -29,6 +29,7 @@ window.LearnUX=(()=>{
     tireoide:'M12 8v10M12 10C10.5 6 5 6 5 10c0 2.5 2.5 3.5 4.5 3.5C8 14.5 7 16.5 8 18c2 .8 3.5-1 4-3.5m0-4.5c1.5-4 7-4 7 0 0 2.5-2.5 3.5-4.5 3.5 1.5 1 2.5 3 1.5 4.5-2 .8-3.5-1-4-3.5',
     endocrino:'M12 3l7 4v8l-7 4-7-4V7Zm0 5.5a3 3 0 1 0 0 6 3 3 0 0 0 0-6Z',
     tele:'M4 6h11a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1Zm12 4.5 5-3v9l-5-3',
+    cirurgia:'M5 19 19 5m-4 0 4 4M3 21l4-1-3-3ZM8 8l3 3',
     geral:'M12 6c-3-3-7-3-10-2v15c4-1 7-1 10 2m0-15c3-3 7-3 10-2v15c-4-1-7-1-10 2V6'};
   const icon=id=>`<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${ICONS[area(id)]}"/></svg>`;
 
@@ -50,13 +51,13 @@ window.LearnUX=(()=>{
     return set;
   }
   function streak(){const set=activeDays();let n=0;const d=new Date();if(!set.has(dayKey(d)))d.setDate(d.getDate()-1);while(set.has(dayKey(d))){n++;d.setDate(d.getDate()-1);}return n;}
-  function lessonsDone(){const p1=window.P1?P1.getBackup().completed||{}:{};return Object.values(store.completed||{}).filter(Boolean).length+Object.values(p1).filter(Boolean).length;}
+  function lessonsDone(){const p1=window.P1?P1.getBackup().completed||{}:{};const cir=window.CIR?CIR.completed():{};return Object.values(store.completed||{}).filter(Boolean).length+Object.values(p1).filter(Boolean).length+Object.values(cir).filter(Boolean).length;}
   function todayPanel(){
-    const due=dueList().length,cards=window.HIG?HIG.dueCards():0,s=streak(),set=activeDays(),total=TOPICS.concat(P1.topics).reduce((n,t)=>n+t.chapters.length,0);
+    const due=dueList().length,cards=window.HIG?HIG.dueCards():0,s=streak(),set=activeDays(),total=TOPICS.concat(P1.topics,window.CIR?CIR.topics:[]).reduce((n,t)=>n+t.chapters.length,0);
     const week=[];for(let i=6;i>=0;i--){const d=new Date();d.setDate(d.getDate()-i);week.push({on:set.has(dayKey(d)),label:d.toLocaleDateString('pt-BR',{weekday:'short'}).slice(0,3),today:i===0});}
     return `<aside class="dash-today" aria-label="Seu estudo hoje"><span class="overview-label">HOJE</span><div class="dash-today-nums"><div><strong>${s}</strong><span>${s===1?'dia seguido':'dias seguidos'}</span></div><div><strong>${due}</strong><span>${due===1?'pergunta para revisar':'perguntas para revisar'}</span></div><div><strong>${lessonsDone()}<small>/${total}</small></strong><span>aulas concluídas</span></div></div><ol class="dash-week" aria-label="Últimos sete dias">${week.map(w=>`<li class="${w.on?'on':''}${w.today?' today':''}"><span aria-hidden="true"></span>${esc(w.label)}<span class="visually-hidden">${w.on?': estudou':': sem registro'}</span></li>`).join('')}</ol>${due?`<button class="btn primary" type="button" onclick="LearnUX.openDue()">Revisar agora <span aria-hidden="true">→</span></button>`:`<p class="dash-today-hint">${cards?cards+' flashcards disponíveis. ':''}Avalie as perguntas de evocação ao fim de cada aula para agendar revisões aqui.</p>`}</aside>`;
   }
-  function openLesson(key){const cut=key.lastIndexOf('_'),id=key.slice(0,cut),i=Number(key.slice(cut+1));if(id.startsWith('p1')){navigate('p1');P1.openTopic(id);P1.chapter(i);}else{openTopic(id);switchChapter(i);}}
+  function openLesson(key){const cut=key.lastIndexOf('_'),id=key.slice(0,cut),i=Number(key.slice(cut+1));if(id.startsWith('cir')){CIR.openTopic(id,i);}else if(id.startsWith('p1')){navigate('p1');P1.openTopic(id);P1.chapter(i);}else{openTopic(id);switchChapter(i);}}
   function openDue(){
     const key=dueList()[0];if(!key)return;openLesson(key.split('#')[0]);
     setTimeout(()=>{const el=document.querySelector(`[data-recall="${CSS.escape(key)}"]`);if(el){el.scrollIntoView({block:'center',behavior:'instant'});el.querySelector('summary').focus({preventScroll:true});}},450);
