@@ -37,7 +37,7 @@ function mockSdk(){
  }})};
 }
 async function open(options={}){
- const context=await browser.newContext({viewport:options.viewport||{width:1440,height:1000},isMobile:options.mobile||false,hasTouch:options.mobile||false});
+ const context=await browser.newContext({timezoneId:'UTC',viewport:options.viewport||{width:1440,height:1000},isMobile:options.mobile||false,hasTouch:options.mobile||false});
  const page=await context.newPage(),errors=[];page.on('pageerror',e=>errors.push(e.message));
  const f={user,session:false,remote:[],consent:true,...options};
  await page.addInitScript(({f,keys})=>{
@@ -369,7 +369,7 @@ test('refreshed library and lesson remain usable with 200 percent reading size o
 
 test('release URL versions local assets and preserves recovery callbacks',async()=>{
  const t=await open({session:true,root:true,query:'?auth=recovery'}),p=t.page;await text(p,'#master-auth-title',/Definir nova senha/);
- assert.equal(new URL(p.url()).searchParams.get('v'),'20261113-design1');
+ assert.equal(new URL(p.url()).searchParams.get('v'),'20261113-touch1');
  const unversioned=await p.evaluate(()=>[...document.querySelectorAll('script[src],link[rel=stylesheet]')].map(e=>e.src||e.href).filter(url=>new URL(url).origin===location.origin&&!new URL(url).searchParams.has('v')));assert.deepEqual(unversioned,[]);await t.close();
 });
 test('Decision Lab has 24 stable cases with 20 P2 items, valid answers and references',async()=>{

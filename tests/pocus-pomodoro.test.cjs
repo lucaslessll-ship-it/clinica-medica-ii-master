@@ -107,3 +107,13 @@ test('topic head is single, outline lists deep sections, pretest and recall are 
  await p.evaluate(()=>HIG.openSearch());await p.locator('#global-search').fill('alternar tema');assert.match(await p.locator('#search-results').textContent(),/Alternar tema claro e escuro/);await p.keyboard.press('Escape');
  await p.setViewportSize({width:390,height:844});await p.waitForTimeout(100);assert.equal(await p.locator('#focus-float').isVisible(),false);assert.equal(await p.locator('#mobile-tabbar svg').count(),5);await t.close();
 });
+test('tablet portrait collapses the sidebar by default, hides the idle floating pomodoro and keeps touch targets and text readable',async()=>{
+ const t=await open({width:820,height:1180}),p=t.page;
+ assert.equal(await p.evaluate(()=>document.body.classList.contains('side-collapsed')),true);assert.ok(await p.locator('#main-content').evaluate(el=>el.getBoundingClientRect().width)>700);
+ assert.equal(await p.locator('#focus-float').isVisible(),false);
+ await p.locator('.desktop-sidebar-button').click();assert.equal(await p.evaluate(()=>document.body.classList.contains('side-collapsed')),false);await p.locator('.desktop-sidebar-button').click();
+ await p.evaluate(()=>openTopic('neuro1'));assert.ok(await fits(p));
+ const small=await p.evaluate(()=>[...document.querySelectorAll('.deep-pre-btns button,.deep-hy-btn,.reading-outline summary,.chapter-pill')].filter(e=>e.getBoundingClientRect().height<44).length);assert.equal(small,0);
+ const tiny=await p.evaluate(()=>[...document.querySelectorAll('.topic-head *,.deep-lesson *,.lesson-head *')].filter(e=>e.offsetParent&&[...e.childNodes].some(n=>n.nodeType===3&&n.textContent.trim())&&parseFloat(getComputedStyle(e).fontSize)<12).length);assert.equal(tiny,0);
+ await p.setViewportSize({width:1180,height:820});await p.waitForTimeout(100);assert.equal(await p.evaluate(()=>document.body.classList.contains('side-collapsed')),false);await t.close();
+});
