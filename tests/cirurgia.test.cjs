@@ -26,7 +26,7 @@ async function open(viewport={width:1280,height:800}){
 test('surgery lessons that have deep content are complete and fit 320 px',async()=>{
  const t=await open({width:320,height:640}),p=t.page;
  const lessons=await p.evaluate(()=>CIR.topics.flatMap(x=>x.chapters.map((_,i)=>[x.id,i])).filter(([id,i])=>LessonDeep.has(id,i)));
- assert.ok(lessons.length>=46,`only ${lessons.length} deep surgery lessons`);
+ assert.ok(lessons.length>=58,`only ${lessons.length} deep surgery lessons`);
  for(const [id,i] of lessons){
   await p.evaluate(([id,i])=>CIR.openTopic(id,i),[id,i]);
   const info=await p.evaluate(()=>{const d=document.querySelector('.deep-lesson');return d&&{pre:d.querySelectorAll('.deep-pretest li').length,flow:d.querySelectorAll('.deep-flow > li').length,recall:d.querySelectorAll('.deep-recall').length,refs:d.querySelectorAll('.deep-refs a[href^="https://"]').length,mn:d.querySelectorAll('.deep-mnemonics dt').length,fit:document.documentElement.scrollWidth<=innerWidth+1}});
