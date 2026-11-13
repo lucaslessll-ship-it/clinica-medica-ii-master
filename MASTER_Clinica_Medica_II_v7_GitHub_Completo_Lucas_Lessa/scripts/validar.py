@@ -1,13 +1,14 @@
 """Teste estático rápido. Não substitui inspeção visual no iPad."""
 from pathlib import Path
 import re, sys
+from urllib.parse import urlsplit
 root=Path(__file__).resolve().parent.parent
 html=(root/'index.html').read_text(encoding='utf-8')
 style=(root/'evidence.css').read_text(encoding='utf-8')
 missing=[]
 for name in re.findall(r'(?:href|src)="([^"]+)"',html):
     if name.startswith(('https:','http:','#','mailto:','data:')): continue
-    if not (root/name).exists(): missing.append(name)
+    if not (root/urlsplit(name).path).exists(): missing.append(name)
 checks={
     'legenda explícita': 'color: #173b3e;' in style,
     'selecionado explícito': 'color: #075a4f;' in style,

@@ -6,12 +6,16 @@
   <title>MASTER Clínica Médica II</title>
   <script>
     // Preserve recovery/OAuth parameters when an email link returns to the root.
-    location.replace('./MASTER_Clinica_Medica_II_v7_GitHub_Completo_Lucas_Lessa/index.html' + location.search + location.hash);
+    const target = new URL('./MASTER_Clinica_Medica_II_v7_GitHub_Completo_Lucas_Lessa/index.html', location.href);
+    target.search = location.search;
+    target.searchParams.set('v', '20261112-lab1');
+    target.hash = location.hash;
+    location.replace(target.href);
   </script>
 </head>
 <body>
   <p>Abrindo MASTER Clínica Médica II...</p>
-  <a href="./MASTER_Clinica_Medica_II_v7_GitHub_Completo_Lucas_Lessa/index.html">
+  <a href="./MASTER_Clinica_Medica_II_v7_GitHub_Completo_Lucas_Lessa/index.html?v=20261112-lab1">
     Abrir o site
   </a>
 </body>
