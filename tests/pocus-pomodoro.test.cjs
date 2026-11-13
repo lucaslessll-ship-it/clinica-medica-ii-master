@@ -70,3 +70,13 @@ test('deep study block renders on the pilot lesson with flowchart, recall and so
  await p.evaluate(()=>P1.chapter(1));assert.equal(await p.locator('.deep-lesson').count(),0);
  await p.setViewportSize({width:390,height:844});await p.evaluate(()=>P1.chapter(0));assert.ok(await fits(p));await t.close();
 });
+test('every P2 lesson has a complete deep study block that fits small screens',async()=>{
+ const t=await open({width:390,height:844}),p=t.page;
+ const lessons=await p.evaluate(()=>TOPICS.flatMap(x=>x.chapters.map((_,i)=>[x.id,i])));assert.equal(lessons.length,22);
+ for(const [id,i] of lessons){
+  await p.evaluate(([id,i])=>{openTopic(id);switchChapter(i);},[id,i]);
+  const info=await p.evaluate(()=>{const d=document.querySelector('.deep-lesson');return d&&{pre:d.querySelectorAll('.deep-pretest li').length,flow:d.querySelectorAll('.deep-flow > li').length,recall:d.querySelectorAll('.deep-recall').length,refs:d.querySelectorAll('.deep-refs a[href^="https://"]').length,mn:d.querySelectorAll('.deep-mnemonics dt').length,fit:document.documentElement.scrollWidth<=innerWidth+1}});
+  assert.ok(info,`${id}_${i} missing`);assert.ok(info.pre>=4&&info.flow>=6&&info.recall>=5&&info.refs>=2&&info.mn>=3&&info.fit,`${id}_${i} ${JSON.stringify(info)}`);
+ }
+ await t.close();
+});
