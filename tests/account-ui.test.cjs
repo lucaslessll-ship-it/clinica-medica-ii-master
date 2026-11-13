@@ -254,8 +254,8 @@ test('dashboard typography has no overlapping card text at phone, tablet and des
 });
 test('sidebar supports direct navigation, disclosure toggles and compact icons without native markers',async()=>{
  const t=await open({session:true}),p=t.page;await p.waitForFunction(()=>document.getElementById('master-auth').hidden);assert.equal(await p.locator('#sidebar-nav summary').count(),0);
- await p.locator('[data-nav-toggle="3"]').click();assert.equal(await p.locator('[data-nav-toggle="3"]').getAttribute('aria-expanded'),'true');await p.locator('#nav-children-3').getByRole('button',{name:'Simulado de 20 questões',exact:true}).click();assert.equal(await p.evaluate(()=>ui.route),'exam');
- await p.locator('#sidebar-nav .nav-destination').filter({hasText:'Estudar P2'}).click();assert.equal(await p.evaluate(()=>ui.route),'topics');await p.evaluate(()=>HIG.toggleSidebar());assert.equal(await p.locator('#sidebar-nav .nav-destination>span').first().isVisible(),false);await p.evaluate(()=>HIG.toggleSidebar());await t.close();
+ await p.getByRole('button',{name:'Expandir Exercícios',exact:true}).click();assert.equal(await p.getByRole('button',{name:'Recolher Exercícios',exact:true}).getAttribute('aria-expanded'),'true');await p.locator('#sidebar-nav').getByRole('button',{name:'Simulado de 20 questões',exact:true}).click();assert.equal(await p.evaluate(()=>ui.route),'exam');
+ await p.locator('#sidebar-nav .nav-destination').filter({hasText:'Matérias P2'}).click();assert.equal(await p.evaluate(()=>ui.route),'topics');await p.evaluate(()=>HIG.toggleSidebar());assert.equal(await p.locator('#sidebar-nav .nav-destination>span').first().isVisible(),false);await p.evaluate(()=>HIG.toggleSidebar());await t.close();
 });
 test('account illustration is stable, changes with the account and never interpolates profile HTML',async()=>{
  const t=await open({session:true}),p=t.page;await p.waitForFunction(()=>document.getElementById('master-auth').hidden);
@@ -362,7 +362,7 @@ test('refreshed library and lesson remain usable with 200 percent reading size o
 
 test('release URL versions local assets and preserves recovery callbacks',async()=>{
  const t=await open({session:true,root:true,query:'?auth=recovery'}),p=t.page;await text(p,'#master-auth-title',/Definir nova senha/);
- assert.equal(new URL(p.url()).searchParams.get('v'),'20261112-lab1');
+ assert.equal(new URL(p.url()).searchParams.get('v'),'20261112-nav2');
  const unversioned=await p.evaluate(()=>[...document.querySelectorAll('script[src],link[rel=stylesheet]')].map(e=>e.src||e.href).filter(url=>new URL(url).origin===location.origin&&!new URL(url).searchParams.has('v')));assert.deepEqual(unversioned,[]);await t.close();
 });
 test('Decision Lab has 24 stable cases with 20 P2 items, valid answers and references',async()=>{
@@ -379,4 +379,14 @@ test('all Decision Lab cases render, answer and explain correctly on a narrow sc
  const t=await open({session:true,viewport:{width:390,height:844}}),p=t.page;await p.waitForFunction(()=>document.getElementById('master-auth').hidden);await p.evaluate(()=>navigate('decisionlab'));
  for(let i=0;i<24;i++){await p.evaluate(i=>EVIDENCE.chooseCase(i),i);const expected=await p.evaluate(i=>EVIDENCE.caseItems[i].correct,i);await p.locator('.ev-option').nth(expected).click();await text(p,'.ev-feedback',/Boa decisão/);assert.ok(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));}
  await text(p,'.decision-progress',/24\/24 respondidos · 24 acertos/);await p.screenshot({path:'work/decision-lab-mobile.png'});await t.close();
+});
+test('sidebar exposes requested panels and opens Decision Lab directly on desktop and phone',async()=>{
+ for(const width of [1440,390]){
+  const t=await open({session:true,viewport:{width,height:1000}}),p=t.page;await p.waitForFunction(()=>document.getElementById('master-auth').hidden);
+  const panels=[['Matérias P1','p1'],['Matérias P2','topics'],['Casos clínicos','cases'],['Exercícios','practice'],['Decision Lab','banca']];
+  for(const [label,route] of panels){if(width<801)await p.getByRole('button',{name:'Abrir menu de navegação',exact:true}).click();await p.locator('#sidebar-nav').getByRole('button',{name:label,exact:true}).click();assert.equal(await p.evaluate(()=>ui.route),route);assert.equal(await p.locator('.nav-group.is-active').count(),1);}
+  if(width<801)await p.getByRole('button',{name:'Abrir menu de navegação',exact:true}).click();
+  await p.locator('#sidebar-nav').getByRole('button',{name:'Microdecisões',exact:true}).click();assert.equal(await p.evaluate(()=>ui.route),'decisionlab');assert.equal(await p.locator('#decision-case option').count(),24);
+  if(width<801)await p.getByRole('button',{name:'Abrir menu de navegação',exact:true}).click();await p.screenshot({path:`work/side-panels-${width}.png`,animations:'disabled'});await t.close();
+ }
 });
