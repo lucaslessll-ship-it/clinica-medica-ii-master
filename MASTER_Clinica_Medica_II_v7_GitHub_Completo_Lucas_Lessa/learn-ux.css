@@ -126,3 +126,25 @@ button,a,summary,label,[role=button]{-webkit-tap-highlight-color:transparent;tou
 .dash-today-nums>div{min-width:0;overflow-wrap:anywhere}
 @media(max-width:420px){.dash-today-nums{grid-template-columns:repeat(auto-fit,minmax(88px,1fr))}}
 .stat{min-width:0}.stat small,.stat span{overflow-wrap:anywhere}
+
+/* ===== Cirurgia ===== */
+.cir-countdown{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,150px),1fr));gap:var(--sp-3,12px);margin:var(--sp-4,16px) 0}
+.cir-countdown>div{background:var(--surface,#fff);border:1px solid var(--line,#e3e3e3);border-radius:var(--r-md,12px);padding:12px 14px;min-width:0}
+.cir-countdown strong{display:block;font-size:1.6rem;line-height:1.1;color:#0f6b5c}
+.cir-countdown strong small{font-size:.9rem;opacity:.7}
+.cir-countdown span{font-size:.85rem;color:var(--muted,#5b6470);overflow-wrap:anywhere}
+body[data-theme="dark"] .cir-countdown strong{color:#8fe0cf}
+.cir-main-actions{margin-bottom:var(--sp-2,8px)}
+.cir-bank-line{font-size:.88rem;color:var(--muted,#5b6470);margin:6px 0 0}
+.cir-icon{color:#0f6b5c}
+.cir-hy{margin:.4rem 0 0;padding:8px 12px;border-left:3px solid #0f6b5c;background:#e3f4f0;border-radius:6px;color:#163a33}
+body[data-theme="dark"] .cir-hy{background:#173d36;color:#d9f3ec;border-color:#8fe0cf}
+.cir-filters{display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end;margin:12px 0}
+.cir-filters label{display:flex;flex-direction:column;gap:4px;font-size:.85rem;font-weight:600;min-width:0;flex:1 1 160px}
+.cir-filters select{min-height:44px;font-size:16px;border-radius:10px;border:1px solid var(--line,#ccc);padding:0 10px;background:var(--surface,#fff);color:inherit;max-width:100%}
+.cir-filters .btn{min-height:44px}
+.cir-q-img{max-width:100%;height:auto;border-radius:10px;margin:8px 0;display:block}
+.cir-q .status-row{flex-wrap:wrap;gap:6px}
+.cir-foot{margin-top:24px}
+.cir-filter-box{margin:6px 0 12px}
+.cir-filter-box>summary{min-height:44px;display:flex;align-items:center;cursor:pointer;font-weight:600;color:var(--muted,#5b6470)}
