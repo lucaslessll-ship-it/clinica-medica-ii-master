@@ -51,3 +51,46 @@ test('surgery questions are well formed, practice records errors for review and 
  assert.ok(await p.locator('.topic-card.cir-topic').count()>=14);
  await t.close();
 });
+
+// Conteúdo e imagem sintéticos usados somente nesta interface de teste.
+// Não representam caso clínico, licença verificada ou figura distribuída no site.
+function extendedFixture(){
+ const text='Texto de teste para conferir leitura, marcações e navegação.';
+ return {
+  updated:'13/11/2026',pretest:Array.from({length:6},(_,i)=>'Pergunta de teste '+(i+1)),
+  exam:Array.from({length:4},(_,i)=>({pattern:'Enunciado de teste '+(i+1),trap:'Identificar a limitação descrita.',answer:'Justificar a resposta com os dados apresentados.'})),
+  sections:[{h:'Seção de teste',p:[text]}],flow:{title:'Sequência de teste',nodes:Array.from({length:6},()=>({k:'do',t:text}))},
+  reasoning:[text],mnemonics:Array.from({length:3},()=>({n:'Lembrete de teste',t:text})),pitfalls:[text],recall:Array.from({length:8},(_,i)=>({q:'Pergunta '+(i+1),a:text})),practice:[text],
+  refs:[{t:'Fonte de teste 1',u:'https://example.test/1'},{t:'Fonte de teste 2',u:'https://example.test/2'}],
+  cases:[{title:'Caso sintético 1',data:[text],reasoning:[text,text],conduct:[text,text],error:text},{title:'Caso sintético 2',data:text,reasoning:text,conduct:text,error:text}],
+  figs:[{src:'assets/figs/figura-teste.webp',alt:'Figura geométrica sintética para teste de interface',caption:'Imagem sintética criada no teste. Sem conteúdo clínico.',credit:'Teste de interface',license:'CC0 1.0',sourceUrl:'https://commons.wikimedia.org/wiki/Main_Page',markers:[{x:20,y:25,toX:45,toY:45,label:'Centro da forma de teste.'},{x:80,y:75,toX:60,toY:55,label:'Borda da forma de teste.'}]}]
+ };
+}
+async function showFixture(p){
+ const data=await p.evaluate(()=>{const canvas=document.createElement('canvas');canvas.width=600;canvas.height=400;const ctx=canvas.getContext('2d');ctx.fillStyle='#303b46';ctx.fillRect(0,0,600,400);ctx.fillStyle='#d8ede5';ctx.fillRect(200,120,200,160);return canvas.toDataURL('image/webp').split(',')[1];});
+ await p.route('**/assets/figs/figura-teste.webp',route=>route.fulfill({contentType:'image/webp',body:Buffer.from(data,'base64')}));
+ await p.evaluate(fixture=>{LessonDeep.add({'teste_0':fixture});document.querySelector('#main-content').innerHTML=LessonDeep.render('teste',0);},extendedFixture());
+}
+test('campos opcionais de prova e casos preservam aulas existentes e escapam texto',async()=>{
+ const t=await open(),p=t.page;const original=await p.evaluate(()=>LessonDeep.render('ciraa',0));await showFixture(p);
+ assert.equal(await p.evaluate(()=>LessonDeep.render('ciraa',0)),original);
+ assert.equal(await p.locator('.deep-exam-list>li').count(),4);assert.equal(await p.locator('.deep-case').count(),2);
+ assert.equal(await p.locator('.deep-pretest + .deep-exam').count(),1);assert.equal(await p.locator('.deep-case dt').count(),8);assert.equal(await p.locator('.deep-pretest li').count(),6);assert.equal(await p.locator('.deep-recall').count(),8);
+ const malicious='<img src=x onerror=alert(1)>';
+ await p.evaluate(({fixture,malicious})=>{fixture.exam=[{pattern:malicious,trap:malicious,answer:malicious}];fixture.cases[0].title=malicious;LessonDeep.add({'teste_0':fixture});document.querySelector('#main-content').innerHTML=LessonDeep.render('teste',0);},{fixture:extendedFixture(),malicious});
+ assert.equal(await p.locator('.deep-exam img,.deep-cases img').count(),0);assert.ok((await p.locator('.deep-exam').innerText()).includes(malicious));await t.close();
+});
+test('figuras locais têm crédito, licença, marcações e ampliação por teclado sem rolagem horizontal',async()=>{
+ for(const width of [320,390,820,1280])for(const theme of ['light','dark']){
+  const t=await open({width,height:1000}),p=t.page;await p.evaluate(theme=>HIG.setTheme(theme),theme);await showFixture(p);
+  const figure=p.locator('.deep-images .deep-figure');await figure.scrollIntoViewIfNeeded();await p.locator('.deep-figure img').evaluate(img=>img.decode());
+  assert.equal(await figure.locator('svg circle').count(),2);assert.equal(await figure.locator('.deep-figure-legend li').count(),2);assert.match(await figure.locator('figcaption').innerText(),/Crédito: Teste de interface.*CC0 1.0/s);
+  assert.equal(await figure.locator('a').last().getAttribute('href'),'https://commons.wikimedia.org/wiki/Main_Page');assert.ok(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));
+  const button=figure.locator('button');assert.ok(await button.evaluate(el=>el.getBoundingClientRect().height)>=44);await button.focus();await p.keyboard.press('Enter');
+  const dialog=p.locator('.deep-figure-dialog');assert.equal(await dialog.isVisible(),true);assert.equal(await dialog.locator('svg circle').count(),2);assert.equal(await dialog.locator('.deep-figure-legend li').count(),2);assert.ok(await dialog.evaluate(el=>el.scrollWidth<=el.clientWidth+1));
+  assert.equal(await p.evaluate(()=>{const ids=[...document.querySelectorAll('marker')].map(el=>el.id);return ids.length===new Set(ids).size;}),true);
+  assert.ok(await dialog.locator('button').evaluate(el=>el.getBoundingClientRect().height)>=44);await p.keyboard.press('Escape');await p.waitForFunction(()=>!document.querySelector('.deep-figure-dialog'));assert.equal(await button.evaluate(el=>el===document.activeElement),true);
+  await button.click();await p.getByRole('button',{name:'Fechar imagem',exact:true}).click();await dialog.waitFor({state:'detached'});
+  const rejected=await p.evaluate(figure=>['CC BY-NC-SA 4.0','CC BY-SA 4.0','Licença não informada'].map(license=>LessonDeep.figures([{...figure,license}])),extendedFixture().figs[0]);assert.deepEqual(rejected,['','','']);await t.close();
+ }
+});
