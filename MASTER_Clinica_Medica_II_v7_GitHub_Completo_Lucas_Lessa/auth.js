@@ -5,6 +5,7 @@
   const keys = cfg?.progressKeys || [];
   const ownerKey = 'master_auth_local_owner';
   const recoveryKey = 'master_password_recovery';
+  let sessionStore;
   const originalSet = Storage.prototype.setItem;
   const $ = id => document.getElementById(id);
   const status = {client:null, user:null, ready:false, busy:false, mode:'login', initializing:true, timers:new Map(), epoch:0, entering:null, recovery:false, baseline:new Map(), consent:null};
@@ -66,7 +67,7 @@
       title='Seus dados de estudo';description='Para sincronizar, armazenamos seu e-mail, respostas, anotações e progresso no Supabase. O acesso ao progresso é vinculado à sua conta. Nunca inclua dados de pacientes identificáveis.';
       fields='<label class="auth-consent"><input id="master-consent" type="checkbox" required> Li o aviso de privacidade e concordo em sincronizar meus dados de estudo.</label>';submit='Concordar e continuar';
     }else{
-      title='Seu estudo, no seu ritmo.';description='Entre para retomar suas aulas e sincronizar seu progresso.';fields=emailField()+field('master-password','Senha','password','current-password');submit='Entrar';
+      title='Seu estudo, no seu ritmo.';description='Entre para retomar suas aulas e sincronizar seu progresso.';fields=emailField()+field('master-password','Senha','password','current-password')+`<label class="auth-consent auth-remember"><input id="master-remember" type="checkbox" ${MasterSessionStorage.remembered()?'checked':''} aria-describedby="master-remember-hint"> Manter conectado neste dispositivo</label><p id="master-remember-hint" class="auth-hint">Use em um dispositivo pessoal. Desmarcado, a sessão fica apenas nesta aba. Você pode encerrar o acesso em “Sair da conta”.</p>`;submit='Entrar';
     }
     $('master-auth-title').textContent=title;$('master-auth-description').textContent=description;
     $('master-auth-fields').innerHTML=fields;
@@ -84,7 +85,7 @@
   function interfaceHtml(){
     const el=document.createElement('section');el.id='master-auth';
     el.setAttribute('role','dialog');el.setAttribute('aria-modal','true');el.setAttribute('aria-labelledby','master-auth-title');
-    el.innerHTML=`<div class="auth-panel"><div class="auth-brand">✦ MASTER</div><div id="master-auth-tabs" class="auth-tabs"><button id="master-login-tab" type="button" aria-pressed="true">Entrar</button><button id="master-register-tab" type="button" aria-pressed="false">Criar conta</button></div><h1 id="master-auth-title" tabindex="-1"></h1><p id="master-auth-description"></p><form id="master-auth-form"><div id="master-auth-fields"></div><button id="master-submit" class="btn primary" type="submit" data-label="Entrar">Entrar</button></form><button id="master-google" class="btn auth-google" type="button">Continuar com Google</button><div class="auth-links"><button id="master-forgot" class="auth-link" type="button">Esqueci a senha</button><button id="master-back" class="auth-link" type="button" hidden>Voltar para entrar</button></div><p id="master-auth-message" role="status" aria-live="polite" aria-atomic="true"></p><button id="master-retry" class="btn" type="button" hidden>Tentar carregar progresso novamente</button><details class="auth-privacy"><summary>Privacidade e seus dados</summary><p>Seu e-mail identifica sua conta; respostas e anotações são armazenadas no Supabase para sincronização. Nunca inclua dados de pacientes identificáveis. Para solicitar acesso ou exclusão dos seus dados, contate o responsável pela plataforma. Este aviso resumido não substitui uma Política de Privacidade completa.</p></details><noscript>Ative o JavaScript para acessar seu ambiente de estudo.</noscript></div>`;
+    el.innerHTML=`<div class="auth-panel"><div class="auth-brand">Clínica Médica e Cirurgia</div><div id="master-auth-tabs" class="auth-tabs"><button id="master-login-tab" type="button" aria-pressed="true">Entrar</button><button id="master-register-tab" type="button" aria-pressed="false">Criar conta</button></div><h1 id="master-auth-title" tabindex="-1"></h1><p id="master-auth-description"></p><form id="master-auth-form"><div id="master-auth-fields"></div><button id="master-submit" class="btn primary" type="submit" data-label="Entrar">Entrar</button></form><button id="master-google" class="btn auth-google" type="button">Continuar com Google</button><div class="auth-links"><button id="master-forgot" class="auth-link" type="button">Esqueci a senha</button><button id="master-back" class="auth-link" type="button" hidden>Voltar para entrar</button></div><p id="master-auth-message" role="status" aria-live="polite" aria-atomic="true"></p><button id="master-retry" class="btn" type="button" hidden>Tentar carregar progresso novamente</button><details class="auth-privacy"><summary>Privacidade e seus dados</summary><p>Seu e-mail identifica sua conta; respostas e anotações são armazenadas no Supabase para sincronização. Nunca inclua dados de pacientes identificáveis. Para solicitar acesso ou exclusão dos seus dados, contate o responsável pela plataforma. Este aviso resumido não substitui uma Política de Privacidade completa.</p></details><noscript>Ative o JavaScript para acessar seu ambiente de estudo.</noscript></div>`;
     document.body.appendChild(el);
     $('master-auth-form').addEventListener('submit',submit);
     $('master-login-tab').addEventListener('click',()=>show('login'));
@@ -158,6 +159,7 @@
         notice('Se o endereço estiver cadastrado, você receberá um e-mail com instruções. Confira também o spam.');return;
       }
       if(mode==='login'||mode==='register'){
+        if(mode==='login')sessionStore.setRemember($('master-remember').checked);
         const result=mode==='login'?await status.client.auth.signInWithPassword({email,password}):await status.client.auth.signUp({email,password,options:{emailRedirectTo:redirectUrl()}});
         if(result.error)throw result.error;
         $('master-password').value='';if($('master-confirm'))$('master-confirm').value='';
@@ -327,7 +329,8 @@
       const params=new URLSearchParams(location.search),hash=new URLSearchParams(location.hash.slice(1));
       const callbackError=params.get('error_description')||hash.get('error_description');
       status.recovery=!callbackError&&(params.get('auth')==='recovery'||hash.get('type')==='recovery'||sessionStorage.getItem(recoveryKey)==='yes');
-      status.client=window.supabase.createClient(cfg.url,cfg.publishableKey);
+      sessionStore=window.MasterSessionStorage.create(cfg.url);
+      status.client=window.supabase.createClient(cfg.url,cfg.publishableKey,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,storage:sessionStore.storage}});
       // Never await Supabase calls inside this callback: they can hold the Auth lock.
       status.client.auth.onAuthStateChange((event,session)=>{
         if(status.initializing){if(event==='PASSWORD_RECOVERY')status.recovery=true;return;}

@@ -138,8 +138,8 @@ test('responsive layouts, theme preferences and keyboard focus remain usable',as
  }
 });
 
-async function realSdkApp(recovery=false){
- const context=await browser.newContext(),page=await context.newPage(),apiCalls=[],errors=[];
+async function realSdkApp(recovery=false,storageState){
+ const context=await browser.newContext({storageState}),page=await context.newPage(),apiCalls=[],errors=[];
  page.on('pageerror',e=>errors.push(e.message));
  const sdk=await fs.readFile(path.join(process.cwd(),'node_modules/@supabase/supabase-js/dist/umd/supabase.js'),'utf8');
  const realUser={...user,id:'00000000-0000-4000-8000-000000000001',aud:'authenticated',role:'authenticated',app_metadata:{provider:'email',providers:['email']},created_at:new Date().toISOString()};
@@ -149,7 +149,7 @@ async function realSdkApp(recovery=false){
  await page.addInitScript(id=>localStorage.setItem('master_auth_local_owner',id),realUser.id);
  await page.route('https://cdn.jsdelivr.net/**/supabase.min.js',r=>r.fulfill({contentType:'text/javascript',body:sdk}));
  await page.route('https://lnbcqrdjivvqbhylhtgd.supabase.co/**',async route=>{
-   const request=route.request(),url=new URL(request.url()),body=request.postDataJSON();apiCalls.push({path:url.pathname,method:request.method(),body});
+   const request=route.request(),url=new URL(request.url()),body=request.postDataJSON();apiCalls.push({path:url.pathname,method:request.method(),body,grantType:url.searchParams.get('grant_type')});
    const headers={'access-control-allow-origin':'*','access-control-allow-headers':'*','access-control-allow-methods':'GET,POST,PUT,OPTIONS'};
    let data={};
    if(url.pathname.endsWith('/token'))data=session;
@@ -396,4 +396,32 @@ test('sidebar exposes requested panels and opens Decision Lab directly on deskto
   await p.locator('#sidebar-nav').getByRole('button',{name:'Microdecisões',exact:true}).click();assert.equal(await p.evaluate(()=>ui.route),'decisionlab');assert.equal(await p.locator('#decision-case option').count(),24);
   if(width<801)await p.getByRole('button',{name:'Abrir menu de navegação',exact:true}).click();await p.screenshot({path:`work/side-panels-${width}.png`,animations:'disabled'});await t.close();
  }
+});
+test('remembered Supabase session survives reload without another password login and logout removes it',async()=>{
+ const t=await realSdkApp(),p=t.page,key='sb-lnbcqrdjivvqbhylhtgd-auth-token';
+ assert.equal(await p.locator('#master-remember').isChecked(),true);await login(p);
+ assert.ok(await p.evaluate(key=>localStorage.getItem(key),key));assert.equal(await p.evaluate(key=>sessionStorage.getItem(key),key),null);
+ await p.reload();await p.waitForFunction(()=>document.getElementById('master-auth').hidden);
+ assert.equal(t.apiCalls.filter(c=>c.path.endsWith('/token')&&c.body?.grant_type!=='refresh_token').length,1);
+ assert.ok(!(JSON.stringify(await t.context.storageState())).includes('strong-password'));
+ const saved=await t.context.storageState();await t.close();const restored=await realSdkApp(false,saved),reopened=restored.page;await reopened.waitForFunction(()=>document.getElementById('master-auth').hidden);assert.equal(restored.apiCalls.filter(c=>c.path.endsWith('/token')).length,0);await restored.close();
+ const logout=await realSdkApp(false,saved),exit=logout.page;await exit.waitForFunction(()=>document.getElementById('master-auth').hidden);await exit.locator('#master-avatar').click();await exit.locator('#master-signout').click();await exit.waitForFunction(()=>!document.getElementById('master-auth').hidden);
+ assert.equal(await exit.evaluate(key=>localStorage.getItem(key),key),null);assert.equal(await exit.evaluate(key=>sessionStorage.getItem(key),key),null);await logout.close();
+});
+test('unchecked remember option stores auth only in the current tab and preserves its choice',async()=>{
+ const t=await realSdkApp(),p=t.page,key='sb-lnbcqrdjivvqbhylhtgd-auth-token';await p.locator('#master-remember').uncheck();await login(p);
+ assert.equal(await p.evaluate(key=>localStorage.getItem(key),key),null);assert.ok(await p.evaluate(key=>sessionStorage.getItem(key),key));
+ const exported=await t.context.storageState();assert.ok(!exported.origins.some(o=>o.localStorage.some(item=>item.name===key)));
+ await p.reload();await p.waitForFunction(()=>document.getElementById('master-auth').hidden);await p.locator('#master-avatar').click();await p.locator('#master-signout').click();await p.waitForFunction(()=>!document.getElementById('master-auth').hidden);
+ assert.equal(await p.locator('#master-remember').isChecked(),false);assert.equal(await p.evaluate(key=>sessionStorage.getItem(key),key),null);await t.close();
+});
+test('site identity includes clinical medicine and surgery without changing legacy study keys',async()=>{
+ const t=await open({session:true}),p=t.page;await p.waitForFunction(()=>document.getElementById('master-auth').hidden);
+ assert.equal(await p.title(),'Clínica Médica e Cirurgia');assert.match(await p.locator('.brand-text').innerText(),/Clínica Médica\s+e Cirurgia/);assert.equal(await p.locator('.top-context-title').innerText(),'Clínica Médica e Cirurgia');
+ const manifest=await (await p.request.get(base+'/MASTER_Clinica_Medica_II_v7_GitHub_Completo_Lucas_Lessa/manifest.webmanifest')).json();assert.equal(manifest.name,'Clínica Médica e Cirurgia');assert.ok(await p.evaluate(()=>MASTER_AUTH_CONFIG.progressKeys.includes('master_p2_lucas_v1')));await t.close();
+});
+test('remembered expired access token renews through Supabase without asking for the password again',async()=>{
+ const t=await realSdkApp();await login(t.page);const saved=await t.context.storageState();await t.close();
+ const item=saved.origins.flatMap(o=>o.localStorage).find(i=>i.name==='sb-lnbcqrdjivvqbhylhtgd-auth-token');const session=JSON.parse(item.value);session.expires_at=1;item.value=JSON.stringify(session);
+ const restored=await realSdkApp(false,saved);await restored.page.waitForFunction(()=>document.getElementById('master-auth').hidden);assert.ok(restored.apiCalls.some(c=>c.path.endsWith('/token')&&c.grantType==='refresh_token'));await restored.close();
 });
