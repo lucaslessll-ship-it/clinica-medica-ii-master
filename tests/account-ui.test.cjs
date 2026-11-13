@@ -138,8 +138,8 @@ test('responsive layouts, theme preferences and keyboard focus remain usable',as
  }
 });
 
-async function realSdkApp(recovery=false){
- const context=await browser.newContext(),page=await context.newPage(),apiCalls=[],errors=[];
+async function realSdkApp(recovery=false,storageState){
+ const context=await browser.newContext({storageState}),page=await context.newPage(),apiCalls=[],errors=[];
  page.on('pageerror',e=>errors.push(e.message));
  const sdk=await fs.readFile(path.join(process.cwd(),'node_modules/@supabase/supabase-js/dist/umd/supabase.js'),'utf8');
  const realUser={...user,id:'00000000-0000-4000-8000-000000000001',aud:'authenticated',role:'authenticated',app_metadata:{provider:'email',providers:['email']},created_at:new Date().toISOString()};
@@ -396,4 +396,22 @@ test('sidebar exposes requested panels and opens Decision Lab directly on deskto
   await p.locator('#sidebar-nav').getByRole('button',{name:'Microdecisões',exact:true}).click();assert.equal(await p.evaluate(()=>ui.route),'decisionlab');assert.equal(await p.locator('#decision-case option').count(),24);
   if(width<801)await p.getByRole('button',{name:'Abrir menu de navegação',exact:true}).click();await p.screenshot({path:`work/side-panels-${width}.png`,animations:'disabled'});await t.close();
  }
+});
+test('remembered Supabase session survives reload without another password login and logout removes it',async()=>{
+ const t=await realSdkApp(),p=t.page,key='sb-lnbcqrdjivvqbhylhtgd-auth-token';
+ assert.equal(await p.locator('#master-remember').isChecked(),true);await login(p);
+ assert.ok(await p.evaluate(key=>localStorage.getItem(key),key));assert.equal(await p.evaluate(key=>sessionStorage.getItem(key),key),null);
+ await p.reload();await p.waitForFunction(()=>document.getElementById('master-auth').hidden);
+ assert.equal(t.apiCalls.filter(c=>c.path.endsWith('/token')&&c.body?.grant_type!=='refresh_token').length,1);
+ assert.ok(!(JSON.stringify(await t.context.storageState())).includes('strong-password'));
+ const saved=await t.context.storageState();await t.close();const restored=await realSdkApp(false,saved),reopened=restored.page;await reopened.waitForFunction(()=>document.getElementById('master-auth').hidden);assert.equal(restored.apiCalls.filter(c=>c.path.endsWith('/token')).length,0);await restored.close();
+ const logout=await realSdkApp(false,saved),exit=logout.page;await exit.waitForFunction(()=>document.getElementById('master-auth').hidden);await exit.locator('#master-avatar').click();await exit.locator('#master-signout').click();await exit.waitForFunction(()=>!document.getElementById('master-auth').hidden);
+ assert.equal(await exit.evaluate(key=>localStorage.getItem(key),key),null);assert.equal(await exit.evaluate(key=>sessionStorage.getItem(key),key),null);await logout.close();
+});
+test('unchecked remember option stores auth only in the current tab and preserves its choice',async()=>{
+ const t=await realSdkApp(),p=t.page,key='sb-lnbcqrdjivvqbhylhtgd-auth-token';await p.locator('#master-remember').uncheck();await login(p);
+ assert.equal(await p.evaluate(key=>localStorage.getItem(key),key),null);assert.ok(await p.evaluate(key=>sessionStorage.getItem(key),key));
+ const exported=await t.context.storageState();assert.ok(!exported.origins.some(o=>o.localStorage.some(item=>item.name===key)));
+ await p.reload();await p.waitForFunction(()=>document.getElementById('master-auth').hidden);await p.locator('#master-avatar').click();await p.locator('#master-signout').click();await p.waitForFunction(()=>!document.getElementById('master-auth').hidden);
+ assert.equal(await p.locator('#master-remember').isChecked(),false);assert.equal(await p.evaluate(key=>sessionStorage.getItem(key),key),null);await t.close();
 });
