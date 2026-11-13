@@ -149,6 +149,7 @@ ${lessonBlock('Dica de fixação',c.memory,'emphasis','✦')}
 ${lessonBlock('Dica de prova · estilo Oswaldo',c.exam,'exam','◎')}
 ${lessonBlock('Aprofundamento para resposta discursiva',c.discursive,'full','✎')}
 ${deepLesson(t,idx)}
+${window.LessonDeep?LessonDeep.render(t.id,idx):''}
 ${window.EVIDENCE?EVIDENCE.lesson('P2',t.id,idx):''}
 <div class="lesson-block full"><h3>▦ Esquema de raciocínio — do dado clínico à conduta</h3><div class="flow-diagram"><div class="flow-node"><b>1 · RECONHECER</b>Fenótipo/síndrome<br/>e sinais de risco</div><div class="flow-node"><b>2 · LOCALIZAR</b>Fisiopatologia<br/>e órgão ameaçado</div><div class="flow-node"><b>3 · CONFIRMAR</b>Exame direcionado<br/>que muda manejo</div><div class="flow-node"><b>4 · AGIR</b>Conduta prioritária<br/>+ contraindicações</div></div></div>
 ${differentialDiagram(t.id)}

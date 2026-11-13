@@ -203,9 +203,22 @@
   }
   // Postgres jsonb returns object keys in its own order; compare payloads independent of key order.
   const canon=value=>JSON.stringify(value,(k,x)=>x&&typeof x==='object'&&!Array.isArray(x)?Object.fromEntries(Object.keys(x).sort().map(name=>[name,x[name]])):x);
+  // Values this tab already sent: a read that returns one of them is our own write, not another device.
+  const sent=new Map();
+  function rememberSent(key,value){const list=sent.get(key)||[];list.push(value);if(list.length>30)list.shift();sent.set(key,list);}
+  let lastConflictNotice=0;
+  function keepConflictCopy(userId,rows){
+    const prefix='master_conflict_backup_'+userId+'_';
+    try{
+      originalSet.call(localStorage,prefix+Date.now(),JSON.stringify(Object.fromEntries(rows.map(row=>[row.storage_key,row.payload]))));
+      // Keep only the five most recent copies so repeated conflicts cannot fill the browser storage.
+      Object.keys(localStorage).filter(name=>name.startsWith(prefix)).sort().slice(0,-5).forEach(name=>localStorage.removeItem(name));
+    }catch{}
+    if(Date.now()-lastConflictNotice>600000){lastConflictNotice=Date.now();toast('Outro dispositivo alterou o progresso. Cópia da versão remota preservada; disponível no menu da conta.');}
+  }
   const pendingKey=id=>'master_auth_pending_'+id;
   function pending(id){return read(pendingKey(id))||{};}
-  function cancelSync(){status.ready=false;status.epoch++;for(const timer of status.timers.values())clearTimeout(timer);status.timers.clear();}
+  function cancelSync(){status.ready=false;status.epoch++;sent.clear();for(const timer of status.timers.values())clearTimeout(timer);status.timers.clear();}
   async function syncKey(key){
     if(!status.ready||!status.user||!keys.includes(key))return;
     const raw=localStorage.getItem(key),value=read(key);if(value===null)return;
@@ -215,14 +228,13 @@
     if(epoch!==status.epoch)return;
     const remote=latest?.find(row=>row.storage_key===key);
     const remoteCanon=remote?canon(remote.payload):null;
-    if(remote&&remoteCanon!==status.baseline.get(key)&&remoteCanon!==canon(value)){
-      originalSet.call(localStorage,'master_conflict_backup_'+userId+'_'+Date.now(),JSON.stringify(Object.fromEntries(latest.map(row=>[row.storage_key,row.payload]))));
-      toast('Outro dispositivo alterou o progresso. Cópia da versão remota preservada; disponível no menu da conta.');
-    }
+    const localCanon=canon(value);
+    if(remote&&remoteCanon!==status.baseline.get(key)&&remoteCanon!==localCanon&&!(sent.get(key)||[]).includes(remoteCanon))keepConflictCopy(userId,latest);
+    rememberSent(key,localCanon);
     const {error}=await status.client.from('master_progress').upsert({user_id:userId,storage_key:key,payload:value,updated_at:new Date().toISOString()},{onConflict:'user_id,storage_key'});
     if(error){if(epoch===status.epoch)syncNotice('Sincronização pendente. Seu progresso continua salvo neste dispositivo.');throw error;}
     if(epoch===status.epoch){
-      status.baseline.set(key,canon(value));
+      status.baseline.set(key,localCanon);
       const queued=pending(userId);
       if(queued[key]===raw){delete queued[key];originalSet.call(localStorage,pendingKey(userId),JSON.stringify(queued));}
       syncNotice(Object.keys(queued).length?'Há alterações aguardando sincronização.':'Progresso sincronizado.');
