@@ -149,7 +149,7 @@ async function realSdkApp(recovery=false,storageState){
  await page.addInitScript(id=>localStorage.setItem('master_auth_local_owner',id),realUser.id);
  await page.route('https://cdn.jsdelivr.net/**/supabase.min.js',r=>r.fulfill({contentType:'text/javascript',body:sdk}));
  await page.route('https://lnbcqrdjivvqbhylhtgd.supabase.co/**',async route=>{
-   const request=route.request(),url=new URL(request.url()),body=request.postDataJSON();apiCalls.push({path:url.pathname,method:request.method(),body});
+   const request=route.request(),url=new URL(request.url()),body=request.postDataJSON();apiCalls.push({path:url.pathname,method:request.method(),body,grantType:url.searchParams.get('grant_type')});
    const headers={'access-control-allow-origin':'*','access-control-allow-headers':'*','access-control-allow-methods':'GET,POST,PUT,OPTIONS'};
    let data={};
    if(url.pathname.endsWith('/token'))data=session;
@@ -419,4 +419,9 @@ test('site identity includes clinical medicine and surgery without changing lega
  const t=await open({session:true}),p=t.page;await p.waitForFunction(()=>document.getElementById('master-auth').hidden);
  assert.equal(await p.title(),'Clínica Médica e Cirurgia');assert.match(await p.locator('.brand-text').innerText(),/Clínica Médica\s+e Cirurgia/);assert.equal(await p.locator('.top-context-title').innerText(),'Clínica Médica e Cirurgia');
  const manifest=await (await p.request.get(base+'/MASTER_Clinica_Medica_II_v7_GitHub_Completo_Lucas_Lessa/manifest.webmanifest')).json();assert.equal(manifest.name,'Clínica Médica e Cirurgia');assert.ok(await p.evaluate(()=>MASTER_AUTH_CONFIG.progressKeys.includes('master_p2_lucas_v1')));await t.close();
+});
+test('remembered expired access token renews through Supabase without asking for the password again',async()=>{
+ const t=await realSdkApp();await login(t.page);const saved=await t.context.storageState();await t.close();
+ const item=saved.origins.flatMap(o=>o.localStorage).find(i=>i.name==='sb-lnbcqrdjivvqbhylhtgd-auth-token');const session=JSON.parse(item.value);session.expires_at=1;item.value=JSON.stringify(session);
+ const restored=await realSdkApp(false,saved);await restored.page.waitForFunction(()=>document.getElementById('master-auth').hidden);assert.ok(restored.apiCalls.some(c=>c.path.endsWith('/token')&&c.grantType==='refresh_token'));await restored.close();
 });
