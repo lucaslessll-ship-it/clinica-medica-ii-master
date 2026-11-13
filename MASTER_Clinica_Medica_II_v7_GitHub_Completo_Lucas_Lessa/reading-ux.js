@@ -23,7 +23,8 @@ window.ReadingUX=(()=>{
     progress.setAttribute('aria-valuenow',String(amount));
     progress.querySelector('.reading-progress-fill').style.width=amount+'%';
     outline.querySelector('.reading-progress-label').textContent=`Posição na aula · ${amount}%`;
-    let current=0;headings.forEach((heading,index)=>{if(heading.getBoundingClientRect().top<=inset+30)current=index;});
+    let current=0;headings.forEach((heading,index)=>{if(heading.offsetParent&&heading.getBoundingClientRect().top<=inset+30)current=index;});
+    const now=outline.querySelector('.reading-current');if(now)now.textContent=headings[current].textContent.replace(/^[^\p{L}\p{N}]+/u,'').trim();
     outline.querySelectorAll('[data-reading-target]').forEach((button,index)=>{
       if(index===current)button.setAttribute('aria-current','location');else button.removeAttribute('aria-current');
     });
@@ -36,20 +37,20 @@ window.ReadingUX=(()=>{
     if(!next||!content){clear();return;}
     if(next===lesson&&outline?.isConnected){schedule();return;}
     clear();lesson=next;sections=content;
-    headings=[...content.querySelectorAll(':scope > .lesson-block > h3')];
+    headings=[...content.querySelectorAll(':scope > .lesson-block > h3, :scope > .deep-lesson .deep-head h3, :scope > .deep-lesson .deep-block > h4')];
     if(!headings.length){clear();return;}
     lesson.classList.add('reading-lesson');
     outline=document.createElement('div');outline.className='reading-outline';
     const details=document.createElement('details'),summary=document.createElement('summary');
     summary.textContent='Navegar nesta aula';
     const count=document.createElement('span');count.className='reading-outline-count';count.textContent=`${headings.length} seções`;
-    summary.append(count);details.append(summary);
+    const now=document.createElement('span');now.className='reading-current';summary.append(count,now);details.append(summary);
     const nav=document.createElement('nav');nav.className='reading-outline-links';nav.setAttribute('aria-label','Seções desta aula');
     headings.forEach((heading,index)=>{
       heading.id=heading.id||`reading-section-${index+1}`;heading.tabIndex=-1;
-      const button=document.createElement('button');button.type='button';button.dataset.readingTarget=heading.id;
+      const button=document.createElement('button');button.type='button';button.dataset.readingTarget=heading.id;if(heading.tagName==='H4')button.className='sub';
       button.textContent=heading.textContent.replace(/^[^\p{L}\p{N}]+/u,'').trim();
-      button.addEventListener('click',()=>go(heading));nav.append(button);
+      button.addEventListener('click',()=>{details.open=false;go(heading);});nav.append(button);
     });
     details.append(nav);outline.append(details);
     const label=document.createElement('span');label.className='reading-progress-label';label.textContent='Posição na aula · 0%';

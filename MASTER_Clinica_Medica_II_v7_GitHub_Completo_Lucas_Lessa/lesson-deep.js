@@ -128,21 +128,21 @@ function add(entries){Object.assign(DATA,entries);}
 const refLink=r=>r.u||'https://pubmed.ncbi.nlm.nih.gov/?term='+encodeURIComponent(r.q||r.t);
 function table(t){return `<div class="deep-table-wrap"><table class="deep-table"><thead><tr>${t.head.map(h=>`<th scope="col">${h}</th>`).join('')}</tr></thead><tbody>${t.rows.map(r=>`<tr>${r.map((c,i)=>i?`<td>${c}</td>`:`<th scope="row">${c}</th>`).join('')}</tr>`).join('')}</tbody></table></div>`;}
 function flow(f){
-  return `<section class="deep-block"><h4>Fluxograma: ${f.title}</h4><ol class="deep-flow">${f.nodes.map(n=>{
+  return `<section class="deep-block hy-keep"><h4>Fluxograma: ${f.title}</h4><ol class="deep-flow">${f.nodes.map(n=>{
     if(n.k==='ask')return `<li class="deep-flow-ask"><p>${n.t}</p><div class="deep-flow-branches"><span class="yes"><b>Sim</b>${n.yes}</span><span class="no"><b>Não</b>${n.no}</span></div></li>`;
     return `<li class="deep-flow-${n.k}"><p>${n.t}</p></li>`;}).join('')}</ol></section>`;
 }
 function render(id,index){
   const d=DATA[id+'_'+index];if(!d)return '';
-  const key=id+'_'+index;
-  return `<section class="lesson-block full deep-lesson" aria-label="Estudo aprofundado"><header class="deep-head"><span class="kicker">Estudo aprofundado</span><h3>Entenda, decida e lembre</h3><p>Leia depois dos blocos acima. Comece tentando responder ao pré-teste, mesmo sem saber: errar antes de ler melhora a retenção.</p></header>
-  <section class="deep-block deep-pretest"><h4>Pré-teste: responda de cabeça</h4><ol>${d.pretest.map(q=>`<li>${q}</li>`).join('')}</ol></section>
+  const key=id+'_'+index,L=window.LearnUX;
+  return `<section class="lesson-block full deep-lesson${L&&L.isHy()?' deep-hy':''}" aria-label="Estudo aprofundado"><header class="deep-head"><span class="kicker">Estudo aprofundado</span><h3>Entenda, decida e lembre</h3><p>Leia depois dos blocos acima. Comece tentando responder ao pré-teste, mesmo sem saber: errar antes de ler melhora a retenção.</p>${L?L.tools():''}</header>
+  <section class="deep-block deep-pretest"><h4>Pré-teste: responda de cabeça</h4><ol>${d.pretest.map((q,i)=>L?L.preMarkup(q,i):`<li>${q}</li>`).join('')}</ol><p class="deep-pre-out subtle" role="status" aria-live="polite"></p></section>
   ${d.sections.map(s=>`<section class="deep-block"><h4>${s.h}</h4>${(s.p||[]).map(p=>`<p>${p}</p>`).join('')}${s.table?table(s.table):''}${s.list?`<ul>${s.list.map(x=>`<li>${x}</li>`).join('')}</ul>`:''}${s.after?`<p>${s.after}</p>`:''}</section>`).join('')}
   ${d.flow?flow(d.flow):''}
   <section class="deep-block"><h4>Dicas de raciocínio</h4><ul>${d.reasoning.map(x=>`<li>${x}</li>`).join('')}</ul></section>
-  <section class="deep-block deep-mnemonics"><h4>Para memorizar</h4><dl>${d.mnemonics.map(m=>`<div><dt>${m.n}</dt><dd>${m.t}</dd></div>`).join('')}</dl></section>
-  <section class="deep-block deep-pitfalls"><h4>Erros que custam ponto e paciente</h4><ul>${d.pitfalls.map(x=>`<li>${x}</li>`).join('')}</ul></section>
-  <section class="deep-block"><h4>Evocação ativa</h4><p class="subtle">Responda em voz alta ou por escrito antes de abrir a resposta. Volte a estas perguntas em 1, 3 e 7 dias.</p>${d.recall.map((r,i)=>`<details class="deep-recall"><summary><span>${i+1}</span>${r.q}</summary><p>${r.a}</p></details>`).join('')}</section>
+  <section class="deep-block deep-mnemonics hy-keep"><h4>Para memorizar</h4><dl>${d.mnemonics.map(m=>`<div><dt>${m.n}</dt><dd>${m.t}</dd></div>`).join('')}</dl></section>
+  <section class="deep-block deep-pitfalls hy-keep"><h4>Erros que custam ponto e paciente</h4><ul>${d.pitfalls.map(x=>`<li>${x}</li>`).join('')}</ul></section>
+  <section class="deep-block deep-recall-block hy-keep"><h4>Evocação ativa</h4><p class="subtle">Responda em voz alta ou por escrito antes de abrir a resposta. Depois diga como foi: a pergunta volta para revisão no painel inicial em 1, 3, 7, 14 ou 30 dias.</p>${d.recall.map((r,i)=>{const k=key+'#'+i,due=L?L.dueText(k):'';return `<details class="deep-recall" data-recall="${k}"><summary><span>${i+1}</span>${r.q}<em class="deep-recall-due"${due?'':' hidden'}>${due}</em></summary><p>${r.a}</p>${L?L.rateMarkup(k):''}</details>`;}).join('')}</section>
   <section class="deep-block"><h4>Na prática</h4><ul>${d.practice.map(x=>`<li>${x}</li>`).join('')}</ul></section>
   <section class="deep-block deep-refs"><h4>Referências</h4><ul>${d.refs.map(r=>`<li><a href="${refLink(r)}" target="_blank" rel="noopener">${r.t}</a></li>`).join('')}</ul>${d.note?`<p class="subtle">${d.note} Revisado em ${d.updated}.</p>`:''}</section>
   </section>`;

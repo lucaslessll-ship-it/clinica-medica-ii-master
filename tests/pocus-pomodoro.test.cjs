@@ -90,3 +90,20 @@ test('every P1 lesson has a complete deep study block that fits small screens',a
  }
  await t.close();
 });
+test('topic head is single, outline lists deep sections, pretest and recall are interactive and due reviews reach the dashboard',async()=>{
+ const t=await open(),p=t.page;await p.evaluate(()=>{navigate('p1');P1.openTopic('p1arr');});
+ assert.equal(await p.locator('.topic-head').count(),1);assert.equal(await p.locator('.topic-banner').count(),0);assert.equal(await p.locator('#main-content h1').count(),1);
+ assert.ok(await p.locator('.reading-outline-links button.sub').count()>=8);assert.equal(await p.locator('.reading-outline').evaluate(el=>getComputedStyle(el).position),'sticky');
+ await p.locator('.deep-pre-btns button[data-v="0"]').first().click();assert.match(await p.locator('.deep-pre-out').textContent(),/1 de \d+ marcadas/);
+ await p.locator('[data-deep-act=hy]').click();assert.equal(await p.locator('.deep-pretest').isVisible(),false);assert.equal(await p.locator('.deep-flow').isVisible(),true);await p.locator('[data-deep-act=hy]').click();
+ await p.locator('.deep-recall summary').first().click();await p.locator('.deep-rate button[data-v="0"]').first().click();
+ assert.equal(await p.locator('.deep-recall-due').first().textContent(),'revisar amanhã');
+ assert.equal(await p.evaluate(()=>LearnUX.dueList().length),0);assert.equal(await p.evaluate(()=>LearnUX.streak()),1);
+ await p.evaluate(()=>{const r=store.study.deep.recall;Object.keys(r).forEach(k=>r[k].d='2026-01-01');stateSave();navigate('dashboard');});
+ assert.match(await p.locator('.dash-today').textContent(),/1pergunta para revisar/);
+ await p.locator('.dash-today .btn').click();await p.waitForFunction(()=>document.activeElement?.closest('[data-recall="p1arr_0#0"]'));
+ assert.equal(await p.locator('[data-recall="p1arr_0#0"] .deep-recall-due').textContent(),'revisar hoje');
+ await p.evaluate(()=>navigate('dashboard'));assert.equal(await p.locator('.subject-card[data-area]').count(),16);
+ await p.evaluate(()=>HIG.openSearch());await p.locator('#global-search').fill('alternar tema');assert.match(await p.locator('#search-results').textContent(),/Alternar tema claro e escuro/);await p.keyboard.press('Escape');
+ await p.setViewportSize({width:390,height:844});await p.waitForTimeout(100);assert.equal(await p.locator('#focus-float').isVisible(),false);assert.equal(await p.locator('#mobile-tabbar svg').count(),5);await t.close();
+});

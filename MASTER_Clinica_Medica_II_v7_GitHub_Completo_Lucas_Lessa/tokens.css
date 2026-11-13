@@ -1,0 +1,46 @@
+/* Tokens de design: fonte unica para espacos, raios, sombras, tipos e cores por especialidade.
+   Folhas novas usam apenas estes valores; as antigas migram por partes. */
+:root{
+  --space-1:4px;--space-2:8px;--space-3:12px;--space-4:16px;--space-5:20px;--space-6:24px;--space-7:32px;--space-8:40px;
+  --radius-sm:8px;--radius-md:12px;--radius-lg:16px;--radius-xl:22px;--radius-pill:999px;
+  --text-xs:.75rem;--text-sm:.8125rem;--text-md:.9375rem;--text-lg:1.0625rem;--text-xl:1.375rem;--text-2xl:1.75rem;
+  --shadow-1:0 1px 2px rgba(12,66,63,.06);--shadow-2:0 6px 18px rgba(12,66,63,.08);--shadow-3:0 14px 36px rgba(12,66,63,.12);
+  --ease:cubic-bezier(.2,.7,.2,1);--speed:.16s;
+  --warn:#8a4b12;--warn-soft:#fff6ed;--warn-line:#f1d6b8;
+  --info:#2b3f8f;--info-soft:#f3f6ff;--info-line:#cfd9f5;
+  --bad:#a8322c;--bad-soft:#fdeeed;--bad-line:#efc1bd;
+  --ok:#0b6c66;--ok-soft:#eef6f3;--ok-line:#c9e2da;
+  --area:#0b6c66;--area-soft:#e4f4ef;
+}
+[data-area=neuro]{--area:#6146b8;--area-soft:#efebfb}
+[data-area=reuma]{--area:#b03a6b;--area-soft:#fbeaf1}
+[data-area=onco]{--area:#9a5b08;--area-soft:#fbf1dd}
+[data-area=hema]{--area:#b3352f;--area-soft:#fcebea}
+[data-area=gastro]{--area:#b2531a;--area-soft:#fcefe5}
+[data-area=infecto]{--area:#2c7a3f;--area-soft:#e8f5ea}
+[data-area=cardio]{--area:#bb2d4a;--area-soft:#fdeaee}
+[data-area=pressao]{--area:#1f65b0;--area-soft:#e8f1fb}
+[data-area=diabetes]{--area:#8a6a00;--area-soft:#faf3d6}
+[data-area=tireoide]{--area:#0b7a86;--area-soft:#e2f5f7}
+[data-area=endocrino]{--area:#4653b8;--area-soft:#ebedfb}
+[data-area=tele]{--area:#4a5f6b;--area-soft:#eaf0f3}
+body[data-theme="dark"]{
+  --shadow-1:0 1px 2px rgba(0,0,0,.3);--shadow-2:0 6px 18px rgba(0,0,0,.32);--shadow-3:0 14px 36px rgba(0,0,0,.4);
+  --warn:#ffcf99;--warn-soft:#3a2c1c;--warn-line:#6b5234;
+  --info:#b9c8ff;--info-soft:#1d2740;--info-line:#3b4a78;
+  --bad:#ffb4ae;--bad-soft:#472322;--bad-line:#7d3a36;
+  --ok:#7fd6c3;--ok-soft:#1c3a35;--ok-line:#3b7165;
+  --area:#7fd6c3;--area-soft:#214d45;
+}
+body[data-theme="dark"] [data-area=neuro]{--area:#c3b4ff;--area-soft:#322a55}
+body[data-theme="dark"] [data-area=reuma]{--area:#ffa9cb;--area-soft:#4c2437}
+body[data-theme="dark"] [data-area=onco]{--area:#f3c46a;--area-soft:#453414}
+body[data-theme="dark"] [data-area=hema]{--area:#ffa59f;--area-soft:#4a2322}
+body[data-theme="dark"] [data-area=gastro]{--area:#ffb88a;--area-soft:#4a2c18}
+body[data-theme="dark"] [data-area=infecto]{--area:#93dba3;--area-soft:#1f3f27}
+body[data-theme="dark"] [data-area=cardio]{--area:#ff9fb2;--area-soft:#4c1f2b}
+body[data-theme="dark"] [data-area=pressao]{--area:#9cc7ff;--area-soft:#1c3554}
+body[data-theme="dark"] [data-area=diabetes]{--area:#ecd06a;--area-soft:#403610}
+body[data-theme="dark"] [data-area=tireoide]{--area:#7fdbe6;--area-soft:#143e44}
+body[data-theme="dark"] [data-area=endocrino]{--area:#b3bcff;--area-soft:#2a2f5c}
+body[data-theme="dark"] [data-area=tele]{--area:#bcd0da;--area-soft:#2b3a42}
