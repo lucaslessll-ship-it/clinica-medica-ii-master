@@ -139,6 +139,7 @@ function render(id,index){
   return `<section class="lesson-block full deep-lesson${L&&L.isHy()?' deep-hy':''}" aria-label="Estudo aprofundado"><header class="deep-head"><span class="kicker">Estudo aprofundado</span><h3>Entenda, decida e lembre</h3><p>Leia depois dos blocos acima. Comece tentando responder ao pré-teste, mesmo sem saber: errar antes de ler melhora a retenção.</p>${L?L.tools():''}</header>
   <section class="deep-block deep-pretest"><h4>Pré-teste: responda de cabeça</h4><ol>${d.pretest.map((q,i)=>L?L.preMarkup(q,i):`<li>${q}</li>`).join('')}</ol><p class="deep-pre-out subtle" role="status" aria-live="polite"></p></section>
   ${d.exam?`<section class="deep-block deep-exam hy-keep"><h4>Como cai na prova</h4><ul>${d.exam.map(x=>`<li><strong>${x.c}</strong><span><b>Pegadinha:</b> ${x.p}</span><span><b>A banca quer:</b> ${x.r}</span></li>`).join('')}</ul></section>`:''}
+  ${window.LessonImages?LessonImages.slot(key):''}
   ${d.sections.map(s=>`<section class="deep-block"><h4>${s.h}</h4>${(s.p||[]).map(p=>`<p>${p}</p>`).join('')}${s.table?table(s.table):''}${s.list?`<ul>${s.list.map(x=>`<li>${x}</li>`).join('')}</ul>`:''}${s.after?`<p>${s.after}</p>`:''}</section>`).join('')}
   ${d.flow?flow(d.flow):''}
   <section class="deep-block"><h4>Dicas de raciocínio</h4><ul>${d.reasoning.map(x=>`<li>${x}</li>`).join('')}</ul></section>
