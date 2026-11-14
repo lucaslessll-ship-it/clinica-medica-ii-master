@@ -28,6 +28,18 @@ Validação deste lote em uma cópia exata dos arquivos preparados para commit: 
 
 Versão preparada: `20261114-plano2`, Interface `2026.11.14.2`.
 
+## Lote dos temas de maior peso e Hérnias
+
+As 19 aulas de peso 5 e as 4 aulas de Hérnias foram ampliadas. Cada uma tem pelo menos 6 pré-testes, 8 perguntas de evocação, 4 itens de prova e 2 casos resolvidos, com novas seções de fisiopatologia, diferenciais, técnica e complicações.
+
+Entraram 69 questões autorais: 10 de Abdome, 14 de Pâncreas, 14 de Hérnias, 13 de Trauma abdominal e 18 de Trauma torácico. O banco passa a ter 281 questões nesta etapa. Esses cinco temas alcançam pelo menos 30 questões, com os IDs anteriores preservados. Os comentários novos explicam as alternativas pelo conteúdo, sem depender das letras que são embaralhadas.
+
+Foram corrigidas imprecisões anatômicas do canal inguinal e qualificadas regras absolutas sobre escore diagnóstico, necrose pancreática, cistos, anticoagulação, laparotomia, hematoma retroperitoneal e TEVAR. Os valores numéricos anteriores não foram certificados como atualizados; as notas de cada aula informam a conferência online a confirmar. Classificações, doses, prazos e pontos de corte atuais continuam sujeitos à revisão nas fontes.
+
+Validação desta etapa em cópia exata dos arquivos preparados: 84 testes aprovados, nenhum ignorado, ambos os validadores Python aprovados e sintaxe dos 54 arquivos JavaScript válida.
+
+Versão preparada: `20261114-cirdeep1`, Interface `2026.11.14.3`.
+
 ## Fontes e publicação
 
 O proxy ativo continua permitindo apenas o Supabase como domínio personalizado. As tentativas de acesso à API do GitHub e ao PubMed Central retornaram `CONNECT 403`. A página pública do GitHub abriu, mas sem sessão autenticada para escrita pela interface web.

@@ -30,8 +30,8 @@ test('surgery lessons that have deep content are complete and fit 320 px',async(
  assert.ok(lessons.length>=58,`only ${lessons.length} deep surgery lessons`);
  for(const [id,i] of lessons){
   await p.evaluate(([id,i])=>CIR.openTopic(id,i),[id,i]);
-  const info=await p.evaluate(()=>{const d=document.querySelector('.deep-lesson');return d&&{pre:d.querySelectorAll('.deep-pretest li').length,flow:d.querySelectorAll('.deep-flow > li').length,recall:d.querySelectorAll('.deep-recall').length,refs:d.querySelectorAll('.deep-refs a[href^="https://"]').length,mn:d.querySelectorAll('.deep-mnemonics dt').length,ex:d.querySelectorAll('.deep-exam li').length,fit:document.documentElement.scrollWidth<=innerWidth+1}});
-  assert.ok(info,`${id}_${i} missing`);if(['ciraa','cirpanc','cirtabd','cirttor'].includes(id))assert.ok(info.ex>=4,`${id}_${i} exam ${info.ex}`);assert.ok(info.pre>=4&&info.flow>=6&&info.recall>=5&&info.refs>=2&&info.mn>=3&&info.fit,`${id}_${i} ${JSON.stringify(info)}`);
+  const info=await p.evaluate(()=>{const d=document.querySelector('.deep-lesson');return d&&{pre:d.querySelectorAll('.deep-pretest li').length,flow:d.querySelectorAll('.deep-flow > li').length,recall:d.querySelectorAll('.deep-recall').length,refs:d.querySelectorAll('.deep-refs a[href^="https://"]').length,mn:d.querySelectorAll('.deep-mnemonics dt').length,cases:d.querySelectorAll('.deep-case').length,ex:d.querySelectorAll('.deep-exam li').length,fit:document.documentElement.scrollWidth<=innerWidth+1}});
+  assert.ok(info,`${id}_${i} missing`);if(['ciraa','cirpanc','cirher','cirtabd','cirttor'].includes(id))assert.ok(info.ex>=4&&info.pre>=6&&info.recall>=8&&info.cases===2,`${id}_${i} aprofundamento ${JSON.stringify(info)}`);assert.ok(info.pre>=4&&info.flow>=6&&info.recall>=5&&info.refs>=2&&info.mn>=3&&info.fit,`${id}_${i} ${JSON.stringify(info)}`);
  }
  await t.close();
 });
@@ -143,4 +143,10 @@ test('figuras locais têm crédito, licença, marcações e ampliação por tecl
   const rejected=await p.evaluate(figure=>['CC BY-NC-SA 4.0','CC BY-SA 4.0','Licença não informada'].map(license=>LessonDeep.figures([{...figure,license}])),extendedFixture().figs[0]);assert.deepEqual(rejected,['','','']);
   const noMarkers=await p.evaluate(figure=>LessonDeep.figures([{...figure,markers:[]}]),extendedFixture().figs[0]);assert.equal(noMarkers,'');await t.close();
  }
+});
+
+test('temas aprofundados oferecem ao menos 30 questões distintas',async()=>{
+ const t=await open(),p=t.page;
+ const counts=await p.evaluate(()=>Object.fromEntries(['ciraa','cirpanc','cirher','cirtabd','cirttor'].map(id=>[id,CIR.own.filter(q=>q.t===id).length])));
+ for(const [id,count] of Object.entries(counts))assert.ok(count>=30,id+': '+count);await t.close();
 });
