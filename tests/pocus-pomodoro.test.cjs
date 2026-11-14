@@ -101,9 +101,9 @@ test('topic head is single, outline lists deep sections, pretest and recall are 
  assert.equal(await p.evaluate(()=>LearnUX.dueList().length),0);assert.equal(await p.evaluate(()=>LearnUX.streak()),1);
  await p.evaluate(()=>{const r=store.study.deep.recall;Object.keys(r).forEach(k=>r[k].d='2026-01-01');stateSave();navigate('dashboard');});
  assert.match(await p.locator('.dash-today').textContent(),/1pergunta para revisar/);
- await p.locator('.dash-today .btn').click();await p.waitForFunction(()=>document.activeElement?.closest('[data-recall="p1arr_0#0"]'));
+ await p.locator('.dash-today > .btn').click();await p.waitForFunction(()=>document.activeElement?.closest('[data-recall="p1arr_0#0"]'));
  assert.equal(await p.locator('[data-recall="p1arr_0#0"] .deep-recall-due').textContent(),'revisar hoje');
- await p.evaluate(()=>navigate('dashboard'));assert.equal(await p.locator('.subject-card[data-area]').count(),16);
+ await p.evaluate(()=>navigate('dashboard'));assert.equal(await p.locator('.subject-card[data-area]').count(),30);
  await p.evaluate(()=>HIG.openSearch());await p.locator('#global-search').fill('alternar tema');assert.match(await p.locator('#search-results').textContent(),/Alternar tema claro e escuro/);await p.keyboard.press('Escape');
  await p.setViewportSize({width:390,height:844});await p.waitForTimeout(100);assert.equal(await p.locator('#focus-float').isVisible(),false);assert.equal(await p.locator('#mobile-tabbar svg').count(),5);await t.close();
 });

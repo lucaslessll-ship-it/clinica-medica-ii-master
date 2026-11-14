@@ -316,8 +316,8 @@ test('a second tab cannot double-count a running pomodoro for the same account',
 test('dashboard shows all sixteen subjects directly and every card opens its own topic',async()=>{
  const t=await open({session:true}),p=t.page;await p.waitForFunction(()=>document.getElementById('master-auth').hidden);
  const subjects=await p.locator('[data-subject]').evaluateAll(nodes=>nodes.map(n=>({id:n.dataset.subject,period:n.dataset.period,title:n.querySelector('strong').textContent,hiddenInDetails:!!n.closest('details')})));
- assert.equal(subjects.length,16);assert.equal(new Set(subjects.map(s=>s.id)).size,16);assert.ok(subjects.every(s=>!s.hiddenInDetails));
- for(const s of subjects){await p.locator(`[data-subject="${s.id}"]`).click();assert.equal(await p.evaluate(()=>ui.route),s.period==='P2'?'topic':'p1topic');assert.ok((await p.locator('#main-content').innerText()).includes(s.title));await p.evaluate(()=>navigate('dashboard'));}
+ assert.equal(subjects.length,30);assert.equal(new Set(subjects.map(s=>s.id)).size,30);assert.ok(subjects.every(s=>!s.hiddenInDetails));
+ for(const s of subjects){await p.locator(`[data-subject="${s.id}"]`).click();assert.equal(await p.evaluate(()=>ui.route),s.period==='P2'?'topic':s.period==='CIR'?'cirtopic':'p1topic');assert.ok((await p.locator('#main-content').innerText()).includes(s.title));await p.evaluate(()=>navigate('dashboard'));}
  await p.setViewportSize({width:390,height:844});await p.evaluate(()=>{closeMobileNav();window.scrollTo(0,0);});assert.ok(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));await p.screenshot({path:'work/subjects-mobile.png',animations:'disabled'});await t.close();
 });
 test('Decision Lab has twenty P2 and two P1 cases with stable legacy IDs, feedback and saved progress',async()=>{
@@ -347,7 +347,7 @@ test('subject discovery supports accents, evaluation filters and clear empty sta
  const t=await open({session:true,remote:[{storage_key:keys[0],payload:{...empty,completed:{neuro1_0:true}}},{storage_key:keys[1],payload:{completed:{p1arr_0:true}}}]}),p=t.page;await p.waitForFunction(()=>document.getElementById('master-auth').hidden);
  assert.match(await p.locator('[data-subject=neuro1] .subject-meta').innerText(),/1 revisada/);assert.match(await p.locator('[data-subject=p1arr] .subject-meta').innerText(),/1 revisada/);
  await p.locator('[data-subject-filter=P1]').click();assert.equal(await p.locator('[data-subject]:visible').count(),8);await p.locator('[data-subject-filter=all]').click();await p.locator('#subjects-search').fill('lupus');assert.equal(await p.locator('[data-subject]:visible').count(),1);assert.equal(await p.locator('[data-subject=reuma2]').isVisible(),true);assert.match(await p.locator('#subject-results').innerText(),/^1 matéria/);
- await p.locator('#subjects-search').fill('nenhuma-materia-com-este-nome');assert.equal(await p.locator('#subject-empty').isVisible(),true);await p.getByRole('button',{name:'Limpar filtros'}).click();assert.equal(await p.locator('[data-subject]:visible').count(),16);assert.equal(await p.locator('#subjects-search').evaluate(el=>el===document.activeElement),true);assert.equal(await p.evaluate(()=>store.completed.neuro1_0),true);await t.close();
+ await p.locator('#subjects-search').fill('nenhuma-materia-com-este-nome');assert.equal(await p.locator('#subject-empty').isVisible(),true);await p.getByRole('button',{name:'Limpar filtros'}).click();assert.equal(await p.locator('[data-subject]:visible').count(),30);assert.equal(await p.locator('#subjects-search').evaluate(el=>el===document.activeElement),true);assert.equal(await p.evaluate(()=>store.completed.neuro1_0),true);await t.close();
 });
 test('lesson section navigation and reading position preserve P2/P1 routes and clear on leaving',async()=>{
  const t=await open({session:true}),p=t.page;await p.waitForFunction(()=>document.getElementById('master-auth').hidden);await p.emulateMedia({reducedMotion:'reduce'});
@@ -362,14 +362,14 @@ test('lesson section navigation and reading position preserve P2/P1 routes and c
 test('refreshed library and lesson remain usable with 200 percent reading size on phone and tablet',async()=>{
  for(const width of [320,390,820]){
   const t=await open({session:true,viewport:{width,height:1000}}),p=t.page;await p.waitForFunction(()=>document.getElementById('master-auth').hidden);await p.evaluate(()=>{HIG.setFont('xxlarge');HIG.setTheme('dark');HIG.togglePref('contrast');});
-  assert.ok(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),`library overflow ${width}`);assert.equal(await p.locator('[data-subject]:visible').count(),16);
+  assert.ok(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),`library overflow ${width}`);assert.equal(await p.locator('[data-subject]:visible').count(),30);
   await p.locator('#subjects-search').fill('guillain');assert.equal(await p.locator('[data-subject]:visible').count(),1);await p.locator('[data-subject=neuro2]').click();await p.locator('.reading-outline summary').click();assert.ok(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),`lesson overflow ${width}`);await p.screenshot({path:`work/review-reading-${width}.png`,animations:'disabled'});await t.close();
  }
 });
 
 test('release URL versions local assets and preserves recovery callbacks',async()=>{
  const t=await open({session:true,root:true,query:'?auth=recovery'}),p=t.page;await text(p,'#master-auth-title',/Definir nova senha/);
- assert.equal(new URL(p.url()).searchParams.get('v'),'20261113-cir3');
+ assert.equal(new URL(p.url()).searchParams.get('v'),'20261114-plano1');
  const unversioned=await p.evaluate(()=>[...document.querySelectorAll('script[src],link[rel=stylesheet]')].map(e=>e.src||e.href).filter(url=>new URL(url).origin===location.origin&&!new URL(url).searchParams.has('v')));assert.deepEqual(unversioned,[]);await t.close();
 });
 test('Decision Lab has 24 stable cases with 20 P2 items, valid answers and references',async()=>{

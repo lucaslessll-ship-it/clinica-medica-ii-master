@@ -29,8 +29,8 @@ test('surgery lessons that have deep content are complete and fit 320 px',async(
  assert.ok(lessons.length>=58,`only ${lessons.length} deep surgery lessons`);
  for(const [id,i] of lessons){
   await p.evaluate(([id,i])=>CIR.openTopic(id,i),[id,i]);
-  const info=await p.evaluate(()=>{const d=document.querySelector('.deep-lesson');return d&&{pre:d.querySelectorAll('.deep-pretest li').length,flow:d.querySelectorAll('.deep-flow > li').length,recall:d.querySelectorAll('.deep-recall').length,refs:d.querySelectorAll('.deep-refs a[href^="https://"]').length,mn:d.querySelectorAll('.deep-mnemonics dt').length,fit:document.documentElement.scrollWidth<=innerWidth+1}});
-  assert.ok(info,`${id}_${i} missing`);assert.ok(info.pre>=4&&info.flow>=6&&info.recall>=5&&info.refs>=2&&info.mn>=3&&info.fit,`${id}_${i} ${JSON.stringify(info)}`);
+  const info=await p.evaluate(()=>{const d=document.querySelector('.deep-lesson');return d&&{pre:d.querySelectorAll('.deep-pretest li').length,flow:d.querySelectorAll('.deep-flow > li').length,recall:d.querySelectorAll('.deep-recall').length,refs:d.querySelectorAll('.deep-refs a[href^="https://"]').length,mn:d.querySelectorAll('.deep-mnemonics dt').length,ex:d.querySelectorAll('.deep-exam li').length,fit:document.documentElement.scrollWidth<=innerWidth+1}});
+  assert.ok(info,`${id}_${i} missing`);if(['ciraa','cirpanc','cirtabd','cirttor'].includes(id))assert.ok(info.ex>=4,`${id}_${i} exam ${info.ex}`);assert.ok(info.pre>=4&&info.flow>=6&&info.recall>=5&&info.refs>=2&&info.mn>=3&&info.fit,`${id}_${i} ${JSON.stringify(info)}`);
  }
  await t.close();
 });
@@ -49,5 +49,21 @@ test('surgery questions are well formed, practice records errors for review and 
  assert.equal(saved.correct,false);assert.ok(Date.parse(saved.next)>Date.now());
  await p.evaluate(()=>{location.hash='#cir'});await p.waitForFunction(()=>ui.route==='cir');
  assert.ok(await p.locator('.topic-card.cir-topic').count()>=14);
+ await t.close();
+});
+
+test('study plan, home card, per-topic performance and the surgery filter work',async()=>{
+ const t=await open({width:390,height:844}),p=t.page;
+ const plan=await p.evaluate(()=>CIR.plan());
+ if(plan){assert.equal(plan.pending.length,58);assert.ok(plan.target>=1&&plan.today.length===plan.left);assert.equal(plan.today[0].t.priority,5);}
+ await p.evaluate(()=>{const s=JSON.parse(localStorage.getItem('master_cir_lucas_v1')||'{}');s.results=s.results||{};const past=new Date(Date.now()-864e5).toISOString();CIR.own.filter(q=>q.t==='cirher').slice(0,6).forEach((q,i)=>s.results[q.id]={correct:i<2,answer:0,attempts:1,date:past,box:0,next:past});localStorage.setItem('master_cir_lucas_v1',JSON.stringify(s));CIR.reload();navigate('dashboard');});
+ assert.match(await p.locator('.dash-cir').innerText(),/Revisar 6 erros de cirurgia/);
+ assert.ok(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));
+ await p.locator('[data-subject-filter=CIR]').click();assert.equal(await p.locator('[data-subject]:visible').count(),14);
+ await p.evaluate(()=>navigate('cir'));
+ assert.match(await p.locator('.cir-perf-row').first().innerText(),/Hérnias[\s\S]*33%/);
+ assert.match(await p.locator('.cir-perf-row').nth(1).innerText(),/poucos dados/);
+ assert.ok(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));
+ if(plan){await p.locator('.cir-plan-list button').first().click();assert.equal(await p.evaluate(()=>ui.route),'cirtopic');await p.getByRole('button',{name:/Marcar aula concluída/}).click();assert.equal(await p.evaluate(()=>CIR.plan().doneToday),1);}
  await t.close();
 });
