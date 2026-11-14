@@ -148,3 +148,20 @@ body[data-theme="dark"] .cir-hy{background:#173d36;color:#d9f3ec;border-color:#8
 .cir-foot{margin-top:24px}
 .cir-filter-box{margin:6px 0 12px}
 .cir-filter-box>summary{min-height:44px;display:flex;align-items:center;cursor:pointer;font-weight:600;color:var(--muted,#5b6470)}
+.dash-cir{display:flex;flex-direction:column;gap:8px;padding-top:var(--space-4,16px);border-top:1px solid var(--line);min-width:0}
+.dash-cir p{margin:0;font-size:var(--text-sm,14px);line-height:1.5;overflow-wrap:anywhere}
+.dash-cir .btn{white-space:normal;text-align:left;min-height:44px;overflow-wrap:anywhere}
+.cir-plan-lead{margin:0 0 10px}
+.cir-plan-list{list-style:none;margin:0 0 12px;padding:0;display:grid;gap:6px}
+.cir-plan-list button{width:100%;min-height:44px;display:flex;gap:10px;align-items:center;text-align:left;padding:8px 12px;border:1px solid var(--line);border-radius:10px;background:transparent;color:inherit;cursor:pointer;font:inherit}
+.cir-plan-list button span{flex:0 0 auto;font-size:12px;font-weight:700;color:#0f6b5c;max-width:38%;overflow-wrap:anywhere}
+.cir-plan-list button strong{font-weight:600;min-width:0;overflow-wrap:anywhere}
+body[data-theme="dark"] .cir-plan-list button span{color:#8fe0cf}
+.cir-perf{list-style:none;margin:0;display:grid;gap:8px}
+.cir-perf-row{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(60px,1fr) auto auto;gap:10px;align-items:center}
+.cir-perf-name{font-weight:600;overflow-wrap:anywhere;min-width:0}
+.cir-perf-bar{height:8px;border-radius:99px;background:var(--line);overflow:hidden}
+.cir-perf-bar span{display:block;height:100%;border-radius:99px}.cir-perf-bar .bad{background:var(--bad,#b3352f)}.cir-perf-bar .mid{background:var(--warn,#9a5b08)}.cir-perf-bar .good{background:var(--ok,#2c7a3f)}
+.cir-perf-num{font-size:13px;color:var(--muted);white-space:nowrap}
+.cir-perf-row .btn{min-height:44px}
+@media (max-width:560px){.cir-perf-row{grid-template-columns:minmax(0,1fr) auto}.cir-perf-bar{grid-column:1/-1;order:3}.cir-perf-num{grid-column:1;order:2}.cir-perf-row .btn{grid-row:1;grid-column:2}}

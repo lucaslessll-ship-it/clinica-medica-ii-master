@@ -125,6 +125,7 @@ const DATA={
 
 function has(id,index){return !!DATA[id+'_'+index];}
 function add(entries){Object.assign(DATA,entries);}
+function extend(extra){for(const k in extra)if(DATA[k])Object.assign(DATA[k],extra[k]);}
 const refLink=r=>r.u||'https://pubmed.ncbi.nlm.nih.gov/?term='+encodeURIComponent(r.q||r.t);
 function table(t){return `<div class="deep-table-wrap"><table class="deep-table"><thead><tr>${t.head.map(h=>`<th scope="col">${h}</th>`).join('')}</tr></thead><tbody>${t.rows.map(r=>`<tr>${r.map((c,i)=>i?`<td>${c}</td>`:`<th scope="row">${c}</th>`).join('')}</tr>`).join('')}</tbody></table></div>`;}
 function flow(f){
@@ -137,6 +138,7 @@ function render(id,index){
   const key=id+'_'+index,L=window.LearnUX;
   return `<section class="lesson-block full deep-lesson${L&&L.isHy()?' deep-hy':''}" aria-label="Estudo aprofundado"><header class="deep-head"><span class="kicker">Estudo aprofundado</span><h3>Entenda, decida e lembre</h3><p>Leia depois dos blocos acima. Comece tentando responder ao pré-teste, mesmo sem saber: errar antes de ler melhora a retenção.</p>${L?L.tools():''}</header>
   <section class="deep-block deep-pretest"><h4>Pré-teste: responda de cabeça</h4><ol>${d.pretest.map((q,i)=>L?L.preMarkup(q,i):`<li>${q}</li>`).join('')}</ol><p class="deep-pre-out subtle" role="status" aria-live="polite"></p></section>
+  ${d.exam?`<section class="deep-block deep-exam hy-keep"><h4>Como cai na prova</h4><ul>${d.exam.map(x=>`<li><strong>${x.c}</strong><span><b>Pegadinha:</b> ${x.p}</span><span><b>A banca quer:</b> ${x.r}</span></li>`).join('')}</ul></section>`:''}
   ${d.sections.map(s=>`<section class="deep-block"><h4>${s.h}</h4>${(s.p||[]).map(p=>`<p>${p}</p>`).join('')}${s.table?table(s.table):''}${s.list?`<ul>${s.list.map(x=>`<li>${x}</li>`).join('')}</ul>`:''}${s.after?`<p>${s.after}</p>`:''}</section>`).join('')}
   ${d.flow?flow(d.flow):''}
   <section class="deep-block"><h4>Dicas de raciocínio</h4><ul>${d.reasoning.map(x=>`<li>${x}</li>`).join('')}</ul></section>
@@ -147,6 +149,6 @@ function render(id,index){
   <section class="deep-block deep-refs"><h4>Referências</h4><ul>${d.refs.map(r=>`<li><a href="${refLink(r)}" target="_blank" rel="noopener">${r.t}</a></li>`).join('')}</ul>${d.note?`<p class="subtle">${d.note} Revisado em ${d.updated}.</p>`:''}</section>
   </section>`;
 }
-return {render,has,add,keys:()=>Object.keys(DATA)};
+return {render,has,add,extend,keys:()=>Object.keys(DATA)};
 })();
 window.LessonDeep=LessonDeep;
