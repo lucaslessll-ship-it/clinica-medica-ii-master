@@ -133,15 +133,62 @@ function flow(f){
     if(n.k==='ask')return `<li class="deep-flow-ask"><p>${n.t}</p><div class="deep-flow-branches"><span class="yes"><b>Sim</b>${n.yes}</span><span class="no"><b>Não</b>${n.no}</span></div></li>`;
     return `<li class="deep-flow-${n.k}"><p>${n.t}</p></li>`;}).join('')}</ol></section>`;
 }
+const plain=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',[String.fromCharCode(39)]:'&#39;'}[char]));
+function examBlock(items){
+  if(!Array.isArray(items)||!items.length)return '';
+  return `<section class="deep-block deep-exam hy-keep"><h4>Como cai na prova</h4><ol class="deep-exam-list">${items.map(item=>`<li>${typeof item==='string'?plain(item):`<p><strong>Padrão do enunciado:</strong> ${plain(item.c??item.pattern)}</p><p><strong>Pegadinha:</strong> ${plain(item.p??item.trap)}</p><p><strong>Resposta esperada:</strong> ${plain(item.r??item.answer)}</p>`}</li>`).join('')}</ol></section>`;
+}
+function caseSteps(value){return Array.isArray(value)?`<ol>${value.map(step=>`<li>${plain(step)}</li>`).join('')}</ol>`:`<p>${plain(value)}</p>`;}
+function casesBlock(items){
+  if(!Array.isArray(items)||!items.length)return '';
+  return `<section class="deep-block deep-cases"><h4>Casos resolvidos passo a passo</h4>${items.map((item,index)=>`<article class="deep-case"><h5>${plain(item.title||'Caso '+(index+1))}</h5><dl>${[['Dados',item.data],['Raciocínio',item.reasoning],['Conduta',item.conduct],['Erro comum',item.error]].map(([label,value])=>`<div><dt>${label}</dt><dd>${caseSteps(value)}</dd></div>`).join('')}</dl></article>`).join('')}</section>`;
+}
+function figureLicense(value){
+  const license=String(value||'').trim(),by=license.match(/^CC BY (1\.0|2\.0|2\.5|3\.0|4\.0)$/);
+  return by?{label:license,url:'https://creativecommons.org/licenses/by/'+by[1]+'/'}:/^CC0(?: 1\.0)?$/.test(license)?{label:license,url:'https://creativecommons.org/publicdomain/zero/1.0/'}:null;
+}
+function validFigure(figure){
+  if(!figure||!/^assets\/figs\/[a-zA-Z0-9][a-zA-Z0-9._-]*\.webp$/.test(figure.src||'')||!figureLicense(figure.license))return false;
+  if(!validMarkers(figure.markers))return false;
+  if(![figure.alt,figure.caption,figure.credit].every(value=>typeof value==='string'&&value.trim()))return false;
+  try{const source=new URL(figure.sourceUrl);return source.protocol==='https:'&&['pmc.ncbi.nlm.nih.gov','commons.wikimedia.org','radiopaedia.org'].includes(source.hostname);}catch{return false;}
+}
+let figureSequence=0;
+function validMarkers(items){return Array.isArray(items)&&items.length>=2&&items.length<=4&&items.every(item=>[item.x,item.y,item.toX,item.toY].every(value=>Number.isFinite(value)&&value>=0&&value<=100)&&typeof item.label==='string'&&item.label.trim());}
+function figureMarkers(items){
+  if(!validMarkers(items))return {svg:'',legend:''};
+  const id='deep-arrow-'+(++figureSequence);
+  return {svg:`<svg class="deep-figure-marks" width="100%" height="100%" aria-hidden="true" focusable="false"><defs><marker id="${id}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#ffe066"/></marker></defs>${items.map((item,index)=>`<line x1="${item.x}%" y1="${item.y}%" x2="${item.toX}%" y2="${item.toY}%" marker-end="url(#${id})"/><circle cx="${item.x}%" cy="${item.y}%" r="12"/><text x="${item.x}%" y="${item.y}%" dy=".35em" text-anchor="middle">${index+1}</text>`).join('')}</svg>`,legend:`<ol class="deep-figure-legend">${items.map(item=>`<li>${plain(item.label)}</li>`).join('')}</ol>`};
+}
+function figures(items){
+  const usable=Array.isArray(items)?items.filter(validFigure):[];if(!usable.length)return '';
+  return `<div class="deep-figures">${usable.map(figure=>{const license=figureLicense(figure.license),marks=figureMarkers(figure.markers);return `<figure class="deep-figure"><button type="button" class="deep-figure-open" data-deep-figure aria-label="Ampliar imagem: ${plain(figure.alt)}"><span class="deep-figure-visual"><img src="${plain(figure.src)}" alt="${plain(figure.alt)}" loading="lazy" decoding="async">${marks.svg}</span><span class="deep-figure-hint">Toque para ampliar</span></button><figcaption><p>${plain(figure.caption)}</p>${marks.legend}<p class="deep-figure-credit">Crédito: ${plain(figure.credit)}. Licença: <a href="${license.url}" target="_blank" rel="noopener">${plain(license.label)}</a>. <a href="${plain(figure.sourceUrl)}" target="_blank" rel="noopener">Página de origem</a>.</p></figcaption></figure>`;}).join('')}</div>`;
+}
+function openFigure(button){
+  const source=button.closest('.deep-figure');if(!source)return;
+  const dialog=document.createElement('dialog');dialog.className='deep-figure-dialog';dialog.setAttribute('aria-label',button.getAttribute('aria-label'));
+  dialog.innerHTML=`<button type="button" class="btn deep-figure-close" autofocus>Fechar imagem</button><figure class="deep-figure">${source.querySelector('.deep-figure-visual').outerHTML}${source.querySelector('figcaption').outerHTML}</figure>`;
+  const arrow=dialog.querySelector('marker');if(arrow){arrow.id+='-zoom';dialog.querySelectorAll('line').forEach(line=>line.setAttribute('marker-end','url(#'+arrow.id+')'));}
+  dialog.querySelectorAll('img').forEach(img=>img.loading='eager');
+  document.body.appendChild(dialog);
+  dialog.querySelector('.deep-figure-close').addEventListener('click',()=>dialog.close());
+  dialog.addEventListener('click',event=>{if(event.target===dialog)dialog.close();});
+  dialog.addEventListener('close',()=>{dialog.remove();if(button.isConnected)button.focus();},{once:true});
+  dialog.showModal();
+}
+window.addEventListener('master-auth-ended',()=>document.querySelectorAll('.deep-figure-dialog').forEach(dialog=>dialog.close()));
+document.addEventListener('click',event=>{const button=event.target.closest?.('[data-deep-figure]');if(button)openFigure(button);});
 function render(id,index){
   const d=DATA[id+'_'+index];if(!d)return '';
-  const key=id+'_'+index,L=window.LearnUX;
+  const key=id+'_'+index,L=window.LearnUX,imageHTML=figures(d.figs);
   return `<section class="lesson-block full deep-lesson${L&&L.isHy()?' deep-hy':''}" aria-label="Estudo aprofundado"><header class="deep-head"><span class="kicker">Estudo aprofundado</span><h3>Entenda, decida e lembre</h3><p>Leia depois dos blocos acima. Comece tentando responder ao pré-teste, mesmo sem saber: errar antes de ler melhora a retenção.</p>${L?L.tools():''}</header>
   <section class="deep-block deep-pretest"><h4>Pré-teste: responda de cabeça</h4><ol>${d.pretest.map((q,i)=>L?L.preMarkup(q,i):`<li>${q}</li>`).join('')}</ol><p class="deep-pre-out subtle" role="status" aria-live="polite"></p></section>
-  ${d.exam?`<section class="deep-block deep-exam hy-keep"><h4>Como cai na prova</h4><ul>${d.exam.map(x=>`<li><strong>${x.c}</strong><span><b>Pegadinha:</b> ${x.p}</span><span><b>A banca quer:</b> ${x.r}</span></li>`).join('')}</ul></section>`:''}
+  ${examBlock(d.exam)}
   ${d.sections.map(s=>`<section class="deep-block"><h4>${s.h}</h4>${(s.p||[]).map(p=>`<p>${p}</p>`).join('')}${s.table?table(s.table):''}${s.list?`<ul>${s.list.map(x=>`<li>${x}</li>`).join('')}</ul>`:''}${s.after?`<p>${s.after}</p>`:''}</section>`).join('')}
+  ${imageHTML?`<section class="deep-block deep-images"><h4>Imagens comentadas</h4>${imageHTML}</section>`:''}
   ${d.flow?flow(d.flow):''}
   <section class="deep-block"><h4>Dicas de raciocínio</h4><ul>${d.reasoning.map(x=>`<li>${x}</li>`).join('')}</ul></section>
+  ${casesBlock(d.cases)}
   <section class="deep-block deep-mnemonics hy-keep"><h4>Para memorizar</h4><dl>${d.mnemonics.map(m=>`<div><dt>${m.n}</dt><dd>${m.t}</dd></div>`).join('')}</dl></section>
   <section class="deep-block deep-pitfalls hy-keep"><h4>Erros que custam ponto e paciente</h4><ul>${d.pitfalls.map(x=>`<li>${x}</li>`).join('')}</ul></section>
   <section class="deep-block deep-recall-block hy-keep"><h4>Evocação ativa</h4><p class="subtle">Responda em voz alta ou por escrito antes de abrir a resposta. Depois diga como foi: a pergunta volta para revisão no painel inicial em 1, 3, 7, 14 ou 30 dias.</p>${d.recall.map((r,i)=>{const k=key+'#'+i,due=L?L.dueText(k):'';return `<details class="deep-recall" data-recall="${k}"><summary><span>${i+1}</span>${r.q}<em class="deep-recall-due"${due?'':' hidden'}>${due}</em></summary><p>${r.a}</p>${L?L.rateMarkup(k):''}</details>`;}).join('')}</section>
@@ -149,6 +196,6 @@ function render(id,index){
   <section class="deep-block deep-refs"><h4>Referências</h4><ul>${d.refs.map(r=>`<li><a href="${refLink(r)}" target="_blank" rel="noopener">${r.t}</a></li>`).join('')}</ul>${d.note?`<p class="subtle">${d.note} Revisado em ${d.updated}.</p>`:''}</section>
   </section>`;
 }
-return {render,has,add,extend,keys:()=>Object.keys(DATA)};
+return {render,has,add,extend,keys:()=>Object.keys(DATA),figures};
 })();
 window.LessonDeep=LessonDeep;
