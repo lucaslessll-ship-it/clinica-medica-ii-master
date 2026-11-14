@@ -67,3 +67,13 @@ test('study plan, home card, per-topic performance and the surgery filter work',
  if(plan){await p.locator('.cir-plan-list button').first().click();assert.equal(await p.evaluate(()=>ui.route),'cirtopic');await p.getByRole('button',{name:/Marcar aula concluída/}).click();assert.equal(await p.evaluate(()=>CIR.plan().doneToday),1);}
  await t.close();
 });
+
+test('table cells never break a word letter by letter and the page does not scroll sideways',async()=>{
+ const t=await open({width:320,height:640}),p=t.page;
+ for(const [id,i,p1] of [['hema',0],['p1arr',0,true],['cirremit',3],['cirtabd',0],['reuma1',0]]){
+  await p.evaluate(([id,i,p1])=>{if(id.startsWith('cir'))CIR.openTopic(id,i);else if(p1){navigate('p1');P1.openTopic(id);P1.chapter(i);}else{openTopic(id);switchChapter(i);}},[id,i,p1]);
+  const bad=await p.evaluate(()=>{const cv=document.createElement('canvas').getContext('2d'),out=[];document.querySelectorAll('#main-content :is(th,td)').forEach(c=>{const txt=c.textContent.trim();if(!txt)return;const cs=getComputedStyle(c);cv.font=cs.fontWeight+' '+cs.fontSize+' '+cs.fontFamily;const need=Math.max(...txt.split(/\s+/).map(x=>cv.measureText(x).width)),have=c.clientWidth-parseFloat(cs.paddingLeft)-parseFloat(cs.paddingRight);if(have+1<need)out.push(txt.slice(0,30));});return {out,cells:document.querySelectorAll('#main-content :is(th,td)').length,fit:document.documentElement.scrollWidth<=innerWidth+1};});
+  assert.ok(bad.cells>0,`${id} has no table`);assert.deepEqual(bad.out,[],`${id} broken cells`);assert.ok(bad.fit,`${id} overflow`);
+ }
+ await t.close();
+});

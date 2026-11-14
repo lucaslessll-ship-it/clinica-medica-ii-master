@@ -165,3 +165,13 @@ body[data-theme="dark"] .cir-plan-list button span{color:#8fe0cf}
 .cir-perf-num{font-size:13px;color:var(--muted);white-space:nowrap}
 .cir-perf-row .btn{min-height:44px}
 @media (max-width:560px){.cir-perf-row{grid-template-columns:minmax(0,1fr) auto}.cir-perf-bar{grid-column:1/-1;order:3}.cir-perf-num{grid-column:1;order:2}.cir-perf-row .btn{grid-row:1;grid-column:2}}
+
+/* ===== Tabelas: nunca quebrar palavra letra a letra =====
+   Contêineres de leitura usam overflow-wrap:anywhere, que as células herdavam; com isso a
+   coluna podia encolher até a largura de uma letra. Regra única para toda tabela do site:
+   palavras inteiras, largura mínima por coluna e rolagem lateral dentro do bloco. */
+#main-content table{width:max-content;min-width:100%;max-width:none;table-layout:auto}
+#main-content :is(th,td){overflow-wrap:normal!important;word-break:normal!important;hyphens:none;white-space:normal;min-width:7.5em;max-width:24em}
+#main-content :is(th,td):first-child{min-width:6.5em}
+#main-content :is(.deep-table-wrap,.pocus-table-wrap,.clinical-table-wrap,.table-wrap){overflow-x:auto;-webkit-overflow-scrolling:touch;max-width:100%}
+#main-content table:not(:is(.deep-table-wrap,.pocus-table-wrap,.clinical-table-wrap,.table-wrap) table){display:block;overflow-x:auto;-webkit-overflow-scrolling:touch}
