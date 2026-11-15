@@ -44,7 +44,10 @@ test('POCUS preserva os índices antigos e acrescenta seis questões com esquema
 });
 test('estações e questões com SVG funcionam nos dois temas e de 320 px a desktop',async()=>{
  for(const width of [320,390,820,1280])for(const theme of ['light','dark']){
-  const t=await open(width),p=t.page;await p.evaluate(theme=>{HIG.setTheme(theme);navigate('pocus');},theme);
+  const t=await open(width),p=t.page;await p.evaluate(theme=>HIG.setTheme(theme),theme);
+  if(width<801)await p.getByRole('button',{name:'Abrir menu de navegação',exact:true}).click();
+  await p.locator('#sidebar-nav').getByRole('button',{name:/^POCUS/}).click();assert.equal(await p.evaluate(()=>ui.route),'pocus');
+  assert.ok(await p.locator('.nav-badge').evaluate(el=>parseFloat(getComputedStyle(el).fontSize))>=12);
   for(let index=0;index<8;index++){
    await p.evaluate(index=>PocusCourse.open(index),index);
    assert.equal(await p.locator('.pocus-q-image').count(),6);assert.equal(await p.locator('.pocus-q-image svg[role=img]').count(),6);

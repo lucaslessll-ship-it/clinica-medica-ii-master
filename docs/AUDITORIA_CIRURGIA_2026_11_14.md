@@ -72,6 +72,33 @@ Não foram introduzidas doses, prazos ou pontos de corte novos sem confirmação
 
 As figuras reais abertas de Radiologia, Trauma e POCUS ainda dependem de licença confirmada na origem, download e conversão para WebP de até 1200 px, créditos e marcações. Nenhum arquivo de licença incerta foi incluído.
 
+## POCUS e validação final da integração
+
+Os 8 módulos receberam 4 itens de prova prática, 4 erros técnicos específicos e um roteiro de fala com 6 passos cada. Foram acrescentadas 48 questões com esquemas originais, 6 por módulo, totalizando 74 questões. As 26 anteriores foram preservadas com o mesmo conteúdo e os mesmos índices.
+
+Os esquemas têm ampliação de 100% a 300%, movimento por toque e teclado, rótulos legíveis na visão ampliada e retorno do foco ao fechar. A comparação lado a lado com figuras reais está preparada, mas depende das imagens licenciadas. As novas questões são baseadas em desenhos, não em fotografias reais de ultrassom.
+
+A integração preserva a aba própria de POCUS da main `617c189`, PR 20. O indicador do menu tem fonte mínima de 12 px. Também preserva as tabelas e o banco privado de imagens, com limpeza de imagens, legendas, diálogos e cache ao encerrar a sessão. Respostas atrasadas de outra conta ou sessão são descartadas, e dados de imagem malformados são rejeitados antes da renderização.
+
+Validação final: **96 testes aprovados, nenhum ignorado**, os dois validadores Python aprovados, sintaxe dos 55 arquivos JavaScript válida e `git diff --check` aprovado. O POCUS foi exercitado em 64 combinações de módulo, largura e tema, com persistência das 48 respostas novas e dos registros antigos. Há testes de ampliação em 320 px e de isolamento das imagens entre contas e sessões.
+
+Os testes de interface foram executados em Chromium. Safari nativo não foi executado neste ambiente. Os testes de autenticação e de imagens usam dados simulados; dados reais do Supabase não foram acessados ou alterados e as políticas RLS remotas não foram auditadas.
+
+Versão final preparada: `20261115-cirurgia-pocus1`, Interface `2026.11.15.2`.
+
+## Situação das tarefas na branch de integração
+
+| Tarefa | Implementado | Pendente |
+| --- | --- | --- |
+| 1. Plano | Calendário, aulas e questões por peso, progresso diário, dias perdidos, revisão em 19/11 e expiração | Publicação |
+| 2. Início | Temas, filtro, contadores e revisões de Cirurgia | Publicação |
+| 3. Desempenho | Contagem, ordenação e tratamento de poucos dados | Publicação |
+| 4. Aprofundamento | 58 aulas, 116 casos, pré-testes, evocações, prova e 220 questões novas | Conferência quantitativa e de diretrizes atuais, classificações completas e publicação |
+| 5. Imagens reais abertas | Renderizador e metadados com crédito, licença e marcações | Curadoria, comprovação de licença na origem e todos os arquivos de imagem locais |
+| 6. POCUS | Conteúdo prático, fala, erros, 74 questões e ampliação | Imagens reais licenciadas, questões vinculadas a essas fotografias, conferência das fontes e publicação |
+
+A branch `cirurgia-aprofundamento` reúne a integração final. As branches `cirurgia-plano-revisado`, `cirurgia-aulas-prioritarias` e `cirurgia-aulas-completas` registram as etapas anteriores de preparação. As alterações não foram mescladas na main por este trabalho.
+
 ## Fontes e publicação
 
 O proxy ativo continua permitindo apenas o Supabase como domínio personalizado. As tentativas de acesso à API do GitHub e ao PubMed Central retornaram `CONNECT 403`. A página pública do GitHub abriu, mas sem sessão autenticada para escrita pela interface web.
