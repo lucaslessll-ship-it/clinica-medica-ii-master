@@ -133,7 +133,7 @@
         auth:{storage:storage||localStorage,persistSession:true,autoRefreshToken:true,detectSessionInUrl:false}
       });
       const {data:{user},error}=await client.auth.getUser();
-      if(error&&!user){info('Entre no MASTER para sincronizar');return;}
+      if(error&&!user){info('Entre no MASTER para sincronizar');}
       if(user?.id){await load(user.id)}else{info('Entre no MASTER para sincronizar');}
       client.auth.onAuthStateChange((event,session)=>{
         const id=session?.user?.id||null;
