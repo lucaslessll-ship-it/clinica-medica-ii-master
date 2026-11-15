@@ -6,13 +6,14 @@ const fs=require('node:fs/promises');
 const path=require('node:path');
 const vm=require('node:vm');
 const app='MASTER_Clinica_Medica_II_v7_GitHub_Completo_Lucas_Lessa';
-const previous=[3,3,3,4,3,4,3,3];
+const previousById={m1:3,m2:3,m3:3,m4:4,m5:3,m6:4,m7:3,m8:3};
+let previous=[];
 let browser,server,base,modules;
 before(async()=>{
  const context={window:{}};vm.createContext(context);
  await fs.readFile(path.join(app,'pocus-figures.js'),'utf8').then(source=>vm.runInContext(source,context));
  await fs.readFile(path.join(app,'pocus-course.js'),'utf8').then(source=>vm.runInContext(source.replace('const MODULES=[','const MODULES=window.testModules=['),context));
- modules=JSON.parse(JSON.stringify(context.window.testModules));
+ modules=JSON.parse(JSON.stringify(context.window.testModules));previous=modules.map(m=>previousById[m.id]);
  server=http.createServer(async(req,res)=>{try{const file=path.join(process.cwd(),decodeURIComponent(new URL(req.url,'http://local').pathname));res.setHeader('Content-Type',file.endsWith('.js')?'text/javascript':file.endsWith('.css')?'text/css':'text/html');res.end(await fs.readFile(file));}catch{res.writeHead(404);res.end();}});
  await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));base=`http://127.0.0.1:${server.address().port}`;
  browser=await chromium.launch({executablePath:process.env.CHROMIUM_PATH||'/usr/bin/chromium',headless:true});
@@ -32,15 +33,15 @@ async function open(width=1280,settings={}){
 }
 test('POCUS preserva os índices antigos e acrescenta seis questões com esquema por módulo',async()=>{
  const context={window:{}};vm.createContext(context);vm.runInContext(await fs.readFile(path.join(app,'pocus-figures.js'),'utf8'),context);
- assert.equal(modules.length,8);let total=0,images=0;
+ assert.equal(modules.length,12);assert.equal(new Set(modules.map(m=>m.id)).size,12);let total=0,images=0;
  modules.forEach((m,index)=>{
-  assert.equal(m.id,'m'+(index+1));assert.equal(m.quiz.length,previous[index]+6);assert.ok(m.quiz.slice(0,previous[index]).every(q=>!q.fig));
+  if(previous[index]===undefined){assert.ok(['m9','m10','m11','m12'].includes(m.id));assert.equal(m.quiz.length,3);total+=m.quiz.length;return;}assert.equal(m.quiz.length,previous[index]+6);assert.ok(m.quiz.slice(0,previous[index]).every(q=>!q.fig));
   assert.equal(m.practical.exam.length,4);assert.equal(m.practical.errors.length,4);assert.equal(m.practical.script.length,6);
   assert.equal(new Set(m.quiz.map(q=>q.q)).size,m.quiz.length);
   m.quiz.slice(previous[index]).forEach(q=>{assert.ok(context.window.PocusFigures.names.includes(q.fig));assert.equal(q.o.length,4);assert.ok(Number.isInteger(q.a)&&q.a>=0&&q.a<4);assert.ok(q.why.length>100);assert.ok(!/alternativa [ABCD]\b/.test(q.why));assert.ok(!/[0-9]/.test(q.q+q.o.join(' ')+q.why));images++;});
   total+=m.quiz.length;
  });
- assert.equal(total,74);assert.equal(images,48);
+ assert.equal(total,86);assert.equal(images,48);
 });
 test('estações e questões com SVG funcionam nos dois temas e de 320 px a desktop',async()=>{
  for(const width of [320,390,820,1280])for(const theme of ['light','dark']){
@@ -48,10 +49,10 @@ test('estações e questões com SVG funcionam nos dois temas e de 320 px a desk
   if(width<801)await p.getByRole('button',{name:'Abrir menu de navegação',exact:true}).click();
   await p.locator('#sidebar-nav').getByRole('button',{name:/^POCUS/}).click();assert.equal(await p.evaluate(()=>ui.route),'pocus');
   assert.ok(await p.locator('.nav-badge').evaluate(el=>parseFloat(getComputedStyle(el).fontSize))>=12);
-  for(let index=0;index<8;index++){
+  for(let index=0;index<modules.length;index++){
    await p.evaluate(index=>PocusCourse.open(index),index);
-   assert.equal(await p.locator('.pocus-q-image').count(),6);assert.equal(await p.locator('.pocus-q-image svg[role=img]').count(),6);
-   assert.equal(await p.locator('.pocus-practical li').count(),4);assert.equal(await p.locator('.pocus-technique-errors li').count(),4);assert.equal(await p.locator('.pocus-script li').count(),6);
+   const count=previous[index]===undefined?0:6;assert.equal(await p.locator('.pocus-q-image').count(),count);assert.equal(await p.locator('.pocus-q-image svg[role=img]').count(),count);
+   assert.equal(await p.locator('.pocus-practical li').count(),count?4:0);assert.equal(await p.locator('.pocus-technique-errors li').count(),count?4:0);assert.equal(await p.locator('.pocus-script li').count(),count?6:0);
    assert.ok(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),`rolagem em ${width}, ${theme}, módulo ${index}`);
    assert.equal(await p.evaluate(()=>{const ids=[...document.querySelectorAll('.pocus-module svg [id]')].map(el=>el.id);return ids.length===new Set(ids).size;}),true);
    assert.equal(await p.locator('.pocus-q-opt,.pocus-script summary').evaluateAll(items=>items.filter(el=>el.getBoundingClientRect().height<44).length),0);
@@ -62,7 +63,7 @@ test('estações e questões com SVG funcionam nos dois temas e de 320 px a desk
 });
 test('respostas das 48 questões novas e progresso antigo permanecem ao recarregar',async()=>{
  const t=await open(),p=t.page;await p.evaluate(()=>{navigate('pocus');PocusCourse.open(0);PocusCourse.answer(0,0,1);PocusCourse.complete('m1',true);});
- for(let mi=0;mi<8;mi++){
+ for(let mi=0;mi<modules.length;mi++){
   await p.evaluate(mi=>PocusCourse.open(mi),mi);
   for(let qi=previous[mi];qi<modules[mi].quiz.length;qi++){
    const question=p.locator('#pq-'+mi+'-'+qi);await question.locator('.pocus-q-opt').nth(modules[mi].quiz[qi].a).click();assert.match(await question.locator('.pocus-q-why').innerText(),/^Correto\./);
