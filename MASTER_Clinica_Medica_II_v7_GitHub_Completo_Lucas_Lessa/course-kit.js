@@ -9,6 +9,7 @@ function create(cfg){
   const {global:G,key,route,label,REFS,MODULES,CASES}=cfg;
   let view=null,current=null;
   // Distribui a posição da alternativa correta, para a resposta não cair sempre na mesma letra.
+  MODULES.forEach(m=>{if(window.ReadingTime)m.min=ReadingTime.minutes(m);});
   MODULES.forEach((m,mi)=>m.quiz.forEach((x,qi)=>{const to=(mi+qi*2+1)%x.o.length;if(to===x.a)return;const o=x.o.slice();[o[to],o[x.a]]=[o[x.a],o[to]];x.o=o;x.a=to;}));
   function st(){const s=store.study||(store.study={version:1,since:new Date().toISOString(),reviews:{},steps:{},settings:{intervals:[1,3,7],dailyLimit:20}});const p=s[key]||(s[key]={});p.done=p.done||{};p.quiz=p.quiz||{};p.seen=p.seen||{};return p;}
   const doneCount=()=>MODULES.filter(m=>st().done[m.id]).length;
