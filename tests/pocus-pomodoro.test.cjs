@@ -33,10 +33,10 @@ test('lesson tabs wrap without horizontal scrolling and keep the active tab read
   assert.ok(contrast>=4.5,`active tab contrast ${contrast}`);assert.ok(await fits(p));await t.close();
  }
 });
-test('POCUS course lists eight modules, renders annotated figures and saves answers and completion',async()=>{
+test('POCUS course lists twelve modules, renders annotated figures and saves answers and completion',async()=>{
  const t=await open(),p=t.page;await p.evaluate(()=>navigate('pocus'));
- assert.equal(await p.locator('.pocus-card').count(),8);assert.equal(await p.locator('#pocus-note').count(),1);
- for(let i=0;i<8;i++){
+ assert.equal(await p.locator('.pocus-card').count(),12);assert.equal(await p.locator('#pocus-note').count(),1);
+ for(let i=0;i<12;i++){
   await p.evaluate(i=>PocusCourse.open(i),i);
   assert.ok(await p.locator('.pocus-q').count()>=3,`module ${i+1} questions`);assert.ok(await p.locator('.pocus-refs a').count()>=1,`module ${i+1} sources`);assert.ok(await fits(p),`module ${i+1} overflow`);
   assert.equal(await p.locator('.pocus-fig').evaluateAll(list=>list.every(f=>f.querySelector('svg[role=img]')&&f.querySelector('figcaption small'))),true);
@@ -46,7 +46,7 @@ test('POCUS course lists eight modules, renders annotated figures and saves answ
  await p.locator('#pq-3-1 .pocus-q-opt').nth(2).click();assert.match(await p.locator('#pq-3-1 .pocus-q-why').textContent(),/Correto/);
  await p.locator('.pocus-module .pocus-done input').check();
  await p.reload();await p.waitForFunction(()=>document.getElementById('master-auth').hidden);await p.evaluate(()=>navigate('pocus'));
- assert.match(await p.locator('.pocus-progress-head').textContent(),/1 de 8/);assert.equal(await p.locator('.pocus-card.done').count(),1);
+ assert.match(await p.locator('.pocus-progress-head').textContent(),/1 de 12/);assert.equal(await p.locator('.pocus-card.done').count(),1);
  await p.setViewportSize({width:390,height:844});await p.evaluate(()=>PocusCourse.open(5));assert.ok(await fits(p));await t.close();
 });
 test('floating pomodoro can be dragged, expanded, cancelled with confirmation and remembers its place',async()=>{
