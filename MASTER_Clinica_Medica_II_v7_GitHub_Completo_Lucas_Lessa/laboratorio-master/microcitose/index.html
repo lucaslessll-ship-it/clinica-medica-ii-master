@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="color-scheme" content="light">
+<meta name="description" content="Laboratório Master — aula piloto aprofundada de anemia microcítica com fisiologia, exames, microscopia e casos clínicos progressivos.">
+<title>Microcitose • Laboratório Master</title>
+<link rel="stylesheet" href="styles.css?v=20261115-labmaster2"><style>.sync-status{display:inline-flex;align-items:center;border:1px solid var(--border,#c8ded8);border-radius:999px;padding:7px 12px;font-size:12px;font-weight:600}.master-return{color:inherit;text-decoration:none;border:1px solid var(--border,#c8ded8);border-radius:9px;padding:9px 12px}.master-return:hover{text-decoration:underline}@media(max-width:650px){.sync-status{max-width:125px;font-size:11px;padding:6px 8px}}</style>
+</head>
+<body>
+<a class="skip" href="#main">Pular para o estudo</a>
+<div class="shell">
+ <aside class="sidebar" aria-label="Navegação do curso">
+  <div class="brand"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 40 40" fill="none" width="36"><path d="M7 31V9l13 22L33 9v22" stroke="currentColor" stroke-width="4.2" stroke-linejoin="round" stroke-linecap="round"/></svg></span><span><strong>LABORATÓRIO</strong><small>MASTER / CLÍNICA</small></span></div>
+  <div class="course-id"><span class="course-kicker">TRILHA 02 · HEMATOLOGIA</span><h2>Anemia microcítica</h2><p>Hemograma → metabolismo do ferro → hipótese clínica.</p></div>
+  <div class="side-progress"><div class="between"><span>Sua jornada</span><strong id="progressPercent">0%</strong></div><div class="progress-track"><div id="progressFill" class="progress-fill"></div></div><small id="progressText">0 de 7 etapas concluídas</small></div>
+  <nav id="sideNav" class="side-nav">
+   <button data-view="overview" class="active"><span class="nav-n">01</span><span>Visão geral<small>Objetivos e método</small></span></button>
+   <button data-view="physio"><span class="nav-n">02</span><span>Fisiologia profunda<small>Hepcidina e eritropoiese</small></span></button>
+   <button data-view="patterns"><span class="nav-n">03</span><span>Padrões laboratoriais<small>Valores e fisiopatologia</small></span></button>
+   <button data-view="microscopy"><span class="nav-n">04</span><span>Microscopia<small>Esfregaços reais</small></span></button>
+   <button data-view="lab"><span class="nav-n">05</span><span>Laudos interativos<small>Quatro perfis clínicos</small></span></button>
+   <button data-view="cases"><span class="nav-n">06</span><span>Casos progressivos<small>Decisões sob demanda</small></span></button>
+   <button data-view="quiz"><span class="nav-n">07</span><span>Prova de domínio<small>N1, N2, N3 · 12 itens</small></span></button>
+  </nav>
+  <div class="side-bottom"><span class="statusdot"></span> LABORATÓRIO MASTER · NOV/2026<br><small>Curso integrado · Microcitose</small></div>
+ </aside>
+ <div class="workspace">
+  <header class="topbar"><div class="crumb"><span>Laboratórios</span><span class="slash">/</span><strong>Hematologia</strong><span class="slash">/</span><span>Microcitose</span></div><div class="top-actions"><a class="master-return" href="../../index.html#dashboard">← Voltar ao MASTER</a><span id="syncStatus" class="sync-status" aria-live="polite">Verificando conta…</span><button id="themeToggle" class="iconbtn" title="Alternar tema" aria-label="Alternar tema">☾</button><button id="exportBtn" class="quietbtn">Exportar estudo</button><span class="version">PILOTO 01</span></div></header>
+  <main id="main" tabindex="-1" aria-live="polite"></main>
+  <footer class="footer"><span>Conteúdo original de apoio acadêmico · Dados de pacientes fictícios · Não substitui decisões clínicas</span><span>Revisão de fontes: 15/11/2026</span></footer>
+ </div>
+</div>
+<dialog id="imgDialog" class="image-dialog" aria-label="Imagem ampliada"><button id="closeDialog" class="close-dialog" aria-label="Fechar imagem">✕ Fechar</button><img id="largeImage" alt="Imagem de esfregaço ampliada"><p id="largeCaption"></p></dialog>
+<script defer src="../../auth-config.js"></script>
+<script defer src="../../auth-storage.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.0/dist/umd/supabase.min.js"></script>
+<script defer src="app.js?v=20261115-labmaster2"></script>
+<script defer src="sync.js?v=20261115-labmaster2"></script>
+</body></html>
