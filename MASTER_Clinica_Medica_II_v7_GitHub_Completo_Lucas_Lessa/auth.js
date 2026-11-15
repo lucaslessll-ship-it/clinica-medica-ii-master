@@ -27,7 +27,8 @@
     return 'Não foi possível concluir. '+(e?.message || 'Tente novamente.');
   }
   function notice(text, error=false){$('master-auth-message').textContent=text;$('master-auth-message').dataset.error=String(error);}
-  function syncNotice(text){$('master-sync-status').textContent=text;}
+  const quietSync=/^(Sincronizando|Salvo neste dispositivo|Progresso sincronizado)/;
+  function syncNotice(text){$('master-sync-status').textContent=quietSync.test(text)?'':text;}
   function lock(on){
     if(on)window.closeMobileNav?.(false);
     if(on)window.FocusTimer?.pause();
@@ -346,6 +347,8 @@
       else{const recovery=status.recovery;status.recovery=false;sessionStorage.removeItem(recoveryKey);clearAuthUrl();show(recovery?'forgot':'login',recovery?'Não foi possível validar o link. Solicite um novo e-mail.':'Entre para acessar seu ambiente de estudos.',recovery);}
     }catch(e){notice(errorText(e),true);}
     window.addEventListener('online',()=>{if(status.ready)keys.forEach(syncSoon);});
+    // Nova tentativa automática do que ficou pendente, sem depender do botão.
+    setInterval(()=>{if(status.ready&&status.user&&navigator.onLine!==false)Object.keys(pending(status.user.id)).forEach(key=>syncKey(key).catch(()=>{}));},45000);
     document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden'&&status.ready)keys.forEach(syncSoon);});
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();

@@ -113,6 +113,6 @@ A integração foi atualizada com a main `9a6e986`, incluindo as marcações das
 
 As marcações existentes funcionam com as proteções de sessão e validação de imagens. Não houve escrita no Supabase. Os textos novos independentes e o mapa de Hemograma foram salvos em `docs/rascunhos-cursos`, para revisão e integração futura. Os livros e PDFs não integram o repositório.
 
-Versão de publicação preparada: `20261115-cursos1`, Interface `2026.11.15.4`. A autorização de publicação não representa certificação dos números clínicos ou das licenças ainda pendentes neste relatório.
+Versão de publicação preparada: `20261115-menu1`, Interface `2026.11.15.4`. A autorização de publicação não representa certificação dos números clínicos ou das licenças ainda pendentes neste relatório.
 
 A verificação final da integração atualizada com os 12 módulos aprovou 96 testes, ambos os validadores Python e a sintaxe dos 55 arquivos JavaScript. O teste de telas do POCUS percorre 96 combinações de módulo, largura e tema. O estado da publicação é acompanhado no workflow GitHub Pages do repositório.

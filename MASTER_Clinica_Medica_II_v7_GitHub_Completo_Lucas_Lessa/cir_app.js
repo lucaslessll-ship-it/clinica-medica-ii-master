@@ -77,13 +77,14 @@ function countdown(){
  return `<div class="cir-countdown">${part(w,'prova escrita')}${part(p,'prova prática')}<div><strong>${pool().length}</strong><span>questões disponíveis</span></div><div><strong>${Object.keys(state.completed).filter(k=>state.completed[k]).length}<small>/${nLessons}</small></strong><span>aulas concluídas</span></div></div>`;
 }
 function topicCard(t){const s=stats(t.id),lp=lessonPct(t);return `<button type="button" class="topic-card cir-topic" onclick="CIR.openTopic('${t.id}')"><div class="topic-icon cir-icon" aria-hidden="true">${t.block==='RAD'?'◐':t.block==='URO'?'◒':'✂'}</div><strong>${esc(t.title)}</strong><small>${t.chapters.length} aulas · ${s.total} questões${s.answered?` · ${s.answered<5?'poucos dados':s.pct+'% de acertos'}`:''}</small><div class="mini-bar" aria-hidden="true"><span style="width:${lp}%"></span></div><span class="visually-hidden">${lp}% das aulas concluídas</span></button>`;}
-function hub(){
+function hub(period){
+ const shown=period==='P1'?data.blocks.filter(b=>b[0]==='P1'):period==='P2'?data.blocks.filter(b=>b[0]!=='P1'):data.blocks;
  const due=pool().filter(q=>isDue(q.id)).length;
- return header('CIRURGIA · 8º PERÍODO','Cirurgia <em>completa para a P2.</em>','Aulas aprofundadas por tema, fluxogramas de conduta, revisão ativa e treino com questões comentadas. Organizado pelo checklist da disciplina.')+
+ return (period==='P1'?header('CIRURGIA · MATÉRIAS P1','Cirurgia <em>P1.</em>','Conteúdo da primeira prova, cumulativo para a P2: esôfago, estômago, vias biliares e fígado.'):period==='P2'?header('CIRURGIA · MATÉRIAS P2','Cirurgia <em>P2.</em>','Conteúdo novo da prova escrita, com Radiologia e Urologia.'):header('CIRURGIA · 8º PERÍODO','Cirurgia <em>completa para a P2.</em>','Aulas aprofundadas por tema, fluxogramas de conduta, revisão ativa e treino com questões comentadas. Organizado pelo checklist da disciplina.'))+
  countdown()+
  `<div class="btn-row cir-main-actions"><button class="btn primary" type="button" onclick="CIR.resume()">Continuar de onde parei →</button><button class="btn secondary" type="button" onclick="CIR.startPractice({t:'all',src:'all',mode:'all'})">Treinar questões</button>${due?`<button class="btn" type="button" onclick="CIR.startPractice({t:'all',src:'all',mode:'due'})">Revisar ${due} ${due===1?'erro':'erros'} do dia</button>`:''}<button class="btn" type="button" onclick="CIR.go('cirexam')">Simulado</button></div>`+
  bankLine()+planSection()+performance()+
- data.blocks.map(([b,title,sub])=>sec(esc(title),`<div class="topic-grid">${topics.filter(t=>t.block===b).map(topicCard).join('')}</div>`,`<span class="subtle small">${esc(sub)}</span>`)).join('')+
+ shown.map(([b,title,sub])=>sec(esc(title),`<div class="topic-grid">${topics.filter(t=>t.block===b).map(topicCard).join('')}</div>`,`<span class="subtle small">${esc(sub)}</span>`)).join('')+
  `<p class="subtle small cir-foot">Conteúdo educativo para estudo. Condutas e doses seguem diretrizes citadas em cada aula e não substituem protocolo institucional nem supervisão.</p>`;
 }
 
@@ -151,7 +152,7 @@ function nextChapter(){const t=topic(sel);if(chap<t.chapters.length-1)chap++;els
 function toggleDone(){const k=sel+'_'+chap;state.completed[k]=!state.completed[k];state.doneAt=state.doneAt||{};if(state.completed[k]){state.doneAt[k]=dayKey();const day=planActivity();day.lessons=day.lessons||[];if(!day.lessons.includes(k))day.lessons.push(k);}else{delete state.doneAt[k];for(const day of Object.values(state.plan?.days||{}))day.lessons=(day.lessons||[]).filter(key=>key!==k);}save();render();}
 function saveNote(){state.notes[sel+'_'+chap]=document.getElementById('cir-note')?.value||'';save();toast('Anotação salva.');}
 function resume(){openTopic(topics.some(t=>t.id===state.lastTopic)?state.lastTopic:'ciraa',state.lastChapter||0);}
-function view(r){switch(r){case 'cirtopic':return topicView();case 'cirpractice':return practiceView();case 'cirexam':return examView();default:return hub();}}
+function view(r){switch(r){case 'cirtopic':return topicView();case 'cirpractice':return practiceView();case 'cirexam':return examView();case 'cirp1':return hub('P1');case 'cirp2':return hub('P2');default:return hub();}}
 function afterRender(r){if(r==='cirexam'&&exam&&!exam.done)clock();else clearInterval(tick);}
 function searchItems(){return topics.flatMap(t=>[{type:'Cirurgia',label:t.title,sub:'Cirurgia · '+t.focus,icon:'✂',action:()=>openTopic(t.id),text:[t.title,t.focus]},...t.chapters.map((c,i)=>({type:'Aula de cirurgia',label:c.name,sub:t.title,icon:'✂',action:()=>openTopic(t.id,i),text:[c.name,c.hy]}))]);}
 function reload(){clearInterval(tick);state=load();practice=null;exam=null;sel=state.lastTopic;chap=state.lastChapter||0;}
