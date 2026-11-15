@@ -48,7 +48,7 @@ test('estações e questões com SVG funcionam nos dois temas e de 320 px a desk
   const t=await open(width),p=t.page;await p.evaluate(theme=>HIG.setTheme(theme),theme);
   if(width<801)await p.getByRole('button',{name:'Abrir menu de navegação',exact:true}).click();
   await p.locator('#sidebar-nav').getByRole('button',{name:/^POCUS/}).click();assert.equal(await p.evaluate(()=>ui.route),'pocus');
-  assert.ok(await p.locator('.nav-badge').evaluate(el=>parseFloat(getComputedStyle(el).fontSize))>=12);
+  assert.ok(await p.locator('.nav-badge').first().evaluate(el=>parseFloat(getComputedStyle(el).fontSize))>=12);
   for(let index=0;index<modules.length;index++){
    await p.evaluate(index=>PocusCourse.open(index),index);
    const count=previous[index]===undefined?0:6;assert.equal(await p.locator('.pocus-q-image').count(),count);assert.equal(await p.locator('.pocus-q-image svg[role=img]').count(),count);

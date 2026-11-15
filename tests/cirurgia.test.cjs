@@ -183,3 +183,34 @@ test('real images load from the private table for signed-in users and stay hidde
  await p.waitForSelector('[data-img-key="pocus_m4"]:not([hidden]) figure img');
  await t.close();
 });
+
+test('ECG course has every module and tracing, saves answers and shows private images',async()=>{
+ const t=await open({width:320,height:640}),p=t.page;
+ await p.evaluate(()=>{const c=MASTER_AUTH.client(),orig=c.from.bind(c);c.from=table=>{if(table!=='lesson_images')return orig(table);return {select(cols){const q={contains(){return q},order(){return q},then(done){done({error:null,data:cols==='keys'?[{keys:['ecg_m6','ecg_t65']}]:[{id:'x',ord:0,caption:'Figura de teste',credit:'Fonte de teste',mime:'image/gif',marks:[{x:40,y:40,lx:20,ly:20,t:'Achado'}],data:'R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='}]});}};return q;}};};});
+ await p.evaluate(()=>navigate('ecg'));
+ await p.waitForSelector('.pocus-card');
+ assert.equal(await p.locator('.pocus-card').count(),15,'modulos do curso de ECG');
+ for(let i=0;i<15;i++){
+  await p.evaluate(x=>ECGCourse.open(x),i);
+  assert.ok(await p.locator('.pocus-q').count()>=3,`modulo ${i+1} questoes`);
+  assert.ok(await p.locator('.pocus-refs li').count()>=1,`modulo ${i+1} fontes`);
+  assert.ok(await p.locator('.pocus-pitfalls li').count()>=4,`modulo ${i+1} armadilhas`);
+  assert.ok(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),`modulo ${i+1} estoura 320 px`);
+ }
+ await p.evaluate(()=>ECGCourse.open(5));
+ await p.waitForSelector('[data-img-key="ecg_m6"]:not([hidden]) figure img',{state:'attached'});
+ assert.equal(await p.locator('.lesson-marks-toggle').count(),1,'botao de achados na figura do modulo');
+ await p.locator('#eq-5-0 .pocus-q-opt').nth(1).click();
+ assert.match(await p.locator('#eq-5-0 .pocus-q-why').textContent(),/Correto/);
+ await p.locator('.pocus-module .pocus-done input').check();
+ await p.evaluate(()=>ECGCourse.bank());
+ assert.equal(await p.locator('.pocus-card').count(),27,'tracados no banco');
+ assert.ok(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),'banco estoura 320 px');
+ await p.evaluate(()=>ECGCourse.tracing(26));
+ await p.waitForSelector('[data-img-key="ecg_t65"]:not([hidden]) figure img',{state:'attached'});
+ assert.equal(await p.locator('details.pocus-script').count(),1,'leitura comentada do tracado G8');
+ await p.reload();await p.waitForFunction(()=>document.getElementById('master-auth').hidden);
+ await p.evaluate(()=>navigate('ecg'));
+ assert.equal(await p.locator('.pocus-card.done').count(),1,'progresso do modulo salvo');
+ await t.close();
+});
