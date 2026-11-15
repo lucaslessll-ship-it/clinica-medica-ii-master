@@ -90,19 +90,29 @@ Versão final preparada: `20261115-cirurgia-pocus1`, Interface `2026.11.15.2`.
 
 | Tarefa | Implementado | Pendente |
 | --- | --- | --- |
-| 1. Plano | Calendário, aulas e questões por peso, progresso diário, dias perdidos, revisão em 19/11 e expiração | Publicação |
-| 2. Início | Temas, filtro, contadores e revisões de Cirurgia | Publicação |
-| 3. Desempenho | Contagem, ordenação e tratamento de poucos dados | Publicação |
-| 4. Aprofundamento | 58 aulas, 116 casos, pré-testes, evocações, prova e 220 questões novas | Conferência quantitativa e de diretrizes atuais, classificações completas e publicação |
+| 1. Plano | Calendário, aulas e questões por peso, progresso diário, dias perdidos, revisão em 19/11 e expiração | Nenhum ajuste funcional pendente |
+| 2. Início | Temas, filtro, contadores e revisões de Cirurgia | Nenhum ajuste funcional pendente |
+| 3. Desempenho | Contagem, ordenação e tratamento de poucos dados | Nenhum ajuste funcional pendente |
+| 4. Aprofundamento | 58 aulas, 116 casos, pré-testes, evocações, prova e 220 questões novas | Conferência quantitativa e de diretrizes atuais, classificações completas |
 | 5. Imagens reais abertas | Renderizador e metadados com crédito, licença e marcações | Curadoria, comprovação de licença na origem e todos os arquivos de imagem locais |
-| 6. POCUS | Conteúdo prático, fala, erros, 74 questões e ampliação | Imagens reais licenciadas, questões vinculadas a essas fotografias, conferência das fontes e publicação |
+| 6. POCUS | Conteúdo prático, fala, erros, 74 questões e ampliação | Imagens reais licenciadas, questões vinculadas a essas fotografias, conferência das fontes |
 
-A branch `cirurgia-aprofundamento` reúne a integração final. As branches `cirurgia-plano-revisado`, `cirurgia-aulas-prioritarias` e `cirurgia-aulas-completas` registram as etapas anteriores de preparação. As alterações não foram mescladas na main por este trabalho.
+A branch `cirurgia-aprofundamento` reúne a integração final. As branches `cirurgia-plano-revisado`, `cirurgia-aulas-prioritarias` e `cirurgia-aulas-completas` registram as etapas anteriores de preparação. A integração utiliza PR, merge e confirmação do workflow de Pages para publicação.
 
 ## Fontes e publicação
 
-O proxy ativo continua permitindo apenas o Supabase como domínio personalizado. As tentativas de acesso à API do GitHub e ao PubMed Central retornaram `CONNECT 403`. A página pública do GitHub abriu, mas sem sessão autenticada para escrita pela interface web.
+Durante as etapas anteriores, o proxy permitia apenas o Supabase como domínio personalizado e retornava CONNECT 403 para a API do GitHub e fontes médicas. Após a publicação da configuração do ambiente em 15/11, os domínios previstos passaram a estar liberados e o acesso à API do GitHub foi confirmado.
 
-O rascunho de configuração com os domínios necessários já foi salvo. Ele ainda precisa ser aplicado ao ambiente ativo. Credenciais ou valores secretos não foram publicados.
+A configuração de rede foi aplicada ao ambiente ativo. Credenciais ou valores secretos não foram publicados.
 
 Publicação exige PR, merge na main e confirmação do Pages. Enviar uma branch não equivale a publicar. O sucesso do Pages não deve ser presumido apenas pelo histórico de merge.
+
+## Preparação da publicação autorizada
+
+A integração foi atualizada com a main `9a6e986`, incluindo as marcações das imagens privadas e os quatro módulos adicionais de POCUS. Eles foram preservados na ordem da main. O curso totaliza 12 módulos e 86 questões: as 38 anteriores da main permanecem preservadas, com as 48 questões de esquemas acrescentadas nos oito módulos originais. O progresso continua identificado pelo ID de cada módulo.
+
+As marcações existentes funcionam com as proteções de sessão e validação de imagens. Não houve escrita no Supabase. Os textos novos independentes e o mapa de Hemograma foram salvos em `docs/rascunhos-cursos`, para revisão e integração futura. Os livros e PDFs não integram o repositório.
+
+Versão de publicação preparada: `20261115-publicacao1`, Interface `2026.11.15.4`. A autorização de publicação não representa certificação dos números clínicos ou das licenças ainda pendentes neste relatório.
+
+A verificação final da integração atualizada com os 12 módulos aprovou 96 testes, ambos os validadores Python e a sintaxe dos 55 arquivos JavaScript. O teste de telas do POCUS percorre 96 combinações de módulo, largura e tema. O estado da publicação é acompanhado no workflow GitHub Pages do repositório.
