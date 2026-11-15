@@ -1,0 +1,56 @@
+'use strict';
+const test=require('node:test');
+const assert=require('node:assert/strict');
+const fs=require('node:fs');
+const path=require('node:path');
+const vm=require('node:vm');
+const root=path.join(__dirname,'..');
+const appdir=path.join(root,'MASTER_Clinica_Medica_II_v7_GitHub_Completo_Lucas_Lessa');
+const pilot=path.join(appdir,'laboratorio-master','microcitose');
+const txt=f=>fs.readFileSync(f,'utf8');
+test('Laboratório Master possui acesso próprio, retorno e progress sync',()=>{
+ const app=txt(path.join(appdir,'app.js'));
+ const html=txt(path.join(pilot,'index.html'));
+ assert.match(app,/\['Laboratório Master','lab',\['labmaster'\]\]/);
+ assert.match(app,/window.location.href='laboratorio-master\/microcitose\/index.html'/);
+ assert.match(html,/id="syncStatus"/);
+ assert.match(html,/href="\.\.\/\.\.\/index.html#dashboard"/);
+ assert.match(html,/auth-config\.js/);
+ assert.match(html,/supabase\.min\.js/);
+ assert.match(html,/sync\.js/);
+});
+test('O conteúdo aprovado e a interface original foram preservados',()=>{
+ const src=txt(path.join(pilot,'app.js'));
+ const css=txt(path.join(pilot,'styles.css'));
+ assert.match(src,/VIEWS=\['overview','physio','patterns','microscopy','lab','cases','quiz'\]/);
+ assert.match(src,/const IMAGE_DATA=\[/);
+ assert.match(src,/commons\.wikimedia\.org/);
+ assert.match(src,/let state=/);
+ assert.match(src,/LabMasterCourse=/);
+ assert.ok(css.length>12000,'Não substituir o design aprovado por estilo simplificado');
+ new vm.Script(src);
+ new vm.Script(txt(path.join(pilot,'sync.js')));
+});
+test('A migração mantém progresso separado e protegido por usuário',()=>{
+ const sql=txt(path.join(root,'supabase/migrations/20261115_lab_master_progress.sql'));
+ assert.match(sql,/public\.lab_master_progress/);
+ assert.match(sql,/enable row level security/);
+ assert.match(sql,/auth\.uid\(\)/);
+ assert.match(sql,/revoke all on public\.lab_master_progress from anon/);
+ assert.doesNotMatch(sql,/drop table|truncate table|delete from public\.master_progress/i);
+});
+test('Merge não perde respostas, respeita exclusões e mantém as chaves',()=>{
+ const script=txt(path.join(pilot,'sync.js'));
+ const sandbox={window:{LabMasterCourse:{status(){},getSnapshot(){return{}},adopt(){}}},document:{addEventListener(){}},localStorage:{getItem(){return null}},setTimeout,clearTimeout,TextEncoder};
+ vm.runInNewContext(script,sandbox);
+ const merge=sandbox.window.LabMasterSync.merge;
+ const remote={done:['physio'],quizAnswers:{one:0},caseAnswers:{old:1},_clock:{done:{physio:100},quiz:{one:100},cases:{old:100},reset:{}}};
+ const local={done:['lab'],quizAnswers:{two:2},_clock:{done:{lab:200},quiz:{two:200},reset:{cases:210}}};
+ const merged=merge(remote,local);
+ assert.deepEqual(Array.from(merged.done).sort(),['lab','physio']);
+ assert.equal(merged.quizAnswers.one,0);
+ assert.equal(merged.quizAnswers.two,2);
+ assert.equal(Object.keys(merged.caseAnswers).length,0);
+ const unmarked=merge(remote,{done:[],_clock:{done:{physio:500}}});
+ assert.ok(!unmarked.done.includes('physio'));
+});
