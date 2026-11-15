@@ -359,6 +359,27 @@ test('lesson section navigation and reading position preserve P2/P1 routes and c
  }
  await p.evaluate(()=>navigate('dashboard'));assert.equal(await p.locator('.reading-back').count(),0);assert.equal(await p.locator('.reading-outline').count(),0);await t.close();
 });
+test('back-to-top button appears on every scrolling route and yields to the lesson button',async()=>{
+ const t=await open({session:true}),p=t.page;await p.waitForFunction(()=>document.getElementById('master-auth').hidden);await p.emulateMedia({reducedMotion:'reduce'});
+ const btn=p.locator('.scroll-top');
+ for(const size of [{width:390,height:844},{width:1280,height:800}]){
+  await p.setViewportSize(size);
+  for(const route of ['dashboard','cir','pocus','banca']){
+   await p.evaluate(r=>navigate(r),route);await p.waitForFunction(()=>window.scrollY<5);
+   assert.equal(await btn.isVisible(),false,`${route} at ${size.width}: button must stay hidden at the top`);
+   if(!await p.evaluate(()=>document.documentElement.scrollHeight>innerHeight+400))continue;
+   await p.evaluate(()=>window.scrollTo({top:1400,behavior:'instant'}));
+   await p.waitForFunction(()=>!document.querySelector('.scroll-top').hidden,null,{timeout:4000});
+   await btn.click();await p.waitForFunction(()=>window.scrollY<5);
+   assert.equal(await btn.isVisible(),false,`${route} at ${size.width}: button must hide again at the top`);
+  }
+ }
+ await p.evaluate(()=>openTopic('neuro1'));
+ await p.evaluate(()=>window.scrollTo({top:document.body.scrollHeight,behavior:'instant'}));
+ await p.waitForFunction(()=>!document.querySelector('.reading-back').hidden);
+ assert.equal(await btn.isVisible(),false,'only one floating button at a time');
+ await t.close();
+});
 test('refreshed library and lesson remain usable with 200 percent reading size on phone and tablet',async()=>{
  for(const width of [320,390,820]){
   const t=await open({session:true,viewport:{width,height:1000}}),p=t.page;await p.waitForFunction(()=>document.getElementById('master-auth').hidden);await p.evaluate(()=>{HIG.setFont('xxlarge');HIG.setTheme('dark');HIG.togglePref('contrast');});
@@ -369,7 +390,7 @@ test('refreshed library and lesson remain usable with 200 percent reading size o
 
 test('release URL versions local assets and preserves recovery callbacks',async()=>{
  const t=await open({session:true,root:true,query:'?auth=recovery'}),p=t.page;await text(p,'#master-auth-title',/Definir nova senha/);
- assert.equal(new URL(p.url()).searchParams.get('v'),'20261115-publicacao1');
+ assert.equal(new URL(p.url()).searchParams.get('v'),'20261115-topo1');
  const unversioned=await p.evaluate(()=>[...document.querySelectorAll('script[src],link[rel=stylesheet]')].map(e=>e.src||e.href).filter(url=>new URL(url).origin===location.origin&&!new URL(url).searchParams.has('v')));assert.deepEqual(unversioned,[]);await t.close();
 });
 test('Decision Lab has 24 stable cases with 20 P2 items, valid answers and references',async()=>{

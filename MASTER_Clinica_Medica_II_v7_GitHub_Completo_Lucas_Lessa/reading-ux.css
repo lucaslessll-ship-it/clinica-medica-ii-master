@@ -31,3 +31,13 @@ body.reduce-motion .reading-lesson *{scroll-behavior:auto!important}
 .chapter-pill.current{background:#0b6c66;border-color:#0b6c66;color:#fff;box-shadow:0 6px 18px rgba(11,108,102,.22)}
 body[data-theme="dark"] .chapter-pill{background:#20353a;color:#d9efeb;border-color:#3e5b5a}
 body[data-theme="dark"] .chapter-pill.current{background:#7fd6c3;border-color:#7fd6c3;color:#0c2a27}
+
+/* Botão global de subir para o início da página (todas as rotas com rolagem) */
+.scroll-top{position:fixed;right:max(18px,env(safe-area-inset-right));bottom:90px;z-index:53;display:flex;align-items:center;justify-content:center;width:44px;min-height:44px;border:1px solid var(--line);border-radius:50%;background:var(--white);color:var(--ink);font:inherit;cursor:pointer;box-shadow:var(--shadow)}
+.scroll-top[hidden]{display:none}
+.scroll-top:hover{border-color:var(--green);color:var(--green2)}
+.scroll-top:focus-visible{outline:3px solid var(--focus,var(--green));outline-offset:3px}
+html.master-auth-locked .scroll-top{display:none!important}
+body.high-contrast .scroll-top{border-color:currentColor}
+@media(max-width:800px){.scroll-top{bottom:calc(144px + env(safe-area-inset-bottom))}}
+@media print{.scroll-top{display:none!important}}
