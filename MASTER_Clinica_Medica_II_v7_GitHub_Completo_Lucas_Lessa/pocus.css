@@ -62,3 +62,37 @@ body[data-theme="dark"] .pocus-q-opt.right{background:#173b2a;border-color:#3fae
 body[data-theme="dark"] .pocus-q-opt b{background:#20353a}
 body[data-theme="dark"] .pocus-fig.light{background:#f4f9f8}
 @media(max-width:600px){.pocus-sec p,.pocus-sec li,.pocus-goals li{font-size:15px}.pocus-card{padding:15px}.pocus-pager .btn{flex:1}}
+
+/* Estações práticas e questões com os esquemas autorais já existentes. */
+.pocus-practical,.pocus-technique-errors{padding:18px;border:1px solid var(--line);border-radius:16px;background:var(--soft)}
+.pocus-practical li,.pocus-technique-errors li{overflow-wrap:anywhere}
+.pocus-script{margin-top:24px;border:1px solid var(--line);border-radius:16px;padding:0 18px;background:var(--white)}
+.pocus-script summary{display:flex;align-items:center;min-height:44px;padding:12px 0;cursor:pointer;font-size:15px;line-height:1.6;font-weight:700;color:var(--green2)}
+.pocus-script summary::after{content:'+';margin-left:auto;padding-left:12px;font-size:20px;line-height:1}.pocus-script[open] summary::after{content:'-'}
+.pocus-script summary:focus-visible{outline:3px solid var(--focus,var(--green));outline-offset:3px}
+.pocus-script p,.pocus-script li{font-size:15px;line-height:1.75;max-width:74ch;overflow-wrap:anywhere}
+.pocus-script ol{padding-left:24px;margin:12px 0 18px}.pocus-script li+li{margin-top:10px}
+.pocus-q-visual{min-width:0;margin:12px 0}.pocus-q-visual .pocus-fig{max-width:640px;margin-inline:auto}
+.pocus-q-visual .pocus-q-kind{font-size:12px;line-height:1.6;color:var(--muted);margin:0 0 8px}
+.pocus-visual-pair{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;align-items:start;margin-top:16px;min-width:0}
+.pocus-visual-pair>*{min-width:0}.pocus-visual-pair .pocus-fig{margin-top:0}.pocus-visual-pair .pocus-visual-label{font-size:13px;font-weight:700;line-height:1.6;color:var(--ink);margin:0 0 10px}
+.pocus-module .btn,.pocus-done,.pocus-case summary{min-height:44px}.pocus-case summary{display:flex;align-items:center}
+.pocus-refs a{display:inline-flex;align-items:center;max-width:100%;min-height:44px}
+@media(max-width:760px){.pocus-visual-pair{grid-template-columns:minmax(0,1fr)}.pocus-practical,.pocus-technique-errors{padding:14px}.pocus-script{padding:0 14px}}
+
+/* Ampliação dos esquemas sem reduzir os rótulos na visão ampliada. */
+.pocus-zoom-open{display:flex;align-items:center;justify-content:center;min-height:44px;width:100%;border:0;border-top:1px solid var(--line);padding:10px 14px;background:var(--white);color:var(--green2);font:inherit;font-size:14px;font-weight:700;cursor:zoom-in}
+.pocus-zoom-open:focus-visible,.pocus-zoom-viewport:focus-visible{outline:3px solid var(--focus,var(--green));outline-offset:-3px}
+.pocus-zoom-dialog{box-sizing:border-box;width:min(1100px,calc(100vw - 24px));max-width:calc(100vw - 24px);max-height:calc(100dvh - 24px);padding:16px;border:1px solid var(--line);border-radius:16px;background:var(--white);color:var(--ink);overflow-y:auto;overscroll-behavior:contain}
+.pocus-zoom-dialog::backdrop{background:rgba(0,0,0,.8)}
+.pocus-zoom-title{font-size:20px;line-height:1.4;margin:0 0 12px;overflow-wrap:anywhere}
+.pocus-zoom-controls{display:flex;align-items:center;flex-wrap:wrap;gap:8px;min-width:0}
+.pocus-zoom-controls .btn{min-height:44px;margin:0;font-size:14px;white-space:normal}
+.pocus-zoom-level{display:flex;align-items:center;justify-content:center;min-height:44px;min-width:52px;font-size:14px;font-weight:700}
+.pocus-zoom-hint{font-size:13px;line-height:1.6;margin:12px 0;color:var(--muted)}
+.pocus-zoom-figure{margin:0}
+.pocus-zoom-viewport{max-height:60dvh;overflow:auto;overscroll-behavior:contain;scroll-behavior:auto;touch-action:pan-x pan-y pinch-zoom;background:#05080a}
+.pocus-zoom-canvas{max-width:none;flex:none}
+.pocus-zoom-canvas svg{display:block;width:100%;max-width:none;height:auto}
+body[data-theme="dark"] .pocus-zoom-open{color:#7fd6c3}
+@media(max-width:600px){.pocus-zoom-dialog{padding:12px}.pocus-zoom-controls .btn{flex:1}.pocus-zoom-close{flex-basis:100%!important}}

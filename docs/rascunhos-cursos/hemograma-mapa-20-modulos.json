@@ -1,0 +1,126 @@
+{
+  "fonte": "Hemograma: um guia prático, 1ª edição, arquivo enviado pelo usuário",
+  "observacao": "Mapeamento temático a partir do sumário. Não contém transcrição dos capítulos. Ano editorial a confirmar: ficha catalográfica e créditos exibem datas diferentes.",
+  "modulos": [
+    {
+      "id": "hmg01",
+      "capituloFonte": 1,
+      "tituloAutoral": "Qualidade da amostra e interferentes",
+      "situacao": "texto LessonDeep pendente"
+    },
+    {
+      "id": "hmg02",
+      "capituloFonte": 2,
+      "tituloAutoral": "Índices eritrocitários",
+      "situacao": "texto LessonDeep pendente"
+    },
+    {
+      "id": "hmg03",
+      "capituloFonte": 3,
+      "tituloAutoral": "Raciocínio inicial nas anemias",
+      "situacao": "texto LessonDeep pendente"
+    },
+    {
+      "id": "hmg04",
+      "capituloFonte": 4,
+      "tituloAutoral": "Padrões microcíticos",
+      "situacao": "texto LessonDeep pendente"
+    },
+    {
+      "id": "hmg05",
+      "capituloFonte": 5,
+      "tituloAutoral": "Padrões macrocíticos",
+      "situacao": "texto LessonDeep pendente"
+    },
+    {
+      "id": "hmg06",
+      "capituloFonte": 6,
+      "tituloAutoral": "Anemia normocítica",
+      "situacao": "texto LessonDeep pendente"
+    },
+    {
+      "id": "hmg07",
+      "capituloFonte": 7,
+      "tituloAutoral": "Eritrocitose relativa e absoluta",
+      "situacao": "texto LessonDeep pendente"
+    },
+    {
+      "id": "hmg08",
+      "capituloFonte": 8,
+      "tituloAutoral": "Leucograma e contagens absolutas",
+      "situacao": "texto LessonDeep pendente"
+    },
+    {
+      "id": "hmg09",
+      "capituloFonte": 9,
+      "tituloAutoral": "Leucocitose reativa e clonal",
+      "situacao": "texto LessonDeep pendente"
+    },
+    {
+      "id": "hmg10",
+      "capituloFonte": 10,
+      "tituloAutoral": "Neutrofilia",
+      "situacao": "texto LessonDeep pendente"
+    },
+    {
+      "id": "hmg11",
+      "capituloFonte": 11,
+      "tituloAutoral": "Neutropenia",
+      "situacao": "texto LessonDeep pendente"
+    },
+    {
+      "id": "hmg12",
+      "capituloFonte": 12,
+      "tituloAutoral": "Linfocitose",
+      "situacao": "texto LessonDeep pendente"
+    },
+    {
+      "id": "hmg13",
+      "capituloFonte": 13,
+      "tituloAutoral": "Linfopenia",
+      "situacao": "texto LessonDeep pendente"
+    },
+    {
+      "id": "hmg14",
+      "capituloFonte": 14,
+      "tituloAutoral": "Eosinofilia e eosinopenia",
+      "situacao": "texto LessonDeep pendente"
+    },
+    {
+      "id": "hmg15",
+      "capituloFonte": 15,
+      "tituloAutoral": "Monocitose e monocitopenia",
+      "situacao": "texto LessonDeep pendente"
+    },
+    {
+      "id": "hmg16",
+      "capituloFonte": 16,
+      "tituloAutoral": "Basofilia e basopenia",
+      "situacao": "texto LessonDeep pendente"
+    },
+    {
+      "id": "hmg17",
+      "capituloFonte": 17,
+      "tituloAutoral": "Plaquetopenia",
+      "situacao": "texto LessonDeep pendente"
+    },
+    {
+      "id": "hmg18",
+      "capituloFonte": 18,
+      "tituloAutoral": "Trombocitose",
+      "situacao": "texto LessonDeep pendente"
+    },
+    {
+      "id": "hmg19",
+      "capituloFonte": 19,
+      "tituloAutoral": "Pancitopenia",
+      "situacao": "texto LessonDeep pendente"
+    },
+    {
+      "id": "hmg20",
+      "capituloFonte": 20,
+      "tituloAutoral": "Leitura sistemática do esfregaço",
+      "situacao": "texto LessonDeep pendente"
+    }
+  ]
+}

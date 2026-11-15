@@ -1,0 +1,13 @@
+/* Plano temporário e desempenho, com cores herdadas do tema ativo. */
+.cir-study-plan{border-top:1px solid var(--line);padding-top:16px;min-width:0;width:100%;font-size:14px;line-height:1.65}
+.cir-study-plan h3{font-size:17px;margin:6px 0 12px}.cir-study-plan p{margin:8px 0;font-size:14px!important;line-height:1.65;overflow-wrap:anywhere}
+.cir-study-plan .btn{width:100%;margin-top:8px;min-height:44px;justify-content:center;font-size:13px}
+.cir-plan-calendar{margin-top:16px;font-size:13px}.cir-plan-calendar summary{cursor:pointer;min-height:44px;padding:10px 0;line-height:1.6;overflow-wrap:anywhere}
+.cir-plan-calendar>ol{list-style:none;padding:0;margin:10px 0}.cir-plan-calendar>ol>li{border-top:1px solid var(--line)}.cir-plan-calendar ul{padding:0;list-style:none}.cir-plan-calendar .btn{font-size:12px;text-align:left;justify-content:flex-start;white-space:normal}
+.cir-performance{display:grid;gap:10px}.cir-performance-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(100px,.6fr) auto;align-items:center;gap:16px;padding:16px;min-width:0}
+.cir-performance-row h3{font-size:16px;line-height:1.5;margin:0;overflow-wrap:anywhere}.cir-performance-row p{font-size:13px;color:var(--muted);margin:4px 0 0}.cir-performance-row>strong{font-size:14px;overflow-wrap:anywhere}.cir-performance-row .btn{font-size:13px;min-height:44px}
+.cir-plan-calendar summary:focus-visible,.cir-study-plan .btn:focus-visible{outline:3px solid var(--focus,var(--green));outline-offset:3px}
+.subject-filters button{min-height:44px}.subject-period,.subject-filters button span,.subject-results,.subject-group-heading>span,.subject-meta{font-size:12px}
+@media(max-width:800px){.cir-performance-row{grid-template-columns:minmax(0,1fr)}.cir-performance-row .btn{width:100%}.cir-study-plan p{font-size:13px!important}}
+.dash-cir .cir-study-plan{border-top:0;padding-top:0}.cir-perf-num{white-space:normal;overflow-wrap:anywhere}.cir-perf-row .btn{white-space:normal;font-size:13px}
+@media(max-width:800px){.cir-perf-row{grid-template-columns:minmax(0,1fr);padding:12px 0;gap:8px}.cir-perf-row>*{grid-column:auto;grid-row:auto;order:initial}.cir-perf-row .btn{grid-column:auto;grid-row:auto;width:100%}.cir-perf-bar{grid-column:auto;order:initial}.cir-perf-num{grid-column:auto;order:initial}}
