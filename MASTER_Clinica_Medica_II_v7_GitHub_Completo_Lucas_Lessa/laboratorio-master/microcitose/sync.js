@@ -55,7 +55,7 @@
       if(!Object.keys(p).length && Math.max(ta,tb)>0)continue;
       out.profiles[id]={...q,...p,requested:[...new Set([...(Array.isArray(q.requested)?q.requested:[]),...(Array.isArray(p.requested)?p.requested:[])])]};
       if(p.answer===null||p.answer===undefined){
-        if(q.answer!==undefined&&ta===tb)out.profiles[id].answer=q.answer;
+        if(q.answer!==undefined)out.profiles[id].answer=q.answer;
       }
     }
     const older=num(Date.parse(a._updatedAt||'')),newer=num(Date.parse(b._updatedAt||''));
