@@ -1,0 +1,10 @@
+AMR 3.1.0, Matthijs S. Berends e colaboradores.
+https://github.com/msberends/AMR/tree/v3.1.0
+Referência: https://doi.org/10.18637/jss.v104.i03
+Licença do componente: GPL-2, preservada em AMR-GPL-2.txt.
+Recorte de três registros EUCAST 16.1, extraído da distribuição AMR.
+Commit de origem: 052edc476158f1bad7a3df3b0fc78c95eea8ace4.
+Fonte e hashes: amr-uro-data.js.
+Código de reprodução e atribuição:
+https://github.com/lucaslessll-ship-it/clinica-medica-ii-master/tree/main/tools/amr
+Não há runtime R nem pacote AMR executado no navegador.

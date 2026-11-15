@@ -262,7 +262,7 @@ const CASES=[
  answer:['Germe e sensibilidade conhecidos, foco drenado, paciente estável: momento de descalonar.','Suspender a vancomicina, que não tem alvo.','Trocar meropenem por ceftriaxona. A cobertura para anaeróbios pode ser mantida se houver anastomose biliodigestiva ou suspeita de infecção polimicrobiana.','Considerar via oral quando houver opção ativa e boa aceitação.','Duração: curso curto após a drenagem adequada. Bacteriemia por Gram-negativo não complicada se trata com 7 dias no total.']}
 ];
 
-return CourseKit.create({global:'AtbCourse',key:'atb',route:'atb',label:'Antimicrobianos',title:'Curso de Antimicrobianos',
+return CourseKit.create({extraHome:()=>window.MicroLab?MicroLab.entry():'',global:'AtbCourse',key:'atb',route:'atb',label:'Antimicrobianos',title:'Curso de Antimicrobianos',
  heading:'Curso de <em>Antimicrobianos</em>',lead:'Dos princípios à escolha por síndrome, com as diretrizes vigentes em novembro de 2026.',
  notice:'Material educacional. As doses não são listadas de propósito: dependem de peso, função renal, foco e protocolo local. Confira sempre o antibiograma do seu serviço.',
  pathHint:'Os módulos 3 a 5 são a base. Sem o mapa de cobertura, os módulos de síndromes viram decoreba.',
