@@ -214,3 +214,37 @@ test('ECG course has every module and tracing, saves answers and shows private i
  assert.equal(await p.locator('.pocus-card.done').count(),1,'progresso do modulo salvo');
  await t.close();
 });
+
+test('Hemograma and Antimicrobianos courses render every module and case, save answers and keep progress',async()=>{
+ const t=await open({width:320,height:640}),p=t.page;
+ for(const c of [{route:'hemo',api:'HemoCourse',key:'hemo',modules:12,cases:10},{route:'atb',api:'AtbCourse',key:'atb',modules:12,cases:10}]){
+  await p.evaluate(r=>navigate(r),c.route);
+  await p.waitForSelector('.pocus-card');
+  assert.equal(await p.locator('.pocus-card').count(),c.modules,`${c.route}: modulos`);
+  for(let i=0;i<c.modules;i++){
+   await p.evaluate(([api,i])=>window[api].open(i),[c.api,i]);
+   assert.ok(await p.locator('.pocus-q').count()>=3,`${c.route} modulo ${i+1}: questoes`);
+   assert.ok(await p.locator('.pocus-goals li').count()>=3,`${c.route} modulo ${i+1}: objetivos`);
+   assert.ok(await p.locator('.pocus-pitfalls li').count()>=5,`${c.route} modulo ${i+1}: erros comuns`);
+   assert.ok(await p.locator('.pocus-refs li').count()>=1,`${c.route} modulo ${i+1}: fontes`);
+   assert.ok(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),`${c.route} modulo ${i+1}: estoura 320 px`);
+   assert.ok(await p.evaluate(()=>[...document.querySelectorAll('#main-content :is(th,td)')].every(el=>el.scrollWidth<=el.clientWidth+1||getComputedStyle(el).overflowWrap==='normal')),`${c.route} modulo ${i+1}: tabela`);
+  }
+  assert.ok(await p.evaluate(api=>{const m=[];for(let i=0;i<window[api].modules();i++){window[api].open(i);document.querySelectorAll('.pocus-q').forEach(q=>{if(q.querySelectorAll('.pocus-q-opt').length!==4)m.push(i)})}return m.length===0},c.api),`${c.route}: toda questao tem 4 alternativas`);
+  await p.evaluate(api=>window[api].open(0),c.api);
+  await p.locator(`#${c.key}q-0-0 .pocus-q-opt`).nth(1).click();
+  assert.match(await p.locator(`#${c.key}q-0-0 .pocus-q-why`).textContent(),/Correto/);
+  await p.locator('.pocus-module .pocus-done input').check();
+  await p.evaluate(api=>window[api].bank(),c.api);
+  assert.equal(await p.locator('.pocus-card').count(),c.cases,`${c.route}: casos`);
+  for(let i=0;i<c.cases;i++){
+   await p.evaluate(([api,i])=>window[api].caseOpen(i),[c.api,i]);
+   assert.ok(await p.locator('details.pocus-script li').count()>=4,`${c.route} caso ${i+1}: resolucao`);
+   assert.ok(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),`${c.route} caso ${i+1}: estoura 320 px`);
+  }
+ }
+ await p.reload();await p.waitForFunction(()=>document.getElementById('master-auth').hidden);
+ for(const r of ['hemo','atb']){await p.evaluate(r=>navigate(r),r);assert.equal(await p.locator('.pocus-card.done').count(),1,`${r}: progresso salvo`);}
+ assert.equal(await p.locator('#sidebar-nav .nav-featured').count(),4);
+ await t.close();
+});
