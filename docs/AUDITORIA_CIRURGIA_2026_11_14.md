@@ -40,6 +40,38 @@ Validação desta etapa em cópia exata dos arquivos preparados: 84 testes aprov
 
 Versão preparada: `20261114-cirdeep1`, Interface `2026.11.14.3`.
 
+## Retomada em 15/11: demais aulas de Cirurgia e Radiologia
+
+A main avançou para `aba6505`, com melhorias de tabelas e imagens da base privada. Essas mudanças foram incorporadas, preservando os dois novos testes e o carregamento autenticado das imagens. Esse banco privado não equivale à curadoria de imagens abertas solicitada.
+
+As 35 aulas restantes foram ampliadas e entraram mais 151 questões. A cobertura completa de Cirurgia passa a ser:
+
+| Item | Resultado |
+| --- | ---: |
+| Aulas aprofundadas | 58 |
+| Pré-testes, 6 por aula | 348 |
+| Perguntas de evocação, mínimo de 8 por aula | 473 |
+| Itens de prova, mínimo de 4 por aula | 250 |
+| Casos resolvidos, 2 por aula | 116 |
+| Seções de estudo | 395 |
+| Questões autorais | 432 |
+| Questões anteriores preservadas, incluindo IDs e conteúdo | 212 |
+| Novas imagens locais com licença verificada | 0 |
+
+Todos os 14 temas têm pelo menos 30 questões. Abdome e Urologia têm 36. O inventário por aula e tema está em `docs/cirurgia-cobertura.json`.
+
+Validação desta etapa em cópia exata dos arquivos preparados: 86 testes aprovados, nenhum ignorado, ambos os validadores Python aprovados e sintaxe dos 55 arquivos JavaScript válida. O teste das 58 aulas exige pré-teste >= 6, evocação >= 8, prova >= 4 e casos = 2, além dos requisitos anteriores.
+
+Versão preparada: `20261115-cirdeep2`, Interface `2026.11.15.1`.
+
+### Conferência médica pendente
+
+O aprofundamento novo é qualitativo e autoral, com referências anteriores preservadas. Houve revisão offline de coerência dos casos e gabaritos, com amostragem dos comentários. Isso não comprova atualização de todas as diretrizes.
+
+Não foram introduzidas doses, prazos ou pontos de corte novos sem confirmação. Os números anteriores foram preservados e não estão certificados como atuais. A revisão quantitativa de doses, janelas, limiares, classificações completas e protocolos vigentes continua a confirmar nas fontes. Isso inclui critérios atuais de cistos e estadiamento, AAST, limiares de intervenções no trauma e terapias oncológicas. Os referenciais clássicos ATLS e Parkland existentes foram mantidos com contexto nas aulas; sua atualização online ainda está pendente.
+
+As figuras reais abertas de Radiologia, Trauma e POCUS ainda dependem de licença confirmada na origem, download e conversão para WebP de até 1200 px, créditos e marcações. Nenhum arquivo de licença incerta foi incluído.
+
 ## Fontes e publicação
 
 O proxy ativo continua permitindo apenas o Supabase como domínio personalizado. As tentativas de acesso à API do GitHub e ao PubMed Central retornaram `CONNECT 403`. A página pública do GitHub abriu, mas sem sessão autenticada para escrita pela interface web.
