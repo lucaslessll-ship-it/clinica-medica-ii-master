@@ -263,7 +263,7 @@ const CASES=[
  answer:['Eritrocitose absoluta com leucocitose e trombocitose: panmielose.','Eritropoetina baixa e saturação normal afastam causa secundária por hipóxia.','Prurido aquagênico é pista clássica.','Hipótese: policitemia vera. Confirmar com pesquisa de mutação de JAK2.','Risco principal: trombose arterial e venosa. Tratamento: sangrias para manter o hematócrito abaixo de 45% e aspirina em dose baixa; citorredução nos pacientes de alto risco.']}
 ];
 
-return CourseKit.create({global:'HemoCourse',key:'hemo',route:'hemo',label:'Hemograma',title:'Curso de Hemograma',
+return CourseKit.create({extraHome:()=>window.LabFerro?LabFerro.entry():'',global:'HemoCourse',key:'hemo',route:'hemo',label:'Hemograma',title:'Curso de Hemograma',
  heading:'Curso de <em>Hemograma</em>',lead:'Da coleta ao raciocínio clínico: como ler cada série e chegar ao diagnóstico.',
  notice:'Material educacional: valores de referência variam entre laboratórios, e pontos de corte e condutas devem ser conferidos na diretriz vigente.',
  pathHint:'Siga a ordem: os índices do módulo 2 são usados em todos os módulos de anemia.',
