@@ -30,7 +30,7 @@ function create(cfg){
     ${mi?`<p class="info-notice">Este módulo usa o que foi visto em "${MODULES[mi-1].title}". Se algo parecer novo, volte um passo.</p>`:''}
     <section class="pocus-goals"><h3>Ao final, você deve conseguir</h3><ul>${m.goals.map(g=>`<li>${g}</li>`).join('')}</ul></section>
     ${m.sections.map(sectionMarkup).join('')}
-    ${window.LessonImages?LessonImages.slot(key+'_'+m.id,'pocus-sec'):''}
+    ${cfg.images!==false&&window.LessonImages?LessonImages.slot(key+'_'+m.id,'pocus-sec'):''}
     <section class="pocus-sec pocus-pitfalls"><h3>Erros comuns</h3><ul>${m.pitfalls.map(t=>`<li>${t}</li>`).join('')}</ul></section>
     <section class="pocus-sec"><h3>Fixação</h3><p class="subtle">Responda antes de ver o comentário. As respostas ficam salvas no seu progresso.</p>${m.quiz.map((_,qi)=>quizItem(mi,qi)).join('')}</section>
     <section class="pocus-sec pocus-refs"><h3>Fontes deste módulo</h3><ul>${m.refs.map(refItem).join('')}</ul><p>${cfg.refNote}</p></section>
@@ -58,6 +58,7 @@ function create(cfg){
     const n=doneCount(),pct=Math.round(n/MODULES.length*100),total=MODULES.reduce((s,m)=>s+m.quiz.length,0);
     return header('CURSO',cfg.heading,cfg.lead)
     +`<div class="info-notice">${MODULES.length} módulos e ${total} questões, mais ${CASES.length} casos com resolução comentada. ${cfg.notice}</div>`
+    +(typeof cfg.extraHome==='function'?cfg.extraHome():'')
     +section('Seu percurso',`<div class="card pad pocus-progress"><div class="pocus-progress-head"><strong>${n} de ${MODULES.length} módulos concluídos</strong><span>${pct}%</span></div><div class="progress-track" role="progressbar" aria-label="Progresso no ${cfg.title}" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${pct}"><div class="progress-fill" style="width:${pct}%"></div></div><p class="subtle">${cfg.pathHint}</p></div>
     <ol class="pocus-grid">${MODULES.map((m,i)=>{const q=quizScore(m),d=!!st().done[m.id];return `<li><button type="button" class="pocus-card${d?' done':''}" onclick="${G}.open(${i})"><span class="pocus-card-n">${i+1}</span><span class="pocus-card-body"><small>${m.layer}</small><strong>${m.title}</strong><span>${m.summary}</span><em>${m.min} min · ${q.answered?`${q.right}/${q.total} questões certas`:`${q.total} questões`}${d?' · concluído':''}</em></span></button></li>`}).join('')}</ol>`)
     +section(cfg.bankTitle,`<div class="card pad"><p>${cfg.bankLead} ${seenCount()} de ${CASES.length} resolvidos até agora.</p><button type="button" class="btn primary" onclick="${G}.bank()">Abrir os casos</button></div>`)
@@ -79,7 +80,7 @@ function create(cfg){
     return MODULES.map((m,i)=>({type:'Módulo de '+label,label:m.title,sub:cfg.title+' · '+m.layer,icon:'◎',action:()=>{navigate(route);open(i);},text:[m.title,m.summary,m.layer]}))
       .concat(CASES.map((c,i)=>({type:'Caso de '+label,label:'Caso '+(i+1)+': '+c.focus,sub:cfg.title,icon:'◎',action:()=>{navigate(route);caseOpen(i);},text:[c.stem,c.focus]})));
   }
-  return {page,open,bank,caseOpen,answer,complete,markSeen,searchItems,modules:()=>MODULES.length,cases:()=>CASES.length};
+  return {page,open,bank,caseOpen,answer,complete,markSeen,searchItems,modulePage:i=>MODULES[i]?moduleView(i):home(),casePage:i=>CASES[i]?caseView(i):home(),modules:()=>MODULES.length,cases:()=>CASES.length};
 }
 return {create};
 })();
