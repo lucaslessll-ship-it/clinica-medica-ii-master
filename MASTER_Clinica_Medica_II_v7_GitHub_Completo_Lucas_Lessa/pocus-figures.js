@@ -8,7 +8,7 @@ const screen='#05080a';
 // Textura granular parecida com o speckle do modo B, recortada pela forma indicada.
 function speckle(id,clip,opacity=.5){return `<filter id="${id}" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".85" numOctaves="2" seed="${uid}"/><feColorMatrix type="matrix" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  .9 .9 .9 0 -.75"/></filter><rect x="0" y="0" width="${W}" height="${H}" filter="url(#${id})" opacity="${opacity}" clip-path="url(#${clip})" style="mix-blend-mode:screen"/>`;}
 function mark(n,x,y,lx,ly){return `<g class="pf-mark"><line x1="${lx}" y1="${ly}" x2="${x}" y2="${y}" stroke="#ffd166" stroke-width="1.6"/><circle cx="${x}" cy="${y}" r="3.2" fill="#ffd166"/><circle cx="${lx}" cy="${ly}" r="12" fill="#ffd166" stroke="#1b1b1b" stroke-width="1"/><text x="${lx}" y="${ly+4.5}" text-anchor="middle" font-size="13" font-weight="800" fill="#1b1b1b">${n}</text></g>`;}
-function label(x,y,text,opts={}){const {size=13,fill='#e8f1f0',anchor='middle',weight=600}=opts;return `<text x="${x}" y="${y}" text-anchor="${anchor}" font-size="${size}" font-weight="${weight}" fill="${fill}">${text}</text>`;}
+function label(x,y,text,opts={}){const {size=13,fill='#e8f1f0',anchor='middle',weight=600}=opts;return `<text x="${x}" y="${y}" text-anchor="${anchor}" font-size="${Math.max(12,size)}" font-weight="${weight}" fill="${fill}">${text}</text>`;}
 function wrap(title,body,notes,opts={}){
   const h=opts.h||H,light=opts.light;
   return `<figure class="pocus-fig${light?' light':''}"><svg viewBox="0 0 ${W} ${h}" role="img" aria-label="${title}" font-family="Inter,system-ui,sans-serif"><rect width="${W}" height="${h}" rx="14" fill="${light?'#f4f9f8':screen}"/>${body}</svg><figcaption><strong>${title}</strong>${notes&&notes.length?`<ol>${notes.map(n=>`<li>${n}</li>`).join('')}</ol>`:''}<small>Esquema didático original. Não é imagem real de exame e não substitui a visualização de exames supervisionados.</small></figcaption></figure>`;
@@ -46,9 +46,10 @@ function transdutores(){
   return wrap('Os três transdutores básicos',body,[],{light:true});
 }
 function movimentos(){
+  const id='mv'+(++uid);
   const p=(x,name,extra,desc)=>`<g><rect x="${x+48}" y="70" width="44" height="86" rx="10" fill="#dfe9e7" stroke="#147e71" stroke-width="2"/><rect x="${x+48}" y="150" width="44" height="10" rx="3" fill="#147e71"/><line x1="${x+10}" y1="162" x2="${x+130}" y2="162" stroke="#8aa5a2" stroke-width="2"/>${extra}${label(x+70,212,name,{size:15,weight:800,fill:'#173238'})}<foreignObject x="${x-4}" y="222" width="148" height="110"><div xmlns="http://www.w3.org/1999/xhtml" style="font:12px Inter,system-ui,sans-serif;color:#41585c;text-align:center;line-height:1.4">${desc}</div></foreignObject></g>`;
-  const arr=(d)=>`<path d="${d}" stroke="#e5484d" stroke-width="3" fill="none" stroke-linecap="round" marker-end="url(#pfarr)"/>`;
-  const body=`<defs><marker id="pfarr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#e5484d"/></marker></defs>`
+  const arr=(d)=>`<path d="${d}" stroke="#e5484d" stroke-width="3" fill="none" stroke-linecap="round" marker-end="url(#${id})"/>`;
+  const body=`<defs><marker id="${id}" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#e5484d"/></marker></defs>`
    +p(14,'Deslizar',arr('M104 112 H140')+arr('M50 112 H16'),'Muda o ponto de contato sobre a pele, sem mudar o ângulo')
    +p(170,'Bascular',arr('M264 62 Q284 54 300 70'),'Inclina o feixe para varrer a estrutura, com a face apoiada no mesmo ponto')
    +p(326,'Rodar',arr('M372 56 A30 12 0 1 1 430 56'),'Gira no próprio eixo: passa do eixo curto para o eixo longo')
@@ -101,7 +102,7 @@ function derramePleural(){
   <path d="M300 14 Q362 160 372 300" stroke="#fff" stroke-width="6" fill="none"/>
   <path d="M30 296 Q320 276 612 296 V380 H30 Z" fill="#010202"/><path d="M40 294 Q320 274 604 294" stroke="#f1f5f5" stroke-width="7" fill="none" stroke-dasharray="52 12"/>
   </g>
-  ${mark(1,480,170,600,70)}${mark(2,352,150,400,36)}${mark(3,190,100,60,50)}${mark(4,170,196,36,180)}${mark(5,200,286,60,350)}${label(120,372,'cranial',{size:11,fill:'#9fb3b3'})}${label(520,372,'caudal',{size:11,fill:'#9fb3b3'})}`;
+  ${mark(1,480,170,600,70)}${mark(2,352,150,400,36)}${mark(3,190,100,60,50)}${mark(4,170,196,36,180)}${mark(5,200,286,60,350)}${label(120,372,'cranial',{size:12,fill:'#9fb3b3'})}${label(520,372,'caudal',{size:12,fill:'#9fb3b3'})}`;
   return wrap('Derrame pleural na base direita',body,['Fígado: tecido de ecotextura homogênea, abaixo do diafragma.','Diafragma: linha curva hiperecoica.','Derrame pleural: área anecoica acima do diafragma.','Pulmão atelectasiado flutuando no líquido.','Sinal da coluna: os corpos vertebrais continuam visíveis acima do diafragma, porque o líquido conduz o som. No pulmão aerado normal a coluna some nesse ponto.']);
 }
 function morrison(){
@@ -120,7 +121,7 @@ function janelasFast(){
   const body=`<circle cx="200" cy="52" r="30" fill="#e3ecea" stroke="#8aa5a2" stroke-width="2"/><path d="M130 100 Q200 82 270 100 L282 300 Q200 330 118 300 Z" fill="#e3ecea" stroke="#8aa5a2" stroke-width="2"/><path d="M130 104 L84 230 M270 104 L316 230" stroke="#8aa5a2" stroke-width="16" stroke-linecap="round"/><path d="M150 176 Q200 196 250 176" stroke="#8aa5a2" stroke-width="2" fill="none" stroke-dasharray="5 5"/>
   ${dot(1,140,206)}${dot(2,264,196)}${dot(3,200,292)}${dot(4,200,182)}${dot(5,166,128,'#b3312f')}${dot(6,234,128,'#b3312f')}
   <g font-size="13" fill="#173238">${[['1','Quadrante superior direito: hepatorrenal, subfrênico e ponta do fígado'],['2','Quadrante superior esquerdo: subfrênico e esplenorrenal'],['3','Pelve: atrás da bexiga, em dois planos'],['4','Subxifoide: pericárdio'],['5 e 6','E-FAST: tórax anterior bilateral, deslizamento pleural']].map(([n,t],i)=>`<text x="350" y="${70+i*52}" font-weight="800" fill="${i===4?'#b3312f':'#0b6c66'}">${n}</text><foreignObject x="350" y="${76+i*52}" width="270" height="44"><div xmlns="http://www.w3.org/1999/xhtml" style="font:12.5px Inter,system-ui,sans-serif;color:#41585c;line-height:1.35">${t}</div></foreignObject>`).join('')}</g>
-  ${label(110,352,'direita do paciente',{size:11,fill:'#6c8589'})}${label(292,352,'esquerda',{size:11,fill:'#6c8589'})}`;
+  ${label(110,352,'direita do paciente',{size:12,fill:'#6c8589'})}${label(292,352,'esquerda',{size:12,fill:'#6c8589'})}`;
   return wrap('Janelas do FAST e do E-FAST',body,[],{light:true});
 }
 function subxifoide(){
@@ -188,6 +189,54 @@ function agulha(){
   return wrap('Visualização da agulha',body,['Em plano: toda a haste aparece como linha hiperecoica.','Ponta da agulha dentro da luz do vaso. Só avance vendo a ponta.','Veia em eixo longo.','Fora de plano: a agulha aparece só como um ponto hiperecoico. Esse ponto pode ser a haste, e não a ponta; por isso desloque a sonda acompanhando a ponta à medida que ela avança.','Veia em eixo curto.'],{h:374});
 }
 const all={ecogenicidade,artefatos,transdutores,movimentos,pulmaoNormal,linhasB,modoM,derramePleural,morrison,janelasFast,subxifoide,paraesternal,veiaCava,vascularCurto,agulha};
-return {render:name=>all[name]?all[name]():'',names:Object.keys(all)};
+const names=Object.keys(all),zoomLevels=[1,1.5,2,3];
+let zoom=null;
+function picture(name){return names.includes(name)?all[name]():'';}
+function render(name){
+  const html=picture(name);
+  return html?html.replace('</svg>','</svg><button type="button" class="pocus-zoom-open" data-pocus-zoom="'+name+'" aria-haspopup="dialog">Ampliar esquema</button>'):'';
+}
+function closeZoom(restoreFocus=true){if(zoom){zoom.restoreFocus=restoreFocus;zoom.dialog.close();}}
+function openZoom(trigger){
+  if(zoom)return;
+  const html=picture(trigger.dataset.pocusZoom);if(!html)return;
+  const holder=document.createElement('div');holder.innerHTML=html;
+  const figure=holder.firstElementChild,svg=figure.querySelector('svg'),width=svg.viewBox.baseVal.width;
+  const dialog=document.createElement('dialog'),titleId='pocus-zoom-title-'+(++uid),hintId=titleId+'-hint';
+  dialog.className='pocus-zoom-dialog';dialog.setAttribute('aria-labelledby',titleId);
+  dialog.innerHTML=`<h2 id="${titleId}" class="pocus-zoom-title"></h2><div class="pocus-zoom-controls" role="group" aria-label="Controles de ampliação"><button type="button" class="btn" data-pocus-zoom-action="less">Diminuir</button><output class="pocus-zoom-level" role="status" aria-live="polite" aria-label="Ampliação">100%</output><button type="button" class="btn" data-pocus-zoom-action="more">Aumentar</button><button type="button" class="btn" data-pocus-zoom-action="reset">Restaurar</button><button type="button" class="btn pocus-zoom-close" data-pocus-zoom-action="close" autofocus>Fechar esquema</button></div><p id="${hintId}" class="pocus-zoom-hint">Deslize o esquema para ver as outras regiões. Com o painel em foco, use as setas do teclado para mover.</p><div class="pocus-zoom-content"></div>`;
+  dialog.querySelector('h2').textContent=svg.getAttribute('aria-label');
+  let viewport=document.createElement('div');const canvas=document.createElement('div');
+  viewport.className='pocus-zoom-viewport';viewport.tabIndex=0;viewport.setAttribute('role','region');viewport.setAttribute('aria-label','Esquema ampliado');viewport.setAttribute('aria-describedby',hintId);
+  canvas.className='pocus-zoom-canvas';canvas.appendChild(svg);viewport.appendChild(canvas);figure.prepend(viewport);figure.classList.add('pocus-zoom-figure');
+  dialog.querySelector('.pocus-zoom-content').appendChild(figure);
+  const current={dialog,trigger,restoreFocus:true,index:0};zoom=current;
+  function update(){
+    canvas.style.width=width*zoomLevels[current.index]+'px';
+    dialog.querySelector('output').textContent=zoomLevels[current.index]*100+'%';
+    dialog.querySelector('[data-pocus-zoom-action=less]').disabled=current.index===0;
+    dialog.querySelector('[data-pocus-zoom-action=more]').disabled=current.index===zoomLevels.length-1;
+  }
+  dialog.addEventListener('click',event=>{
+    const action=event.target.closest?.('[data-pocus-zoom-action]')?.dataset.pocusZoomAction;
+    if(action==='close'||event.target===dialog){closeZoom();return;}
+    if(action==='less')current.index=Math.max(0,current.index-1);
+    if(action==='more')current.index=Math.min(zoomLevels.length-1,current.index+1);
+    if(action==='reset'){
+      current.index=0;update();
+      // Recriar o painel encerra o movimento nativo iniciado pelas setas do teclado.
+      const restored=viewport.cloneNode(false);restored.appendChild(canvas);viewport.replaceWith(restored);viewport=restored;
+      return;
+    }
+    if(action)update();
+  });
+  dialog.addEventListener('close',()=>{dialog.remove();if(zoom===current)zoom=null;if(current.restoreFocus&&trigger.isConnected&&!trigger.closest('[inert]'))trigger.focus();},{once:true});
+  document.body.appendChild(dialog);update();dialog.showModal();
+}
+if(typeof document!=='undefined'&&typeof document.addEventListener==='function'){
+  document.addEventListener('click',event=>{const trigger=event.target.closest?.('[data-pocus-zoom]');if(trigger)openZoom(trigger);});
+  if(typeof window.addEventListener==='function')window.addEventListener('master-auth-ended',()=>closeZoom(false));
+}
+return {render,names};
 })();
 window.PocusFigures=PocusFigures;

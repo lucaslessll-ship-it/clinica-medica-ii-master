@@ -90,3 +90,5 @@ body[data-theme="dark"] .deep-exam{background:#1d2740;border-color:#3b4a78}
 .lesson-image-dialog img{display:block;max-width:100%;max-height:74vh;margin:10px auto;border-radius:8px}
 .lesson-image-dialog form{display:flex;justify-content:flex-end}
 .lesson-image-dialog p{margin:0;font-size:.95rem}
+.lesson-image-open{min-height:44px}
+.lesson-image-dialog{box-sizing:border-box;width:min(1100px,calc(100vw - 24px));max-width:calc(100vw - 24px);max-height:calc(100dvh - 24px);background:var(--white);color:var(--ink)}
