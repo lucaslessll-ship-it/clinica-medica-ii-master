@@ -323,6 +323,7 @@ questions:[
   {fig:'pulmaoNormal',q:'O esquema ensina o padrão de linhas A. Na vinheta, o exame dinâmico real confirma deslizamento, mas o paciente continua dispneico. Qual conclusão é correta?',o:['Deslizamento com linhas A prova ausência de qualquer doença cardiopulmonar','Toda dispneia com linhas A deve ser chamada de pneumotórax','O achado descreve a região examinada e não exclui causas como doença obstrutiva ou embolia, que exigem integração clínica','Não é necessário investigar outras regiões do tórax ou outros órgãos'],a:2,why:'O padrão local não encerra o diagnóstico da dispneia. Deslizamento afasta pneumotórax naquele ponto, mas não todas as doenças. Linhas A não transformam o quadro em pneumotórax. Outras regiões e órgãos podem oferecer informações necessárias à hipótese clínica.'}
 ]}
 };
+if(window.ReadingTime)MODULES.forEach(m=>{m.min=ReadingTime.minutes(m);});
 for(const module of MODULES){const extra=PRACTICAL[module.id];if(!extra)continue;module.practical={exam:extra.exam,errors:extra.errors,script:extra.script};module.quiz.push(...extra.questions);}
 
 let view=null;

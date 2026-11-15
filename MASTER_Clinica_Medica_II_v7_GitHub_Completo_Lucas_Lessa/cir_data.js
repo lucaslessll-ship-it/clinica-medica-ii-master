@@ -22,11 +22,12 @@ window.MASTER_CIR_DATA={
    C('Abdome agudo vascular','Isquemia mesentérica: dor desproporcional ao exame, angioTC e revascularização'),
    C('Abdome agudo hemorrágico','Gravidez ectópica rota, aneurisma roto e ruptura de víscera sólida')
   ]),
-  T('cirpanc','P2','Pâncreas','Pâncreas',5,'Diagnosticar e graduar a pancreatite, manejar coleções e reconhecer tumores',[
+  T('cirpanc','P2','Pâncreas','Pâncreas',6,'Diagnosticar e graduar a pancreatite, manejar coleções e reconhecer tumores',[
    C('Pancreatite aguda','Dois de três critérios, Atlanta revisado, hidratação e dieta precoce'),
    C('Complicações locais da pancreatite','Coleções agudas, pseudocisto, necrose encapsulada e abordagem em degraus'),
    C('Pancreatite crônica','Álcool, dor, insuficiência exócrina e endócrina, calcificações e cirurgia'),
-   C('Tumores do pâncreas','Adenocarcinoma, ressecabilidade, Whipple, neoplasias císticas e neuroendócrinas')
+   C('Tumores do pâncreas','Adenocarcinoma, ressecabilidade, Whipple, neoplasias císticas e neuroendócrinas'),
+   C('Exames: pancreatite e icterícia','Enzimas, Ranson, BISAP, padrão colestático, Courvoisier e imagem')
   ]),
   T('cirher','P2','Hérnias da parede abdominal','Hérnias',4,'Anatomia inguinal, classificação de Nyhus e quando operar com urgência',[
    C('Anatomia da região inguinal e classificação','Triângulo de Hesselbach, direta versus indireta, Nyhus'),
@@ -51,11 +52,12 @@ window.MASTER_CIR_DATA={
    C('Câncer colorretal: rastreamento, estadiamento e cirurgia','Colonoscopia, TNM, reto versus cólon e neoadjuvância'),
    C('Outras doenças anorretais','Cisto pilonidal, prolapso retal, condiloma e câncer de canal anal')
   ]),
-  T('cirremit','P2','REMIT, cicatrização e queimaduras','REMIT e queimaduras',4,'Fisiologia do trauma, fases da cicatrização e atendimento ao queimado',[
+  T('cirremit','P2','REMIT, cicatrização e queimaduras','REMIT e queimaduras',5,'Fisiologia do trauma, fases da cicatrização e atendimento ao queimado',[
    C('Resposta endócrino-metabólica ao trauma','Fase ebb e flow, hormônios, catabolismo e como modular'),
    C('Cicatrização de feridas','Fases, tipos de intenção, fatores que atrapalham, queloide e cicatriz hipertrófica'),
    C('Queimaduras: classificação e avaliação','Profundidade, regra dos nove, Lund-Browder e critérios de grande queimado'),
-   C('Queimaduras: atendimento e reposição','Via aérea, Parkland, diurese alvo, escarotomia, inalatória e elétrica')
+   C('Queimaduras: atendimento e reposição','Via aérea, Parkland, diurese alvo, escarotomia, inalatória e elétrica'),
+   C('Hidroeletrolítico e ácido-base no cirúrgico','Gasometria em quatro passos, potássio, sódio, perdas por estomas e fístulas')
   ]),
   T('cirvasc','P2','Doença vascular','Vascular',4,'Isquemia arterial, aneurisma e doença venosa',[
    C('Doença arterial obstrutiva periférica','Claudicação, ITB, Fontaine e Rutherford, tratamento clínico e revascularização'),

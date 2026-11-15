@@ -349,6 +349,7 @@ const TRACINGS=[
 let view=null,tracing=null;
 
 function st(){const s=store.study||(store.study={version:1,since:new Date().toISOString(),reviews:{},steps:{},settings:{intervals:[1,3,7],dailyLimit:20}});const p=s.ecg||(s.ecg={});p.done=p.done||{};p.quiz=p.quiz||{};p.seen=p.seen||{};return p;}
+if(window.ReadingTime)MODULES.forEach(m=>{m.min=ReadingTime.minutes(m);});
 const doneCount=()=>MODULES.filter(m=>st().done[m.id]).length;
 const seenCount=()=>TRACINGS.filter(t=>st().seen[t.id]).length;
 function quizScore(m){const q=st().quiz;let right=0,answered=0;m.quiz.forEach((x,i)=>{const v=q[m.id+'_'+i];if(Number.isInteger(v)){answered++;if(v===x.a)right++;}});return {right,answered,total:m.quiz.length};}
