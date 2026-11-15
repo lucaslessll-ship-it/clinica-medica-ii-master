@@ -150,3 +150,32 @@ test('temas aprofundados oferecem ao menos 30 questões distintas',async()=>{
  const counts=await p.evaluate(()=>Object.fromEntries(['ciraa','cirpanc','cirher','cirtabd','cirttor'].map(id=>[id,CIR.own.filter(q=>q.t===id).length])));
  for(const [id,count] of Object.entries(counts))assert.ok(count>=30,id+': '+count);await t.close();
 });
+
+test('table cells never break a word letter by letter and the page does not scroll sideways',async()=>{
+ const t=await open({width:320,height:640}),p=t.page;
+ for(const [id,i,p1] of [['hema',0],['p1arr',0,true],['cirremit',3],['cirtabd',0],['reuma1',0]]){
+  await p.evaluate(([id,i,p1])=>{if(id.startsWith('cir'))CIR.openTopic(id,i);else if(p1){navigate('p1');P1.openTopic(id);P1.chapter(i);}else{openTopic(id);switchChapter(i);}},[id,i,p1]);
+  const bad=await p.evaluate(()=>{const cv=document.createElement('canvas').getContext('2d'),out=[];document.querySelectorAll('#main-content :is(th,td)').forEach(c=>{const txt=c.textContent.trim();if(!txt)return;const cs=getComputedStyle(c);cv.font=cs.fontWeight+' '+cs.fontSize+' '+cs.fontFamily;const need=Math.max(...txt.split(/\s+/).map(x=>cv.measureText(x).width)),have=c.clientWidth-parseFloat(cs.paddingLeft)-parseFloat(cs.paddingRight);if(have+1<need)out.push(txt.slice(0,30));});return {out,cells:document.querySelectorAll('#main-content :is(th,td)').length,fit:document.documentElement.scrollWidth<=innerWidth+1};});
+  assert.ok(bad.cells>0,`${id} has no table`);assert.deepEqual(bad.out,[],`${id} broken cells`);assert.ok(bad.fit,`${id} overflow`);
+ }
+ await t.close();
+});
+
+test('real images load from the private table for signed-in users and stay hidden where there are none',async()=>{
+ const t=await open({width:320,height:640}),p=t.page;
+ await p.evaluate(()=>{const c=MASTER_AUTH.client(),orig=c.from.bind(c);c.from=table=>{if(table!=='lesson_images')return orig(table);return {select(cols){const q={contains(){return q},order(){return q},then(done){done({error:null,data:cols==='keys'?[{keys:['ciraa_1','pocus_m4']}]:[{id:'x',ord:0,caption:'Legenda de teste',credit:'Slides da disciplina',mime:'image/gif',data:'R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='}]});}};return q;}};};});
+ await p.evaluate(()=>CIR.openTopic('ciraa',1));
+ await p.waitForSelector('.lesson-images:not([hidden]) figure img',{state:'attached'});
+ assert.equal(await p.locator('.lesson-images figure').count(),1);
+ assert.match(await p.locator('.lesson-images figcaption').innerText(),/Legenda de teste/);
+ assert.ok(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),'images overflow at 320 px');
+ await p.locator('.lesson-image-open').click();
+ assert.ok(await p.evaluate(()=>document.querySelector('.lesson-image-dialog').open));
+ await p.evaluate(()=>document.querySelector('.lesson-image-dialog').close());
+ await p.evaluate(()=>CIR.openTopic('ciraa',0));
+ await p.waitForFunction(()=>document.querySelector('[data-img-key="ciraa_0"][data-img-done]'));
+ assert.ok(await p.evaluate(()=>document.querySelector('[data-img-key="ciraa_0"]').hidden));
+ await p.evaluate(()=>{navigate('pocus');PocusCourse.open(3);});
+ await p.waitForSelector('[data-img-key="pocus_m4"]:not([hidden]) figure img');
+ await t.close();
+});
