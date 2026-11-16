@@ -1,7 +1,7 @@
 /* Reading aids only: no study scoring, account data or persistence changes. */
 window.ReadingUX=(()=>{
   'use strict';
-  let lesson=null,sections=null,outline=null,progress=null,back=null,headings=[],pending=false;
+  let lesson=null,sections=null,outline=null,progress=null,back=null,headings=[],pending=false,observador=null;
   const reducedMotion=()=>document.body.classList.contains('reduce-motion')||window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   function go(target){
     if(!target)return;
@@ -11,24 +11,47 @@ window.ReadingUX=(()=>{
   function clear(){
     lesson?.classList.remove('reading-lesson');outline?.remove();back?.remove();
     lesson=null;sections=null;outline=null;progress=null;back=null;headings=[];
+    medida=null;ultimo={};observador?.disconnect();
+  }
+  // Posições medidas uma vez e reaproveitadas: durante a rolagem o quadro
+  // só lê scrollY, sem forçar cálculo de layout a cada linha de cabeçalho.
+  let medida=null,ultimo={};
+  function medir(){
+    if(!lesson?.isConnected||!sections?.isConnected){medida=null;return;}
+    const barra=document.querySelector('.topbar'),caixaBarra=barra?.getBoundingClientRect();
+    const inset=caixaBarra&&caixaBarra.bottom>0?Math.max(0,caixaBarra.bottom)+20:24;
+    const caixa=sections.getBoundingClientRect(),cabeca=lesson.querySelector('.lesson-head');
+    medida={inset,topo:caixa.top+window.scrollY,altura:caixa.height,
+      titulos:headings.map(h=>h.offsetParent?h.getBoundingClientRect().top+window.scrollY:Infinity),
+      cabeca:cabeca?cabeca.getBoundingClientRect().top+window.scrollY:0};
   }
   function update(){
     pending=false;
-    if(!lesson?.isConnected||!sections?.isConnected)return;
-    const topbar=document.querySelector('.topbar'),bar=topbar?.getBoundingClientRect();
-    const inset=bar&&bar.bottom>0?Math.max(0,bar.bottom)+20:24;
-    const rect=sections.getBoundingClientRect(),available=window.innerHeight-inset;
-    const range=rect.height-available;
-    const amount=Math.round(Math.max(0,Math.min(1,range>0?(inset-rect.top)/range:rect.bottom<=window.innerHeight?1:0))*100);
-    progress.setAttribute('aria-valuenow',String(amount));
-    progress.querySelector('.reading-progress-fill').style.width=amount+'%';
-    outline.querySelector('.reading-progress-label').textContent=`Posição na aula · ${amount}%`;
-    let current=0;headings.forEach((heading,index)=>{if(heading.offsetParent&&heading.getBoundingClientRect().top<=inset+30)current=index;});
-    const now=outline.querySelector('.reading-current');if(now)now.textContent=headings[current].textContent.replace(/^[^\p{L}\p{N}]+/u,'').trim();
-    outline.querySelectorAll('[data-reading-target]').forEach((button,index)=>{
-      if(index===current)button.setAttribute('aria-current','location');else button.removeAttribute('aria-current');
-    });
-    back.hidden=lesson.querySelector('.lesson-head').getBoundingClientRect().top>=-250;
+    if(!lesson?.isConnected||!sections?.isConnected||!progress||!outline||!back){medida=null;return;}
+    if(!medida)medir();
+    if(!medida)return;
+    const {inset,topo,altura,titulos,cabeca}=medida;
+    const disponivel=window.innerHeight-inset,faixa=altura-disponivel;
+    const percorrido=window.scrollY+inset-topo;
+    const amount=Math.round(Math.max(0,Math.min(1,faixa>0?percorrido/faixa:(topo+altura<=window.scrollY+window.innerHeight?1:0)))*100);
+    if(amount!==ultimo.amount){
+      ultimo.amount=amount;
+      progress.setAttribute('aria-valuenow',String(amount));
+      progress.querySelector('.reading-progress-fill').style.width=amount+'%';
+      outline.querySelector('.reading-progress-label').textContent=`Posição na aula · ${amount}%`;
+    }
+    const limite=window.scrollY+inset+30;
+    let current=0;for(let i=0;i<titulos.length;i++)if(titulos[i]<=limite)current=i;
+    if(current!==ultimo.current){
+      ultimo.current=current;
+      const agora=outline.querySelector('.reading-current');
+      if(agora&&headings[current])agora.textContent=headings[current].textContent.replace(/^[^\p{L}\p{N}]+/u,'').trim();
+      outline.querySelectorAll('[data-reading-target]').forEach((button,index)=>{
+        if(index===current)button.setAttribute('aria-current','location');else button.removeAttribute('aria-current');
+      });
+    }
+    const esconder=cabeca-window.scrollY>=-250;
+    if(esconder!==ultimo.esconder){ultimo.esconder=esconder;back.hidden=esconder;}
   }
   function schedule(){if(!pending){pending=true;requestAnimationFrame(update);}}
   function afterRender(){
@@ -61,9 +84,14 @@ window.ReadingUX=(()=>{
     back=document.createElement('button');back.type='button';back.className='reading-back';back.hidden=true;
     back.setAttribute('aria-label','Voltar ao início da aula');back.title='Voltar ao início da aula';back.innerHTML='<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 12 6-6 6 6M12 6v14"/></svg>';
     back.addEventListener('click',()=>{head.querySelector('h2').tabIndex=-1;go(head.querySelector('h2'));});
-    document.querySelector('.app-body').append(back);schedule();
+    document.querySelector('.app-body').append(back);
+    medida=null;ultimo={};
+    if(observador){observador.disconnect();observador.observe(sections);}
+    schedule();
   }
-  window.addEventListener('scroll',schedule,{passive:true});window.addEventListener('resize',schedule,{passive:true});
+  const remedir=()=>{medida=null;ultimo={};schedule();};
+  window.addEventListener('scroll',schedule,{passive:true});window.addEventListener('resize',remedir,{passive:true});
+  if(typeof ResizeObserver!=='undefined')observador=new ResizeObserver(remedir);
   window.addEventListener('master-auth-ended',clear);
   return {afterRender};
 })();

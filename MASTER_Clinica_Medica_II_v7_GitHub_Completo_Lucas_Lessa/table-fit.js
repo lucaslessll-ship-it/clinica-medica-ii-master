@@ -52,9 +52,17 @@
     ocupado = true;
     // Empilhar só quando nem o texto quebrado cabe: compara a largura mínima
     // da tabela com o espaço do container. Leitura e escrita no mesmo quadro.
-    for (const table of lista) table.dataset.fit = 'wrap';
+    // Só mexe em tabela cuja caixa mudou de largura. No iPad a barra do
+    // navegador some ao rolar e dispara resize; remontar aqui faria a página
+    // saltar, porque a altura das tabelas acima da tela mudaria.
+    const pendentes = lista.filter(t => {
+      const caixa = t.parentElement;
+      return caixa && String(caixa.clientWidth) !== t.dataset.fitW;
+    });
+    if (!pendentes.length) { ocupado = false; return; }
+    for (const table of pendentes) table.dataset.fit = 'wrap';
     const empilhar = new Set();
-    for (const table of lista) {
+    for (const table of pendentes) {
       const caixa = table.parentElement;
       if (!caixa) continue;
       const largura = table.style.width;
@@ -66,10 +74,11 @@
       // palavra por linha. Abaixo de COLUNA_LEGIVEL, a linha vira bloco.
       if (minima > caixa.clientWidth + 1 || caixa.clientWidth / colunas < COLUNA_LEGIVEL) empilhar.add(table);
     }
-    for (const table of lista) {
+    for (const table of pendentes) {
       const deve = empilhar.has(table);
       if (deve) rotular(table);
       table.dataset.fit = deve ? 'stack' : 'wrap';
+      table.dataset.fitW = String(table.parentElement ? table.parentElement.clientWidth : 0);
       papeis(table, deve);
     }
     ocupado = false;
@@ -90,7 +99,12 @@
     if (alvo) new MutationObserver(() => agendar()).observe(alvo, { childList: true, subtree: true });
     const dialogo = document.getElementById('hig-overlay');
     if (dialogo) new MutationObserver(() => agendar()).observe(dialogo, { childList: true, subtree: true });
-    addEventListener('resize', agendar, { passive: true });
+    let larguraAnterior = innerWidth;
+    addEventListener('resize', () => {
+      if (innerWidth === larguraAnterior) return; // altura só: barra do navegador entrando e saindo
+      larguraAnterior = innerWidth;
+      agendar();
+    }, { passive: true });
     addEventListener('master-auth-ready', agendar);
   }
 

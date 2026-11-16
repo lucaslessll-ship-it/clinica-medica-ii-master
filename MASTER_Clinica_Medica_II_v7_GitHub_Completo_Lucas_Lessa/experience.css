@@ -17,7 +17,7 @@ body[data-theme=dark] .btn.primary{background:var(--green);border-color:var(--gr
 .btn:hover{border-color:var(--green)}
 .btn-row{gap:10px;flex-wrap:wrap}
 #main-content{max-width:1440px;padding:28px 32px 64px;min-width:0}
-.topbar{background:var(--white);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.topbar{background:var(--white)}
 .top-context-title{font-size:14px}.top-context-sub{font-size:11px}
 .topbar .icon-button{min-width:44px;min-height:44px}.topbar .icon-button>svg,.search-symbol>svg{display:block;margin:auto}
 .sidebar{padding-top:22px;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin}
