@@ -40,7 +40,7 @@
 .pocus-case h4{margin:0 0 6px;font-size:15px}.pocus-case summary{cursor:pointer;font-weight:700;color:var(--green2);padding:6px 0}
 .pocus-q{border:1px solid var(--line);border-radius:16px;padding:16px 18px;margin:14px 0;min-width:0}
 .pocus-q legend{font-size:15px;line-height:1.55;font-weight:650;padding:0 6px;color:var(--ink)}
-.pocus-q legend span{display:block;font-size:12px;font-weight:800;color:var(--green2);letter-spacing:.03em;text-transform:uppercase}
+.pocus-q legend>span:first-child{display:block;font-size:12px;font-weight:800;color:var(--green2);letter-spacing:.03em;text-transform:uppercase}
 .pocus-q-options{display:grid;gap:8px;margin-top:8px}
 .pocus-q-opt{display:flex;gap:12px;align-items:flex-start;width:100%;min-height:44px;padding:10px 14px;border:1px solid var(--line);border-radius:12px;background:var(--white);color:var(--ink);font:inherit;font-size:14.5px;line-height:1.5;text-align:left;cursor:pointer}
 .pocus-q-opt:hover{border-color:var(--green)}
@@ -55,7 +55,7 @@
 .pocus-pager{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:22px;padding-top:18px;border-top:1px solid var(--line)}
 .pocus-pager .btn{margin-top:0;font-size:13.5px}
 body[data-theme="dark"] .pocus-card-body span,body[data-theme="dark"] .pocus-card-body em,body[data-theme="dark"] .pocus-lead,body[data-theme="dark"] .pocus-crumb,body[data-theme="dark"] .pocus-fig figcaption small{color:#a9c4c0}
-body[data-theme="dark"] .pocus-card-body small,body[data-theme="dark"] .pocus-q legend span,body[data-theme="dark"] .pocus-refs a,body[data-theme="dark"] .pocus-case summary{color:#7fd6c3}
+body[data-theme="dark"] .pocus-card-body small,body[data-theme="dark"] .pocus-q legend>span:first-child,body[data-theme="dark"] .pocus-refs a,body[data-theme="dark"] .pocus-case summary{color:#7fd6c3}
 body[data-theme="dark"] .pocus-card-n{background:#214d45;color:#c8f4e7}
 body[data-theme="dark"] .pocus-pitfalls{background:#3a2c1c;border-color:#6b5234}body[data-theme="dark"] .pocus-pitfalls h3{color:#ffcf99}
 body[data-theme="dark"] .pocus-q-opt.right{background:#173b2a;border-color:#3fae7b}body[data-theme="dark"] .pocus-q-opt.wrong{background:#472322;border-color:#e0635c}
