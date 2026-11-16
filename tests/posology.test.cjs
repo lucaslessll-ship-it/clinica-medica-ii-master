@@ -74,3 +74,8 @@ test('laboratório independente mantém fichas legíveis nos dois temas e nas qu
   const t=await open({viewport:{width,height:900}}),p=t.page;await p.goto(base+'/'+app+'/laboratorio-master/microcitose/index.html');await p.waitForFunction(()=>window.Posology&&window.LabMasterCourse);if((await p.locator('body').getAttribute('class')||'').includes('dark')!==(theme==='dark'))await p.locator('#themeToggle').click();await p.evaluate(()=>Posology.open('ferriccarboxymaltose'));assert.equal(await p.locator('.posology-dialog').evaluate(d=>d.scrollWidth<=d.clientWidth+1),true,`${width} ${theme}`);assert.equal(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),true);await p.keyboard.press('Escape');await t.close();
  }
 });
+test('posologia do Laboratório embutido permanece dentro da tela e preserva navegação principal',async()=>{
+ for(const width of [320,820]){
+  const t=await open({viewport:{width,height:900}}),p=t.page;await p.evaluate(()=>navigate('labmaster'));const f=p.frameLocator('#lab-master-frame');await f.locator('.posology-guide>summary').click();await f.locator('.posology-guide [data-posology-id=ferroussulfate]').click();await p.evaluate(()=>new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r))));const box=await f.locator('.posology-dialog').boundingBox();assert.ok(box.y>=0&&box.y+box.height<=902,JSON.stringify({width,box}));assert.match(await f.locator('.posology-dialog').innerText(),/50 a 100 mg/);await p.keyboard.press('Escape');await f.locator('.posology-dialog').waitFor({state:'detached'});assert.equal(await f.locator('.posology-dialog').count(),0);assert.equal(await p.evaluate(()=>ui.route),'labmaster');await t.close();
+ }
+});
