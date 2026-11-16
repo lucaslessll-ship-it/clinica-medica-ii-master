@@ -1,6 +1,6 @@
 # Curso de Radiologia
 
-Implementado sobre a main `71f795f`, preservando o Laboratório Master e as atualizações de Cirurgia.
+Implementado sobre a main `71f795f`, preservando o Laboratório Master e as atualizações de Cirurgia. A atualização simultânea `4ca4a6f` (fichas de posologia) foi incorporada, preservando scripts, estilos, integração do Laboratório e testes.
 
 ## O que foi localizado
 
@@ -23,4 +23,4 @@ As referências externas são apresentadas para aprofundamento, sem alegar consu
 
 ## Verificação
 
-`tests/radiology.test.cjs` cobre os nove módulos em 320 e 1440 px, questões, chaves de imagens, ampliação, casos, persistência após recarga, navegação e pesquisa. A API é simulada nos testes, sem contas ou gravações de produção. As capturas foram conferidas visualmente em ambos os tamanhos. Os dois validadores estáticos existentes passaram.
+`tests/radiology.test.cjs` cobre os nove módulos em 320 e 1440 px, questões, chaves de imagens, ampliação, casos, persistência após recarga, navegação e pesquisa. A API é simulada nos testes, sem contas ou gravações de produção. As capturas foram conferidas visualmente em ambos os tamanhos. A bateria inicial completa teve 126 testes aprovados, sem falhas. Após incorporar a atualização de posologia, foram executadas novamente as verificações de Radiologia, posologia, expansão de antimicrobianos, Laboratório e URL de versão. Os dois validadores estáticos existentes passaram antes e depois da integração.

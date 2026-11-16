@@ -2,7 +2,7 @@
    com o menu, o tema e a barra de progresso do MASTER, sem sair da plataforma. */
 window.LabMasterEmbed=(()=>{
  'use strict';
- const SRC='laboratorio-master/microcitose/index.html',VERSION='20261115-labmaster3';
+ const SRC='laboratorio-master/microcitose/index.html',VERSION='20261116-farmaco1';
  let bound=false;
  const frame=()=>document.getElementById('lab-master-frame');
  const theme=()=>document.body.dataset.theme==='dark'?'dark':'light';
