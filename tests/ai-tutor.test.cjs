@@ -100,3 +100,17 @@ test('requisição que não termina ganha mensagem visível e libera nova tentat
  await p.locator('#ai-tutor-question').fill('abdome agudo');const request=p.waitForRequest('**/functions/v1/ai-tutor');await p.locator('.ai-tutor-send').click();await request;await p.clock.fastForward(66000);
  await p.locator('.ai-tutor-retry').waitFor();assert.match(await p.locator('.ai-tutor-message').last().innerText(),/demorou mais/);assert.equal(await p.locator('.ai-tutor-send').isDisabled(),false);assert.equal(await p.locator('.ai-tutor-pending').count(),0);if(release)await release();await t.close();
 });
+test('ocultar recolhe o robô ao lado do Pomodoro e o botão compacto restaura sem abrir o chat',async()=>{
+ for(const width of [320,390,820,1440]){
+  const t=await open({width,height:844}),p=t.page;let calls=0;p.on('request',r=>{if(r.url().includes('/functions/v1/ai-tutor'))calls++;});
+  assert.equal(await p.locator('#ai-tutor-restore').isVisible(),false);
+  await p.locator('.ai-tutor-hide').click();assert.equal(await p.locator('.ai-tutor-dock').isVisible(),false);assert.equal(await p.locator('#ai-tutor-restore').isVisible(),true);
+  const layout=await p.evaluate(()=>{const a=document.getElementById('focus-top').getBoundingClientRect(),b=document.getElementById('ai-tutor-restore').getBoundingClientRect();return {next:document.getElementById('focus-top').nextElementSibling.id,gap:b.left-a.right,sameRow:Math.abs(a.top-b.top)<2,fit:document.documentElement.scrollWidth<=innerWidth+1,height:b.height};});
+  assert.equal(layout.next,'ai-tutor-restore');assert.ok(layout.gap>=0&&layout.gap<=12,JSON.stringify(layout));assert.equal(layout.sameRow,true);assert.equal(layout.fit,true);assert.ok(layout.height>=44);
+  await p.locator('#ai-tutor-restore img').evaluate(img=>img.decode());await p.screenshot({path:'work/ai-pomodoro-'+width+'.png'});
+  await p.locator('#ai-tutor-restore').click();assert.equal(await p.locator('.ai-tutor-dock').isVisible(),true);assert.equal(await p.locator('#ai-tutor-restore').isVisible(),false);assert.equal(await p.locator('.ai-tutor-dialog').evaluate(d=>d.open),false);
+  await p.locator('.ai-tutor-hide').click();await p.reload();await p.waitForFunction(()=>document.getElementById('master-auth')?.hidden);assert.equal(await p.locator('#ai-tutor-restore').isVisible(),true);assert.equal(await p.locator('.ai-tutor-dock').isVisible(),false);
+  await p.locator('#ai-tutor-restore').click();assert.equal(await p.locator('.ai-tutor-dock').isVisible(),true);assert.equal(calls,0);
+  await p.evaluate(()=>{document.documentElement.classList.add('master-auth-locked');window.dispatchEvent(new Event('master-auth-ended'));});assert.equal(await p.locator('#ai-tutor-restore').isVisible(),false);await t.close();
+ }
+});
