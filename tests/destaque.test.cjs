@@ -17,13 +17,13 @@ function mock(){
  window.supabase={createClient:()=>({auth:{getSession:async()=>({data:{session:{user,access_token:'test-jwt'}}}),getUser:async()=>({data:{user}}),onAuthStateChange(){return {data:{subscription:{unsubscribe(){}}}}},signOut:async()=>({error:null})},from(table){let columns='',key='';const query={select(c){columns=c;return query},order(){return query},contains(_,keys){key=keys[0];return query},eq(){return query},maybeSingle:async()=>({data:{policy_version:'2026-11-08'},error:null}),upsert:async()=>({error:null}),then(resolve){const data=table==='lesson_images'?(columns==='keys'?[{keys:Array.from({length:8},(_,i)=>'rad_m'+(i+2))}]:[{id:key,caption:'Imagem sintética para teste',credit:'Fixture',mime:'image/png',data:fixture,marks:[{t:'Achado',x:50,y:50,lx:10,ly:10}]}]):[];resolve({data,error:null});}};return query;}})};
 }
 const APP='MASTER_Clinica_Medica_II_v7_GitHub_Completo_Lucas_Lessa';
-async function abrirAula(width=1280){
+async function abrirAula(width=1280,topico='neuro1'){
  const context=await browser.newContext({viewport:{width,height:1000},timezoneId:'America/Sao_Paulo',isMobile:width<800,hasTouch:width<800});
  const page=await context.newPage(),errors=[];page.on('pageerror',e=>errors.push(e.stack||e.message));
  await page.route('https://cdn.jsdelivr.net/**/supabase.min.js',route=>route.fulfill({contentType:'text/javascript',body:`(${mock})()`}));
  await page.goto(`${base}/${APP}/index.html`);
  await page.waitForFunction(()=>document.getElementById('master-auth')?.hidden,null,{timeout:20000});
- await page.evaluate(async()=>{openTopic('neuro1');await new Promise(r=>setTimeout(r,400));switchChapter(0)});
+ await page.evaluate(async t=>{openTopic(t);await new Promise(r=>setTimeout(r,500));switchChapter(0)},topico);
  await page.waitForFunction(()=>document.querySelectorAll('.k-dado').length>0,null,{timeout:15000});
  await page.waitForTimeout(500);
  return {page,errors,close:async()=>{await context.close();assert.deepEqual(errors,[]);}};
@@ -81,4 +81,34 @@ test('o destaque sobrevive à troca de aula e não duplica',async()=>{
  const depois=await p.evaluate(()=>document.querySelectorAll('.k-dado').length);
  assert.equal(depois,antes,`marcas mudaram ao reabrir a aula: ${antes} para ${depois}`);
  await t.close();
+});
+
+test('a marca nunca embrulha texto solto dentro de grade ou flex',async()=>{
+ // O <span> viraria item de layout e ganharia coluna própria, sobrepondo a
+ // linha ao lado. Foi o que aconteceu nas perguntas de evocação ativa.
+ for(const width of [390,820,1194]){
+  const t=await abrirAula(width,'onco'),p=t.page;
+  const emLayout=await p.evaluate(()=>[...document.querySelectorAll('.k-dado,.nota-marca')]
+   .filter(m=>/^(flex|grid|inline-flex|inline-grid)$/.test(getComputedStyle(m.parentElement).display))
+   .map(m=>`${m.textContent} em ${m.parentElement.tagName}.${m.parentElement.className}`));
+  assert.deepEqual(emLayout,[],`marca dentro de grade ou flex em ${width}px`);
+
+  const sobrepostas=await p.evaluate(()=>{
+   const cruza=(a,b)=>Math.min(a.right,b.right)-Math.max(a.left,b.left)>2&&Math.min(a.bottom,b.bottom)-Math.max(a.top,b.top)>2.5;
+   const contem=(a,b)=>a.left<=b.left+1&&a.right>=b.right-1&&a.top<=b.top+1&&a.bottom>=b.bottom-1;
+   const achados=[];
+   for(const el of document.querySelectorAll('.deep-recall summary,.deep-pretest li')){
+    const faixa=document.createRange();faixa.selectNodeContents(el);
+    let caixas=[...faixa.getClientRects()].filter(r=>r.height>4&&r.width>2);
+    // getClientRects devolve a caixa do bloco e também as linhas dentro dela;
+    // compara só as linhas, descartando quem envolve outra caixa.
+    caixas=caixas.filter(a=>!caixas.some(b=>b!==a&&contem(a,b)));
+    for(let i=0;i<caixas.length;i++)for(let j=i+1;j<caixas.length;j++)
+     if(cruza(caixas[i],caixas[j])){achados.push(el.textContent.trim().slice(0,45));i=caixas.length;break;}
+   }
+   return [...new Set(achados)];
+  });
+  assert.deepEqual(sobrepostas,[],`texto sobreposto em ${width}px`);
+  await t.close();
+ }
 });

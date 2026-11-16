@@ -12,11 +12,25 @@
   const VALOR = new RegExp(`(?:[<>≥≤]\\s?)?\\d{1,4}(?:[.,]\\d{1,3})?(?:\\s?[-–a]\\s?\\d{1,4}(?:[.,]\\d{1,3})?)?\\s?(?:${UNIDADES}|${TEMPO})(?![\\wÀ-ÿ/])`, 'giu');
   let agendado = false, ocupado = false;
 
+  // Texto solto dentro de grade ou flex não pode ser embrulhado: o <span>
+  // viraria item de layout e ganharia uma coluna só para ele, sobrepondo a
+  // linha ao lado (acontecia nas perguntas de evocação e no pré-teste).
+  function montaLayout(elemento, cache) {
+    if (cache.has(elemento)) return cache.get(elemento);
+    const display = getComputedStyle(elemento).display;
+    const monta = display === 'flex' || display === 'grid' || display === 'inline-flex' || display === 'inline-grid';
+    cache.set(elemento, monta);
+    return monta;
+  }
+
   function marcar(raiz) {
+    const cache = new Map();
     const andarilho = document.createTreeWalker(raiz, NodeFilter.SHOW_TEXT, {
       acceptNode(no) {
         if (!no.nodeValue || no.nodeValue.length < 2 || !/\d/.test(no.nodeValue)) return NodeFilter.FILTER_REJECT;
-        return no.parentElement && !no.parentElement.closest(PROIBIDO) ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT;
+        const pai = no.parentElement;
+        if (!pai || pai.closest(PROIBIDO) || montaLayout(pai, cache)) return NodeFilter.FILTER_REJECT;
+        return NodeFilter.FILTER_ACCEPT;
       }
     });
     const alvos = [];

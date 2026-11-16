@@ -21,8 +21,13 @@
   function localizar(raiz, marca) {
     const nos = [];
     const andarilho = document.createTreeWalker(raiz, NodeFilter.SHOW_TEXT, {
-      acceptNode: no => no.parentElement && !no.parentElement.closest('script,style,.nota-bolha,.nota-barra,.nota-caixa')
-        ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT
+      acceptNode: no => {
+        const pai = no.parentElement;
+        if (!pai || pai.closest('script,style,.nota-bolha,.nota-barra,.nota-caixa')) return NodeFilter.FILTER_REJECT;
+        const display = getComputedStyle(pai).display;
+        if (display === 'flex' || display === 'grid' || display === 'inline-flex' || display === 'inline-grid') return NodeFilter.FILTER_REJECT;
+        return NodeFilter.FILTER_ACCEPT;
+      }
     });
     let total = '';
     for (let no = andarilho.nextNode(); no; no = andarilho.nextNode()) { nos.push([no, total.length]); total += no.nodeValue; }
@@ -154,6 +159,12 @@
     const faixa = selecao.getRangeAt(0);
     const dentro = faixa.commonAncestorContainer.nodeType === 1 ? faixa.commonAncestorContainer : faixa.commonAncestorContainer.parentElement;
     if (!dentro || !dentro.closest(LEITURA) || dentro.closest('.nota-caixa,.nota-barra,input,textarea,[contenteditable]')) return null;
+    for (const ponta of [faixa.startContainer, faixa.endContainer]) {
+      const pai = ponta.nodeType === 3 ? ponta.parentElement : ponta;
+      if (!pai) return null;
+      const display = getComputedStyle(pai).display;
+      if (display === 'flex' || display === 'grid' || display === 'inline-flex' || display === 'inline-grid') return null;
+    }
     const texto = normal(selecao.toString());
     if (texto.length < 3 || texto.length > 600) return null;
     return { faixa, texto };
