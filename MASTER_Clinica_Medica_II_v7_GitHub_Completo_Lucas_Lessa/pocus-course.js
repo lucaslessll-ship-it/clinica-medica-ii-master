@@ -377,6 +377,6 @@ function page(){return view===null||!MODULES[view]?home():moduleView(view);}
 function open(i){view=i===null?null:Math.max(0,Math.min(MODULES.length-1,Number(i)||0));render();window.scrollTo({top:0,behavior:'instant'});const h=document.querySelector('#main-content h1');if(h){h.tabIndex=-1;h.focus({preventScroll:true});}}
 function answer(mi,qi,oi){const m=MODULES[mi];if(!m||!m.quiz[qi])return;st().quiz[m.id+'_'+qi]=oi;stateSave();const el=document.getElementById(`pq-${mi}-${qi}`);if(el)el.outerHTML=quizItem(mi,qi);}
 function complete(id,value){st().done[id]=!!value;stateSave();}
-return {page,open,answer,complete,modules:()=>MODULES.length};
+return {page,open,answer,complete,modules:()=>MODULES.length,findId:id=>MODULES.findIndex(m=>m.id===id),titleOf:id=>MODULES.find(m=>m.id===id)?.title||''};
 })();
 window.PocusCourse=PocusCourse;
