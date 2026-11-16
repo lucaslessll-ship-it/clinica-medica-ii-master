@@ -254,7 +254,7 @@ test('clinical guide and prescription manual reflow on phone/tablet and dark mod
 test('dashboard typography has no overlapping card text at phone, tablet and desktop widths',async()=>{
  for(const width of [390,820,1440,1562]){
   const t=await open({session:true,viewport:{width,height:1000}}),p=t.page;await p.waitForFunction(()=>document.getElementById('master-auth').hidden);await p.evaluate(()=>document.fonts.ready);
-  assert.equal(await p.evaluate(()=>document.fonts.check('400 16px Inter')),true);
+  assert.equal(await p.evaluate(()=>document.fonts.check("400 16px 'Public Sans'")),true);
   const cards=await p.evaluate(()=>[...document.querySelectorAll('.study-tool')].map(card=>{const a=card.querySelector('strong').getBoundingClientRect(),b=card.querySelector('small').getBoundingClientRect();return {title:card.querySelector('strong').textContent,overlap:b.top<a.bottom-1,inside:b.right<=card.getBoundingClientRect().right,width:a.width}}));
   assert.ok(cards.every(c=>!c.overlap&&c.inside&&c.width>60),JSON.stringify({width,cards}));assert.ok(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));await p.screenshot({path:`work/redesign-${width}.png`});await t.close();
  }
@@ -390,7 +390,7 @@ test('refreshed library and lesson remain usable with 200 percent reading size o
 
 test('release URL versions local assets and preserves recovery callbacks',async()=>{
  const t=await open({session:true,root:true,query:'?auth=recovery'}),p=t.page;await text(p,'#master-auth-title',/Definir nova senha/);
- assert.equal(new URL(p.url()).searchParams.get('v'),'20261116-labcir');
+ assert.equal(new URL(p.url()).searchParams.get('v'),'20261116-labcir2');
  const unversioned=await p.evaluate(()=>[...document.querySelectorAll('script[src],link[rel=stylesheet]')].map(e=>e.src||e.href).filter(url=>new URL(url).origin===location.origin&&!new URL(url).searchParams.has('v')));assert.deepEqual(unversioned,[]);await t.close();
 });
 test('Decision Lab has 24 stable cases with 20 P2 items, valid answers and references',async()=>{

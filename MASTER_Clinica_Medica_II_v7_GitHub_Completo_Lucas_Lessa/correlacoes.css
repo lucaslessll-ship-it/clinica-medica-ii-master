@@ -1,0 +1,26 @@
+.correl-term{display:inline-flex;align-items:center;vertical-align:baseline;min-height:44px;min-width:44px;padding:2px 5px;margin:0;background:transparent;border:0;border-radius:0;color:var(--info);font:inherit;font-weight:650;line-height:inherit;text-align:left;white-space:normal;overflow-wrap:anywhere;text-decoration:underline dotted;text-decoration-thickness:1px;text-underline-offset:3px}
+/* O alvo de toque vem do padding vertical. Em elemento inline o padding não muda a altura da
+   linha, então o parágrafo continua com o espaçamento normal da leitura. */
+.correl-term::after{content:"↗";margin-left:3px;font-size:.78em;font-weight:400;opacity:.75}
+.correl-term:hover,.correl-term:focus-visible{text-decoration-style:solid;color:var(--ink)}
+.correl-term:focus-visible{outline:2px solid var(--info);outline-offset:1px}
+.correl-guide{margin:var(--space-6) 0 var(--space-4)}
+.correl-guide h3{font-size:var(--text-lg);margin:0 0 var(--space-2)}
+.correl-guide-lead{font-size:var(--text-sm);color:var(--muted);line-height:1.7;max-width:75ch;margin:0 0 var(--space-4)}
+.correl-guide-list{list-style:none;padding:0;margin:0;display:grid;gap:var(--space-3)}
+.correl-guide-list>li{padding:var(--space-4);background:var(--info-soft);border:1px solid var(--info-line);border-radius:var(--radius-sm);display:grid;gap:var(--space-2)}
+.correl-guide-where{margin:0;font-size:var(--text-sm);font-weight:700;color:var(--info)}
+.correl-guide-items{margin:0;display:flex;flex-wrap:wrap;gap:var(--space-2)}
+.correl-guide-items button{min-height:44px;min-width:44px;border:1px solid var(--info-line);background:var(--white);color:var(--ink);padding:10px 12px;border-radius:var(--radius-sm);font:inherit;font-size:var(--text-sm);text-align:left;white-space:normal;overflow-wrap:anywhere;max-width:100%}
+.correl-guide-items button:hover{border-color:var(--info)}
+.correl-guide-go{margin:0}
+.correl-guide-toggle{margin:var(--space-4) 0 0}
+.correl-guide-toggle .btn{min-height:44px;min-width:44px;font-size:var(--text-sm)}
+.correl-dialog{width:min(560px,calc(100% - 24px));max-width:calc(100% - 24px);max-height:calc(100dvh - 32px);padding:var(--space-6);border:1px solid var(--line);border-radius:var(--radius-lg);background:var(--white);color:var(--ink);overflow:auto;overscroll-behavior:contain}
+.correl-dialog::backdrop{background:rgba(0,0,0,.6)}
+.correl-dialog-head{display:flex;gap:var(--space-5);align-items:center;justify-content:space-between;position:sticky;top:calc(var(--space-6)*-1);background:var(--white);z-index:1;padding:10px 0;border-bottom:1px solid var(--line)}
+.correl-dialog-head h2{font-size:var(--text-xl);line-height:1.3;margin:0}
+.correl-dialog .btn{min-height:44px;min-width:44px;white-space:normal}
+.correl-what{font-size:var(--text-md);line-height:1.75;margin:var(--space-4) 0 0}
+.correl-why{font-size:var(--text-md);line-height:1.75;color:var(--muted);margin:var(--space-3) 0 var(--space-5)}
+@media print{.correl-term{border:0;color:inherit}.correl-term::after{content:""}.correl-guide,.correl-dialog{display:none}}

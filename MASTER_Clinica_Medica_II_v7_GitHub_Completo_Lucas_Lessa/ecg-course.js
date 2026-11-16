@@ -418,6 +418,6 @@ function searchItems(){
   return MODULES.map((m,i)=>({type:'Módulo de ECG',label:m.title,sub:'Curso de ECG · '+m.layer,icon:'♡',action:()=>{navigate('ecg');open(i);},text:[m.title,m.summary,m.layer]}))
     .concat(TRACINGS.map((t,i)=>({type:'Traçado de ECG',label:'Traçado '+t.code,sub:t.focus,icon:'♡',action:()=>{navigate('ecg');openTracing(i);},text:[t.stem,t.focus,t.code]})));
 }
-return {page,open,bank,tracing:openTracing,answer,complete,markSeen,searchItems,modules:()=>MODULES.length,tracings:()=>TRACINGS.length};
+return {page,open,bank,tracing:openTracing,answer,complete,markSeen,searchItems,modules:()=>MODULES.length,tracings:()=>TRACINGS.length,findId:id=>MODULES.findIndex(m=>m.id===id),titleOf:id=>MODULES.find(m=>m.id===id)?.title||''};
 })();
 window.ECGCourse=ECGCourse;
