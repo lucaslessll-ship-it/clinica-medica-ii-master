@@ -57,7 +57,7 @@ Não houve upload de imagens, nova tabela ou modificação de dados reais no Sup
 
 ## Validação
 
-159 testes aprovados na suíte completa, incluindo sete novos. Validadores validar.py e validar_v7.py aprovados; sintaxe conferida nos 81 arquivos JS do app. Casos, questões, busca, contadores, persistência, IDs anteriores e regimes opcionais testados com autenticação simulada e bloqueio do Supabase real. Verificados 320, 390, 820 e 1280 px, temas claro/escuro, teclado, fontes de pelo menos 12 px e alvos de 44 px.
+170 testes aprovados na suíte completa, incluindo sete novos. Validadores validar.py e validar_v7.py aprovados; sintaxe conferida nos 83 arquivos JS do app. Casos, questões, busca, contadores, persistência, IDs anteriores e regimes opcionais testados com autenticação simulada e bloqueio do Supabase real. Verificados 320, 390, 820 e 1280 px, temas claro/escuro, teclado, fontes de pelo menos 12 px e alvos de 44 px.
 
 ## Onde parei e o que falta
 
