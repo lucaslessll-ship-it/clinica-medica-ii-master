@@ -7,3 +7,8 @@
 
 .lab-ferro{width:100%;max-width:1040px;padding:0;margin:0 auto}.lab-ferro-entry{display:flex;gap:20px;justify-content:space-between;align-items:center;padding:22px;margin:24px 0}.lab-ferro-entry p{margin:10px 0}.lab-ferro-entry h2{margin:0;font-size:23px}.lab-ferro-entry .btn{min-height:44px;white-space:normal;flex-shrink:0}.lab-ferro .lab-draft-status{font-size:14px;min-height:24px;color:var(--green2)}
 @media(max-width:620px){.lab-ferro{width:100%}.lab-ferro-entry{flex-direction:column;align-items:stretch}.lab-ferro .pocus-pitfalls{border-left:0}}
+
+/* Laboratório Master embutido no site */
+.lab-embed.card{padding:clamp(12px,2vw,22px);overflow:hidden}
+.lab-embed-frame{display:block;width:100%;min-height:480px;border:0;background:transparent}
+.lab-embed-note{margin:12px 4px}

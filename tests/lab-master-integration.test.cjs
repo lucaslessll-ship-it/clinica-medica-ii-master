@@ -12,7 +12,7 @@ test('Laboratório Master possui acesso próprio, retorno e progress sync',()=>{
  const app=txt(path.join(appdir,'app.js'));
  const html=txt(path.join(pilot,'index.html'));
  assert.match(app,/\['Laboratório Master','lab',\['labmaster'\]\]/);
- assert.match(app,/window.location.href='laboratorio-master\/microcitose\/index.html'/);
+ assert.doesNotMatch(app,/window.location.href='laboratorio-master/);assert.match(app,/case 'labmaster':content=window.LabMasterEmbed/);
  assert.match(html,/id="syncStatus"/);
  assert.match(html,/href="\.\.\/\.\.\/index.html#dashboard"/);
  assert.match(html,/auth-config\.js/);
