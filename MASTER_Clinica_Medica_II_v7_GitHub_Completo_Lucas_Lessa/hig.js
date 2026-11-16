@@ -31,7 +31,24 @@ const HIG = (() => {
   function sideCollapsed(){return tabletMedia.matches?preferences.tabletCollapsed!==false:!!preferences.collapsed;}
   tabletMedia.addEventListener('change',()=>applyPrefs());
   function toggleSidebar(){if(tabletMedia.matches)preferences.tabletCollapsed=!sideCollapsed();else preferences.collapsed=!preferences.collapsed;save();applyPrefs()}
-  function toggleFocus(){preferences.focus=!preferences.focus;save();applyPrefs();toast(preferences.focus?'Concentração ativada. Pressione F para sair.':'Modo de concentração encerrado.');}
+  // Modo foco: esconde a interface e, onde o navegador permite, entra em tela cheia.
+  // O iPhone não concede tela cheia a elementos; lá vale a leitura sem distrações.
+  function fullscreenOn(){return !!(document.fullscreenElement||document.webkitFullscreenElement)}
+  function fullscreenAvailable(){const el=document.documentElement;return !!(el.requestFullscreen||el.webkitRequestFullscreen)}
+  function enterFullscreen(){const el=document.documentElement,fn=el.requestFullscreen||el.webkitRequestFullscreen;if(!fn||fullscreenOn())return;try{const r=fn.call(el);if(r&&r.catch)r.catch(()=>{})}catch{}}
+  function leaveFullscreen(){const fn=document.exitFullscreen||document.webkitExitFullscreen;if(!fn||!fullscreenOn())return;try{const r=fn.call(document);if(r&&r.catch)r.catch(()=>{})}catch{}}
+  function setFocus(on,useFullscreen=true){
+    on=!!on;const changed=preferences.focus!==on;
+    const first=on&&changed&&!preferences.focusHintSeen;
+    preferences.focus=on;
+    if(first)preferences.focusHintSeen=true;
+    save();applyPrefs();
+    if(useFullscreen){on?enterFullscreen():leaveFullscreen()}
+    const trigger=document.querySelector('.focus-trigger');if(trigger)trigger.setAttribute('aria-pressed',String(on));
+    // Aviso só na primeira vez, e sem citar teclas em quem usa toque.
+    if(first)toast(matchMedia('(pointer:fine)').matches?'Modo foco. Pressione F ou Esc para sair.':'Modo foco. Toque em Sair do foco quando quiser voltar.');
+  }
+  function toggleFocus(){setFocus(!preferences.focus)}
   function openOverlay(name,content){
     if(document.documentElement.classList.contains('master-auth-locked'))return;
     closeMobileNav(false);
@@ -152,16 +169,19 @@ const HIG = (() => {
   async function importProgress(event){const f=event?.target?.files?.[0];if(!f)return;if(f.size>3_000_000){toast('Arquivo muito grande para um backup de progresso.');return}try{let v=JSON.parse(await f.text());if(v.app!=='MASTER_P2_Lucas_Lessa'||!v.data||typeof v.data!=='object'||!v.data.results||!v.data.completed){throw new Error('Formato de backup incompatível')}if(!confirm('Substituir o progresso atual pelos dados deste backup? Exporte antes seus dados atuais, se quiser guardá-los.'))return;store={...store,...v.data};stateSave();if(v.p1&&window.P1)P1.restoreBackup(v.p1);if(v.experience&&typeof v.experience==='object'){preferences={...preferences,...v.experience,notes:{...preferences.notes,...(v.experience.notes||{})},bookmarks:{...preferences.bookmarks,...(v.experience.bookmarks||{})}};save();applyPrefs()}ui.exam=null;ui.practice=null;ui.flashDeck=[];closeOverlay();render();toast('Backup restaurado com sucesso.')}catch(e){toast('Não foi possível importar: '+e.message)}finally{event.target.value=''}}
   function init(){applyPrefs();searchItems=makeSearchItems();
     window.matchMedia('(prefers-color-scheme: dark)').addEventListener?.('change',()=>{if(preferences.theme==='system')applyPrefs()});
+    for(const evt of ['fullscreenchange','webkitfullscreenchange'])document.addEventListener(evt,()=>{if(!fullscreenOn()&&preferences.focus)setFocus(false,false)});
+    // Uma sessão nunca começa presa no foco: a tela cheia não sobrevive ao recarregamento.
+    if(preferences.focus&&!fullscreenOn())setFocus(false,false);
     document.addEventListener('keydown',e=>{
       if(document.documentElement.classList.contains('master-auth-locked'))return;
       if(document.getElementById('hig-overlay').hidden===false){dialogKeys(e);return}
       if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==='k'){e.preventDefault();openSearch();return}
       if(e.target.closest('input,textarea,select,[contenteditable="true"]'))return;
-      if(e.key==='/'){e.preventDefault();openSearch()}else if(e.key.toLowerCase()==='f'&&!e.metaKey&&!e.ctrlKey){e.preventDefault();toggleFocus()}else if(e.key==='?'&&!e.metaKey&&!e.ctrlKey){openHelp()}
+      if(e.key==='/'){e.preventDefault();openSearch()}else if(e.key.toLowerCase()==='f'&&!e.metaKey&&!e.ctrlKey){e.preventDefault();toggleFocus()}else if(e.key==='?'&&!e.metaKey&&!e.ctrlKey){openHelp()}else if(e.key==='Escape'&&preferences.focus){e.preventDefault();setFocus(false)}
     });
   }
   function reload(){preferences=load();applyPrefs();}
-  return {reload,init,afterRender,openSearch,searchInput,searchKeys,chooseResult,openSettings,openHelp,closeOverlay,setTheme,setFont,togglePref,toggleSidebar,toggleFocus,lessonToolbar,lessonNotes,saveNote,bookmark,viewToday,viewNotes,configureTimer,toggleTimer,resetTimer,exportNotes,exportBackup,importProgress,openLast,resumeInfo,focusTopic,dueCards,focusData,saveFocus,refreshFocus,openTimer};
+  return {reload,init,afterRender,setFocus,fullscreenAvailable,openSearch,searchInput,searchKeys,chooseResult,openSettings,openHelp,closeOverlay,setTheme,setFont,togglePref,toggleSidebar,toggleFocus,lessonToolbar,lessonNotes,saveNote,bookmark,viewToday,viewNotes,configureTimer,toggleTimer,resetTimer,exportNotes,exportBackup,importProgress,openLast,resumeInfo,focusTopic,dueCards,focusData,saveFocus,refreshFocus,openTimer};
 })();
 window.HIG=HIG;
 window.addEventListener('DOMContentLoaded',HIG.init);

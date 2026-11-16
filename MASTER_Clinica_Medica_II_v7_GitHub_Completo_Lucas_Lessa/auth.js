@@ -226,12 +226,19 @@
     if(!status.ready||!status.user||!keys.includes(key))return;
     const raw=localStorage.getItem(key),value=read(key);if(value===null)return;
     const epoch=status.epoch,userId=status.user.id;
+    // Gravações idênticas aconteceriam a cada navegação: sem mudança real, não vai à rede.
+    const current=canon(value);
+    if(status.baseline.get(key)===current){
+      const queued=pending(userId);
+      if(key in queued){delete queued[key];originalSet.call(localStorage,pendingKey(userId),JSON.stringify(queued));}
+      return;
+    }
     const {data:latest,error:readError}=await status.client.from('master_progress').select('storage_key,payload').eq('user_id',userId);
     if(readError){syncNotice('Sincronização pendente. Seu progresso continua salvo neste dispositivo.');throw readError;}
     if(epoch!==status.epoch)return;
     const remote=latest?.find(row=>row.storage_key===key);
     const remoteCanon=remote?canon(remote.payload):null;
-    const localCanon=canon(value);
+    const localCanon=current;
     if(remote&&remoteCanon!==status.baseline.get(key)&&remoteCanon!==localCanon&&!(sent.get(key)||[]).includes(remoteCanon))keepConflictCopy(userId,latest);
     rememberSent(key,localCanon);
     const {error}=await status.client.from('master_progress').upsert({user_id:userId,storage_key:key,payload:value,updated_at:new Date().toISOString()},{onConflict:'user_id,storage_key'});
