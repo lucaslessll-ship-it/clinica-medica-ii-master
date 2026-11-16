@@ -6,9 +6,9 @@
 'use strict';
 const HIG = (() => {
   const UX_KEY='master_p2_hig_v2';
-  const defaults={theme:'light',font:'normal',contrast:false,motion:false,collapsed:false,focus:false,notes:{},bookmarks:{},lastTopic:'neuro1',lastChapter:0,sessionMinutes:25,sessionSpent:0};
+  const defaults={theme:'light',font:'normal',contrast:false,motion:false,collapsed:false,focus:false,notes:{},bookmarks:{},marcas:{},lastTopic:'neuro1',lastChapter:0,sessionMinutes:25,sessionSpent:0};
   let preferences=load(),modalType='',modalFocus=null,modalBackground=null,searchItems=[],activeResult=0;
-  function load(){try{let v=JSON.parse(localStorage.getItem(UX_KEY));return {...defaults,...(v&&typeof v==='object'?v:{}),notes:{...defaults.notes,...(v?.notes||{})},bookmarks:{...defaults.bookmarks,...(v?.bookmarks||{})}}}catch{return {...defaults}}}
+  function load(){try{let v=JSON.parse(localStorage.getItem(UX_KEY));return {...defaults,...(v&&typeof v==='object'?v:{}),notes:{...defaults.notes,...(v?.notes||{})},bookmarks:{...defaults.bookmarks,...(v?.bookmarks||{})},marcas:{...defaults.marcas,...(v?.marcas||{})}}}catch{return {...defaults}}}
   function save(){try{localStorage.setItem(UX_KEY,JSON.stringify(preferences))}catch{toast('O navegador não permitiu salvar esta preferência.') }}
   function focusData(){return preferences.pomodoro||{minutes:preferences.sessionMinutes,legacyMinutes:preferences.sessionSpent};}
   function saveFocus(data){preferences.pomodoro=JSON.parse(JSON.stringify(data));preferences.sessionMinutes=data.minutes;save();}
@@ -134,6 +134,13 @@ const HIG = (() => {
     return `<div class="lesson-toolbar"><span>◷ ${minutes} min de leitura estimada</span><div class="lesson-toolbar-actions"><button class="plain-pill" type="button" aria-pressed="${marked}" onclick="HIG.bookmark('${key}')">${marked?'★ Salvo na biblioteca':'☆ Salvar para revisão'}</button><button class="plain-pill" type="button" onclick="HIG.toggleFocus()">⛶ Leitura focada</button></div></div>`;
   }
   function lessonNotes(t,idx){const key=t.id+'_'+idx,old=preferences.notes[key]||'';return `<div class="lesson-caderno"><details ${old?'open':''}><summary>✎ Meu caderno desta aula <span class="note-meta">${old?'Anotações salvas':'Adicionar anotações pessoais'}</span></summary><label for="chapter-note" class="field-label">O que eu preciso lembrar na P2?</label><textarea id="chapter-note" class="answer-box" rows="5" placeholder="Escreva com suas palavras: diagnóstico diferencial, critérios, exceções, conduta e armadilhas…" oninput="HIG.saveNote('${key}',this.value)">${escapeHtml(old)}</textarea><div class="note-tip">Salvamento automático neste navegador. Faça backup em Preferências.</div></details></div>`}
+  // Marca-texto e comentários presos ao trecho. Gravados nas preferências,
+  // que já sobem para a conta pelo salvamento automático.
+  function marcas(key){return (preferences.marcas||{})[key]||[]}
+  function marcasTodas(){return preferences.marcas||{}}
+  function marcaAdd(key,marca){if(!preferences.marcas)preferences.marcas={};(preferences.marcas[key]||(preferences.marcas[key]=[])).push(marca);save();return marca}
+  function marcaEdita(key,id,campos){const lista=(preferences.marcas||{})[key]||[];const i=lista.findIndex(m=>m.id===id);if(i<0)return null;lista[i]={...lista[i],...campos};save();return lista[i]}
+  function marcaRemove(key,id){const lista=(preferences.marcas||{})[key]||[];const i=lista.findIndex(m=>m.id===id);if(i<0)return false;lista.splice(i,1);if(!lista.length)delete preferences.marcas[key];save();return true}
   function saveNote(key,val){preferences.notes[key]=val;save();const info=document.querySelector('.note-meta');if(info)info.textContent='Salvo automaticamente';}
   function bookmark(key){preferences.bookmarks[key]=!preferences.bookmarks[key];save();render();toast(preferences.bookmarks[key]?'Adicionado às revisões.':'Retirado das revisões.');}
   function resumeInfo(){
@@ -162,7 +169,29 @@ const HIG = (() => {
   function resetTimer(){FocusTimer.reset()}
   function viewNotes(){let all=TOPICS.flatMap(t=>t.chapters.map((ch,i)=>({t,ch,i,key:t.id+'_'+i,note:preferences.notes[t.id+'_'+i]||'',bookmarked:!!preferences.bookmarks[t.id+'_'+i]})));const marked=all.filter(x=>x.bookmarked||x.note.trim());return header('BIBLIOTECA PESSOAL','Seu caderno <em>de revisão.</em>','Reúna suas anotações, aulas salvas e pontos que precisam de uma segunda leitura.')+
       `<div class="card pad" style="margin-bottom:18px"><div class="status-row"><span class="subtle">${marked.length} aulas com notas ou marcações • ${all.length} aulas disponíveis</span><button class="btn secondary" onclick="HIG.exportNotes()">↓ Exportar caderno em Markdown</button></div></div>`+
+      secaoMarcas()+
       (marked.length?`<div class="notes-grid">${marked.map(x=>`<article class="note-card"><div class="note-overline">${x.bookmarked?'★ SALVO PARA REVISÃO':'✎ ANOTAÇÕES'} · ${escapeHtml(x.t.area)}</div><h3>${escapeHtml(x.ch.name)}</h3><p>${escapeHtml((x.note||x.ch.memory).slice(0,240))}${(x.note||x.ch.memory).length>240?'…':''}</p><button class="btn" onclick="openTopic('${x.t.id}');switchChapter(${x.i})">Abrir aula ↗</button></article>`).join('')}</div>`:`<div class="empty-state"><strong>Seu caderno está pronto.</strong><p>Abra uma aula, marque ☆ Salvar para revisão ou escreva suas anotações.</p><button class="btn primary" onclick="navigate('topics')">Explorar as 22 aulas</button></div>`);
+  }
+  // Todas as marcações de texto reunidas por aula, com o trecho e o comentário.
+  function secaoMarcas(){
+    const porAula=preferences.marcas||{};
+    const aulas=Object.keys(porAula).filter(k=>(porAula[k]||[]).length);
+    if(!aulas.length)return '';
+    const nome=key=>{const corte=key.lastIndexOf('_'),t=TOPICS.find(x=>x.id===key.slice(0,corte));
+      if(!t)return key;const c=t.chapters[Number(key.slice(corte+1))];
+      return {aula:c?c.name:t.title,area:t.area||t.short||t.title,topico:t.id,indice:Number(key.slice(corte+1))}};
+    const total=aulas.reduce((n,k)=>n+porAula[k].length,0);
+    return `<section class="section-spaced" aria-label="Trechos marcados"><h2 class="section-title">Trechos marcados</h2>`+
+      `<p class="subtle" style="margin:0 0 12px">${total} ${total===1?'trecho marcado':'trechos marcados'} em ${aulas.length} ${aulas.length===1?'aula':'aulas'}.</p>`+
+      aulas.map(key=>{const info=nome(key),lista=porAula[key];
+        return `<article class="notas-aula"><h3>Notas de aula · ${escapeHtml(info.aula||key)}</h3>`+
+          `<p class="notas-conta">${escapeHtml(info.area||'')} · ${lista.length} ${lista.length===1?'trecho':'trechos'}</p>`+
+          lista.map(m=>`<div class="notas-item"><span class="notas-cor" data-cor="${escapeHtml(m.cor||'amarelo')}"></span>`+
+            `<div class="notas-texto"><p class="notas-trecho">${escapeHtml(m.texto||'')}</p>`+
+            (m.comentario?`<p class="notas-comentario">${escapeHtml(m.comentario)}</p>`:'')+
+            `<button type="button" class="notas-ir" onclick="openTopic('${info.topico}');switchChapter(${info.indice})">Abrir no texto ↗</button></div></div>`).join('')+
+          `</article>`;}).join('')+
+      `</section>`;
   }
   function exportNotes(){let lines=['# MASTER P2 — Meu caderno de revisão','',`Exportado: ${new Date().toLocaleString('pt-BR')}`,''];TOPICS.forEach(t=>t.chapters.forEach((c,i)=>{let key=t.id+'_'+i,n=preferences.notes[key],b=preferences.bookmarks[key];if(n||b){lines.push(`## ${t.title} — ${c.name}`,b?'> ★ Salvo para revisão':'',n||'_Sem anotações pessoais_','')}}));download('MASTER_P2_Caderno_Lucas_Lessa.md',lines.join('\n'),'text/markdown;charset=utf-8');toast('Caderno exportado.')}
   function download(name,content,type){const blob=new Blob([content],{type});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),1500)}
@@ -182,7 +211,7 @@ const HIG = (() => {
     });
   }
   function reload(){preferences=load();applyPrefs();}
-  return {reload,init,afterRender,setFocus,fullscreenAvailable,openSearch,searchInput,searchKeys,chooseResult,openSettings,openHelp,closeOverlay,setTheme,setFont,togglePref,toggleSidebar,toggleFocus,lessonToolbar,lessonNotes,saveNote,bookmark,viewToday,viewNotes,configureTimer,toggleTimer,resetTimer,exportNotes,exportBackup,importProgress,openLast,resumeInfo,focusTopic,dueCards,focusData,saveFocus,refreshFocus,openTimer};
+  return {reload,init,afterRender,marcas,marcasTodas,marcaAdd,marcaEdita,marcaRemove,setFocus,fullscreenAvailable,openSearch,searchInput,searchKeys,chooseResult,openSettings,openHelp,closeOverlay,setTheme,setFont,togglePref,toggleSidebar,toggleFocus,lessonToolbar,lessonNotes,saveNote,bookmark,viewToday,viewNotes,configureTimer,toggleTimer,resetTimer,exportNotes,exportBackup,importProgress,openLast,resumeInfo,focusTopic,dueCards,focusData,saveFocus,refreshFocus,openTimer};
 })();
 window.HIG=HIG;
 window.addEventListener('DOMContentLoaded',HIG.init);

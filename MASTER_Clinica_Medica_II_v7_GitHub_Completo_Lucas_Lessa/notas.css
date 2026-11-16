@@ -1,0 +1,63 @@
+/* Marca-texto, sublinhado e comentários presos ao trecho da aula. */
+.nota-marca{border-radius:3px;padding:0 1px;box-decoration-break:clone;-webkit-box-decoration-break:clone}
+.nota-marca[data-cor="amarelo"]{background:#fdf0bd}
+.nota-marca[data-cor="verde"]{background:#cdeedd}
+.nota-marca[data-cor="azul"]{background:#d4e7fb}
+.nota-marca[data-cor="rosa"]{background:#fbd9e6}
+.nota-marca[data-cor="sublinhado"]{background:none;text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:3px;text-decoration-color:#15867a}
+body[data-theme="dark"] .nota-marca[data-cor="amarelo"]{background:#54491c;color:#f7eecd}
+body[data-theme="dark"] .nota-marca[data-cor="verde"]{background:#1f4d3f;color:#dcf3e9}
+body[data-theme="dark"] .nota-marca[data-cor="azul"]{background:#1f3c59;color:#dbeaf9}
+body[data-theme="dark"] .nota-marca[data-cor="rosa"]{background:#53283c;color:#f9dcea}
+body[data-theme="dark"] .nota-marca[data-cor="sublinhado"]{text-decoration-color:#7fd3c2}
+body.high-contrast .nota-marca{outline:1px solid currentColor;outline-offset:1px}
+
+/* Botão do comentário, colado ao fim do trecho. */
+.nota-bolha{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;min-width:22px;margin:0 0 0 3px;padding:0;border:0;border-radius:50%;background:#0b5f57;color:#fff;font-size:11px;line-height:1;cursor:pointer;vertical-align:baseline;transform:translateY(-1px)}
+.nota-bolha:hover{background:#08483f}
+.nota-bolha:focus-visible{outline:2px solid var(--focus,#0b5f57);outline-offset:2px}
+body[data-theme="dark"] .nota-bolha{background:#7fd3c2;color:#10241f}
+
+/* Barra que aparece ao selecionar texto. */
+.nota-barra{position:absolute;z-index:70;display:flex;align-items:center;gap:4px;padding:6px;border:1px solid var(--line);border-radius:12px;background:var(--white);box-shadow:0 10px 26px rgba(10,46,43,.18)}
+.nota-barra[hidden]{display:none}
+.nota-barra button{display:grid;place-items:center;width:34px;height:34px;min-width:34px;padding:0;border:1px solid transparent;border-radius:9px;background:none;cursor:pointer;font-size:13px;color:var(--ink)}
+.nota-barra button:hover{background:var(--soft)}
+.nota-barra button:focus-visible{outline:2px solid var(--focus,#0b5f57);outline-offset:1px}
+.nota-barra .nota-cor{border-radius:50%;background-repeat:no-repeat;background-position:center}
+.nota-barra .nota-cor::before{content:'';width:21px;height:21px;border-radius:50%;border:1px solid rgba(10,46,43,.22)}
+.nota-barra .nota-cor[data-cor="amarelo"]::before{background:#fdf0bd}
+.nota-barra .nota-cor[data-cor="verde"]::before{background:#cdeedd}
+.nota-barra .nota-cor[data-cor="azul"]::before{background:#d4e7fb}
+.nota-barra .nota-cor[data-cor="rosa"]::before{background:#fbd9e6}
+.nota-barra .nota-sep{width:1px;height:22px;background:var(--line);margin:0 2px}
+
+/* Caixa do comentário. */
+.nota-caixa{position:absolute;z-index:71;width:min(320px,calc(100vw - 28px));padding:14px;border:1px solid var(--line);border-radius:14px;background:var(--white);box-shadow:0 14px 34px rgba(10,46,43,.2)}
+.nota-caixa[hidden]{display:none}
+.nota-caixa blockquote{margin:0 0 10px;padding:0 0 0 10px;border-left:3px solid #0b5f57;font-size:13px;line-height:1.5;color:var(--secondary-text,var(--muted))}
+.nota-caixa textarea{width:100%;min-height:92px;padding:10px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink);font:inherit;font-size:14px;line-height:1.5;resize:vertical}
+.nota-caixa textarea:focus-visible{outline:2px solid var(--focus,#0b5f57);outline-offset:1px}
+.nota-caixa-acoes{display:flex;gap:8px;margin-top:10px}
+.nota-caixa-acoes button{min-height:38px;padding:8px 14px;border-radius:10px;border:1px solid var(--line);background:var(--white);color:var(--ink);font-size:13px;font-weight:650;cursor:pointer}
+.nota-caixa-acoes .nota-salvar{background:#0b5f57;border-color:#0b5f57;color:#fff;margin-right:auto}
+.nota-caixa-acoes .nota-apagar{color:var(--bad,#b4322a);border-color:transparent}
+body[data-theme="dark"] .nota-caixa-acoes .nota-salvar{background:#7fd3c2;border-color:#7fd3c2;color:#10241f}
+
+/* Lista central, na Biblioteca pessoal. */
+.notas-aula{margin:0 0 14px;padding:14px 16px;border:1px solid var(--line);border-radius:14px;background:var(--white)}
+.notas-aula h3{margin:0 0 4px;font-size:16px}
+.notas-aula .notas-conta{margin:0 0 10px;font-size:12px;color:var(--muted)}
+.notas-item{display:flex;gap:10px;padding:10px 0;border-top:1px solid var(--line)}
+.notas-item:first-of-type{border-top:0}
+.notas-cor{flex:none;width:6px;border-radius:3px;background:#ddd}
+.notas-cor[data-cor="amarelo"]{background:#f0d262}.notas-cor[data-cor="verde"]{background:#79c7a5}
+.notas-cor[data-cor="azul"]{background:#79a8d8}.notas-cor[data-cor="rosa"]{background:#d98aad}
+.notas-cor[data-cor="sublinhado"]{background:#15867a}
+.notas-texto{flex:1;min-width:0}
+.notas-trecho{margin:0;font-size:14px;line-height:1.55;color:var(--ink)}
+.notas-comentario{margin:6px 0 0;font-size:13.5px;line-height:1.55;color:var(--secondary-text,var(--muted))}
+.notas-ir{margin-top:6px;padding:0;border:0;background:none;color:#0b5f57;font-size:12.5px;font-weight:700;cursor:pointer;text-decoration:underline}
+body[data-theme="dark"] .notas-ir{color:#7fd3c2}
+@media(max-width:600px){.nota-barra{padding:7px}.nota-barra button{width:38px;height:38px;min-width:38px}}
+@media print{.nota-barra,.nota-caixa,.nota-bolha{display:none!important}}
