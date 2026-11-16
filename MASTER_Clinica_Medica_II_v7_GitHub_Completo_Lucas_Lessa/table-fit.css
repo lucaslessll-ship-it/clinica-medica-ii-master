@@ -1,0 +1,21 @@
+/* Tabelas que cabem na página em qualquer tela.
+   Quando a tabela não cabe na largura disponível, cada linha vira um bloco
+   com o rótulo da coluna acima do valor, em vez de rolagem horizontal.
+   O prefixo :is(...) iguala a especificidade das regras de largura existentes. */
+#main-content :is(.deep-table,.pocus-table,.clinical-table,.fit-table){min-width:0}
+/* Sem empilhar, a tabela usa a largura da coluna e quebra o texto, em vez de esticar. */
+:is(#main-content,.hig-dialog,.ai-tutor-dialog) table[data-fit="wrap"]{width:100%;max-width:100%;table-layout:auto}
+:is(#main-content,.hig-dialog,.ai-tutor-dialog) table[data-fit="wrap"] :is(td,th){overflow-wrap:break-word}
+
+:is(#main-content,.hig-dialog,.ai-tutor-dialog) table[data-fit="stack"]{display:block;width:100%;max-width:100%;border-collapse:separate;border-spacing:0;font-size:14px;overflow:visible}
+:is(#main-content,.hig-dialog,.ai-tutor-dialog) table[data-fit="stack"] thead{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+:is(#main-content,.hig-dialog,.ai-tutor-dialog) table[data-fit="stack"] tbody{display:block;width:100%}
+:is(#main-content,.hig-dialog,.ai-tutor-dialog) table[data-fit="stack"] tr{display:block;width:100%;margin:0 0 10px;padding:12px 14px;border:1px solid var(--line);border-radius:var(--radius-md,12px);background:var(--white)}
+:is(#main-content,.hig-dialog,.ai-tutor-dialog) table[data-fit="stack"] tr:last-child{margin-bottom:0}
+:is(#main-content,.hig-dialog,.ai-tutor-dialog) table[data-fit="stack"] :is(td,th){display:block;width:auto;max-width:100%;border:0;padding:0;text-align:left;overflow-wrap:anywhere}
+:is(#main-content,.hig-dialog,.ai-tutor-dialog) table[data-fit="stack"] th[scope="row"]{margin:0 0 10px;font-weight:700;color:var(--ink);background:none;font-size:15px;line-height:1.35;letter-spacing:normal;text-transform:none}
+:is(#main-content,.hig-dialog,.ai-tutor-dialog) table[data-fit="stack"] td{padding:9px 0 0;margin-top:9px;border-top:1px solid var(--line);color:var(--secondary-text,var(--ink));line-height:1.55}
+:is(#main-content,.hig-dialog,.ai-tutor-dialog) table[data-fit="stack"] tr>td:first-child{margin-top:0;border-top:0;padding-top:0}
+:is(#main-content,.hig-dialog,.ai-tutor-dialog) table[data-fit="stack"] td[data-col]::before{content:attr(data-col);display:block;margin:0 0 4px;font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+/* A caixa deixa de rolar quando o conteúdo já cabe empilhado. */
+:is(.deep-table-wrap,.pocus-table-wrap,.clinical-table-wrap,.table-wrap):has(table[data-fit="stack"]){overflow-x:visible}
