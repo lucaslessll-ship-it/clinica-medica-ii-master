@@ -188,7 +188,7 @@ test('curriculum has eight checklist topics, oral has six and P1 six groups',asy
  const t=await open({session:true}),p=t.page;await p.waitForFunction(()=>document.getElementById('master-auth').hidden);
  assert.deepEqual(await p.evaluate(()=>Study.curriculum().map(t=>t.id)),['reuma2','reuma1','neuro1','neuro2','neuro3','gastro','onco','hema']);await p.evaluate(()=>navigate('oral'));assert.equal(await p.locator('.topic-filter .topic-chip').count(),6);assert.equal(await p.locator('.topic-filter').innerText().then(s=>/Neoplasias|Emergências onco/.test(s)),false);
  await p.evaluate(()=>{ui.oralIndex=CASE_BANK.findIndex(c=>c.t==='onco');render()});assert.ok(await p.evaluate(()=>Study.oralIds.includes(CASE_BANK[ui.oralIndex].t)));
- await p.evaluate(()=>navigate('pocus'));await text(p,'#main-content',/escopo específico/);await p.locator('#pocus-note').fill('Roteiro de treino');await p.reload();await p.waitForFunction(()=>document.getElementById('master-auth').hidden);assert.equal(await p.locator('#pocus-note').inputValue(),'Roteiro de treino');await t.close();
+ await p.evaluate(()=>navigate('pocus'));await text(p,'#main-content',/escopo específico/);assert.equal(await p.locator('#pocus-note').count(),0);assert.equal(await p.getByRole('heading',{name:'Treino de descrição verbal'}).count(),0);await t.close();
 });
 test('question filters use old results, hide answers, record help and schedule with controlled dates',async()=>{
  const t=await open({session:true}),p=t.page;await p.waitForFunction(()=>document.getElementById('master-auth').hidden);

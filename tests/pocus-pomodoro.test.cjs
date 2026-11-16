@@ -35,7 +35,7 @@ test('lesson tabs wrap without horizontal scrolling and keep the active tab read
 });
 test('POCUS course lists twelve modules, renders annotated figures and saves answers and completion',async()=>{
  const t=await open(),p=t.page;await p.evaluate(()=>navigate('pocus'));
- assert.equal(await p.locator('.pocus-card').count(),12);assert.equal(await p.locator('#pocus-note').count(),1);
+ assert.equal(await p.locator('.pocus-card').count(),12);assert.equal(await p.locator('#pocus-note').count(),0);
  for(let i=0;i<12;i++){
   await p.evaluate(i=>PocusCourse.open(i),i);
   assert.ok(await p.locator('.pocus-q').count()>=3,`module ${i+1} questions`);assert.ok(await p.locator('.pocus-refs a').count()>=1,`module ${i+1} sources`);assert.ok(await fits(p),`module ${i+1} overflow`);
