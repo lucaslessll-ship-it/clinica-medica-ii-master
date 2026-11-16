@@ -173,13 +173,22 @@ const HIG = (() => {
       (marked.length?`<div class="notes-grid">${marked.map(x=>`<article class="note-card"><div class="note-overline">${x.bookmarked?'★ SALVO PARA REVISÃO':'✎ ANOTAÇÕES'} · ${escapeHtml(x.t.area)}</div><h3>${escapeHtml(x.ch.name)}</h3><p>${escapeHtml((x.note||x.ch.memory).slice(0,240))}${(x.note||x.ch.memory).length>240?'…':''}</p><button class="btn" onclick="openTopic('${x.t.id}');switchChapter(${x.i})">Abrir aula ↗</button></article>`).join('')}</div>`:`<div class="empty-state"><strong>Seu caderno está pronto.</strong><p>Abra uma aula, marque ☆ Salvar para revisão ou escreva suas anotações.</p><button class="btn primary" onclick="navigate('topics')">Explorar as 22 aulas</button></div>`);
   }
   // Todas as marcações de texto reunidas por aula, com o trecho e o comentário.
+  // Abre a aula certa, qualquer que seja o módulo, e reaplica as marcas.
+  function abrirAula(rota,id,indice){
+    if(rota==='p1topic'&&window.P1){P1.openTopic(id);if(indice)P1.chapter(indice);}
+    else if(rota==='cirtopic'&&window.CIR){CIR.openTopic(id,indice);}
+    else{openTopic(id);if(indice)switchChapter(indice);}
+    closeOverlay?.();
+  }
   function secaoMarcas(){
     const porAula=preferences.marcas||{};
     const aulas=Object.keys(porAula).filter(k=>(porAula[k]||[]).length);
     if(!aulas.length)return '';
-    const nome=key=>{const corte=key.lastIndexOf('_'),t=TOPICS.find(x=>x.id===key.slice(0,corte));
-      if(!t)return key;const c=t.chapters[Number(key.slice(corte+1))];
-      return {aula:c?c.name:t.title,area:t.area||t.short||t.title,topico:t.id,indice:Number(key.slice(corte+1))}};
+    const nome=key=>{const corte=key.lastIndexOf('_'),id=key.slice(0,corte),indice=Number(key.slice(corte+1));
+      const fontes=[['topic',TOPICS,'P2'],['p1topic',window.P1?.topics||[],'P1'],['cirtopic',window.CIR?.topics||[],'Cirurgia']];
+      for(const [rota,lista,rotulo] of fontes){const t=lista.find(x=>x.id===id);if(!t)continue;const c=(t.chapters||[])[indice];
+        return {aula:c?(c.name||c.title):t.title,area:rotulo+' · '+(t.area||t.short||t.title),topico:id,indice,rota};}
+      return {aula:key,area:'',topico:'',indice:0,rota:''};};
     const total=aulas.reduce((n,k)=>n+porAula[k].length,0);
     return `<section class="section-spaced" aria-label="Trechos marcados"><h2 class="section-title">Trechos marcados</h2>`+
       `<p class="subtle" style="margin:0 0 12px">${total} ${total===1?'trecho marcado':'trechos marcados'} em ${aulas.length} ${aulas.length===1?'aula':'aulas'}.</p>`+
@@ -189,7 +198,7 @@ const HIG = (() => {
           lista.map(m=>`<div class="notas-item"><span class="notas-cor" data-cor="${escapeHtml(m.cor||'amarelo')}"></span>`+
             `<div class="notas-texto"><p class="notas-trecho">${escapeHtml(m.texto||'')}</p>`+
             (m.comentario?`<p class="notas-comentario">${escapeHtml(m.comentario)}</p>`:'')+
-            `<button type="button" class="notas-ir" onclick="openTopic('${info.topico}');switchChapter(${info.indice})">Abrir no texto ↗</button></div></div>`).join('')+
+            (info.rota?`<button type="button" class="notas-ir" onclick="HIG.abrirAula('${info.rota}','${info.topico}',${info.indice})">Abrir no texto ↗</button>`:'')+`</div></div>`).join('')+
           `</article>`;}).join('')+
       `</section>`;
   }
@@ -211,7 +220,7 @@ const HIG = (() => {
     });
   }
   function reload(){preferences=load();applyPrefs();}
-  return {reload,init,afterRender,marcas,marcasTodas,marcaAdd,marcaEdita,marcaRemove,setFocus,fullscreenAvailable,openSearch,searchInput,searchKeys,chooseResult,openSettings,openHelp,closeOverlay,setTheme,setFont,togglePref,toggleSidebar,toggleFocus,lessonToolbar,lessonNotes,saveNote,bookmark,viewToday,viewNotes,configureTimer,toggleTimer,resetTimer,exportNotes,exportBackup,importProgress,openLast,resumeInfo,focusTopic,dueCards,focusData,saveFocus,refreshFocus,openTimer};
+  return {reload,init,afterRender,abrirAula,marcas,marcasTodas,marcaAdd,marcaEdita,marcaRemove,setFocus,fullscreenAvailable,openSearch,searchInput,searchKeys,chooseResult,openSettings,openHelp,closeOverlay,setTheme,setFont,togglePref,toggleSidebar,toggleFocus,lessonToolbar,lessonNotes,saveNote,bookmark,viewToday,viewNotes,configureTimer,toggleTimer,resetTimer,exportNotes,exportBackup,importProgress,openLast,resumeInfo,focusTopic,dueCards,focusData,saveFocus,refreshFocus,openTimer};
 })();
 window.HIG=HIG;
 window.addEventListener('DOMContentLoaded',HIG.init);

@@ -181,7 +181,7 @@ document.addEventListener('click',event=>{const button=event.target.closest?.('[
 function render(id,index){
   const d=DATA[id+'_'+index];if(!d)return '';
   const key=id+'_'+index,L=window.LearnUX,imageHTML=figures(d.figs);
-  return `<section class="lesson-block full deep-lesson${L&&L.isHy()?' deep-hy':''}" aria-label="Estudo aprofundado"><header class="deep-head"><span class="kicker">Estudo aprofundado</span><h3>Entenda, decida e lembre</h3>${window.ReadingTime?`<p class="deep-read-time subtle">Leitura média: cerca de ${ReadingTime.minutes(d)} min</p>`:''}<p>Leia depois dos blocos acima. Comece tentando responder ao pré-teste, mesmo sem saber: errar antes de ler melhora a retenção.</p>${L?L.tools():''}</header>
+  return `<section class="lesson-block full deep-lesson${L&&L.isHy()?' deep-hy':''}" aria-label="Estudo aprofundado" data-lesson-key="${key}" data-lesson-route="${typeof ui!=='undefined'?ui.route:''}"><header class="deep-head"><span class="kicker">Estudo aprofundado</span><h3>Entenda, decida e lembre</h3>${window.ReadingTime?`<p class="deep-read-time subtle">Leitura média: cerca de ${ReadingTime.minutes(d)} min</p>`:''}<p>Leia depois dos blocos acima. Comece tentando responder ao pré-teste, mesmo sem saber: errar antes de ler melhora a retenção.</p>${L?L.tools():''}</header>
   <section class="deep-block deep-pretest"><h4>Pré-teste: responda de cabeça</h4><ol>${d.pretest.map((q,i)=>L?L.preMarkup(q,i):`<li>${q}</li>`).join('')}</ol><p class="deep-pre-out subtle" role="status" aria-live="polite"></p></section>
   ${examBlock(d.exam)}
   ${window.LessonImages?LessonImages.slot(key):''}

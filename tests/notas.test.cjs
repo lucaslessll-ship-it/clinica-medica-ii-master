@@ -131,3 +131,58 @@ test('as marcas aparecem reunidas por aula na Biblioteca pessoal',async()=>{
  assert.match(await p.evaluate(()=>location.hash),/^#topic\//);
  await t.close();
 });
+
+// A marcação precisa funcionar em todas as rotas de aula: P2, P1 e Cirurgia.
+const abrirRota=async(abrir,width=1280)=>{
+ const context=await browser.newContext({viewport:{width,height:900},timezoneId:'America/Sao_Paulo',isMobile:width<800,hasTouch:width<800});
+ const page=await context.newPage(),errors=[];page.on('pageerror',e=>errors.push(e.stack||e.message));
+ await page.route('https://cdn.jsdelivr.net/**/supabase.min.js',route=>route.fulfill({contentType:'text/javascript',body:`(${mock})()`}));
+ await page.goto(`${base}/${APP}/index.html`);
+ await page.waitForFunction(()=>document.getElementById('master-auth')?.hidden,null,{timeout:20000});
+ await page.evaluate(abrir);
+ await page.waitForFunction(()=>document.querySelectorAll('.deep-lesson .deep-block p').length>0,null,{timeout:15000});
+ await page.waitForTimeout(700);
+ return {page,errors,close:async()=>{await context.close();assert.deepEqual(errors,[]);}};
+};
+const ROTAS=[
+ ['P2 (topic)',()=>{openTopic('neuro1');switchChapter(0)},'neuro1_0'],
+ ['P1 (p1topic)',()=>{P1.openTopic('p1dm');P1.chapter(0)},'p1dm_0'],
+ ['Cirurgia (cirtopic)',()=>{CIR.openTopic(CIR.topics.find(t=>window.LessonDeep&&true).id,0)},null]
+];
+for(const [nome,abrir,chave] of ROTAS){
+ test(`marcar, comentar e reencontrar o trecho funciona em ${nome}`,async()=>{
+  const t=await abrirRota(abrir),p=t.page;
+  const texto=await selecionar(p);
+  await p.waitForSelector('.nota-barra:not([hidden])',{timeout:5000});
+  await p.click('.nota-barra [data-cor="verde"]');
+  await p.waitForSelector('.nota-marca[data-cor="verde"]',{timeout:5000});
+  const marcada=await p.locator('.nota-marca').first().evaluate(el=>({texto:el.textContent,fundo:getComputedStyle(el).backgroundColor}));
+  assert.ok(marcada.texto.trim().length>5);assert.notEqual(marcada.fundo,'rgba(0, 0, 0, 0)','marca sem cor de fundo');
+  let gr=await gravadas(p);const chaves=Object.keys(gr);assert.equal(chaves.length,1,'nada foi gravado');
+  if(chave)assert.equal(chaves[0],chave);
+  // Comentário: abre a caixa, digita, salva e a bolha aparece ao lado do texto.
+  await selecionar(p,1,5,50);
+  await p.waitForSelector('.nota-barra:not([hidden])');
+  await p.click('.nota-barra [data-acao="comentar"]');
+  await p.waitForSelector('.nota-caixa:not([hidden]) textarea',{timeout:5000});
+  assert.equal(await p.locator('.nota-caixa').isVisible(),true,'caixa de comentário não apareceu');
+  await p.fill('.nota-caixa textarea','revisar na sexta');
+  await p.click('.nota-caixa .nota-salvar');
+  await p.waitForSelector('.nota-bolha',{timeout:5000});
+  gr=await gravadas(p);assert.equal(Object.values(gr)[0].length,2);
+  assert.ok(Object.values(gr)[0].some(m=>m.comentario==='revisar na sexta'));
+  // Recarrega: as marcas voltam sozinhas.
+  await p.reload();
+  await p.waitForFunction(()=>document.getElementById('master-auth')?.hidden,null,{timeout:20000});
+  await p.evaluate(abrir);
+  await p.waitForSelector('.nota-marca',{timeout:8000});
+  assert.equal(await p.locator('.nota-bolha').count(),1);
+  // A Biblioteca reúne e leva de volta à aula certa.
+  await p.evaluate(()=>navigate('notes'));
+  await p.waitForSelector('.notas-aula',{timeout:5000});
+  assert.match(await p.locator('.notas-aula').first().innerText(),/revisar na sexta/);
+  await p.locator('.notas-ir').first().click();
+  await p.waitForSelector('.deep-lesson .nota-marca',{timeout:8000});
+  await t.close();
+ });
+}

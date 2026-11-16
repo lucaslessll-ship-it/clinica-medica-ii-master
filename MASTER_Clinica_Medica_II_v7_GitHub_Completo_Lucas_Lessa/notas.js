@@ -9,9 +9,10 @@
   let barra, caixa, emEdicao = null, agendado = false;
 
   const api = () => (typeof HIG !== 'undefined' && HIG.marcaAdd ? HIG : null);
-  const aulaAtual = () => {
-    try { return typeof ui !== 'undefined' && ui.topic ? `${ui.topic}_${ui.chapter || 0}` : ''; } catch { return ''; }
-  };
+  // A própria aula diz quem ela é (P2, P1 e Cirurgia usam rotas diferentes).
+  const aulaEl = () => document.querySelector('#main-content .deep-lesson[data-lesson-key]');
+  const aulaAtual = () => aulaEl()?.dataset.lessonKey || '';
+  const rotaAtual = () => aulaEl()?.dataset.lessonRoute || '';
   const normal = t => t.replace(/\s+/g, ' ').trim();
 
   /* ---------- aplicar as marcas gravadas no texto renderizado ---------- */
@@ -107,7 +108,7 @@
     for (const velha of raiz.querySelectorAll('.nota-bolha')) velha.remove();
     for (const velha of raiz.querySelectorAll('.nota-marca')) velha.replaceWith(...velha.childNodes);
     raiz.normalize();
-    if (!aula || !location.hash.startsWith('#topic/')) return;
+    if (!aula) return;
     const alvo = raiz.querySelector('.deep-lesson');
     if (!alvo) return;
     for (const marca of HIGapi.marcas(aula)) {
@@ -204,7 +205,7 @@
     const { antes, depois, ocorrencia } = contexto(emEdicao.faixa, emEdicao.texto);
     const marca = HIGapi.marcaAdd(aula, {
       id: `m${Date.now().toString(36)}${Math.random().toString(36).slice(2, 6)}`,
-      texto: emEdicao.texto, antes, depois, ocorrencia, cor, comentario, criadoEm: new Date().toISOString()
+      texto: emEdicao.texto, antes, depois, ocorrencia, cor, comentario, rota: rotaAtual(), titulo: normal(document.querySelector('#main-content h1')?.textContent || ''), criadoEm: new Date().toISOString()
     });
     window.getSelection()?.removeAllRanges();
     esconderBarra();
