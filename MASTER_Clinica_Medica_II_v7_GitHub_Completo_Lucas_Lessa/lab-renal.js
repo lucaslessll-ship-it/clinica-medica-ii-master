@@ -4,7 +4,7 @@ window.LabRenal=(()=>{
 'use strict';
 const PILOT=window.MASTER_LAB_RENAL,e=escapeHtml;
 let caseIndex=0,stageIndex=0,noteTimer;
-function data(){const p=store.study?.labRenal||{};return {version:1,...p,decisions:p.decisions||{},attempts:p.attempts||[],drafts:p.drafts||{},settings:p.settings||{correctDays:3},counts:p.counts||{attempts:0,correct:0},seenSolution:p.seenSolution||{}};}
+function data(){const p=store.study?.labRenal||{};return {version:1,...p,decisions:p.decisions||{},attempts:p.attempts||[],drafts:p.drafts||{},settings:p.settings||{correctDays:3},counts:p.counts||{attempts:0,correct:0},seenSolution:p.seenSolution||{},helpSeen:p.helpSeen||{}};}
 function hasRoom(candidate=store){return new TextEncoder().encode(JSON.stringify(candidate)).byteLength<=950000;}
 function save(change){
  const next=structuredClone(data());change(next);
@@ -49,7 +49,16 @@ function page(){
 function afterRender(){
  if(ui.route!=='labrenal')return;const main=getMain();
  main.querySelectorAll('.pocus-module .pocus-sec > h3,.pocus-module .pocus-goals > h3').forEach(heading=>{const h=document.createElement('h2');h.textContent=heading.textContent;heading.replaceWith(h);});
- const parts=location.hash.slice(1).split('/');if(parts[1]==='aula'){
+ const parts=location.hash.slice(1).split('/');
+ if(parts[1]==='caso'){
+  const stage=PILOT.CASES[caseIndex]?.stages[stageIndex],hint=main.querySelector('.lab-help');
+  hint?.querySelector('summary')?.addEventListener('click',()=>{if(stage&&!hint.open&&!data().decisions[stage.id])save(next=>{next.helpSeen[stage.id]=true;});});
+ }
+ if(parts[1]==='sintese'){
+  const c=PILOT.CASES[Number(parts[2])],solution=main.querySelector('.pocus-script');
+  solution?.querySelector('summary')?.addEventListener('click',()=>{if(c&&!solution.open&&!data().seenSolution[c.id])save(next=>{next.seenSolution[c.id]=true;});});
+ }
+ if(parts[1]==='aula'){
   const module=PILOT.MODULES[Number(parts[2])],first=main.querySelector('.pocus-goals');
   if(first&&module?.pretest)first.insertAdjacentHTML('afterend',`<section class="pocus-sec"><h2>Antes de ler: pré-teste</h2><ol>${module.pretest.map(q=>`<li>${e(q)}</li>`).join('')}</ol><p class="subtle">Responda em voz alta ou no caderno. Abrir a aula não conta como acerto.</p></section>`);
  }
@@ -58,12 +67,12 @@ function cases(){go('casos');}
 function caseOpen(ci,si){if(!Number.isInteger(ci)||!PILOT.CASES[ci])return;const stages=PILOT.CASES[ci].stages;const next=stages.findIndex(s=>!data().decisions[s.id]);go('caso/'+ci+'/'+(Number.isInteger(si)?si:Math.max(0,next)));}
 function pick(choice){
  const s=PILOT.CASES[caseIndex]?.stages[stageIndex];if(!s||data().decisions[s.id]||!Number.isInteger(choice)||choice<0||choice>=s.o.length)return;
- const help=document.getElementById('lab-used-help').checked||document.querySelector('.lab-ferro .lab-help').open||!!data().seenSolution[PILOT.CASES[caseIndex].id],correct=choice===s.a,now=new Date(),days=correct&&!help?data().settings.correctDays:1;
+ const help=document.getElementById('lab-used-help').checked||document.querySelector('.lab-ferro .lab-help').open||!!data().helpSeen[s.id]||!!data().seenSolution[PILOT.CASES[caseIndex].id],correct=choice===s.a,now=new Date(),days=correct&&!help?data().settings.correctDays:1;
  const entry={selected:choice,correct,help,justification:document.getElementById('lab-justification').value.slice(0,1200),at:now.toISOString(),due:new Date(now.getTime()+days*86400000).toISOString()};
  if(!save(next=>{next.decisions[s.id]=entry;next.attempts.push({caseId:PILOT.CASES[caseIndex].id,stageId:s.id,selected:choice,correct,help,at:entry.at});next.attempts=next.attempts.slice(-100);next.counts.attempts++;if(correct)next.counts.correct++;}))return;
  render();const feedback=document.querySelector('.lab-ferro .lab-feedback');feedback?.focus({preventScroll:true});
 }
-function retry(){const s=PILOT.CASES[caseIndex]?.stages[stageIndex];if(!s||!save(next=>{delete next.decisions[s.id];}))return;render();document.querySelector('.lab-ferro .lab-choices button')?.focus({preventScroll:true});}
+function retry(){const s=PILOT.CASES[caseIndex]?.stages[stageIndex];if(!s||!save(next=>{delete next.decisions[s.id];delete next.helpSeen[s.id];}))return;render();document.querySelector('.lab-ferro .lab-choices button')?.focus({preventScroll:true});}
 function next(){const c=PILOT.CASES[caseIndex];if(!data().decisions[c.stages[stageIndex].id]||stageIndex>=c.stages.length-1)return;go('caso/'+caseIndex+'/'+(stageIndex+1));}
 function draft(value){const s=PILOT.CASES[caseIndex]?.stages[stageIndex];if(!s)return;const saved=save(next=>{next.drafts[s.id]=String(value).slice(0,1200);});const status=document.querySelector('.lab-ferro .lab-draft-status');if(status){clearTimeout(noteTimer);status.textContent=saved?'Justificativa atualizada.':'Justificativa ainda não salva. Tente novamente.';}}
 function solution(index=caseIndex){if(!PILOT.CASES[index]||!save(next=>{next.seenSolution[PILOT.CASES[index].id]=true;}))return;go('sintese/'+index);}

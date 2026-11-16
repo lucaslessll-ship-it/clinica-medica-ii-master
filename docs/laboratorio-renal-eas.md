@@ -43,6 +43,10 @@ Fontes e links completos estão em `lab-renal-data.js`. Evidência de consulta, 
 - Não há calculadora automática de dose por TFGe. Depuração e TFGe indexada não são intercambiáveis; LRA exige avaliação própria. As fichas farmacológicas existentes continuam disponíveis pelo Manual de prescrição e pela anotação contextual.
 - Revisão docente independente segue pendente. Não foram incluídas imagens novas nem modificados dados reais no Supabase. O simulador de antibiograma permanece removido.
 
+## Validação
+
+152 testes aprovados na suíte completa, incluindo nove específicos do bloco renal. Validadores validar.py e validar_v7.py aprovados; sintaxe conferida em 79 arquivos JS. Fluxos testados com autenticação simulada e bloqueio de chamadas ao Supabase real. Cobertura de 320, 390, 820 e 1280 px, temas claro e escuro, teclado, persistência, isolamento entre contas e uso de ajuda.
+
 ## Onde parei e o que falta
 
 Concluído o bloco renal e EAS: 3 aulas, 18 questões, 5 casos, 10 decisões, busca e progresso no ambiente existente.
