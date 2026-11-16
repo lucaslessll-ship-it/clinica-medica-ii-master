@@ -51,7 +51,7 @@ test('estações e questões com SVG funcionam nos dois temas e de 320 px a desk
   assert.ok(await p.locator('.nav-badge').first().evaluate(el=>parseFloat(getComputedStyle(el).fontSize))>=12);
   for(let index=0;index<modules.length;index++){
    await p.evaluate(index=>PocusCourse.open(index),index);
-   const count=previous[index]===undefined?0:6;assert.equal(await p.locator('.pocus-q-image').count(),count);assert.equal(await p.locator('.pocus-q-image svg[role=img]').count(),count);
+   const count=previous[index]===undefined?0:6;assert.equal(await p.locator('.pocus-module > .pocus-sec > .pocus-fig').count(),0);if(count)await p.locator('.pocus-schematic-practice summary').click();assert.equal(await p.locator('.pocus-q-image').count(),count);assert.equal(await p.locator('.pocus-q-image svg[role=img]').count(),count);
    assert.equal(await p.locator('.pocus-practical li').count(),count?4:0);assert.equal(await p.locator('.pocus-technique-errors li').count(),count?4:0);assert.equal(await p.locator('.pocus-script li').count(),count?6:0);
    assert.ok(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),`rolagem em ${width}, ${theme}, módulo ${index}`);
    assert.equal(await p.evaluate(()=>{const ids=[...document.querySelectorAll('.pocus-module svg [id]')].map(el=>el.id);return ids.length===new Set(ids).size;}),true);
@@ -64,7 +64,7 @@ test('estações e questões com SVG funcionam nos dois temas e de 320 px a desk
 test('respostas das 48 questões novas e progresso antigo permanecem ao recarregar',async()=>{
  const t=await open(),p=t.page;await p.evaluate(()=>{navigate('pocus');PocusCourse.open(0);PocusCourse.answer(0,0,1);PocusCourse.complete('m1',true);});
  for(let mi=0;mi<modules.length;mi++){
-  await p.evaluate(mi=>PocusCourse.open(mi),mi);
+  await p.evaluate(mi=>PocusCourse.open(mi),mi);if(previous[mi]!==undefined)await p.locator('.pocus-schematic-practice summary').click();
   for(let qi=previous[mi];qi<modules[mi].quiz.length;qi++){
    const question=p.locator('#pq-'+mi+'-'+qi);await question.locator('.pocus-q-opt').nth(modules[mi].quiz[qi].a).click();assert.match(await question.locator('.pocus-q-why').innerText(),/^Correto\./);
   }
@@ -75,6 +75,7 @@ test('respostas das 48 questões novas e progresso antigo permanecem ao recarreg
 });
 test('esquema ampliado permite zoom e movimento em 320 px, com foco e rótulos legíveis',async()=>{
  const t=await open(320,{hasTouch:true}),p=t.page;await p.evaluate(()=>{HIG.setTheme('dark');navigate('pocus');PocusCourse.open(0);});
+ await p.locator('.pocus-schematic-practice summary').click();
  const trigger=p.locator('.pocus-fig').filter({has:p.locator('defs')}).first().locator('.pocus-zoom-open');assert.ok(await trigger.evaluate(el=>el.getBoundingClientRect().height)>=44);await trigger.focus();await p.keyboard.press('Enter');
  const dialog=p.locator('.pocus-zoom-dialog'),viewport=dialog.locator('.pocus-zoom-viewport'),svg=dialog.locator('svg');await dialog.waitFor({state:'visible'});
  assert.equal(await dialog.locator('output').innerText(),'100%');assert.equal(await dialog.getByRole('button',{name:'Diminuir',exact:true}).isDisabled(),true);

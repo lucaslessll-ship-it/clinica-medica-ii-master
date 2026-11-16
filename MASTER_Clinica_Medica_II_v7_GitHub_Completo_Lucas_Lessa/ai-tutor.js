@@ -1,0 +1,83 @@
+/* Tutor: índice público sob demanda, histórico efêmero e proxy autenticado. */
+(()=>{'use strict';
+const script=document.currentScript,asset=new URL('ai-index.json',script.src);asset.search=new URL(script.src).search;
+let dialog,launch,dock,hide,returnFocus,history,input,status,send,loader=null,index=null,documents=[],byId=new Map(),controller=null,generation=0,owner=null;
+const HIDDEN='master_ai_launcher_hidden_v1',NEWS='master_ai_news_20261116';
+const pref=key=>{try{return localStorage.getItem(key)==='1';}catch{return false;}};
+const savePref=key=>{try{localStorage.setItem(key,'1');}catch{}};
+let concealed=pref(HIDDEN),newsDismissed=pref(NEWS);
+const normalize=s=>String(s).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
+const stops=new Set('a o os as um uma de do da dos das em no na nos nas e ou que qual quais como para por com sobre me isso esta este'.split(' '));
+const auth=()=>window.MASTER_AUTH;
+const unlocked=()=>!document.documentElement.classList.contains('master-auth-locked')&&!!auth()?.user();
+function message(who,text,sources=[]){const box=document.createElement('article');box.className='ai-tutor-message';const title=document.createElement('strong');title.textContent=who;box.append(title,document.createTextNode(text));if(sources.length){const links=document.createElement('nav');links.className='ai-tutor-sources';links.setAttribute('aria-label','Aulas consultadas');const used=new Set();for(const source of sources){const d=byId.get(source.id);if(!d||used.has(d.lesson))continue;used.add(d.lesson);const button=document.createElement('button');button.type='button';button.className='ai-tutor-source';button.textContent='Abrir aula: '+d.title;button.onclick=()=>openSource(d);links.append(button);}box.append(links);}history.append(box);history.scrollTop=history.scrollHeight;}
+function state(text,busy=false){status.textContent=text;status.classList.toggle('ai-tutor-dots',busy);send.disabled=busy;input.disabled=busy;dialog.querySelectorAll('[data-ai-mode]').forEach(b=>b.disabled=busy);}
+async function load(){
+ if(index)return;if(loader)return loader;
+ loader=(async()=>{
+  if(!window.MiniSearch){
+   const library=url=>new Promise((resolve,reject)=>{const tag=document.createElement('script'),timer=setTimeout(()=>{tag.remove();reject(new Error('index'));},12000);tag.src=url;tag.onload=()=>{clearTimeout(timer);resolve();};tag.onerror=()=>{clearTimeout(timer);tag.remove();reject(new Error('index'));};document.head.append(tag);});
+   try{await library('https://cdn.jsdelivr.net/npm/minisearch@7.2.0/dist/umd/index.js');}catch{await library(new URL('assets/vendor/minisearch-7.2.0.js',script.src));}
+  }
+  const result=await fetch(asset,{credentials:'omit'});if(!result.ok)throw new Error('index');documents=await result.json();byId=new Map(documents.map(d=>[d.id,d]));
+  index=new MiniSearch({fields:['title','text'],storeFields:['title','text','lesson'],processTerm:t=>{const n=normalize(t);return stops.has(n)?null:n;},searchOptions:{boost:{title:3},fuzzy:0.2,prefix:true}});index.addAll(documents);
+ })().catch(e=>{loader=null;throw e;});return loader;
+}
+function search(question){return index.search(question).slice(0,5).map(r=>byId.get(r.id));}
+function current(){
+ const main=document.getElementById('main-content'),route=location.hash.split('/')[0],heading=main?.querySelector('.pocus-title')?.textContent||main?.querySelector('h1')?.textContent||'';
+ if(typeof ui!=='undefined'&&ui.route==='topic')return documents.find(d=>d.kind==='p2'&&d.topic===ui.topic&&d.chapter===ui.chapter)?.lesson;
+ const pill=main?.querySelector('.chapter-pill.current')?.textContent.replace(/^[✓\s\d.]+/,'').trim();
+ if(pill)return documents.find(d=>d.route===route&&d.title.endsWith(' · '+pill))?.lesson;
+ return documents.find(d=>d.route===route&&d.title===heading)?.lesson;
+}
+function openSource(d){close();if(d.kind==='p1'){P1.openTopic(d.topic);P1.chapter(d.chapter);}else if(d.kind==='cir')CIR.openTopic(d.topic,d.chapter);else if(d.kind==='p2'){openTopic(d.topic);ui.chapter=d.chapter;render();}else{navigate(d.course);const courses={pocus:window.PocusCourse,ecg:window.ECGCourse,hemo:window.HemoCourse,atb:window.AtbCourse,rad:window.RadCourse};courses[d.course]?.open(d.module);}window.scrollTo({top:0,behavior:'instant'});document.querySelector('#main-content h1')?.focus({preventScroll:true});}
+const errors={daily_limit:'Limite diário atingido, volta amanhã.',provider_busy:'O provedor atingiu o limite temporário. Tente mais tarde.',not_configured:'A IA ainda precisa da chave do provedor no Supabase. Você pode consultar as aulas encontradas abaixo.',bad_key:'A chave do provedor precisa ser revisada no Supabase.',auth:'Sua sessão expirou. Entre novamente.',usage:'Não foi possível conferir o limite diário. Tente novamente.',empty:'Reabra o assistente para atualizar o índice das aulas.',upstream:'O provedor não respondeu. Tente novamente.',unavailable:'A IA está indisponível no momento. Tente novamente.'};
+async function ask(mode='ask'){
+ if(controller||!unlocked())return;
+ let question=input.value.trim();const mine=++generation,uid=auth().user().id;controller=new AbortController();state('Buscando nas aulas',true);
+ try{
+  await load();if(mine!==generation||!unlocked()||auth().user().id!==uid)return;
+  let blocks;
+  if(mode!=='ask'){
+   const lesson=current();if(!lesson){state('Abra uma aula para usar este atalho.');return;}blocks=documents.filter(d=>d.lesson===lesson).slice(0,5);
+   const label=blocks[0].title;question=mode==='resumo'?`Resuma a aula ${label}, somente com os trechos disponíveis.`:mode==='questoes'?`Crie 3 questões de revisão com gabarito comentado sobre ${label}.`:`Destaque pontos de revisão e confusões importantes de ${label}. Não invente frequência em provas.`;
+   question=question.slice(0,500);
+  }else{
+   if(question.length<3){state('Escreva uma pergunta com pelo menos 3 caracteres.');return;}blocks=search(question);
+  }
+  message('Você',question);input.value='';
+  if(!blocks.length){message('Assistente','Isso não está no conteúdo do site encontrado pela busca. Tente mencionar o tema ou o nome da aula.\n\nDica de estudo: comece identificando a síndrome principal.');state('Nenhuma chamada à IA foi feita.');return;}
+  state('Preparando resposta',true);
+  const client=auth().client(),session=await client.auth.getSession();const token=session.data?.session?.access_token;
+  if(!token)throw new Error('auth');
+  const config=window.MASTER_AUTH_CONFIG;
+  const result=await fetch(config.url+'/functions/v1/ai-tutor',{method:'POST',headers:{Authorization:'Bearer '+token,apikey:config.publishableKey,'Content-Type':'application/json'},body:JSON.stringify({question,blocks:blocks.map(b=>({id:b.id})),lessonTitle:blocks[0].title}),signal:controller.signal});
+  let value;try{value=await result.json();}catch{throw new Error('upstream');}
+  if(mine!==generation||!unlocked()||auth().user().id!==uid)return;
+  if(!result.ok){message('Assistente',errors[value.error]||'Não foi possível responder agora.',blocks);state('As aulas encontradas estão disponíveis para consulta.');return;}
+  if(typeof value.answer!=='string')throw new Error('upstream');
+  const allowed=new Set(blocks.map(b=>b.id));const sources=Array.isArray(value.sources)?value.sources.filter(s=>allowed.has(s.id)):blocks;
+  message('Assistente',value.answer,sources);state(Number.isFinite(value.remaining)?`${value.remaining} perguntas disponíveis hoje.`:'Resposta baseada nas aulas encontradas.');
+ }catch(e){if(mine===generation&&e.name!=='AbortError'){message('Assistente',errors[e.message]||(e.message==='index'?'Não foi possível carregar a busca. Confira a conexão e tente novamente.':'Sem conexão ou serviço indisponível. Tente novamente.'));state('Não foi possível concluir a pergunta.');}}
+ finally{if(mine===generation){controller=null;send.disabled=false;input.disabled=false;dialog.querySelectorAll('[data-ai-mode]').forEach(b=>b.disabled=false);status.classList.remove('ai-tutor-dots');input.focus();}}
+}
+function restoreFocus(){if(!unlocked())return;const mobile=document.querySelector('#sidebar')?.inert&&returnFocus?.closest('#sidebar');const target=mobile?document.querySelector('.menu-button'):returnFocus?.isConnected&&returnFocus.getClientRects().length?returnFocus:!launch.hidden?launch:document.querySelector('[data-ai-open]');target?.focus({preventScroll:true});}
+function close(){if(dialog.open)dialog.close();restoreFocus();}
+function show(from=launch,help=false){if(!unlocked())return;returnFocus=from;if(typeof closeMobileNav==='function')closeMobileNav(false);dialog.showModal();if(help||concealed)dialog.querySelector('.ai-tutor-help').open=true;input.focus();load().catch(()=>state('A busca não carregou. Confira a conexão e tente novamente.'));}
+function installEntry(){const nav=document.getElementById('sidebar-nav');if(!nav||nav.querySelector('[data-ai-open]'))return;const entry=document.createElement('button');entry.type='button';entry.className='nav-destination ai-tutor-menu';entry.dataset.aiOpen='';entry.title='Assistente de estudo';entry.setAttribute('aria-haspopup','dialog');entry.innerHTML='<svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M4 4h16v12H9l-5 4V4Z"/><path d="M8 8h8M8 12h5"/></svg><span>Assistente de estudo</span>';const first=nav.querySelector('.nav-group');if(first)first.after(entry);else nav.append(entry);}
+function showNews(){const main=document.getElementById('main-content');if(!main||typeof ui==='undefined'||ui.route!=='dashboard'||!unlocked()||newsDismissed||main.querySelector('.ai-tutor-news'))return;const news=document.createElement('section');news.className='card pad ai-tutor-news';news.setAttribute('aria-label','Novas funções do MASTER');news.innerHTML='<div class="ai-tutor-news-head"><h2>Novidades do MASTER</h2><button type="button" class="btn" data-ai-dismiss aria-label="Dispensar aviso de novas funções">Dispensar</button></div><p class="ai-tutor-news-lead">Novo assistente com busca nas aulas e atalhos de revisão. Respostas por IA dependem da ativação do serviço.</p><details class="ai-tutor-news-details"><summary>Ver o que mudou</summary><ul><li><strong>Assistente de estudo:</strong> encontre aulas e use atalhos de revisão em um só painel. As respostas por IA dependem da ativação do serviço.</li><li><strong>POCUS:</strong> imagens do acervo em destaque, com treino por desenhos separado.</li><li><strong>Laboratório Master:</strong> aulas e casos de função renal e EAS, além da microcitose.</li></ul></details><div class="btn-row"><button type="button" class="btn primary" data-ai-open>Abrir assistente</button><button type="button" class="btn" data-ai-open data-ai-help>Como usar</button></div>';news.querySelector('[data-ai-dismiss]').onclick=()=>{newsDismissed=true;savePref(NEWS);news.remove();};main.prepend(news);}
+
+function reset(){generation++;controller?.abort();controller=null;if(dialog.open)dialog.close();history.replaceChildren();input.value='';owner=null;state('Pergunte sobre os conteúdos do site.');}
+function sync(){const visible=unlocked();launch.hidden=!visible||concealed;dock.hidden=launch.hidden;dialog.querySelector('[data-ai-show]').hidden=!concealed;if(!visible){reset();return;}const uid=auth().user().id;if(owner&&owner!==uid)reset();owner=uid;installEntry();showNews();}
+function init(){
+ launch=document.createElement('button');launch.type='button';launch.className='ai-tutor-launch';launch.hidden=true;launch.setAttribute('aria-label','Abrir assistente de estudo');launch.setAttribute('aria-haspopup','dialog');launch.innerHTML='<svg width="34" height="34" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="4" width="16" height="13" rx="6"/><path d="M12 10h.01M20 10h.01M13 13q3 2 6 0M16 4V2M7 28v-5a6 6 0 0 1 6-6h6a6 6 0 0 1 6 6v5M13 19l3 4 3-4M16 23v5M5 28h22"/></svg>';
+ dialog=document.createElement('dialog');dialog.className='ai-tutor-dialog';dialog.setAttribute('aria-labelledby','ai-tutor-title');dialog.setAttribute('aria-modal','true');dialog.setAttribute('role','dialog');dialog.innerHTML='<header class="ai-tutor-head"><h2 id="ai-tutor-title">Assistente de estudo</h2><button type="button" class="btn" data-ai-close aria-label="Fechar assistente">Fechar</button></header><details class="ai-tutor-help"><summary>Como usar o assistente</summary><ol><li>Escreva uma dúvida sobre as aulas. A busca local encontra trechos relacionados.</li><li>Dentro de uma aula, use os atalhos para resumo, questões ou pontos de revisão.</li><li>Confira a resposta e toque em Abrir aula para consultar a fonte completa.</li><li>O botão ao lado do boneco oculta o flutuante. Para voltar, use Assistente de estudo no menu lateral.</li><li>Feche com Fechar ou Escape. O histórico não é mantido ao recarregar ou sair da conta.</li></ol><button type="button" class="btn" data-ai-show hidden>Mostrar assistente flutuante</button><p>Se houver aviso de ativação, as aulas encontradas continuam acessíveis enquanto as respostas por IA estão indisponíveis.</p></details><div class="ai-tutor-history" role="log" aria-live="polite" aria-relevant="additions"></div><p class="ai-tutor-status" role="status"></p><div class="ai-tutor-actions"><button type="button" data-ai-mode="resumo">Resumir esta aula</button><button type="button" data-ai-mode="questoes">Me faça 3 questões sobre isso</button><button type="button" data-ai-mode="prova">O que mais cai disso na prova</button></div><form class="ai-tutor-form"><label for="ai-tutor-question">Sua dúvida sobre as aulas</label><textarea id="ai-tutor-question" maxlength="500" placeholder="Ex.: para que serve a manobra vagal?"></textarea><button class="ai-tutor-send" type="submit">Perguntar</button></form><p class="ai-tutor-notice">Ferramenta de estudo. Não substitui supervisão clínica. </p><details class="ai-tutor-privacy"><summary>Privacidade e uso de dados</summary><p>São enviados ao provedor somente sua pergunta e trechos públicos das aulas. Não inclua dados de pacientes. O histórico fica apenas nesta sessão.</p></details>';
+ dialog.addEventListener('keydown',e=>{if(e.key!=='Tab')return;const items=[...dialog.querySelectorAll('button:not([disabled]),textarea:not([disabled]),a[href],summary')].filter(el=>el.getClientRects().length);const first=items[0],last=items.at(-1);if(e.shiftKey&&document.activeElement===first){e.preventDefault();last?.focus();}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first?.focus();}});
+ dock=document.createElement('aside');dock.className='ai-tutor-dock';dock.setAttribute('aria-label','Assistente flutuante');hide=document.createElement('button');hide.type='button';hide.className='ai-tutor-hide';hide.setAttribute('aria-label','Ocultar assistente flutuante');hide.title='Ocultar. Você pode abrir pelo menu lateral.';hide.innerHTML='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 6 12 12M6 18 18 6"/></svg>';hide.onclick=()=>{concealed=true;savePref(HIDDEN);sync();document.getElementById('main-content')?.focus({preventScroll:true});if(typeof toast==='function')toast('Assistente oculto. Acesse pelo menu lateral.');};dock.append(launch,hide);document.body.append(dock,dialog);history=dialog.querySelector('.ai-tutor-history');input=dialog.querySelector('textarea');status=dialog.querySelector('.ai-tutor-status');send=dialog.querySelector('[type=submit]');
+ dialog.querySelector('[data-ai-show]').onclick=()=>{concealed=false;try{localStorage.removeItem(HIDDEN);}catch{}sync();};launch.onclick=()=>show(launch);dialog.querySelector('[data-ai-close]').onclick=close;dialog.addEventListener('close',restoreFocus);dialog.querySelector('form').onsubmit=e=>{e.preventDefault();ask();};dialog.querySelectorAll('[data-ai-mode]').forEach(b=>b.onclick=()=>ask(b.dataset.aiMode));
+ window.addEventListener('master-auth-ended',sync);window.addEventListener('master-auth-ready',sync);new MutationObserver(sync).observe(document.documentElement,{attributes:true,attributeFilter:['class']});new MutationObserver(installEntry).observe(document.getElementById('sidebar-nav'),{childList:true});new MutationObserver(showNews).observe(document.getElementById('main-content'),{childList:true});document.addEventListener('click',e=>{const button=e.target.closest('[data-ai-open]');if(button)show(button,button.hasAttribute('data-ai-help'));});sync();
+ window.AITutor={search:async q=>{await load();return search(q);},current,openSource};
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+})();

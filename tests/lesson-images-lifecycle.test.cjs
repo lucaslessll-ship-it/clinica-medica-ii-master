@@ -122,3 +122,13 @@ test('metadados e base64 malformados não criam atributos ou elementos executáv
  assert.equal(await page.locator('.lesson-images figcaption').innerText(),caption+' Crédito de teste.');assert.equal(await page.locator('.lesson-images figcaption img,[onerror]').count(),0);assert.equal(await page.evaluate(()=>window.payload),undefined);
  await page.locator('.lesson-image-open').click();assert.equal(await page.locator('.lesson-image-dialog p').innerText(),caption);assert.equal(await page.locator('.lesson-image-dialog p img').count(),0);await page.getByRole('button',{name:'Fechar imagem',exact:true}).click();await page.waitForFunction(()=>!document.querySelector('.lesson-image-dialog').open);
 });
+
+test('curadoria por bloco filtra desenhos e contextualiza a legenda sem mudar o cache original',async t=>{
+ const page=await open(t,{rows:{'conta-a':[row('Remover'),row('Fonte')],'conta-b':[]}});
+ await page.evaluate(()=>{document.getElementById('content').innerHTML=LessonImages.slot('aula_0','',['Remover'],{Fonte:'Legenda contextualizada <sem HTML>'});LessonImages.scan();});
+ await page.waitForFunction(()=>document.querySelector('.lesson-images figcaption')?.textContent.includes('contextualizada'));
+ assert.equal(await page.locator('.lesson-images figure').count(),1);assert.match(await page.locator('.lesson-images figcaption').innerText(),/Legenda contextualizada <sem HTML>/);
+ await page.locator('.lesson-image-open').click();assert.match(await page.locator('.lesson-image-dialog p').innerText(),/contextualizada/);await page.keyboard.press('Escape');
+ await page.evaluate(()=>{document.getElementById('content').innerHTML=LessonImages.slot('aula_0');LessonImages.scan();});
+ await page.waitForFunction(()=>document.querySelectorAll('.lesson-images figure').length===2);assert.match(await page.locator('.lesson-images figure').last().innerText(),/Fonte/);assert.doesNotMatch(await page.locator('.lesson-images').innerText(),/contextualizada/);
+});
