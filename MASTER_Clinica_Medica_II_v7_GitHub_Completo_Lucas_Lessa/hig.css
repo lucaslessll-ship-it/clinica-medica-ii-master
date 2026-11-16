@@ -53,7 +53,7 @@ a:hover{color:var(--accent-dark)}
 }
 .brand{padding:0 8px 25px;gap:11px;text-decoration:none;color:var(--ink);min-height:70px}
 .brand:hover{text-decoration:none}
-.brand-icon{width:44px;height:44px;flex:none;border-radius:14px;background:linear-gradient(140deg,#0c796f,#1d9e97);color:#fff;box-shadow:0 7px 16px #126e6024;letter-spacing:normal;padding:0}
+.brand-icon{width:44px;height:44px;flex:none;border-radius:12px;background:#0b5f57;color:#fff;letter-spacing:normal;padding:0}
 .brand strong{font-family:inherit;font-size:21px;letter-spacing:-.065em;line-height:1.15;color:var(--ink);font-weight:800}
 .brand strong span{font-weight:500;color:var(--green)}
 .brand small{font-size:11px;display:block;margin-top:4px;color:var(--muted)}
@@ -127,7 +127,7 @@ kbd{font-family:inherit;font-size:10px;font-weight:700;color:#56696f;background:
 .topic-card small{font-size:11px;line-height:1.4;color:#5e757b}
 .topic-card .mini-bar{height:5px}
 .btn{border-radius:12px;min-height:44px;padding:11px 16px;font-weight:700;font-size:12px;letter-spacing:-.005em;box-shadow:none;transition:background-color .15s,transform .15s,border-color .15s}
-.btn.primary{background:#0f8276;color:#fff;border-color:#0f8276;box-shadow:0 5px 14px #0d817226}
+.btn.primary{background:#0f8276;color:#fff;border-color:#0f8276;box-shadow:0 2px 6px rgba(10,46,43,.16)}
 .btn.primary:hover{background:#096b61;border-color:#096b61;transform:translateY(-1px)}
 .btn.secondary{background:#eaf6f1;color:#0c6d64;border-color:#d1e9e0}
 .btn.secondary:hover{background:#def2e8}
