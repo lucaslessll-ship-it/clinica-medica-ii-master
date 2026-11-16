@@ -1,6 +1,6 @@
 /* Curso de Antimicrobianos em camadas. Texto autoral, com as diretrizes em REFS.
-   Progresso salvo em store.study.atb. Doses não são listadas de propósito:
-   dependem de função renal, peso, foco e protocolo local. */
+   Progresso salvo em store.study.atb. Posologia contextualizada disponível nas fichas de medicamentos;
+   depende de função renal, peso, foco e protocolo local. */
 const AtbCourse=(()=>{
 'use strict';
 
@@ -264,7 +264,7 @@ const CASES=[
 
 return CourseKit.create({extraHome:()=>window.MicroLab?MicroLab.entry():'',global:'AtbCourse',key:'atb',route:'atb',label:'Antimicrobianos',title:'Curso de Antimicrobianos',
  heading:'Curso de <em>Antimicrobianos</em>',lead:'Dos princípios à escolha por síndrome, com as diretrizes vigentes em novembro de 2026.',
- notice:'Material educacional. As doses não são listadas de propósito: dependem de peso, função renal, foco e protocolo local. Confira sempre o antibiograma do seu serviço.',
+ notice:'Material educacional. Abra Posologia e orientações de uso ou toque no medicamento para ver esquemas por indicação, apresentação, via e duração. Peso, rim, foco e protocolo local modificam a escolha. Confira sempre o antibiograma do seu serviço.',
  pathHint:'Os módulos 3 a 5 são a base. Sem o mapa de cobertura, os módulos de síndromes viram decoreba.',
  bankTitle:'Casos de prescrição',bankHeading:'Casos de <em>prescrição</em>',bankLead:'Casos curtos para decidir o que cobrir, com o quê e por quanto tempo.',
  caseHint:'Responda na ordem: há infecção, qual o foco, qual a gravidade, quais germes, qual esquema e por quanto tempo.',
