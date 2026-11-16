@@ -2,13 +2,14 @@
    com o menu, o tema e a barra de progresso do MASTER, sem sair da plataforma. */
 window.LabMasterEmbed=(()=>{
  'use strict';
- const SRC='laboratorio-master/microcitose/index.html',VERSION='20261116-posologia2';
+ const SRC='laboratorio-master/microcitose/index.html',VERSION='20261116-renal-eas';
  let bound=false;
  const frame=()=>document.getElementById('lab-master-frame');
  const theme=()=>document.body.dataset.theme==='dark'?'dark':'light';
  function page(){
-  return header('LABORATÓRIO','Laboratório <em>Master</em>','Aula aprofundada de anemia microcítica: fisiologia, padrões laboratoriais, microscopia, laudos interativos, casos e prova de domínio. O progresso é salvo automaticamente na sua conta.')
-   +`<div class="card lab-embed"><iframe id="lab-master-frame" class="lab-embed-frame" title="Laboratório Master: anemia microcítica" src="${SRC}?embed=1&theme=${theme()}&v=${VERSION}" scrolling="no"></iframe></div><p class="subtle lab-embed-note">Prefere tela cheia? <a href="${SRC}" target="_blank" rel="noopener">Abrir em outra aba</a>.</p>`;
+  return header('LABORATÓRIO','Laboratório <em>Master</em>','Estude por laudos e casos: anemia microcítica, função renal e EAS. Use o mesmo menu e acompanhe seu progresso na conta.')
+   +(window.LabRenal?LabRenal.entry():'')
+   +`<h2>Anemia microcítica</h2><div class="card lab-embed"><iframe id="lab-master-frame" class="lab-embed-frame" title="Laboratório Master: anemia microcítica" src="${SRC}?embed=1&theme=${theme()}&v=${VERSION}" scrolling="no"></iframe></div><p class="subtle lab-embed-note">Prefere tela cheia? <a href="${SRC}" target="_blank" rel="noopener">Abrir em outra aba</a>.</p>`;
  }
  function post(message){try{frame()?.contentWindow?.postMessage({labMasterHost:true,...message},location.origin);}catch{}}
  function viewport(){const f=frame();if(f)post({vp:{top:Math.max(0,-f.getBoundingClientRect().top),h:window.innerHeight}});}
