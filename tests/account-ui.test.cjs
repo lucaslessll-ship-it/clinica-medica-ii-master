@@ -254,7 +254,7 @@ test('clinical guide and prescription manual reflow on phone/tablet and dark mod
 test('dashboard typography has no overlapping card text at phone, tablet and desktop widths',async()=>{
  for(const width of [390,820,1440,1562]){
   const t=await open({session:true,viewport:{width,height:1000}}),p=t.page;await p.waitForFunction(()=>document.getElementById('master-auth').hidden);await p.evaluate(()=>document.fonts.ready);
-  assert.equal(await p.evaluate(()=>document.fonts.check('400 16px Inter')),true);
+  assert.equal(await p.evaluate(()=>document.fonts.check("400 16px 'Public Sans'")),true);
   const cards=await p.evaluate(()=>[...document.querySelectorAll('.study-tool')].map(card=>{const a=card.querySelector('strong').getBoundingClientRect(),b=card.querySelector('small').getBoundingClientRect();return {title:card.querySelector('strong').textContent,overlap:b.top<a.bottom-1,inside:b.right<=card.getBoundingClientRect().right,width:a.width}}));
   assert.ok(cards.every(c=>!c.overlap&&c.inside&&c.width>60),JSON.stringify({width,cards}));assert.ok(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));await p.screenshot({path:`work/redesign-${width}.png`});await t.close();
  }
