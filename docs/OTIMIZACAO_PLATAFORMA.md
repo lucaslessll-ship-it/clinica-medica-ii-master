@@ -2,7 +2,7 @@
 
 ## Publicação
 
-`npm ci` instala as versões fixadas no lockfile (Node 24). `npm run build` usa Vite para gerar `dist/`, mantendo o endereço principal e a subpasta original do site. O workflow do GitHub Pages publica somente esse diretório. Os arquivos-fonte continuam utilizáveis sem build, com os intervalos de revisão antigos como alternativa; a versão publicada usa FSRS.
+`npm ci` instala as versões fixadas no lockfile (Node 24). `npm run build` usa Vite para gerar `dist/`, mantendo o endereço principal e a subpasta original do site. O workflow do GitHub Pages publica somente esse diretório. Enquanto o Pages estiver no modo de publicação pela branch, o workflow aguarda a publicação automática dos arquivos originais antes de enviar o build otimizado. A integração atual não tem permissão para mudar o modo do Pages para GitHub Actions; essa coordenação evita que o build original sobrescreva o otimizado. Os arquivos-fonte continuam utilizáveis sem build, com os intervalos de revisão antigos como alternativa; a versão publicada usa FSRS.
 
 O build compacta JS/CSS, preserva o escopo e a ordem dos scripts legados e gera uma versão de cache pelo conteúdo. Cursos de ECG, Hemograma, Antimicrobianos e Radiologia e as extensões das aulas aprofundadas de P1, P2 e Cirurgia são carregados na primeira abertura de cada grupo. Falhas mostram uma opção de tentar novamente. A busca global carrega os quatro cursos sob demanda ao ser aberta, preservando seus resultados mesmo antes da primeira visita aos cursos. O índice de busca da IA é regenerado das aulas a cada build e continua sendo baixado sob demanda. Nenhuma ferramenta de auditoria é enviada ao navegador dos visitantes.
 
