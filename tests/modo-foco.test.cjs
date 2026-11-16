@@ -97,3 +97,22 @@ test('o aviso do foco aparece uma única vez e a sessão nunca começa presa no 
  assert.equal(depois.foco,false);assert.equal(depois.topbar!=='none',true);
  await t.close();
 });
+
+test('evento atrasado da saída anterior não cancela nova entrada no foco',async()=>{
+ const t=await open({width:1280,height:900}),p=t.page;
+ const result=await p.evaluate(async()=>{
+  let current=null,complete;
+  Object.defineProperty(document,'fullscreenElement',{configurable:true,get:()=>current});
+  document.documentElement.requestFullscreen=()=>new Promise(resolve=>{complete=()=>{current=document.documentElement;resolve();document.dispatchEvent(new Event('fullscreenchange'));};});
+  document.exitFullscreen=async()=>{current=null;document.dispatchEvent(new Event('fullscreenchange'));};
+  HIG.setFocus(true);
+  // A saída antiga chega enquanto a nova solicitação ainda está em andamento.
+  document.dispatchEvent(new Event('fullscreenchange'));
+  const pending=document.body.classList.contains('focus-mode');
+  complete();await Promise.resolve();await Promise.resolve();
+  const entered=document.body.classList.contains('focus-mode');
+  HIG.setFocus(false);await Promise.resolve();
+  return {pending,entered,closed:!document.body.classList.contains('focus-mode'),focusRestored:document.activeElement===document.querySelector('.focus-trigger')};
+ });
+ assert.deepEqual(result,{pending:true,entered:true,closed:true,focusRestored:true});await t.close();
+});

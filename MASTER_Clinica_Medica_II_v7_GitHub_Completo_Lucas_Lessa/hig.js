@@ -35,7 +35,8 @@ const HIG = (() => {
   // O iPhone não concede tela cheia a elementos; lá vale a leitura sem distrações.
   function fullscreenOn(){return !!(document.fullscreenElement||document.webkitFullscreenElement)}
   function fullscreenAvailable(){const el=document.documentElement;return !!(el.requestFullscreen||el.webkitRequestFullscreen)}
-  function enterFullscreen(){const el=document.documentElement,fn=el.requestFullscreen||el.webkitRequestFullscreen;if(!fn||fullscreenOn())return;try{const r=fn.call(el);if(r&&r.catch)r.catch(()=>{})}catch{}}
+  let fullscreenEntering=false;
+  function enterFullscreen(){const el=document.documentElement,fn=el.requestFullscreen||el.webkitRequestFullscreen;if(!fn||fullscreenOn())return;fullscreenEntering=true;try{const r=fn.call(el);if(r&&r.then)Promise.resolve(r).catch(()=>{}).finally(()=>{fullscreenEntering=false});else fullscreenEntering=false;}catch{fullscreenEntering=false;}}
   function leaveFullscreen(){const fn=document.exitFullscreen||document.webkitExitFullscreen;if(!fn||!fullscreenOn())return;try{const r=fn.call(document);if(r&&r.catch)r.catch(()=>{})}catch{}}
   function setFocus(on,useFullscreen=true){
     on=!!on;const changed=preferences.focus!==on;
@@ -44,7 +45,7 @@ const HIG = (() => {
     if(first)preferences.focusHintSeen=true;
     save();applyPrefs();
     if(useFullscreen){on?enterFullscreen():leaveFullscreen()}
-    const trigger=document.querySelector('.focus-trigger');if(trigger)trigger.setAttribute('aria-pressed',String(on));
+    const trigger=document.querySelector('.focus-trigger');if(trigger){trigger.setAttribute('aria-pressed',String(on));if(changed&&!on)trigger.focus({preventScroll:true});}
     // Aviso só na primeira vez, e sem citar teclas em quem usa toque.
     if(first)toast(matchMedia('(pointer:fine)').matches?'Modo foco. Pressione F ou Esc para sair.':'Modo foco. Toque em Sair do foco quando quiser voltar.');
   }
@@ -169,7 +170,7 @@ const HIG = (() => {
   async function importProgress(event){const f=event?.target?.files?.[0];if(!f)return;if(f.size>3_000_000){toast('Arquivo muito grande para um backup de progresso.');return}try{let v=JSON.parse(await f.text());if(v.app!=='MASTER_P2_Lucas_Lessa'||!v.data||typeof v.data!=='object'||!v.data.results||!v.data.completed){throw new Error('Formato de backup incompatível')}if(!confirm('Substituir o progresso atual pelos dados deste backup? Exporte antes seus dados atuais, se quiser guardá-los.'))return;store={...store,...v.data};stateSave();if(v.p1&&window.P1)P1.restoreBackup(v.p1);if(v.experience&&typeof v.experience==='object'){preferences={...preferences,...v.experience,notes:{...preferences.notes,...(v.experience.notes||{})},bookmarks:{...preferences.bookmarks,...(v.experience.bookmarks||{})}};save();applyPrefs()}ui.exam=null;ui.practice=null;ui.flashDeck=[];closeOverlay();render();toast('Backup restaurado com sucesso.')}catch(e){toast('Não foi possível importar: '+e.message)}finally{event.target.value=''}}
   function init(){applyPrefs();searchItems=makeSearchItems();
     window.matchMedia('(prefers-color-scheme: dark)').addEventListener?.('change',()=>{if(preferences.theme==='system')applyPrefs()});
-    for(const evt of ['fullscreenchange','webkitfullscreenchange'])document.addEventListener(evt,()=>{if(!fullscreenOn()&&preferences.focus)setFocus(false,false)});
+    for(const evt of ['fullscreenchange','webkitfullscreenchange'])document.addEventListener(evt,()=>{if(!fullscreenOn()&&preferences.focus&&!fullscreenEntering)setFocus(false,false)});
     // Uma sessão nunca começa presa no foco: a tela cheia não sobrevive ao recarregamento.
     if(preferences.focus&&!fullscreenOn())setFocus(false,false);
     document.addEventListener('keydown',e=>{
