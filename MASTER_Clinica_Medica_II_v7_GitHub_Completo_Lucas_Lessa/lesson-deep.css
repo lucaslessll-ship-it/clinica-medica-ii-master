@@ -85,7 +85,7 @@ body[data-theme="dark"] .deep-exam{background:#1d2740;border-color:#3b4a78}
 .lesson-image-open:focus-visible{outline:3px solid var(--focus,#1f65b0);outline-offset:2px}
 .lesson-images figcaption{font-size:.92rem;line-height:1.45}
 .lesson-images figcaption small{opacity:.7}
-.lesson-image-dialog{border:0;border-radius:14px;padding:14px;max-width:min(96vw,1100px);max-height:94vh;background:var(--surface,#fff);color:inherit}
+.lesson-image-dialog{border:0;border-radius:14px;padding:14px;max-width:min(96vw,1100px);max-height:94vh;background:var(--white,#fff);color:inherit}
 .lesson-image-dialog::backdrop{background:rgba(0,0,0,.8)}
 .lesson-image-dialog img{display:block;max-width:100%;max-height:74vh;margin:10px auto;border-radius:8px}
 .lesson-image-dialog form{display:flex;justify-content:flex-end}

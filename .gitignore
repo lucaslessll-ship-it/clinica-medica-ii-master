@@ -1,3 +1,7 @@
 node_modules/
 work/
 test-results/
+
+.impeccable/audit/
+.impeccable/critique/
+.claude/settings.local.json
