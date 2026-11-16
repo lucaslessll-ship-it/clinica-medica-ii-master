@@ -81,7 +81,7 @@ function create(cfg){
     return MODULES.map((m,i)=>({type:'Módulo de '+label,label:m.title,sub:cfg.title+' · '+m.layer,icon:'◎',action:()=>{navigate(route);open(i);},text:[m.title,m.summary,m.layer]}))
       .concat(CASES.map((c,i)=>({type:'Caso de '+label,label:'Caso '+(i+1)+': '+c.focus,sub:cfg.title,icon:'◎',action:()=>{navigate(route);caseOpen(i);},text:[c.stem,c.focus]})));
   }
-  return {page,open,bank,caseOpen,answer,complete,markSeen,searchItems,modulePage:i=>MODULES[i]?moduleView(i):home(),casePage:i=>CASES[i]?caseView(i):home(),modules:()=>MODULES.length,cases:()=>CASES.length};
+  return {page,open,bank,caseOpen,answer,complete,markSeen,searchItems,modulePage:i=>MODULES[i]?moduleView(i):home(),casePage:i=>CASES[i]?caseView(i):home(),modules:()=>MODULES.length,cases:()=>CASES.length,findId:id=>MODULES.findIndex(m=>m.id===id),titleOf:id=>MODULES.find(m=>m.id===id)?.title||''};
 }
 return {create};
 })();

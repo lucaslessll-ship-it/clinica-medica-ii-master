@@ -9,8 +9,9 @@
 .focus-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;line-height:1.6}.focus-stats>div{min-width:0}.focus-stats dt{font-size:13px;color:var(--muted)}.focus-stats dd{margin:6px 0 0;font-size:23px;font-weight:650;overflow-wrap:anywhere}
 .focus-week{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:8px;list-style:none;margin:18px 0 0;padding:0}.focus-week li{display:flex;flex-direction:column;gap:8px;padding:10px 4px;text-align:center;border:1px solid var(--line);border-radius:8px;font-size:12px;min-width:0}.focus-week time{color:var(--muted)}.focus-week strong{overflow-wrap:anywhere}
 html.master-auth-locked .focus-float{display:none!important}
-body.focus-mode .topbar{display:flex!important}body.focus-mode .focus-exit{top:88px}
+
 @media(max-width:800px){.focus-float{bottom:calc(84px + env(safe-area-inset-bottom))}.focus-top{min-width:88px;padding:6px;font-size:13px}}
+@media(max-width:380px){.focus-top{min-width:44px;width:44px;padding:0;display:grid;place-items:center}.focus-top .focus-top-label,.focus-top [data-focus-time]{display:none}}
 @media(max-width:1100px){.topbar .search-trigger{width:44px;min-width:44px;padding:0;display:grid;place-items:center}.topbar .search-trigger span:nth-child(2),.topbar .search-trigger kbd,.topbar .top-context-sub{display:none}.topbar-left,.topbar-right{gap:5px}}
 @media(max-width:600px){.topbar .top-context{display:none}.topbar{padding-left:10px;padding-right:10px}.topbar-right{flex:1;justify-content:flex-end}.topbar-left{gap:0}.focus-stats{grid-template-columns:repeat(2,minmax(0,1fr))}.focus-week{grid-template-columns:repeat(4,minmax(0,1fr))}}
 @media print{.focus-top,.focus-float{display:none!important}}

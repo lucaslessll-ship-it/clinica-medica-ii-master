@@ -54,6 +54,7 @@ jobs:
           for file in "$app_dir"/*.js; do node --check "$file"; done
           node --check "$app_dir/laboratorio-master/microcitose/app.js"
           node --check "$app_dir/laboratorio-master/microcitose/sync.js"
+          node scripts/validar-correlacoes.cjs
           node --test tests/lab-master-integration.test.cjs
 
       - name: Preparar GitHub Pages
