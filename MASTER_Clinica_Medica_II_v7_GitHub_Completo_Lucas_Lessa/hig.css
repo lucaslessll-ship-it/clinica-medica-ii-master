@@ -522,3 +522,4 @@ body[data-theme="dark"] .top-context-sub,body[data-theme="dark"] .p1-summary sma
 body[data-theme="dark"] .p1-rank,body[data-theme="dark"] .p1-mini-tags i{background:var(--surface-muted);color:var(--secondary-text)}
 body[data-theme="dark"] .lesson-toolbar,body[data-theme="dark"] .lesson-toolbar span,body[data-theme="dark"] .empty-state{color:var(--muted)}
 body[data-theme="dark"] .banca-hero h2 em,body[data-theme="dark"] .banca-lab h2 em{color:var(--green)}
+body[data-theme="dark"] .case-step{background:#1a2b32;border-left-color:#2f9c86;color:#d8eeea}body[data-theme="dark"] .case-step .kicker{color:#7fd3c2}body[data-theme="dark"] .case-step h2,body[data-theme="dark"] .case-step h3,body[data-theme="dark"] .case-stem{color:#e3f3f0}
