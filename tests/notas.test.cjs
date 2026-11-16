@@ -142,6 +142,8 @@ const abrirRota=async(abrir,width=1280)=>{
  await page.evaluate(abrir);
  await page.waitForFunction(()=>document.querySelectorAll('.deep-lesson .deep-block p').length>0,null,{timeout:15000});
  await page.waitForTimeout(700);
+ // A abertura da aula rola suavemente; só seleciona quando o texto parou.
+ await page.waitForFunction(()=>new Promise(r=>{const a=scrollY;setTimeout(()=>r(Math.abs(scrollY-a)<1),250)}),null,{timeout:10000,polling:300});
  return {page,errors,close:async()=>{await context.close();assert.deepEqual(errors,[]);}};
 };
 const ROTAS=[

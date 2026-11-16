@@ -65,3 +65,14 @@ body[data-theme=dark] .side-goal-head,body[data-theme=dark] .side-goal small{col
 .nav-group.nav-featured.is-active{box-shadow:inset 3px 0 0 var(--green),inset 0 0 0 1px color-mix(in srgb,var(--green) 35%,transparent)}
 .nav-badge{margin-left:auto;font-style:normal;font-size:max(12px,.75rem);font-weight:700;letter-spacing:.02em;padding:2px 7px;border-radius:999px;background:var(--accent-dark);color:#fff;white-space:nowrap}
 @media(min-width:801px){body.side-collapsed .nav-badge{display:none}}
+
+/* 2026-11-16: barra reduzida só com ícones (sem rótulos cortados nem caixas pesadas) */
+body.side-collapsed .nav-section-label{font-size:0;line-height:0;letter-spacing:0;height:1px;padding:0;margin:12px 16px;background:var(--line);overflow:hidden;border-radius:1px}
+body.side-collapsed .nav-section-label:first-of-type{display:none}
+body.side-collapsed .nav-group{padding:2px 0;background:transparent;box-shadow:none}
+body.side-collapsed .nav-group.nav-featured{background:transparent;box-shadow:none}
+body.side-collapsed .nav-group.is-active,body.side-collapsed .nav-group.nav-featured.is-active{background:var(--mint);box-shadow:none}
+body.side-collapsed .nav-group.is-active .nav-destination{color:var(--green2)}
+body.side-collapsed .nav-destination{justify-content:center;padding:12px 0;min-height:48px;border-radius:12px}
+body.side-collapsed .nav-destination>span,body.side-collapsed .nav-expand,body.side-collapsed .nav-children,body.side-collapsed .nav-badge,body.side-collapsed [class*="nav-"][class*="badge"]{display:none!important}
+body.side-collapsed .nav-destination>svg{opacity:1}
