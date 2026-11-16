@@ -18,11 +18,11 @@ LessonDeep.add({
    'Os critérios de Ranson foram criados para pancreatite alcoólica e têm duas partes: admissão e 48 horas. Três ou mais pontos indicam pancreatite grave. A limitação é prática: o escore só fica completo em 48 horas. O BISAP usa dados da admissão e é mais rápido.'],
    table:{head:['Ranson (não biliar)','Critério'],rows:[
     ['Admissão','Idade acima de 55 anos, leucócitos acima de 16.000/mm3, glicose acima de 200 mg/dL, LDH acima de 350 U/L, AST acima de 250 U/L'],
-    ['48 horas','Queda do hematócrito acima de 10 pontos, aumento da ureia acima de 5 mg/dL, cálcio abaixo de 8 mg/dL, PaO2 abaixo de 60 mmHg, déficit de base acima de 4 mEq/L, sequestro de líquido acima de 6 L'],
-    ['Biliar (valores diferentes)','Admissão: idade acima de 70, leucócitos acima de 18.000, glicose acima de 220, LDH acima de 400, AST acima de 250. Em 48 horas não entram PaO2, e os cortes de ureia (2 mg/dL), déficit de base (5) e sequestro (4 L) mudam']]},
+    ['48 horas','Queda do hematócrito acima de 10 pontos, aumento do nitrogênio ureico (BUN) acima de 5 mg/dL, cálcio abaixo de 8 mg/dL, PaO2 abaixo de 60 mmHg, déficit de base acima de 4 mEq/L, sequestro de líquido acima de 6 L'],
+    ['Biliar (valores diferentes)','Admissão: idade acima de 70, leucócitos acima de 18.000, glicose acima de 220, LDH acima de 400, AST acima de 250. Em 48 horas a PaO2 não entra e o corte do BUN cai para 2 mg/dL; os cortes de déficit de base e de sequestro de líquido variam entre as fontes, então confira o da sua apostila']]},
    after:'Armadilha de prova: na P2 de Cirurgia (Med 60) a questão que pedia o critério de Ranson que NÃO está na admissão foi anulada, porque as quatro alternativas (idade, leucócitos, glicose, LDH) pertencem à admissão. Memorize as duas listas separadas.'},
   {h:'BISAP e Atlanta lado a lado',table:{head:['Escore','Itens','Leitura'],rows:[
-   ['BISAP (1 ponto cada)','Ureia acima de 25 mg/dL, alteração do estado mental, SIRS, idade acima de 60 anos, derrame pleural','3 ou mais: risco maior de falência orgânica e de morte'],
+   ['BISAP (1 ponto cada)','BUN acima de 25 mg/dL (nitrogênio ureico; corresponde a ureia perto de 54 mg/dL), alteração do estado mental, SIRS, idade acima de 60 anos, derrame pleural','3 ou mais: risco maior de falência orgânica e de morte'],
    ['Atlanta revisado','Falência orgânica transitória (até 48 horas) ou persistente (mais de 48 horas)','Persistente define grave'],
    ['Marshall modificado','Sistemas respiratório, renal e cardiovascular','2 pontos ou mais num sistema: falência']]},
    after:'Os escores orientam vigilância e nível de cuidado. Eles não substituem o exame clínico seriado, a diurese e a perfusão.'},
@@ -99,7 +99,7 @@ LessonDeep.add({
   {t:'Banks PA, et al. Classification of acute pancreatitis 2012: revision of the Atlanta classification. Gut. 2013.',q:'Classification of acute pancreatitis 2012 revision of the Atlanta classification Banks Gut'},
   {t:'Buxbaum JL, et al. ASGE guideline on the role of endoscopy in the evaluation and management of choledocholithiasis. Gastrointest Endosc. 2019.',q:'ASGE guideline role of endoscopy evaluation management choledocholithiasis 2019'},
   {t:'Kiriyama S, et al. Tokyo Guidelines 2018: diagnostic criteria and severity grading of acute cholangitis. J Hepatobiliary Pancreat Sci. 2018.',q:'Tokyo Guidelines 2018 diagnostic criteria severity grading acute cholangitis'}],
- note:'Pontos de corte de Ranson e BISAP conforme as publicações originais. Conferência online de atualizações das fontes: a confirmar.',
+ note:'Cortes do Ranson não biliar e do BISAP conferidos em 16/11/2026 (StatPearls, WikEM). BUN é nitrogênio ureico: ureia em mg/dL é cerca de 2,14 vezes maior. Cortes do Ranson biliar divergem entre fontes.',
  exam:[
   {c:'Critério de Ranson que NÃO está na admissão.',p:'Escolher uma alternativa entre idade, leucócitos, glicose e LDH.',r:'Todas pertencem à admissão (não biliar). Hematócrito, ureia, cálcio, PaO2, déficit de base e sequestro de líquido são os de 48 horas.'},
   {c:'Gravidade da pancreatite e valor da lipase.',p:'Lipase muito alta indica forma grave.',r:'A enzima não mede gravidade; a falência orgânica persistente define.'},
@@ -192,7 +192,7 @@ LessonDeep.add({
  refs:[
   {t:'Sterns RH. Disorders of plasma sodium: causes, consequences, and correction. N Engl J Med. 2015.',q:'Sterns Disorders of plasma sodium causes consequences and correction NEJM 2015'},
   {t:'Kraut JA, Madias NE. Metabolic acidosis: pathophysiology, diagnosis and management. Nat Rev Nephrol. 2010.',q:'Kraut Madias Metabolic acidosis pathophysiology diagnosis and management Nat Rev Nephrol 2010'}],
- note:'Doses e limites de correção seguem a prática clínica geral; conferir o protocolo do serviço. Conferência online de atualizações das fontes: a confirmar.',
+ note:'Limite de correção do sódio coerente com Sterns 2015 (8 mEq/L em 24 h nos de maior risco, máximo de 10 a 12 nos demais). Velocidade de KCl segue a prática geral: o protocolo do serviço manda.',
  exam:[
   {c:'Estenose pilórica com vômitos prolongados.',p:'Acidose metabólica hiperclorêmica.',r:'Alcalose metabólica hipoclorêmica e hipocalêmica.'},
   {c:'Ileostomia de alto débito com ânion gap normal.',p:'Alcalose por perda de ácido.',r:'Acidose metabólica hiperclorêmica por perda de bicarbonato.'},
