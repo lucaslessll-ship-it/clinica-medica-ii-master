@@ -65,3 +65,7 @@ body[data-theme=dark] .btn.primary{background:var(--green);border-color:var(--gr
 body.high-contrast .subject-card,body.high-contrast .subject-filters,body.high-contrast .subject-search{border-color:currentColor;box-shadow:none}
 body.reduce-motion .subject-card,body.reduce-motion .btn{transition:none;transform:none}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto!important}.subject-card,.btn{transition:none!important;transform:none!important}}
+
+/* Contraste verificado por axe: contagens e rodapé devem permanecer legíveis. */
+.subject-filters button span{opacity:1}
+body .footer{color:var(--muted)}

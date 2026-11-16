@@ -1,0 +1,30 @@
+name: Qualidade do Clínica Master
+on:
+  pull_request:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      CHROMIUM_PATH: /usr/bin/google-chrome
+      CHROME_PATH: /usr/bin/google-chrome
+      PROMPTFOO_DISABLE_TELEMETRY: '1'
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci
+      - run: mkdir -p work && npm test
+      - run: npm run eval:validate
+      - run: npm run audit:performance
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: auditoria-desempenho
+          path: work/lighthouse

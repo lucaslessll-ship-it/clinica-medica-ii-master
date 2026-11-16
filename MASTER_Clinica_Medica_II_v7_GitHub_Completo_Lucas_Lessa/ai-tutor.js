@@ -51,7 +51,7 @@ function current(){
  if(pill)return documents.find(d=>d.route===route&&d.title.endsWith(' · '+pill))?.lesson;
  return documents.find(d=>d.route===route&&d.title===heading)?.lesson;
 }
-function openSource(d){close();if(d.kind==='p1'){P1.openTopic(d.topic);P1.chapter(d.chapter);}else if(d.kind==='cir')CIR.openTopic(d.topic,d.chapter);else if(d.kind==='p2'){openTopic(d.topic);ui.chapter=d.chapter;render();}else{navigate(d.course);const courses={pocus:window.PocusCourse,ecg:window.ECGCourse,hemo:window.HemoCourse,atb:window.AtbCourse,rad:window.RadCourse};courses[d.course]?.open(d.module);}window.scrollTo({top:0,behavior:'instant'});document.querySelector('#main-content h1')?.focus({preventScroll:true});}
+async function openSource(d){await window.RouteAssets?.ensure(d.course);close();if(d.kind==='p1'){P1.openTopic(d.topic);P1.chapter(d.chapter);}else if(d.kind==='cir')CIR.openTopic(d.topic,d.chapter);else if(d.kind==='p2'){openTopic(d.topic);ui.chapter=d.chapter;render();}else{navigate(d.course);const courses={pocus:window.PocusCourse,ecg:window.ECGCourse,hemo:window.HemoCourse,atb:window.AtbCourse,rad:window.RadCourse};courses[d.course]?.open(d.module);}window.scrollTo({top:0,behavior:'instant'});document.querySelector('#main-content h1')?.focus({preventScroll:true});}
 const errors={daily_limit:'Limite diário atingido, volta amanhã.',provider_busy:'O provedor atingiu o limite temporário. Tente mais tarde.',not_configured:'A IA ainda precisa da chave do provedor no Supabase. Você pode consultar as aulas encontradas abaixo.',bad_key:'A chave do provedor precisa ser revisada no Supabase.',auth:'Sua sessão expirou. Entre novamente.',usage:'Não foi possível conferir o limite diário. Tente novamente.',empty:'Reabra o assistente para atualizar o índice das aulas.',upstream:'O provedor não respondeu. Tente novamente.',unavailable:'A IA está indisponível no momento. Tente novamente.'};
 async function ask(mode='ask'){
  if(controller||!unlocked())return;
@@ -65,7 +65,9 @@ async function ask(mode='ask'){
    const label=blocks[0].title;question=mode==='resumo'?`Resuma a aula ${label}, somente com os trechos disponíveis.`:mode==='questoes'?`Crie 3 questões de revisão com gabarito comentado sobre ${label}.`:`Destaque pontos de revisão e confusões importantes de ${label}. Não invente frequência em provas.`;
    question=question.slice(0,500);
   }else{
-   if(question.length<3){state('Escreva uma pergunta com pelo menos 3 caracteres.');return;}blocks=search(question);
+   if(question.length<3){state('Escreva uma pergunta com pelo menos 3 caracteres.');return;}const lesson=current();
+   const refersToLesson=/\b(ess[ae]|est[ae]|iss[oa]|conte[uú]do|memorizar|mnem[oô]nico)\b/i.test(question);
+   blocks=lesson&&refersToLesson?documents.filter(d=>d.lesson===lesson).slice(0,5):search(question);
   }
   submitted=true;input.blur();dialog.querySelector('.ai-tutor-help').open=false;dialog.querySelector('.ai-tutor-tools').open=false;dialog.querySelector('[data-ai-help-toggle]').setAttribute('aria-expanded','false');message('Você',question);input.value='';
   if(!blocks.length){message('Assistente','Isso não está no conteúdo do site encontrado pela busca. Tente mencionar o tema ou o nome da aula.\n\nDica de estudo: comece identificando a síndrome principal.');state('Nenhuma chamada à IA foi feita.');return;}

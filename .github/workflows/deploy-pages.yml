@@ -19,6 +19,7 @@ jobs:
     timeout-minutes: 15
     permissions:
       contents: read
+      actions: read
       pages: write
       id-token: write
     environment:
@@ -29,6 +30,19 @@ jobs:
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
           persist-credentials: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+
+      - name: Instalar ferramentas e gerar site otimizado
+        run: npm ci && npm run build
+
+      - name: Verificar site otimizado e acessibilidade
+        env:
+          CHROMIUM_PATH: /usr/bin/google-chrome
+        run: node --test tests/optimized-site.test.cjs
 
       - name: Validar os arquivos do site
         shell: bash
@@ -51,13 +65,26 @@ jobs:
           set -euo pipefail
           site_dir="$RUNNER_TEMP/master-site"
           mkdir -p "$site_dir"
-          cp index.html "$site_dir/index.html"
-          cp -R MASTER_Clinica_Medica_II_v7_GitHub_Completo_Lucas_Lessa "$site_dir/"
+          cp -R dist/. "$site_dir/"
 
       - name: Enviar o pacote do site
         uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa # v3
         with:
           path: ${{ runner.temp }}/master-site
+
+      - name: Aguardar publicação automática dos arquivos originais
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          for attempt in {1..36}; do
+            pending=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs?head_sha=$GITHUB_SHA&per_page=30" --jq '[.workflow_runs[] | select(.path == "dynamic/pages/pages-build-deployment" and .status != "completed")] | length')
+            if [ "$pending" = "0" ]; then exit 0; fi
+            sleep 5
+          done
+          echo "A publicação automática ainda está em andamento; evitando publicações concorrentes."
+          exit 1
 
       - name: Publicar o site
         id: deployment
