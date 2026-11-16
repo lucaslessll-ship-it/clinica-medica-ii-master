@@ -7,19 +7,24 @@ const FocusTimer=(()=>{
   const dayKey=value=>{const d=new Date(value);return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;};
   const format=ms=>{const seconds=Math.ceil(Math.max(0,ms)/1000);return `${String(Math.floor(seconds/60)).padStart(2,'0')}:${String(seconds%60).padStart(2,'0')}`;};
   const duration=ms=>{const minutes=Math.floor(ms/60000);return minutes>=60?`${Math.floor(minutes/60)} h ${minutes%60} min`:`${minutes} min`;};
+  const DESCANSOS=[5,10,15];
   function normalize(raw={}){
     const minutes=[25,45,60].includes(raw.minutes)?raw.minutes:25,days={};
-    for(const [key,value]of Object.entries(raw.days||{}))if(/^\d{4}-\d{2}-\d{2}$/.test(key)&&value&&typeof value==='object')days[key]={ms:Math.max(0,Math.min(86400000,Number(value.ms)||0)),completed:Math.max(0,Math.floor(Number(value.completed)||0))};
-    return {version:1,minutes,remainingMs:Number.isFinite(raw.remainingMs)?Math.max(0,Math.min(minutes*60000,raw.remainingMs)):minutes*60000,floating:raw.floating!==false,legacyMinutes:Math.max(0,Number(raw.legacyMinutes)||0),days};
+    const breakMinutes=DESCANSOS.includes(raw.breakMinutes)?raw.breakMinutes:5;
+    const mode=raw.mode==='descanso'?'descanso':'foco';
+    for(const [key,value]of Object.entries(raw.days||{}))if(/^\d{4}-\d{2}-\d{2}$/.test(key)&&value&&typeof value==='object')days[key]={ms:Math.max(0,Math.min(86400000,Number(value.ms)||0)),completed:Math.max(0,Math.floor(Number(value.completed)||0)),breakMs:Math.max(0,Math.min(86400000,Number(value.breakMs)||0)),breaks:Math.max(0,Math.floor(Number(value.breaks)||0))};
+    return {version:1,minutes,breakMinutes,mode,remainingMs:(()=>{const teto=(mode==='descanso'?breakMinutes:minutes)*60000;return Number.isFinite(raw.remainingMs)?Math.max(0,Math.min(teto,raw.remainingMs)):teto})(),floating:raw.floating!==false,legacyMinutes:Math.max(0,Number(raw.legacyMinutes)||0),days};
   }
   function release(){clearInterval(interval);interval=null;running=false;releaseLock?.();releaseLock=null;}
   function reload(){release();owner=user();state=normalize(HIG.focusData());loadFloat();render();refreshHistory();}
   function allowed(){return owner&&owner===user()&&!document.documentElement.classList.contains('master-auth-locked');}
   function persist(){if(owner&&owner===user())HIG.saveFocus(state);lastSave=performance.now();refreshHistory();}
+  const diaDe=key=>state.days[key]||(state.days[key]={ms:0,completed:0,breakMs:0,breaks:0});
   function credit(start,ms){
     let at=start,left=ms;
+    const campo=state.mode==='descanso'?'breakMs':'ms';
     while(left>0){const date=new Date(at),key=dayKey(at);date.setHours(24,0,0,0);const part=Math.min(left,date.getTime()-at);if(part<=0)break;
-      const day=state.days[key]||(state.days[key]={ms:0,completed:0});day.ms+=part;left-=part;at+=part;
+      const day=diaDe(key);day[campo]=(day[campo]||0)+part;left-=part;at+=part;
     }
   }
   function tick(saveNow=false){
@@ -28,7 +33,12 @@ const FocusTimer=(()=>{
     const now=performance.now(),elapsed=Math.min(state.remainingMs,Math.max(0,now-lastTick)),completedAt=lastWall+elapsed;
     // Monotonic elapsed time avoids timer drift and manual wall-clock changes.
     credit(lastWall,elapsed);state.remainingMs=Math.max(0,state.remainingMs-elapsed);lastTick=now;lastWall=Date.now();
-    if(state.remainingMs===0){const key=dayKey(completedAt),day=state.days[key]||(state.days[key]={ms:0,completed:0});day.completed++;release();persist();toast('Pomodoro concluído. Faça uma pausa antes de iniciar outro bloco.');}
+    if(state.remainingMs===0){
+      const day=diaDe(dayKey(completedAt)),terminou=state.mode;
+      if(terminou==='descanso')day.breaks=(day.breaks||0)+1;else day.completed++;
+      state.mode='foco';state.remainingMs=state.minutes*60000;
+      release();persist();avisarFim(terminou);
+    }
     else if(saveNow||now-lastSave>=5000)persist();
     render();
   }
@@ -51,16 +61,161 @@ const FocusTimer=(()=>{
   function configure(minutes){if(!allowed()||![25,45,60].includes(minutes))return;pause();state.minutes=minutes;state.remainingMs=minutes*60000;persist();render();}
   function reset(){if(!allowed())return;pause();state.remainingMs=state.minutes*60000;persist();render();}
   function floating(show){if(!allowed())return;state.floating=!!show;persist();render();if(!show&&document.getElementById('hig-overlay').hidden)document.getElementById('focus-top')?.focus();}
-  function panel(){return `<p>Escolha um bloco de dedicação. O tempo é registrado enquanto o pomodoro estiver rodando, inclusive ao navegar entre aulas. Ao recarregar ou fechar, o bloco fica pausado; o tempo já salvo é preservado.</p><div class="btn-row">${[25,45,60].map(n=>`<button class="btn" data-focus-duration="${n}" onclick="FocusTimer.configure(${n})" type="button">${n} min</button>`).join('')}</div><p class="focus-panel-time" data-focus-time>${format(state.remainingMs)}</p><div class="btn-row"><button class="btn primary" data-focus-toggle onclick="FocusTimer.toggle()" type="button">${running?'Pausar':'Começar'}</button><button class="btn" onclick="FocusTimer.reset()" type="button">Reiniciar bloco</button><button class="btn" onclick="FocusTimer.resetFloat()" type="button">Recentralizar flutuante</button><button class="btn" data-focus-floating onclick="FocusTimer.floating(!FocusTimer.status().floating)" type="button">${state.floating?'Ocultar':'Mostrar'} controle lateral</button></div>${historyMarkup()}`;}
+  function panel(){return `<p>Escolha um bloco de dedicação. O tempo é registrado enquanto o pomodoro estiver rodando, inclusive ao navegar entre aulas. Ao recarregar ou fechar, o bloco fica pausado; o tempo já salvo é preservado.</p><div class="btn-row">${[25,45,60].map(n=>`<button class="btn" data-focus-duration="${n}" onclick="FocusTimer.configure(${n})" type="button">${n} min</button>`).join('')}</div>
+    <p class="focus-panel-sub">Descanso entre blocos</p>
+    <div class="btn-row">${DESCANSOS.map(n=>`<button class="btn" data-focus-break-duration="${n}" onclick="FocusTimer.definirDescanso(${n})" type="button">${n} min</button>`).join('')}<button class="btn" onclick="FocusTimer.iniciarDescanso()" type="button">Descansar agora</button></div><p class="focus-panel-time" data-focus-time>${format(state.remainingMs)}</p><div class="btn-row"><button class="btn primary" data-focus-toggle onclick="FocusTimer.toggle()" type="button">${running?'Pausar':'Começar'}</button><button class="btn" onclick="FocusTimer.reset()" type="button">Reiniciar bloco</button><button class="btn" onclick="FocusTimer.resetFloat()" type="button">Recentralizar flutuante</button><button class="btn" data-focus-floating onclick="FocusTimer.floating(!FocusTimer.status().floating)" type="button">${state.floating?'Ocultar':'Mostrar'} controle lateral</button></div>${historyMarkup()}`;}
   function historyMarkup(){return `<section class="focus-history" data-focus-history aria-label="Histórico de dedicação">${historyContent()}</section>`;}
   function historyContent(){
     if(!state)return '';
-    const today=dayKey(Date.now()),days=state.days,datedTotal=Object.values(days).reduce((sum,d)=>sum+d.ms,0),blocks=Object.values(days).reduce((sum,d)=>sum+d.completed,0);
-    const now=new Date(),recent=[];for(let i=6;i>=0;i--){const date=new Date(now);date.setDate(date.getDate()-i);recent.push({date,key:dayKey(date.getTime())});}
-    let streak=0,date=new Date(now);if(!(days[today]?.ms>0))date.setDate(date.getDate()-1);
-    while(days[dayKey(date.getTime())]?.ms>0){streak++;date.setDate(date.getDate()-1);}
-    return `<h3>Sua dedicação</h3><dl class="focus-stats"><div><dt>Hoje</dt><dd>${duration(days[today]?.ms||0)}</dd></div><div><dt>Total registrado</dt><dd>${duration(datedTotal+state.legacyMinutes*60000)}</dd></div><div><dt>Blocos concluídos</dt><dd>${blocks}</dd></div><div><dt>Dias em sequência</dt><dd>${streak}</dd></div></dl><p class="clinical-note">Tempo com pomodoro ativo, não uma medida de atenção ou domínio clínico. Dias em sequência consideram qualquer tempo registrado; as datas seguem o fuso do dispositivo.</p><ol class="focus-week">${recent.map(({date,key})=>`<li><time datetime="${key}">${date.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'})}</time><strong>${duration(days[key]?.ms||0)}</strong></li>`).join('')}</ol>${state.legacyMinutes?`<p class="clinical-note">${state.legacyMinutes} min do temporizador anterior estão no total, sem atribuição a dias ou novos blocos.</p>`:''}`;
+    const hojeKey=dayKey(Date.now()),days=state.days;
+    const totalMs=Object.values(days).reduce((soma,d)=>soma+d.ms,0);
+    const blocos=Object.values(days).reduce((soma,d)=>soma+d.completed,0);
+    const pausas=Object.values(days).reduce((soma,d)=>soma+(d.breaks||0),0);
+    const agora=new Date();
+    const dia=atras=>{const d=new Date(agora);d.setHours(12,0,0,0);d.setDate(d.getDate()-atras);return d;};
+
+    let sequencia=0,cursor=new Date(agora);
+    if(!(days[hojeKey]?.ms>0))cursor.setDate(cursor.getDate()-1);
+    while(days[dayKey(cursor.getTime())]?.ms>0){sequencia++;cursor.setDate(cursor.getDate()-1);}
+
+    const semana=Array.from({length:7},(_,k)=>days[dayKey(dia(k).getTime())]?.ms||0).reduce((a,b)=>a+b,0);
+    const diasAtivos=Object.values(days).filter(d=>d.ms>0).length;
+
+    // Barras: minutos de foco por dia nas duas últimas semanas.
+    const janela=Array.from({length:14},(_,k)=>{const d=dia(13-k),key=dayKey(d.getTime()),reg=days[key]||{};
+      return {d,key,min:Math.round((reg.ms||0)/60000),blocos:reg.completed||0,pausas:reg.breaks||0};});
+    const teto=Math.max(25,...janela.map(x=>x.min));
+    const fmtDia=d=>d.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'});
+    const inicial=d=>['D','S','T','Q','Q','S','S'][d.getDay()];
+    const barras=janela.map(x=>{
+      const altura=x.min?Math.max(4,Math.round(x.min/teto*100)):0;
+      const hoje=x.key===hojeKey;
+      return `<li class="focus-bar"${hoje?' data-hoje="true"':''}>
+        <span class="focus-bar-trilho">${x.min?`<span class="focus-bar-valor" style="height:${altura}%"></span>`:''}</span>
+        <span class="focus-bar-dia" aria-hidden="true">${inicial(x.d)}</span>
+        <span class="focus-bar-dica" role="tooltip">${fmtDia(x.d)} · ${x.min} min · ${x.blocos} ${x.blocos===1?'bloco':'blocos'}</span>
+        <span class="sr-only">${fmtDia(x.d)}: ${x.min} minutos, ${x.blocos} blocos</span>
+      </li>`;}).join('');
+
+    // Frequência: em quantas das últimas 8 semanas você estudou em cada dia.
+    const frequencia=Array.from({length:7},(_,semanaDia)=>{
+      let contagem=0;
+      for(let k=0;k<56;k++){const d=dia(k);if(d.getDay()===semanaDia&&days[dayKey(d.getTime())]?.ms>0)contagem++;}
+      return {semanaDia,contagem};});
+    const maxFreq=Math.max(1,...frequencia.map(f=>f.contagem));
+    const nomeDia=['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'];
+    const freqMarkup=frequencia.map(f=>`<li><span class="focus-freq-nome">${nomeDia[f.semanaDia].slice(0,3)}</span>
+      <span class="focus-freq-trilho">${f.contagem?`<span class="focus-freq-valor" style="width:${Math.round(f.contagem/maxFreq*100)}%"></span>`:''}</span>
+      <span class="focus-freq-conta">${f.contagem}</span>
+      <span class="sr-only">${nomeDia[f.semanaDia]}: ${f.contagem} de 8 semanas</span></li>`).join('');
+
+    const tabela=janela.filter(x=>x.min||x.blocos).reverse().map(x=>`<tr><th scope="row">${fmtDia(x.d)}</th><td>${x.min} min</td><td>${x.blocos}</td><td>${x.pausas}</td></tr>`).join('')
+      ||'<tr><td colspan="4">Nenhum bloco nas duas últimas semanas.</td></tr>';
+
+    return `<h3>Sua dedicação</h3>
+      <dl class="focus-stats">
+        <div><dt>Hoje</dt><dd>${duration(days[hojeKey]?.ms||0)}</dd></div>
+        <div><dt>Últimos 7 dias</dt><dd>${duration(semana)}</dd></div>
+        <div><dt>Sequência</dt><dd>${sequencia} ${sequencia===1?'dia':'dias'}</dd></div>
+        <div><dt>Blocos concluídos</dt><dd>${blocos}</dd></div>
+      </dl>
+      <figure class="focus-chart">
+        <figcaption>Minutos de foco por dia <span class="focus-chart-nota"><span class="focus-nota-larga">últimas duas semanas</span><span class="focus-nota-curta">última semana</span> · pico de ${teto} min</span></figcaption>
+        <ol class="focus-bars">${barras}</ol>
+      </figure>
+      <figure class="focus-chart">
+        <figcaption>Em que dias você estuda <span class="focus-chart-nota">semanas com estudo, das 8 últimas</span></figcaption>
+        <ol class="focus-freq">${freqMarkup}</ol>
+      </figure>
+      <p class="focus-chart-nota">${diasAtivos} ${diasAtivos===1?'dia registrado':'dias registrados'} · ${pausas} ${pausas===1?'descanso cumprido':'descansos cumpridos'} · ${duration(totalMs+state.legacyMinutes*60000)} no total</p>
+      <details class="focus-tabela"><summary>Ver tabela dos últimos 14 dias</summary>
+        <table><thead><tr><th scope="col">Dia</th><th scope="col">Foco</th><th scope="col">Blocos</th><th scope="col">Pausas</th></tr></thead><tbody>${tabela}</tbody></table>
+      </details>`;
   }
+  /* ---------- aviso de fim de ciclo ---------- */
+
+  // Mensagens variam com a hora e com quantos blocos já saíram hoje, para o
+  // aviso não virar paisagem.
+  function mensagemFim(terminou){
+    const hora=new Date().getHours(),blocos=state.days[dayKey(Date.now())]?.completed||0;
+    if(terminou==='descanso'){
+      const pausa=['Pausa encerrada. Pronto para outro bloco?','Descanso cumprido. Voltar ao estudo?','Fim da pausa. Bora para o próximo bloco?'];
+      return {titulo:pausa[blocos%pausa.length],detalhe:`Você já fechou ${blocos} ${blocos===1?'bloco':'blocos'} hoje.`};
+    }
+    const abertura=hora<6?'Bloco fechado de madrugada.':hora<12?'Bloco da manhã fechado.':hora<18?'Bloco da tarde fechado.':'Bloco da noite fechado.';
+    const elogio=blocos<=1?'Primeiro bloco do dia já conta.'
+      :blocos<4?`${blocos} blocos hoje, o ritmo está de pé.`
+      :blocos<7?`${blocos} blocos hoje. Isso é dia de estudo cheio.`
+      :`${blocos} blocos hoje. Cuide do descanso também.`;
+    return {titulo:abertura,detalhe:elogio};
+  }
+
+  function caixaFim(){
+    let caixa=document.getElementById('focus-end');
+    if(caixa)return caixa;
+    caixa=document.createElement('div');
+    caixa.id='focus-end';caixa.className='focus-end';caixa.hidden=true;
+    caixa.innerHTML=`<div class="focus-end-card" role="alertdialog" aria-labelledby="focus-end-title">
+      <button type="button" class="focus-end-x" data-focus-end-close aria-label="Fechar aviso">&#10005;</button>
+      <p class="focus-end-kicker" data-focus-end-kicker></p>
+      <h2 id="focus-end-title" data-focus-end-title></h2>
+      <p class="focus-end-detail" data-focus-end-detail></p>
+      <p class="focus-end-ask" data-focus-end-ask></p>
+      <div class="focus-end-break" data-focus-end-break>
+        <span class="focus-end-break-label">Descanso de</span>
+        <div class="focus-end-chips" role="group" aria-label="Minutos de descanso">
+          ${DESCANSOS.map(n=>`<button type="button" class="focus-end-chip" data-focus-break="${n}" aria-pressed="false">${n} min</button>`).join('')}
+        </div>
+      </div>
+      <div class="focus-end-actions">
+        <button type="button" class="btn primary" data-focus-end-main></button>
+        <button type="button" class="btn" data-focus-end-alt></button>
+      </div></div>`;
+    document.body.append(caixa);
+    caixa.addEventListener('click',evento=>{
+      if(evento.target===caixa||evento.target.closest('[data-focus-end-close]')){fecharFim();return;}
+      const chip=evento.target.closest('[data-focus-break]');
+      if(chip){definirDescanso(Number(chip.dataset.focusBreak));return;}
+      if(evento.target.closest('[data-focus-end-main]')){const tipo=caixa.dataset.tipo;fecharFim();tipo==='descanso'?iniciarFoco():iniciarDescanso();return;}
+      if(evento.target.closest('[data-focus-end-alt]')){const tipo=caixa.dataset.tipo;fecharFim();tipo==='descanso'?iniciarDescanso():iniciarFoco();}
+    });
+    return caixa;
+  }
+
+  function avisarFim(terminou){
+    if(!allowed())return;
+    const caixa=caixaFim(),{titulo,detalhe}=mensagemFim(terminou);
+    caixa.dataset.tipo=terminou;
+    caixa.querySelector('[data-focus-end-kicker]').textContent=terminou==='descanso'?'Descanso concluído':'Pomodoro concluído';
+    caixa.querySelector('[data-focus-end-title]').textContent=titulo;
+    caixa.querySelector('[data-focus-end-detail]').textContent=detalhe;
+    caixa.querySelector('[data-focus-end-ask]').textContent=terminou==='descanso'
+      ? 'Voltar ao estudo ou esticar a pausa?'
+      : 'Hora do descanso ou vai continuar estudando?';
+    caixa.querySelector('[data-focus-end-main]').textContent=terminou==='descanso'?`Estudar ${state.minutes} min`:`Descansar ${state.breakMinutes} min`;
+    caixa.querySelector('[data-focus-end-alt]').textContent=terminou==='descanso'?`Mais ${state.breakMinutes} min de pausa`:`Continuar estudando ${state.minutes} min`;
+    caixa.hidden=false;
+    render();
+    requestAnimationFrame(()=>caixa.querySelector('[data-focus-end-main]')?.focus());
+    try{navigator.vibrate?.(terminou==='descanso'?[90]:[90,70,90]);}catch{}
+  }
+
+  function fecharFim(){const caixa=document.getElementById('focus-end');if(caixa)caixa.hidden=true;}
+  function definirDescanso(minutos){
+    if(!allowed()||!DESCANSOS.includes(minutos))return;
+    state.breakMinutes=minutos;
+    if(state.mode==='descanso'&&!running)state.remainingMs=minutos*60000;
+    persist();render();
+  }
+  function iniciarDescanso(){
+    if(!allowed())return;
+    pause();state.mode='descanso';state.remainingMs=state.breakMinutes*60000;persist();render();toggle();
+  }
+  function iniciarFoco(){
+    if(!allowed())return;
+    pause();state.mode='foco';state.remainingMs=state.minutes*60000;persist();render();toggle();
+  }
+
   function refreshHistory(){document.querySelectorAll('[data-focus-history]').forEach(el=>el.innerHTML=historyContent());}
   function render(){
     if(!state)return;
@@ -68,6 +223,16 @@ const FocusTimer=(()=>{
     document.querySelectorAll('[data-focus-time],#timer-count').forEach(el=>el.textContent=label);
     document.querySelectorAll('[data-focus-toggle],#timer-toggle').forEach(el=>{el.textContent=running?'Pausar':'Começar';el.setAttribute('aria-label',running?'Pausar pomodoro':'Iniciar pomodoro');});
     document.querySelectorAll('[data-focus-duration]').forEach(el=>el.setAttribute('aria-pressed',String(Number(el.dataset.focusDuration)===state.minutes)));
+    document.querySelectorAll('[data-focus-break-duration]').forEach(el=>el.setAttribute('aria-pressed',String(Number(el.dataset.focusBreakDuration)===state.breakMinutes)));
+    document.querySelectorAll('.focus-end-chip').forEach(el=>el.setAttribute('aria-pressed',String(Number(el.dataset.focusBreak)===state.breakMinutes)));
+    const aviso=document.getElementById('focus-end');
+    if(aviso&&!aviso.hidden){
+      const descanso=aviso.dataset.tipo==='descanso';
+      aviso.querySelector('[data-focus-end-main]').textContent=descanso?`Estudar ${state.minutes} min`:`Descansar ${state.breakMinutes} min`;
+      aviso.querySelector('[data-focus-end-alt]').textContent=descanso?`Mais ${state.breakMinutes} min de pausa`:`Continuar estudando ${state.minutes} min`;
+    }
+    document.querySelectorAll('[data-focus-mode-label]').forEach(el=>el.textContent=state.mode==='descanso'?'Descanso':'Foco');
+    document.documentElement.dataset.focusMode=state.mode;
     document.querySelectorAll('[data-focus-floating]').forEach(el=>el.textContent=state.floating?'Ocultar controle lateral':'Mostrar controle lateral');
     const top=document.getElementById('focus-top');if(top){top.setAttribute('aria-label',`Abrir pomodoro: ${label}, ${running?'em andamento':'pausado'}`);top.dataset.running=String(running);}
     const float=document.getElementById('focus-float');if(float){float.hidden=!state.floating||!allowed();float.dataset.running=String(running);placeFloat();}
@@ -115,8 +280,8 @@ const FocusTimer=(()=>{
     window.addEventListener('resize',placeFloat);
   }
   function status(){return {...state,running};}
-  function init(){initFloat();reload();document.addEventListener('visibilitychange',()=>{if(running)tick(true);});window.addEventListener('pagehide',pause);window.addEventListener('beforeunload',pause);window.addEventListener('master-auth-ready',reload);window.addEventListener('master-auth-ended',()=>{release();state=normalize();owner=null;render();refreshHistory();});window.addEventListener('storage',e=>{if(e.key==='master_p2_hig_v2'&&!running){HIG.refreshFocus();state=normalize(HIG.focusData());render();refreshHistory();}});}
-  return {init,reload,render,toggle,pause,configure,reset,floating,panel,historyMarkup,status,cancel,expand,resetFloat};
+  function init(){initFloat();reload();document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!document.getElementById('focus-end')?.hidden)fecharFim();});document.addEventListener('visibilitychange',()=>{if(running)tick(true);});window.addEventListener('pagehide',pause);window.addEventListener('beforeunload',pause);window.addEventListener('master-auth-ready',reload);window.addEventListener('master-auth-ended',()=>{release();state=normalize();owner=null;render();refreshHistory();});window.addEventListener('storage',e=>{if(e.key==='master_p2_hig_v2'&&!running){HIG.refreshFocus();state=normalize(HIG.focusData());render();refreshHistory();}});}
+  return {init,reload,render,toggle,pause,configure,reset,floating,panel,historyMarkup,status,cancel,expand,resetFloat,definirDescanso,iniciarDescanso,iniciarFoco,fecharFim,avisarFim};
 })();
 window.FocusTimer=FocusTimer;
 window.addEventListener('DOMContentLoaded',FocusTimer.init);
