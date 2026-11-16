@@ -208,7 +208,7 @@ test('image viewer zoom, normalized annotations, undo, export, Escape and broken
  await p.evaluate(()=>MediaViewer.open('data:image/svg+xml,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="600" height="400"><rect width="600" height="400" fill="white"/></svg>'),'Teste geométrico, não clínico'));
  await p.locator('[data-action=in]').click();await text(p,'.image-status',/125%/);await p.locator('[data-mode=arrow]').click();const box=await p.locator('.image-layer img').boundingBox();await p.mouse.move(box.x+100,box.y+100);await p.mouse.down();await p.mouse.move(box.x+200,box.y+160);await p.mouse.up();assert.equal(await p.locator('.image-layer svg path').count(),1);
  const before=await p.locator('.image-layer svg path').getAttribute('d');await p.locator('[data-action=in]').click();assert.equal(await p.locator('.image-layer svg path').getAttribute('d'),before);
- const download=p.waitForEvent('download');await p.locator('[data-action=export]').click();assert.equal((await download).suggestedFilename(),'MASTER-imagem-anotada.png');await p.locator('[data-action=undo]').click();assert.equal(await p.locator('.image-layer svg path').count(),0);await p.keyboard.press('Escape');assert.equal(await p.locator('dialog').count(),0);
+ const download=p.waitForEvent('download');await p.locator('[data-action=export]').click();assert.equal((await download).suggestedFilename(),'MASTER-imagem-anotada.png');await p.locator('[data-action=undo]').click();assert.equal(await p.locator('.image-layer svg path').count(),0);await p.keyboard.press('Escape');assert.equal(await p.locator('.image-dialog').count(),0);
  await p.evaluate(()=>MediaViewer.open('/missing-image.png'));await text(p,'.image-status',/Não foi possível abrir/);await p.keyboard.press('Escape');await t.close();
 });
 test('a second-device version is backed up before overwriting and can be exported',async()=>{
@@ -390,7 +390,7 @@ test('refreshed library and lesson remain usable with 200 percent reading size o
 
 test('release URL versions local assets and preserves recovery callbacks',async()=>{
  const t=await open({session:true,root:true,query:'?auth=recovery'}),p=t.page;await text(p,'#master-auth-title',/Definir nova senha/);
- assert.equal(new URL(p.url()).searchParams.get('v'),'20261116-renal-eas');
+ assert.equal(new URL(p.url()).searchParams.get('v'),'20261116-ai1-eas');
  const unversioned=await p.evaluate(()=>[...document.querySelectorAll('script[src],link[rel=stylesheet]')].map(e=>e.src||e.href).filter(url=>new URL(url).origin===location.origin&&!new URL(url).searchParams.has('v')));assert.deepEqual(unversioned,[]);await t.close();
 });
 test('Decision Lab has 24 stable cases with 20 P2 items, valid answers and references',async()=>{

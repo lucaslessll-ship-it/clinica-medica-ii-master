@@ -1,0 +1,3 @@
+[functions.ai-tutor]
+# JWT validado explicitamente com getUser no handler; configuração já existente em produção.
+verify_jwt = false

@@ -1,0 +1,78 @@
+const {test,before,after}=require('node:test');
+const assert=require('node:assert/strict');
+const {chromium}=require('playwright');
+const http=require('node:http');
+const fs=require('node:fs/promises');
+const path=require('node:path');
+let browser,server,base;
+before(async()=>{
+ server=http.createServer(async(req,res)=>{try{const file=path.join(process.cwd(),decodeURIComponent(new URL(req.url,'http://local').pathname));res.setHeader('Content-Type',file.endsWith('.js')?'text/javascript':file.endsWith('.css')?'text/css':'text/html');res.end(await fs.readFile(file));}catch{res.writeHead(404);res.end();}});
+ await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));base=`http://127.0.0.1:${server.address().port}`;
+ browser=await chromium.launch({executablePath:process.env.CHROMIUM_PATH||'/usr/bin/chromium',headless:true});
+});
+after(async()=>{await browser?.close();await new Promise(resolve=>server.close(resolve));});
+function mock(){
+ const user={id:'cir-test',email:'cir@example.test',user_metadata:{full_name:'Cirurgia'}};
+ localStorage.setItem('master_auth_local_owner',user.id);const canvas=document.createElement('canvas');canvas.width=600;canvas.height=400;const ctx=canvas.getContext('2d');ctx.fillStyle='#284c54';ctx.fillRect(0,0,600,400);const fixture=canvas.toDataURL('image/png').split(',')[1];
+ window.supabase={createClient:()=>({auth:{getSession:async()=>({data:{session:{user,access_token:'test-jwt'}}}),getUser:async()=>({data:{user}}),onAuthStateChange(){return {data:{subscription:{unsubscribe(){}}}}},signOut:async()=>({error:null})},from(table){let columns='',key='';const query={select(c){columns=c;return query},order(){return query},contains(_,keys){key=keys[0];return query},eq(){return query},maybeSingle:async()=>({data:{policy_version:'2026-11-08'},error:null}),upsert:async()=>({error:null}),then(resolve){const data=table==='lesson_images'?(columns==='keys'?[{keys:Array.from({length:8},(_,i)=>'rad_m'+(i+2))}]:[{id:key,caption:'Imagem sintética para teste',credit:'Fixture',mime:'image/png',data:fixture,marks:[{t:'Achado',x:50,y:50,lx:10,ly:10}]}]):[];resolve({data,error:null});}};return query;}})};
+}
+async function open(viewport={width:1280,height:800},date){
+ const context=await browser.newContext({viewport,timezoneId:'America/Sao_Paulo'});const page=await context.newPage(),errors=[];page.on('pageerror',e=>errors.push(e.stack||e.message));
+ await page.route('https://cdn.jsdelivr.net/**/supabase.min.js',route=>route.fulfill({contentType:'text/javascript',body:`(${mock.toString()})()`}));
+ await page.route('https://cdn.jsdelivr.net/npm/minisearch@7.2.0/**',async route=>route.fulfill({contentType:'text/javascript',body:await fs.readFile('node_modules/minisearch/dist/umd/index.js','utf8')}));
+ if(date)await page.clock.install({time:new Date(date)});
+ await page.goto(base+'/MASTER_Clinica_Medica_II_v7_GitHub_Completo_Lucas_Lessa/index.html');await page.waitForFunction(()=>document.getElementById('master-auth')?.hidden);
+ return {page,close:async()=>{assert.deepEqual(errors,[]);await context.close();}};
+}
+
+test('assistente carrega busca sob demanda, recupera aulas e abre fonte correta',async()=>{
+ const t=await open({width:1440,height:900}),p=t.page;let indexCalls=0,received;
+ p.on('request',r=>{if(r.url().includes('ai-index.json'))indexCalls++;});
+ assert.equal(await p.locator('.ai-tutor-launch').isVisible(),true);assert.equal(indexCalls,0);
+ await p.route('**/functions/v1/ai-tutor',async route=>{received=route.request().postDataJSON();assert.equal(route.request().headers().authorization,'Bearer test-jwt');const first=received.blocks[0];await route.fulfill({contentType:'application/json',body:JSON.stringify({answer:'Resposta falsa de teste <script>erro()</script>.\nDica de estudo: revise a aula.',sources:[{id:first.id}],remaining:39})});});
+ await p.locator('.ai-tutor-launch').click();assert.equal(await p.locator('#ai-tutor-question').evaluate(e=>e===document.activeElement),true);
+ const results=await p.evaluate(async()=>({cardio:await AITutor.search('manobra vagal'),cir:await AITutor.search('abdome agudo')}));assert.ok(results.cardio.some(d=>d.kind==='p1'));assert.ok(results.cir.some(d=>d.kind==='cir'));
+ await p.locator('#ai-tutor-question').fill('manobra vagal');await p.locator('.ai-tutor-send').click();await p.waitForFunction(()=>document.querySelector('.ai-tutor-status')?.textContent.includes('39 perguntas'));
+ assert.equal(received.blocks.length,5);assert.equal(Object.keys(received.blocks[0]).join(','),'id');assert.equal(await p.locator('.ai-tutor-message script').count(),0);assert.match(await p.locator('.ai-tutor-history').innerText(),/<script>/);
+ await p.locator('.ai-tutor-source').first().click();assert.equal(await p.locator('.ai-tutor-dialog').evaluate(d=>d.open),false);assert.equal(await p.evaluate(()=>ui.route),'p1topic');
+ await t.close();
+});
+test('atalhos usam a aula atual, painel reflow e temas mantêm foco; expiração limpa a conversa',async()=>{
+ for(const theme of ['light','dark','high-contrast']){
+  const t=await open({width:320,height:740}),p=t.page;let request;
+  await p.route('**/functions/v1/ai-tutor',async r=>{request=r.request().postDataJSON();await r.fulfill({status:429,contentType:'application/json',body:JSON.stringify({error:'daily_limit'})});});
+  await p.evaluate(theme=>{HIG.setTheme(theme==='high-contrast'?'light':theme);if(theme==='high-contrast')HIG.togglePref('contrast');navigate('pocus');PocusCourse.open(0);},theme);
+  await p.locator('.ai-tutor-launch').click();await p.locator('[data-ai-mode=resumo]').click();await p.waitForFunction(()=>document.querySelector('.ai-tutor-history')?.textContent.includes('Limite diário'));
+  assert.match(request.question,/Resuma a aula/);assert.ok(request.blocks.every(b=>b.id.startsWith('pocus_')));assert.ok(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));
+  await p.keyboard.press('Escape');assert.equal(await p.locator('.ai-tutor-launch').evaluate(e=>e===document.activeElement),true);
+  await p.locator('.ai-tutor-launch').click();await p.locator('.ai-tutor-dialog button').last().focus();await p.keyboard.press('Tab');assert.equal(await p.evaluate(()=>document.querySelector('.ai-tutor-dialog').contains(document.activeElement)),true);
+  await p.screenshot({path:'work/ai-tutor-'+theme+'.png'});
+  await p.evaluate(()=>{document.documentElement.classList.add('master-auth-locked');window.dispatchEvent(new Event('master-auth-ended'));});
+  assert.equal(await p.locator('.ai-tutor-launch').isVisible(),false);assert.equal(await p.locator('.ai-tutor-dialog').evaluate(d=>d.open),false);assert.equal(await p.locator('.ai-tutor-history').innerText(),'');await t.close();
+ }
+});
+test('rede indisponível e resposta atrasada não vazam conversa após expiração',async()=>{
+ const t=await open(),p=t.page;let complete;
+ await p.route('**/functions/v1/ai-tutor',r=>new Promise(resolve=>{complete=async()=>{await r.fulfill({contentType:'application/json',body:JSON.stringify({answer:'Resposta antiga',sources:[]})}).catch(()=>{});resolve();};}));
+ await p.locator('.ai-tutor-launch').click();await p.locator('#ai-tutor-question').fill('abdome agudo');await p.locator('.ai-tutor-send').click();await p.waitForFunction(()=>document.querySelector('.ai-tutor-status')?.textContent.includes('Preparando'));
+ await p.evaluate(()=>{document.documentElement.classList.add('master-auth-locked');window.dispatchEvent(new Event('master-auth-ended'));});if(complete)await complete();assert.equal(await p.locator('.ai-tutor-history').innerText(),'');await t.close();
+});
+test('boneco pode ser ocultado, continua no menu e pode ser reexibido em celular e desktop',async()=>{
+ for(const width of [320,1440]){
+  const t=await open({width,height:900}),p=t.page;
+  await p.screenshot({path:'work/ai-dock-home-'+width+'.png'});await p.locator('.ai-tutor-hide').click();assert.equal(await p.locator('.ai-tutor-dock').isVisible(),false);
+  await p.reload();await p.waitForFunction(()=>document.getElementById('master-auth')?.hidden);assert.equal(await p.locator('.ai-tutor-dock').isVisible(),false);
+  if(width<801)await p.locator('.menu-button').click();
+  await p.locator('#sidebar-nav [data-ai-open]').click();assert.equal(await p.locator('.ai-tutor-dialog').evaluate(d=>d.open),true);assert.equal(await p.locator('.ai-tutor-help').getAttribute('open'),'');assert.match(await p.locator('.ai-tutor-help').innerText(),/menu lateral/);
+  await p.locator('[data-ai-show]').click();await p.keyboard.press('Escape');assert.equal(await p.locator('.ai-tutor-dock').isVisible(),true);
+  await p.evaluate(()=>{openTopic('neuro1');window.scrollTo({top:document.body.scrollHeight,behavior:'instant'});});await p.waitForFunction(()=>document.querySelector('.reading-back')&&!document.querySelector('.reading-back').hidden);
+  const overlap=await p.evaluate(()=>{const a=document.querySelector('.ai-tutor-dock').getBoundingClientRect(),b=document.querySelector('.reading-back').getBoundingClientRect();return a.left<b.right&&a.right>b.left&&a.top<b.bottom&&a.bottom>b.top;});assert.equal(overlap,false);
+  await t.close();
+ }
+});
+test('aviso de novas funções é dispensável e as instruções permanecem no assistente',async()=>{
+ const t=await open({width:390,height:844}),p=t.page;assert.equal(await p.locator('.ai-tutor-news').count(),1);
+ await p.locator('.ai-tutor-news [data-ai-help]').click();assert.equal(await p.locator('.ai-tutor-help').getAttribute('open'),'');assert.match(await p.locator('.ai-tutor-help').innerText(),/resumo, questões/);await p.keyboard.press('Escape');
+ await p.locator('[data-ai-dismiss]').click();assert.equal(await p.locator('.ai-tutor-news').count(),0);await p.reload();await p.waitForFunction(()=>document.getElementById('master-auth')?.hidden);assert.equal(await p.locator('.ai-tutor-news').count(),0);
+ await p.screenshot({path:'work/ai-assistant-hidden-home.png'});await t.close();
+});
