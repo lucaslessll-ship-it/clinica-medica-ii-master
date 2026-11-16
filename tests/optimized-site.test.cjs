@@ -47,6 +47,21 @@ test('global search loads course entries even before the first course visit',asy
  const {page:p,context}=await open();assert.equal(await p.evaluate(()=>typeof window.ECGCourse),'undefined');await p.evaluate(()=>HIG.openSearch());assert.equal(await p.evaluate(()=>['ECGCourse','HemoCourse','AtbCourse','RadCourse'].every(name=>!!window[name])),true);await p.locator('#global-search').fill('ECG');await p.locator('#search-results button').first().waitFor();await context.close();
 });
 
+test('Laboratório Master built catalog works before Hemograma loads, then opens its original lesson',async()=>{
+ const {page:p,context}=await open();const errors=[];p.on('pageerror',e=>errors.push(e.message));
+ assert.equal(await p.evaluate(()=>typeof window.HemoCourse),'undefined');await p.evaluate(()=>navigate('labmaster'));assert.equal(await p.locator('.la-track').count(),20);
+ await p.evaluate(()=>LabAcademy.go('trilha/hemograma'));await p.locator('.la-module').first().click();await p.waitForFunction(()=>ui.route==='hemo'&&!!document.querySelector('.pocus-module'));
+ await p.evaluate(()=>LabAcademy.go('aula/coagulacao-fundamentos'));assert.equal(await p.locator('.la-question').count(),2);await p.locator('.la-options button').first().click();assert.ok((await p.locator('.la-feedback').first().innerText()).length>40);
+ assert.equal(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),true);assert.deepEqual(errors,[]);await context.close();
+});
+test('axe audits laboratory catalog, annotated report and answered case in the built site',async()=>{
+ const {page:p,context}=await open();
+ for(const path of ['', 'aula/hepatico-interpretacao','caso/coagulacao/0']){
+  await p.evaluate(path=>LabAcademy.go(path),path);if(path.startsWith('caso/'))await p.locator('.la-options button').first().click();
+  const result=await new AxeBuilder({page:p}).withTags(['wcag2a','wcag2aa','wcag21aa']).analyze();assert.deepEqual(result.violations.map(v=>({id:v.id,nodes:v.nodes.map(n=>n.target)})),[],path||'catalog');
+ }
+ await context.close();
+});
 test('built site preserves exam priority, laboratory lessons and related Surgery chapters',async()=>{
  const {page:p,context}=await open();await p.clock.setFixedTime(new Date('2026-11-16T12:00:00-03:00'));await p.evaluate(()=>navigate('dashboard'));
  await p.locator('.lab-exam-shortcut').click();await p.waitForURL('**#labrenal/aula/7');assert.match(await p.locator('.lab-renal h1').innerText(),/Pancreatite/);assert.equal(await p.locator('.lab-exam-patterns li').count(),4);assert.equal(await p.evaluate(()=>MASTER_LAB_RENAL.MODULES.length),10);

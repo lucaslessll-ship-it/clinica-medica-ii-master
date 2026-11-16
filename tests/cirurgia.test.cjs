@@ -245,6 +245,6 @@ test('Hemograma and Antimicrobianos courses render every module and case, save a
  }
  await p.reload();await p.waitForFunction(()=>document.getElementById('master-auth').hidden);
  for(const r of ['hemo','atb']){await p.evaluate(r=>navigate(r),r);assert.equal(await p.locator('.pocus-card.done').count(),1,`${r}: progresso salvo`);}
- assert.equal(await p.locator('#sidebar-nav .nav-featured').count(),4);
+ assert.equal(await p.locator('#sidebar-nav .nav-featured').count(),3);
  await t.close();
 });

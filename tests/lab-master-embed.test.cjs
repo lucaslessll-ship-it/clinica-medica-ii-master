@@ -15,8 +15,9 @@ async function open(width){const context=await browser.newContext({viewport:{wid
 for(const width of [390,1280])test('Laboratório Master abre dentro do site, sem página separada, com tema e tamanho ajustados em '+width+' px',async()=>{
  const {page,context,errors}=await open(width);
  await page.evaluate(()=>navigate('labmaster'));
+ await page.getByRole('button',{name:'Laboratório visual de microcitose',exact:true}).click();
  assert.ok(page.url().includes('/index.html'),'não deve sair do site');
- assert.equal(await page.evaluate(()=>location.hash),'#labmaster');
+ assert.equal(await page.evaluate(()=>location.hash),'#labmicrocitose');
  assert.match(await page.locator('.nav-group.is-active').innerText(),/Laboratório Master/);
  const src=await page.locator('#lab-master-frame').getAttribute('src');assert.match(src,/embed=1/);
  const frame=page.frameLocator('#lab-master-frame');
