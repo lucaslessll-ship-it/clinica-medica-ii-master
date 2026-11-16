@@ -1,6 +1,6 @@
 # Laboratório Master
 
-O catálogo reúne 20 trilhas com 49 aulas: 23 aulas dos cursos anteriores e 26 aulas novas. Hemograma, renal/equilíbrio e microbiologia continuam em suas rotas e com seus identificadores de progresso originais. Microcitose visual continua disponível em `#labmicrocitose` e no endereço anterior do módulo.
+O catálogo reúne 20 trilhas com 49 aulas nas trilhas: 23 aulas dos cursos anteriores e 26 aulas novas. Também preserva as três aulas complementares de exames de Cirurgia e o painel de prioridades, totalizando 52 aulas disponíveis nesses percursos. Hemograma, renal/equilíbrio e microbiologia continuam em suas rotas e com seus identificadores de progresso originais. Microcitose visual continua disponível em `#labmicrocitose` e no endereço anterior do módulo.
 
 ## Percurso
 

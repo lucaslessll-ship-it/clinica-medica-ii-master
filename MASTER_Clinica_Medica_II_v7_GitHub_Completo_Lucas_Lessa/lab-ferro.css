@@ -12,3 +12,16 @@
 .lab-embed.card{padding:clamp(12px,2vw,22px);overflow:hidden}
 .lab-embed-frame{display:block;width:100%;min-height:480px;border:0;background:transparent}
 .lab-embed-note{margin:12px 4px}
+
+/* Revisão dos exames ligados à prova: usa os temas e pesos do curso. */
+.lab-exam-focus{padding:clamp(18px,3vw,28px);margin:0 0 24px;overflow-wrap:anywhere}
+.lab-exam-focus h2{margin:0 0 12px;font-size:clamp(22px,3vw,28px);line-height:1.3}
+.lab-exam-focus p{font-size:15px;line-height:1.6}
+.lab-exam-focus .subtle{font-size:13px}
+.lab-exam-list{list-style:none;padding:0;margin:18px 0;display:grid;gap:12px}
+.lab-exam-list li{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:14px;align-items:center;padding:14px;border:1px solid var(--line);border-radius:12px;background:var(--white)}
+.lab-exam-list strong{font-size:17px}.lab-exam-list p{margin:6px 0;font-size:14px}
+.lab-exam-focus .btn{min-height:44px;min-width:44px;white-space:normal;text-align:center;font-size:14px}
+.lab-exam-patterns li{padding:10px 0}.lab-exam-patterns li p{margin:6px 0}.lab-related .btn{white-space:normal}
+@media(max-width:620px){.lab-exam-list li{grid-template-columns:minmax(0,1fr)}.lab-exam-focus .btn{width:100%}}
+.lab-exam-shortcut.btn{display:flex;flex-direction:column;align-items:flex-start;gap:4px;white-space:normal;text-align:left;width:100%;min-height:44px;min-width:44px;margin-top:12px;font-size:14px}.lab-exam-shortcut span{font-size:12px;line-height:1.5}

@@ -62,3 +62,10 @@ test('axe audits laboratory catalog, annotated report and answered case in the b
  }
  await context.close();
 });
+test('built site preserves exam priority, laboratory lessons and related Surgery chapters',async()=>{
+ const {page:p,context}=await open();await p.clock.setFixedTime(new Date('2026-11-16T12:00:00-03:00'));await p.evaluate(()=>navigate('dashboard'));
+ await p.locator('.lab-exam-shortcut').click();await p.waitForURL('**#labrenal/aula/7');assert.match(await p.locator('.lab-renal h1').innerText(),/Pancreatite/);assert.equal(await p.locator('.lab-exam-patterns li').count(),4);assert.equal(await p.evaluate(()=>MASTER_LAB_RENAL.MODULES.length),10);
+ await p.locator('[data-lab-topic=cirpanc]').click();await p.waitForFunction(()=>RouteAssets.ready('cirtopic')&&document.getElementById('main-content')?.textContent.includes('Três ou mais pontos indicam maior risco'));
+ assert.match(await p.locator('#main-content').innerText(),/Três ou mais pontos indicam maior risco/);assert.doesNotMatch(await p.locator('#main-content').innerText(),/Três ou mais pontos indicam pancreatite grave\./);
+ await p.goBack();await p.waitForURL('**#labrenal/aula/7');assert.match(await p.locator('.lab-renal h1').innerText(),/Pancreatite/);await context.close();
+});
