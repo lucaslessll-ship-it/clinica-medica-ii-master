@@ -1,6 +1,6 @@
 # Posologia e orientação de uso
 
-Catálogo ampliado em 15/11/2026: 202 fichas, incluindo as 16 anteriores. Foram acrescentadas 186 fichas e 188 esquemas contextuais com fontes documentais. Três fichas novas estão explicitamente pendentes de dose numérica: atropina, lidocaína e dipirona. Os esquemas novos documentados são 188 distribuídos por 183 medicamentos; as três fichas pendentes não contam como esquemas conferidos.
+Catálogo ampliado em 15/11/2026: 202 fichas, incluindo as 16 anteriores. Foram acrescentadas 186 fichas e 191 esquemas contextuais com fontes documentais. Três fichas novas estão explicitamente pendentes de dose numérica: atropina, lidocaína e dipirona. Os esquemas novos documentados são 191 distribuídos por 183 medicamentos; as três fichas pendentes não contam como esquemas conferidos.
 
 ## Acesso e integração
 
@@ -8,7 +8,7 @@ Catálogo ampliado em 15/11/2026: 202 fichas, incluindo as 16 anteriores. Foram 
 - Manual central: todas as 202 fichas; filtros existentes e os 16 cálculos anteriores preservados.
 - Classes farmacológicas oferecem exemplos de moléculas, sem atribuir uma dose única à classe.
 - Anemia microcítica: ferro elementar oral e fichas separadas de carboximaltose férrica e sacarato de hidróxido férrico IV, com populações e apresentações identificadas.
-- Urocultura: nitrofurantoína e ciprofloxacino acessíveis também no simulador. S/I/R continua separado de indicação e dose; categoria I não autoriza duplicação automática.
+- Urocultura: nitrofurantoína e ciprofloxacino acessíveis nas aulas e nos casos. Simulador removido; interpretação de S/I/R em texto e tabelas, separada de indicação e dose. Categoria I não autoriza duplicação automática.
 
 Cada esquema documentado apresenta contexto, dose/via/frequência, duração ou reavaliação, administração, riscos/ajustes/monitorização e fontes próprias. Regimes de bula EUA são identificados e não apresentados como uma diretriz brasileira. O catálogo não confirma todos os ajustes por indicação, idade ou apresentação.
 
@@ -32,5 +32,7 @@ Conferência documental não equivale a revisão docente ou prescrição individ
 ## Implementação e verificação
 
 `posology-data.js` amplia os registros existentes sem mudar formatos obrigatórios. `posology.js` identifica menções em nós de texto, preserva alternativas, links, formulários e conteúdo editável e acompanha feedback inserido após a renderização. `clinical.js` aceita o campo opcional `regimens`. Nenhuma consulta de ficha é salva, e não há cálculo com dados de pacientes. O diálogo fecha ao encerrar sessão e devolve foco ao acionador.
+
+A integração também alcança o Laboratório Master independente de microcitose, sem mudar suas chaves de progresso.
 
 Os testes cobrem fontes/estrutura, aliases e siglas sem falsos positivos conhecidos, navegação entre cursos, separação entre interpretação e prescrição, unidades e regimes críticos, atualização parcial, foco/teclado, isolamento de armazenamento e telas de 320, 390, 820 e 1280 px nos dois temas. O Supabase é interceptado nos testes, sem alteração de dados reais.
