@@ -17,7 +17,7 @@ function ready(){
   return {uid:user.id,client,generation};
 }
 function current(scope){const a=auth();return !ended&&scope.generation===generation&&a&&a.user()?.id===scope.uid&&a.client()===scope.client;}
-function slot(key,cls){return `<section class="${cls||'deep-block'} lesson-images" data-img-key="${esc(key)}" hidden></section>`;}
+function slot(key,cls,exclude=[],captions={}){return `<section class="${cls||'deep-block'} lesson-images" data-img-key="${esc(key)}"${exclude.length?` data-img-exclude="${esc(JSON.stringify(exclude))}"`:''} data-img-captions="${esc(JSON.stringify(captions))}" hidden></section>`;}
 async function keys(scope){
   const uid=scope.uid;
   if(index&&indexFor===uid)return index;
@@ -63,7 +63,9 @@ async function fill(el,scope){
   el.dataset.imgDone='1';
   try{
     const key=el.dataset.imgKey,set=await keys(scope);if(!current(scope)||!set.has(key))return;
-    const rows=await load(scope,key);if(!current(scope)||!rows.length||!el.isConnected)return;
+    let exclude=[];try{const value=JSON.parse(el.dataset.imgExclude||'[]');if(Array.isArray(value))exclude=value;}catch{}
+    let captions={};try{const value=JSON.parse(el.dataset.imgCaptions||'{}');if(value&&typeof value==='object'&&!Array.isArray(value))captions=value;}catch{}
+    const rows=(await load(scope,key)).filter(row=>!exclude.includes(row.id)).map(row=>Object.hasOwn(captions,row.id)&&typeof captions[row.id]==='string'?{...row,caption:captions[row.id]}:row);if(!current(scope)||!rows.length||!el.isConnected)return;
     el.innerHTML=markup(rows);el.hidden=false;
     el.onclick=e=>{if(!current(scope))return;const t=e.target.closest('[data-img-marks]');if(t){const o=t.closest('figure').querySelector('.lesson-marks');if(!o)return;const on=o.hidden;o.hidden=!on;t.setAttribute('aria-pressed',String(on));t.textContent=on?'Ocultar achados':'Mostrar achados';return;}const b=e.target.closest('[data-img-open]');if(!b)return;const r=rows[Number(b.dataset.imgOpen)],o=b.querySelector('.lesson-marks');if(r)open(b.querySelector('img').src,r.caption,r.marks,!!o&&!o.hidden);};
   }catch{if(current(scope))delete el.dataset.imgDone;}

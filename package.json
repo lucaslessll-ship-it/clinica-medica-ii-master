@@ -2,10 +2,12 @@
   "name": "clinica-medica-ii-master",
   "private": true,
   "scripts": {
-    "test": "node --test tests/*.test.cjs"
+    "test": "node --test tests/*.test.cjs",
+    "build:ai-index": "node scripts/build-ai-index.cjs"
   },
   "devDependencies": {
     "@supabase/supabase-js": "2.119.0",
+    "minisearch": "7.2.0",
     "playwright": "1.62.1"
   }
 }
