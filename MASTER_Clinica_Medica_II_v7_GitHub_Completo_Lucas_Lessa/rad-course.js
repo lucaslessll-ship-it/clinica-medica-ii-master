@@ -13,7 +13,7 @@ const RadCourse=CourseKit.create({
   "bankLead": "Nove cenários para justificar a interpretação e a próxima etapa.",
   "caseHint": "Formule a hipótese, os limites da imagem e o próximo passo antes de abrir a resolução.",
   "refNote": "Referências para aprofundamento. O material não representa revisão docente independente de todas as imagens.",
-  "sourcesNote": "Texto e questões autorais. As 21 imagens já existentes permanecem na base privada, com créditos e marcações do catálogo. Acesso não equivale a licença de redistribuição.",
+  "sourcesNote": "Texto e questões autorais. As imagens ficam na base privada, com crédito e marcações por figura, e só aparecem para quem está logado. Acesso não equivale a licença de redistribuição.",
   "REFS": {
     "acr": {
       "t": "ACR Appropriateness Criteria — seleção de exames por cenário clínico",
@@ -37,6 +37,18 @@ const RadCourse=CourseKit.create({
     },
     "atlas": {
       "t": "Créditos individuais das imagens: catálogo privado existente, com origem informada por figura. As fontes não equivalem a revisão independente das legendas."
+    },
+    "gi": {
+      "t": "ACR Appropriateness Criteria — Suspected Small-Bowel Obstruction e Acute Abdominal Pain",
+      "u": "https://acsearch.acr.org/list"
+    },
+    "inv": {
+      "t": "Gluckman S, et al. Management for intussusception in children. Cochrane Database Syst Rev. 2017;6:CD006476.",
+      "u": "https://doi.org/10.1002/14651858.CD006476.pub3"
+    },
+    "bili": {
+      "t": "Rosenthal SJ, et al. Sonography of the gallbladder and biliary tract (SRU consensus e revisões de técnica)",
+      "u": "https://www.acr.org/Clinical-Resources/Practice-Parameters-and-Technical-Standards"
     }
   },
   "MODULES": [
@@ -741,6 +753,185 @@ const RadCourse=CourseKit.create({
         "msk",
         "acr"
       ]
+    },
+    {
+      "id": "m10",
+      "layer": "Camada 10 · Interpretação e decisão",
+      "title": "Contraste, ultrassom e o abdome que a radiografia não resolve",
+      "summary": "Bário ou iodado, invaginação na criança e vesícula no ultrassom: o que pedir quando o RX simples não fecha.",
+      "min": 18,
+      "goals": [
+        "Escolher entre bário e contraste hidrossolúvel.",
+        "Reconhecer pneumoperitônio e obstrução na radiografia simples.",
+        "Descrever os sinais da invaginação no ultrassom e indicar a redução por enema.",
+        "Ler um ultrassom de vesícula e separar cálculo de colecistite."
+      ],
+      "sections": [
+        {
+          "h": "O que o RX simples ainda resolve",
+          "p": [
+            "Três perguntas continuam sendo respondidas pela radiografia: há ar livre, há obstrução, há corpo estranho. Para ar livre, a melhor incidência é o tórax em PA com o paciente sentado ou em pé por pelo menos cinco minutos: o ar sobe e aparece como uma lâmina clara sob a cúpula diafragmática. Em quem não levanta, use o decúbito lateral esquerdo com raio horizontal, e o ar aparece entre o fígado e a parede.",
+            "Na obstrução, procure alças distendidas, níveis hidroaéreos em degraus e ausência de ar distal. Delgado distendido mostra as válvulas coniventes atravessando toda a alça; cólon mostra haustrações que não atravessam. Distensão sem nível e sem dor forte sugere íleo adinâmico, não obstrução mecânica."
+          ],
+          "list": [
+            "Ar livre: tórax em PA sentado ou em pé, não o abdome deitado.",
+            "Delgado dilatado: acima de 3 cm. Cólon: acima de 6 cm. Ceco: acima de 9 cm.",
+            "Volvo de sigmoide: alça em grão de café apontando para o quadrante superior direito.",
+            "A radiografia normal não afasta obstrução nem perfuração; a TC é mais sensível."
+          ]
+        },
+        {
+          "h": "Bário ou hidrossolúvel",
+          "p": [
+            "O bário dá o melhor detalhe de mucosa, mas, se cair no peritônio, provoca peritonite química grave, e no pulmão causa pneumonite. O contraste iodado hidrossolúvel tem detalhe pior e é absorvido, por isso é o escolhido sempre que houver risco de perfuração ou de aspiração."
+          ],
+          "table": {
+            "head": [
+              "Situação",
+              "Contraste",
+              "Motivo"
+            ],
+            "rows": [
+              [
+                "Trânsito ou enema de rotina, sem suspeita de perfuração",
+                "Bário",
+                "Melhor detalhe da mucosa"
+              ],
+              [
+                "Suspeita de perfuração, pós-operatório recente, deiscência",
+                "Hidrossolúvel",
+                "Bário no peritônio causa peritonite química"
+              ],
+              [
+                "Risco de aspiração ou fístula para a via aérea",
+                "Hidrossolúvel de baixa osmolaridade",
+                "Bário causa pneumonite; o hiperosmolar puxa líquido para o alvéolo"
+              ],
+              [
+                "Obstrução parcial de delgado em tratamento conservador",
+                "Hidrossolúvel",
+                "Tem efeito diagnóstico e também terapêutico"
+              ]
+            ]
+          },
+          "after": "Sinais clássicos: bico de pássaro no volvo, mola enrolada na invaginação, maçã mordida na lesão estenosante do cólon."
+        },
+        {
+          "h": "Invaginação intestinal",
+          "p": [
+            "Criança entre três meses e três anos, com dor em cólica que vem em crises, choro com flexão das pernas e intervalos de calma. Massa em salsicha no quadrante superior direito e fezes em geleia de framboesa são achados tardios, e esperar por eles atrasa o diagnóstico.",
+            "O ultrassom é o exame de escolha: no corte transversal, camadas concêntricas formam o sinal do alvo, ou do donut; no corte longitudinal, a mesma alça dentro da outra forma o pseudo-rim. Sensibilidade e especificidade são altas, sem radiação."
+          ],
+          "list": [
+            "Confirmado o diagnóstico, a redução é feita por enema com ar ou com contraste hidrossolúvel, guiada por fluoroscopia ou por ultrassom.",
+            "Contraindicações à redução por enema: peritonite, perfuração e choque. Nesses casos, cirurgia.",
+            "A equipe cirúrgica precisa estar avisada antes da tentativa de redução.",
+            "Recorrência acontece em até um décimo dos casos, a maioria nas primeiras 48 horas.",
+            "Acima de três anos ou com recorrência, procure um ponto de partida: divertículo de Meckel, pólipo, linfoma."
+          ]
+        },
+        {
+          "h": "Ultrassom da vesícula e das vias biliares",
+          "p": [
+            "Peça jejum de pelo menos seis horas: vesícula contraída não é avaliável. O cálculo aparece como foco hiperecogênico que se move com a mudança de decúbito e que projeta sombra acústica posterior. Pólipo também é hiperecogênico, mas não se move e não faz sombra."
+          ],
+          "table": {
+            "head": [
+              "Achado",
+              "Como se mede",
+              "O que sugere"
+            ],
+            "rows": [
+              [
+                "Cálculo",
+                "Foco móvel com sombra posterior",
+                "Colelitíase"
+              ],
+              [
+                "Parede da vesícula",
+                "Acima de 3 mm",
+                "Colecistite, mas também ascite, hepatopatia e insuficiência cardíaca"
+              ],
+              [
+                "Líquido perivesicular",
+                "Lâmina ao redor da vesícula",
+                "Inflamação aguda"
+              ],
+              [
+                "Murphy ecográfico",
+                "Dor máxima quando a sonda comprime a vesícula",
+                "Colecistite aguda, com boa correlação quando somado aos outros sinais"
+              ],
+              [
+                "Via biliar principal",
+                "Acima de 6 mm, somando 1 mm por década após os 60 anos",
+                "Obstrução distal, pensar em coledocolitíase"
+              ]
+            ]
+          },
+          "after": "Vesícula cheia de cálculos e cheia de gás podem dar a mesma imagem de sombra. A diferença é que o gás sobe quando o paciente muda de posição e o cálculo cai."
+        }
+      ],
+      "pitfalls": [
+        "Pedir bário quando há suspeita de perfuração.",
+        "Pedir RX de abdome deitado para procurar ar livre.",
+        "Esperar as fezes em geleia de framboesa para pensar em invaginação.",
+        "Chamar de colecistite toda parede espessada, sem dor e sem o resto do quadro.",
+        "Tentar redução por enema sem a equipe cirúrgica avisada.",
+        "Concluir que não há obstrução porque a radiografia está normal."
+      ],
+      "quiz": [
+        {
+          "q": "Pós-operatório de gastrectomia no quarto dia, com febre e suspeita de deiscência da anastomose. O estudo contrastado deve usar:",
+          "o": [
+            "Bário, pelo melhor detalhe de mucosa",
+            "Contraste hidrossolúvel",
+            "Bário diluído",
+            "Nenhum contraste"
+          ],
+          "a": 1,
+          "why": "Com risco de extravasamento, o bário no peritônio provoca peritonite química grave. O hidrossolúvel é absorvido."
+        },
+        {
+          "q": "Lactente de 9 meses com crises de choro, vômitos e massa palpável à direita. O exame inicial e o achado esperado são:",
+          "o": [
+            "TC de abdome com contraste e borramento da gordura",
+            "Ultrassom e sinal do alvo no corte transversal",
+            "Radiografia simples e nível hidroaéreo isolado",
+            "Enema opaco diagnóstico e terapêutico já na suspeita"
+          ],
+          "a": 1,
+          "why": "O ultrassom é o exame de escolha, com o alvo no transversal e o pseudo-rim no longitudinal. O enema vem depois, para reduzir."
+        },
+        {
+          "q": "Mulher de 44 anos com dor no hipocôndrio direito. Ultrassom: cálculo de 12 mm, parede de 5 mm, líquido perivesicular e dor à compressão da vesícula. O quadro corresponde a:",
+          "o": [
+            "Colelitíase assintomática",
+            "Colecistite aguda",
+            "Coledocolitíase",
+            "Pólipo de vesícula"
+          ],
+          "a": 1,
+          "why": "Cálculo somado a parede espessada, líquido perivesicular e Murphy ecográfico positivo caracteriza colecistite aguda."
+        },
+        {
+          "q": "Para procurar ar livre em paciente que consegue ficar sentado, a melhor incidência é:",
+          "o": [
+            "Abdome em decúbito dorsal",
+            "Tórax em PA, sentado ou em pé",
+            "Abdome em decúbito lateral direito",
+            "Tórax em perfil deitado"
+          ],
+          "a": 1,
+          "why": "O ar sobe para baixo da cúpula diafragmática e fica bem visível no tórax em PA com o paciente sentado ou em pé por alguns minutos."
+        }
+      ],
+      "refs": [
+        "gi",
+        "inv",
+        "bili",
+        "acr"
+      ]
     }
   ],
   "CASES": [
@@ -841,6 +1032,21 @@ const RadCourse=CourseKit.create({
         "Descrever o padrão observado e formular diferencial.",
         "Relacionar dados clínicos, laboratoriais e investigação especializada.",
         "Sinalizar a discordância da legenda e revisar a fonte antes de atribuir diagnóstico à segunda imagem."
+      ]
+    },
+    {
+      "id": "c10",
+      "focus": "Contraste, ultrassom e o abdome que a radiografia não resolve",
+      "stem": "Lactente de 11 meses, previamente hígido, com crises de choro intenso a cada 20 minutos há 10 horas, vômitos e recusa alimentar. Entre as crises, fica quieto e pálido. Abdome com massa alongada no quadrante superior direito, sem defesa. Sem febre, enchimento capilar de 2 segundos.",
+      "ask": "Qual o exame inicial, o que você espera ver, qual o tratamento e o que o contraindicaria?",
+      "answer": [
+        "Dor em cólica intermitente com intervalos de calma, vômitos e massa em salsicha em lactente: invaginação intestinal até prova em contrário.",
+        "Exame inicial: ultrassom de abdome, sem radiação e com alta acurácia.",
+        "Achados esperados: sinal do alvo, ou donut, no corte transversal e pseudo-rim no corte longitudinal.",
+        "Tratamento: redução por enema com ar ou com contraste hidrossolúvel, guiada por fluoroscopia ou ultrassom, com a equipe cirúrgica avisada e acesso venoso garantido.",
+        "Contraindicações à redução: peritonite, perfuração e choque, que levam direto à cirurgia.",
+        "Depois da redução, observação: a recorrência acontece em até um décimo dos casos, a maioria nas primeiras 48 horas.",
+        "Nessa idade o ponto de partida costuma ser hipertrofia linfoide. Acima de 3 anos ou em recorrências, procurar divertículo de Meckel, pólipo ou linfoma."
       ]
     }
   ],
