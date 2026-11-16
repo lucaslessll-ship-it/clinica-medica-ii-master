@@ -223,7 +223,7 @@ test('clinical data covers all sixteen topics and every reference regimen has tr
  const audit=await p.evaluate(()=>{
   const guides=window.MASTER_CLINICAL_GUIDES,rx=window.MASTER_RX;
   return {topics:Object.keys(guides).length,drugs:Object.keys(rx.drugs).length,invalidGuides:Object.entries(guides).filter(([id,g])=>!g.note.includes('[')||g.history.length<3||g.exam.length<3||g.tests.length<3||g.drugs.some(key=>!rx.drugs[key])).map(([id])=>id),invalidDrugs:Object.entries(rx.drugs).filter(([,d])=>['name','context','mechanism','dose','course','care'].some(key=>!d[key])||!d.sources.length||d.sources.some(key=>!rx.sources[key]?.url.startsWith('https://'))).map(([id])=>id)};
- });assert.equal(audit.topics,16);assert.equal(audit.drugs,202);assert.deepEqual(audit.invalidGuides,[]);assert.deepEqual(audit.invalidDrugs,[]);await t.close();
+ });assert.equal(audit.topics,16);assert.equal(audit.drugs,279);assert.deepEqual(audit.invalidGuides,[]);assert.deepEqual(audit.invalidDrugs,[]);await t.close();
 });
 test('every P2 and P1 chapter keeps its original content and receives one clinical guide',async()=>{
  const t=await open({session:true}),p=t.page;await p.waitForFunction(()=>document.getElementById('master-auth').hidden);
@@ -274,7 +274,7 @@ test('account illustration is stable, changes with the account and never interpo
 });
 test('all existing reference cards expose worked unit calculations in the manual and lesson',async()=>{
  const t=await open({session:true,viewport:{width:390,height:844}}),p=t.page;await p.waitForFunction(()=>document.getElementById('master-auth').hidden);
- await p.evaluate(()=>navigate('prescriptions'));assert.equal(await p.locator('.rx-card').count(),202);assert.equal(await p.locator('.rx-calculation').count(),16);
+ await p.evaluate(()=>navigate('prescriptions'));assert.equal(await p.locator('.rx-card').count(),279);assert.equal(await p.locator('.rx-calculation').count(),16);
  const ivig=p.locator('[data-drug=ivig]');await ivig.locator('summary').click();assert.match(await ivig.innerText(),/140 g/);assert.match(await ivig.innerText(),/280 mL/);
  const atra=p.locator('[data-drug=tretinoin]');await atra.locator('summary').click();assert.match(await atra.innerText(),/90 mg\/dia/);
  assert.ok(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));
@@ -390,7 +390,7 @@ test('refreshed library and lesson remain usable with 200 percent reading size o
 
 test('release URL versions local assets and preserves recovery callbacks',async()=>{
  const t=await open({session:true,root:true,query:'?auth=recovery'}),p=t.page;await text(p,'#master-auth-title',/Definir nova senha/);
- assert.equal(new URL(p.url()).searchParams.get('v'),'20261116-farmaco1');
+ assert.equal(new URL(p.url()).searchParams.get('v'),'20261116-posologia2');
  const unversioned=await p.evaluate(()=>[...document.querySelectorAll('script[src],link[rel=stylesheet]')].map(e=>e.src||e.href).filter(url=>new URL(url).origin===location.origin&&!new URL(url).searchParams.has('v')));assert.deepEqual(unversioned,[]);await t.close();
 });
 test('Decision Lab has 24 stable cases with 20 P2 items, valid answers and references',async()=>{

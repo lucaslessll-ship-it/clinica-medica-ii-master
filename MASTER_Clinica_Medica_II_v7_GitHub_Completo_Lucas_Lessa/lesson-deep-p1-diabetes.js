@@ -181,14 +181,14 @@ LessonDeep.add({
    'Fármacos: corticoides, inibidores de SGLT2, antipsicóticos atípicos.',
    'Dor abdominal é comum na cetoacidose e melhora com o tratamento; se persistir, investigar abdome.']},
   {h:'Tratamento em três frentes',table:{head:['Frente','Conduta'],rows:[
-   ['Volume','Cristaloide isotônico, 1 a 1,5 litro na primeira hora; depois 250 a 500 mL por hora conforme hidratação e sódio. Acrescentar glicose a 5 ou 10% quando a glicemia chegar a 250 mg/dL na cetoacidose, ou a 300 no estado hiperosmolar'],
+   ['Volume','Consenso de 2024, adulto sem comprometimento cardíaco ou renal: cristaloide isotônico ou balanceado a 500 a 1.000 mL/h nas primeiras 2 a 4 horas, depois ajustar por perfusão, balanço e sódio. Idosos, insuficiência cardíaca ou doença renal terminal podem exigir bolus menores, por exemplo 250 mL, com reavaliação frequente. Na cetoacidose, acrescentar glicose a 5 ou 10% quando a glicemia ficar abaixo de 250 mg/dL. Seguir protocolo próprio de osmolaridade no estado hiperosmolar'],
    ['Potássio','Abaixo de 3,5 mEq/L: não iniciar insulina; repor potássio até subir. De 3,5 a 5,0: acrescentar 20 a 30 mEq em cada litro de soro. Acima de 5,0: não repor e reavaliar a cada 2 horas'],
    ['Insulina','Regular intravenosa em infusão de 0,1 unidade/kg por hora. Quando a glicemia chegar a 250, reduzir a infusão e manter glicose no soro, até resolver a acidose'],
    ['Bicarbonato','Só com pH abaixo de 7,0'],
-   ['Fósforo','Repor apenas se muito baixo ou com disfunção cardíaca ou respiratória']]},
+   ['Fósforo','Não repor rotineiramente. O consenso de 2024 considera reposição com fósforo abaixo de 1,0 mmol/L e fraqueza muscular ou comprometimento cardiorrespiratório; conferir a ficha de fosfato de potássio']]},
    after:'O potássio corporal total está sempre baixo, mesmo com potássio sérico normal ou alto: a insulina e a correção da acidose empurram o potássio para dentro da célula. Insulina sem potássio causa arritmia fatal. Cetoacidose leve pode ser tratada com análogo rápido subcutâneo.'},
   {h:'Resolução e transição',list:[
-   'Cetoacidose resolvida: glicemia abaixo de 200 com bicarbonato de 18 ou mais, pH acima de 7,30 e cetonas baixas ou ânion gap normal. A glicemia normaliza antes da acidose: não desligue a insulina por causa dela.',
+   'Consenso de 2024: cetoacidose resolvida com cetona plasmática abaixo de 0,6 mmol/L e pH venoso de pelo menos 7,3 ou bicarbonato de pelo menos 18 mmol/L; idealmente glicemia abaixo de 200 mg/dL. Não usar ânion gap como critério de resolução: a acidose hiperclorêmica pode confundir. Não desligar insulina apenas pela glicemia.',
    'Estado hiperosmolar resolvido: osmolaridade abaixo de 300, glicemia abaixo de 250 e consciência recuperada. Reduzir a osmolaridade de forma gradual.',
    'Transição: aplicar insulina basal subcutânea 1 a 2 horas antes de desligar a bomba. Sem essa sobreposição, a cetoacidose volta.',
    'Complicações do tratamento: hipocalemia, hipoglicemia, acidose hiperclorêmica, edema cerebral (principalmente em crianças) e sobrecarga de volume.',
@@ -226,15 +226,15 @@ LessonDeep.add({
   {q:'Após 6 horas, glicemia de 230, bicarbonato de 12 e ânion gap de 20. O que fazer?',a:'A acidose não resolveu. Acrescentar glicose ao soro, reduzir a taxa de insulina sem suspender e manter potássio, até fechar o ânion gap.'},
   {q:'Como diferenciar cetoacidose de estado hiperosmolar?',a:'Cetoacidose: cetonas elevadas e acidose. Hiperosmolar: glicemia de 600 ou mais, osmolaridade efetiva acima de 300, sem acidose nem cetose relevantes.'},
   {q:'Quando o bicarbonato é indicado?',a:'Apenas com pH abaixo de 7,0.'},
-  {q:'Qual o critério de resolução da cetoacidose?',a:'Glicemia abaixo de 200 com bicarbonato de 18 ou mais, pH acima de 7,30 e cetonas baixas ou ânion gap normal.'}],
+  {q:'Qual o critério de resolução da cetoacidose?',a:'Cetona plasmática abaixo de 0,6 mmol/L e pH venoso de pelo menos 7,3 ou bicarbonato de pelo menos 18 mmol/L; idealmente glicemia abaixo de 200 mg/dL. Ânion gap não define resolução no consenso de 2024.'}],
  practice:[
   'Monte uma folha de fluxo com glicemia horária, potássio, bicarbonato e ânion gap.',
   'Anote o horário da insulina basal antes de desligar a bomba.',
   'Pergunte "por que hoje?" a todo paciente em crise.'],
  refs:[
-  {t:'Umpierrez GE, et al. Hyperglycaemic crises in adults with diabetes: a consensus report. Diabetes Care. 2024.',q:'Hyperglycemic Crises in Adults With Diabetes A Consensus Report Umpierrez 2024'},
+  {t:'Umpierrez GE, et al. Hyperglycaemic crises in adults with diabetes: a consensus report. Diabetes Care. 2024. Texto integral consultado em 16/11/2026.',u:'https://pmc.ncbi.nlm.nih.gov/articles/PMC11272983/'},
   {t:'Kitabchi AE, et al. Hyperglycemic crises in adult patients with diabetes. Diabetes Care. 2009.',q:'Hyperglycemic crises in adult patients with diabetes Kitabchi 2009'}],
- note:'Critérios e limiares do consenso de 2024. Protocolos locais podem diferir em doses e pontos de corte.'
+ note:'O texto de 2009 é referência histórica. O consenso de 2024 atualiza fluidos, potássio e critérios de resolução; a referência antiga de 1 a 1,5 L na primeira hora não substitui a individualização atual. Protocolos locais e condições cardíacas ou renais exigem avaliação.'
 },
 'p1dm_3':{
  updated:'2026-11',
