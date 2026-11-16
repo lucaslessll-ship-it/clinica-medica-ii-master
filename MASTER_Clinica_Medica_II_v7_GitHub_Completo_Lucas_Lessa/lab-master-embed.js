@@ -2,12 +2,12 @@
    com o menu, o tema e a barra de progresso do MASTER, sem sair da plataforma. */
 window.LabMasterEmbed=(()=>{
  'use strict';
- const SRC='laboratorio-master/microcitose/index.html',VERSION='20261116-equilibrio';
+ const SRC='laboratorio-master/microcitose/index.html',VERSION='20261116-labcir';
  let bound=false;
  const frame=()=>document.getElementById('lab-master-frame');
  const theme=()=>document.body.dataset.theme==='dark'?'dark':'light';
  function page(){
-  return header('LABORATÓRIO','Laboratório <em>Master</em>','Estude por laudos e casos: anemia microcítica, função renal, EAS, eletrólitos e gasometria. Use o mesmo menu e acompanhe seu progresso na conta.')
+  return header('LABORATÓRIO','Laboratório <em>Master</em>','Estude por laudos e casos: anemia microcítica, função renal, EAS, eletrólitos, gasometria e exames prioritários de Cirurgia. Use o mesmo menu e acompanhe seu progresso na conta.')
    +(window.LabRenal?LabRenal.entry():'')
    +`<h2>Anemia microcítica</h2><div class="card lab-embed"><iframe id="lab-master-frame" class="lab-embed-frame" title="Laboratório Master: anemia microcítica" src="${SRC}?embed=1&theme=${theme()}&v=${VERSION}" scrolling="no"></iframe></div><p class="subtle lab-embed-note">Prefere tela cheia? <a href="${SRC}" target="_blank" rel="noopener">Abrir em outra aba</a>.</p>`;
  }

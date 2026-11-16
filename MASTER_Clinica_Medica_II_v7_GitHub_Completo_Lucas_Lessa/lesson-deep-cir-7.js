@@ -15,7 +15,7 @@ LessonDeep.add({
     ['Ureia e hematócrito','Hemoconcentração e ureia crescente indicam perda de volume e pior evolução'],
     ['PCR acima de 150 mg/L após 48 horas','Preditor de necrose e de forma grave']]}},
   {h:'Escores de gravidade: Ranson, BISAP e quando usar',p:[
-   'Os critérios de Ranson foram criados para pancreatite alcoólica e têm duas partes: admissão e 48 horas. Três ou mais pontos indicam pancreatite grave. A limitação é prática: o escore só fica completo em 48 horas. O BISAP usa dados da admissão e é mais rápido.'],
+   'Os critérios de Ranson foram criados para pancreatite alcoólica e têm duas partes: admissão e 48 horas. Três ou mais pontos indicam maior risco, sem substituir a classificação de Atlanta. A limitação é prática: o escore só fica completo em 48 horas. O BISAP usa dados da admissão e é mais rápido.'],
    table:{head:['Ranson (não biliar)','Critério'],rows:[
     ['Admissão','Idade acima de 55 anos, leucócitos acima de 16.000/mm3, glicose acima de 200 mg/dL, LDH acima de 350 U/L, AST acima de 250 U/L'],
     ['48 horas','Queda do hematócrito acima de 10 pontos, aumento do nitrogênio ureico (BUN) acima de 5 mg/dL, cálcio abaixo de 8 mg/dL, PaO2 abaixo de 60 mmHg, déficit de base acima de 4 mEq/L, sequestro de líquido acima de 6 L'],
@@ -74,7 +74,7 @@ LessonDeep.add({
     'No dia seguinte mantém-se estável, sem falência orgânica.'],
    reasoning:[
     'Dois critérios fecham o diagnóstico; ALT acima de 150 reforça a causa biliar.',
-    'Ausência de febre, icterícia importante ou colédoco dilatado afasta colangite e a CPRE de rotina.',
+    'O caso não descreve evidências suficientes de colangite ou obstrução persistente; CPRE não é rotina apenas pela ALT elevada.',
     'Ranson completo só viria em 48 horas; a evolução clínica e a falência orgânica guiam o nível de cuidado.'],
    conduct:[
     'Hidratação moderada guiada por metas, analgesia e dieta oral precoce conforme tolerância.',
