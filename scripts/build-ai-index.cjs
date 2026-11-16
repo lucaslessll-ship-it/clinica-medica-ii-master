@@ -35,5 +35,5 @@ for(const [key,d] of Object.entries(window.__deep||{})){
 }
 for(const [key,meta] of base)if(!window.__deep?.[key])add(key,meta.title,meta.route,strings(meta.chapterData).join('\n'),{kind:meta.kind,topic:meta.topic,chapter:meta.chapter});
 for(const [route,modules] of Object.entries(window.__courses))modules.forEach((m,index)=>add(route+'_'+m.id,m.title,'#'+route,strings(m).join('\n'),{kind:'course',course:route,module:index}));
-const json=JSON.stringify(docs);fs.writeFileSync(path.join(A,'ai-index.json'),json+'\n');
+const json=JSON.stringify(docs);fs.writeFileSync(process.argv[2]||path.join(A,'ai-index.json'),json+'\n');
 console.log(`${docs.length} blocos, ${new Set(docs.map(d=>d.lesson)).size} aulas, ${(Buffer.byteLength(json)/1024).toFixed(0)} KiB`);

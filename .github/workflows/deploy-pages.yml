@@ -30,6 +30,19 @@ jobs:
         with:
           persist-credentials: false
 
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+
+      - name: Instalar ferramentas e gerar site otimizado
+        run: npm ci && npm run build
+
+      - name: Verificar site otimizado e acessibilidade
+        env:
+          CHROMIUM_PATH: /usr/bin/google-chrome
+        run: node --test tests/optimized-site.test.cjs
+
       - name: Validar os arquivos do site
         shell: bash
         run: |
@@ -51,8 +64,7 @@ jobs:
           set -euo pipefail
           site_dir="$RUNNER_TEMP/master-site"
           mkdir -p "$site_dir"
-          cp index.html "$site_dir/index.html"
-          cp -R MASTER_Clinica_Medica_II_v7_GitHub_Completo_Lucas_Lessa "$site_dir/"
+          cp -R dist/. "$site_dir/"
 
       - name: Enviar o pacote do site
         uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa # v3
