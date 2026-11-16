@@ -1,0 +1,16 @@
+/* Padrão de destaque para leitura dinâmica.
+   Dois papéis apenas, para não poluir o texto:
+   .k-termo  termo-chave que abre a ideia (os <strong> já escritos no conteúdo)
+   .k-dado   valor clínico com unidade, corte ou prazo (marcado automaticamente)
+   Documentado em docs/PADRAO_DESTAQUE.md. */
+:is(.deep-block,.pocus-card-body,.pocus-lead,.pocus-sec,.course-body,.insight,.case-step) :is(strong,b,.k-termo){
+  font-weight:650;color:#0b5f57;letter-spacing:-.002em}
+body[data-theme="dark"] :is(.deep-block,.pocus-card-body,.pocus-lead,.pocus-sec,.course-body,.insight,.case-step) :is(strong,b,.k-termo){color:#8fe0cf}
+
+/* Marca de leitura: fica atrás do número, sem caixa e sem mexer na linha. */
+.k-dado{font-weight:620;color:inherit;
+  background-image:linear-gradient(transparent 58%,#bfe9dd 58%,#bfe9dd 94%,transparent 94%);
+  background-repeat:no-repeat;padding:0 1px;border-radius:2px}
+body[data-theme="dark"] .k-dado{background-image:linear-gradient(transparent 58%,#2c6358 58%,#2c6358 94%,transparent 94%)}
+body.high-contrast .k-dado{background-image:none;text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:3px}
+@media print{.k-dado{background:none;text-decoration:underline}}

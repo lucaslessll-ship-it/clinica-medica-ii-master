@@ -77,6 +77,9 @@
 
   function agendar() {
     if (agendado || ocupado) return;
+    // Páginas sem tabela não agendam quadro nenhum: nada a medir, e o ritmo
+    // de requestAnimationFrame de quem está na tela fica intocado.
+    if (!document.querySelector(`${RAIZ.split(',').map(r => `${r.trim()} table`).join(',')}`)) return;
     agendado = true;
     requestAnimationFrame(ajustar);
   }
