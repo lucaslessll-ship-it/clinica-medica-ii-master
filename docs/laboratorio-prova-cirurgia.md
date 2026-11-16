@@ -53,6 +53,12 @@ Foram corrigidas duas frases em `lesson-deep-cir-7.js`: Ranson alto indica maior
 - Revisão docente independente ainda pendente. Não há previsão validada de questões da prova.
 - Nenhuma imagem nova, migração ou modificação de dados reais no Supabase.
 
+## Validação
+
+188 testes aprovados na suíte completa, incluindo oito novos testes do laboratório e um teste do build otimizado. Os dois validadores Python foram aprovados e a sintaxe foi conferida nos 84 arquivos JS do app. Foram verificados pesos do currículo, datas em São Paulo, retomada, respostas, preservação do progresso, busca, carregamento dos capítulos relacionados, 320/390/820/1280 px, temas claro/escuro, teclado, fonte mínima e toque. Autenticação e dados dos testes são simulados.
+
+A publicação preserva as atualizações recebidas na main, incluindo carregamento otimizado, revisões adaptativas, correção de ECG F12 e retirada do exercício genérico de descrição do POCUS. O build e os fluxos afetados são verificados após essa integração.
+
 ## Onde parei e o que falta
 
 Pronto para estudo: bloco prioritário de pâncreas, via biliar e hemostasia, com atalho no Hoje, três aulas, 18 questões e seis casos novos. Total atual do laboratório: dez aulas, 60 questões e 17 casos.
