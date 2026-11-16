@@ -23,3 +23,7 @@ Testes cobrem imagem decodificada, ocultar/reexibir, menu mobile/desktop, três 
 A consulta somente de leitura aos logs de produção encontrou chamadas do ai-tutor com status 200 e 502 na janela verificada. Não foram lidos nem registrados conteúdos de perguntas, respostas, chaves, tokens ou identificadores pessoais. O status 200 confirma uma chamada bem-sucedida, mas não equivale à conferência clínica de seu texto. Não houve mudança na Edge Function, no cadastro da chave ou no banco nesta entrega.
 
 A atualização simultânea do Laboratório de equilíbrio ácido-base (`9cb5d60`) foi preservada. Recursos versionados como `20261116-robo3d1`.
+
+## Recolher junto ao Pomodoro
+
+Ao ocultar o robô, um botão compacto com o mesmo mascote aparece imediatamente ao lado do Pomodoro na barra superior. Esse botão restaura o flutuante sem abrir o chat nem fazer chamadas à IA. A preferência persiste após recarga, e o acesso pelo menu continua disponível. A barra de 320 px usa o Pomodoro compacto para preservar os alvos de toque e evitar rolagem horizontal. Recursos desta atualização: `20261116-iarestore1`.
