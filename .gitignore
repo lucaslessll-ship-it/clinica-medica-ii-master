@@ -5,3 +5,7 @@ test-results/
 .impeccable/audit/
 .impeccable/critique/
 .claude/settings.local.json
+
+dist/
+.lighthouseci/
+evaluations/results/
