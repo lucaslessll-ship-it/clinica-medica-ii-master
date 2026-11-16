@@ -21,15 +21,25 @@ const FocusTimer=(()=>{
     const feitos=Math.max(0,Math.min(rodada,Math.floor(Number(raw.feitos)||0)));
     const teto=(mode==='foco'?minutes:mode==='longo'?longMinutes:shortMinutes)*60000;
     for(const [key,value]of Object.entries(raw.days||{}))if(/^\d{4}-\d{2}-\d{2}$/.test(key)&&value&&typeof value==='object')days[key]={ms:Math.max(0,Math.min(86400000,Number(value.ms)||0)),completed:Math.max(0,Math.floor(Number(value.completed)||0)),breakMs:Math.max(0,Math.min(86400000,Number(value.breakMs)||0)),breaks:Math.max(0,Math.floor(Number(value.breaks)||0))};
-    return {version:2,minutes,shortMinutes,longMinutes,rodada,feitos,mode,auto:raw.auto===true,remainingMs:Number.isFinite(raw.remainingMs)?Math.max(0,Math.min(teto,raw.remainingMs)):teto,floating:raw.floating!==false,legacyMinutes:Math.max(0,Number(raw.legacyMinutes)||0),days,get breakMinutes(){return this.shortMinutes;}};
+    const ativoRaw=raw.ativo&&typeof raw.ativo==='object'&&typeof raw.ativo.dev==='string'&&Number(raw.ativo.fimEm)>0?{dev:raw.ativo.dev,modo:MODOS[raw.ativo.modo]?raw.ativo.modo:'foco',fimEm:Number(raw.ativo.fimEm)}:null;
+    return {version:2,em:Number(raw.em)||0,ativo:ativoRaw,minutes,shortMinutes,longMinutes,rodada,feitos,mode,auto:raw.auto===true,remainingMs:Number.isFinite(raw.remainingMs)?Math.max(0,Math.min(teto,raw.remainingMs)):teto,floating:raw.floating!==false,legacyMinutes:Math.max(0,Number(raw.legacyMinutes)||0),days,get breakMinutes(){return this.shortMinutes;}};
   }
   const minutosDe=modo=>modo==='foco'?state.minutes:modo==='longo'?state.longMinutes:state.shortMinutes;
   const duracao=modo=>minutosDe(modo)*60000;
   const proximoModo=()=>state.mode==='foco'?(state.feitos+1>=state.rodada?'longo':'curto'):'foco';
-  function release(){clearInterval(interval);interval=null;running=false;releaseLock?.();releaseLock=null;}
-  function reload(){release();owner=user();state=normalize(HIG.focusData());loadFloat();render();refreshHistory();}
+  const DEV=(()=>{try{let d=localStorage.getItem('master_device_id');if(!d){d=Math.random().toString(36).slice(2,10)+Date.now().toString(36);localStorage.setItem('master_device_id',d);}return d;}catch{return 'local';}})();
+  let espelho=null;
+  const remotoAtivo=()=>state&&!running&&state.ativo&&state.ativo.dev!==DEV&&state.ativo.fimEm>Date.now()?state.ativo:null;
+  function pararEspelho(){clearInterval(espelho);espelho=null;}
+  function iniciarEspelho(){
+    pararEspelho();const a=remotoAtivo();if(!a)return;
+    espelho=setInterval(()=>{const r=remotoAtivo();if(!r){pararEspelho();render();return;}state.mode=r.modo;state.remainingMs=Math.max(0,r.fimEm-Date.now());render();},1000);
+    state.mode=a.modo;state.remainingMs=Math.max(0,a.fimEm-Date.now());render();
+  }
+  function release(){window.__pomodoroRunning=false;clearInterval(interval);interval=null;running=false;releaseLock?.();releaseLock=null;}
+  function reload(){release();pararEspelho();owner=user();state=normalize(HIG.focusData());loadFloat();render();refreshHistory();iniciarEspelho();}
   function allowed(){return owner&&owner===user()&&!document.documentElement.classList.contains('master-auth-locked');}
-  function persist(){if(owner&&owner===user())HIG.saveFocus(state);lastSave=performance.now();refreshHistory();}
+  function persist(){if(owner&&owner===user()){state.em=Date.now();state.ativo=running?{dev:DEV,modo:state.mode,fimEm:Date.now()+state.remainingMs}:null;HIG.saveFocus(state);}lastSave=performance.now();refreshHistory();}
   const diaDe=key=>state.days[key]||(state.days[key]={ms:0,completed:0,breakMs:0,breaks:0});
   function credit(start,ms){
     let at=start,left=ms;
@@ -65,13 +75,14 @@ const FocusTimer=(()=>{
       if(!lock){toast('O pomodoro desta conta já está ativo em outra aba. Pause-o lá antes de iniciar aqui.');return;}
       if(!allowed()||owner!==requestedOwner)return;
       // Another tab may have finished a session since this page was opened.
-      HIG.refreshFocus();state=normalize(HIG.focusData());
+      HIG.refreshFocus();state=normalize(HIG.focusData());pararEspelho();
+      {const a=state.ativo;if(a&&a.dev!==DEV&&a.fimEm>Date.now()){state.mode=a.modo;state.remainingMs=a.fimEm-Date.now();}}
       if(state.remainingMs<=0)state.remainingMs=duracao(state.mode);
-      const held=new Promise(resolve=>releaseLock=resolve);running=true;lastTick=performance.now();lastWall=Date.now();lastSave=lastTick;
-      persist();interval=setInterval(()=>tick(),1000);render();await held;
+      const held=new Promise(resolve=>releaseLock=resolve);running=true;window.__pomodoroRunning=true;lastTick=performance.now();lastWall=Date.now();lastSave=lastTick;
+      persist();window.MASTER_AUTH?.flush?.('master_p2_hig_v2')?.catch?.(()=>{});interval=setInterval(()=>tick(),1000);render();await held;
     });
   }
-  function pause(){if(!running)return;tick(true);release();persist();render();}
+  function pause(){if(!running)return;tick(true);release();persist();render();window.MASTER_AUTH?.flush?.('master_p2_hig_v2')?.catch?.(()=>{});}
   function configure(minutes){definir('foco',minutes);}
   function definir(campo,valor){
     if(!allowed()||!LIMITES[campo])return;
@@ -301,7 +312,7 @@ const FocusTimer=(()=>{
     if(!state)return;
     const label=format(state.remainingMs);
     document.querySelectorAll('[data-focus-time],#timer-count').forEach(el=>el.textContent=label);
-    document.querySelectorAll('[data-focus-toggle],#timer-toggle').forEach(el=>{el.textContent=running?'Pausar':'Começar';el.setAttribute('aria-label',running?'Pausar pomodoro':'Iniciar pomodoro');});
+    document.querySelectorAll('[data-focus-toggle],#timer-toggle').forEach(el=>{el.textContent=running?'Pausar':remotoAtivo()?'Assumir aqui':'Começar';el.setAttribute('aria-label',running?'Pausar pomodoro':'Iniciar pomodoro');});
     document.querySelectorAll('[data-focus-mode-tab]').forEach(el=>el.setAttribute('aria-pressed',String(el.dataset.focusModeTab===state.mode)));
     document.querySelectorAll('[data-focus-duration]').forEach(el=>el.setAttribute('aria-pressed',String(Number(el.dataset.focusDuration)===state.minutes)));
     document.querySelectorAll('[data-focus-break-duration]').forEach(el=>el.setAttribute('aria-pressed',String(Number(el.dataset.focusBreakDuration)===state.shortMinutes)));
@@ -381,7 +392,7 @@ const FocusTimer=(()=>{
     window.addEventListener('resize',placeFloat);
   }
   function status(){return {...state,running};}
-  function init(){initFloat();reload();document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!document.getElementById('focus-end')?.hidden)fecharFim();});document.addEventListener('visibilitychange',()=>{if(running)tick(true);});window.addEventListener('pagehide',pause);window.addEventListener('beforeunload',pause);window.addEventListener('master-auth-ready',reload);window.addEventListener('master-auth-ended',()=>{release();state=normalize();owner=null;render();refreshHistory();});window.addEventListener('storage',e=>{if(e.key==='master_p2_hig_v2'&&!running){HIG.refreshFocus();state=normalize(HIG.focusData());render();refreshHistory();}});}
+  function init(){initFloat();reload();document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!document.getElementById('focus-end')?.hidden)fecharFim();});document.addEventListener('visibilitychange',()=>{if(running)tick(true);});window.addEventListener('pagehide',pause);window.addEventListener('beforeunload',pause);window.addEventListener('master-auth-ready',reload);window.addEventListener('master-remote-merge',e=>{if(e.detail?.key!=='master_p2_hig_v2')return;HIG.refreshFocus();const r=normalize(HIG.focusData());if(running){if(r.ativo&&r.ativo.dev!==DEV&&r.em>state.em){release();state=r;render();refreshHistory();iniciarEspelho();}}else{state=r;render();refreshHistory();iniciarEspelho();}window.Notas?.aplicar?.();});window.addEventListener('master-auth-ended',()=>{release();state=normalize();owner=null;render();refreshHistory();});window.addEventListener('storage',e=>{if(e.key==='master_p2_hig_v2'&&!running){HIG.refreshFocus();state=normalize(HIG.focusData());render();refreshHistory();}});}
   return {init,reload,render,toggle,pause,configure,definir,ajustar,preset,alternarAuto,trocarModo,pular,reset,floating,panel,historyMarkup,status,cancel,expand,resetFloat,definirDescanso,iniciarDescanso,iniciarFoco,iniciarEtapa,fecharFim,avisarFim};
 })();
 window.FocusTimer=FocusTimer;

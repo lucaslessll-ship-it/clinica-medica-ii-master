@@ -3,12 +3,13 @@
   'use strict';
   const cfg = window.MASTER_AUTH_CONFIG;
   const keys = cfg?.progressKeys || [];
+  const HIGKEY = 'master_p2_hig_v2';
   const ownerKey = 'master_auth_local_owner';
   const recoveryKey = 'master_password_recovery';
   let sessionStore;
   const originalSet = Storage.prototype.setItem;
   const $ = id => document.getElementById(id);
-  const status = {client:null, user:null, ready:false, busy:false, mode:'login', initializing:true, timers:new Map(), epoch:0, entering:null, recovery:false, baseline:new Map(), consent:null};
+  const status = {client:null, user:null, ready:false, busy:false, mode:'login', initializing:true, timers:new Map(), epoch:0, entering:null, recovery:false, baseline:new Map(), baseObj:new Map(), consent:null};
   const read = key => {try{return JSON.parse(localStorage.getItem(key));}catch{return null;}};
   const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const errors = {
@@ -239,21 +240,45 @@
     const remote=latest?.find(row=>row.storage_key===key);
     const remoteCanon=remote?canon(remote.payload):null;
     const localCanon=current;
-    if(remote&&remoteCanon!==status.baseline.get(key)&&remoteCanon!==localCanon&&!(sent.get(key)||[]).includes(remoteCanon))keepConflictCopy(userId,latest);
-    rememberSent(key,localCanon);
-    const {error}=await status.client.from('master_progress').upsert({user_id:userId,storage_key:key,payload:value,updated_at:new Date().toISOString()},{onConflict:'user_id,storage_key'});
+    let outgoing=value,outCanon=localCanon,merged=false;
+    const alheio=remote&&remoteCanon!==status.baseline.get(key)&&remoteCanon!==localCanon&&!(sent.get(key)||[]).includes(remoteCanon);
+    if(alheio&&key===HIGKEY&&window.MASTER_SYNC_MERGE){
+      // Outro aparelho mexeu: mescla em silêncio (marcas, notas, pomodoro) em vez de sobrescrever.
+      outgoing=window.MASTER_SYNC_MERGE.mesclarPrefs(status.baseObj.get(key),value,remote.payload);outCanon=canon(outgoing);merged=outCanon!==localCanon;
+    }else if(alheio)keepConflictCopy(userId,latest);
+    rememberSent(key,outCanon);
+    const {error}=await status.client.from('master_progress').upsert({user_id:userId,storage_key:key,payload:outgoing,updated_at:new Date().toISOString()},{onConflict:'user_id,storage_key'});
     if(error){if(epoch===status.epoch)syncNotice('Sincronização pendente. Seu progresso continua salvo neste dispositivo.');throw error;}
     if(epoch===status.epoch){
-      status.baseline.set(key,localCanon);
+      status.baseline.set(key,outCanon);status.baseObj.set(key,outgoing);
+      if(merged){originalSet.call(localStorage,key,JSON.stringify(outgoing));window.dispatchEvent(new CustomEvent('master-remote-merge',{detail:{key}}));}
       const queued=pending(userId);
-      if(queued[key]===raw){delete queued[key];originalSet.call(localStorage,pendingKey(userId),JSON.stringify(queued));}
+      if(queued[key]===raw||merged&&key in queued){delete queued[key];originalSet.call(localStorage,pendingKey(userId),JSON.stringify(queued));}
       syncNotice(Object.keys(queued).length?'Há alterações aguardando sincronização.':'Progresso sincronizado.');
     }
+  }
+  // Busca silenciosa: só olha o carimbo (leve); baixa o conteúdo apenas se mudou.
+  async function pullRemote(){
+    if(!status.ready||!status.user||navigator.onLine===false||status.pulling)return;
+    const epoch=status.epoch,userId=status.user.id;status.pulling=true;
+    try{
+      const {data:stamp}=await status.client.from('master_progress').select('updated_at').eq('user_id',userId).eq('storage_key',HIGKEY).maybeSingle();
+      if(epoch!==status.epoch||!stamp||stamp.updated_at===status.stamp)return;
+      const {data:row}=await status.client.from('master_progress').select('payload').eq('user_id',userId).eq('storage_key',HIGKEY).maybeSingle();
+      if(epoch!==status.epoch||!row)return;
+      status.stamp=stamp.updated_at;
+      const rc=canon(row.payload),lc=canon(read(HIGKEY)||{});
+      if(rc===lc||rc===status.baseline.get(HIGKEY)||(sent.get(HIGKEY)||[]).includes(rc))return;
+      if(lc===status.baseline.get(HIGKEY)){ // nada pendente aqui: adota o remoto direto
+        originalSet.call(localStorage,HIGKEY,JSON.stringify(row.payload));status.baseline.set(HIGKEY,rc);status.baseObj.set(HIGKEY,row.payload);
+        window.dispatchEvent(new CustomEvent('master-remote-merge',{detail:{key:HIGKEY}}));
+      }else await syncKey(HIGKEY);
+    }catch{}finally{status.pulling=false;}
   }
   async function syncAll(){syncNotice('Sincronizando…');await Promise.all(keys.map(syncKey));syncNotice('Progresso sincronizado.');}
   function syncSoon(key){
     if(!status.ready)return;clearTimeout(status.timers.get(key));syncNotice('Salvo neste dispositivo. Sincronizando…');
-    status.timers.set(key,setTimeout(()=>{status.timers.delete(key);syncKey(key).catch(()=>{});},800));
+    status.timers.set(key,setTimeout(()=>{status.timers.delete(key);syncKey(key).catch(()=>{});},key===HIGKEY&&window.__pomodoroRunning?20000:800));
   }
   Storage.prototype.setItem=function(key,value){originalSet.call(this,key,value);if(this===localStorage&&keys.includes(String(key))&&status.ready&&status.user){
       const queued=pending(status.user.id);queued[String(key)]=String(value);
@@ -273,7 +298,7 @@
       if(epoch!==status.epoch)return;
       const {data:remote,error:loadError}=await status.client.from('master_progress').select('storage_key,payload').eq('user_id',user.id);if(loadError)throw loadError;
       if(epoch!==status.epoch)return;
-      status.baseline=new Map((remote||[]).map(row=>[row.storage_key,canon(row.payload)]));
+      status.baseline=new Map((remote||[]).map(row=>[row.storage_key,canon(row.payload)]));status.baseObj=new Map((remote||[]).map(row=>[row.storage_key,row.payload]));
       let importLocal=!remote?.length&&previousOwner===user.id;
       if(!remote?.length&&!previousOwner&&keys.some(k=>read(k)&&Object.keys(read(k)).length)){
         importLocal=confirm('Encontramos progresso anterior neste navegador. Deseja vinculá-lo à sua conta? Cancelar inicia com progresso vazio e mantém uma cópia de segurança local.');
@@ -346,7 +371,7 @@
         if(event==='SIGNED_OUT')lock(true);
         setTimeout(()=>handleSession(event,session),0);
       });
-      window.MASTER_AUTH={user:()=>status.user,client:()=>status.client,signOut,sync:syncAll,exportConflict,changePassword:()=>{if(status.ready)show('password');}};
+      window.MASTER_AUTH={flush:key=>syncKey(key),pull:pullRemote,user:()=>status.user,client:()=>status.client,signOut,sync:syncAll,exportConflict,changePassword:()=>{if(status.ready)show('password');}};
       const {data,error}=await status.client.auth.getSession();status.initializing=false;if(error)throw error;
       if(callbackError){status.recovery=false;sessionStorage.removeItem(recoveryKey);clearAuthUrl();show('forgot','O link é inválido, expirou ou já foi utilizado. Solicite um novo e-mail.',true);}
       else if(data.session&&status.recovery){status.user=data.session.user;sessionStorage.setItem(recoveryKey,'yes');clearAuthUrl();show('recovery');}
@@ -356,7 +381,9 @@
     window.addEventListener('online',()=>{if(status.ready)keys.forEach(syncSoon);});
     // Nova tentativa automática do que ficou pendente, sem depender do botão.
     setInterval(()=>{if(status.ready&&status.user&&navigator.onLine!==false)Object.keys(pending(status.user.id)).forEach(key=>syncKey(key).catch(()=>{}));},45000);
-    document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden'&&status.ready)keys.forEach(syncSoon);});
+    document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden'&&status.ready)keys.forEach(syncSoon);else if(status.ready)pullRemote();});
+    window.addEventListener('focus',()=>pullRemote());
+    setInterval(()=>{if(document.visibilityState==='visible')pullRemote();},15000);
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();
 })();
