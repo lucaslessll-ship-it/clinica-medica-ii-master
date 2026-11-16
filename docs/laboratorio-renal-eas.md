@@ -1,5 +1,7 @@
 # Laboratório Master: função renal e EAS
 
+Continuação: as etapas de eletrólitos e gasometria foram acrescentadas em [laboratorio-equilibrio.md](laboratorio-equilibrio.md). Os números abaixo registram o lote original.
+
 Entrega de 16/11/2026, conforme a trilha renal do plano do Laboratório de Exames. Conteúdo e laudos autorais; pessoas fictícias. Revisão docente externa pendente.
 
 ## O que entrou
