@@ -7,14 +7,25 @@ const FocusTimer=(()=>{
   const dayKey=value=>{const d=new Date(value);return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;};
   const format=ms=>{const seconds=Math.ceil(Math.max(0,ms)/1000);return `${String(Math.floor(seconds/60)).padStart(2,'0')}:${String(seconds%60).padStart(2,'0')}`;};
   const duration=ms=>{const minutes=Math.floor(ms/60000);return minutes>=60?`${Math.floor(minutes/60)} h ${minutes%60} min`:`${minutes} min`;};
-  const DESCANSOS=[5,10,15];
+  const LIMITES={foco:[5,90,25],curto:[1,30,5],longo:[5,60,15],rodada:[2,8,4]};
+  const limitar=(campo,valor)=>{const [min,max,padrao]=LIMITES[campo];const n=Math.round(Number(valor));return Number.isFinite(n)?Math.max(min,Math.min(max,n)):padrao;};
+  const MODOS={foco:'Foco',curto:'Pausa curta',longo:'Pausa longa'};
   function normalize(raw={}){
-    const minutes=[25,45,60].includes(raw.minutes)?raw.minutes:25,days={};
-    const breakMinutes=DESCANSOS.includes(raw.breakMinutes)?raw.breakMinutes:5;
-    const mode=raw.mode==='descanso'?'descanso':'foco';
+    const days={};
+    const minutes=limitar('foco',raw.minutes);
+    // breakMinutes é o nome antigo da pausa curta; migra sem perder o ajuste.
+    const shortMinutes=limitar('curto',raw.shortMinutes??raw.breakMinutes);
+    const longMinutes=limitar('longo',raw.longMinutes);
+    const rodada=limitar('rodada',raw.rodada);
+    const mode=MODOS[raw.mode]?raw.mode:raw.mode==='descanso'?'curto':'foco';
+    const feitos=Math.max(0,Math.min(rodada,Math.floor(Number(raw.feitos)||0)));
+    const teto=(mode==='foco'?minutes:mode==='longo'?longMinutes:shortMinutes)*60000;
     for(const [key,value]of Object.entries(raw.days||{}))if(/^\d{4}-\d{2}-\d{2}$/.test(key)&&value&&typeof value==='object')days[key]={ms:Math.max(0,Math.min(86400000,Number(value.ms)||0)),completed:Math.max(0,Math.floor(Number(value.completed)||0)),breakMs:Math.max(0,Math.min(86400000,Number(value.breakMs)||0)),breaks:Math.max(0,Math.floor(Number(value.breaks)||0))};
-    return {version:1,minutes,breakMinutes,mode,remainingMs:(()=>{const teto=(mode==='descanso'?breakMinutes:minutes)*60000;return Number.isFinite(raw.remainingMs)?Math.max(0,Math.min(teto,raw.remainingMs)):teto})(),floating:raw.floating!==false,legacyMinutes:Math.max(0,Number(raw.legacyMinutes)||0),days};
+    return {version:2,minutes,shortMinutes,longMinutes,rodada,feitos,mode,auto:raw.auto===true,remainingMs:Number.isFinite(raw.remainingMs)?Math.max(0,Math.min(teto,raw.remainingMs)):teto,floating:raw.floating!==false,legacyMinutes:Math.max(0,Number(raw.legacyMinutes)||0),days,get breakMinutes(){return this.shortMinutes;}};
   }
+  const minutosDe=modo=>modo==='foco'?state.minutes:modo==='longo'?state.longMinutes:state.shortMinutes;
+  const duracao=modo=>minutosDe(modo)*60000;
+  const proximoModo=()=>state.mode==='foco'?(state.feitos+1>=state.rodada?'longo':'curto'):'foco';
   function release(){clearInterval(interval);interval=null;running=false;releaseLock?.();releaseLock=null;}
   function reload(){release();owner=user();state=normalize(HIG.focusData());loadFloat();render();refreshHistory();}
   function allowed(){return owner&&owner===user()&&!document.documentElement.classList.contains('master-auth-locked');}
@@ -22,7 +33,7 @@ const FocusTimer=(()=>{
   const diaDe=key=>state.days[key]||(state.days[key]={ms:0,completed:0,breakMs:0,breaks:0});
   function credit(start,ms){
     let at=start,left=ms;
-    const campo=state.mode==='descanso'?'breakMs':'ms';
+    const campo=state.mode==='foco'?'ms':'breakMs';
     while(left>0){const date=new Date(at),key=dayKey(at);date.setHours(24,0,0,0);const part=Math.min(left,date.getTime()-at);if(part<=0)break;
       const day=diaDe(key);day[campo]=(day[campo]||0)+part;left-=part;at+=part;
     }
@@ -35,9 +46,12 @@ const FocusTimer=(()=>{
     credit(lastWall,elapsed);state.remainingMs=Math.max(0,state.remainingMs-elapsed);lastTick=now;lastWall=Date.now();
     if(state.remainingMs===0){
       const day=diaDe(dayKey(completedAt)),terminou=state.mode;
-      if(terminou==='descanso')day.breaks=(day.breaks||0)+1;else day.completed++;
-      state.mode='foco';state.remainingMs=state.minutes*60000;
+      let proximo;
+      if(terminou==='foco'){day.completed++;proximo=state.feitos+1>=state.rodada?'longo':'curto';state.feitos=Math.min(state.rodada,state.feitos+1);}
+      else{day.breaks=(day.breaks||0)+1;proximo='foco';if(terminou==='longo')state.feitos=0;}
+      state.mode=proximo;state.remainingMs=duracao(proximo);
       release();persist();avisarFim(terminou);
+      if(state.auto)toggle();
     }
     else if(saveNow||now-lastSave>=5000)persist();
     render();
@@ -52,18 +66,88 @@ const FocusTimer=(()=>{
       if(!allowed()||owner!==requestedOwner)return;
       // Another tab may have finished a session since this page was opened.
       HIG.refreshFocus();state=normalize(HIG.focusData());
-      if(state.remainingMs<=0)state.remainingMs=state.minutes*60000;
+      if(state.remainingMs<=0)state.remainingMs=duracao(state.mode);
       const held=new Promise(resolve=>releaseLock=resolve);running=true;lastTick=performance.now();lastWall=Date.now();lastSave=lastTick;
       persist();interval=setInterval(()=>tick(),1000);render();await held;
     });
   }
   function pause(){if(!running)return;tick(true);release();persist();render();}
-  function configure(minutes){if(!allowed()||![25,45,60].includes(minutes))return;pause();state.minutes=minutes;state.remainingMs=minutes*60000;persist();render();}
-  function reset(){if(!allowed())return;pause();state.remainingMs=state.minutes*60000;persist();render();}
+  function configure(minutes){definir('foco',minutes);}
+  function definir(campo,valor){
+    if(!allowed()||!LIMITES[campo])return;
+    const n=limitar(campo,valor);
+    if(campo==='rodada'){state.rodada=n;state.feitos=Math.min(state.feitos,n);}
+    else{const chave=campo==='foco'?'minutes':campo==='longo'?'longMinutes':'shortMinutes';state[chave]=n;}
+    const modoDoCampo=campo==='foco'?'foco':campo==='longo'?'longo':campo==='curto'?'curto':null;
+    if(modoDoCampo&&state.mode===modoDoCampo){if(running)pause();state.remainingMs=duracao(state.mode);}
+    persist();render();
+  }
+  function ajustar(campo,passo){if(!state||!LIMITES[campo])return;definir(campo,(campo==='rodada'?state.rodada:minutosDe(campo==='foco'?'foco':campo))+passo);}
+  function preset(nome){
+    const escolha=PRESETS[nome];
+    if(!escolha||!allowed())return;
+    if(running)pause();
+    [state.minutes,state.shortMinutes,state.longMinutes,state.rodada]=escolha;
+    state.feitos=Math.min(state.feitos,state.rodada);state.remainingMs=duracao(state.mode);
+    persist();render();
+  }
+  const PRESETS={classico:[25,5,15,4],curto:[15,3,10,4],longo:[50,10,20,3]};
+  const ehPreset=nome=>{const v=PRESETS[nome];return !!v&&v[0]===state.minutes&&v[1]===state.shortMinutes&&v[2]===state.longMinutes&&v[3]===state.rodada;};
+  function alternarAuto(){if(!allowed())return;state.auto=!state.auto;persist();render();}
+  function trocarModo(modo){
+    if(!allowed()||!MODOS[modo]||state.mode===modo)return;
+    if(running)pause();
+    state.mode=modo;state.remainingMs=duracao(modo);persist();render();
+  }
+  function pular(){
+    if(!allowed())return;
+    const proximo=proximoModo();
+    if(running)pause();
+    if(state.mode==='longo')state.feitos=0;
+    state.mode=proximo;state.remainingMs=duracao(proximo);persist();render();
+  }
+  function reset(){if(!allowed())return;pause();state.remainingMs=duracao(state.mode);persist();render();}
   function floating(show){if(!allowed())return;state.floating=!!show;persist();render();if(!show&&document.getElementById('hig-overlay').hidden)document.getElementById('focus-top')?.focus();}
-  function panel(){return `<p>Escolha um bloco de dedicação. O tempo é registrado enquanto o pomodoro estiver rodando, inclusive ao navegar entre aulas. Ao recarregar ou fechar, o bloco fica pausado; o tempo já salvo é preservado.</p><div class="btn-row">${[25,45,60].map(n=>`<button class="btn" data-focus-duration="${n}" onclick="FocusTimer.configure(${n})" type="button">${n} min</button>`).join('')}</div>
-    <p class="focus-panel-sub">Descanso entre blocos</p>
-    <div class="btn-row">${DESCANSOS.map(n=>`<button class="btn" data-focus-break-duration="${n}" onclick="FocusTimer.definirDescanso(${n})" type="button">${n} min</button>`).join('')}<button class="btn" onclick="FocusTimer.iniciarDescanso()" type="button">Descansar agora</button></div><p class="focus-panel-time" data-focus-time>${format(state.remainingMs)}</p><div class="btn-row"><button class="btn primary" data-focus-toggle onclick="FocusTimer.toggle()" type="button">${running?'Pausar':'Começar'}</button><button class="btn" onclick="FocusTimer.reset()" type="button">Reiniciar bloco</button><button class="btn" onclick="FocusTimer.resetFloat()" type="button">Recentralizar flutuante</button><button class="btn" data-focus-floating onclick="FocusTimer.floating(!FocusTimer.status().floating)" type="button">${state.floating?'Ocultar':'Mostrar'} controle lateral</button></div>${historyMarkup()}`;}
+
+  function campoNum(campo,rotulo,sufixo){
+    const [min,max]=LIMITES[campo],valor=campo==='rodada'?state.rodada:minutosDe(campo);
+    return `<div class="focus-campo">
+      <span class="focus-campo-rotulo" id="focus-rot-${campo}">${rotulo} <span class="focus-campo-sufixo">(${sufixo})</span></span>
+      <div class="focus-stepper">
+        <button type="button" class="focus-stepper-btn" onclick="FocusTimer.ajustar('${campo}',-1)" aria-label="Diminuir ${rotulo.toLowerCase()}">&minus;</button>
+        <input class="focus-stepper-valor" type="number" inputmode="numeric" min="${min}" max="${max}" step="1" value="${valor}" data-focus-campo="${campo}" aria-labelledby="focus-rot-${campo}" onchange="FocusTimer.definir('${campo}',this.value)">
+        <button type="button" class="focus-stepper-btn" onclick="FocusTimer.ajustar('${campo}',1)" aria-label="Aumentar ${rotulo.toLowerCase()}">+</button>
+      </div>
+    </div>`;
+  }
+  function pontos(){
+    return Array.from({length:state.rodada},(_,i)=>`<span class="focus-ponto"${i<state.feitos?' data-feito="true"':''}></span>`).join('');
+  }
+  function textoCiclo(){
+    const restantes=Math.max(0,state.rodada-state.feitos);
+    if(state.mode==='longo')return 'Pausa longa: rodada completa.';
+    return restantes<=0?'Próxima pausa é a longa.'
+      :`${state.feitos} de ${state.rodada} blocos até a pausa longa`;
+  }
+  function panel(){
+    return `<div class="focus-modos" role="group" aria-label="Etapa do pomodoro">${Object.entries(MODOS).map(([id,rotulo])=>`<button type="button" class="focus-modo" data-focus-mode-tab="${id}" aria-pressed="${state.mode===id}" onclick="FocusTimer.trocarModo('${id}')">${rotulo}</button>`).join('')}</div>
+    <p class="focus-panel-time" data-focus-time>${format(state.remainingMs)}</p>
+    <p class="focus-ciclo"><span class="focus-pontos" data-focus-dots aria-hidden="true">${pontos()}</span><span data-focus-ciclo-texto>${textoCiclo()}</span></p>
+    <div class="btn-row"><button class="btn primary" data-focus-toggle onclick="FocusTimer.toggle()" type="button">${running?'Pausar':'Começar'}</button><button class="btn" onclick="FocusTimer.reset()" type="button">Reiniciar etapa</button><button class="btn" onclick="FocusTimer.pular()" type="button">Pular etapa</button></div>
+    <p class="subtle">O tempo é registrado enquanto o pomodoro roda, inclusive ao navegar entre aulas. Ao recarregar ou fechar, a etapa fica pausada e o tempo já salvo é preservado.</p>
+    <section class="focus-config" aria-label="Ajustes do pomodoro">
+      <h3 class="focus-config-titulo">Seus tempos</h3>
+      <div class="focus-campos">
+        ${campoNum('foco','Foco','min')}
+        ${campoNum('curto','Pausa curta','min')}
+        ${campoNum('longo','Pausa longa','min')}
+        ${campoNum('rodada','Pausa longa a cada','blocos')}
+      </div>
+      <div class="focus-presets"><span class="focus-campo-rotulo">Atalhos</span><div class="btn-row">${[['classico','25 · 5 · 15'],['curto','15 · 3 · 10'],['longo','50 · 10 · 20']].map(([id,rot])=>`<button type="button" class="btn" data-focus-preset="${id}" onclick="FocusTimer.preset('${id}')">${rot}</button>`).join('')}</div></div>
+      <label class="focus-switch"><input type="checkbox" data-focus-auto ${state.auto?'checked':''} onchange="FocusTimer.alternarAuto()"><span>Começar a próxima etapa sozinho</span></label>
+    </section>
+    <div class="btn-row focus-extra"><button class="btn" onclick="FocusTimer.resetFloat()" type="button">Recentralizar flutuante</button><button class="btn" data-focus-floating onclick="FocusTimer.floating(!FocusTimer.status().floating)" type="button">${state.floating?'Ocultar':'Mostrar'} controle lateral</button></div>${historyMarkup()}`;
+  }
   function historyMarkup(){return `<section class="focus-history" data-focus-history aria-label="Histórico de dedicação">${historyContent()}</section>`;}
   function historyContent(){
     if(!state)return '';
@@ -138,7 +222,7 @@ const FocusTimer=(()=>{
   // aviso não virar paisagem.
   function mensagemFim(terminou){
     const hora=new Date().getHours(),blocos=state.days[dayKey(Date.now())]?.completed||0;
-    if(terminou==='descanso'){
+    if(terminou!=='foco'){
       const pausa=['Pausa encerrada. Pronto para outro bloco?','Descanso cumprido. Voltar ao estudo?','Fim da pausa. Bora para o próximo bloco?'];
       return {titulo:pausa[blocos%pausa.length],detalhe:`Você já fechou ${blocos} ${blocos===1?'bloco':'blocos'} hoje.`};
     }
@@ -150,6 +234,12 @@ const FocusTimer=(()=>{
     return {titulo:abertura,detalhe:elogio};
   }
 
+  // Chips do aviso: sugestões do tipo de pausa proposto, sempre incluindo o
+  // valor já configurado para o ajuste caber em um toque.
+  function chipsDe(modo){
+    const base=modo==='longo'?[10,15,20,30]:[3,5,10,15],atual=minutosDe(modo);
+    return [...new Set([...base,atual])].sort((a,b)=>a-b);
+  }
   function caixaFim(){
     let caixa=document.getElementById('focus-end');
     if(caixa)return caixa;
@@ -162,11 +252,10 @@ const FocusTimer=(()=>{
       <p class="focus-end-detail" data-focus-end-detail></p>
       <p class="focus-end-ask" data-focus-end-ask></p>
       <div class="focus-end-break" data-focus-end-break>
-        <span class="focus-end-break-label">Descanso de</span>
-        <div class="focus-end-chips" role="group" aria-label="Minutos de descanso">
-          ${DESCANSOS.map(n=>`<button type="button" class="focus-end-chip" data-focus-break="${n}" aria-pressed="false">${n} min</button>`).join('')}
-        </div>
+        <span class="focus-end-break-label" data-focus-end-break-label>Descanso de</span>
+        <div class="focus-end-chips" data-focus-end-chips role="group" aria-label="Minutos de descanso"></div>
       </div>
+      <p class="focus-ciclo focus-end-ciclo"><span class="focus-pontos" data-focus-dots aria-hidden="true"></span><span data-focus-ciclo-texto></span></p>
       <div class="focus-end-actions">
         <button type="button" class="btn primary" data-focus-end-main></button>
         <button type="button" class="btn" data-focus-end-alt></button>
@@ -175,46 +264,37 @@ const FocusTimer=(()=>{
     caixa.addEventListener('click',evento=>{
       if(evento.target===caixa||evento.target.closest('[data-focus-end-close]')){fecharFim();return;}
       const chip=evento.target.closest('[data-focus-break]');
-      if(chip){definirDescanso(Number(chip.dataset.focusBreak));return;}
-      if(evento.target.closest('[data-focus-end-main]')){const tipo=caixa.dataset.tipo;fecharFim();tipo==='descanso'?iniciarFoco():iniciarDescanso();return;}
-      if(evento.target.closest('[data-focus-end-alt]')){const tipo=caixa.dataset.tipo;fecharFim();tipo==='descanso'?iniciarDescanso():iniciarFoco();}
+      if(chip){definir(caixa.dataset.proximo==='longo'?'longo':'curto',Number(chip.dataset.focusBreak));return;}
+      if(evento.target.closest('[data-focus-end-main]')){fecharFim();iniciarEtapa(caixa.dataset.proximo);return;}
+      if(evento.target.closest('[data-focus-end-alt]')){const alt=caixa.dataset.proximo==='foco'?'curto':'foco';fecharFim();iniciarEtapa(alt);}
     });
     return caixa;
   }
 
   function avisarFim(terminou){
     if(!allowed())return;
-    const caixa=caixaFim(),{titulo,detalhe}=mensagemFim(terminou);
-    caixa.dataset.tipo=terminou;
-    caixa.querySelector('[data-focus-end-kicker]').textContent=terminou==='descanso'?'Descanso concluído':'Pomodoro concluído';
+    const caixa=caixaFim(),{titulo,detalhe}=mensagemFim(terminou),proximo=terminou==='foco'?(state.feitos>=state.rodada?'longo':'curto'):'foco';
+    caixa.dataset.tipo=terminou;caixa.dataset.proximo=proximo;
+    caixa.querySelector('[data-focus-end-kicker]').textContent=terminou==='foco'?'Pomodoro concluído':terminou==='longo'?'Pausa longa concluída':'Descanso concluído';
     caixa.querySelector('[data-focus-end-title]').textContent=titulo;
     caixa.querySelector('[data-focus-end-detail]').textContent=detalhe;
-    caixa.querySelector('[data-focus-end-ask]').textContent=terminou==='descanso'
-      ? 'Voltar ao estudo ou esticar a pausa?'
-      : 'Hora do descanso ou vai continuar estudando?';
-    caixa.querySelector('[data-focus-end-main]').textContent=terminou==='descanso'?`Estudar ${state.minutes} min`:`Descansar ${state.breakMinutes} min`;
-    caixa.querySelector('[data-focus-end-alt]').textContent=terminou==='descanso'?`Mais ${state.breakMinutes} min de pausa`:`Continuar estudando ${state.minutes} min`;
+    caixa.querySelector('[data-focus-end-ask]').textContent=terminou==='foco'
+      ? 'Hora do descanso ou vai continuar estudando?'
+      : 'Voltar ao estudo ou esticar a pausa?';
     caixa.hidden=false;
     render();
     requestAnimationFrame(()=>caixa.querySelector('[data-focus-end-main]')?.focus());
-    try{navigator.vibrate?.(terminou==='descanso'?[90]:[90,70,90]);}catch{}
+    try{navigator.vibrate?.(terminou==='foco'?[90,70,90]:[90]);}catch{}
   }
 
   function fecharFim(){const caixa=document.getElementById('focus-end');if(caixa)caixa.hidden=true;}
-  function definirDescanso(minutos){
-    if(!allowed()||!DESCANSOS.includes(minutos))return;
-    state.breakMinutes=minutos;
-    if(state.mode==='descanso'&&!running)state.remainingMs=minutos*60000;
-    persist();render();
+  function definirDescanso(minutos){definir('curto',minutos);}
+  function iniciarEtapa(modo){
+    if(!allowed()||!MODOS[modo])return;
+    pause();state.mode=modo;state.remainingMs=duracao(modo);persist();render();toggle();
   }
-  function iniciarDescanso(){
-    if(!allowed())return;
-    pause();state.mode='descanso';state.remainingMs=state.breakMinutes*60000;persist();render();toggle();
-  }
-  function iniciarFoco(){
-    if(!allowed())return;
-    pause();state.mode='foco';state.remainingMs=state.minutes*60000;persist();render();toggle();
-  }
+  function iniciarDescanso(){iniciarEtapa(state.mode==='foco'?proximoModo():state.mode==='longo'?'longo':'curto');}
+  function iniciarFoco(){iniciarEtapa('foco');}
 
   function refreshHistory(){document.querySelectorAll('[data-focus-history]').forEach(el=>el.innerHTML=historyContent());}
   function render(){
@@ -222,20 +302,41 @@ const FocusTimer=(()=>{
     const label=format(state.remainingMs);
     document.querySelectorAll('[data-focus-time],#timer-count').forEach(el=>el.textContent=label);
     document.querySelectorAll('[data-focus-toggle],#timer-toggle').forEach(el=>{el.textContent=running?'Pausar':'Começar';el.setAttribute('aria-label',running?'Pausar pomodoro':'Iniciar pomodoro');});
+    document.querySelectorAll('[data-focus-mode-tab]').forEach(el=>el.setAttribute('aria-pressed',String(el.dataset.focusModeTab===state.mode)));
     document.querySelectorAll('[data-focus-duration]').forEach(el=>el.setAttribute('aria-pressed',String(Number(el.dataset.focusDuration)===state.minutes)));
-    document.querySelectorAll('[data-focus-break-duration]').forEach(el=>el.setAttribute('aria-pressed',String(Number(el.dataset.focusBreakDuration)===state.breakMinutes)));
-    document.querySelectorAll('.focus-end-chip').forEach(el=>el.setAttribute('aria-pressed',String(Number(el.dataset.focusBreak)===state.breakMinutes)));
+    document.querySelectorAll('[data-focus-break-duration]').forEach(el=>el.setAttribute('aria-pressed',String(Number(el.dataset.focusBreakDuration)===state.shortMinutes)));
+    // Campos numéricos só são reescritos quando não estão sendo digitados.
+    document.querySelectorAll('[data-focus-campo]').forEach(el=>{const campo=el.dataset.focusCampo,valor=String(campo==='rodada'?state.rodada:minutosDe(campo));if(el!==document.activeElement&&el.value!==valor)el.value=valor;});
+    document.querySelectorAll('[data-focus-auto]').forEach(el=>{el.checked=state.auto;});
+    document.querySelectorAll('[data-focus-preset]').forEach(el=>el.setAttribute('aria-pressed',String(ehPreset(el.dataset.focusPreset))));
+    document.querySelectorAll('[data-focus-dots]').forEach(el=>{el.innerHTML=pontos();});
+    document.querySelectorAll('[data-focus-ciclo-texto]').forEach(el=>{el.textContent=textoCiclo();});
     const aviso=document.getElementById('focus-end');
     if(aviso&&!aviso.hidden){
-      const descanso=aviso.dataset.tipo==='descanso';
-      aviso.querySelector('[data-focus-end-main]').textContent=descanso?`Estudar ${state.minutes} min`:`Descansar ${state.breakMinutes} min`;
-      aviso.querySelector('[data-focus-end-alt]').textContent=descanso?`Mais ${state.breakMinutes} min de pausa`:`Continuar estudando ${state.minutes} min`;
+      const proximo=aviso.dataset.proximo||'curto',pausa=proximo!=='foco';
+      const caixaChips=aviso.querySelector('[data-focus-end-chips]');
+      const lista=pausa?chipsDe(proximo):[];
+      const assinatura=lista.join(',')+'|'+proximo;
+      if(caixaChips.dataset.assinatura!==assinatura){
+        caixaChips.dataset.assinatura=assinatura;
+        caixaChips.innerHTML=lista.map(n=>`<button type="button" class="focus-end-chip" data-focus-break="${n}" aria-pressed="false">${n} min</button>`).join('');
+      }
+      aviso.querySelector('[data-focus-end-break]').hidden=!pausa;
+      aviso.querySelector('[data-focus-end-break-label]').textContent=proximo==='longo'?'Pausa longa de':'Descanso de';
+      aviso.querySelector('[data-focus-end-main]').textContent=pausa
+        ?`${proximo==='longo'?'Pausa longa de':'Descansar'} ${minutosDe(proximo)} min`
+        :`Estudar ${state.minutes} min`;
+      aviso.querySelector('[data-focus-end-alt]').textContent=pausa
+        ?`Continuar estudando ${state.minutes} min`
+        :`Mais ${state.shortMinutes} min de pausa`;
+      aviso.querySelectorAll('.focus-end-chip').forEach(el=>el.setAttribute('aria-pressed',String(Number(el.dataset.focusBreak)===minutosDe(proximo))));
     }
-    document.querySelectorAll('[data-focus-mode-label]').forEach(el=>el.textContent=state.mode==='descanso'?'Descanso':'Foco');
+    document.querySelectorAll('[data-focus-mode-label]').forEach(el=>el.textContent=MODOS[state.mode]);
+    document.querySelectorAll('[data-focus-mode-short]').forEach(el=>el.textContent=state.mode==='foco'?'Pomodoro':state.mode==='longo'?'Pausa longa':'Pausa');
     document.documentElement.dataset.focusMode=state.mode;
     document.querySelectorAll('[data-focus-floating]').forEach(el=>el.textContent=state.floating?'Ocultar controle lateral':'Mostrar controle lateral');
-    const top=document.getElementById('focus-top');if(top){top.setAttribute('aria-label',`Abrir pomodoro: ${label}, ${running?'em andamento':'pausado'}`);top.dataset.running=String(running);}
-    const float=document.getElementById('focus-float');if(float){float.hidden=!state.floating||!allowed();float.dataset.running=String(running);placeFloat();}
+    const top=document.getElementById('focus-top');if(top){top.setAttribute('aria-label',`Abrir pomodoro: ${label}, ${MODOS[state.mode].toLowerCase()}, ${running?'em andamento':'pausado'}`);top.dataset.running=String(running);top.dataset.mode=state.mode;}
+    const float=document.getElementById('focus-float');if(float){float.hidden=!state.floating||!allowed();float.dataset.running=String(running);float.dataset.mode=state.mode;placeFloat();}
     document.querySelectorAll('[data-focus-float-toggle]').forEach(el=>{el.textContent=running?'Pausar':'Começar';});
   }
   /* Floating control: position and size are device preferences, stored per account on this device only. */
@@ -281,7 +382,7 @@ const FocusTimer=(()=>{
   }
   function status(){return {...state,running};}
   function init(){initFloat();reload();document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!document.getElementById('focus-end')?.hidden)fecharFim();});document.addEventListener('visibilitychange',()=>{if(running)tick(true);});window.addEventListener('pagehide',pause);window.addEventListener('beforeunload',pause);window.addEventListener('master-auth-ready',reload);window.addEventListener('master-auth-ended',()=>{release();state=normalize();owner=null;render();refreshHistory();});window.addEventListener('storage',e=>{if(e.key==='master_p2_hig_v2'&&!running){HIG.refreshFocus();state=normalize(HIG.focusData());render();refreshHistory();}});}
-  return {init,reload,render,toggle,pause,configure,reset,floating,panel,historyMarkup,status,cancel,expand,resetFloat,definirDescanso,iniciarDescanso,iniciarFoco,fecharFim,avisarFim};
+  return {init,reload,render,toggle,pause,configure,definir,ajustar,preset,alternarAuto,trocarModo,pular,reset,floating,panel,historyMarkup,status,cancel,expand,resetFloat,definirDescanso,iniciarDescanso,iniciarFoco,iniciarEtapa,fecharFim,avisarFim};
 })();
 window.FocusTimer=FocusTimer;
 window.addEventListener('DOMContentLoaded',FocusTimer.init);

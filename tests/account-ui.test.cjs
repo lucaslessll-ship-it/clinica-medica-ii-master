@@ -293,9 +293,9 @@ test('pomodoro is global, dismissible and synchronizes active dedication without
 test('pomodoro completion is capped, counted once and restored paused after reload',async()=>{
  const t=await open({session:true}),p=t.page;await p.waitForFunction(()=>document.getElementById('master-auth').hidden);await freezeTime(p,'2026-11-11T12:00:00Z');
  await p.locator('#focus-top').click();await p.locator('[data-focus-toggle]').click();await p.waitForFunction(()=>FocusTimer.status().running);await p.clock.fastForward(1800000);
- let data=await p.evaluate(()=>FocusTimer.status());assert.equal(data.running,false);assert.equal(data.mode,'foco');assert.equal(data.remainingMs,1500000);assert.equal(data.days['2026-11-11'].ms,1500000);assert.equal(data.days['2026-11-11'].completed,1);
+ let data=await p.evaluate(()=>FocusTimer.status());assert.equal(data.running,false);assert.equal(data.mode,'curto');assert.equal(data.remainingMs,300000);assert.equal(data.days['2026-11-11'].ms,1500000);assert.equal(data.days['2026-11-11'].completed,1);
  assert.equal(await p.locator('#focus-end').isVisible(),true);assert.match(await p.locator('#focus-end').innerText(),/Hora do descanso ou vai continuar estudando\?/);await p.locator('[data-focus-end-close]').click();assert.equal(await p.locator('#focus-end').isVisible(),false);
- await p.clock.fastForward(60000);await p.reload();await p.waitForFunction(()=>document.getElementById('master-auth').hidden);data=await p.evaluate(()=>FocusTimer.status());assert.equal(data.running,false);assert.equal(data.days['2026-11-11'].completed,1);assert.equal(data.remainingMs,1500000);await t.close();
+ await p.clock.fastForward(60000);await p.reload();await p.waitForFunction(()=>document.getElementById('master-auth').hidden);data=await p.evaluate(()=>FocusTimer.status());assert.equal(data.running,false);assert.equal(data.days['2026-11-11'].completed,1);assert.equal(data.remainingMs,300000);await t.close();
 });
 test('pomodoro splits midnight and keeps accounts isolated during a running session',async()=>{
  const t=await open({session:true}),p=t.page;await p.waitForFunction(()=>document.getElementById('master-auth').hidden);await freezeTime(p,'2026-11-11T23:59:50Z');
@@ -391,7 +391,7 @@ test('refreshed library and lesson remain usable with 200 percent reading size o
 
 test('release URL versions local assets and preserves recovery callbacks',async()=>{
  const t=await open({session:true,root:true,query:'?auth=recovery'}),p=t.page;await text(p,'#master-auth-title',/Definir nova senha/);
- assert.equal(new URL(p.url()).searchParams.get('v'),'20261116-pomo21');
+ assert.equal(new URL(p.url()).searchParams.get('v'),'20261116-pomo22');
  const unversioned=await p.evaluate(()=>[...document.querySelectorAll('script[src],link[rel=stylesheet]')].map(e=>e.src||e.href).filter(url=>new URL(url).origin===location.origin&&!new URL(url).searchParams.has('v')));assert.deepEqual(unversioned,[]);await t.close();
 });
 test('Decision Lab has 24 stable cases with 20 P2 items, valid answers and references',async()=>{

@@ -50,7 +50,7 @@ test('o fim do bloco abre um aviso na tela, com a pergunta e saída fácil',asyn
    alvoFechar:Math.min(...[...el.querySelectorAll('button')].map(bt=>Math.min(bt.getBoundingClientRect().width,bt.getBoundingClientRect().height)))}));
   assert.equal(card.pergunta,'Hora do descanso ou vai continuar estudando?');
   assert.ok(card.titulo.length>8,'título vazio');
-  assert.deepEqual(card.chips,['5 min','10 min','15 min']);
+  assert.deepEqual(card.chips,['3 min','5 min','10 min','15 min']);
   assert.match(card.principal,/^Descansar \d+ min$/);
   assert.match(card.alternativa,/^Continuar estudando \d+ min$/);
   assert.ok(card.dentroDaTela,`aviso corta na tela de ${width}px`);
@@ -75,7 +75,7 @@ test('a mensagem muda conforme os blocos do dia e o tipo de ciclo',async()=>{
  await p.evaluate(()=>FocusTimer.avisarFim('foco'));
  const cheio=await p.locator('[data-focus-end-detail]').textContent();
  assert.notEqual(primeiro,cheio,'mensagem não muda com a quantidade de blocos');
- await p.evaluate(()=>FocusTimer.avisarFim('descanso'));
+ await p.evaluate(()=>FocusTimer.avisarFim('curto'));
  const pausa=await p.locator('#focus-end').evaluate(el=>({
   kicker:el.querySelector('[data-focus-end-kicker]').textContent,
   pergunta:el.querySelector('[data-focus-end-ask]').textContent,
@@ -97,7 +97,7 @@ test('o descanso é escolhido no próprio aviso e conta separado do foco',async(
 
  // Um descanso curto rodando credita em breakMs, não no tempo de foco.
  const antes=await p.evaluate(()=>{const d=FocusTimer.status().days;const hoje=Object.values(d)[0]||{};return {ms:hoje.ms||0,breakMs:hoje.breakMs||0}});
- await p.evaluate(()=>{FocusTimer.pause();HIG.saveFocus({...FocusTimer.status(),mode:'descanso',remainingMs:4000});FocusTimer.reload();});
+ await p.evaluate(()=>{FocusTimer.pause();HIG.saveFocus({...FocusTimer.status(),mode:'curto',remainingMs:4000});FocusTimer.reload();});
  await p.evaluate(()=>FocusTimer.toggle());
  await p.waitForTimeout(2600);
  await p.evaluate(()=>FocusTimer.pause());
@@ -131,5 +131,85 @@ test('o relatório mostra barras por dia, frequência por dia da semana e tabela
  assert.equal(r.frequencia,7);
  assert.equal(r.linhasTabela,10);
  assert.deepEqual(r.estatisticas,['Hoje','Últimos 7 dias','Sequência','Blocos concluídos']);
+ await t.close();
+});
+
+test('tempos de foco, pausas e ciclo são configuráveis e sobrevivem ao recarregar',async()=>{
+ const t=await abrir(),p=t.page;
+ await p.evaluate(()=>HIG.openTimer());
+ await p.waitForSelector('[data-focus-campo="foco"]');
+ // Stepper, digitação e atalho: três formas de ajustar.
+ await p.click('[data-focus-campo="foco"]+.focus-stepper-btn');
+ await p.evaluate(()=>FocusTimer.ajustar('foco',4));
+ await p.evaluate(()=>FocusTimer.definir('curto',8));
+ await p.fill('[data-focus-campo="longo"]','20');
+ await p.dispatchEvent('[data-focus-campo="longo"]','change');
+ await p.evaluate(()=>FocusTimer.definir('rodada',3));
+ let s=await p.evaluate(()=>FocusTimer.status());
+ assert.equal(s.minutes,30);assert.equal(s.shortMinutes,8);assert.equal(s.longMinutes,20);assert.equal(s.rodada,3);
+ assert.equal(s.remainingMs,30*60000,'bloco de foco não acompanhou o novo tempo');
+ // Limites protegem de valores absurdos.
+ await p.evaluate(()=>{FocusTimer.definir('foco',999);FocusTimer.definir('curto',0);});
+ s=await p.evaluate(()=>FocusTimer.status());
+ assert.equal(s.minutes,90);assert.equal(s.shortMinutes,1);
+ await p.evaluate(()=>FocusTimer.preset('classico'));
+ s=await p.evaluate(()=>FocusTimer.status());
+ assert.deepEqual([s.minutes,s.shortMinutes,s.longMinutes,s.rodada],[25,5,15,4]);
+ assert.equal(await p.evaluate(()=>document.querySelector('[data-focus-preset="classico"]').getAttribute('aria-pressed')),'true');
+ await p.evaluate(()=>FocusTimer.preset('longo'));
+ await p.reload();
+ await p.waitForFunction(()=>document.getElementById('master-auth')?.hidden,null,{timeout:20000});
+ s=await p.evaluate(()=>FocusTimer.status());
+ assert.deepEqual([s.minutes,s.shortMinutes,s.longMinutes,s.rodada],[50,10,20,3],'ajustes não sobreviveram ao recarregar');
+ await t.close();
+});
+
+test('a pausa longa chega depois do número de blocos configurado',async()=>{
+ const t=await abrir(),p=t.page;
+ await p.evaluate(()=>{FocusTimer.definir('rodada',2);FocusTimer.definir('curto',4);FocusTimer.definir('longo',12);});
+ const terminarBloco=()=>p.evaluate(async()=>{
+  FocusTimer.pause();
+  HIG.saveFocus({...FocusTimer.status(),mode:'foco',remainingMs:800});
+  FocusTimer.reload();await FocusTimer.toggle();
+  await new Promise(r=>setTimeout(r,1400));
+ });
+ await terminarBloco();
+ let s=await p.evaluate(()=>FocusTimer.status());
+ assert.equal(s.mode,'curto','primeiro bloco deveria levar à pausa curta');
+ assert.equal(s.remainingMs,4*60000);
+ assert.equal(s.feitos,1);
+ assert.equal(await p.locator('[data-focus-end-main]').textContent(),'Descansar 4 min');
+ await p.evaluate(()=>FocusTimer.fecharFim());
+ await terminarBloco();
+ s=await p.evaluate(()=>FocusTimer.status());
+ assert.equal(s.mode,'longo','segundo bloco deveria abrir a pausa longa');
+ assert.equal(s.remainingMs,12*60000);
+ assert.equal(await p.locator('[data-focus-end-main]').textContent(),'Pausa longa de 12 min');
+ // Terminada a pausa longa, a contagem recomeça.
+ await p.evaluate(async()=>{
+  FocusTimer.fecharFim();FocusTimer.pause();
+  HIG.saveFocus({...FocusTimer.status(),mode:'longo',remainingMs:800});
+  FocusTimer.reload();await FocusTimer.toggle();
+  await new Promise(r=>setTimeout(r,1400));
+ });
+ s=await p.evaluate(()=>FocusTimer.status());
+ assert.equal(s.mode,'foco');assert.equal(s.feitos,0,'ciclo não reiniciou após a pausa longa');
+ await t.close();
+});
+
+test('etapas podem ser trocadas e puladas pelo painel',async()=>{
+ const t=await abrir(),p=t.page;
+ await p.evaluate(()=>HIG.openTimer());
+ await p.click('[data-focus-mode-tab="longo"]');
+ let s=await p.evaluate(()=>FocusTimer.status());
+ assert.equal(s.mode,'longo');assert.equal(s.remainingMs,15*60000);
+ assert.equal(await p.evaluate(()=>document.querySelector('[data-focus-mode-tab="longo"]').getAttribute('aria-pressed')),'true');
+ await p.evaluate(()=>FocusTimer.pular());
+ s=await p.evaluate(()=>FocusTimer.status());
+ assert.equal(s.mode,'foco','pular a pausa longa volta ao foco');
+ await p.evaluate(()=>FocusTimer.pular());
+ s=await p.evaluate(()=>FocusTimer.status());
+ assert.equal(s.mode,'curto');
+ assert.equal(await p.locator('[data-focus-dots] .focus-ponto').count(),4);
  await t.close();
 });

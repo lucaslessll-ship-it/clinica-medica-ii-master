@@ -95,3 +95,44 @@ body[data-theme="dark"] .focus-freq-valor{background:#5bbfae}
 .focus-tabela thead th{font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
 .focus-sr,.focus-chart .sr-only{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
 @media(max-width:600px){.focus-bars{grid-template-columns:repeat(7,minmax(0,1fr));height:112px}.focus-bar:nth-child(-n+7){display:none}.focus-nota-larga{display:none}.focus-nota-curta{display:inline}.focus-bar:nth-child(-n+10) .focus-bar-dica{left:0;right:auto;transform:none;text-align:left}}
+
+/* 2026-11-16: etapas, ciclo e ajustes de tempo no painel (modelo pomodoro clássico) */
+.focus-modos{display:flex;gap:6px;padding:5px;border:1px solid var(--line);border-radius:999px;background:var(--soft)}
+.focus-modo{flex:1 1 0;min-height:40px;padding:8px 10px;border:0;border-radius:999px;background:transparent;color:var(--muted);font:inherit;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap}
+.focus-modo[aria-pressed=true]{background:var(--white);color:var(--ink);box-shadow:0 1px 3px rgba(12,46,43,.14)}
+.focus-modo[data-focus-mode-tab=foco][aria-pressed=true]{color:#b3312f}
+.focus-ciclo{display:flex;align-items:center;justify-content:center;gap:9px;margin:4px 0 14px;font-size:13px;color:var(--muted)}
+.focus-pontos{display:inline-flex;gap:5px}
+.focus-ponto{width:9px;height:9px;border-radius:50%;border:1.5px solid #d8b7b5;background:transparent}
+.focus-ponto[data-feito=true]{background:#e5484d;border-color:#e5484d}
+.focus-config{margin:18px 0 0;padding:16px;border:1px solid var(--line);border-radius:var(--radius);background:var(--soft)}
+.focus-config-titulo{margin:0 0 12px;font-size:14px;font-weight:700;color:var(--ink)}
+.focus-campos{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+.focus-campo{display:grid;gap:6px;min-width:0}
+.focus-campo-rotulo{font-size:12.5px;font-weight:650;color:var(--muted)}
+.focus-campo-sufixo{font-size:11.5px;font-weight:500;color:var(--muted)}
+.focus-presets .btn[aria-pressed=true]{border-color:#0b5f57;background:var(--mint);color:var(--green2)}
+.focus-stepper{display:grid;grid-template-columns:40px minmax(0,1fr) 40px;align-items:center;border:1px solid var(--line);border-radius:12px;background:var(--white);overflow:hidden}
+.focus-stepper-btn{min-height:44px;border:0;background:transparent;color:var(--ink);font:inherit;font-size:18px;font-weight:700;cursor:pointer}
+.focus-stepper-btn:hover{background:var(--soft)}
+.focus-stepper-valor{min-width:0;width:100%;min-height:44px;border:0;border-left:1px solid var(--line);border-right:1px solid var(--line);background:transparent;color:var(--ink);font:inherit;font-size:16px;font-weight:700;text-align:center;font-variant-numeric:tabular-nums;-moz-appearance:textfield}
+.focus-stepper-valor::-webkit-outer-spin-button,.focus-stepper-valor::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+.focus-stepper-valor:focus-visible{outline:3px solid var(--focus,var(--green));outline-offset:-3px}
+.focus-presets{margin:14px 0 0;display:grid;gap:6px}
+.focus-presets .btn-row{gap:6px;flex-wrap:wrap}
+.focus-switch{display:flex;align-items:center;gap:10px;margin:14px 0 0;min-height:44px;font-size:13.5px;color:var(--ink);cursor:pointer}
+.focus-switch input{width:20px;height:20px;accent-color:#0b5f57;cursor:pointer}
+.focus-extra{margin-top:14px}
+.focus-end-ciclo{margin:12px 0 0;justify-content:flex-start}
+body[data-theme="dark"] .focus-modo[aria-pressed=true]{background:#20353a;color:#eafaf6}
+body[data-theme="dark"] .focus-modo[data-focus-mode-tab=foco][aria-pressed=true]{color:#ffb4ae}
+body[data-theme="dark"] .focus-stepper{background:#17292e}
+body[data-theme="dark"] .focus-ponto{border-color:#6b3a3a}
+@media(max-width:480px){.focus-modos{gap:3px;padding:4px}.focus-modo{font-size:12px;padding:8px 6px}.focus-campos{grid-template-columns:1fr}}
+/* Durante as pausas o controle troca de cor: dá para saber a etapa de relance. */
+.focus-top[data-mode=curto],.focus-top[data-mode=longo]{border-color:#bfe3d8}
+.focus-top[data-mode=curto][data-running=true],.focus-top[data-mode=longo][data-running=true]{border-color:#0b5f57;background:var(--mint);color:var(--green2)}
+.focus-top[data-mode=curto] .focus-top-label,.focus-top[data-mode=longo] .focus-top-label{color:#0b5f57}
+.focus-float[data-mode=curto][data-running=true],.focus-float[data-mode=longo][data-running=true]{border-color:#0b5f57}
+body[data-theme="dark"] .focus-top[data-mode=curto][data-running=true],body[data-theme="dark"] .focus-top[data-mode=longo][data-running=true]{background:#214d45;color:#c8f4e7;border-color:#5bbfae}
+body[data-theme="dark"] .focus-top[data-mode=curto] .focus-top-label,body[data-theme="dark"] .focus-top[data-mode=longo] .focus-top-label{color:#8fe0cf}
