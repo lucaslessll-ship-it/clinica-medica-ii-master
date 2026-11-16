@@ -1,5 +1,7 @@
 # Laboratório Master: eletrólitos e gasometria
 
+Continuação para as provas: [laboratorio-prova-cirurgia.md](laboratorio-prova-cirurgia.md) acrescenta pâncreas, perfil hepático/vias biliares e coagulação. Os números abaixo registram o lote de eletrólitos.
+
 Continuação do bloco renal, em 16/11/2026. Texto, questões e laudos autorais; pessoas e resultados fictícios. Revisão docente externa pendente.
 
 ## Entrega
