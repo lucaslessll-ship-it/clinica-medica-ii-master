@@ -31,7 +31,7 @@ function create(cfg){
     ${mi?`<p class="info-notice">Este módulo usa o que foi visto em "${MODULES[mi-1].title}". Se algo parecer novo, volte um passo.</p>`:''}
     <section class="pocus-goals"><h3>Ao final, você deve conseguir</h3><ul>${m.goals.map(g=>`<li>${g}</li>`).join('')}</ul></section>
     ${m.sections.map(sectionMarkup).join('')}
-    ${cfg.images!==false&&window.LessonImages?LessonImages.slot(key+'_'+m.id,'pocus-sec'):''}
+    ${window.LessonImages?(m.imageKeys||(cfg.images!==false?[key+'_'+m.id]:[])).map(imageKey=>LessonImages.slot(imageKey,'pocus-sec')).join(''):''}
     <section class="pocus-sec pocus-pitfalls"><h3>Erros comuns</h3><ul>${m.pitfalls.map(t=>`<li>${t}</li>`).join('')}</ul></section>
     <section class="pocus-sec"><h3>Fixação</h3><p class="subtle">Responda antes de ver o comentário. As respostas ficam salvas no seu progresso.</p>${m.quiz.map((_,qi)=>quizItem(mi,qi)).join('')}</section>
     <section class="pocus-sec pocus-refs"><h3>Fontes deste módulo</h3><ul>${m.refs.map(refItem).join('')}</ul><p>${cfg.refNote}</p></section>
