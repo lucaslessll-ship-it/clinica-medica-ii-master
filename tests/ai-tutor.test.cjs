@@ -42,7 +42,7 @@ test('atalhos usam a aula atual, painel reflow e temas mantêm foco; expiração
   const t=await open({width:320,height:740}),p=t.page;let request;
   await p.route('**/functions/v1/ai-tutor',async r=>{request=r.request().postDataJSON();await r.fulfill({status:429,contentType:'application/json',body:JSON.stringify({error:'daily_limit'})});});
   await p.evaluate(theme=>{HIG.setTheme(theme==='high-contrast'?'light':theme);if(theme==='high-contrast')HIG.togglePref('contrast');navigate('pocus');PocusCourse.open(0);},theme);
-  await p.locator('.ai-tutor-launch').click();await p.locator('[data-ai-mode=resumo]').click();await p.waitForFunction(()=>document.querySelector('.ai-tutor-history')?.textContent.includes('Limite diário'));
+  await p.locator('.ai-tutor-launch').click();await p.locator('.ai-tutor-tools summary').click();await p.locator('[data-ai-mode=resumo]').click();await p.waitForFunction(()=>document.querySelector('.ai-tutor-history')?.textContent.includes('Limite diário'));
   assert.match(request.question,/Resuma a aula/);assert.ok(request.blocks.every(b=>b.id.startsWith('pocus_')));assert.ok(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));
   await p.keyboard.press('Escape');assert.equal(await p.locator('.ai-tutor-launch').evaluate(e=>e===document.activeElement),true);
   await p.locator('.ai-tutor-launch').click();await p.locator('.ai-tutor-dialog button').last().focus();await p.keyboard.press('Tab');assert.equal(await p.evaluate(()=>document.querySelector('.ai-tutor-dialog').contains(document.activeElement)),true);
@@ -60,10 +60,10 @@ test('rede indisponível e resposta atrasada não vazam conversa após expiraç�
 test('boneco pode ser ocultado, continua no menu e pode ser reexibido em celular e desktop',async()=>{
  for(const width of [320,1440]){
   const t=await open({width,height:900}),p=t.page;
-  await p.screenshot({path:'work/ai-dock-home-'+width+'.png'});await p.locator('.ai-tutor-hide').click();assert.equal(await p.locator('.ai-tutor-dock').isVisible(),false);
+  await p.locator('.ai-tutor-launch img').evaluate(img=>img.decode());assert.equal(await p.locator('.ai-tutor-launch img').evaluate(img=>img.naturalWidth),256);await p.screenshot({path:'work/ai-dock-home-'+width+'.png'});await p.locator('.ai-tutor-hide').click();assert.equal(await p.locator('.ai-tutor-dock').isVisible(),false);
   await p.reload();await p.waitForFunction(()=>document.getElementById('master-auth')?.hidden);assert.equal(await p.locator('.ai-tutor-dock').isVisible(),false);
   if(width<801)await p.locator('.menu-button').click();
-  await p.locator('#sidebar-nav [data-ai-open]').click();assert.equal(await p.locator('.ai-tutor-dialog').evaluate(d=>d.open),true);assert.equal(await p.locator('.ai-tutor-help').getAttribute('open'),'');assert.match(await p.locator('.ai-tutor-help').innerText(),/menu lateral/);
+  await p.locator('#sidebar-nav [data-ai-open]').click();assert.equal(await p.locator('.ai-tutor-dialog').evaluate(d=>d.open),true);assert.equal(await p.locator('.ai-tutor-help').getAttribute('open'),null);await p.locator('[data-ai-help-toggle]').click();assert.match(await p.locator('.ai-tutor-help').innerText(),/menu lateral/);
   await p.locator('[data-ai-show]').click();await p.keyboard.press('Escape');assert.equal(await p.locator('.ai-tutor-dock').isVisible(),true);
   await p.evaluate(()=>{openTopic('neuro1');window.scrollTo({top:document.body.scrollHeight,behavior:'instant'});});await p.waitForFunction(()=>document.querySelector('.reading-back')&&!document.querySelector('.reading-back').hidden);
   const overlap=await p.evaluate(()=>{const a=document.querySelector('.ai-tutor-dock').getBoundingClientRect(),b=document.querySelector('.reading-back').getBoundingClientRect();return a.left<b.right&&a.right>b.left&&a.top<b.bottom&&a.bottom>b.top;});assert.equal(overlap,false);
@@ -75,4 +75,28 @@ test('aviso de novas funções é dispensável e as instruções permanecem no a
  await p.locator('.ai-tutor-news [data-ai-help]').click();assert.equal(await p.locator('.ai-tutor-help').getAttribute('open'),'');assert.match(await p.locator('.ai-tutor-help').innerText(),/resumo, questões/);await p.keyboard.press('Escape');
  await p.locator('[data-ai-dismiss]').click();assert.equal(await p.locator('.ai-tutor-news').count(),0);await p.reload();await p.waitForFunction(()=>document.getElementById('master-auth')?.hidden);assert.equal(await p.locator('.ai-tutor-news').count(),0);
  await p.screenshot({path:'work/ai-assistant-hidden-home.png'});await t.close();
+});
+test('resposta permanece visível no celular após envio pelo menu com boneco oculto',async()=>{
+ for(const height of [600,420]){
+ const t=await open({width:390,height}),p=t.page;
+ await p.route('**/functions/v1/ai-tutor',async r=>{const body=r.request().postDataJSON();await r.fulfill({contentType:'application/json',body:JSON.stringify({answer:'RESPOSTA VISÍVEL: a manobra vagal atua no nó atrioventricular, conforme a aula de arritmias.\n\nDica de estudo: revise a aula original antes de memorizar.',sources:body.blocks.map(b=>({id:b.id})),remaining:39})});});
+ await p.locator('.ai-tutor-hide').click();await p.locator('.menu-button').click();await p.locator('#sidebar-nav [data-ai-open]').click();
+ await p.locator('#ai-tutor-question').fill('manobra vagal');await p.locator('.ai-tutor-send').click();await p.waitForFunction(()=>document.querySelector('.ai-tutor-status')?.textContent.includes('39 perguntas'));
+ const visible=await p.evaluate(()=>{const log=document.querySelector('.ai-tutor-history'),messages=[...document.querySelectorAll('.ai-tutor-message')],reply=messages.at(-1),text=[...reply.childNodes].find(n=>n.nodeType===Node.TEXT_NODE),range=document.createRange();range.setStart(text,0);range.setEnd(text,30);const r=range.getBoundingClientRect(),h=log.getBoundingClientRect();return {historyHeight:h.height,answerTop:r.top,answerBottom:r.bottom,historyTop:h.top,historyBottom:h.bottom,visible:h.height>=120&&r.bottom>Math.max(0,h.top)&&r.top<Math.min(innerHeight,h.bottom)};});
+ await p.screenshot({path:'work/robot-chat-response-390-'+height+'.png'});assert.equal(visible.visible,true,JSON.stringify(visible));await t.close();
+ }
+});
+test('chat mostra espera e erro do provedor; uma nova tentativa exibe a resposta sem reabrir teclado',async()=>{
+ const t=await open({width:390,height:600}),p=t.page;let release,calls=0;
+ await p.route('**/functions/v1/ai-tutor',async route=>{calls++;if(calls===1)await new Promise(resolve=>{release=async()=>{await route.fulfill({status:502,contentType:'application/json',body:JSON.stringify({error:'upstream'})});resolve();};});else await route.fulfill({contentType:'application/json',body:JSON.stringify({answer:'RESPOSTA APÓS TENTATIVA.\nDica de estudo: releia a aula.',sources:[],remaining:38})});});
+ await p.locator('.ai-tutor-launch').click();await p.locator('#ai-tutor-question').fill('abdome agudo');await p.locator('.ai-tutor-send').click();await p.locator('.ai-tutor-pending').waitFor();assert.equal(await p.locator('.ai-tutor-pending').isVisible(),true);await release();
+ await p.locator('.ai-tutor-retry').waitFor();assert.match(await p.locator('.ai-tutor-message').last().innerText(),/provedor não respondeu/);assert.equal(await p.locator('.ai-tutor-pending').count(),0);
+ await p.locator('.ai-tutor-retry').click();await p.waitForFunction(()=>document.querySelector('.ai-tutor-status')?.textContent.includes('38 perguntas'));assert.match(await p.locator('.ai-tutor-message').last().innerText(),/RESPOSTA APÓS/);assert.equal(await p.locator('#ai-tutor-question').evaluate(el=>el===document.activeElement),false);assert.equal(calls,2);await t.close();
+});
+test('requisição que não termina ganha mensagem visível e libera nova tentativa após timeout',async()=>{
+ const t=await open({width:390,height:600}),p=t.page;let release;
+ await p.route('**/functions/v1/ai-tutor',r=>new Promise(resolve=>{release=async()=>{await r.abort().catch(()=>{});resolve();};}));
+ await p.locator('.ai-tutor-launch').click();await p.evaluate(()=>AITutor.search('abdome agudo'));await p.clock.install();
+ await p.locator('#ai-tutor-question').fill('abdome agudo');const request=p.waitForRequest('**/functions/v1/ai-tutor');await p.locator('.ai-tutor-send').click();await request;await p.clock.fastForward(66000);
+ await p.locator('.ai-tutor-retry').waitFor();assert.match(await p.locator('.ai-tutor-message').last().innerText(),/demorou mais/);assert.equal(await p.locator('.ai-tutor-send').isDisabled(),false);assert.equal(await p.locator('.ai-tutor-pending').count(),0);if(release)await release();await t.close();
 });
