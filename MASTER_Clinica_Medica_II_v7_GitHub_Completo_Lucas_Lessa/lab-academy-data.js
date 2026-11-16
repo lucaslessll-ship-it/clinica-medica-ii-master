@@ -970,15 +970,15 @@ window.MASTER_LAB_ACADEMY={
             "why": "A albumina baixa não determina sozinha desnutrição. A interpretação depende da pergunta e do contexto."
           },
           {
-            "q": "Como incorporar a nova informação?",
+            "q": "A proteinúria persistente muda a hipótese do caso porque:",
             "o": [
-              "O novo dado elimina toda incerteza",
-              "A albumina baixa não determina sozinha desnutrição",
-              "A referência de qualquer laboratório pode ser usada sem conferir método",
-              "O resultado substitui a avaliação clínica"
+              "Demonstra que a dieta é a única causa",
+              "Demonstra uma via de perda que deve ser quantificada e investigada",
+              "Exclui todas as alterações de síntese",
+              "Define sozinha a etiologia renal"
             ],
             "a": 1,
-            "why": "A avaliação encontra perdas urinárias persistentes; a ingestão alimentar isolada não explica o conjunto. A decisão deve integrar essa informação ao conjunto."
+            "why": "O achado dá suporte a um mecanismo de perda; a doença renal específica ainda precisa ser esclarecida."
           }
         ]
       },
@@ -995,15 +995,15 @@ window.MASTER_LAB_ACADEMY={
           "why": "A albumina baixa não determina sozinha desnutrição."
         },
         {
-          "q": "Qual cuidado deve acompanhar a leitura deste conjunto?",
+          "q": "Um componente monoclonal na eletroforese permite concluir qual doença?",
           "o": [
-            "Comparar só o número com um laudo de outro método",
-            "Conferir método, unidade, tempo e contexto",
-            "Ignorar resultados anteriores",
-            "Interpretar sem saber o material coletado"
+            "Mieloma confirmado em qualquer pessoa",
+            "Nenhuma doença específica sem caracterização e avaliação clínica",
+            "Desnutrição confirmada",
+            "Hepatite viral confirmada"
           ],
           "a": 1,
-          "why": "A comparação exige compatibilidade e contexto."
+          "why": "A distribuição das proteínas orienta a investigação. Caracterizar o componente e avaliar o fenótipo não são etapas intercambiáveis."
         },
         {
           "q": "Qual afirmação sintetiza a limitação principal?",
@@ -1017,15 +1017,15 @@ window.MASTER_LAB_ACADEMY={
           "why": "A hipótese deve ser sustentada por dados clínicos e testes apropriados."
         },
         {
-          "q": "Como redigir a conclusão?",
+          "q": "Por que albumina baixa não deve ser usada sozinha para diagnosticar desnutrição?",
           "o": [
-            "Escrever diagnóstico definitivo sem demonstrá-lo",
-            "Descrever padrão, hipótese, limitações e investigação justificada",
-            "Copiar apenas os números",
-            "Omitir os achados discordantes"
+            "Porque a albumina não pode ser medida",
+            "Inflamação, perdas e diluição também podem reduzir a concentração",
+            "Porque só muda em doença hepática",
+            "Porque proteinúria nunca afeta a albumina"
           ],
           "a": 1,
-          "why": "Uma boa síntese explicita a força e os limites da evidência."
+          "why": "Concentração sérica, ingestão e estado nutricional não representam a mesma dimensão."
         }
       ],
       "refs": [
@@ -1119,15 +1119,15 @@ window.MASTER_LAB_ACADEMY={
             "why": "Calprotectina elevada não confirma sozinha uma etiologia. A interpretação depende da pergunta e do contexto."
           },
           {
-            "q": "Como incorporar a nova informação?",
+            "q": "O uso recente de anti-inflamatório permite encerrar a investigação?",
             "o": [
-              "A referência de qualquer laboratório pode ser usada sem conferir método",
-              "O novo dado elimina toda incerteza",
-              "Calprotectina elevada não confirma sozinha uma etiologia",
-              "O resultado substitui a avaliação clínica"
+              "Sim, perda ponderal deixa de ser relevante",
+              "Sim, toda elevação vem obrigatoriamente do fármaco",
+              "Não; é um dado adicional e os sintomas persistentes ainda precisam de avaliação",
+              "Sim, prova ausência de inflamação"
             ],
             "a": 2,
-            "why": "A história revela uso recente de anti-inflamatório, uma informação que também pode influenciar a interpretação. A decisão deve integrar essa informação ao conjunto."
+            "why": "Uma possível interferência ou causa alternativa não elimina o quadro clínico nem estabelece causalidade."
           }
         ]
       },
@@ -1144,15 +1144,15 @@ window.MASTER_LAB_ACADEMY={
           "why": "Calprotectina elevada não confirma sozinha uma etiologia."
         },
         {
-          "q": "Qual cuidado deve acompanhar a leitura deste conjunto?",
+          "q": "O que um painel molecular positivo demonstra diretamente?",
           "o": [
-            "Ignorar resultados anteriores",
-            "Comparar só o número com um laudo de outro método",
-            "Conferir método, unidade, tempo e contexto",
-            "Interpretar sem saber o material coletado"
+            "Que o microrganismo está sempre viável",
+            "Que o alvo explica necessariamente todos os sintomas",
+            "Detecção do alvo pesquisado na amostra",
+            "Que a coleta não tem nenhuma limitação"
           ],
           "a": 2,
-          "why": "A comparação exige compatibilidade e contexto."
+          "why": "Detecção, causalidade e viabilidade são afirmações distintas. Leia o alvo junto à síndrome e à qualidade da amostra."
         },
         {
           "q": "Qual afirmação sintetiza a limitação principal?",
@@ -1166,15 +1166,15 @@ window.MASTER_LAB_ACADEMY={
           "why": "A hipótese deve ser sustentada por dados clínicos e testes apropriados."
         },
         {
-          "q": "Como redigir a conclusão?",
+          "q": "Uma amostra parasitológica negativa afasta qualquer parasitose?",
           "o": [
-            "Copiar apenas os números",
-            "Escrever diagnóstico definitivo sem demonstrá-lo",
-            "Descrever padrão, hipótese, limitações e investigação justificada",
-            "Omitir os achados discordantes"
+            "Sim, se não houver febre",
+            "Sim, independentemente do método",
+            "Não; técnica, agente, amostra e exposição modificam a interpretação",
+            "Sim, mesmo antes da exposição"
           ],
           "a": 2,
-          "why": "Uma boa síntese explicita a força e os limites da evidência."
+          "why": "A escolha e o rendimento do método dependem da hipótese e das condições da coleta."
         }
       ],
       "refs": [
@@ -1268,15 +1268,15 @@ window.MASTER_LAB_ACADEMY={
             "why": "Discordância exige revisão do método e da situação clínica. A interpretação depende da pergunta e do contexto."
           },
           {
-            "q": "Como incorporar a nova informação?",
+            "q": "Como verificar a hipótese de interferência pela biotina neste caso?",
             "o": [
-              "O resultado substitui a avaliação clínica",
-              "O novo dado elimina toda incerteza",
-              "A referência de qualquer laboratório pode ser usada sem conferir método",
-              "Discordância exige revisão do método e da situação clínica"
+              "Usar um prazo universal de suspensão sem conhecer o método",
+              "Concluir tireotoxicose apenas pelo ensaio inicial",
+              "Descartar toda doença sem reavaliar",
+              "Discutir o ensaio e a estratégia de confirmação com o laboratório"
             ],
             "a": 3,
-            "why": "Na entrevista, relata uso de suplemento com biotina; o laboratório informa que o método pode sofrer interferência. A decisão deve integrar essa informação ao conjunto."
+            "why": "A interferência depende do ensaio e da exposição. A investigação deve seguir orientação do laboratório e avaliação clínica."
           }
         ]
       },
@@ -1293,15 +1293,15 @@ window.MASTER_LAB_ACADEMY={
           "why": "Discordância exige revisão do método e da situação clínica."
         },
         {
-          "q": "Qual cuidado deve acompanhar a leitura deste conjunto?",
+          "q": "T4 livre baixo e TSH dentro da referência sempre indicam eixo tireoidiano normal?",
           "o": [
-            "Interpretar sem saber o material coletado",
-            "Comparar só o número com um laudo de outro método",
-            "Ignorar resultados anteriores",
-            "Conferir método, unidade, tempo e contexto"
+            "Sim, basta comparar cada exame isoladamente",
+            "Sim, o TSH normal exclui qualquer alteração",
+            "Sim, T4 nunca participa da avaliação",
+            "Não; o TSH pode ser inadequado ao T4 e precisa de interpretação contextual"
           ],
           "a": 3,
-          "why": "A comparação exige compatibilidade e contexto."
+          "why": "O regulador deve ser interpretado em relação ao hormônio periférico, ao contexto e ao método."
         },
         {
           "q": "Qual afirmação sintetiza a limitação principal?",
@@ -1315,15 +1315,15 @@ window.MASTER_LAB_ACADEMY={
           "why": "A hipótese deve ser sustentada por dados clínicos e testes apropriados."
         },
         {
-          "q": "Como redigir a conclusão?",
+          "q": "Um cortisol coletado em horário aleatório resolve toda suspeita de insuficiência adrenal?",
           "o": [
-            "Omitir os achados discordantes",
-            "Escrever diagnóstico definitivo sem demonstrá-lo",
-            "Copiar apenas os números",
-            "Descrever padrão, hipótese, limitações e investigação justificada"
+            "Sim, a doença aguda não tem efeito",
+            "Sim, qualquer número é diagnóstico",
+            "Sim, o horário não influencia o eixo",
+            "Não; horário, quadro clínico e estratégia de confirmação importam"
           ],
           "a": 3,
-          "why": "Uma boa síntese explicita a força e os limites da evidência."
+          "why": "A pergunta clínica e as condições do exame definem o que o resultado consegue demonstrar."
         }
       ],
       "refs": [
@@ -1418,15 +1418,15 @@ window.MASTER_LAB_ACADEMY={
             "why": "Proteína C-reativa elevada é inespecífica. A interpretação depende da pergunta e do contexto."
           },
           {
-            "q": "Como incorporar a nova informação?",
+            "q": "Sinovite e rigidez matinal tornam a PCR específica para doença autoimune?",
             "o": [
-              "Proteína C-reativa elevada é inespecífica",
-              "O novo dado elimina toda incerteza",
-              "A referência de qualquer laboratório pode ser usada sem conferir método",
-              "O resultado substitui a avaliação clínica"
+              "Não; refinam o fenótipo, mas o diferencial ainda precisa ser investigado",
+              "Sim, já definem uma etiologia única",
+              "Sim, eliminam qualquer causa infecciosa",
+              "Sim, tornam outros dados irrelevantes"
             ],
             "a": 0,
-            "why": "Nova avaliação encontra rigidez matinal e sinovite; ainda é necessário esclarecer o mecanismo e excluir causas relevantes. A decisão deve integrar essa informação ao conjunto."
+            "why": "O novo dado modifica a probabilidade das hipóteses sem conferir especificidade automática ao marcador."
           }
         ]
       },
@@ -1443,15 +1443,15 @@ window.MASTER_LAB_ACADEMY={
           "why": "Proteína C-reativa elevada é inespecífica."
         },
         {
-          "q": "Qual cuidado deve acompanhar a leitura deste conjunto?",
+          "q": "PCR muito elevada diferencia sozinha infecção bacteriana de doença autoimune?",
           "o": [
-            "Conferir método, unidade, tempo e contexto",
-            "Comparar só o número com um laudo de outro método",
-            "Ignorar resultados anteriores",
-            "Interpretar sem saber o material coletado"
+            "Não; ambas podem elevar o marcador e exigem avaliação clínica",
+            "Sim, qualquer elevação é bacteriana",
+            "Sim, a altura exclui inflamação estéril",
+            "Sim, dispensa investigar o foco"
           ],
           "a": 0,
-          "why": "A comparação exige compatibilidade e contexto."
+          "why": "Proteína C-reativa mede uma resposta inflamatória, sem identificar sozinha o mecanismo causal."
         },
         {
           "q": "Qual afirmação sintetiza a limitação principal?",
@@ -1465,15 +1465,15 @@ window.MASTER_LAB_ACADEMY={
           "why": "A hipótese deve ser sustentada por dados clínicos e testes apropriados."
         },
         {
-          "q": "Como redigir a conclusão?",
+          "q": "PCR em queda, mas nova hipotensão e confusão: qual dado deve orientar a prioridade?",
           "o": [
-            "Descrever padrão, hipótese, limitações e investigação justificada",
-            "Escrever diagnóstico definitivo sem demonstrá-lo",
-            "Copiar apenas os números",
-            "Omitir os achados discordantes"
+            "A deterioração clínica exige reavaliação imediata",
+            "A queda da PCR elimina a urgência",
+            "Aguardar a próxima coleta sem avaliar",
+            "Ignorar sinais de perfusão se a PCR melhorou"
           ],
           "a": 0,
-          "why": "Uma boa síntese explicita a força e os limites da evidência."
+          "why": "Uma tendência laboratorial favorável não neutraliza sinais clínicos de gravidade."
         }
       ],
       "refs": [
@@ -1567,15 +1567,15 @@ window.MASTER_LAB_ACADEMY={
             "why": "Um teste negativo precoce não exclui universalmente a exposição. A interpretação depende da pergunta e do contexto."
           },
           {
-            "q": "Como incorporar a nova informação?",
+            "q": "Qual é a justificativa para programar reavaliação após a coleta precoce?",
             "o": [
-              "O novo dado elimina toda incerteza",
-              "Um teste negativo precoce não exclui universalmente a exposição",
-              "A referência de qualquer laboratório pode ser usada sem conferir método",
-              "O resultado substitui a avaliação clínica"
+              "Todo teste negativo é falso",
+              "O teste pode ter sido feito antes de o alvo se tornar detectável",
+              "Todos os ensaios têm a mesma janela",
+              "Uma nova avaliação dispensa medidas preventivas urgentes"
             ],
             "a": 1,
-            "why": "O serviço confirma que a amostra foi obtida muito precocemente para excluir a exposição com aquele teste. A decisão deve integrar essa informação ao conjunto."
+            "why": "A janela depende do ensaio. A prevenção e o atendimento sensíveis ao tempo não devem aguardar a repetição do exame."
           }
         ]
       },
@@ -1592,15 +1592,15 @@ window.MASTER_LAB_ACADEMY={
           "why": "Um teste negativo precoce não exclui universalmente a exposição."
         },
         {
-          "q": "Qual cuidado deve acompanhar a leitura deste conjunto?",
+          "q": "Por que anti-HBs e anti-HBc não devem ser tratados como o mesmo marcador?",
           "o": [
-            "Comparar só o número com um laudo de outro método",
-            "Conferir método, unidade, tempo e contexto",
-            "Ignorar resultados anteriores",
-            "Interpretar sem saber o material coletado"
+            "Porque todo anticorpo significa infecção ativa",
+            "Representam alvos diferentes e ajudam a distinguir padrões de exposição e imunidade",
+            "Porque a vacinação produz todos os marcadores da infecção natural",
+            "Porque HBsAg é irrelevante em qualquer avaliação"
           ],
           "a": 1,
-          "why": "A comparação exige compatibilidade e contexto."
+          "why": "Leia o painel de hepatite B em conjunto com vacinação, exposição e quadro clínico, usando o algoritmo apropriado."
         },
         {
           "q": "Qual afirmação sintetiza a limitação principal?",
@@ -1614,15 +1614,15 @@ window.MASTER_LAB_ACADEMY={
           "why": "A hipótese deve ser sustentada por dados clínicos e testes apropriados."
         },
         {
-          "q": "Como redigir a conclusão?",
+          "q": "Um resultado reagente em um ensaio de rastreio deve ser descrito como:",
           "o": [
-            "Escrever diagnóstico definitivo sem demonstrá-lo",
-            "Descrever padrão, hipótese, limitações e investigação justificada",
-            "Copiar apenas os números",
-            "Omitir os achados discordantes"
+            "Diagnóstico definitivo em todo contexto",
+            "Reagente naquele teste, seguindo as etapas previstas no algoritmo diagnóstico",
+            "Falha de coleta obrigatória",
+            "Prova de imunidade para qualquer agente"
           ],
           "a": 1,
-          "why": "Uma boa síntese explicita a força e os limites da evidência."
+          "why": "Rastreio e confirmação têm papéis diferentes. A redação deve indicar o que foi efetivamente demonstrado."
         }
       ],
       "refs": [
@@ -1716,15 +1716,15 @@ window.MASTER_LAB_ACADEMY={
             "why": "FAN reagente isolado não estabelece lúpus. A interpretação depende da pergunta e do contexto."
           },
           {
-            "q": "Como incorporar a nova informação?",
+            "q": "Sem um fenótipo compatível, qual redação evita um rótulo indevido?",
             "o": [
-              "A referência de qualquer laboratório pode ser usada sem conferir método",
-              "O novo dado elimina toda incerteza",
-              "FAN reagente isolado não estabelece lúpus",
-              "O resultado substitui a avaliação clínica"
+              "Doença autoimune excluída para sempre",
+              "Lúpus confirmado apenas pelo FAN",
+              "FAN reagente sem elementos clínicos suficientes para diagnóstico neste momento",
+              "Comprometimento sistêmico comprovado"
             ],
             "a": 2,
-            "why": "A avaliação dirigida não encontra manifestações que sustentem lúpus naquele momento. A decisão deve integrar essa informação ao conjunto."
+            "why": "Descreva o resultado e os limites da avaliação; nem confirmar por um marcador nem prometer exclusão permanente."
           }
         ]
       },
@@ -1741,15 +1741,15 @@ window.MASTER_LAB_ACADEMY={
           "why": "FAN reagente isolado não estabelece lúpus."
         },
         {
-          "q": "Qual cuidado deve acompanhar a leitura deste conjunto?",
+          "q": "Qual cenário dá mais sentido a solicitar autoanticorpos dirigidos?",
           "o": [
-            "Ignorar resultados anteriores",
-            "Comparar só o número com um laudo de outro método",
-            "Conferir método, unidade, tempo e contexto",
-            "Interpretar sem saber o material coletado"
+            "Toda pessoa assintomática precisa de todos os autoanticorpos",
+            "Qualquer cansaço isolado exige painel completo",
+            "Um fenótipo clínico compatível com a doença investigada",
+            "Um painel sempre define a doença sem exame físico"
           ],
           "a": 2,
-          "why": "A comparação exige compatibilidade e contexto."
+          "why": "O fenótipo e a probabilidade pré-teste sustentam a indicação e reduzem interpretações incidentais."
         },
         {
           "q": "Qual afirmação sintetiza a limitação principal?",
@@ -1763,15 +1763,15 @@ window.MASTER_LAB_ACADEMY={
           "why": "A hipótese deve ser sustentada por dados clínicos e testes apropriados."
         },
         {
-          "q": "Como redigir a conclusão?",
+          "q": "C3 e C4, isoladamente, medem toda atividade clínica de uma doença autoimune?",
           "o": [
-            "Copiar apenas os números",
-            "Escrever diagnóstico definitivo sem demonstrá-lo",
-            "Descrever padrão, hipótese, limitações e investigação justificada",
-            "Omitir os achados discordantes"
+            "Sim, excluem todo comprometimento renal",
+            "Sim, substituem o exame de urina",
+            "Não; devem ser integrados à avaliação clínica e aos órgãos envolvidos",
+            "Sim, valores normais eliminam qualquer manifestação"
           ],
           "a": 2,
-          "why": "Uma boa síntese explicita a força e os limites da evidência."
+          "why": "Síntese, consumo e contexto modificam o complemento. A avaliação de atividade não se resume a um marcador."
         }
       ],
       "refs": [
@@ -1865,15 +1865,15 @@ window.MASTER_LAB_ACADEMY={
             "why": "Troponina alta, por si só, não confirma infarto tipo 1. A interpretação depende da pergunta e do contexto."
           },
           {
-            "q": "Como incorporar a nova informação?",
+            "q": "A variação de troponina de 40 para 75 ng/L prova infarto tipo 1?",
             "o": [
-              "O resultado substitui a avaliação clínica",
-              "O novo dado elimina toda incerteza",
-              "A referência de qualquer laboratório pode ser usada sem conferir método",
-              "Troponina alta, por si só, não confirma infarto tipo 1"
+              "Sim, a taquiarritmia torna a causa coronariana obrigatória",
+              "Sim, qualquer subida demonstra ruptura de placa",
+              "Sim, o ECG deixa de ser necessário",
+              "Não; ainda é necessário esclarecer o contexto e as evidências de isquemia"
             ],
             "a": 3,
-            "why": "A variação confirma um padrão dinâmico de lesão, mas os dados fornecidos ainda não demonstram o mecanismo coronariano. A decisão deve integrar essa informação ao conjunto."
+            "why": "A dinâmica apoia a identificação de lesão aguda, mas não define sozinha sua causa."
           }
         ]
       },
@@ -1890,15 +1890,15 @@ window.MASTER_LAB_ACADEMY={
           "why": "Troponina alta, por si só, não confirma infarto tipo 1."
         },
         {
-          "q": "Qual cuidado deve acompanhar a leitura deste conjunto?",
+          "q": "O que a elevação dinâmica da troponina demonstra antes de definir a causa?",
           "o": [
-            "Interpretar sem saber o material coletado",
-            "Comparar só o número com um laudo de outro método",
-            "Ignorar resultados anteriores",
-            "Conferir método, unidade, tempo e contexto"
+            "Ausência de qualquer causa não coronariana",
+            "Ruptura de placa obrigatória",
+            "Oclusão coronariana comprovada pelo número",
+            "Um padrão de lesão miocárdica que precisa ser contextualizado"
           ],
           "a": 3,
-          "why": "A comparação exige compatibilidade e contexto."
+          "why": "Dinâmica e magnitude não identificam sozinhas o mecanismo. A evidência de isquemia deve ser avaliada no contexto."
         },
         {
           "q": "Qual afirmação sintetiza a limitação principal?",
@@ -1912,15 +1912,15 @@ window.MASTER_LAB_ACADEMY={
           "why": "A hipótese deve ser sustentada por dados clínicos e testes apropriados."
         },
         {
-          "q": "Como redigir a conclusão?",
+          "q": "CK elevada após lesão muscular importante pede atenção adicional a:",
           "o": [
-            "Omitir os achados discordantes",
-            "Escrever diagnóstico definitivo sem demonstrá-lo",
-            "Copiar apenas os números",
-            "Descrever padrão, hipótese, limitações e investigação justificada"
+            "Nenhuma repercussão fora do músculo",
+            "Apenas repetir CK sem avaliar o paciente",
+            "Somente LDL",
+            "Função renal, eletrólitos, urina e estado clínico"
           ],
           "a": 3,
-          "why": "Uma boa síntese explicita a força e os limites da evidência."
+          "why": "A lesão muscular pode acompanhar repercussões sistêmicas; o risco não depende apenas da altura da CK."
         }
       ],
       "refs": [
@@ -2019,15 +2019,15 @@ window.MASTER_LAB_ACADEMY={
             "why": "Cristais não excluem infecção concomitante. A interpretação depende da pergunta e do contexto."
           },
           {
-            "q": "Como incorporar a nova informação?",
+            "q": "Febre e piora sistêmica após identificar cristais devem levar a:",
             "o": [
-              "Cristais não excluem infecção concomitante",
-              "O novo dado elimina toda incerteza",
-              "A referência de qualquer laboratório pode ser usada sem conferir método",
-              "O resultado substitui a avaliação clínica"
+              "Reavaliar imediatamente e manter a investigação de infecção concomitante",
+              "Encerrar microbiologia porque há cristais",
+              "Ignorar a evolução se o líquido parece inflamatório",
+              "Definir uma única causa sem novos dados"
             ],
             "a": 0,
-            "why": "A evolução acrescenta febre e piora do estado geral, exigindo reavaliação clínica imediata. A decisão deve integrar essa informação ao conjunto."
+            "why": "Cristais não excluem infecção. A evolução clínica modifica o risco e a prioridade da avaliação."
           }
         ]
       },
@@ -2044,15 +2044,15 @@ window.MASTER_LAB_ACADEMY={
           "why": "Cristais não excluem infecção concomitante."
         },
         {
-          "q": "Qual cuidado deve acompanhar a leitura deste conjunto?",
+          "q": "Classificar um líquido pleural por proteínas e LDH define sua etiologia?",
           "o": [
-            "Conferir método, unidade, tempo e contexto",
-            "Comparar só o número com um laudo de outro método",
-            "Ignorar resultados anteriores",
-            "Interpretar sem saber o material coletado"
+            "Não; a classificação organiza a investigação de causas",
+            "Sim, todo exsudato é neoplasia",
+            "Sim, dispensa dados séricos e clínicos",
+            "Sim, toda efusão tem a mesma causa"
           ],
           "a": 0,
-          "why": "A comparação exige compatibilidade e contexto."
+          "why": "Critérios de classificação e diagnóstico etiológico têm funções diferentes."
         },
         {
           "q": "Qual afirmação sintetiza a limitação principal?",
@@ -2066,15 +2066,15 @@ window.MASTER_LAB_ACADEMY={
           "why": "A hipótese deve ser sustentada por dados clínicos e testes apropriados."
         },
         {
-          "q": "Como redigir a conclusão?",
+          "q": "Na ascite, gradiente de albumina e contagem de neutrófilos respondem à mesma pergunta?",
           "o": [
-            "Descrever padrão, hipótese, limitações e investigação justificada",
-            "Escrever diagnóstico definitivo sem demonstrá-lo",
-            "Copiar apenas os números",
-            "Omitir os achados discordantes"
+            "Não; ajudam a avaliar mecanismo do acúmulo e possibilidade de infecção",
+            "Sim, um substitui o outro em todos os casos",
+            "Sim, albumina sozinha exclui infecção",
+            "Sim, células não acrescentam informação"
           ],
           "a": 0,
-          "why": "Uma boa síntese explicita a força e os limites da evidência."
+          "why": "A seleção do conjunto de análises depende das hipóteses e da urgência clínica."
         }
       ],
       "refs": [

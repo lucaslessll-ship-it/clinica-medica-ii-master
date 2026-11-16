@@ -11,8 +11,9 @@ const txt=f=>fs.readFileSync(f,'utf8');
 test('Laboratório Master possui acesso próprio, retorno e progress sync',()=>{
  const app=txt(path.join(appdir,'app.js'));
  const html=txt(path.join(pilot,'index.html'));
- assert.match(app,/\['Laboratório Master','lab',\['labmaster'(?:,'[^']+')*\]\]/);
- assert.doesNotMatch(app,/window.location.href='laboratorio-master/);assert.match(app,/case 'labmaster':content=window.LabMasterEmbed/);
+ assert.match(app,/\['Laboratório Master','lab',\['labmaster'(?:,'[^']+')*\],null,'EXAMES LABORATORIAIS'\]/);
+ assert.doesNotMatch(app,/window.location.href='laboratorio-master/);assert.match(app,/case 'labmaster':content=window.LabAcademy/);
+ assert.match(app,/case 'labmicrocitose':content=window.LabMasterEmbed/);
  assert.match(html,/id="syncStatus"/);
  assert.match(html,/href="\.\.\/\.\.\/index.html#dashboard"/);
  assert.match(html,/auth-config\.js/);
