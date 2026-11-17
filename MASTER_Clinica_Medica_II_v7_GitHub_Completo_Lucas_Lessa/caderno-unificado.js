@@ -294,6 +294,7 @@
     }
     window.Notas?.aplicar?.();
     window.dispatchEvent(new CustomEvent('master-note-deleted',{detail:{materia,chave,marcaId}}));
+    if(typeof toast==='function')toast(marcaId?'Destaque e comentário excluídos.':'Nota excluída do caderno.');
     return true;
   }
 
