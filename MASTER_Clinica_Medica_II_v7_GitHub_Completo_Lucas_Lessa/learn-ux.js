@@ -31,7 +31,7 @@ window.LearnUX=(()=>{
     tele:'M4 6h11a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1Zm12 4.5 5-3v9l-5-3',
     cirurgia:'M5 19 19 5m-4 0 4 4M3 21l4-1-3-3ZM8 8l3 3',
     geral:'M12 6c-3-3-7-3-10-2v15c4-1 7-1 10 2m0-15c3-3 7-3 10-2v15c-4-1-7-1-10 2V6'};
-  const icon=id=>`<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${ICONS[area(id)]}"/></svg>`;
+  const icon=id=>window.StudyIcons?StudyIcons.icon(area(id),ICONS[area(id)]):`<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${ICONS[area(id)]}"/></svg>`;
 
   function topicHead(o){
     return `<header class="topic-head" data-area="${area(o.id)}"><span class="topic-head-icon" aria-hidden="true">${icon(o.id)}</span><div class="topic-head-main"><div class="page-eyebrow">${esc(o.eyebrow)}</div><h1 class="page-title">${esc(o.title)}</h1><p class="topic-head-sub">${esc(o.subtitle)}</p><div class="topic-head-meta"><span class="topic-head-stats">${esc(o.stats)}</span>${o.badges.map(b=>`<span class="topic-chip">${esc(b)}</span>`).join('')}</div><div class="topic-head-progress" role="progressbar" aria-label="Aulas concluídas neste tema" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${o.pct}"><span style="width:${o.pct}%"></span></div></div><div class="topic-head-actions">${o.actions||''}</div></header>`;

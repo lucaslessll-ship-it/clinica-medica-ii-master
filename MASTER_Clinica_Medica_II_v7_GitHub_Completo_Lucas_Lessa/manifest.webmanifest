@@ -1,6 +1,6 @@
 {
-  "name": "Clínica Médica e Cirurgia",
-  "short_name": "Clínica e Cirurgia",
+  "name": "Estudo Master",
+  "short_name": "Estudo Master",
   "start_url": "./index.html",
   "display": "standalone",
   "theme_color": "#f7fafb",

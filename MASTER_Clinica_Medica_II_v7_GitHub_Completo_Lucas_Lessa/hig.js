@@ -138,6 +138,7 @@ const HIG = (() => {
   function lessonNotes(t,idx){const key=t.id+'_'+idx,old=preferences.notes[key]||'';return `<div class="lesson-caderno"><details ${old?'open':''}><summary>✎ Meu caderno desta aula <span class="note-meta">${old?'Anotações salvas':'Adicionar anotações pessoais'}</span></summary><label for="chapter-note" class="field-label">O que eu preciso lembrar na P2?</label><textarea id="chapter-note" class="answer-box" rows="5" placeholder="Escreva com suas palavras: diagnóstico diferencial, critérios, exceções, conduta e armadilhas…" oninput="HIG.saveNote('${key}',this.value)">${escapeHtml(old)}</textarea><div class="note-tip">Salvamento automático com sincronização da sua conta. Faça um backup se precisar.</div></details></div>`}
   // Marca-texto e comentários presos ao trecho. Gravados nas preferências,
   // que já sobem para a conta pelo salvamento automático.
+  function novidadeVista(id,confirmar=false){if(confirmar){(preferences.novidadesVistas||(preferences.novidadesVistas={}))[id]=true;save();}return !!preferences.novidadesVistas?.[id];}
   function marcas(key){return (preferences.marcas||{})[key]||[]}
   function marcasTodas(){return preferences.marcas||{}}
   function registrarPaginaEstudo(key,meta){
@@ -239,7 +240,7 @@ const HIG = (() => {
     });
   }
   function reload(){preferences=load();applyPrefs();}
-  return {qlog,qlogSave,reload,init,afterRender,abrirAula,marcas,marcasTodas,paginasEstudo,registrarPaginaEstudo,marcaAdd,marcaEdita,marcaRemove,setFocus,fullscreenAvailable,openSearch,searchInput,searchKeys,chooseResult,openSettings,openHelp,closeOverlay,setTheme,setFont,togglePref,toggleSidebar,toggleFocus,lessonToolbar,lessonNotes,saveNote,bookmark,viewToday,viewNotes,configureTimer,toggleTimer,resetTimer,exportNotes,exportBackup,importProgress,openLast,resumeInfo,focusTopic,dueCards,focusData,saveFocus,refreshFocus,openTimer};
+  return {novidadeVista,qlog,qlogSave,reload,init,afterRender,abrirAula,marcas,marcasTodas,paginasEstudo,registrarPaginaEstudo,marcaAdd,marcaEdita,marcaRemove,setFocus,fullscreenAvailable,openSearch,searchInput,searchKeys,chooseResult,openSettings,openHelp,closeOverlay,setTheme,setFont,togglePref,toggleSidebar,toggleFocus,lessonToolbar,lessonNotes,saveNote,bookmark,viewToday,viewNotes,configureTimer,toggleTimer,resetTimer,exportNotes,exportBackup,importProgress,openLast,resumeInfo,focusTopic,dueCards,focusData,saveFocus,refreshFocus,openTimer};
 })();
 window.HIG=HIG;
 window.addEventListener('DOMContentLoaded',HIG.init);

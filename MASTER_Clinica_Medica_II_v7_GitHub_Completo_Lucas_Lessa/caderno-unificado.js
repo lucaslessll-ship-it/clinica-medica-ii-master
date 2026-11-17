@@ -464,14 +464,12 @@
     botao.type = 'button';
     botao.title = 'Abrir meu caderno de anotações';
     botao.setAttribute('aria-label','Abrir caderno de anotações centralizado');
-    botao.innerHTML = '<span class="caderno-icone-3d" aria-hidden="true">' +
-      '<svg viewBox="0 0 32 32" width="24" height="24" fill="none" focusable="false"><path d="M8 5h17a2 2 0 0 1 2 2v19a2 2 0 0 1-2 2H8a3 3 0 0 1-3-3V8a3 3 0 0 1 3-3Z" fill="currentColor" opacity=".16"/><path d="M10 5v23M13.5 11h9M13.5 16h9M13.5 21h6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M8 5h17a2 2 0 0 1 2 2v19a2 2 0 0 1-2 2H8a3 3 0 0 1-3-3V8a3 3 0 0 1 3-3Z" stroke="currentColor" stroke-width="1.6"/></svg>' +
-      '</span><span class="caderno-atalho-texto">Meu caderno</span>';
+    botao.innerHTML = '<span class="caderno-icone-3d" aria-hidden="true">'+StudyIcons.book()+'</span><span class="caderno-atalho-texto">Meu caderno</span>';
     botao.setAttribute('aria-expanded','false');
     botao.setAttribute('aria-controls','caderno-painel');
     botao.addEventListener('click',abrirPainel);
-    const depois = topo.querySelector('.search-trigger');
-    if (depois) depois.after(botao); else topo.prepend(botao);
+    const pomodoro = topo.querySelector('#focus-top');
+    if (pomodoro) pomodoro.before(botao); else topo.prepend(botao);
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded',inserirAtalho,{once:true});
   else inserirAtalho();
