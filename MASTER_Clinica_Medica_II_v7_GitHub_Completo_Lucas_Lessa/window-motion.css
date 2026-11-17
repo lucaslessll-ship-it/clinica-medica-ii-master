@@ -33,4 +33,4 @@ body.reduce-motion .image-dialog::backdrop{animation:none!important}
 
 /* Substitui a antiga animação somente quando a camada compartilhada está ativa. */
 .hig-overlay[data-wm-kind="overlay"] .hig-dialog{animation:none!important}
-.master-profile[data-wm-kind]{transform-origin:top right}
+#master-profile[data-wm-kind]{transform-origin:top right}
