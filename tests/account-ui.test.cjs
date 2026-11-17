@@ -391,7 +391,7 @@ test('refreshed library and lesson remain usable with 200 percent reading size o
 
 test('release URL versions local assets and preserves recovery callbacks',async()=>{
  const t=await open({session:true,root:true,query:'?auth=recovery'}),p=t.page;await text(p,'#master-auth-title',/Definir nova senha/);
- assert.equal(new URL(p.url()).searchParams.get('v'),'20261117-estudos31');
+ assert.equal(new URL(p.url()).searchParams.get('v'),'20261117-uxnotas2');
  const unversioned=await p.evaluate(()=>[...document.querySelectorAll('script[src],link[rel=stylesheet]')].map(e=>e.src||e.href).filter(url=>new URL(url).origin===location.origin&&!new URL(url).searchParams.has('v')));assert.deepEqual(unversioned,[]);await t.close();
 });
 test('Decision Lab has 24 stable cases with 20 P2 items, valid answers and references',async()=>{
@@ -449,11 +449,36 @@ test('unchecked remember option stores auth only in the current tab and preserve
 });
 test('site identity includes clinical medicine and surgery without changing legacy study keys',async()=>{
  const t=await open({session:true}),p=t.page;await p.waitForFunction(()=>document.getElementById('master-auth').hidden);
- assert.equal(await p.title(),'Clínica Médica e Cirurgia');assert.match(await p.locator('.brand-text').innerText(),/Clínica Médica\s+e Cirurgia/);assert.equal(await p.locator('.top-context-title').innerText(),'Clínica Médica e Cirurgia');
- const manifest=await (await p.request.get(base+'/MASTER_Clinica_Medica_II_v7_GitHub_Completo_Lucas_Lessa/manifest.webmanifest')).json();assert.equal(manifest.name,'Clínica Médica e Cirurgia');assert.ok(await p.evaluate(()=>MASTER_AUTH_CONFIG.progressKeys.includes('master_p2_lucas_v1')));await t.close();
+ assert.equal(await p.title(),'Estudo Master');assert.match(await p.locator('.brand-text').innerText(),/Estudo Master\s+Aprendizado, prática e revisão/);assert.equal(await p.locator('.top-context-title').innerText(),'Estudo Master');
+ const manifest=await (await p.request.get(base+'/MASTER_Clinica_Medica_II_v7_GitHub_Completo_Lucas_Lessa/manifest.webmanifest')).json();assert.equal(manifest.name,'Estudo Master');assert.ok(await p.evaluate(()=>MASTER_AUTH_CONFIG.progressKeys.includes('master_p2_lucas_v1')));await t.close();
 });
 test('remembered expired access token renews through Supabase without asking for the password again',async()=>{
  const t=await realSdkApp();await login(t.page);const saved=await t.context.storageState();await t.close();
  const item=saved.origins.flatMap(o=>o.localStorage).find(i=>i.name==='sb-lnbcqrdjivvqbhylhtgd-auth-token');const session=JSON.parse(item.value);session.expires_at=1;item.value=JSON.stringify(session);
  const restored=await realSdkApp(false,saved);await restored.page.waitForFunction(()=>document.getElementById('master-auth').hidden);assert.ok(restored.apiCalls.some(c=>c.path.endsWith('/token')&&c.grantType==='refresh_token'));await restored.close();
+});
+
+
+test('doze avatares 3D variam por conta e escolha pessoal permanece após atualizar',async()=>{
+ const t=await open({session:true}),p=t.page;
+ await p.waitForFunction(()=>document.getElementById('master-auth').hidden);
+ const original=await p.locator('#master-avatar svg').evaluate(el=>el.outerHTML);
+ await p.locator('#master-avatar').click();
+ await p.locator('#master-avatar-change').click();
+ const options=p.locator('#master-avatar-picker [data-avatar-index]');
+ assert.equal(await options.count(),12);
+ const selected=Number(await p.locator('#master-avatar-picker [aria-pressed="true"]').getAttribute('data-avatar-index'));
+ const next=(selected+1)%12;
+ await options.nth(next).click();
+ const changed=await p.locator('#master-avatar svg').evaluate(el=>el.outerHTML);
+ assert.notEqual(changed,original);
+ assert.equal(await p.locator('#master-avatar-picker [aria-pressed="true"]').getAttribute('data-avatar-index'),String(next));
+ assert.equal(await p.evaluate(()=>localStorage.getItem('master_avatar_choice_v1:user-a')),String(next));
+ assert.equal(await p.evaluate(()=>localStorage.getItem('master_avatar_choice_v1:user-b')),null);
+ await p.reload();
+ await p.waitForFunction(()=>document.getElementById('master-auth').hidden);
+ await p.locator('#master-avatar').click();
+ await p.locator('#master-avatar-change').click();
+ assert.equal(await p.locator('#master-avatar-picker [aria-pressed="true"]').getAttribute('data-avatar-index'),String(next));
+ await t.close();
 });
