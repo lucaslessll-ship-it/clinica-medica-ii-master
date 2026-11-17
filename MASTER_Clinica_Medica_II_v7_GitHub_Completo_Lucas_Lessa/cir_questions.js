@@ -4650,7 +4650,7 @@ window.MASTER_CIR_QUESTIONS=[
       "Considerar a compressão proximal negativa suficiente e investigar linfedema como primeira hipótese.",
       "Reavaliar cobertura vascular e indicar ultrassom seriado ou imagem pélvica complementar.",
       "Usar D-dímero de alta sensibilidade para afastar TVP e encerrar investigação se negativo.",
-      "Iniciar anticoagulação contínua sem avaliação adicional de imagem e reexaminar em um mês."
+      "Iniciar anticoagulação plena por provável trombose e programar reimagem em um mês."
     ],
     "a": 1,
     "why": "Na alta probabilidade de TVP, ultrassom proximal negativo único não exclui trombose distal em evolução nem evento não visualizado em veias ilíacas. Em geral, é necessária estratégia adicional: ultrassonografia completa ou repetida após 5–7 dias e, quando edema de toda a perna sugere território pélvico/ilíaco não examinado, imagem complementar dirigida. D-dímero não basta para excluir TVP quando a probabilidade é alta. A necessidade de anticoagulação provisória enquanto se obtém imagem depende de risco de sangramento, tempo até diagnóstico e protocolo local.",
