@@ -322,15 +322,69 @@
     if(evento.key==='Escape'&&painel&&!painel.hidden)fecharPainel();
   });
 
+  let salvarCentralTimer=null;
+  function salvarPendentesCaderno() {
+    clearTimeout(salvarCentralTimer);
+    document.querySelectorAll('.caderno-unificado textarea[data-sujo="sim"]').forEach(campo=>{
+      if(campo.classList.contains('caderno-editor')) {
+        salvarNota(campo.closest('.caderno-aula-corpo')?.querySelector('.caderno-salvar-nota'));
+      } else if(campo.classList.contains('caderno-comentario')) {
+        salvarComentario(campo.closest('.caderno-trecho')?.querySelector('.caderno-salvar-comentario'));
+      }
+      campo.dataset.sujo='nao';
+    });
+  }
+  document.addEventListener('input',evento=>{
+    if(evento.target.matches('.caderno-unificado .caderno-editor,.caderno-unificado .caderno-comentario')) {
+      evento.target.dataset.sujo='sim';
+      clearTimeout(salvarCentralTimer);
+      salvarCentralTimer=setTimeout(salvarPendentesCaderno,850);
+    }
+  });
   document.addEventListener('click', evento => {
     const botao = evento.target.closest('button');
-    if (!botao || !botao.closest('.caderno-unificado')) return;
-    if (botao.dataset.cadernoDestino) document.getElementById(botao.dataset.cadernoDestino)?.scrollIntoView({behavior:'smooth',block:'start'});
-    else if (botao.classList.contains('caderno-salvar-nota')) salvarNota(botao);
-    else if (botao.classList.contains('caderno-salvar-comentario')) salvarComentario(botao);
-    else if (botao.classList.contains('caderno-exportar')) exportar();
-    else if (botao.classList.contains('caderno-abrir')) {
-      window.HIG?.abrirAula(botao.dataset.rota,botao.dataset.tema,Number(botao.dataset.indice));
+    if (!botao) return;
+    if (botao.closest('#caderno-painel')) {
+      if(botao.dataset.painelFiltro) {
+        painelFiltro=botao.dataset.painelFiltro;
+        painel.querySelectorAll('[data-painel-filtro]').forEach(b=>b.setAttribute('aria-pressed',String(b===botao)));
+        filtrarPainel();
+      } else if (botao.dataset.painelAcao==='fechar' || botao.dataset.painelAcao==='minimizar') {
+        fecharPainel();
+      } else if (botao.dataset.painelAcao==='completo') {
+        fecharPainel();
+        if(typeof navigate==='function')navigate('notes');
+      } else if(botao.classList.contains('caderno-painel-salvar')) {
+        const cartao=botao.closest('.caderno-painel-cartao');
+        cartao.dataset.sujo='sim'; salvarCartao(cartao);
+      } else if(botao.classList.contains('caderno-painel-ir')) {
+        const card=botao.closest('.caderno-painel-cartao');
+        salvarEdicoesPainel();
+        voltarAoTrecho(card.dataset.rota,card.dataset.tema,card.dataset.indice,
+          card.dataset.chave,card.dataset.marcaId||'');
+      }
+      return;
+    }
+    if (!botao.closest('.caderno-unificado')) return;
+    if (botao.dataset.cadernoDestino) {
+      document.getElementById(botao.dataset.cadernoDestino)?.scrollIntoView({behavior:'smooth',block:'start'});
+    } else if(botao.dataset.cadernoFiltro) {
+      const raiz=botao.closest('.caderno-unificado');
+      raiz.querySelectorAll('[data-caderno-filtro]').forEach(b=>b.setAttribute('aria-pressed',String(b===botao)));
+      filtrarCaderno();
+    } else if (botao.classList.contains('caderno-salvar-nota')) {
+      salvarNota(botao);
+    } else if (botao.classList.contains('caderno-salvar-comentario')) {
+      salvarComentario(botao);
+    } else if (botao.classList.contains('caderno-exportar')) {
+      salvarPendentesCaderno();exportar();
+    } else if(botao.classList.contains('caderno-voltar-trecho')) {
+      salvarPendentesCaderno();
+      voltarAoTrecho(botao.dataset.rota,botao.dataset.tema,botao.dataset.indice,
+        botao.dataset.chave,botao.dataset.marcaId);
+    } else if (botao.classList.contains('caderno-abrir')) {
+      salvarPendentesCaderno();
+      voltarAoTrecho(botao.dataset.rota,botao.dataset.tema,botao.dataset.indice,'','');
     }
   });
 
@@ -347,7 +401,9 @@
     botao.innerHTML = '<span class="caderno-icone-3d" aria-hidden="true">' +
       '<svg viewBox="0 0 32 32" width="24" height="24" fill="none" focusable="false"><path d="M8 5h17a2 2 0 0 1 2 2v19a2 2 0 0 1-2 2H8a3 3 0 0 1-3-3V8a3 3 0 0 1 3-3Z" fill="currentColor" opacity=".16"/><path d="M10 5v23M13.5 11h9M13.5 16h9M13.5 21h6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M8 5h17a2 2 0 0 1 2 2v19a2 2 0 0 1-2 2H8a3 3 0 0 1-3-3V8a3 3 0 0 1 3-3Z" stroke="currentColor" stroke-width="1.6"/></svg>' +
       '</span><span class="caderno-atalho-texto">Meu caderno</span>';
-    botao.addEventListener('click',()=>{if(typeof navigate==='function')navigate('notes');});
+    botao.setAttribute('aria-expanded','false');
+    botao.setAttribute('aria-controls','caderno-painel');
+    botao.addEventListener('click',abrirPainel);
     const depois = topo.querySelector('.search-trigger');
     if (depois) depois.after(botao); else topo.prepend(botao);
   }
@@ -355,5 +411,5 @@
   else inserirAtalho();
 
   if (window.HIG) window.HIG.viewNotes = exibir;
-  window.CadernoUnificado = {exibir,reunir,exportar};
+  window.CadernoUnificado = {exibir,reunir,exportar,abrirPainel,fecharPainel,filtrarCaderno};
 })();
