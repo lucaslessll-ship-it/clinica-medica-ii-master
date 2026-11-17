@@ -517,8 +517,6 @@
         const estado=caixa.querySelector('.nota-painel-geral-status');
         if(estado)estado.textContent='Editando…';
         clearTimeout(rascunhoTimer);
-        const apagar=caixa.querySelector('.nota-painel-apagar-geral');
-        if(apagar)apagar.disabled=!evento.target.value.trim();
         rascunhoTimer=setTimeout(()=>salvarNotaGeral(),900);
         return;
       }
