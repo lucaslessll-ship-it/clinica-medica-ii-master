@@ -335,3 +335,16 @@ body[data-theme="dark"] .caderno-icone-3d{color:#c6ede1;background:linear-gradie
 .nota-painel-geral label{display:block;color:var(--secondary-text,var(--muted));font-size:12px;margin:9px 0 0}
 .nota-painel-geral textarea{display:block;box-sizing:border-box;width:100%;min-height:85px;padding:10px;margin:6px 0;border:1px solid var(--line);border-radius:9px;background:var(--white);color:var(--ink);font:inherit;font-size:13px}
 .nota-painel-geral .nota-painel-salvar-geral{margin-top:8px;border:1px solid var(--line);border-radius:8px;background:var(--white);color:var(--ink);padding:8px 11px;font:inherit;font-size:12px;font-weight:700;cursor:pointer}
+
+
+/* Cabeçalho estreito: menu deve permanecer clicável mesmo em 390 × 420. */
+@media(max-width:500px){
+ .topbar-left{position:relative;z-index:2;flex:0 0 44px;min-width:44px}
+ .topbar-right{position:relative;z-index:1;flex:1 1 auto;min-width:0;max-width:calc(100% - 50px);gap:2px;justify-content:flex-end}
+ .topbar-right #focus-top{min-width:44px!important;width:44px!important;max-width:44px!important;flex:0 0 44px!important;padding:0!important;gap:0!important}
+ .topbar-right #focus-top .focus-top-label,.topbar-right #focus-top [data-focus-time]{display:none!important}
+ .topbar-right .focus-trigger,.topbar-right .settings-trigger{display:none!important}
+ .topbar-right #caderno-atalho-topo{flex:0 0 32px}
+ .topbar-right .search-trigger{flex:0 0 40px;min-width:40px;width:40px}
+ .topbar-right .account-control{flex:0 0 34px}
+}
