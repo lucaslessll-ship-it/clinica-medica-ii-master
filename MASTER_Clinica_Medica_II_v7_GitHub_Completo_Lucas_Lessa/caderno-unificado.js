@@ -96,7 +96,7 @@
       '<summary><span>' + escapar(aula.titulo) + '</span><small>' +
       (aula.nota.trim() ? 'Nota escrita · ' : '') + aula.marcas.length + ' ' + (aula.marcas.length===1?'trecho':'trechos') +
       (aula.salvo?' · Salva para revisão':'') + '</small></summary>' +
-      '<div class="caderno-aula-corpo" data-materia="' + materia.id + '" data-chave="' + escapar(aula.chave) + '">' +
+      '<div class="caderno-aula-corpo" data-materia="' + (materia.id.startsWith('estudo-')?'estudo':materia.id) + '" data-chave="' + escapar(aula.chave) + '">' +
       '<h3>Notas de aula · ' + escapar(aula.titulo) + '</h3>' +
       '<label class="caderno-rotulo">Anotações da aula' +
       '<textarea class="caderno-editor" rows="4" placeholder="Escreva suas anotações com suas próprias palavras">' + escapar(aula.nota) + '</textarea></label>' +
@@ -329,7 +329,7 @@
     const busca=escapar(buscaNormal([materia.nome,tema.titulo,aula.titulo,aula.nota,marca?.texto||'',marca?.comentario||''].join(' ')));
     const tipo=marca?'marca':'nota';
     const ch=escapar(aula.chave);
-    const ids='data-materia="'+materia.id+'" data-rota="'+materia.rota+
+    const ids='data-materia="'+(materia.id.startsWith('estudo-')?'estudo':materia.id)+'" data-rota="'+materia.rota+
       '" data-tema="'+escapar(tema.id)+'" data-indice="'+aula.indice+
       '" data-chave="'+ch+'"'+(marca?' data-marca-id="'+escapar(marca.id)+'"':'');
     const titulo='<header><strong>'+escapar(aula.titulo)+'</strong><small>'+escapar(materia.nome+' · '+tema.titulo)+'</small></header>';
