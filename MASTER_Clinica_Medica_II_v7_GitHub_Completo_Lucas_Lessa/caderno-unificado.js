@@ -38,8 +38,9 @@
 
   function trechoHTML(marca, chave) {
     const comentario = String(marca.comentario || '');
-    return '<div class="caderno-trecho" data-marca-id="' + escapar(marca.id) + '">' +
-      '<p class="caderno-trecho-citado" data-cor="' + escapar(marca.cor || 'amarelo') + '">' + escapar(marca.texto || '') + '</p>' +
+    return '<div class="caderno-trecho notas-item" data-marca-id="' + escapar(marca.id) + '">' +
+      '<p class="caderno-trecho-citado notas-trecho" data-cor="' + escapar(marca.cor || 'amarelo') + '">' + escapar(marca.texto || '') + '</p>' +
+      '<p class="notas-comentario">' + escapar(comentario) + '</p>' +
       '<label>Observação sobre o trecho' +
       '<textarea rows="2" class="caderno-comentario" placeholder="Acrescente uma observação vinculada ao trecho">' + escapar(comentario) + '</textarea></label>' +
       '<button type="button" class="btn secondary caderno-salvar-comentario" data-chave="' + escapar(chave) +
@@ -47,15 +48,16 @@
   }
 
   function aulaHTML(materia, tema, aula) {
-    return '<details class="caderno-aula">' +
+    return '<details class="caderno-aula notas-aula"' + (aula.marcas.length ? ' open' : '') + '>' +
       '<summary><span>' + escapar(aula.titulo) + '</span><small>' +
       (aula.nota.trim() ? 'Nota escrita · ' : '') + aula.marcas.length + ' ' + (aula.marcas.length===1?'trecho':'trechos') +
       (aula.salvo?' · Salva para revisão':'') + '</small></summary>' +
       '<div class="caderno-aula-corpo" data-materia="' + materia.id + '" data-chave="' + escapar(aula.chave) + '">' +
+      '<h3>Notas de aula · ' + escapar(aula.titulo) + '</h3>' +
       '<label class="caderno-rotulo">Anotações da aula' +
       '<textarea class="caderno-editor" rows="4" placeholder="Escreva suas anotações com suas próprias palavras">' + escapar(aula.nota) + '</textarea></label>' +
       '<div class="caderno-acoes"><button type="button" class="btn secondary caderno-salvar-nota">Salvar nota</button>' +
-      '<button type="button" class="btn caderno-abrir" data-rota="' + materia.rota +
+      '<button type="button" class="btn caderno-abrir notas-ir" data-rota="' + materia.rota +
       '" data-tema="' + escapar(tema.id) + '" data-indice="' + aula.indice + '">Abrir aula no texto</button>' +
       '<span class="caderno-status" aria-live="polite"></span></div>' +
       (aula.marcas.length ? '<details class="caderno-trechos"><summary>' + aula.marcas.length +
@@ -148,6 +150,26 @@
       window.HIG?.abrirAula(botao.dataset.rota,botao.dataset.tema,Number(botao.dataset.indice));
     }
   });
+
+  // Atalho superior: acesso ao caderno completo sem interferir na aula.
+  function inserirAtalho() {
+    const topo = document.querySelector('.topbar-right');
+    if (!topo || document.getElementById('caderno-atalho-topo')) return;
+    const botao = document.createElement('button');
+    botao.id = 'caderno-atalho-topo';
+    botao.className = 'caderno-atalho-topo';
+    botao.type = 'button';
+    botao.title = 'Abrir meu caderno de anotações';
+    botao.setAttribute('aria-label','Abrir caderno de anotações centralizado');
+    botao.innerHTML = '<span class="caderno-icone-3d" aria-hidden="true">' +
+      '<svg viewBox="0 0 32 32" width="24" height="24" fill="none" focusable="false"><path d="M8 5h17a2 2 0 0 1 2 2v19a2 2 0 0 1-2 2H8a3 3 0 0 1-3-3V8a3 3 0 0 1 3-3Z" fill="currentColor" opacity=".16"/><path d="M10 5v23M13.5 11h9M13.5 16h9M13.5 21h6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M8 5h17a2 2 0 0 1 2 2v19a2 2 0 0 1-2 2H8a3 3 0 0 1-3-3V8a3 3 0 0 1 3-3Z" stroke="currentColor" stroke-width="1.6"/></svg>' +
+      '</span><span class="caderno-atalho-texto">Meu caderno</span>';
+    botao.addEventListener('click',()=>{if(typeof navigate==='function')navigate('notes');});
+    const depois = topo.querySelector('.search-trigger');
+    if (depois) depois.after(botao); else topo.prepend(botao);
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded',inserirAtalho,{once:true});
+  else inserirAtalho();
 
   if (window.HIG) window.HIG.viewNotes = exibir;
   window.CadernoUnificado = {exibir,reunir,exportar};
