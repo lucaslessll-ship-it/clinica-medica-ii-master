@@ -549,16 +549,26 @@ window.MASTER_CIR_QUESTIONS=[
   {
     "id": "cirpanc-14",
     "t": "cirpanc",
-    "q": "Mulher de 64 anos está em investigação de icterícia obstrutiva. O CA 19-9 está elevado, mas a imagem ainda não definiu se a estenose é inflamatória ou tumoral. Não há diagnóstico histológico, e a equipe discute como usar o resultado. Qual interpretação é mais adequada?",
+    "q": "Mulher de 64 anos apresenta icterícia progressiva e colúria há três semanas. Bilirrubina total de 8,1 mg/dL, fosfatase alcalina elevada e dilatação das vias biliares na ultrassonografia. CA 19-9 de 420 U/mL, mas a investigação por imagem ainda não diferenciou estenose inflamatória de neoplasia periampular. Está afebril, sem colangite. Na reunião clínica, como esse marcador deve influenciar o próximo passo?",
     "o": [
-      "O resultado confirma adenocarcinoma, permitindo dispensar investigação anatômica.",
-      "O resultado define doença irressecável, permitindo dispensar avaliação vascular.",
-      "A colestase pode elevar o marcador, que deve ser integrado aos demais achados.",
-      "A dosagem é suficiente para rastrear familiares, antes de estratificar o risco."
+      "Considerar malignidade confirmada pelo valor de CA 19-9 e iniciar estadiamento sem esclarecer a estenose.",
+      "Usar o valor de CA 19-9 para definir irressecabilidade, antes de revisar anatomia e vasos.",
+      "Reconhecer possível elevação por colestase, investigar a estenose e reinterpretar o marcador no contexto.",
+      "Presumir etiologia benigna se o CA 19-9 diminuir após desobstrução, apesar de imagem suspeita."
     ],
     "a": 2,
-    "why": "CA 19-9 pode aumentar em obstrução e inflamação benignas e não confirma câncer ou extensão anatômica. Sua interpretação melhora após considerar colestase e evolução, com utilidade prognóstica e de seguimento em contextos apropriados. Pessoas Lewis negativas podem não expressá-lo. Não é exame de rastreamento populacional nem substitui a avaliação individual de famílias de alto risco.",
-    "revision": "cir-20261116"
+    "why": "A obstrução biliar, mesmo benigna, pode elevar CA 19-9; uma dosagem isolada não confirma câncer nem define extensão ou ressecabilidade. A avaliação anatômica da estenose e eventual obtenção de tecido dependem do cenário clínico e dos exames. Uma queda após alívio de colestase não exclui câncer, e a ausência de queda tampouco confirma malignidade. Referência: ESMO (câncer pancreático) e MedlinePlus/NIH (CA 19-9).",
+    "revision": "cir-20261117-a1",
+    "refs": [
+      {
+        "title": "ESMO Clinical Practice Guideline: pancreatic cancer",
+        "url": "https://www.annalsofoncology.org/article/S0923-7534(23)00824-4/fulltext"
+      },
+      {
+        "title": "MedlinePlus (NIH): CA 19-9",
+        "url": "https://medlineplus.gov/lab-tests/ca-19-9-blood-test-pancreatic-cancer/"
+      }
+    ]
   },
   {
     "id": "cirpanc-15",
@@ -1599,16 +1609,22 @@ window.MASTER_CIR_QUESTIONS=[
   {
     "id": "cirremit-14",
     "t": "cirremit",
-    "q": "Homem de 46 anos é retirado de um incêndio em local fechado, com cefaleia e confusão. A glicemia é normal; o oxímetro convencional registra 99%, apesar de relato de exposição intensa à fumaça. Não há outra explicação imediata para a alteração neurológica. Enquanto se avaliam outras lesões e gases tóxicos, qual interpretação e medida inicial são mais adequadas?",
+    "q": "Homem de 46 anos é retirado de incêndio em ambiente fechado após cerca de 20 minutos de exposição. Tem cefaleia intensa, náuseas e confusão, mas está respirando espontaneamente, com SpO₂ de 99% no oxímetro convencional em ar ambiente. Glicemia normal e sem trauma evidente. Enquanto a equipe avalia lesão inalatória e outras intoxicações, qual conduta diagnóstica e terapêutica é mais adequada?",
     "o": [
-      "Aguardar queda da saturação para iniciar oxigênio e coletar gasometria comum.",
-      "Excluir intoxicação por monóxido de carbono e investigar apenas sedativos.",
-      "Usar a pressão arterial de oxigênio isolada para decidir sobre intoxicação.",
-      "Suspeitar de monóxido de carbono, oferecer oxigênio e obter cooximetria."
+      "Iniciar oxigênio e usar uma PaO₂ normal na gasometria como critério de exclusão de intoxicação por CO.",
+      "Iniciar oxigênio e utilizar somente o lactato para confirmar ou afastar exposição ao monóxido de carbono.",
+      "Solicitar a carboxiemoglobina por cooximetria, mas aguardar o resultado para decidir a oxigenoterapia.",
+      "Iniciar oxigênio a 100% e solicitar cooximetria para medir carboxiemoglobina, sem se guiar pela SpO₂."
     ],
     "a": 3,
-    "why": "O oxímetro convencional não distingue adequadamente oxiemoglobina de carboxiemoglobina e pode parecer normal. Oxigênio em alta concentração e cooximetria são apropriados enquanto se avalia gravidade e necessidade de medidas adicionais. PaO2 também pode estar normal e não exclui exposição. Confusão em incêndio pede ainda considerar hipóxia, cianeto e outros diagnósticos, sem atrasar o tratamento inicial.",
-    "revision": "cir-20261116"
+    "why": "A oximetria de pulso convencional não distingue adequadamente carboxiemoglobina de oxiemoglobina, podendo mostrar SpO₂ falsamente normal. A PaO₂ também pode ser normal; não exclui intoxicação por CO. Deve-se administrar oxigênio a 100% de imediato e obter cooximetria sanguínea, avaliando sinais neurológicos, cardíacos e outras toxinas da fumaça. O lactato pode contribuir para investigar hipóxia/cianeto, mas não substitui COHb. Referência: CDC, Clinical Guidance for Carbon Monoxide Poisoning.",
+    "revision": "cir-20261117-a1",
+    "refs": [
+      {
+        "title": "CDC: Clinical Guidance for Carbon Monoxide Poisoning",
+        "url": "https://www.cdc.gov/carbon-monoxide/hcp/clinical-guidance/index.html"
+      }
+    ]
   },
   {
     "id": "cirremit-15",
@@ -1893,16 +1909,26 @@ window.MASTER_CIR_QUESTIONS=[
   {
     "id": "ciresof-04",
     "t": "ciresof",
-    "q": "Homem de 56 anos, com refluxo controlado, tem endoscopia de boa qualidade demonstrando segmento de Barrett de quatro centímetros. Biópsias sistemáticas confirmam metaplasia intestinal sem displasia, e não há nódulos ou lesões visíveis. Os achados foram revisados e não há dúvida de amostragem. Qual planejamento é mais adequado para esse segmento, considerando recomendações usuais de vigilância por extensão?",
+    "q": "Homem de 56 anos com refluxo gastroesofágico controlado usa IBP e realizou endoscopia de boa qualidade. Identificou-se esôfago de Barrett com extensão máxima de 4 cm, sem nódulos ou lesões visíveis. Biópsias sistemáticas confirmaram metaplasia intestinal, sem displasia, com amostragem adequada. Ele pergunta se pode suspender vigilância porque não sente azia. Qual é o plano mais consistente com recomendações por extensão do segmento?",
     "o": [
-      "Ablação endoscópica do segmento e vigilância apenas se houver recidiva.",
-      "IBP e nova endoscopia apenas se surgirem disfagia ou sangramento.",
-      "IBP e vigilância endoscópica em aproximadamente três anos.",
-      "Esofagectomia profilática e acompanhamento da reconstrução."
+      "Manter IBP e programar endoscopia anual por se tratar de Barrett com extensão ≥3 cm.",
+      "Manter IBP e solicitar nova endoscopia somente se houver disfagia ou sangramento.",
+      "Manter IBP e realizar vigilância endoscópica aproximadamente a cada três anos.",
+      "Oferecer ablação endoscópica preventiva do segmento sem displasia e rever após cinco anos."
     ],
     "a": 2,
-    "why": "Barrett não displásico com extensão de pelo menos três centímetros costuma ser acompanhado a cada três anos, após exame inicial adequado e conforme protocolo aplicável. Ablação não é rotina em ausência de displasia ou lesão focal. Esofagectomia seria desproporcional. Ausência de sintomas não elimina o risco que fundamenta vigilância, e o IBP não substitui esse seguimento.",
-    "revision": "cir-20261116"
+    "why": "Em Barrett não displásico de segmento longo (≥3 cm), a ACG recomenda vigilância endoscópica a cada 3 anos, considerando exame inicial de qualidade e expectativa de vida. Não há indicação rotineira de ablação em ausência de displasia, e o controle sintomático com IBP não elimina o risco de progressão. Vigilância anual é intensiva demais para esse cenário sem displasia. Referências: ACG 2022 e AGA 2025.",
+    "revision": "cir-20261117-a1",
+    "refs": [
+      {
+        "title": "ACG 2022: Diagnosis and Management of Barrett's Esophagus",
+        "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10259184/"
+      },
+      {
+        "title": "AGA 2025: Surveillance of Barrett's Esophagus",
+        "url": "https://els-jbs-prod-cdn.jbs.elsevierhealth.com/cms/10.1053/j.gastro.2025.09.012/attachment/874b7e32-5eb4-4762-bdb4-ba13526ae564/mmc2.pdf"
+      }
+    ]
   },
   {
     "id": "ciresof-05",
@@ -2159,16 +2185,22 @@ window.MASTER_CIR_QUESTIONS=[
   {
     "id": "cirvb-05",
     "t": "cirvb",
-    "q": "Homem de 54 anos tem colelitíase sintomática e icterícia persistente. A bilirrubina total é de 5,2 mg/dL, com predomínio direto; o ultrassom mostra colédoco de nove milímetros, mas não visualiza cálculo. Está afebril e estável, sem colecistectomia prévia. O serviço usa a estratificação ASGE para decidir o próximo passo. Qual classificação e conduta se ajustam ao conjunto?",
+    "q": "Homem de 54 anos com cólicas biliares recorrentes apresenta icterícia e colúria persistentes. Bilirrubina total de 5,2 mg/dL (predomínio direto) e colédoco de 9 mm ao ultrassom; há cálculos na vesícula, mas nenhum cálculo ductal foi visualizado. Está estável, sem critérios clínicos de colangite, e nunca foi colecistectomizado. O serviço segue a estratificação ASGE de 2019 para suspeita de coledocolitíase. Qual é a classificação e a próxima abordagem sugerida pelo algoritmo?",
     "o": [
-      "Baixo risco; colecistectomia sem avaliação adicional da via principal.",
-      "Alto risco; planejar CPRE com intenção terapêutica.",
-      "Alto risco; indicar colecistostomia para descompressão do colédoco.",
-      "Risco intermediário; fazer apenas controle laboratorial antes da operação."
+      "Risco intermediário; priorizar colangiorressonância antes de qualquer procedimento endoscópico.",
+      "Alto risco; indicar CPRE com possibilidade de extração do cálculo e drenagem biliar.",
+      "Risco intermediário; realizar ecoendoscopia como avaliação inicial obrigatória do colédoco.",
+      "Alto risco; utilizar uma CPRE apenas diagnóstica antes de planejar tratamento ductal."
     ],
     "a": 1,
-    "why": "Bilirrubina acima de quatro miligramas por decilitro associada à dilatação do colédoco, com vesícula presente, preenche critério de alto risco na estratificação ASGE. A CPRE tem intenção terapêutica, embora a escolha também dependa de recursos e alternativas locais. A combinação não deve ser rebaixada apenas por ausência de cálculo visível. Colecistostomia não substitui drenagem confiável da via principal.",
-    "revision": "cir-20261116"
+    "why": "Bilirrubina total >4 mg/dL associada à dilatação do colédoco (>6 mm com vesícula in situ) preenche critério de alto risco da ASGE 2019, mesmo sem cálculo visualizado. Nesse algoritmo, a CPRE é indicada com finalidade terapêutica. EUS e colangiorressonância são estratégias habituais para risco intermediário; a CPRE diagnóstica isolada expõe a riscos sem objetivo terapêutico. O manejo deve ser adaptado aos recursos e à avaliação clínica. Referência: ASGE, guideline de coledocolitíase (2019).",
+    "revision": "cir-20261117-a1",
+    "refs": [
+      {
+        "title": "ASGE 2019: Choledocholithiasis",
+        "url": "https://www.asge.org/home/resources/publications/guidelines/asge-guideline-on-the-role-of-endoscopy-in-the-evaluation-and-management-of-choledocholithiasis"
+      }
+    ]
   },
   {
     "id": "cirvb-06",
@@ -4525,16 +4557,22 @@ window.MASTER_CIR_QUESTIONS=[
   {
     "id": "cirvasc-28",
     "t": "cirvasc",
-    "q": "Mulher de 71 anos tem úlcera próxima ao maléolo medial, edema e pigmentação ocre. Também apresenta pé frio, pulsos distais reduzidos e relato de dor no antepé à noite. O curativo proposto inclui compressão de alta intensidade. Antes de definir o nível e a segurança da compressão, qual avaliação é mais importante?",
+    "q": "Mulher de 71 anos apresenta úlcera perimaleolar medial, edema e hiperpigmentação ocre, sugerindo doença venosa crônica. Entretanto, refere dor noturna no antepé, tem extremidade fria e pulsos pediosos pouco palpáveis. A enfermagem propôs bandagem de alta compressão, mas ainda não há índice tornozelo-braquial (ITB) ou pressões distais. O que deve orientar a prescrição segura da compressão?",
     "o": [
-      "Quantificar perfusão arterial e considerar componente misto da úlcera.",
-      "Aguardar cicatrização para verificar a presença de doença arterial.",
-      "Confirmar refluxo venoso e dispensar investigação arterial adicional.",
-      "Medir apenas o diâmetro da úlcera e a intensidade do edema."
+      "Medir ITB e, se necessário, pressão do artelho, ajustando a compressão segundo perfusão arterial.",
+      "Iniciar compressão alta pela localização venosa da úlcera e reavaliar pulsos na próxima consulta.",
+      "Prescrever compressão de 40 mmHg quando ITB for inferior a 0,6, em virtude da úlcera mista.",
+      "Suspender qualquer possibilidade de compressão se ITB estiver entre 0,6 e 0,8, sem individualizar."
     ],
     "a": 0,
-    "why": "Sinais venosos não excluem isquemia concomitante. Compressão deve ser ajustada ou evitada conforme a gravidade arterial, com avaliação objetiva por ITB confiável, pressões digitais ou métodos apropriados. Edema e localização não bastam para escolher alta compressão. A investigação venosa tem valor, mas não substitui a avaliação da perfusão em uma lesão possivelmente mista.",
-    "revision": "cir-20261116"
+    "why": "Úlceras venosas podem coexistir com doença arterial. A ESVS orienta avaliação objetiva da perfusão antes da compressão, especialmente diante de dor de repouso e pulsos reduzidos. Compressão sustentada não é recomendada com ITB <0,6, pressão de tornozelo <60 mmHg ou de artelho <30 mmHg. Em doença mista com perfusão adequada, compressão modificada (<40 mmHg) pode ser considerada sob supervisão. Referência: ESVS 2022, recomendações 72 e 74.",
+    "revision": "cir-20261117-a1",
+    "refs": [
+      {
+        "title": "ESVS 2022: Chronic Venous Disease of Lower Limbs",
+        "url": "https://www.cmvc.be/sites/www.cmvc.be/files/uploads/esvs%20guidelines%202022.pdf"
+      }
+    ]
   },
   {
     "id": "cirvasc-29",
@@ -4875,16 +4913,26 @@ window.MASTER_CIR_QUESTIONS=[
   {
     "id": "cirestom-11",
     "t": "cirestom",
-    "q": "Homem de 60 anos apresenta úlcera com sangramento ativo na endoscopia. A injeção local de adrenalina interrompe o fluxo e melhora a visualização, mas o vaso responsável permanece identificável. O aparelho dispõe de clipes e método térmico, e o paciente está estabilizado. Qual próxima medida oferece controle mais duradouro nesse cenário?",
+    "q": "Homem de 60 anos foi submetido a endoscopia por hematêmese com instabilidade inicial, revertida após ressuscitação. Encontrou-se úlcera duodenal com sangramento ativo. A injeção de adrenalina obteve controle transitório e, após lavagem, permanece vaso visível no leito (Forrest IIa). Há clipes e sonda térmica disponíveis, sem dificuldade de acesso à lesão. Qual medida oferece melhor hemostasia definitiva?",
     "o": [
-      "Repetir apenas injeções até desaparecer toda pigmentação do leito.",
-      "Associar hemostasia mecânica ou térmica apropriada ao vaso identificado.",
-      "Substituir a hemostasia pela dose oral habitual de IBP.",
-      "Encerrar o procedimento e usar adrenalina como método definitivo isolado."
+      "Repetir doses de adrenalina e acompanhar o vaso visível durante a internação sob IBP.",
+      "Aplicar terapia mecânica ou térmica no vaso identificado e manter o tratamento com IBP.",
+      "Aplicar pó hemostático como única medida para o vaso acessível, apesar do controle inicial.",
+      "Planejar embolização arterial preventiva antes de realizar outra intervenção endoscópica."
     ],
     "a": 1,
-    "why": "Adrenalina pode produzir tamponamento e vasoconstrição transitórios, facilitando o procedimento, mas não deve ser o único tratamento endoscópico de uma lesão que requer hemostasia definitiva. Clipes ou terapia térmica apropriada reduzem risco de recorrência em comparação com injeção isolada. O IBP é complementar, não substitui o controle do vaso. A aparência do leito deve ser interpretada pelo estigma, não pela perda de pigmentação.",
-    "revision": "cir-20261116"
+    "why": "A injeção de adrenalina produz vasoconstrição e tamponamento transitórios, mas não deve ser a única modalidade para úlcera com estigma de alto risco. Em vaso visível Forrest IIa, clipe ou termocoagulação apropriada é indicado, junto do manejo com IBP. Pós-alta/recidiva podem exigir outra estratégia, mas não se substitui hemostasia endoscópica efetiva por observação ou embolização profilática nesse caso. Referências: ESGE 2021 e ACG 2021 (hemorragia digestiva alta não varicosa).",
+    "revision": "cir-20261117-a1",
+    "refs": [
+      {
+        "title": "ESGE 2021: Nonvariceal Upper GI Hemorrhage",
+        "url": "https://www.esge.com/endoscopic-diagnosis-and-management-of-nonvariceal-upper-gastrointestinal-hemorrhage-esge-update-2021"
+      },
+      {
+        "title": "ACG 2021: Upper GI and Ulcer Bleeding",
+        "url": "https://pubmed.ncbi.nlm.nih.gov/33929377/"
+      }
+    ]
   },
   {
     "id": "cirestom-12",
@@ -5253,16 +5301,22 @@ window.MASTER_CIR_QUESTIONS=[
   {
     "id": "cirvb-17",
     "t": "cirvb",
-    "q": "Mulher de 56 anos teve cólica biliar com elevação transitória de enzimas hepáticas. Não apresenta febre, icterícia persistente ou pancreatite. O ultrassom confirma cálculos vesiculares, sem visualizar cálculo no colédoco; a probabilidade clínica de litíase ductal foi considerada intermediária. O serviço dispõe de ressonância e ecoendoscopia. Qual estratégia evita melhor uma CPRE sem benefício terapêutico?",
+    "q": "Mulher de 56 anos teve dor em hipocôndrio direito e icterícia discreta, ambas em regressão. O ultrassom mostra colelitíase e colédoco de 7 mm, sem cálculo ductal identificado; bilirrubina total de 1,6 mg/dL, ALT de 165 U/L. Está afebril, sem hipotensão ou sinais de colangite, e não houve pancreatite. Existe suspeita intermediária de coledocolitíase pela avaliação clínica e laboratorial. Qual investigação tende a evitar uma CPRE desnecessária?",
     "o": [
-      "Confirmar ou excluir cálculo com colangiorressonância ou ecoendoscopia.",
-      "Programar exploração aberta do colédoco com base apenas nas enzimas.",
-      "Dispensar investigação porque a dor já desapareceu e não há febre.",
-      "Solicitar CPRE diagnóstica antes de qualquer outra definição terapêutica."
+      "Empregar colangiorressonância ou ecoendoscopia antes de indicar eventual CPRE terapêutica.",
+      "Indicar CPRE para diagnóstico imediato, mesmo sem critério de alto risco ou cálculo demonstrado.",
+      "Programar colecistectomia sem qualquer avaliação do colédoco, uma vez que a dor está regredindo.",
+      "Preferir tomografia abdominal convencional para excluir pequenos cálculos ductais antes da cirurgia."
     ],
     "a": 0,
-    "why": "No risco intermediário, métodos menos invasivos selecionam pacientes para CPRE terapêutica. Resolução da cólica ou ausência de cálculo no ultrassom não exclui litíase ductal. CPRE diagnóstica tem risco de pancreatite e outras complicações. Exploração cirúrgica pode integrar estratégias apropriadas, mas não precisa ser indicada automaticamente sem confirmação ou avaliação intraoperatória planejada.",
-    "revision": "cir-20261116"
+    "why": "Com fatores de risco intermediário, ASGE sugere ecoendoscopia (EUS), colangiorressonância (MRCP), colangiografia intraoperatória ou ultrassonografia intraoperatória, conforme cenário e disponibilidade. Não se indica CPRE puramente diagnóstica de rotina; ela envolve pancreatite e outras complicações. Regressão de sintomas não descarta cálculo residual e TC convencional é menos apropriada para pequenos cálculos do colédoco. Referência: ASGE 2019.",
+    "revision": "cir-20261117-a1",
+    "refs": [
+      {
+        "title": "ASGE 2019: Choledocholithiasis",
+        "url": "https://www.asge.org/home/resources/publications/guidelines/asge-guideline-on-the-role-of-endoscopy-in-the-evaluation-and-management-of-choledocholithiasis"
+      }
+    ]
   },
   {
     "id": "cirvb-18",
