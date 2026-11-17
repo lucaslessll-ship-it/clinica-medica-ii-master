@@ -13,7 +13,7 @@
   function inline(texto) {
     return esc(texto)
       .replace(/\*\*([^*\n]+)\*\*/g,'<strong>$1</strong>')
-      .replace(/(?<!\*)\*([^*\n]+)\*(?!\*)/g,'<em>$1</em>')
+      .replace(/(^|[^*])\*([^*\n]+)\*(?!\*)/g,'$1<em>$2</em>')
       .replace(/\+\+([^+\n]+)\+\+/g,'<u>$1</u>')
       .replace(/~~([^~\n]+)~~/g,'<s>$1</s>');
   }
@@ -34,8 +34,8 @@
     return html;
   }
 
-  function aplicar(textarea, tipo) {
-    const inicio=textarea.selectionStart, fim=textarea.selectionEnd;
+  function aplicar(textarea, tipo, anterior) {
+    const inicio=anterior?.inicio ?? textarea.selectionStart, fim=anterior?.fim ?? textarea.selectionEnd;
     const escolhido=textarea.value.slice(inicio,fim);
     if(tipo==='preview')return;
     let novo, posicao;
@@ -87,7 +87,14 @@
     const mostrar=()=>{
       if(!previa.hidden)previa.innerHTML=renderizar(textarea.value);
     };
+    let selecaoAnterior=null;
+    const guardar=evento=>{
+      if(!evento.target.closest('button'))return;
+      selecaoAnterior={inicio:textarea.selectionStart,fim:textarea.selectionEnd};
+    };
+    barra.addEventListener('touchstart',guardar,{passive:true});
     barra.addEventListener('mousedown',event=>{
+      guardar(event);
       if(event.target.closest('button'))event.preventDefault();
     });
     barra.addEventListener('click',event=>{
@@ -98,7 +105,8 @@
         b.setAttribute('aria-pressed',String(!previa.hidden));
         mostrar();
       } else {
-        aplicar(textarea,b.dataset.formatar);
+        aplicar(textarea,b.dataset.formatar,selecaoAnterior);
+        selecaoAnterior=null;
         previa.hidden=false;
         barra.querySelector('[data-formatar="preview"]').setAttribute('aria-pressed','true');
         mostrar();
