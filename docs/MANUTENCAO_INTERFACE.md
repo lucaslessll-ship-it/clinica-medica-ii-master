@@ -20,3 +20,11 @@ A checagem recorrente do Clínica Master foi configurada para execução horári
 6. Registrar correções e limitações. Se não houver problema ou alteração, evitar notificações sem novidade.
 
 Os workflows de qualidade também verificam alterações enviadas ao GitHub. Testes automatizados não substituem o relato de problemas em um iPad real.
+
+## Correções verificadas neste ciclo
+
+- Índice da aula com altura estável e atualização sem recriar nós a cada rolagem; navegação considera a altura do índice e a ampliação de texto.
+- Barra de seleção e caixa de comentário limitadas à área visível; cliques nas marcas e ferramentas não reiniciam indevidamente a seleção.
+- Dicas de uso no celular afastadas dos controles inferiores, preservando o acesso ao assistente.
+
+Os testes específicos cobrem neutropenia febril em 768, 820 e 1024 pixels com texto normal/ampliado, marcações em P1/P2/Cirurgia, navegação e acessibilidade do build. WebKit não pôde ser instalado por bloqueio HTTP 403; a validação foi feita em Chromium com emulação de tablet, sem validação no Safari de iPad físico.

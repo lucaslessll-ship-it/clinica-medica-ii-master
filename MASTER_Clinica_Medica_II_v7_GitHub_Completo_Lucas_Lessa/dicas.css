@@ -21,3 +21,6 @@ body[data-theme="dark"] .focus-trigger.dica-foco{background:#214d45;color:#c8f4e
 body.reduce-motion .dica,body.reduce-motion .dica-alvo{animation:none}
 @media(prefers-reduced-motion:reduce){.dica,.dica-alvo{animation:none}}
 @media print{.dica{display:none!important}}
+
+/* Reserva os controles inferiores (assistente, início da aula e navegação). */
+@media(max-width:800px){.dica{top:calc(84px + env(safe-area-inset-top));bottom:auto;max-height:calc(100vh - 280px);max-height:calc(100dvh - 280px);overflow:auto}}

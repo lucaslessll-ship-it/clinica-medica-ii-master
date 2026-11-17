@@ -293,8 +293,14 @@
   /* ---------- eventos ---------- */
 
   function iniciar() {
-    document.addEventListener('mouseup', () => setTimeout(aoSoltar, 0));
-    document.addEventListener('touchend', () => setTimeout(aoSoltar, 10), { passive: true });
+    document.addEventListener('mouseup', evento => {
+      if (evento.target.closest?.('.nota-marca,.nota-bolha,.nota-barra,.nota-caixa')) return;
+      setTimeout(aoSoltar, 0);
+    });
+    document.addEventListener('touchend', evento => {
+      if (evento.target.closest?.('.nota-marca,.nota-bolha,.nota-barra,.nota-caixa')) return;
+      setTimeout(aoSoltar, 10);
+    }, { passive: true });
     document.addEventListener('keyup', evento => { if (evento.shiftKey || evento.key === 'Shift') aoSoltar(); });
 
     document.addEventListener('click', evento => {
