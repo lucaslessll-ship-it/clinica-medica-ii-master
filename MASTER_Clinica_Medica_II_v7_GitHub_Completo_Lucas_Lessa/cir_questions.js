@@ -1649,16 +1649,26 @@ window.MASTER_CIR_QUESTIONS=[
   {
     "id": "cirremit-16",
     "t": "cirremit",
-    "q": "Eletricista de 32 anos sofreu contato de alta tensão, com pequenas lesões de entrada e saída na mão e no pé. Apresenta dor muscular e urina escura; a creatinoquinase está muito elevada. A área cutânea queimada é pequena, mas a equipe suspeita de lesão muscular profunda. Qual plano inicial responde melhor a esse risco?",
+    "q": "Eletricista de 32 anos é levado após contato com rede de alta tensão. Apresenta pequenas queimaduras de entrada na mão e de saída no pé, dor muscular difusa, urina castanha e creatinoquinase muito elevada. O ECG inicial mostra ritmo sinusal, mas há risco de lesão profunda e distúrbios metabólicos. Qual é o conjunto mais apropriado de prioridades na primeira abordagem hospitalar?",
     "o": [
-      "Calcular a reposição apenas pela área de pele e limitar a avaliação aos curativos.",
-      "Usar diurético para obter diurese elevada sem rever perfusão ou função renal.",
-      "Monitorar ritmo, eletrólitos e compartimentos, titulando fluidos para a pigmentúria.",
-      "Restringir fluidos para evitar diluição da urina e seguir apenas a creatinoquinase."
+      "Calcular líquidos pela área queimada e usar a diurese como meta secundária.",
+      "Iniciar alcalinização e diurético antes de avaliar volemia e eletrólitos.",
+      "Monitorizar ritmo, potássio, função renal e compartimentos; titular cristaloide à resposta.",
+      "Acompanhar creatinoquinase e urina seriadas, adiando expansão até nova dosagem."
     ],
     "a": 2,
-    "why": "Lesão elétrica pode causar rabdomiólise, arritmias e síndrome compartimental desproporcionais à pele. Reposição é individualizada e costuma buscar débito maior, frequentemente cerca de 1–1,5 mL/kg/h na pigmentúria, com monitorização de resposta, congestão e eletrólitos. Urina clara ou queda de enzima não são metas isoladas suficientes. Fluidos ou diuréticos não substituem diagnóstico e descompressão de compartimentos quando indicados.",
-    "revision": "cir-20261116"
+    "why": "Queimaduras elétricas de alta tensão podem produzir dano muscular, rabdomiólise, hipercalemia, arritmias e síndrome compartimental muito além da área cutânea visível. Requerem avaliação de trauma, monitorização cardíaca quando indicada, eletrólitos e função renal seriados, exame neurovascular de membros e fluidos titulados por perfusão e débito urinário, evitando sobrecarga. A CK auxilia no acompanhamento, mas não substitui avaliação clínica; diuréticos ou bicarbonato de rotina não devem preceder restauração volêmica e não têm benefício estabelecido para prevenir lesão renal.",
+    "revision": "cir-20261117-a2",
+    "refs": [
+      {
+        "title": "AAST — consenso de rabdomiólise em trauma (2022)",
+        "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8804685/"
+      },
+      {
+        "title": "NCBI Bookshelf — avaliação de lesões elétricas",
+        "url": "https://www.ncbi.nlm.nih.gov/sites/books/NBK448087/"
+      }
+    ]
   },
   {
     "id": "cirvasc-01",
@@ -1775,16 +1785,26 @@ window.MASTER_CIR_QUESTIONS=[
   {
     "id": "cirvasc-09",
     "t": "cirvasc",
-    "q": "Homem de 68 anos tem aneurisma infrarrenal fusiforme de aorta abdominal, assintomático, com diâmetro máximo confirmado de 5,7 centímetros. É independente, tem expectativa de vida razoável e avaliação cardiopulmonar favorável a intervenção. A equipe dispõe de reparo aberto e endovascular, mas ainda precisa caracterizar o colo e os acessos. Qual planejamento é mais apropriado?",
+    "q": "Homem de 68 anos, sem sintomas abdominais ou dorsais, tem aneurisma fusiforme infrarrenal da aorta de 5,7 cm medido em exame recente e confirmado em avaliação vascular. É independente, apresenta boa reserva cardiopulmonar e expectativa de vida compatível com tratamento. O serviço dispõe de reparo aberto e endovascular, mas a anatomia do colo proximal e dos acessos ainda não foi definida. Qual é a próxima estratégia de planejamento?",
     "o": [
-      "Avaliar reparo eletivo, escolhendo a técnica conforme anatomia e risco.",
-      "Realizar EVAR sem imagem adicional, usando apenas o diâmetro máximo.",
-      "Manter ultrassonografia anual e intervir apenas se aparecer dor.",
-      "Prescrever betabloqueador para reduzir o aneurisma antes de nova imagem."
+      "Discutir reparo eletivo e obter imagem anatômica apropriada para escolher a técnica.",
+      "Programar EVAR com base no diâmetro, reservando tomografia para o pós-operatório.",
+      "Manter ultrassom de vigilância semestral enquanto permanecer assintomático.",
+      "Priorizar medicação anti-hipertensiva e reavaliar a indicação após mais seis meses."
     ],
     "a": 0,
-    "why": "Em homem apto com aneurisma fusiforme assintomático de pelo menos 5,5 centímetros, costuma-se discutir reparo eletivo. Anatomia, risco, expectativa de vida e preferências orientam técnica e oportunidade. O tamanho não autoriza escolher EVAR sem planejamento. Betabloqueador não faz o aneurisma regredir de modo a substituir a avaliação. Sintomas ou crescimento rápido podem indicar intervenção em diâmetros menores.",
-    "revision": "cir-20261116"
+    "why": "Aneurisma fusiforme assintomático com 5,7 cm em homem apto ultrapassa o limiar usual de consideração de reparo eletivo (5,5 cm). Antes de escolher entre EVAR e cirurgia aberta, é essencial caracterizar por angiotomografia quando apropriada o colo, a tortuosidade, os ramos e os acessos, integrando risco perioperatório, expectativa de vida e preferências. O diâmetro isolado não garante viabilidade endovascular; farmacoterapia de fatores de risco não elimina a indicação de avaliar intervenção.",
+    "revision": "cir-20261117-a2",
+    "refs": [
+      {
+        "title": "ESC — diretriz 2024 para doenças aórticas e arteriais periféricas",
+        "url": "https://academic.oup.com/eurheartj/article/45/36/3538/7738955"
+      },
+      {
+        "title": "ESVS — aneurismas aortoilíacos, diretriz 2024",
+        "url": "https://arts.units.it/retrieve/cdca834b-5bae-42e8-a10c-6411f869d2b4/PIIS1078588423008894.pdf"
+      }
+    ]
   },
   {
     "id": "cirvasc-10",
@@ -2669,16 +2689,26 @@ window.MASTER_CIR_QUESTIONS=[
   {
     "id": "ciruro-02",
     "t": "ciruro",
-    "q": "Homem de 62 anos, tabagista, apresenta hematúria macroscópica indolor em dois episódios. A urocultura é negativa; não há proteinúria importante ou dismorfismo eritrocitário. A função renal permite contraste, e não existe contraindicação conhecida à tomografia. Ele está estável, sem retenção por coágulos. Qual estratégia avalia de maneira mais adequada as principais fontes urológicas de sangramento neste perfil?",
+    "q": "Homem de 62 anos, fumante por quatro décadas, relata episódios de hematúria macroscópica indolor. Urocultura negativa, sedimento sem cilindros hemáticos e função renal que permite contraste iodado. Está estável, sem retenção por coágulos, e deseja investigação capaz de avaliar tanto tumor vesical quanto lesões do trato urinário superior. Qual proposta diagnóstica é mais completa para o risco descrito?",
     "o": [
-      "Ultrassom renal isolado e controle de urina em seis meses.",
-      "Cistoscopia e imagem do trato superior por urotomografia.",
-      "Biópsia renal e seguimento clínico antes de estudar a bexiga.",
-      "Citologia urinária isolada e biópsia apenas se vier positiva."
+      "Ultrassom de rins e bexiga associado a citologia, com endoscopia se persistir.",
+      "Cistoscopia associada à urotomografia para avaliar bexiga e sistema excretor.",
+      "Urotomografia e citologia, com cistoscopia condicionada a achados suspeitos.",
+      "Cistoscopia e ultrassom renal, repetindo exame de urina antes de considerar TC."
     ],
     "a": 1,
-    "why": "Hematúria visível em tabagista merece investigação de neoplasia urotelial e outras causas. Cistoscopia avalia a bexiga e urotomografia o trato superior quando apropriada à função renal e ao risco. Ultrassom ou citologia isolados não substituem toda a avaliação. Ausência de sinais glomerulares torna biópsia renal uma prioridade menos coerente. Estabilidade permite investigação organizada, mas não justifica ignorar o sangramento.",
-    "revision": "cir-20261116"
+    "why": "Hematúria visível indolor em tabagista idoso tem risco relevante de câncer urotelial. A cistoscopia examina diretamente a bexiga e a urotomografia, quando apropriada, avalia parênquima e vias urinárias superiores; uma modalidade não substitui integralmente a outra. Citologia pode ser complementar em indicações específicas, mas não afasta a necessidade de cistoscopia. A escolha da imagem deve considerar função renal, alergias e disponibilidade, e investigação deve ser ajustada ao contexto clínico sem depender da persistência do sangramento.",
+    "revision": "cir-20261117-a2",
+    "refs": [
+      {
+        "title": "ACR — critérios de imagem para hematúria macroscópica",
+        "url": "https://acsearch.acr.org/docs/69490/Narrative"
+      },
+      {
+        "title": "Canadian Association of Radiologists — encaminhamento por hematúria (2024)",
+        "url": "https://journals.sagepub.com/doi/10.1177/08465371241261317"
+      }
+    ]
   },
   {
     "id": "ciruro-03",
@@ -3711,16 +3741,26 @@ window.MASTER_CIR_QUESTIONS=[
   {
     "id": "cirtabd-29",
     "t": "cirtabd",
-    "q": "Mulher de 29 anos está em cirurgia por múltiplas lesões abdominais. A fonte arterial principal foi controlada, mas há sangramento difuso, temperatura de 34 °C e acidose crescente. Resta uma reconstrução intestinal complexa, e o edema aumenta a dificuldade de fechar a parede sem tensão. Qual planejamento melhor responde à trajetória fisiológica, sem perder o controle das lesões já identificadas?",
+    "q": "Mulher de 29 anos é operada por múltiplas lesões abdominais após colisão. A hemorragia arterial principal foi controlada, porém persistem sangramento difuso, hipotermia de 34 °C, acidose e sinais de coagulopatia durante ressuscitação maciça. Existe lesão intestinal que demanda controle de contaminação, e o edema torna perigoso fechar a fáscia sob tensão. Qual estratégia cirúrgica melhor prioriza a fisiologia da paciente?",
     "o": [
-      "Completar toda a reconstrução agora, usando pressão arterial isolada como sinal de recuperação.",
-      "Conter contaminação, realizar fechamento temporário e planejar reconstrução após ressuscitação.",
-      "Fechar a parede sob tensão para reduzir a perda de calor e dispensar reabordagem.",
-      "Interromper o procedimento deixando lesões abertas para corrigir primeiro a coagulação na UTI."
+      "Completar a reconstrução definitiva após mais transfusão e aquecimento no centro cirúrgico.",
+      "Controlar sangramento e contaminação, realizar fechamento temporário e reoperar após ressuscitação.",
+      "Realizar as anastomoses intestinais e fechar a fáscia com reforço protético imediato.",
+      "Encerrar com tamponamento e reconstrução intestinal definitiva, evitando reabordagem precoce."
     ],
     "a": 1,
-    "why": "O objetivo do controle de danos é terminar medidas rápidas de hemostasia e contenção, proteger temporariamente e corrigir a fisiologia antes da reconstrução definitiva. A pressão isolada pode mascarar deterioração metabólica e coagulopatia. Fechamento sob tensão pode contribuir para hipertensão abdominal. Transferir sem controle viável de sangramento ou contaminação não é o mesmo que abreviar com estratégia organizada e reoperação planejada.",
-    "revision": "cir-20261116"
+    "why": "Deterioração fisiológica com hipotermia, acidose, coagulopatia, edema visceral e reconstrução demorada favorece cirurgia de controle de danos: hemostasia e controle rápido da contaminação, fechamento abdominal temporário e ressuscitação intensiva com correção da coagulopatia e temperatura antes da reconstrução e fechamento definitivos. Não se recomenda terminar todas as anastomoses durante grave desarranjo metabólico nem fechar a fáscia sob tensão, pelo risco de síndrome compartimental abdominal. A reabordagem deve ser planejada conforme recuperação e achados.",
+    "revision": "cir-20261117-a2",
+    "refs": [
+      {
+        "title": "Diretriz europeia sobre sangramento e coagulopatia após trauma — 6ª edição (2023)",
+        "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC9977110/"
+      },
+      {
+        "title": "WSES — cirurgia de controle de danos abdominal (2013)",
+        "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3878509/"
+      }
+    ]
   },
   {
     "id": "cirtabd-30",
@@ -4605,16 +4645,26 @@ window.MASTER_CIR_QUESTIONS=[
   {
     "id": "cirvasc-29",
     "t": "cirvasc",
-    "q": "Homem de 63 anos tem câncer ativo, cirurgia recente e edema unilateral importante. A probabilidade clínica de TVP é alta. O primeiro ultrassom avaliou somente veias proximais e não mostrou trombo, mas não esclareceu a origem do edema nem avaliou adequadamente o território ilíaco. Qual interpretação deve orientar o seguimento do algoritmo diagnóstico?",
+    "q": "Homem de 63 anos com câncer ativo e cirurgia pélvica recente apresenta edema intenso de uma perna inteira, incluindo raiz da coxa. A probabilidade pré-teste para TVP é alta. A ultrassonografia inicial de compressão avaliou somente segmentos femoropoplíteos e foi negativa, sem visualizar território ilíaco ou esclarecer a causa do edema. O paciente permanece sintomático e estável. Qual encaminhamento diagnóstico é mais consistente com esse resultado e a suspeita persistente?",
     "o": [
-      "Usar D-dímero isolado para encerrar a investigação se o resultado for normal.",
-      "Rever cobertura do exame e indicar avaliação seriada ou complementar conforme a suspeita.",
-      "Repetir apenas o exame físico após um mês para avaliar a evolução do edema.",
-      "Excluir TVP definitivamente e tratar o edema como linfedema pós-operatório."
+      "Considerar a compressão proximal negativa suficiente e investigar linfedema como primeira hipótese.",
+      "Reavaliar cobertura vascular e indicar ultrassom seriado ou imagem pélvica complementar.",
+      "Usar D-dímero de alta sensibilidade para afastar TVP e encerrar investigação se negativo.",
+      "Iniciar anticoagulação contínua sem avaliação adicional de imagem e reexaminar em um mês."
     ],
     "a": 1,
-    "why": "Exame inicial negativo não resolve toda apresentação de alta probabilidade, especialmente se o território suspeito não foi coberto. Ultrassom seriado ou método complementar depende do protocolo e da localização possível, incluindo ilíacas. D-dímero não deve substituir indiscriminadamente imagem na alta probabilidade. Anticoagulação enquanto se investiga depende de risco hemorrágico, acesso aos exames e avaliação clínica.",
-    "revision": "cir-20261116"
+    "why": "Na alta probabilidade de TVP, ultrassom proximal negativo único não exclui trombose distal em evolução nem evento não visualizado em veias ilíacas. Em geral, é necessária estratégia adicional: ultrassonografia completa ou repetida após 5–7 dias e, quando edema de toda a perna sugere território pélvico/ilíaco não examinado, imagem complementar dirigida. D-dímero não basta para excluir TVP quando a probabilidade é alta. A necessidade de anticoagulação provisória enquanto se obtém imagem depende de risco de sangramento, tempo até diagnóstico e protocolo local.",
+    "revision": "cir-20261117-a2",
+    "refs": [
+      {
+        "title": "ESVS — diretrizes de trombose venosa (2021)",
+        "url": "https://www.sciencedirect.com/science/article/pii/S1078588420308686"
+      },
+      {
+        "title": "ACCP/CHEST — diagnóstico de TVP em alta probabilidade",
+        "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3278048/"
+      }
+    ]
   },
   {
     "id": "cirvasc-30",
