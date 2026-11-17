@@ -154,6 +154,19 @@
     const HIGapi = api();
     if (!HIGapi) return;
     const origem=contextoPagina();
+    const atalhoAntigo=document.getElementById('nota-atalho-pagina');
+    if(origem && !atalhoAntigo) {
+      const acao=document.createElement('button');
+      acao.type='button';acao.id='nota-atalho-pagina';
+      acao.className='nota-atalho-pagina';
+      acao.innerHTML='<span aria-hidden="true">▤</span> Anotações desta página';
+      acao.title='Abrir notas, comentários e marcações deste conteúdo';
+      acao.addEventListener('click',abrirTodas);
+      const nav=document.querySelector('#main-content .study-breadcrumb');
+      if(nav)nav.after(acao);
+      else document.getElementById('main-content')?.prepend(acao);
+    }
+    if(!origem && atalhoAntigo)atalhoAntigo.remove();
     const aula=origem?.chave || '';
     const raiz = document.getElementById('main-content');
     if (!raiz) return;
