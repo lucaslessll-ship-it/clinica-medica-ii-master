@@ -153,7 +153,8 @@ function openTopic(id,i=0){sel=id;chap=i;state.lastTopic=id;state.lastChapter=i;
 function setChapter(i){chap=i;state.lastChapter=i;save();render();window.scrollTo({top:160,behavior:'smooth'});}
 function nextChapter(){const t=topic(sel);if(chap<t.chapters.length-1)chap++;else{const k=topics.findIndex(x=>x.id===sel);sel=topics[(k+1)%topics.length].id;chap=0;}state.lastTopic=sel;state.lastChapter=chap;save();render();window.scrollTo({top:160,behavior:'smooth'});}
 function toggleDone(){const k=sel+'_'+chap;state.completed[k]=!state.completed[k];state.doneAt=state.doneAt||{};if(state.completed[k]){state.doneAt[k]=dayKey();const day=planActivity();day.lessons=day.lessons||[];if(!day.lessons.includes(k))day.lessons.push(k);}else{delete state.doneAt[k];for(const day of Object.values(state.plan?.days||{}))day.lessons=(day.lessons||[]).filter(key=>key!==k);}save();render();}
-function saveNote(){state.notes[sel+'_'+chap]=document.getElementById('cir-note')?.value||'';save();toast('Anotação salva.');}
+function saveExternalNote(key,value){state.notes[key]=String(value);save();}
+ function saveNote(){state.notes[sel+'_'+chap]=document.getElementById('cir-note')?.value||'';save();toast('Anotação salva.');}
 function resume(){openTopic(topics.some(t=>t.id===state.lastTopic)?state.lastTopic:'ciraa',state.lastChapter||0);}
 function view(r){switch(r){case 'cirtopic':return topicView();case 'cirpractice':return practiceView();case 'cirexam':return examView();case 'cirp1':return hub('P1');case 'cirp2':return hub('P2');default:return hub();}}
 function afterRender(r){if(r==='cirexam'&&exam&&!exam.done)clock();else clearInterval(tick);}
@@ -163,6 +164,6 @@ window.addEventListener('storage',e=>{if(e.key===KEY)state=load();});
 function dueCount(){return pool().filter(q=>isDue(q.id)).length;}
 function completed(){return state.completed;}
 if(window.QNav)QNav.registrarBanco('cir',{iniciar:ids=>startPractice({t:'all',src:'all',mode:'all',ids}),tema:tid=>startPractice({t:tid,src:'all',mode:'all'})});
-return {jump,plan,homeCard,view,afterRender,go,openTopic,chapter:setChapter,nextChapter,toggleDone,saveNote,resume,startPractice,applyFilters,answer,nextQ,startExam,exAnswer,exGo,finishExam,searchItems,reload,loadBank,dueCount,completed,topics,own,pool,KEY,studyPlan,planPanel,openPlannedLesson,startPlannedQuestions};
+return {jump,plan,homeCard,view,afterRender,go,openTopic,chapter:setChapter,nextChapter,toggleDone,saveNote,saveExternalNote,resume,startPractice,applyFilters,answer,nextQ,startExam,exAnswer,exGo,finishExam,searchItems,reload,loadBank,dueCount,completed,topics,own,pool,KEY,studyPlan,planPanel,openPlannedLesson,startPlannedQuestions};
 })();
 window.CIR=CIR;
