@@ -276,10 +276,44 @@
     if (status) status.textContent = 'Salvo';
   }
 
+  function notaGeralDaAula() {
+    const rota=rotaAtual(), chave=aulaAtual();
+    const materia=rota==='p1topic'?'p1':rota==='cirtopic'?'cir':'p2';
+    const storage=materia==='p1'?'master_p1_lucas_v4':materia==='cir'?'master_cir_lucas_v1':'master_p2_hig_v2';
+    let dados={};
+    try{dados=JSON.parse(localStorage.getItem(storage)||'{}')||{}}catch{}
+    return {materia,chave,valor:String(dados.notes?.[chave]||'')};
+  }
+
+  function salvarNotaGeral() {
+    const campo=caixa?.querySelector('.nota-painel-geral-editor');
+    if(!campo || campo.dataset.sujo!=='sim')return;
+    const {materia,chave}=notaGeralDaAula();
+    if(!chave||chave!==caixa.dataset.aula)return;
+    if(materia==='p2')window.HIG?.saveNote?.(chave,campo.value);
+    else (materia==='p1'?window.P1:window.CIR)?.saveExternalNote?.(chave,campo.value);
+    campo.dataset.sujo='nao';
+    const estado=caixa.querySelector('.nota-painel-geral-status');
+    if(estado)estado.textContent='Salvo no caderno da aula';
+  }
+
+  function montarNotaGeral() {
+    const info=notaGeralDaAula();
+    const secao=document.createElement('section');
+    secao.className='nota-painel-geral';
+    secao.innerHTML='<div class="nota-painel-linha"><strong>Anotação geral da aula</strong><small class="nota-painel-geral-status" aria-live="polite"></small></div>'+
+      '<label for="nota-geral-editor">Seu resumo, dúvidas e associações</label>'+
+      '<textarea id="nota-geral-editor" class="nota-painel-geral-editor" rows="3" placeholder="Anote o que deseja revisar nesta aula"></textarea>'+
+      '<button type="button" class="nota-painel-salvar-geral">Salvar nota da aula</button>';
+    secao.querySelector('textarea').value=info.valor;
+    return secao;
+  }
+
   function salvarTodos() {
     clearTimeout(rascunhoTimer);
     if (!caixa || caixa.hidden) return;
     caixa.querySelectorAll('.nota-painel-entrada').forEach(salvarEntrada);
+    salvarNotaGeral();
   }
 
   function montarEntrada(marca, indice, total) {
@@ -328,6 +362,7 @@
     const lugar = caixa.querySelector('.nota-painel-conteudo');
     lugar.replaceChildren();
     itens.forEach((item,i)=>lugar.append(montarEntrada(item,i,itens.length)));
+    if(modoPainel==='todas')lugar.append(montarNotaGeral());
     const info = caixa.querySelector('.nota-painel-quantidade');
     info.textContent = todas.length === 1 ? '1 anotação nesta aula' :
       todas.length + ' anotações nesta aula';
@@ -366,6 +401,10 @@
         salvarTodos();
         modoPainel = botao.dataset.modo;
         renderizarPainel();
+      } else if (botao.classList.contains('nota-painel-salvar-geral')) {
+        const campo=caixa.querySelector('.nota-painel-geral-editor');
+        if(campo)campo.dataset.sujo='sim';
+        salvarNotaGeral();
       } else if (botao.classList.contains('nota-salvar')) {
         clearTimeout(rascunhoTimer);
         salvarEntrada(botao.closest('.nota-painel-entrada'));
@@ -391,6 +430,14 @@
       }
     });
     caixa.addEventListener('input', evento => {
+      if(evento.target.matches('.nota-painel-geral-editor')) {
+        evento.target.dataset.sujo='sim';
+        const estado=caixa.querySelector('.nota-painel-geral-status');
+        if(estado)estado.textContent='Editando…';
+        clearTimeout(rascunhoTimer);
+        rascunhoTimer=setTimeout(()=>salvarNotaGeral(),900);
+        return;
+      }
       if (!evento.target.matches('.nota-painel-entrada textarea')) return;
       const entrada = evento.target.closest('.nota-painel-entrada');
       entrada.querySelector('.nota-painel-salvo').textContent = 'Editando…';
