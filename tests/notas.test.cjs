@@ -318,3 +318,45 @@ test('caderno filtra matérias, volta ao trecho citado e preserva marcação ori
  assert.equal(await p.evaluate(()=>JSON.stringify(HIG.marcas('neuro1_0'))),original);
  await t.close();
 });
+
+
+test('modo todas reúne comentários e nota geral sem confundir o armazenamento',async()=>{
+ const t=await abrirAula(),p=t.page;
+ await selecionar(p,0,10,55);
+ await p.waitForSelector('.nota-barra:not([hidden])');
+ await p.click('.nota-barra [data-acao="comentar"]');
+ await p.waitForSelector('.nota-caixa:not([hidden])');
+ await p.fill('.nota-painel-entrada textarea','Comentário individual');
+ await p.click('.nota-painel-entrada .nota-salvar');
+ await p.click('.nota-painel-seletor [data-modo="todas"]');
+ await p.waitForSelector('.nota-painel-geral-editor');
+ await p.fill('.nota-painel-geral-editor','Resumo geral desta aula');
+ await p.click('.nota-painel-salvar-geral');
+ const valor=await p.evaluate(()=>JSON.parse(localStorage.getItem('master_p2_hig_v2')).notes.neuro1_0);
+ assert.equal(valor,'Resumo geral desta aula');
+ await p.click('.nota-painel-seletor [data-modo="uma"]');
+ await p.click('.nota-painel-seletor [data-modo="todas"]');
+ assert.equal(await p.locator('.nota-painel-geral-editor').inputValue(),'Resumo geral desta aula');
+ assert.equal(await p.locator('.nota-painel-entrada').count(),1);
+ await t.close();
+});
+
+test('atalho do caderno e menu principal permanecem acessíveis no celular',async()=>{
+ const t=await abrirAula(390),p=t.page;
+ await p.waitForSelector('#caderno-atalho-topo');
+ await p.locator('#caderno-atalho-topo').click();
+ const layout=await p.evaluate(()=>{
+   const painel=document.getElementById('caderno-painel');
+   const r=painel.getBoundingClientRect();
+   const menu=document.querySelector('.menu-button');
+   const b=menu.getBoundingClientRect();
+   return {painel:painel.hidden,painelNaTela:r.left>=0&&r.right<=innerWidth+1,menuLivre:menu.contains(document.elementFromPoint(b.left+b.width/2,b.top+b.height/2))};
+ });
+ assert.equal(layout.painel,false);
+ assert.equal(layout.painelNaTela,true);
+ assert.equal(layout.menuLivre,true);
+ await p.locator('[data-painel-acao="minimizar"]').click();
+ assert.equal(await p.locator('#caderno-painel').isVisible(),false);
+ assert.equal(await p.locator('#caderno-atalho-topo').isVisible(),true);
+ await t.close();
+});
