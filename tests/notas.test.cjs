@@ -96,6 +96,7 @@ test('comentário vira bolha ao lado do trecho e reabre pelo clique',async()=>{
  await p.waitForSelector('.nota-caixa:not([hidden])');
  assert.equal(await p.locator('.nota-caixa textarea').inputValue(),'Diferenciar de crise epiléptica pelo pós-ictal.');
  // Apagar remove a marca do texto e do armazenamento.
+ p.once('dialog',d=>d.accept());
  await p.click('.nota-caixa .nota-apagar');
  await p.waitForFunction(()=>document.querySelectorAll('.nota-marca').length===0,null,{timeout:5000});
  assert.deepEqual(Object.keys(await gravadas(p)),[]);
