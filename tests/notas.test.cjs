@@ -345,6 +345,7 @@ test('atalho do caderno e menu principal permanecem acessíveis no celular',asyn
  const t=await abrirAula(390),p=t.page;
  await p.waitForSelector('#caderno-atalho-topo');
  await p.locator('#caderno-atalho-topo').click();
+ await p.waitForFunction(()=>!document.getElementById('caderno-painel')?.classList.contains('wm-enter'));
  const layout=await p.evaluate(()=>{
    const painel=document.getElementById('caderno-painel');
    const r=painel.getBoundingClientRect();
