@@ -5,15 +5,66 @@
 (() => {
   'use strict';
   const LEITURA = '.deep-block,.deep-lesson,.pocus-card-body,.pocus-sec,.course-body,.case-step,.insight';
+  const BLOQUEADOS = 'button,a,nav,summary,label,input,textarea,select,option,form,[contenteditable],[role="button"],[role="tab"],.nota-barra,.nota-caixa,.nota-bolha,.caderno-unificado,.caderno-painel-lateral,.nota-formatbar,.nota-preview,.ai-tutor-dialog,.media-viewer,.pocus-q-options,.lab-choices,.qnav-dots,.pocus-pager';
+  const ROTAS_ESTUDO = new Set([
+    'topic','p1topic','cirtopic','p1','cir','cirp1','cirp2','topics',
+    'reverse','practice','exam','cases','discursive','oral','flashcards','sources',
+    'p1practice','p1exam','p1cases','p1discursive','p1oral','p1flashcards','p1sources',
+    'cirpractice','cirexam','revisao','decisionlab','banca','prescriptions','pocus',
+    'ecg','rad','hemo','atb','micro','labferro','labrenal','labmaster',
+    'labmicrocitose'
+  ]);
+  const NOME_ROTA = {
+    pocus:'POCUS',ecg:'ECG',rad:'Radiologia',hemo:'Hemograma',
+    atb:'Antimicrobianos',micro:'Microbiologia',labferro:'Laboratório de ferro',
+    labrenal:'Laboratório renal',labmaster:'Laboratório Master',
+    labmicrocitose:'Laboratório · Microcitose',prescriptions:'Prescrições',
+    banca:'Raciocínio clínico',decisionlab:'Decision Lab',revisao:'Revisões',
+    reverse:'Engenharia reversa',practice:'Questões',exam:'Simulados',
+    cases:'Casos clínicos',oral:'Prova oral',discursive:'Discursivas',
+    flashcards:'Flashcards',sources:'Fontes',p1practice:'P1 · Questões',
+    p1exam:'P1 · Simulado',p1cases:'P1 · Casos',p1discursive:'P1 · Discursivas',
+    p1oral:'P1 · Prova oral',p1flashcards:'P1 · Flashcards',
+    cirpractice:'Cirurgia · Questões',cirexam:'Cirurgia · Simulados'
+  };
+  const estudoAtivo = rota => ROTAS_ESTUDO.has(rota) || rota.startsWith('labarea-');
+  const proibido = el => !!el?.closest?.(BLOQUEADOS);
+  const textoLegivel = el => (el?.textContent||'').replace(/\s+/g,' ').trim();
+  function checksum(str) {
+    let h=2166136261;
+    for(let i=0;i<str.length;i++)h=Math.imul(h^str.charCodeAt(i),16777619);
+    return (h>>>0).toString(36);
+  }
   const CORES = [['amarelo', 'Amarelo'], ['verde', 'Verde'], ['azul', 'Azul'], ['rosa', 'Rosa']];
   let barra, caixa, emEdicao = null, agendado = false;
 
   const api = () => (typeof HIG !== 'undefined' && HIG.marcaAdd ? HIG : null);
-  // A própria aula diz quem ela é (P2, P1 e Cirurgia usam rotas diferentes).
   const aulaEl = () => document.querySelector('#main-content .deep-lesson[data-lesson-key]');
-  const aulaAtual = () => aulaEl()?.dataset.lessonKey || '';
-  const rotaAtual = () => aulaEl()?.dataset.lessonRoute || '';
   const normal = t => t.replace(/\s+/g, ' ').trim();
+  function contextoPagina() {
+    const aula = aulaEl();
+    if (aula) return {
+      chave:aula.dataset.lessonKey,rota:aula.dataset.lessonRoute || '',
+      raiz:aula,titulo:textoLegivel(document.querySelector('#main-content h1'))||'Aula',
+      origem:'aula'
+    };
+    const rota = typeof ui !== 'undefined' ? ui.route : location.hash.slice(1).split('/')[0];
+    if(!rota || !estudoAtivo(rota))return null;
+    const raiz=document.querySelector('#main-content');
+    if(!raiz || !raiz.querySelector('p,li,td,th,blockquote,h1,h2,h3'))return null;
+    const titulo=textoLegivel(raiz.querySelector('.pocus-module .pocus-title,.la-lesson h1,.deep-lesson h1,h1,h2'))||NOME_ROTA[rota]||rota;
+    const trilha=textoLegivel(raiz.querySelector('.pocus-crumb span,.la-hero .kicker,.lab-stage-meta'));
+    const primeiroSub=textoLegivel(raiz.querySelector('article h2,.pocus-sec h3,.la-section h2,.clinical-content h2'));
+    const hash=location.hash||('#'+rota);
+    const chave='estudo_'+rota+'_'+checksum([hash,titulo,trilha,primeiroSub].join('|'));
+    const indice=/\b(?:Módulo|Caso|Traçado)\s+(\d+)/i.exec(trilha)?.[1];
+    const tipo=/Caso/i.test(trilha)?'caso':/Traçado/i.test(trilha)?'tracado':/Módulo/i.test(trilha)?'modulo':'pagina';
+    return {chave,rota,raiz,titulo,origem:'estudo',
+      materia:NOME_ROTA[rota]||(/^(p1)/.test(rota)?'Clínica Médica · P1':/^(cir)/.test(rota)?'Cirurgia':'Estudos'),
+      localizacao:hash,indice:indice?Number(indice)-1:null,tipo,trilha};
+  }
+  const aulaAtual = () => contextoPagina()?.chave || '';
+  const rotaAtual = () => contextoPagina()?.rota || '';
 
   /* ---------- aplicar as marcas gravadas no texto renderizado ---------- */
 
@@ -24,7 +75,7 @@
     const andarilho = document.createTreeWalker(raiz, NodeFilter.SHOW_TEXT, {
       acceptNode: no => {
         const pai = no.parentElement;
-        if (!pai || pai.closest('script,style,.nota-bolha,.nota-barra,.nota-caixa')) return NodeFilter.FILTER_REJECT;
+        if (!pai || pai.closest('script,style,'+BLOQUEADOS)) return NodeFilter.FILTER_REJECT;
         const display = getComputedStyle(pai).display;
         if (display === 'flex' || display === 'grid' || display === 'inline-flex' || display === 'inline-grid') return NodeFilter.FILTER_REJECT;
         return NodeFilter.FILTER_ACCEPT;
@@ -69,7 +120,7 @@
   function pintar(faixa, marca) {
     const pedacos = [];
     const andarilho = document.createTreeWalker(faixa.commonAncestorContainer.nodeType === 1 ? faixa.commonAncestorContainer : faixa.commonAncestorContainer.parentNode, NodeFilter.SHOW_TEXT);
-    for (let no = andarilho.nextNode(); no; no = andarilho.nextNode()) if (faixa.intersectsNode(no)) pedacos.push(no);
+    for (let no = andarilho.nextNode(); no; no = andarilho.nextNode()) if (faixa.intersectsNode(no) && !proibido(no.parentElement)) pedacos.push(no);
     if (!pedacos.length && faixa.startContainer.nodeType === 3) pedacos.push(faixa.startContainer);
     let ultimo = null;
     for (const no of pedacos) {
@@ -102,14 +153,15 @@
     agendado = false;
     const HIGapi = api();
     if (!HIGapi) return;
-    const aula = aulaAtual();
+    const origem=contextoPagina();
+    const aula=origem?.chave || '';
     const raiz = document.getElementById('main-content');
     if (!raiz) return;
     for (const velha of raiz.querySelectorAll('.nota-bolha')) velha.remove();
     for (const velha of raiz.querySelectorAll('.nota-marca')) velha.replaceWith(...velha.childNodes);
     raiz.normalize();
     if (!aula) return;
-    const alvo = raiz.querySelector('.deep-lesson');
+    const alvo=origem?.raiz;
     if (!alvo) return;
     for (const marca of HIGapi.marcas(aula)) {
       const faixa = localizar(alvo, marca);
@@ -170,7 +222,13 @@
     if (!selecao || selecao.isCollapsed || !selecao.rangeCount) return null;
     const faixa = selecao.getRangeAt(0);
     const dentro = faixa.commonAncestorContainer.nodeType === 1 ? faixa.commonAncestorContainer : faixa.commonAncestorContainer.parentElement;
-    if (!dentro || !dentro.closest(LEITURA) || dentro.closest('.nota-caixa,.nota-barra,input,textarea,[contenteditable]')) return null;
+    const origem=contextoPagina();
+    if (!origem || !dentro || !origem.raiz.contains(dentro) || proibido(dentro)) return null;
+    const raiz=origem.raiz;
+    for(const limite of [faixa.startContainer,faixa.endContainer]){
+      const el=limite.nodeType===3?limite.parentElement:limite;
+      if(!el || !raiz.contains(el) || proibido(el))return null;
+    }
     for (const ponta of [faixa.startContainer, faixa.endContainer]) {
       const pai = ponta.nodeType === 3 ? ponta.parentElement : ponta;
       if (!pai) return null;
@@ -196,7 +254,7 @@
   }
 
   function contexto(faixa, texto) {
-    const bloco = (faixa.commonAncestorContainer.nodeType === 1 ? faixa.commonAncestorContainer : faixa.commonAncestorContainer.parentElement).closest(LEITURA);
+    const bloco = (faixa.commonAncestorContainer.nodeType === 1 ? faixa.commonAncestorContainer : faixa.commonAncestorContainer.parentElement).closest(LEITURA+',p,li,td,th,blockquote,h1,h2,h3,h4');
     const total = bloco ? bloco.textContent : '';
     const pos = total.indexOf(texto);
     let ocorrencia = 0;
@@ -214,7 +272,15 @@
     const aula = aulaAtual();
     if (!aula) return null;
     const { antes, depois, ocorrencia } = contexto(emEdicao.faixa, emEdicao.texto);
+    const pagina=contextoPagina();
+    if(pagina?.origem==='estudo')HIGapi.registrarPaginaEstudo?.(aula,{
+      rota:pagina.rota,titulo:pagina.titulo,materia:pagina.materia,
+      localizacao:pagina.localizacao,indice:pagina.indice,tipo:pagina.tipo
+    });
     const marca = HIGapi.marcaAdd(aula, {
+      paginaEstudo:pagina?.origem==='estudo',
+      pagina:pagina?.titulo||'',materia:pagina?.materia||'',
+      localizacao:pagina?.localizacao||'',indice:pagina?.indice,tipoPagina:pagina?.tipo||'',
       id: `m${Date.now().toString(36)}${Math.random().toString(36).slice(2, 6)}`,
       texto: emEdicao.texto, antes, depois, ocorrencia, cor, comentario, rota: rotaAtual(), titulo: normal(document.querySelector('#main-content h1')?.textContent || ''), criadoEm: new Date().toISOString()
     });
@@ -499,8 +565,23 @@
   }
 
   function abrirTodas() {
+    const pagina=contextoPagina();
+    if(!pagina)return;
     const primeira=api()?.marcas(aulaAtual()).find(m=>m.comentario||m.comentarioAtivo);
-    if(primeira)abrirCaixa(primeira.id,'todas');
+    if(primeira){abrirCaixa(primeira.id,'todas');return;}
+    if(!caixa)montarCaixa();
+    if(pagina.origem==='estudo')api()?.registrarPaginaEstudo?.(pagina.chave,{
+      rota:pagina.rota,titulo:pagina.titulo,materia:pagina.materia,
+      localizacao:pagina.localizacao,indice:pagina.indice,tipo:pagina.tipo
+    });
+    salvarTodos();
+    caixa.dataset.aula=pagina.chave;
+    caixa.dataset.rota=pagina.rota;
+    caixa.dataset.nota='';
+    modoPainel='todas';
+    caixa.hidden=false;
+    window.CadernoUnificado?.fecharPainel?.();
+    renderizarPainel(true);
   }
 
   /* ---------- eventos ---------- */
