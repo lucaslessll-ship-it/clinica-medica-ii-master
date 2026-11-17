@@ -5,7 +5,7 @@
   const SELETORES = [
     '#chapter-note','#p1-note','#cir-note',
     '.caderno-editor','.caderno-comentario',
-    '.nota-painel-entrada textarea','.caderno-painel-editor'
+    '.nota-painel-entrada textarea','.nota-painel-geral-editor','.caderno-painel-editor'
   ].join(',');
   const esc = v => String(v ?? '').replace(/[&<>"']/g, c =>
     ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
