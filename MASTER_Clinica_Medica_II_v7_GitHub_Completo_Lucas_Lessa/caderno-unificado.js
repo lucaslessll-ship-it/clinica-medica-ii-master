@@ -73,7 +73,7 @@
       '<div class="caderno-resumo"><span>' + total + ' aulas com registros</span>' +
       '<button type="button" class="btn secondary caderno-exportar">Exportar caderno completo</button></div></header>' +
       '<nav class="caderno-atalhos" aria-label="Filtrar por matéria">' +
-      grupos.map(g=>'<a href="#caderno-' + g.id + '">' + escapar(g.nome) + ' (' + g.quantidade + ')</a>').join('') + '</nav>' +
+      grupos.map(g=>'<button type="button" data-caderno-destino="caderno-' + g.id + '">' + escapar(g.nome) + ' (' + g.quantidade + ')</button>').join('') + '</nav>' +
       grupos.map(g=>'<section class="caderno-materia" id="caderno-' + g.id + '" aria-label="' + escapar(g.nome) + '">' +
         '<header><h2>' + escapar(g.nome) + '</h2><span>' + g.quantidade + ' aulas</span></header>' +
         (g.topicos.length ? g.topicos.map(t=>'<section class="caderno-tema"><h3>' + escapar(t.titulo) +
@@ -140,7 +140,8 @@
   document.addEventListener('click', evento => {
     const botao = evento.target.closest('button');
     if (!botao || !botao.closest('.caderno-unificado')) return;
-    if (botao.classList.contains('caderno-salvar-nota')) salvarNota(botao);
+    if (botao.dataset.cadernoDestino) document.getElementById(botao.dataset.cadernoDestino)?.scrollIntoView({behavior:'smooth',block:'start'});
+    else if (botao.classList.contains('caderno-salvar-nota')) salvarNota(botao);
     else if (botao.classList.contains('caderno-salvar-comentario')) salvarComentario(botao);
     else if (botao.classList.contains('caderno-exportar')) exportar();
     else if (botao.classList.contains('caderno-abrir')) {
