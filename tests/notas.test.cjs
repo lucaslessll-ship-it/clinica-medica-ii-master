@@ -228,7 +228,7 @@ test('painel de citações alterna entre uma e todas da aula e minimiza para o �
  assert.equal(await p.locator('.nota-painel-entrada').count(),2);
  assert.deepEqual(await p.locator('.nota-painel-entrada textarea').evaluateAll(v=>v.map(e=>e.value)),['Primeira citação','Segunda citação']);
  await p.click('.nota-minimizar');
- assert.equal(await p.locator('.nota-caixa').isVisible(),false);
+ await p.locator('.nota-caixa').waitFor({state:'hidden'});
  assert.equal(await p.locator('.nota-bolha').count(),2);
  // A bolha reabre apenas a anotação do trecho selecionado.
  await p.locator('.nota-bolha').first().evaluate(el=>el.click());
