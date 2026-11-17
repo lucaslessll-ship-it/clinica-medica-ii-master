@@ -34,7 +34,7 @@ function daysTo(iso){return Math.ceil((Date.parse(iso)-Date.now())/86400000);}
 function sec(title,html,extra=''){return `<section class="section-spaced"><div class="section-header"><h2 class="section-title">${title}</h2>${extra}</div>${html}</section>`;}
 function dayKey(date=new Date()){return CirPlan.dayKey(date);}
 
-function studyPlan(now=new Date()){const key=CirPlan.dayKey(now),activity={...(state.plan?.days||{})},day=activity[key]||{};activity[key]={...day,lessons:[...new Set([...(day.lessons||[]),...Object.keys(state.doneAt||{}).filter(id=>state.doneAt[id]===key)])]};return CirPlan.build({topics,completed:state.completed,questions:own,results:state.results,activity,now});}
+function studyPlan(now=new Date()){const key=CirPlan.dayKey(now),activity={...(state.plan?.days||{})},day=activity[key]||{};activity[key]={...day,lessons:[...new Set([...(day.lessons||[]),...Object.keys(state.doneAt||{}).filter(id=>state.doneAt[id]===key)])]};const currentResults=Object.fromEntries(Object.entries(state.results).filter(([id,result])=>{const q=byId(id);return q&&isCurrent(q,result);}));return CirPlan.build({topics,completed:state.completed,questions:own,results:currentResults,activity,now});}
 function planActivity(){if(!state.plan||typeof state.plan!=='object')state.plan={version:1,days:{}};state.plan.days=state.plan.days||{};const key=CirPlan.dayKey(new Date());return state.plan.days[key]||(state.plan.days[key]={lessons:[],questions:[]});}
 function openPlannedLesson(){const next=studyPlan().next;if(next)openTopic(next.topic,next.index);}
 function startPlannedQuestions(){const ids=studyPlan().days[0]?.questions||[];if(ids.length)startPractice({t:'all',src:'own',mode:'all',ids});}
