@@ -326,3 +326,12 @@ body[data-theme="dark"] .caderno-icone-3d{color:#c6ede1;background:linear-gradie
  .caderno-painel-abas button{padding:7px 4px}
 }
 @media(max-width:380px){.caderno-painel-lateral{bottom:calc(70px + env(safe-area-inset-bottom))}}
+
+
+.nota-painel-geral{border-top:2px solid var(--line);padding:18px 0 5px;margin-top:13px}
+.nota-painel-geral .nota-painel-linha{align-items:center}
+.nota-painel-geral strong{font-size:13px;color:var(--ink)}
+.nota-painel-geral-status{font-size:10.5px!important;color:var(--secondary-text,var(--muted))}
+.nota-painel-geral label{display:block;color:var(--secondary-text,var(--muted));font-size:12px;margin:9px 0 0}
+.nota-painel-geral textarea{display:block;box-sizing:border-box;width:100%;min-height:85px;padding:10px;margin:6px 0;border:1px solid var(--line);border-radius:9px;background:var(--white);color:var(--ink);font:inherit;font-size:13px}
+.nota-painel-geral .nota-painel-salvar-geral{margin-top:8px;border:1px solid var(--line);border-radius:8px;background:var(--white);color:var(--ink);padding:8px 11px;font:inherit;font-size:12px;font-weight:700;cursor:pointer}
