@@ -36,7 +36,7 @@
     return grupos;
   }
 
-  function trechoHTML(marca, chave) {
+  function trechoHTML(marca, chave, materia, tema, aula) {
     const comentario = String(marca.comentario || '');
     return '<div class="caderno-trecho notas-item" data-marca-id="' + escapar(marca.id) + '">' +
       '<p class="caderno-trecho-citado notas-trecho" data-cor="' + escapar(marca.cor || 'amarelo') + '">' + escapar(marca.texto || '') + '</p>' +
@@ -44,11 +44,21 @@
       '<label>Observação sobre o trecho' +
       '<textarea rows="2" class="caderno-comentario" placeholder="Acrescente uma observação vinculada ao trecho">' + escapar(comentario) + '</textarea></label>' +
       '<button type="button" class="btn secondary caderno-salvar-comentario" data-chave="' + escapar(chave) +
-      '" data-marca-id="' + escapar(marca.id) + '">Salvar observação</button></div>';
+      '" data-marca-id="' + escapar(marca.id) + '">Salvar observação</button>' +
+      '<button type="button" class="btn secondary caderno-voltar-trecho" data-rota="' + materia.rota +
+      '" data-tema="' + escapar(tema.id) + '" data-indice="' + aula.indice +
+      '" data-chave="' + escapar(chave) + '" data-marca-id="' + escapar(marca.id) +
+      '">Voltar ao trecho</button></div>';
   }
 
   function aulaHTML(materia, tema, aula) {
-    return '<details class="caderno-aula notas-aula"' + (aula.marcas.length ? ' open' : '') + '>' +
+    const busca=escapar([materia.nome,tema.titulo,aula.titulo,aula.nota,...aula.marcas.map(m=>m.texto+' '+(m.comentario||''))].join(' ').toLowerCase());
+    const comentario=Number(aula.marcas.some(m=>!!(m.comentario||'').trim()));
+    return '<details class="caderno-aula notas-aula" data-busca="' + busca +
+      '" data-tem-marcas="' + Number(aula.marcas.length>0) +
+      '" data-tem-comentarios="' + comentario +
+      '" data-tem-notas="' + Number(!!aula.nota.trim()) +
+      '"' + (aula.marcas.length ? ' open' : '') + '>' +
       '<summary><span>' + escapar(aula.titulo) + '</span><small>' +
       (aula.nota.trim() ? 'Nota escrita · ' : '') + aula.marcas.length + ' ' + (aula.marcas.length===1?'trecho':'trechos') +
       (aula.salvo?' · Salva para revisão':'') + '</small></summary>' +
@@ -61,7 +71,7 @@
       '" data-tema="' + escapar(tema.id) + '" data-indice="' + aula.indice + '">Abrir aula no texto</button>' +
       '<span class="caderno-status" aria-live="polite"></span></div>' +
       (aula.marcas.length ? '<details class="caderno-trechos" open><summary>' + aula.marcas.length +
-      ' trechos destacados e citações</summary>' + aula.marcas.map(m => trechoHTML(m,aula.chave)).join('') +
+      ' trechos destacados e citações</summary>' + aula.marcas.map(m => trechoHTML(m,aula.chave,materia,tema,aula)).join('') +
       '</details>' : '') + '</div></details>';
   }
 
@@ -74,7 +84,15 @@
       'Cada edição permanece no registro original da disciplina.</p>' +
       '<div class="caderno-resumo"><span>' + total + ' aulas com registros</span>' +
       '<button type="button" class="btn secondary caderno-exportar">Exportar caderno completo</button></div></header>' +
-      '<nav class="caderno-atalhos" aria-label="Filtrar por matéria">' +
+      '<div class="caderno-filtros"><label for="caderno-busca">Buscar no caderno</label>' +
+      '<input id="caderno-busca" class="caderno-busca" type="search" placeholder="Buscar por aula, trecho ou anotação" autocomplete="off">' +
+      '<div class="caderno-abas" role="group" aria-label="Tipo de anotação">' +
+      '<button type="button" data-caderno-filtro="todas" aria-pressed="true">Todas</button>' +
+      '<button type="button" data-caderno-filtro="marcas" aria-pressed="false">Destaques</button>' +
+      '<button type="button" data-caderno-filtro="comentarios" aria-pressed="false">Comentários</button>' +
+      '<button type="button" data-caderno-filtro="notas" aria-pressed="false">Notas da aula</button></div>' +
+      '<p class="caderno-resultado" aria-live="polite"></p></div>' +
+      '<nav class="caderno-atalhos" aria-label="Ir para matéria">' +
       grupos.map(g=>'<button type="button" data-caderno-destino="caderno-' + g.id + '">' + escapar(g.nome) + ' (' + g.quantidade + ')</button>').join('') + '</nav>' +
       grupos.map(g=>'<section class="caderno-materia" id="caderno-' + g.id + '" aria-label="' + escapar(g.nome) + '">' +
         '<header><h2>' + escapar(g.nome) + '</h2><span>' + g.quantidade + ' aulas</span></header>' +
@@ -88,6 +106,31 @@
     fecharPainel();
     window.HIG?.abrirAula(rota,tema,Number(indice));
     if(id)window.Notas?.voltarAoTrecho?.(id,chave);
+  }
+
+  function filtrarRaiz(raiz, seletor, filtro, termo) {
+    let visiveis=0;
+    raiz.querySelectorAll(seletor).forEach(cartao=>{
+      const tipo=filtro==='todas' || (filtro==='marcas' && cartao.dataset.temMarcas==='1') ||
+        (filtro==='comentarios' && cartao.dataset.temComentarios==='1') ||
+        (filtro==='notas' && cartao.dataset.temNotas==='1');
+      const busca=String(cartao.dataset.busca||'').toLowerCase().includes(termo);
+      cartao.hidden=!(tipo&&busca);
+      if(!cartao.hidden)visiveis++;
+    });
+    return visiveis;
+  }
+
+  function filtrarCaderno() {
+    const raiz=document.querySelector('.caderno-unificado');
+    if(!raiz)return;
+    const filtro=raiz.querySelector('[data-caderno-filtro][aria-pressed="true"]')?.dataset.cadernoFiltro||'todas';
+    const termo=raiz.querySelector('#caderno-busca')?.value.trim().toLowerCase()||'';
+    const n=filtrarRaiz(raiz,'.caderno-aula',filtro,termo);
+    raiz.querySelectorAll('.caderno-tema').forEach(t=>t.hidden=![...t.querySelectorAll('.caderno-aula')].some(a=>!a.hidden));
+    raiz.querySelectorAll('.caderno-materia').forEach(m=>m.hidden=![...m.querySelectorAll('.caderno-tema')].some(t=>!t.hidden));
+    const status=raiz.querySelector('.caderno-resultado');
+    if(status) status.textContent=n+' '+(n===1?'aula encontrada':'aulas encontradas');
   }
 
   function salvarNota(botao) {
