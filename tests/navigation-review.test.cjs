@@ -38,7 +38,7 @@ test('dialog isolates background and traps visible links, select and textarea co
  await p.locator('#hig-dialog-content').evaluate(el=>{const group=document.createElement('div');group.innerHTML='<select aria-label="Teste de seleção"><option>Um</option></select><textarea aria-label="Teste de texto"></textarea><a id="dialog-last" href="#test">Ajuda</a><input type="hidden">';el.append(group);});
  await p.locator('#dialog-last').focus();await p.keyboard.press('Tab');assert.equal(await p.locator('#hig-overlay .hig-dialog-heading button').evaluate(el=>el===document.activeElement),true);
  await p.keyboard.press('Shift+Tab');assert.equal(await p.locator('#dialog-last').evaluate(el=>el===document.activeElement),true);
- await p.keyboard.press('Escape');assert.equal(await p.locator('#app-shell').evaluate(el=>el.inert),false);assert.equal(await p.locator('.search-trigger').evaluate(el=>el===document.activeElement),true);await t.close();
+ await p.keyboard.press('Escape');await p.waitForFunction(()=>document.getElementById('hig-overlay').hidden);assert.equal(await p.locator('#app-shell').evaluate(el=>el.inert),false);assert.equal(await p.locator('.search-trigger').evaluate(el=>el===document.activeElement),true);await t.close();
 });
 test('skip link retains the route and reduced motion disables smooth navigation',async()=>{
  const t=await open({reducedMotion:'reduce'}),p=t.page;await p.evaluate(()=>navigate('prescriptions'));await p.locator('.skip-link').focus();await p.keyboard.press('Enter');
@@ -54,5 +54,5 @@ test('search announces its active result, handles empty results and opens the ke
  assert.equal(await input.getAttribute('aria-autocomplete'),'list');assert.equal(await input.getAttribute('aria-activedescendant'),'global-search-option-0');
  await input.press('ArrowDown');assert.equal(await input.getAttribute('aria-activedescendant'),'global-search-option-1');assert.equal(await p.locator('#global-search-option-1').getAttribute('aria-selected'),'true');
  await input.fill('zzzxxyynosearchresult');await input.press('ArrowDown');await input.press('ArrowUp');await input.press('Enter');assert.equal(await input.getAttribute('aria-activedescendant'),null);assert.equal(await p.locator('#hig-overlay').isVisible(),true);
- await input.fill('Guillain');await input.press('ArrowDown');const selected=await input.getAttribute('aria-activedescendant');assert.ok(selected);await input.press('Enter');assert.equal(await p.locator('#hig-overlay').isVisible(),false);assert.match(await p.locator('#main-content').innerText(),/Guillain/);await t.close();
+ await input.fill('Guillain');await input.press('ArrowDown');const selected=await input.getAttribute('aria-activedescendant');assert.ok(selected);await input.press('Enter');await p.locator('#hig-overlay').waitFor({state:'hidden'});assert.match(await p.locator('#main-content').innerText(),/Guillain/);await t.close();
 });
