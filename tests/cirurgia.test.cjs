@@ -275,3 +275,31 @@ test('banco privado adaptado embaralha alternativas e corrige pelo índice canô
  await p.getByRole('button',{name:/Conduta delta/}).click();
  const saved=await p.evaluate(()=>JSON.parse(localStorage.getItem(CIR.KEY)).results['b:adaptada']);assert.equal(saved.correct,true);assert.equal(saved.answer,3);assert.equal(saved.revision,'cir-20261116');await t.close();
 });
+
+
+test('alternativas autorais são embaralhadas sem mudar gabarito ou ordem ao voltar',async()=>{
+ const t=await open(),p=t.page;
+ const result=await p.evaluate(()=>{
+  const id=CIR.own[0].id,q=CIR.own[0],seen=new Set();
+  const sequences=[];
+  for(let i=0;i<8;i++){
+   CIR.startPractice({t:q.t,src:'own',mode:'all',ids:[id]});
+   const options=[...document.querySelectorAll('.cir-q .p1-option strong')].map(e=>e.textContent);
+   if(options.length!==4)throw Error('Questão sem quatro alternativas');
+   if(!options.every(t=>q.o.includes(t)))throw Error('Alternativa não corresponde ao registro de origem');
+   sequences.push(options);
+   seen.add(options.join('||'));
+  }
+  const orderBefore=sequences.at(-1);
+  CIR.jump(0);
+  const orderAfter=[...document.querySelectorAll('.cir-q .p1-option strong')].map(e=>e.textContent);
+  CIR.answer(q.a);
+  const data=JSON.parse(localStorage.getItem(CIR.KEY));
+  return {unique:seen.size,before:orderBefore,after:orderAfter,correct:data.results[id].correct,revision:data.results[id].revision};
+ });
+ assert.ok(result.unique>=2,'A ordem não variou em oito tentativas independentes');
+ assert.deepEqual(result.after,result.before,'A ordem da tentativa mudou ao voltar');
+ assert.equal(result.correct,true);
+ assert.equal(result.revision,'cir-20261116');
+ await t.close();
+});
