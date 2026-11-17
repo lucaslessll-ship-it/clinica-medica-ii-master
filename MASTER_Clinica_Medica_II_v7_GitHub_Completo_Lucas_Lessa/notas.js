@@ -313,7 +313,10 @@
       return;
     }
     if (botao.dataset.acao === 'remover') {
-      if (emEdicao?.tipo === 'marca') { HIGapi.marcaRemove(aulaAtual(), emEdicao.id); esconderBarra(); agendar(); }
+      if (emEdicao?.tipo === 'marca') {
+        const ok=window.CadernoUnificado?.excluirRegistro?.({materia:'p2',chave:aulaAtual(),marcaId:emEdicao.id});
+        if(ok){esconderBarra();agendar();}
+      }
       return;
     }
     if (botao.dataset.acao === 'comentar') {
