@@ -34,7 +34,7 @@ test('FSRS survives JSON sync, adapts to ratings and keeps legacy history',async
 test('typed memorization question uses the open lesson instead of unrelated search',async()=>{
  const {page:p,context}=await open();let sent;
  await p.route('**/functions/v1/ai-tutor',async r=>{sent=r.request().postDataJSON();await r.fulfill({contentType:'application/json',body:JSON.stringify({answer:'Dica de estudo: revisão.',remaining:39})});});
- await p.evaluate(()=>{openTopic('gastro');ui.chapter=0;render();});await p.locator('.ai-tutor-launch').click();await p.locator('#ai-tutor-question').fill('Me dê uma dica para memorizar esse conteúdo');await p.locator('.ai-tutor-send').click();await p.waitForFunction(()=>document.querySelector('.ai-tutor-status').textContent.includes('39 perguntas'));
+ await p.evaluate(()=>{openTopic('gastro');ui.chapter=0;render();});await p.locator('.ai-tutor-launch').click();await p.locator('[data-ai-start]').click();await p.locator('#ai-tutor-question').fill('Me dê uma dica para memorizar esse conteúdo');await p.locator('.ai-tutor-send').click();await p.waitForFunction(()=>document.querySelector('.ai-tutor-status').textContent.includes('39 perguntas'));
  assert.ok(sent.blocks.every(b=>b.id.startsWith('gastro_0:')));assert.equal(sent.question,'Me dê uma dica para memorizar esse conteúdo');await context.close();
 });
 test('axe audits built mobile home, study controls, course and assistant',async()=>{
