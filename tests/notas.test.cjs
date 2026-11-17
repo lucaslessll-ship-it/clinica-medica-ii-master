@@ -252,6 +252,10 @@ test('caderno no topo reúne os registros de P1, P2 e Cirurgia sem mudar suas ch
    return [localStorage.getItem('master_p1_lucas_v4'),localStorage.getItem('master_cir_lucas_v1')];
  });
  await p.click('#caderno-atalho-topo');
+ await p.waitForSelector('#caderno-painel:not([hidden])');
+ assert.match(await p.locator('#caderno-painel').innerText(),/Nota P1 preservada/);
+ assert.match(await p.locator('#caderno-painel').innerText(),/Nota da Cirurgia preservada/);
+ await p.click('[data-painel-acao="completo"]');
  await p.waitForSelector('.caderno-unificado');
  assert.equal(await p.locator('.caderno-materia').count(),3);
  const p1aula=p.locator('#caderno-p1 .caderno-aula').first();
@@ -269,5 +273,48 @@ test('caderno no topo reúne os registros de P1, P2 e Cirurgia sem mudar suas ch
  await p1aula.locator('.caderno-editor').fill('Nota P1 editada no caderno');
  await p1aula.locator('.caderno-salvar-nota').click();
  assert.equal(await p.evaluate(()=>JSON.parse(localStorage.getItem('master_p1_lucas_v4')).notes.p1dm_0),'Nota P1 editada no caderno');
+ await t.close();
+});
+
+
+test('editor formata texto e jamais injeta HTML, script ou imagem na prévia',async()=>{
+ const t=await abrirAula(),p=t.page;
+ await p.waitForFunction(()=>!!window.FormatacaoNotas);
+ const html=await p.evaluate(()=>FormatacaoNotas.renderizar('**Negrito** ++sublinhado++ ~~riscado~~\n- Primeiro\n<img src="https://example.test/x" onerror="alert(1)">'));
+ assert.match(html,/<strong>Negrito<\/strong>/);
+ assert.match(html,/<u>sublinhado<\/u>/);
+ assert.match(html,/<s>riscado<\/s>/);
+ assert.match(html,/<li>Primeiro<\/li>/);
+ assert.doesNotMatch(html,/<img |<script|onerror=/i);
+ assert.match(html,/&lt;img/);
+ await p.evaluate(()=>{openTopic('neuro1');switchChapter(0)});
+ const textarea=p.locator('#chapter-note');
+ await p.locator('.lesson-caderno summary').click();
+ await textarea.fill('Texto para negrito');
+ await textarea.evaluate(el=>el.setSelectionRange(0,5));
+ await p.locator('.lesson-caderno .nota-formatbar [data-formatar="negrito"]').click();
+ assert.match(await textarea.inputValue(),/\*\*Texto\*\*/);
+ assert.match(await p.locator('.lesson-caderno .nota-preview').innerHTML(),/<strong>Texto<\/strong>/);
+ await t.close();
+});
+
+test('caderno filtra matérias, volta ao trecho citado e preserva marcação original',async()=>{
+ const t=await abrirAula(),p=t.page;
+ await selecionar(p,0,10,55);
+ await p.waitForSelector('.nota-barra:not([hidden])');
+ await p.click('.nota-barra [data-acao="comentar"]');
+ await p.waitForSelector('.nota-caixa:not([hidden])');
+ await p.fill('.nota-painel-entrada textarea','Observação teste de citação');
+ await p.click('.nota-painel-entrada .nota-salvar');
+ const original=await p.evaluate(()=>JSON.stringify(HIG.marcas('neuro1_0')));
+ await p.evaluate(()=>navigate('notes'));
+ await p.waitForSelector('.caderno-unificado');
+ await p.fill('#caderno-busca','observação teste');
+ assert.equal(await p.locator('.caderno-aula:not([hidden])').count(),1);
+ await p.locator('[data-caderno-filtro="comentarios"]').click();
+ assert.equal(await p.locator('.caderno-aula:not([hidden])').count(),1);
+ await p.locator('.caderno-voltar-trecho').first().click();
+ await p.waitForSelector('.nota-marca.nota-trecho-destino',{timeout:8000});
+ assert.equal(await p.evaluate(()=>JSON.stringify(HIG.marcas('neuro1_0'))),original);
  await t.close();
 });
