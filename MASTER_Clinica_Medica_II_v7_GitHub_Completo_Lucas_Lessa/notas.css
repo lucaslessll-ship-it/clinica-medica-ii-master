@@ -235,3 +235,11 @@ body[data-theme="dark"] .caderno-icone-3d{color:#c6ede1;background:linear-gradie
   #caderno-atalho-topo .caderno-icone-3d{width:22px;height:22px}
   #caderno-atalho-topo .caderno-icone-3d svg{width:19px;height:19px}
 }
+
+
+/* Em celulares de 381–500 px, o relógio continua visível, mas sem
+   a palavra "Pomodoro": libera espaço para menu, caderno e busca. */
+@media(min-width:381px) and (max-width:500px){
+  #focus-top{min-width:78px;width:78px;padding:4px 5px;gap:4px}
+  #focus-top .focus-top-label{display:none!important}
+}
