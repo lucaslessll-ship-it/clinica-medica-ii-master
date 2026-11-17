@@ -525,3 +525,14 @@ body[data-theme="dark"] .p1-rank,body[data-theme="dark"] .p1-mini-tags i{backgro
 body[data-theme="dark"] .lesson-toolbar,body[data-theme="dark"] .lesson-toolbar span,body[data-theme="dark"] .empty-state{color:var(--muted)}
 body[data-theme="dark"] .banca-hero h2 em,body[data-theme="dark"] .banca-lab h2 em{color:var(--green)}
 body[data-theme="dark"] .case-step{background:#1a2b32;border-left-color:#2f9c86;color:#d8eeea}body[data-theme="dark"] .case-step .kicker{color:#7fd3c2}body[data-theme="dark"] .case-step h2,body[data-theme="dark"] .case-step h3,body[data-theme="dark"] .case-stem{color:#e3f3f0}
+
+
+/* Identidade lateral: a marca mantém uma linha e um subtítulo discreto, sem serifas. */
+.sidebar .brand{display:flex;align-items:center;gap:11px;padding:0 7px 21px;min-height:72px}
+.sidebar .brand .brand-icon{width:46px;height:46px;display:grid;place-items:center;border-radius:13px;flex:0 0 46px;box-shadow:0 5px 12px rgba(14,93,84,.12)}
+.sidebar .brand .brand-icon img{width:100%;height:100%;object-fit:contain}
+.sidebar .brand .brand-text{display:flex;flex-direction:column;min-width:0;flex:1;gap:3px}
+.sidebar .brand .brand-text strong{font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-weight:760;font-size:clamp(16px,1.3vw,18px);letter-spacing:-.035em;line-height:1.14;white-space:nowrap;color:var(--ink)}
+.sidebar .brand .brand-text small{display:block;margin:0;font:500 10.5px/1.45 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:0;color:var(--muted);text-wrap:balance;max-width:155px}
+@media(min-width:801px) and (max-width:1140px){.sidebar .brand{padding-inline:3px;gap:8px}.sidebar .brand .brand-icon{width:42px;height:42px;flex-basis:42px}.sidebar .brand .brand-text strong{font-size:16px}.sidebar .brand .brand-text small{font-size:10px}}
+@media(max-width:800px){.sidebar .brand .brand-text strong{font-size:18px}.sidebar .brand .brand-text small{font-size:11px;max-width:170px}}
