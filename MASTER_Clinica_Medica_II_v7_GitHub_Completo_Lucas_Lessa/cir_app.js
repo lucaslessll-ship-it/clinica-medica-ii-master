@@ -27,8 +27,8 @@ const byId=id=>pool().find(q=>q.id===id);
 const isCurrent=(q,r=state.results[q.id])=>!!r&&(!q.revision||r.revision===q.revision);
 const nLessons=topics.reduce((n,t)=>n+t.chapters.length,0);
 const done=(t,i)=>!!state.completed[t+'_'+i];
-function isDue(id){const r=state.results[id];return !!r&&!!r.next&&Date.parse(r.next)<=Date.now();}
-function stats(tid){const qs=pool().filter(q=>tid==='all'||q.t===tid),ans=qs.filter(q=>state.results[q.id]),ok=ans.filter(q=>state.results[q.id].correct);return {total:qs.length,answered:ans.length,right:ok.length,pct:ans.length?Math.round(ok.length/ans.length*100):0};}
+function isDue(id){const q=byId(id),r=state.results[id];return !!q&&isCurrent(q,r)&&!!r.next&&Date.parse(r.next)<=Date.now();}
+function stats(tid){const qs=pool().filter(q=>tid==='all'||q.t===tid),ans=qs.filter(q=>isCurrent(q)),ok=ans.filter(q=>state.results[q.id].correct);return {total:qs.length,answered:ans.length,right:ok.length,pct:ans.length?Math.round(ok.length/ans.length*100):0};}
 function lessonPct(t){return Math.round(t.chapters.filter((_,i)=>done(t.id,i)).length/t.chapters.length*100);}
 function daysTo(iso){return Math.ceil((Date.parse(iso)-Date.now())/86400000);}
 function sec(title,html,extra=''){return `<section class="section-spaced"><div class="section-header"><h2 class="section-title">${title}</h2>${extra}</div>${html}</section>`;}
@@ -116,7 +116,7 @@ function topicView(){
 /* Questões */
 const shuffle=a=>{const o=[...a];for(let i=o.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[o[i],o[j]]=[o[j],o[i]]}return o;};
 const orderOf=q=>q.shuffle?shuffle(q.o.map((_,i)=>i)):q.o.map((_,i)=>i);
-function select(f){return pool().filter(q=>(f.t==='all'||q.t===f.t)&&(f.src==='all'||(f.src==='bank'?q.bank:!q.bank))&&(f.mode==='all'||(f.mode==='new'&&!isCurrent(q))||(f.mode==='wrong'&&state.results[q.id]&&!state.results[q.id].correct)||(f.mode==='due'&&isDue(q.id))));}
+function select(f){return pool().filter(q=>(f.t==='all'||q.t===f.t)&&(f.src==='all'||(f.src==='bank'?q.bank:!q.bank))&&(f.mode==='all'||(f.mode==='new'&&!isCurrent(q))||(f.mode==='wrong'&&isCurrent(q)&&!state.results[q.id].correct)||(f.mode==='due'&&isDue(q.id))));}
 function startPractice(f){const {ids:plannedIds,...filters}=f||{},allowed=Array.isArray(plannedIds)?new Set(plannedIds):null;filt={...filt,...filters};const ids=shuffle(select(filt).filter(q=>!allowed||allowed.has(q.id)).map(q=>q.id));practice={ids,step:0,chosen:null,revealed:false,order:ids.length?orderOf(byId(ids[0])):[],hits:0,done:{}};go('cirpractice');}
 function record(q,a){
  const prev=state.results[q.id],ok=a===q.a,current=isCurrent(q,prev);let box=ok?Math.min(((current?prev?.box:undefined)??-1)+1,LADDER.length-1):0;
