@@ -372,6 +372,8 @@
     if(materia==='p2')window.HIG?.saveNote?.(chave,campo.value);
     else (materia==='p1'?window.P1:window.CIR)?.saveExternalNote?.(chave,campo.value);
     campo.dataset.sujo='nao';
+    const apagar=caixa.querySelector('.nota-painel-apagar-geral');
+    if(apagar)apagar.disabled=!campo.value.trim();
     const estado=caixa.querySelector('.nota-painel-geral-status');
     if(estado)estado.textContent='Salvo no caderno da aula';
   }
@@ -383,7 +385,8 @@
     secao.innerHTML='<div class="nota-painel-linha"><strong>Anotação geral da aula</strong><small class="nota-painel-geral-status" aria-live="polite"></small></div>'+
       '<label for="nota-geral-editor">Seu resumo, dúvidas e associações</label>'+
       '<textarea id="nota-geral-editor" class="nota-painel-geral-editor" rows="3" placeholder="Anote o que deseja revisar nesta aula"></textarea>'+
-      '<button type="button" class="nota-painel-salvar-geral">Salvar nota da aula</button>';
+      '<div class="nota-painel-geral-acoes"><button type="button" class="nota-painel-salvar-geral">Salvar nota da aula</button>'+
+      '<button type="button" class="nota-painel-apagar-geral nota-acao-excluir"'+(info.valor.trim()?'':' disabled')+'>Excluir nota</button></div>';
     secao.querySelector('textarea').value=info.valor;
     return secao;
   }
@@ -484,6 +487,9 @@
         const campo=caixa.querySelector('.nota-painel-geral-editor');
         if(campo)campo.dataset.sujo='sim';
         salvarNotaGeral();
+      } else if (botao.classList.contains('nota-painel-apagar-geral')) {
+        const {materia,chave}=notaGeralDaAula();
+        window.CadernoUnificado?.excluirRegistro?.({materia,chave});
       } else if (botao.classList.contains('nota-salvar')) {
         clearTimeout(rascunhoTimer);
         salvarEntrada(botao.closest('.nota-painel-entrada'));
@@ -495,13 +501,7 @@
         const id = entrada?.dataset.nota;
         if (!id) return;
         salvarTodos();
-        api()?.marcaRemove(caixa.dataset.aula,id);
-        if (caixa.dataset.nota===id) {
-          caixa.dataset.nota = itensAula()[0]?.id || '';
-        }
-        if (!itensAula().length) fecharCaixa(false);
-        else renderizarPainel();
-        agendar();
+        window.CadernoUnificado?.excluirRegistro?.({materia:'p2',chave:caixa.dataset.aula,marcaId:id});
       } else if (botao.classList.contains('nota-minimizar')) {
         fecharCaixa(true);
       } else if (botao.classList.contains('nota-fechar')) {
@@ -514,6 +514,8 @@
         const estado=caixa.querySelector('.nota-painel-geral-status');
         if(estado)estado.textContent='Editando…';
         clearTimeout(rascunhoTimer);
+        const apagar=caixa.querySelector('.nota-painel-apagar-geral');
+        if(apagar)apagar.disabled=!evento.target.value.trim();
         rascunhoTimer=setTimeout(()=>salvarNotaGeral(),900);
         return;
       }
@@ -601,6 +603,24 @@
   }
 
   /* ---------- eventos ---------- */
+
+
+  window.addEventListener('master-note-deleted',evento=>{
+    const {chave,marcaId}=evento.detail||{};
+    if(!caixa||caixa.hidden||caixa.dataset.aula!==chave)return;
+    clearTimeout(rascunhoTimer);
+    if(!marcaId){
+      const editor=caixa.querySelector('.nota-painel-geral-editor');
+      if(editor){editor.value='';editor.dataset.sujo='nao';}
+    }
+    if(marcaId && caixa.dataset.nota===marcaId)
+      caixa.dataset.nota=itensAula()[0]?.id||'';
+    if(modoPainel==='uma'&&!itensAula().length){
+      if(notaGeralDaAula().valor.trim())modoPainel='todas';
+      else {fecharCaixa(false);return;}
+    }
+    renderizarPainel();
+  });
 
   function iniciar() {
     document.addEventListener('mouseup', evento => {
