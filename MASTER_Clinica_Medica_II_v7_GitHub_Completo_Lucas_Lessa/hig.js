@@ -68,8 +68,9 @@ const HIG = (() => {
     requestAnimationFrame(()=>{if(overlay.hidden||document.documentElement.classList.contains('master-auth-locked'))return;let target=name==='search'?document.getElementById('global-search'):overlay.querySelector('.hig-dialog .icon-button');target?.focus()});
   }
   function closeOverlay(){
-    const overlay=document.getElementById('hig-overlay'),wasOpen=!overlay.hidden,locked=document.documentElement.classList.contains('master-auth-locked');
+    const overlay=document.getElementById('hig-overlay'),wasOpen=!overlay.hidden;
     const finalize=()=>{
+      const locked=document.documentElement.classList.contains('master-auth-locked');
       overlay.hidden=true;
       document.body.classList.remove('modal-open');
       modalType='';
