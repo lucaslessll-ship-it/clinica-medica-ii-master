@@ -363,3 +363,12 @@ body[data-theme="dark"] .caderno-icone-3d{color:#c6ede1;background:linear-gradie
 .nota-atalho-pagina:focus-visible{outline:2px solid var(--focus,#0b5f57);outline-offset:3px}
 @media(max-width:650px){.nota-atalho-pagina{margin:5px 0 12px;font-size:11px;padding:6px 9px;min-height:35px}}
 @media print{.nota-atalho-pagina{display:none!important}}
+
+/* Ajuste de ergonomia: preservar foco e alvos de toque acessíveis. */
+@media(max-width:500px){
+ .topbar-right .focus-trigger{
+   display:inline-grid!important;place-items:center;flex:0 0 44px;
+   min-width:44px;width:44px;min-height:44px;height:44px;padding:0;
+ }
+}
+.cir-perf .btn{min-height:44px}
