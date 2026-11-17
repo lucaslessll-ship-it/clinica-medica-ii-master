@@ -202,7 +202,7 @@
     const glasses=i%5===2||i%7===4;
     const freckles=i%4===1;
     const beard=i===3||i===7||i===10;
-    return '<svg class="avatar-3d-art" viewBox="0 0 100 100" role="img" aria-label="Avatar ilustrado '+(i+1)+'" xmlns="http://www.w3.org/2000/svg">'+
+    return '<svg class="avatar-3d-art" viewBox="0 0 100 100" focusable="false" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">'+
       '<defs>'+
         '<radialGradient id="'+uid+'-bg" cx="28%" cy="16%" r="94%"><stop stop-color="#ffffff"/><stop offset=".53" stop-color="#d9e9e6"/><stop offset="1" stop-color="#a7cec8"/></radialGradient>'+
         '<radialGradient id="'+uid+'-skin" cx="29%" cy="24%" r="84%"><stop stop-color="#fff3df"/><stop offset=".36" stop-color="'+skin+'"/><stop offset="1" stop-color="#96604f"/></radialGradient>'+
