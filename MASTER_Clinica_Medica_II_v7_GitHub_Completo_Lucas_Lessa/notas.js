@@ -277,7 +277,7 @@
   }
 
   function notaGeralDaAula() {
-    const rota=rotaAtual(), chave=aulaAtual();
+    const rota=caixa?.dataset.rota || rotaAtual(), chave=caixa?.dataset.aula || aulaAtual();
     const materia=rota==='p1topic'?'p1':rota==='cirtopic'?'cir':'p2';
     const storage=materia==='p1'?'master_p1_lucas_v4':materia==='cir'?'master_cir_lucas_v1':'master_p2_hig_v2';
     let dados={};
@@ -457,6 +457,7 @@
     salvarTodos();
     if (!marca.comentario && !marca.comentarioAtivo) { api()?.marcaEdita(aula,id,{comentarioAtivo:true}); agendar(); }
     caixa.dataset.aula = aula;
+    caixa.dataset.rota = rotaAtual();
     caixa.dataset.nota = id;
     modoPainel = modo;
     window.CadernoUnificado?.fecharPainel?.();
