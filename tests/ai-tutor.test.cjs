@@ -45,7 +45,7 @@ test('atalhos usam a aula atual, painel reflow e temas mantêm foco; expiração
   await p.evaluate(theme=>{HIG.setTheme(theme==='high-contrast'?'light':theme);if(theme==='high-contrast')HIG.togglePref('contrast');navigate('pocus');PocusCourse.open(0);},theme);
   await p.locator('.ai-tutor-launch').click();await p.locator('.ai-tutor-tools summary').click();await p.locator('[data-ai-mode=resumo]').click();await p.waitForFunction(()=>document.querySelector('.ai-tutor-history')?.textContent.includes('Limite diário'));
   assert.match(request.question,/Resuma a aula/);assert.ok(request.blocks.every(b=>b.id.startsWith('pocus_')));assert.ok(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));
-  await p.keyboard.press('Escape');assert.equal(await p.locator('.ai-tutor-launch').evaluate(e=>e===document.activeElement),true);
+  await p.keyboard.press('Escape');await p.waitForFunction(()=>document.activeElement===document.querySelector('.ai-tutor-launch'));assert.equal(await p.locator('.ai-tutor-dialog').evaluate(d=>d.open),false);
   await p.locator('.ai-tutor-launch').click();await p.locator('.ai-tutor-dialog button').last().focus();await p.keyboard.press('Tab');assert.equal(await p.evaluate(()=>document.querySelector('.ai-tutor-dialog').contains(document.activeElement)),true);
   await p.screenshot({path:'work/ai-tutor-'+theme+'.png'});
   await p.evaluate(()=>{document.documentElement.classList.add('master-auth-locked');window.dispatchEvent(new Event('master-auth-ended'));});
