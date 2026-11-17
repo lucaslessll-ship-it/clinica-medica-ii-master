@@ -243,7 +243,7 @@
         if (nova) {
           HIGapi.marcaEdita(aulaAtual(), nova.id, { comentarioAtivo: true });
           agendar();
-          requestAnimationFrame(() => abrirCaixa(nova.id));
+          abrirCaixa(nova.id);
         }
       } else if (emEdicao?.tipo === 'marca') {
         const id = emEdicao.id;
@@ -403,7 +403,7 @@
     const marca = api()?.marcas(aula).find(m=>m.id===id);
     if (!marca) return;
     salvarTodos();
-    if (!marca.comentario && !marca.comentarioAtivo) api()?.marcaEdita(aula,id,{comentarioAtivo:true});
+    if (!marca.comentario && !marca.comentarioAtivo) { api()?.marcaEdita(aula,id,{comentarioAtivo:true}); agendar(); }
     caixa.dataset.aula = aula;
     caixa.dataset.nota = id;
     modoPainel = modo;
