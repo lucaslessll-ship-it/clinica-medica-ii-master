@@ -80,7 +80,9 @@
       '<button type="button" class="btn secondary caderno-voltar-trecho" data-rota="' + materia.rota +
       '" data-tema="' + escapar(tema.id) + '" data-indice="' + aula.indice +
       '" data-chave="' + escapar(chave) + '" data-marca-id="' + escapar(marca.id) +
-      '">Voltar ao trecho</button></div>';
+      '">Voltar ao trecho</button>' +
+      '<button type="button" class="btn caderno-excluir-marca nota-acao-excluir" data-chave="' + escapar(chave) +
+      '" data-marca-id="' + escapar(marca.id) + '">Excluir destaque e comentário</button></div>';
   }
 
   function aulaHTML(materia, tema, aula) {
@@ -99,6 +101,7 @@
       '<label class="caderno-rotulo">Anotações da aula' +
       '<textarea class="caderno-editor" rows="4" placeholder="Escreva suas anotações com suas próprias palavras">' + escapar(aula.nota) + '</textarea></label>' +
       '<div class="caderno-acoes"><button type="button" class="btn secondary caderno-salvar-nota">Salvar nota</button>' +
+      '<button type="button" class="btn caderno-excluir-nota nota-acao-excluir"'+(aula.nota.trim()?'':' disabled')+'>Excluir nota</button>' +
       '<button type="button" class="btn caderno-abrir notas-ir" data-rota="' + materia.rota +
       '" data-tema="' + escapar(tema.id) + '" data-indice="' + aula.indice + '">Abrir aula no texto</button>' +
       '<span class="caderno-status" aria-live="polite"></span></div>' +
@@ -217,6 +220,8 @@
         catch { corpo.querySelector('.caderno-status').textContent = 'Falha ao salvar neste dispositivo.'; return; }
       }
     }
+    const excluir=corpo.querySelector('.caderno-excluir-nota');
+    if(excluir)excluir.disabled=!valor.trim();
     corpo.querySelector('.caderno-status').textContent = 'Salvo no registro original.';
   }
 
@@ -278,7 +283,8 @@
       '" data-tem-comentarios="'+Number(!!(marca?.comentario||'').trim())+
       '" data-tem-notas="'+Number(!marca)+'" data-busca="'+busca+'" '+ids+'>'+titulo+conteudo+
       '<div class="caderno-painel-acoes"><button type="button" class="caderno-painel-salvar">Salvar</button>'+
-      '<button type="button" class="caderno-painel-ir">'+(marca?'Voltar ao trecho':'Abrir aula')+'</button></div>'+
+      '<button type="button" class="caderno-painel-ir">'+(marca?'Voltar ao trecho':'Abrir aula')+'</button>'+
+      '<button type="button" class="caderno-painel-excluir nota-acao-excluir" aria-label="'+(marca?'Excluir destaque e comentário':'Excluir nota da aula')+'">Excluir</button></div>'+
       '<small class="caderno-painel-status" aria-live="polite"></small></article>';
   }
 
