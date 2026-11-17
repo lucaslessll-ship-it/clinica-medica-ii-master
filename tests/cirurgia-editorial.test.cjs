@@ -77,3 +77,14 @@ test('lotes 1 e 2 preservam 410 outras questões e a distribuição 108/108/108/
  const counts=[0,0,0,0];for(const q of qs)counts[q.a]++;
  assert.deepEqual(counts,[108,108,108,108]);
 });
+
+
+test('progresso de versão antiga não conta como domínio atual após reescrita',()=>{
+ const app=fs.readFileSync('MASTER_Clinica_Medica_II_v7_GitHub_Completo_Lucas_Lessa/cir_app.js','utf8');
+ assert.match(app,/const isCurrent=\(q,r=state\.results\[q\.id\]\)/);
+ assert.match(app,/ans=qs\.filter\(q=>isCurrent\(q\)\)/);
+ assert.match(app,/f\.mode==='new'&&!isCurrent\(q\)/);
+ assert.match(app,/f\.mode==='wrong'&&isCurrent\(q\)/);
+ assert.match(app,/function isDue\(id\)\{const q=byId\(id\),r=state\.results\[id\]/);
+ assert.match(app,/results:currentResults,activity,now/);
+});
