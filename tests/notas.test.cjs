@@ -253,8 +253,8 @@ test('caderno no topo reúne os registros de P1, P2 e Cirurgia sem mudar suas ch
  });
  await p.click('#caderno-atalho-topo');
  await p.waitForSelector('#caderno-painel:not([hidden])');
- assert.match(await p.locator('#caderno-painel').innerText(),/Nota P1 preservada/);
- assert.match(await p.locator('#caderno-painel').innerText(),/Nota da Cirurgia preservada/);
+ assert.match(await p.locator('#caderno-painel [data-materia="p1"] .caderno-painel-editor-nota').first().inputValue(),/Nota P1 preservada/);
+ assert.match(await p.locator('#caderno-painel [data-materia="cir"] .caderno-painel-editor-nota').first().inputValue(),/Nota da Cirurgia preservada/);
  await p.click('[data-painel-acao="completo"]');
  await p.waitForSelector('.caderno-unificado');
  assert.equal(await p.locator('.caderno-materia').count(),3);
