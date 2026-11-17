@@ -62,15 +62,26 @@ const HIG = (() => {
     document.getElementById('hig-dialog-title').textContent=name==='search'?'Buscar conteúdo':name==='settings'?'Preferências':name==='pomodoro'?'Pomodoro e dedicação':'Atalhos de teclado';
     document.getElementById('hig-dialog-content').innerHTML=content;
     if(!modalBackground){modalBackground=[...document.querySelectorAll('#app-shell,#mobile-tabbar,#focus-float,#focus-exit')].map(el=>[el,el.inert]);modalBackground.forEach(([el])=>el.inert=true);}
-    overlay.hidden=false;document.body.classList.add('modal-open');
+    if(window.MasterWindowMotion)window.MasterWindowMotion.show(overlay,{kind:'overlay'});
+    else overlay.hidden=false;
+    document.body.classList.add('modal-open');
     requestAnimationFrame(()=>{if(overlay.hidden||document.documentElement.classList.contains('master-auth-locked'))return;let target=name==='search'?document.getElementById('global-search'):overlay.querySelector('.hig-dialog .icon-button');target?.focus()});
   }
   function closeOverlay(){
     const overlay=document.getElementById('hig-overlay'),wasOpen=!overlay.hidden,locked=document.documentElement.classList.contains('master-auth-locked');
-    overlay.hidden=true;document.body.classList.remove('modal-open');modalType='';
-    if(modalBackground){for(const [el,inert]of modalBackground)el.inert=locked||inert;modalBackground=null;}
-    if(wasOpen&&!locked){const target=modalFocus?.isConnected&&modalFocus.getClientRects().length&&!modalFocus.closest('[inert]')?modalFocus:document.querySelector('.menu-button');target?.focus({preventScroll:true});}
-    modalFocus=null;
+    const finalize=()=>{
+      overlay.hidden=true;
+      document.body.classList.remove('modal-open');
+      modalType='';
+      if(modalBackground){for(const [el,inert]of modalBackground)el.inert=locked||inert;modalBackground=null;}
+      if(wasOpen&&!locked){
+        const target=modalFocus?.isConnected&&modalFocus.getClientRects().length&&!modalFocus.closest('[inert]')?modalFocus:document.querySelector('.menu-button');
+        target?.focus({preventScroll:true});
+      }
+      modalFocus=null;
+    };
+    if(window.MasterWindowMotion&&wasOpen)window.MasterWindowMotion.hide(overlay,{kind:'overlay',onComplete:finalize});
+    else finalize();
   }
   function dialogKeys(e){
     if(e.key==='Escape'){e.preventDefault();closeOverlay();return;}
