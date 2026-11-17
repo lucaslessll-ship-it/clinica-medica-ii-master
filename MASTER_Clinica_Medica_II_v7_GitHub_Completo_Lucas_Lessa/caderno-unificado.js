@@ -239,6 +239,64 @@
     }
   }
 
+
+  /* Exclusão única: a visualização central preserva P1, P2, Cirurgia e outras rotas. */
+  function excluirRegistro({materia='p2',chave,marcaId=''}={}) {
+    if(!chave||!['p1','p2','cir','estudo'].includes(materia))return false;
+    const dados=ler(marcaId?UX_KEY:chaveDados(materia==='estudo'?'p2':materia));
+    const existente=marcaId
+      ?(dados.marcas?.[chave]||[]).find(m=>m.id===marcaId)
+      :String(dados.notes?.[chave]||'');
+    if(!existente)return false;
+    const aviso=marcaId
+      ?'Excluir este destaque e o comentário associado? A exclusão será sincronizada e não poderá ser desfeita.'
+      :'Excluir esta anotação da aula? Os destaques permanecem. A exclusão não poderá ser desfeita.';
+    if(!window.confirm(aviso))return false;
+    // O salvamento de rascunhos vem ANTES da exclusão para não ressuscitar itens.
+    salvarPendentesCaderno();
+    salvarEdicoesPainel();
+    let ok=false;
+    if(marcaId){
+      ok=window.HIG?.marcaRemove?.(chave,marcaId)===true;
+    }else{
+      const modulo=materia==='p1'?window.P1:materia==='cir'?window.CIR:window.HIG;
+      const escrever=materia==='p1'||materia==='cir'?modulo?.saveExternalNote:modulo?.saveNote;
+      if(typeof escrever==='function'){escrever.call(modulo,chave,'');ok=true;}
+    }
+    if(!ok)return false;
+    const raiz=document.querySelector('.caderno-unificado');
+    if(raiz){
+      const busca=raiz.querySelector('#caderno-busca')?.value||'';
+      const filtro=raiz.querySelector('[data-caderno-filtro][aria-pressed="true"]')?.dataset.cadernoFiltro||'todas';
+      const y=window.scrollY;
+      raiz.outerHTML=exibir();
+      const nova=document.querySelector('.caderno-unificado');
+      if(nova){
+        nova.querySelector('#caderno-busca').value=busca;
+        nova.querySelectorAll('[data-caderno-filtro]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.cadernoFiltro===filtro)));
+        filtrarCaderno();
+      }
+      window.scrollTo({top:Math.max(0,Math.min(y,document.documentElement.scrollHeight-window.innerHeight)),behavior:'instant'});
+    }
+    if(painel&&!painel.hidden){
+      const area=painel.querySelector('.caderno-painel-scroll');
+      const y=area.scrollTop;
+      area.innerHTML=conteudoPainel();
+      area.scrollTop=y;
+      filtrarPainel();
+    }
+    if(!marcaId){
+      const atual=document.querySelector('#main-content .deep-lesson[data-lesson-key]');
+      if(atual?.dataset.lessonKey===chave){
+        const editor=atual.querySelector('#chapter-note,#p1-note,#cir-note');
+        if(editor)editor.value='';
+      }
+    }
+    window.Notas?.aplicar?.();
+    window.dispatchEvent(new CustomEvent('master-note-deleted',{detail:{materia,chave,marcaId}}));
+    return true;
+  }
+
   function exportar() {
     const linhas = ['# Caderno Clínica Master', '', 'Exportado: ' + new Date().toLocaleString('pt-BR'),''];
     for (const grupo of reunir()) {
@@ -428,6 +486,9 @@
       } else if (botao.dataset.painelAcao==='completo') {
         fecharPainel();
         if(typeof navigate==='function')navigate('notes');
+      } else if(botao.classList.contains('caderno-painel-excluir')) {
+        const card=botao.closest('.caderno-painel-cartao');
+        excluirRegistro({materia:card?.dataset.materia,chave:card?.dataset.chave,marcaId:card?.dataset.marcaId||''});
       } else if(botao.classList.contains('caderno-painel-salvar')) {
         const cartao=botao.closest('.caderno-painel-cartao');
         cartao.dataset.sujo='sim'; salvarCartao(cartao);
@@ -446,6 +507,12 @@
       const raiz=botao.closest('.caderno-unificado');
       raiz.querySelectorAll('[data-caderno-filtro]').forEach(b=>b.setAttribute('aria-pressed',String(b===botao)));
       filtrarCaderno();
+    } else if (botao.classList.contains('caderno-excluir-nota')) {
+      const corpo=botao.closest('.caderno-aula-corpo');
+      excluirRegistro({materia:corpo?.dataset.materia,chave:corpo?.dataset.chave});
+    } else if (botao.classList.contains('caderno-excluir-marca')) {
+      const corpo=botao.closest('.caderno-aula-corpo');
+      excluirRegistro({materia:corpo?.dataset.materia,chave:botao.dataset.chave,marcaId:botao.dataset.marcaId});
     } else if (botao.classList.contains('caderno-salvar-nota')) {
       salvarNota(botao);
     } else if (botao.classList.contains('caderno-salvar-comentario')) {
@@ -483,5 +550,5 @@
   else inserirAtalho();
 
   if (window.HIG) window.HIG.viewNotes = exibir;
-  window.CadernoUnificado = {exibir,reunir,exportar,abrirPainel,fecharPainel,filtrarCaderno};
+  window.CadernoUnificado = {exibir,reunir,exportar,abrirPainel,fecharPainel,filtrarCaderno,excluirRegistro};
 })();
