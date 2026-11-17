@@ -16,8 +16,9 @@ function mock(){
  localStorage.setItem('master_auth_local_owner',user.id);const canvas=document.createElement('canvas');canvas.width=600;canvas.height=400;const ctx=canvas.getContext('2d');ctx.fillStyle='#284c54';ctx.fillRect(0,0,600,400);const fixture=canvas.toDataURL('image/png').split(',')[1];
  window.supabase={createClient:()=>({auth:{getSession:async()=>({data:{session:{user,access_token:'test-jwt'}}}),getUser:async()=>({data:{user}}),onAuthStateChange(){return {data:{subscription:{unsubscribe(){}}}}},signOut:async()=>({error:null})},from(table){let columns='',key='';const query={select(c){columns=c;return query},order(){return query},contains(_,keys){key=keys[0];return query},eq(){return query},maybeSingle:async()=>({data:{policy_version:'2026-11-08'},error:null}),upsert:async()=>({error:null}),then(resolve){const data=table==='lesson_images'?(columns==='keys'?[{keys:Array.from({length:8},(_,i)=>'rad_m'+(i+2))}]:[{id:key,caption:'Imagem sintética para teste',credit:'Fixture',mime:'image/png',data:fixture,marks:[{t:'Achado',x:50,y:50,lx:10,ly:10}]}]):[];resolve({data,error:null});}};return query;}})};
 }
-async function open(viewport={width:1280,height:800},date){
+async function open(viewport={width:1280,height:800},date,showWelcome=false){
  const context=await browser.newContext({viewport,timezoneId:'America/Sao_Paulo'});const page=await context.newPage(),errors=[];page.on('pageerror',e=>errors.push(e.stack||e.message));
+ if(!showWelcome)await page.addInitScript(()=>{try{localStorage.setItem('master_ai_welcome_v1:cir-test','1')}catch{}});
  await page.route('https://cdn.jsdelivr.net/**/supabase.min.js',route=>route.fulfill({contentType:'text/javascript',body:`(${mock.toString()})()`}));
  await page.route('https://cdn.jsdelivr.net/npm/minisearch@7.2.0/**',async route=>route.fulfill({contentType:'text/javascript',body:await fs.readFile('node_modules/minisearch/dist/umd/index.js','utf8')}));
  if(date)await page.clock.install({time:new Date(date)});
@@ -113,4 +114,53 @@ test('ocultar recolhe o robô ao lado do Pomodoro e o botão compacto restaura s
   await p.locator('#ai-tutor-restore').click();assert.equal(await p.locator('.ai-tutor-dock').isVisible(),true);assert.equal(calls,0);
   await p.evaluate(()=>{document.documentElement.classList.add('master-auth-locked');window.dispatchEvent(new Event('master-auth-ended'));});assert.equal(await p.locator('#ai-tutor-restore').isVisible(),false);await t.close();
  }
+});
+
+
+test('primeiro uso no celular apresenta o assistente e não abre o teclado antes de Começar',async()=>{
+ const t=await open({width:390,height:760},undefined,true),p=t.page;
+ let chamadas=0;
+ p.on('request',r=>{if(r.url().includes('/functions/v1/ai-tutor'))chamadas++});
+ await p.locator('.ai-tutor-launch').click();
+ assert.equal(await p.locator('.ai-tutor-welcome').isVisible(),true);
+ assert.equal(await p.locator('#ai-tutor-question').isVisible(),false);
+ assert.equal(await p.locator('#ai-tutor-question').evaluate(e=>e===document.activeElement),false);
+ assert.equal(await p.locator('.ai-tutor-welcome [data-ai-intent]').count(),3);
+ assert.equal(await p.locator('.ai-tutor-welcome .ai-tutor-welcome-robot').isVisible(),true);
+ assert.equal(await p.locator('.ai-tutor-welcome-choices [data-ai-intent="ask"]').getAttribute('aria-pressed'),'true');
+ const bounds=await p.locator('.ai-tutor-welcome-start').boundingBox();
+ assert.ok(bounds&&bounds.x>=0&&bounds.x+bounds.width<=391&&bounds.y+bounds.height<=761);
+ await p.locator('[data-ai-intent="resumo"]').click();
+ assert.equal(await p.locator('[data-ai-intent="resumo"]').getAttribute('aria-pressed'),'true');
+ await p.locator('[data-ai-start]').click();
+ assert.equal(await p.locator('.ai-tutor-welcome').isVisible(),false);
+ assert.equal(await p.locator('.ai-tutor-history').isVisible(),true);
+ assert.equal(await p.locator('.ai-tutor-tools').getAttribute('open'),'');
+ assert.equal(chamadas,0,'Escolher um atalho não deve consumir respostas da IA');
+ await t.close();
+});
+
+test('opção Não mostrar novamente é preservada ao recarregar e ajuda continua acessível',async()=>{
+ const t=await open({width:390,height:700},undefined,true),p=t.page;
+ await p.locator('.ai-tutor-launch').click();
+ await p.locator('[data-ai-never-show]').check();
+ await p.locator('[data-ai-start]').click();
+ assert.equal(await p.evaluate(()=>localStorage.getItem('master_ai_welcome_v1:cir-test')),'1');
+ await p.locator('[data-ai-close]').click();
+ await p.reload();await p.waitForFunction(()=>document.getElementById('master-auth')?.hidden);
+ await p.locator('.ai-tutor-launch').click();
+ assert.equal(await p.locator('.ai-tutor-welcome').isVisible(),false);
+ await p.locator('[data-ai-help-toggle]').click();
+ assert.equal(await p.locator('.ai-tutor-help').getAttribute('open'),'');
+ await t.close();
+});
+
+test('fechar durante a apresentação não grava preferência e reabrir mostra introdução',async()=>{
+ const t=await open({width:360,height:640},undefined,true),p=t.page;
+ await p.locator('.ai-tutor-launch').click();
+ await p.locator('[data-ai-close]').click();
+ assert.equal(await p.evaluate(()=>localStorage.getItem('master_ai_welcome_v1:cir-test')),null);
+ await p.locator('.ai-tutor-launch').click();
+ assert.equal(await p.locator('.ai-tutor-welcome').isVisible(),true);
+ await t.close();
 });

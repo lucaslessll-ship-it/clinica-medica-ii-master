@@ -1,8 +1,10 @@
 /* Tutor: índice público sob demanda, histórico efêmero e proxy autenticado. */
 (()=>{'use strict';
 const script=document.currentScript,asset=new URL('ai-index.json',script.src);asset.search=new URL(script.src).search;
-let dialog,launch,dock,hide,restore,returnFocus,history,input,status,send,loader=null,index=null,documents=[],byId=new Map(),controller=null,generation=0,owner=null;
-const HIDDEN='master_ai_launcher_hidden_v1',NEWS='master_ai_news_20261116_lab20';
+let dialog,launch,dock,hide,restore,returnFocus,history,input,status,send,welcome,loader=null,index=null,documents=[],byId=new Map(),controller=null,generation=0,owner=null;
+const HIDDEN='master_ai_launcher_hidden_v1',NEWS='master_ai_news_20261116_lab20',WELCOME='master_ai_welcome_v1:';
+const welcomeUsedThisSession=new Set();
+let welcomeIntent='ask';
 const pref=key=>{try{return localStorage.getItem(key)==='1';}catch{return false;}};
 const savePref=key=>{try{localStorage.setItem(key,'1');}catch{}};
 let concealed=pref(HIDDEN),newsDismissed=pref(NEWS);
@@ -86,9 +88,61 @@ async function ask(mode='ask'){
  }catch(e){if(mine===generation&&(e.name!=='AbortError'||timedOut)){fail(timedOut?'A resposta demorou mais que o esperado. Tente novamente em instantes.':errors[e.message]||(e.message==='index'?'Não foi possível carregar a busca. Confira a conexão e tente novamente.':'Sem conexão ou serviço indisponível. Tente novamente.'),[],e.message!=='auth');state('Não foi possível concluir a pergunta.');}}
  finally{clearTimeout(requestTimer);if(mine===generation){controller=null;history.querySelector('.ai-tutor-pending')?.remove();history.setAttribute('aria-busy','false');send.disabled=false;input.disabled=false;dialog.querySelectorAll('[data-ai-mode]').forEach(b=>b.disabled=false);status.classList.remove('ai-tutor-dots');if(!submitted)input.focus();}}
 }
+
+function welcomeKey(){const id=auth()?.user()?.id;return id?WELCOME+id:null;}
+function shouldWelcome(){
+ const id=auth()?.user()?.id,key=welcomeKey();
+ if(!id||!key||welcomeUsedThisSession.has(id))return false;
+ try{return localStorage.getItem(key)!=='1';}catch{return true;}
+}
+function chooseWelcome(intent){
+ welcomeIntent=['ask','resumo','questoes'].includes(intent)?intent:'ask';
+ welcome?.querySelectorAll('[data-ai-intent]').forEach(button=>{
+  button.setAttribute('aria-pressed',String(button.dataset.aiIntent===welcomeIntent));
+ });
+}
+function finishWelcome({showHelp=false}={}){
+ if(!welcome||welcome.hidden)return;
+ const id=auth()?.user()?.id,key=welcomeKey();
+ if(id)welcomeUsedThisSession.add(id);
+ if(welcome.querySelector('[data-ai-never-show]')?.checked&&key){
+  try{localStorage.setItem(key,'1');}catch{}
+ }
+ welcome.hidden=true;
+ dialog.classList.remove('ai-tutor-intro');
+ const help=dialog.querySelector('.ai-tutor-help');
+ help.open=showHelp;
+ dialog.querySelector('[data-ai-help-toggle]').setAttribute('aria-expanded',String(showHelp));
+ if(showHelp){help.querySelector('summary')?.focus({preventScroll:true});}
+ else if(welcomeIntent==='resumo'||welcomeIntent==='questoes'){
+  dialog.querySelector('.ai-tutor-tools').open=true;
+  state('Abra uma aula e toque no atalho de revisão. Nenhuma pergunta foi enviada.');
+  dialog.querySelector('[data-ai-mode="'+welcomeIntent+'"]')?.focus({preventScroll:true});
+ }else{input.focus({preventScroll:true});}
+ load().catch(()=>state('A busca não carregou. Confira a conexão e tente novamente.'));
+}
+
 function restoreFocus(){if(!unlocked())return;const mobile=document.querySelector('#sidebar')?.inert&&returnFocus?.closest('#sidebar');const target=mobile?document.querySelector('.menu-button'):returnFocus?.isConnected&&returnFocus.getClientRects().length?returnFocus:!launch.hidden?launch:document.querySelector('[data-ai-open]');target?.focus({preventScroll:true});}
 function close(){if(dialog.open)dialog.close();restoreFocus();}
-function show(from=launch,help=false){if(!unlocked())return;returnFocus=from;if(typeof closeMobileNav==='function')closeMobileNav(false);dialog.showModal();dialog.querySelector('.ai-tutor-help').open=help;dialog.querySelector('[data-ai-help-toggle]').setAttribute('aria-expanded',String(help));if(help)dialog.querySelector('.ai-tutor-help summary').focus();else input.focus();load().catch(()=>state('A busca não carregou. Confira a conexão e tente novamente.'));}
+function show(from=launch,help=false){
+ if(!unlocked())return;
+ returnFocus=from;
+ if(typeof closeMobileNav==='function')closeMobileNav(false);
+ const firstVisit=!help&&shouldWelcome();
+ chooseWelcome('ask');
+ welcome.hidden=!firstVisit;
+ welcome.querySelector('[data-ai-never-show]').checked=false;
+ dialog.classList.toggle('ai-tutor-intro',firstVisit);
+ dialog.showModal();
+ dialog.querySelector('.ai-tutor-help').open=help;
+ dialog.querySelector('[data-ai-help-toggle]').setAttribute('aria-expanded',String(help));
+ if(firstVisit)welcome.querySelector('[data-ai-start]')?.focus({preventScroll:true});
+ else{
+  if(help)dialog.querySelector('.ai-tutor-help summary')?.focus({preventScroll:true});
+  else input.focus({preventScroll:true});
+  load().catch(()=>state('A busca não carregou. Confira a conexão e tente novamente.'));
+ }
+}
 function installEntry(){const nav=document.getElementById('sidebar-nav');if(!nav||nav.querySelector('[data-ai-open]'))return;const entry=document.createElement('button');entry.type='button';entry.className='nav-destination ai-tutor-menu';entry.dataset.aiOpen='';entry.title='Assistente de estudo';entry.setAttribute('aria-haspopup','dialog');entry.innerHTML='<svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M4 4h16v12H9l-5 4V4Z"/><path d="M8 8h8M8 12h5"/></svg><span>Assistente de estudo</span>';const first=nav.querySelector('.nav-group');if(first)first.after(entry);else nav.append(entry);}
 function showNews(){const main=document.getElementById('main-content');if(!main||typeof ui==='undefined'||ui.route!=='dashboard'||!unlocked()||newsDismissed||main.querySelector('.ai-tutor-news'))return;const news=document.createElement('section');news.className='card pad ai-tutor-news';news.setAttribute('aria-label','Novas funções do MASTER');news.innerHTML='<div class="ai-tutor-news-head"><h2>Novidades do MASTER</h2><button type="button" class="btn" data-ai-dismiss aria-label="Dispensar aviso de novas funções">Dispensar</button></div><p class="ai-tutor-news-lead">Laboratório Master ampliado: 20 trilhas, laudos comentados e casos para praticar o raciocínio.</p><details class="ai-tutor-news-details"><summary>Ver o que mudou</summary><ul><li><strong>Assistente de estudo:</strong> encontre aulas e use atalhos de revisão em um só painel. Confira sempre a aula citada na resposta.</li><li><strong>POCUS:</strong> imagens do acervo em destaque, com treino por desenhos separado.</li><li><strong>Laboratório Master:</strong> 20 trilhas de interpretação, 26 novas aulas, laudos didáticos e casos em etapas.</li></ul></details><div class="btn-row"><button type="button" class="btn primary" onclick="navigate(\'labmaster\')">Explorar Laboratório Master</button><button type="button" class="btn" data-ai-open>Abrir assistente</button><button type="button" class="btn" data-ai-open data-ai-help>Como usar</button></div>';news.querySelector('[data-ai-dismiss]').onclick=()=>{newsDismissed=true;savePref(NEWS);news.remove();};main.prepend(news);}
 
@@ -96,9 +150,32 @@ function reset(){generation++;controller?.abort();controller=null;if(dialog.open
 function sync(){const visible=unlocked();launch.hidden=!visible||concealed;dock.hidden=launch.hidden;restore.hidden=!visible||!concealed;dialog.querySelector('[data-ai-show]').hidden=!concealed;if(!visible){reset();return;}const uid=auth().user().id;if(owner&&owner!==uid)reset();owner=uid;installEntry();showNews();}
 function init(){
  launch=document.createElement('button');launch.type='button';launch.className='ai-tutor-launch';launch.hidden=true;launch.setAttribute('aria-label','Abrir assistente de estudo');launch.setAttribute('aria-haspopup','dialog');const mascot=document.createElement('img');const robotURL=new URL('assets/assistant-robot-3d.webp',script.src);robotURL.search=new URL(script.src).search;mascot.src=robotURL.href;mascot.width=64;mascot.height=64;mascot.alt='';mascot.setAttribute('aria-hidden','true');mascot.decoding='async';mascot.draggable=false;launch.append(mascot);
- dialog=document.createElement('dialog');dialog.className='ai-tutor-dialog';dialog.setAttribute('aria-labelledby','ai-tutor-title');dialog.setAttribute('aria-modal','true');dialog.setAttribute('role','dialog');dialog.innerHTML='<header class="ai-tutor-head"><h2 id="ai-tutor-title">Assistente de estudo</h2><button type="button" class="btn" data-ai-help-toggle aria-label="Como usar o assistente" aria-expanded="false">?</button><button type="button" class="btn" data-ai-close aria-label="Fechar assistente">Fechar</button></header><details class="ai-tutor-help"><summary>Como usar o assistente</summary><ol><li>Escreva uma dúvida sobre as aulas. A busca local encontra trechos relacionados.</li><li>Dentro de uma aula, use os atalhos para resumo, questões ou pontos de revisão.</li><li>Confira a resposta e toque em Abrir aula para consultar a fonte completa.</li><li>O botão ao lado do boneco oculta o flutuante. Para mostrar de novo, toque no robô compacto ao lado do Pomodoro ou use o menu lateral.</li><li>Feche com Fechar ou Escape. O histórico não é mantido ao recarregar ou sair da conta.</li></ol><button type="button" class="btn" data-ai-show hidden>Mostrar assistente flutuante</button><p>Se houver aviso de ativação, as aulas encontradas continuam acessíveis enquanto as respostas por IA estão indisponíveis.</p></details><div class="ai-tutor-history" role="log" aria-live="polite" aria-relevant="additions"></div><p class="ai-tutor-status" role="status"></p><details class="ai-tutor-tools"><summary>Atalhos para esta aula</summary><div class="ai-tutor-actions"><button type="button" data-ai-mode="resumo">Resumir esta aula</button><button type="button" data-ai-mode="questoes">Me faça 3 questões sobre isso</button><button type="button" data-ai-mode="prova">O que mais cai disso na prova</button></div></details><form class="ai-tutor-form"><label for="ai-tutor-question">Sua dúvida sobre as aulas</label><textarea id="ai-tutor-question" maxlength="500" placeholder="Ex.: para que serve a manobra vagal?"></textarea><button class="ai-tutor-send" type="submit">Enviar</button></form><p class="ai-tutor-notice">Ferramenta de estudo. Não substitui supervisão clínica. </p><details class="ai-tutor-privacy"><summary>Privacidade e uso de dados</summary><p>São enviados ao provedor somente sua pergunta e trechos públicos das aulas. Não inclua dados de pacientes. O histórico fica apenas nesta sessão.</p></details>';
+ dialog=document.createElement('dialog');dialog.className='ai-tutor-dialog';dialog.setAttribute('aria-labelledby','ai-tutor-title');dialog.setAttribute('aria-modal','true');dialog.setAttribute('role','dialog');dialog.innerHTML='<header class="ai-tutor-head"><div class="ai-tutor-head-brand"><img class="ai-tutor-head-robot" src="assets/assistant-robot-3d.webp" width="36" height="36" alt="" aria-hidden="true"><div><small>ESTUDO MASTER</small><h2 id="ai-tutor-title">Assistente de estudo</h2></div></div><button type="button" class="btn" data-ai-help-toggle aria-label="Como usar o assistente" aria-expanded="false" title="Como usar">?</button><button type="button" class="btn" data-ai-close aria-label="Fechar assistente" title="Fechar">×</button></header><details class="ai-tutor-help"><summary>Como usar o assistente</summary><ol><li>Escreva uma dúvida sobre as aulas. A busca local encontra trechos relacionados.</li><li>Dentro de uma aula, use os atalhos para resumo, questões ou pontos de revisão.</li><li>Confira a resposta e toque em Abrir aula para consultar a fonte completa.</li><li>O botão ao lado do boneco oculta o flutuante. Para mostrar de novo, toque no robô compacto ao lado do Pomodoro ou use o menu lateral.</li><li>Feche pelo X ou pela tecla Escape. O histórico não é mantido ao recarregar ou sair da conta.</li></ol><button type="button" class="btn" data-ai-show hidden>Mostrar assistente flutuante</button><p>Se houver aviso de ativação, as aulas encontradas continuam acessíveis enquanto as respostas por IA estão indisponíveis.</p></details><div class="ai-tutor-history" role="log" aria-live="polite" aria-relevant="additions"></div><p class="ai-tutor-status" role="status"></p><details class="ai-tutor-tools"><summary>Atalhos para esta aula</summary><div class="ai-tutor-actions"><button type="button" data-ai-mode="resumo">Resumir esta aula</button><button type="button" data-ai-mode="questoes">Me faça 3 questões sobre isso</button><button type="button" data-ai-mode="prova">O que mais cai disso na prova</button></div></details><form class="ai-tutor-form"><label for="ai-tutor-question">Sua dúvida sobre as aulas</label><textarea id="ai-tutor-question" maxlength="500" placeholder="Ex.: para que serve a manobra vagal?"></textarea><button class="ai-tutor-send" type="submit">Enviar</button></form><p class="ai-tutor-notice">Ferramenta de estudo. Não substitui supervisão clínica. </p><details class="ai-tutor-privacy"><summary>Privacidade e uso de dados</summary><p>São enviados ao provedor somente sua pergunta e trechos públicos das aulas. Não inclua dados de pacientes. O histórico fica apenas nesta sessão.</p></details>';
+ welcome=document.createElement('section');
+ welcome.className='ai-tutor-welcome';welcome.hidden=true;
+ welcome.setAttribute('aria-labelledby','ai-tutor-welcome-title');
+ welcome.innerHTML=
+  '<div class="ai-tutor-welcome-main">'+
+   '<img class="ai-tutor-welcome-robot" src="assets/assistant-robot-3d.webp" width="66" height="66" alt="" aria-hidden="true" draggable="false">'+
+   '<p class="ai-tutor-welcome-kicker">SEU PARCEIRO DE ESTUDO</p>'+
+   '<h3 id="ai-tutor-welcome-title">Como posso ajudar?</h3>'+
+   '<p class="ai-tutor-welcome-description">Use os conteúdos da plataforma para avançar nos seus estudos.</p>'+
+   '<div class="ai-tutor-welcome-choices" role="group" aria-label="Escolha como estudar">'+
+    '<button type="button" data-ai-intent="ask" aria-pressed="true"><span class="ai-tutor-choice-icon" aria-hidden="true">?</span><span><strong>Tirar dúvidas</strong><small>Entenda conceitos e diferenças.</small></span></button>'+
+    '<button type="button" data-ai-intent="resumo" aria-pressed="false"><span class="ai-tutor-choice-icon" aria-hidden="true">≡</span><span><strong>Resumir aulas</strong><small>Revise os pontos principais.</small></span></button>'+
+    '<button type="button" data-ai-intent="questoes" aria-pressed="false"><span class="ai-tutor-choice-icon" aria-hidden="true">✓</span><span><strong>Praticar questões</strong><small>Treine e confira as fontes.</small></span></button>'+
+   '</div>'+
+  '</div>'+
+  '<div class="ai-tutor-welcome-footer">'+
+   '<label class="ai-tutor-welcome-never"><input type="checkbox" data-ai-never-show>Não mostrar novamente</label>'+
+   '<button type="button" class="ai-tutor-welcome-start" data-ai-start>Começar</button>'+
+  '</div>'+
+  '<p class="ai-tutor-welcome-footnote">O assistente usa as aulas do site. Confira sempre as fontes e não compartilhe dados de pacientes.</p>';
+ dialog.querySelector('.ai-tutor-head').after(welcome);
+ welcome.querySelectorAll('[data-ai-intent]').forEach(b=>b.onclick=()=>chooseWelcome(b.dataset.aiIntent));
+ welcome.querySelector('[data-ai-start]').onclick=()=>finishWelcome();
  const privacy=dialog.querySelector('.ai-tutor-privacy');dialog.querySelector('.ai-tutor-help').append(privacy);
- dialog.querySelector('[data-ai-help-toggle]').onclick=()=>{const help=dialog.querySelector('.ai-tutor-help');help.open=!help.open;dialog.querySelector('[data-ai-help-toggle]').setAttribute('aria-expanded',String(help.open));};
+ dialog.querySelector('[data-ai-help-toggle]').onclick=()=>{if(!welcome.hidden){finishWelcome({showHelp:true});return;}const help=dialog.querySelector('.ai-tutor-help');help.open=!help.open;dialog.querySelector('[data-ai-help-toggle]').setAttribute('aria-expanded',String(help.open));};
  dialog.addEventListener('keydown',e=>{if(e.key!=='Tab')return;const items=[...dialog.querySelectorAll('button:not([disabled]),textarea:not([disabled]),a[href],summary')].filter(el=>el.getClientRects().length);const first=items[0],last=items.at(-1);if(e.shiftKey&&document.activeElement===first){e.preventDefault();last?.focus();}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first?.focus();}});
  dock=document.createElement('aside');dock.className='ai-tutor-dock';dock.setAttribute('aria-label','Assistente flutuante');hide=document.createElement('button');hide.type='button';hide.className='ai-tutor-hide';hide.setAttribute('aria-label','Ocultar assistente flutuante');hide.title='Ocultar. Você pode abrir pelo menu lateral.';hide.innerHTML='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 6 12 12M6 18 18 6"/></svg>';hide.onclick=()=>{concealed=true;savePref(HIDDEN);sync();restore.focus({preventScroll:true});if(typeof toast==='function')toast('Robô recolhido ao lado do Pomodoro.');};dock.append(launch,hide);document.body.append(dock,dialog);history=dialog.querySelector('.ai-tutor-history');input=dialog.querySelector('textarea');status=dialog.querySelector('.ai-tutor-status');send=dialog.querySelector('[type=submit]');
  function revealFloating(){concealed=false;try{localStorage.removeItem(HIDDEN);}catch{}sync();if(dialog.open)dialog.querySelector('[data-ai-help-toggle]').focus();else launch.focus({preventScroll:true});}
