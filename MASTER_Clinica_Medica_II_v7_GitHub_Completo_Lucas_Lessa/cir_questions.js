@@ -4211,8 +4211,8 @@ window.MASTER_CIR_QUESTIONS=[
     "revision": "cir-20261117-a2",
     "refs": [
       {
-        "title": "ASCRS — tratamento do prolapso retal, diretriz clínica (2017)",
-        "url": "https://www.guidelinecentral.com/guideline/9226/"
+        "title": "ASCRS — Clinical Practice Guidelines: Treatment of Rectal Prolapse (2017)",
+        "url": "https://www.ascrsu.com/ascrs/view/ASCRS-Evidence-Based-Guidelines-and-Expert-Consensus/3982038/all/Treatment_of_Rectal_Prolapse__2017_?q=anal+cancer"
       }
     ]
   },
@@ -6120,7 +6120,7 @@ window.MASTER_CIR_QUESTIONS=[
       },
       {
         "title": "EAU — avaliação diagnóstica de LUTS masculinos",
-        "url": "https://d5edc83c-03f2-494e-ba36-4feaf988a1fb.patients.uroweb.org/guidelines/management-of-non-neurogenic-male-luts/chapter/diagnostic-evaluation"
+        "url": "https://uroweb.org/guidelines/management-of-non-neurogenic-male-luts/chapter/diagnostic-evaluation"
       }
     ]
   },
