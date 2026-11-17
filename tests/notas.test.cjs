@@ -457,7 +457,9 @@ test('excluir nota de P1 no caderno central preserva P2 e Cirurgia',async()=>{
    HIG.saveNote('neuro1_0','Nota clínica preservada');
    navigate('notes');
  });
- await p.waitForSelector('.caderno-unificado .caderno-aula-corpo[data-materia="p1"][data-chave="p1dm_0"]');
+ const p1corpo=p.locator('.caderno-unificado .caderno-aula-corpo[data-materia="p1"][data-chave="p1dm_0"]');
+ await p1corpo.locator('xpath=..').locator('summary').first().click();
+ await p1corpo.waitFor({state:'visible'});
  p.once('dialog',d=>d.accept());
  await p.locator('.caderno-aula-corpo[data-materia="p1"][data-chave="p1dm_0"] .caderno-excluir-nota').click();
  const atual=await p.evaluate(()=>{
@@ -536,7 +538,8 @@ test('nota de ECG também é excluída pelo caderno central sem alterar outra p�
  await p.evaluate(()=>navigate('notes'));
  await p.waitForSelector('.caderno-unificado');
  const card=p.locator('.caderno-aula-corpo[data-materia="estudo"][data-chave="'+key+'"]');
- await card.waitFor();
+ await card.locator('xpath=..').locator('summary').first().click();
+ await card.waitFor({state:'visible'});
  p.once('dialog',d=>d.accept());
  await card.locator('.caderno-excluir-nota').click();
  const value=await p.evaluate(k=>JSON.parse(localStorage.getItem('master_p2_hig_v2')||'{}').notes?.[k],key);
