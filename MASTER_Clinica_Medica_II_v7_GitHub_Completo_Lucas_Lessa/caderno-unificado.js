@@ -9,6 +9,7 @@
     {id:'cir',nome:'Clínica Cirúrgica',rota:'cirtopic'}
   ];
   const escapar = valor => String(valor ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const buscaNormal = v => String(v??'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
   const ler = chave => { try { return JSON.parse(localStorage.getItem(chave)) || {}; } catch { return {}; } };
   const chaveDados = id => id === 'p1' ? P1_KEY : id === 'cir' ? CIR_KEY : UX_KEY;
   const catalogo = id => id === 'p2' ? (typeof TOPICS !== 'undefined' ? TOPICS : []) :
@@ -52,7 +53,7 @@
   }
 
   function aulaHTML(materia, tema, aula) {
-    const busca=escapar([materia.nome,tema.titulo,aula.titulo,aula.nota,...aula.marcas.map(m=>m.texto+' '+(m.comentario||''))].join(' ').toLowerCase());
+    const busca=escapar(buscaNormal([materia.nome,tema.titulo,aula.titulo,aula.nota,...aula.marcas.map(m=>m.texto+' '+(m.comentario||''))].join(' ')));
     const comentario=Number(aula.marcas.some(m=>!!(m.comentario||'').trim()));
     return '<details class="caderno-aula notas-aula" data-busca="' + busca +
       '" data-tem-marcas="' + Number(aula.marcas.length>0) +
@@ -114,7 +115,7 @@
       const tipo=filtro==='todas' || (filtro==='marcas' && cartao.dataset.temMarcas==='1') ||
         (filtro==='comentarios' && cartao.dataset.temComentarios==='1') ||
         (filtro==='notas' && cartao.dataset.temNotas==='1');
-      const busca=String(cartao.dataset.busca||'').toLowerCase().includes(termo);
+      const busca=buscaNormal(cartao.dataset.busca||'').includes(buscaNormal(termo));
       cartao.hidden=!(tipo&&busca);
       if(!cartao.hidden)visiveis++;
     });
@@ -197,7 +198,7 @@
   let painel=null, salvarTimer=null, painelFiltro='todas';
 
   function painelCartao({materia,tema,aula,marca}) {
-    const busca=escapar([materia.nome,tema.titulo,aula.titulo,aula.nota,marca?.texto||'',marca?.comentario||''].join(' ').toLowerCase());
+    const busca=escapar(buscaNormal([materia.nome,tema.titulo,aula.titulo,aula.nota,marca?.texto||'',marca?.comentario||''].join(' ')));
     const tipo=marca?'marca':'nota';
     const ch=escapar(aula.chave);
     const ids='data-materia="'+materia.id+'" data-rota="'+materia.rota+
