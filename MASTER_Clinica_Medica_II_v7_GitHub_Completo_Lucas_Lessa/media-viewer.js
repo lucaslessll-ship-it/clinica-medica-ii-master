@@ -13,14 +13,31 @@ function open(src,label='Imagem de estudo'){
  stage.onpointerdown=e=>{if(e.button!==0)return;e.preventDefault();stage.setPointerCapture(e.pointerId);drag={cx:e.clientX,cy:e.clientY,x,y};if(mode!=='pan'){draft={mode,points:[point(e)]};paint()}};
  stage.onpointermove=e=>{if(!drag)return;if(mode==='pan'){x=drag.x+e.clientX-drag.cx;y=drag.y+e.clientY-drag.cy;transform()}else{if(mode==='arrow')draft.points[1]=point(e);else draft.points.push(point(e));paint()}};
  const finish=()=>{if(draft&&draft.points.length>1)marks.push(draft);draft=null;drag=null;paint()};stage.onpointerup=finish;stage.onpointercancel=finish;
- dialog.onkeydown=e=>{if(e.target.closest('input,textarea'))return;if(['+','=','-','0','ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(e.key)){e.preventDefault();if(e.key==='0')action('fit');else if(e.key==='-')action('out');else if(e.key==='+'||e.key==='=')action('in');else{x+=e.key==='ArrowLeft'?-20:e.key==='ArrowRight'?20:0;y+=e.key==='ArrowUp'?-20:e.key==='ArrowDown'?20:0;transform()}}};dialog.showModal();dialog.querySelector('h2').focus();
+ dialog.onkeydown=e=>{if(e.target.closest('input,textarea'))return;if(['+','=','-','0','ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(e.key)){e.preventDefault();if(e.key==='0')action('fit');else if(e.key==='-')action('out');else if(e.key==='+'||e.key==='=')action('in');else{x+=e.key==='ArrowLeft'?-20:e.key==='ArrowRight'?20:0;y+=e.key==='ArrowUp'?-20:e.key==='ArrowDown'?20:0;transform()}}};if(window.MasterWindowMotion)window.MasterWindowMotion.showDialog(dialog);else dialog.showModal();dialog.querySelector('h2').focus();
 }
 function transform(){if(!dialog)return;dialog.querySelector('.image-layer').style.transform=`translate(${x}px,${y}px) scale(${scale})`;dialog.querySelector('.image-status').textContent=`Zoom ${Math.round(scale*100)}%`}
 function path(mark){if(mark.mode==='pen')return mark.points.map((p,i)=>`${i?'L':'M'}${p[0]},${p[1]}`).join(' ');const a=mark.points[0],b=mark.points.at(-1),angle=Math.atan2(b[1]-a[1],b[0]-a[0]),n=25;return `M${a} L${b} M${b[0]-n*Math.cos(angle-.5)},${b[1]-n*Math.sin(angle-.5)} L${b} L${b[0]-n*Math.cos(angle+.5)},${b[1]-n*Math.sin(angle+.5)}`}
 function paint(){const svg=dialog.querySelector('svg');svg.replaceChildren();for(const mark of [...marks,...(draft?[draft]:[])]){const p=document.createElementNS(NS,'path');p.setAttribute('d',path(mark));p.setAttribute('stroke','#e12e37');p.setAttribute('stroke-width','5');p.setAttribute('fill','none');p.setAttribute('stroke-linecap','round');svg.appendChild(p)}}
 async function action(name){if(name==='close'){close();return}if(name==='fit'){scale=1;x=y=0}if(name==='in')scale=Math.min(5,scale*1.25);if(name==='out')scale=Math.max(.5,scale/1.25);if(name==='undo')marks.pop();if(name==='clear')marks=[];if(name==='fullscreen'){if(dialog.requestFullscreen){try{await dialog.requestFullscreen()}catch{dialog.querySelector('.image-status').textContent='Tela cheia indisponível.'}}else dialog.querySelector('.image-status').textContent='Tela cheia não suportada.';return}if(name==='export'){exportImage();return}paint();transform()}
 function exportImage(){if(!img.complete||!img.naturalWidth)return;canvas=document.createElement('canvas');canvas.width=img.naturalWidth;canvas.height=img.naturalHeight;ctx=canvas.getContext('2d');ctx.drawImage(img,0,0);ctx.save();ctx.scale(canvas.width/1000,canvas.height/1000);ctx.strokeStyle='#e12e37';ctx.lineWidth=5;for(const mark of marks)ctx.stroke(new Path2D(path(mark)));ctx.restore();try{canvas.toBlob(blob=>{if(!blob)return;const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='MASTER-imagem-anotada.png';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)})}catch{dialog.querySelector('.image-status').textContent='Exportação indisponível para esta origem.'}}
-function close(){if(!dialog)return;dialog.close();dialog.remove();dialog=null;if(objectUrl){URL.revokeObjectURL(objectUrl);objectUrl=null}origin?.focus()}
+function close(){
+ if(!dialog)return;
+ const current=dialog,returnTo=origin;
+ const finish=()=>{
+  if(current.open)current.close();
+  current.remove();
+  if(dialog===current)dialog=null;
+  if(objectUrl){URL.revokeObjectURL(objectUrl);objectUrl=null;}
+  returnTo?.focus({preventScroll:true});
+ };
+ if(window.MasterWindowMotion)window.MasterWindowMotion.hideDialog(current,()=>{
+  current.remove();
+  if(dialog===current)dialog=null;
+  if(objectUrl){URL.revokeObjectURL(objectUrl);objectUrl=null;}
+  returnTo?.focus({preventScroll:true});
+ });
+ else finish();
+}
 window.addEventListener('master-auth-ended',()=>{if(dialog)close()});
 return {pick,open};
 })();

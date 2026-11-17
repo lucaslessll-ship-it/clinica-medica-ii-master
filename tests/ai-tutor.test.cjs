@@ -35,7 +35,7 @@ test('assistente carrega busca sob demanda, recupera aulas e abre fonte correta'
  const results=await p.evaluate(async()=>({cardio:await AITutor.search('manobra vagal'),cir:await AITutor.search('abdome agudo')}));assert.ok(results.cardio.some(d=>d.kind==='p1'));assert.ok(results.cir.some(d=>d.kind==='cir'));
  await p.locator('#ai-tutor-question').fill('manobra vagal');await p.locator('.ai-tutor-send').click();await p.waitForFunction(()=>document.querySelector('.ai-tutor-status')?.textContent.includes('39 perguntas'));
  assert.equal(received.blocks.length,5);assert.equal(Object.keys(received.blocks[0]).join(','),'id');assert.equal(await p.locator('.ai-tutor-message script').count(),0);assert.match(await p.locator('.ai-tutor-history').innerText(),/<script>/);
- await p.locator('.ai-tutor-source').first().click();assert.equal(await p.locator('.ai-tutor-dialog').evaluate(d=>d.open),false);assert.equal(await p.evaluate(()=>ui.route),'p1topic');
+ await p.locator('.ai-tutor-source').first().click();await p.waitForFunction(()=>!document.querySelector('.ai-tutor-dialog')?.open);assert.equal(await p.evaluate(()=>ui.route),'p1topic');
  await t.close();
 });
 test('atalhos usam a aula atual, painel reflow e temas mantêm foco; expiração limpa a conversa',async()=>{

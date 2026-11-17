@@ -540,14 +540,16 @@
     caixa.dataset.nota = id;
     modoPainel = modo;
     window.CadernoUnificado?.fecharPainel?.();
-    caixa.hidden = false;
+    if(window.MasterWindowMotion)window.MasterWindowMotion.show(caixa,{kind:'sheet'});
+    else caixa.hidden = false;
     renderizarPainel(true);
   }
 
   function fecharCaixa(minimizar = false) {
     if (!caixa || caixa.hidden) return;
     salvarTodos();
-    caixa.hidden = true;
+    if(window.MasterWindowMotion)window.MasterWindowMotion.hide(caixa,{kind:'sheet'});
+    else caixa.hidden = true;
     if (!minimizar) delete caixa.dataset.nota;
   }
 
@@ -592,7 +594,8 @@
     caixa.dataset.rota=pagina.rota;
     caixa.dataset.nota='';
     modoPainel='todas';
-    caixa.hidden=false;
+    if(window.MasterWindowMotion)window.MasterWindowMotion.show(caixa,{kind:'sheet'});
+    else caixa.hidden=false;
     window.CadernoUnificado?.fecharPainel?.();
     renderizarPainel(true);
   }

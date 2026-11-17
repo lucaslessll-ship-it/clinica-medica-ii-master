@@ -292,13 +292,14 @@ const FocusTimer=(()=>{
     caixa.querySelector('[data-focus-end-ask]').textContent=terminou==='foco'
       ? 'Hora do descanso ou vai continuar estudando?'
       : 'Voltar ao estudo ou esticar a pausa?';
-    caixa.hidden=false;
+    if(window.MasterWindowMotion)window.MasterWindowMotion.show(caixa,{kind:'overlay'});
+    else caixa.hidden=false;
     render();
     requestAnimationFrame(()=>caixa.querySelector('[data-focus-end-main]')?.focus());
     try{navigator.vibrate?.(terminou==='foco'?[90,70,90]:[90]);}catch{}
   }
 
-  function fecharFim(){const caixa=document.getElementById('focus-end');if(caixa)caixa.hidden=true;}
+  function fecharFim(){const caixa=document.getElementById('focus-end');if(!caixa)return;if(window.MasterWindowMotion)window.MasterWindowMotion.hide(caixa,{kind:'overlay'});else caixa.hidden=true;}
   function definirDescanso(minutos){definir('curto',minutos);}
   function iniciarEtapa(modo){
     if(!allowed()||!MODOS[modo])return;

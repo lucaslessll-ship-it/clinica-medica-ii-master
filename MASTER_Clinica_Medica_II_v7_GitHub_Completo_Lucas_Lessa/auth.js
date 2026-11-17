@@ -52,7 +52,7 @@
   }
   const field=(id,label,type,autocomplete,extra='')=>`<label for="${id}">${label}</label><input id="${id}" name="${id}" type="${type}" autocomplete="${autocomplete}" aria-describedby="master-auth-message" required ${extra}>`;
   function show(mode, message='', error=false){
-    status.mode=mode;closeProfile();lock(true);$('master-auth').hidden=false;
+    status.mode=mode;closeProfile(true);lock(true);$('master-auth').hidden=false;
     let title,description,fields,submit;
     const email=esc($('master-email')?.value||status.user?.email||'');
     const emailField=()=>field('master-email','E-mail','email','email',`value="${email}" autocapitalize="none" spellcheck="false"`);
@@ -104,7 +104,13 @@
     }));
     $('master-retry').addEventListener('click',()=>{if(!status.busy)enter(status.user);});
     $('master-avatar').addEventListener('click',()=>{
-      const open=$('master-profile').hidden;$('master-profile').hidden=!open;$('master-avatar').setAttribute('aria-expanded',String(open));
+      const profile=$('master-profile');
+      const open=profile.hidden || window.MasterWindowMotion?.isClosing(profile);
+      if(open){
+        if(window.MasterWindowMotion)window.MasterWindowMotion.show(profile,{kind:'modal'});
+        else profile.hidden=false;
+      }else closeProfile();
+      $('master-avatar').setAttribute('aria-expanded',String(open));
       if(open)$('master-change-password').focus();
     });
     $('master-change-password').addEventListener('click',()=>show('password'));
@@ -126,7 +132,18 @@
       }
     });
   }
-  function closeProfile(){if($('master-profile'))$('master-profile').hidden=true;$('master-avatar')?.setAttribute('aria-expanded','false');}
+  function closeProfile(instant=false){
+    const profile=$('master-profile');
+    if(profile && !profile.hidden){
+      if(instant || document.documentElement.classList.contains('master-auth-locked') || !status.user){
+        window.MasterWindowMotion?.cancel(profile);
+        profile.hidden=true;
+      }else if(window.MasterWindowMotion){
+        if(!window.MasterWindowMotion.isClosing(profile))window.MasterWindowMotion.hide(profile,{kind:'modal'});
+      }else profile.hidden=true;
+    }
+    $('master-avatar')?.setAttribute('aria-expanded','false');
+  }
   function accountAvatar(id){
     // Local, stable account illustration. Never send account identifiers to an image service.
     let hash=2166136261;
