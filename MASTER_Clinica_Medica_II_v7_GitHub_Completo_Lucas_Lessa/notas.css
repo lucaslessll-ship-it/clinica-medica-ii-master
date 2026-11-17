@@ -372,3 +372,16 @@ body[data-theme="dark"] .caderno-icone-3d{color:#c6ede1;background:linear-gradie
  }
 }
 .cir-perf .btn{min-height:44px}
+
+
+/* Exclusão explícita e confirmada de registros em cada superfície de anotação. */
+.nota-acao-excluir{border:1px solid var(--line,#d9e4e2)!important;background:var(--white,#fff)!important;color:var(--danger,#a83a37)!important;font-size:12px;font-weight:600;line-height:1.25;font-family:inherit;cursor:pointer;border-radius:9px;padding:9px 11px;min-height:38px}
+.nota-acao-excluir:hover:not(:disabled){background:rgba(190,55,55,.065)!important;border-color:var(--danger,#a83a37)!important}
+.nota-acao-excluir:focus-visible{outline:2px solid var(--danger,#a83a37);outline-offset:2px}
+.nota-acao-excluir:disabled{opacity:.47;cursor:not-allowed}
+.caderno-acoes,.caderno-painel-acoes,.nota-caixa-acoes,.nota-painel-geral-acoes{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.caderno-acoes .nota-acao-excluir,.caderno-painel-acoes .nota-acao-excluir{margin-left:auto}
+.nota-painel-geral-acoes{margin-top:8px}
+.nota-painel-lateral .nota-acao-excluir{flex-shrink:0}
+
+.nota-acao-excluir::before{content:'🗑';display:inline-block;margin-right:5px;font-size:14px;vertical-align:middle}

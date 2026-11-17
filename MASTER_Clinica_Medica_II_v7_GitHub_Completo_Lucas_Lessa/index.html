@@ -13,11 +13,11 @@
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="stylesheet" href="tokens.css?v=20261116-cirurgia28">
   <link rel="stylesheet" href="style.css?v=20261116-cirurgia28">
-  <link rel="stylesheet" href="hig.css?v=20261116-cirurgia28">
+  <link rel="stylesheet" href="hig.css?v=20261117-uxnotas2">
   <link rel="stylesheet" href="p1.css?v=20261116-cirurgia28">
   <link rel="stylesheet" href="evidence.css?v=20261116-cirurgia28">
   <link rel="stylesheet" href="banca.css?v=20261116-cirurgia28">
-  <link rel="stylesheet" href="auth.css?v=20261116-cirurgia28">
+  <link rel="stylesheet" href="auth.css?v=20261117-uxnotas2">
   <link rel="stylesheet" href="study.css?v=20261116-cirurgia28">
   <link rel="stylesheet" href="clinical.css?v=20261116-cirurgia28">
   <link rel="stylesheet" href="focus-timer.css?v=20261116-cirurgia28">
@@ -35,7 +35,7 @@
   <link rel="stylesheet" href="table-fit.css?v=20261116-cirurgia28">
   <link rel="stylesheet" href="destaque.css?v=20261116-cirurgia28">
   <link rel="stylesheet" href="modern-icons.css?v=20261117-estudo32">
-  <link rel="stylesheet" href="notas.css?v=20261117-estudos31">
+  <link rel="stylesheet" href="notas.css?v=20261117-uxnotas2">
   <link rel="stylesheet" href="ai-tutor.css?v=20261117-assistente1">
   <link rel="stylesheet" href="dicas.css?v=20261116-cirurgia28">
   <link rel="stylesheet" href="qnav.css?v=20261116-cirurgia28">
@@ -53,7 +53,7 @@
       <button class="sidebar-close" type="button" onclick="closeMobileNav()" aria-label="Fechar menu de navegação">×</button>
       <a href="#dashboard" class="brand" aria-label="Estudo Master, início" onclick="navigate('dashboard');return false">
         <span class="brand-icon" aria-hidden="true"><img src="assets/app-icon.svg" width="48" height="48" alt=""></span>
-        <span class="brand-text"><strong>Estudo Master</strong><small>Seu espaço de aprendizado</small></span>
+        <span class="brand-text"><strong>Estudo Master</strong><small>Aprendizado, prática e revisão</small></span>
       </a>
       <div class="side-context"><span class="context-dot"></span> ESPAÇO DE ESTUDO</div>
       <div class="side-label">PAINÉIS</div>
@@ -83,6 +83,8 @@
             <section id="master-profile" class="profile-popover" aria-label="Sua conta" hidden>
               <strong id="master-profile-name">Sua conta</strong><p id="master-profile-email"></p>
               <p id="master-sync-status" role="status" aria-live="polite"></p>
+              <button id="master-avatar-change" class="btn" type="button" aria-expanded="false" aria-controls="master-avatar-picker">Trocar avatar</button>
+              <div id="master-avatar-picker" class="avatar-picker" role="group" aria-label="Escolha seu avatar" hidden></div>
               <button id="master-change-password" class="btn" type="button">Alterar senha</button>
               <button class="btn" type="button" onclick="HIG.openSettings()">Preferências</button>
               <button class="btn" type="button" onclick="MASTER_AUTH.exportConflict()">Exportar cópia de conflito</button>
@@ -183,11 +185,11 @@
   <script src="route-motion.js?v=20261116-cirurgia28"></script>
   <script src="table-fit.js?v=20261116-cirurgia28"></script>
   <script src="destaque.js?v=20261116-cirurgia28"></script>
-  <script src="formatacao-notas.js?v=20261117-ios1"></script>
-  <script src="notas.js?v=20261117-ios1"></script>
+  <script src="formatacao-notas.js?v=20261117-uxnotas2"></script>
+  <script src="notas.js?v=20261117-uxnotas2"></script>
   <script src="p1_app.js?v=20261116-cirurgia28"></script>
   <script src="hig.js?v=20261117-ios1"></script>
-  <script src="caderno-unificado.js?v=20261117-ios1"></script>
+  <script src="caderno-unificado.js?v=20261117-uxnotas2"></script>
   <script src="novidades.js?v=20261117-estudo32"></script>
   <script src="focus-timer.js?v=20261117-ios1"></script>
 <script src="clinical-data.js?v=20261116-cirurgia28"></script>
@@ -219,6 +221,6 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.0/dist/umd/supabase.min.js"></script>
 <script src="auth-storage.js?v=20261116-cirurgia28"></script>
 <script src="sync-merge.js?v=20261116-cirurgia28"></script>
-<script src="auth.js?v=20261117-ios1"></script>
+<script src="auth.js?v=20261117-uxnotas2"></script>
 </body>
 </html>

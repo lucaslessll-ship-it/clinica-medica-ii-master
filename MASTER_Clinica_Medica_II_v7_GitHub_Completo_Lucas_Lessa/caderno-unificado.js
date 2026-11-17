@@ -80,7 +80,9 @@
       '<button type="button" class="btn secondary caderno-voltar-trecho" data-rota="' + materia.rota +
       '" data-tema="' + escapar(tema.id) + '" data-indice="' + aula.indice +
       '" data-chave="' + escapar(chave) + '" data-marca-id="' + escapar(marca.id) +
-      '">Voltar ao trecho</button></div>';
+      '">Voltar ao trecho</button>' +
+      '<button type="button" class="btn caderno-excluir-marca nota-acao-excluir" data-chave="' + escapar(chave) +
+      '" data-marca-id="' + escapar(marca.id) + '">Excluir destaque e comentário</button></div>';
   }
 
   function aulaHTML(materia, tema, aula) {
@@ -94,11 +96,12 @@
       '<summary><span>' + escapar(aula.titulo) + '</span><small>' +
       (aula.nota.trim() ? 'Nota escrita · ' : '') + aula.marcas.length + ' ' + (aula.marcas.length===1?'trecho':'trechos') +
       (aula.salvo?' · Salva para revisão':'') + '</small></summary>' +
-      '<div class="caderno-aula-corpo" data-materia="' + materia.id + '" data-chave="' + escapar(aula.chave) + '">' +
+      '<div class="caderno-aula-corpo" data-materia="' + (materia.id.startsWith('estudo-')?'estudo':materia.id) + '" data-chave="' + escapar(aula.chave) + '">' +
       '<h3>Notas de aula · ' + escapar(aula.titulo) + '</h3>' +
       '<label class="caderno-rotulo">Anotações da aula' +
       '<textarea class="caderno-editor" rows="4" placeholder="Escreva suas anotações com suas próprias palavras">' + escapar(aula.nota) + '</textarea></label>' +
       '<div class="caderno-acoes"><button type="button" class="btn secondary caderno-salvar-nota">Salvar nota</button>' +
+      '<button type="button" class="btn caderno-excluir-nota nota-acao-excluir"'+(aula.nota.trim()?'':' disabled')+'>Excluir nota</button>' +
       '<button type="button" class="btn caderno-abrir notas-ir" data-rota="' + materia.rota +
       '" data-tema="' + escapar(tema.id) + '" data-indice="' + aula.indice + '">Abrir aula no texto</button>' +
       '<span class="caderno-status" aria-live="polite"></span></div>' +
@@ -217,6 +220,8 @@
         catch { corpo.querySelector('.caderno-status').textContent = 'Falha ao salvar neste dispositivo.'; return; }
       }
     }
+    const excluir=corpo.querySelector('.caderno-excluir-nota');
+    if(excluir)excluir.disabled=!valor.trim();
     corpo.querySelector('.caderno-status').textContent = 'Salvo no registro original.';
   }
 
@@ -232,6 +237,65 @@
       if (exibido) exibido.textContent = texto;
       window.Notas?.aplicar?.();
     }
+  }
+
+
+  /* Exclusão única: a visualização central preserva P1, P2, Cirurgia e outras rotas. */
+  function excluirRegistro({materia='p2',chave,marcaId=''}={}) {
+    if(!chave||!['p1','p2','cir','estudo'].includes(materia))return false;
+    const dados=ler(marcaId?UX_KEY:chaveDados(materia==='estudo'?'p2':materia));
+    const existente=marcaId
+      ?(dados.marcas?.[chave]||[]).find(m=>m.id===marcaId)
+      :String(dados.notes?.[chave]||'');
+    if(!existente)return false;
+    const aviso=marcaId
+      ?'Excluir este destaque e o comentário associado? A exclusão será sincronizada e não poderá ser desfeita.'
+      :'Excluir esta anotação da aula? Os destaques permanecem. A exclusão não poderá ser desfeita.';
+    if(!window.confirm(aviso))return false;
+    // O salvamento de rascunhos vem ANTES da exclusão para não ressuscitar itens.
+    salvarPendentesCaderno();
+    salvarEdicoesPainel();
+    let ok=false;
+    if(marcaId){
+      ok=window.HIG?.marcaRemove?.(chave,marcaId)===true;
+    }else{
+      const modulo=materia==='p1'?window.P1:materia==='cir'?window.CIR:window.HIG;
+      const escrever=materia==='p1'||materia==='cir'?modulo?.saveExternalNote:modulo?.saveNote;
+      if(typeof escrever==='function'){escrever.call(modulo,chave,'');ok=true;}
+    }
+    if(!ok)return false;
+    const raiz=document.querySelector('.caderno-unificado');
+    if(raiz){
+      const busca=raiz.querySelector('#caderno-busca')?.value||'';
+      const filtro=raiz.querySelector('[data-caderno-filtro][aria-pressed="true"]')?.dataset.cadernoFiltro||'todas';
+      const y=window.scrollY;
+      raiz.outerHTML=exibir();
+      const nova=document.querySelector('.caderno-unificado');
+      if(nova){
+        nova.querySelector('#caderno-busca').value=busca;
+        nova.querySelectorAll('[data-caderno-filtro]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.cadernoFiltro===filtro)));
+        filtrarCaderno();
+      }
+      window.scrollTo({top:Math.max(0,Math.min(y,document.documentElement.scrollHeight-window.innerHeight)),behavior:'instant'});
+    }
+    if(painel&&!painel.hidden){
+      const area=painel.querySelector('.caderno-painel-scroll');
+      const y=area.scrollTop;
+      area.innerHTML=conteudoPainel();
+      area.scrollTop=y;
+      filtrarPainel();
+    }
+    if(!marcaId){
+      const atual=document.querySelector('#main-content .deep-lesson[data-lesson-key]');
+      if(atual?.dataset.lessonKey===chave){
+        const editor=atual.querySelector('#chapter-note,#p1-note,#cir-note');
+        if(editor)editor.value='';
+      }
+    }
+    window.Notas?.aplicar?.();
+    window.dispatchEvent(new CustomEvent('master-note-deleted',{detail:{materia,chave,marcaId}}));
+    if(typeof toast==='function')toast(marcaId?'Destaque e comentário excluídos.':'Nota excluída do caderno.');
+    return true;
   }
 
   function exportar() {
@@ -266,7 +330,7 @@
     const busca=escapar(buscaNormal([materia.nome,tema.titulo,aula.titulo,aula.nota,marca?.texto||'',marca?.comentario||''].join(' ')));
     const tipo=marca?'marca':'nota';
     const ch=escapar(aula.chave);
-    const ids='data-materia="'+materia.id+'" data-rota="'+materia.rota+
+    const ids='data-materia="'+(materia.id.startsWith('estudo-')?'estudo':materia.id)+'" data-rota="'+materia.rota+
       '" data-tema="'+escapar(tema.id)+'" data-indice="'+aula.indice+
       '" data-chave="'+ch+'"'+(marca?' data-marca-id="'+escapar(marca.id)+'"':'');
     const titulo='<header><strong>'+escapar(aula.titulo)+'</strong><small>'+escapar(materia.nome+' · '+tema.titulo)+'</small></header>';
@@ -278,7 +342,8 @@
       '" data-tem-comentarios="'+Number(!!(marca?.comentario||'').trim())+
       '" data-tem-notas="'+Number(!marca)+'" data-busca="'+busca+'" '+ids+'>'+titulo+conteudo+
       '<div class="caderno-painel-acoes"><button type="button" class="caderno-painel-salvar">Salvar</button>'+
-      '<button type="button" class="caderno-painel-ir">'+(marca?'Voltar ao trecho':'Abrir aula')+'</button></div>'+
+      '<button type="button" class="caderno-painel-ir">'+(marca?'Voltar ao trecho':'Abrir aula')+'</button>'+
+      '<button type="button" class="caderno-painel-excluir nota-acao-excluir" aria-label="'+(marca?'Excluir destaque e comentário':'Excluir nota da aula')+'">Excluir</button></div>'+
       '<small class="caderno-painel-status" aria-live="polite"></small></article>';
   }
 
@@ -422,6 +487,9 @@
       } else if (botao.dataset.painelAcao==='completo') {
         fecharPainel();
         if(typeof navigate==='function')navigate('notes');
+      } else if(botao.classList.contains('caderno-painel-excluir')) {
+        const card=botao.closest('.caderno-painel-cartao');
+        excluirRegistro({materia:card?.dataset.materia,chave:card?.dataset.chave,marcaId:card?.dataset.marcaId||''});
       } else if(botao.classList.contains('caderno-painel-salvar')) {
         const cartao=botao.closest('.caderno-painel-cartao');
         cartao.dataset.sujo='sim'; salvarCartao(cartao);
@@ -440,6 +508,12 @@
       const raiz=botao.closest('.caderno-unificado');
       raiz.querySelectorAll('[data-caderno-filtro]').forEach(b=>b.setAttribute('aria-pressed',String(b===botao)));
       filtrarCaderno();
+    } else if (botao.classList.contains('caderno-excluir-nota')) {
+      const corpo=botao.closest('.caderno-aula-corpo');
+      excluirRegistro({materia:corpo?.dataset.materia,chave:corpo?.dataset.chave});
+    } else if (botao.classList.contains('caderno-excluir-marca')) {
+      const corpo=botao.closest('.caderno-aula-corpo');
+      excluirRegistro({materia:corpo?.dataset.materia,chave:botao.dataset.chave,marcaId:botao.dataset.marcaId});
     } else if (botao.classList.contains('caderno-salvar-nota')) {
       salvarNota(botao);
     } else if (botao.classList.contains('caderno-salvar-comentario')) {
@@ -477,5 +551,5 @@
   else inserirAtalho();
 
   if (window.HIG) window.HIG.viewNotes = exibir;
-  window.CadernoUnificado = {exibir,reunir,exportar,abrirPainel,fecharPainel,filtrarCaderno};
+  window.CadernoUnificado = {exibir,reunir,exportar,abrirPainel,fecharPainel,filtrarCaderno,excluirRegistro};
 })();

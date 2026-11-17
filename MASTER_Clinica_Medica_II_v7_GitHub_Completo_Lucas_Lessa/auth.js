@@ -113,6 +113,24 @@
       $('master-avatar').setAttribute('aria-expanded',String(open));
       if(open)$('master-change-password').focus();
     });
+    $('master-avatar-change').addEventListener('click',()=>{
+      if(!status.ready || !status.user)return;
+      const picker=$('master-avatar-picker'),expanded=picker.hidden;
+      picker.hidden=!expanded;
+      $('master-avatar-change').setAttribute('aria-expanded',String(expanded));
+      if(expanded)picker.querySelector('[aria-pressed="true"]')?.focus({preventScroll:true});
+    });
+    $('master-avatar-picker').addEventListener('click',event=>{
+      const btn=event.target.closest('[data-avatar-index]');
+      if(!btn||!status.ready||!status.user)return;
+      const i=Number(btn.dataset.avatarIndex);
+      if(!Number.isInteger(i)||i<0||i>11)return;
+      try{localStorage.setItem(AVATAR_CHOICE+status.user.id,String(i))}
+      catch{notice('Não foi possível salvar o avatar neste navegador.',true);return}
+      $('master-avatar').innerHTML=accountAvatar(status.user.id);
+      $('master-avatar-picker').querySelectorAll('[data-avatar-index]').forEach(b=>b.setAttribute('aria-pressed',String(Number(b.dataset.avatarIndex)===i)));
+      btn.focus({preventScroll:true});
+    });
     $('master-change-password').addEventListener('click',()=>show('password'));
     $('master-signout').addEventListener('click',signOut);
     $('master-sync').addEventListener('click',async()=>{
@@ -144,21 +162,89 @@
     }
     $('master-avatar')?.setAttribute('aria-expanded','false');
   }
-  function accountAvatar(id){
-    // Local, stable account illustration. Never send account identifiers to an image service.
+  const AVATAR_CHOICE='master_avatar_choice_v1:';
+  let avatarSerial=0;
+  function avatarHash(id){
     let hash=2166136261;
     for(const char of String(id||'guest'))hash=Math.imul(hash^char.codePointAt(0),16777619)>>>0;
-    const backgrounds=['#dcefe9','#e2e9fa','#f5e5ef','#f6ebd6','#dceef6','#ebe2f4'];
-    const shirts=['#17685e','#365b93','#854665','#895f25','#24667d','#66508e'];
-    const skins=['#f2c8a4','#deb08b','#bd8665','#875b45'];
-    const hair=['#302c32','#654331','#36363f','#4c352b'];
-    const style=(hash>>>12)%4,skin=skins[(hash>>>8)%skins.length],shirt=shirts[(hash>>>4)%shirts.length];
-    const hairline=['M12 18V14a8 8 0 0 1 16 0v4l-4-6-5 3-7-1Z','M12 18V14a8 8 0 0 1 16 0v4l-2-4H14Z','M12 18V14a8 8 0 0 1 16 0v4l-4-3-3-4-7 4Z','M12 18V14a8 8 0 0 1 16 0v4l-3-5-10-1Z'][style];
-    return `<svg viewBox="0 0 40 40" aria-hidden="true" focusable="false"><rect width="40" height="40" rx="20" fill="${backgrounds[hash%backgrounds.length]}"/><path d="M6 40v-3a14 14 0 0 1 28 0v3Z" fill="${shirt}"/><path d="M17 24h6v6a5 5 0 0 1-6 0Z" fill="${skin}"/><ellipse cx="20" cy="18" rx="8" ry="10" fill="${skin}"/><path d="${hairline}" fill="${hair[(hash>>>16)%hair.length]}"/><g fill="#28232a"><circle cx="17" cy="18" r="1"/><circle cx="23" cy="18" r="1"/></g><path d="M18 23q2 2 4 0" fill="none" stroke="#694436" stroke-width="1.2" stroke-linecap="round"/></svg>`;
+    return hash;
   }
+  function avatarChoice(id){
+    const fallback=avatarHash(id)%12;
+    if(!id)return fallback;
+    try{
+      const value=localStorage.getItem(AVATAR_CHOICE+id);
+      if(value!==null&&/^(?:[0-9]|1[01])$/.test(value))return Number(value);
+    }catch{}
+    return fallback;
+  }
+  /* Avatares vetoriais com gradientes e sombras, estilo 3D, processados localmente.
+     Não enviam UUID, e-mail ou foto a fornecedores de imagens. */
+  function accountAvatar(id,choice){
+    const i=Number.isInteger(choice)&&choice>=0&&choice<12?choice:avatarChoice(id);
+    const uid='master-avatar-'+(++avatarSerial);
+    const skins=['#f5cda9','#ddb18b','#ad7257','#8b5843','#e5bc96','#bf8669',
+      '#e8b88d','#80513c','#f2c5a5','#cc9272','#a76b51','#ecc4a7'];
+    const coats=['#147b70','#395f99','#975f7e','#9b7348','#396b72','#675fa2',
+      '#128b7b','#bb6860','#385c91','#736b9a','#277d87','#8d6f50'];
+    const hairs=['#332b31','#27282f','#412d27','#492f27','#6b4832','#24242c',
+      '#493126','#2f3336','#5a392c','#242832','#3c3433','#654431'];
+    const skin=skins[i],shirt=coats[i],hair=hairs[i];
+    const styles=[
+      'M29 42Q23 22 38 17Q55 9 69 22Q78 31 69 43Q64 31 55 29Q42 36 32 33Z',
+      'M26 43Q19 33 29 23Q32 12 44 17Q56 10 66 21Q79 21 73 41L66 39Q69 28 60 29L43 31Q34 26 33 42Z',
+      'M28 45Q21 24 39 17Q52 13 70 24L71 41Q63 38 62 31Q53 38 34 33L32 47Z',
+      'M26 44Q23 28 33 22Q43 9 61 17Q77 20 74 44L67 43Q67 31 59 30Q42 38 32 33L31 46Z',
+      'M25 43Q22 22 41 16Q53 10 69 23Q77 33 72 50Q65 45 65 31Q51 41 34 32L31 51Z',
+      'M29 40Q31 19 49 18Q70 18 72 40Q62 29 48 32Q36 30 29 40Z'
+    ];
+    const style=i%styles.length;
+    const glasses=i%5===2||i%7===4;
+    const freckles=i%4===1;
+    const beard=i===3||i===7||i===10;
+    return '<svg class="avatar-3d-art" viewBox="0 0 100 100" focusable="false" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">'+
+      '<defs>'+
+        '<radialGradient id="'+uid+'-bg" cx="28%" cy="16%" r="94%"><stop stop-color="#ffffff"/><stop offset=".53" stop-color="#d9e9e6"/><stop offset="1" stop-color="#a7cec8"/></radialGradient>'+
+        '<radialGradient id="'+uid+'-skin" cx="29%" cy="24%" r="84%"><stop stop-color="#fff3df"/><stop offset=".36" stop-color="'+skin+'"/><stop offset="1" stop-color="#96604f"/></radialGradient>'+
+        '<linearGradient id="'+uid+'-shirt" x1="12%" y1="0%" x2="90%" y2="100%"><stop stop-color="#f3fffb" stop-opacity=".28"/><stop offset=".38" stop-color="'+shirt+'"/><stop offset="1" stop-color="#203844"/></linearGradient>'+
+        '<linearGradient id="'+uid+'-hair" x1="0%" y1="0%" x2="98%" y2="90%"><stop stop-color="#b08d70" stop-opacity=".55"/><stop offset=".28" stop-color="'+hair+'"/><stop offset="1" stop-color="#141920"/></linearGradient>'+
+      '</defs>'+
+      '<circle cx="50" cy="50" r="49" fill="url(#'+uid+'-bg)"/>'+
+      '<ellipse cx="50" cy="92" rx="34" ry="6" fill="#294f56" opacity=".17"/>'+
+      '<path d="M10 101Q13 76 35 72L50 78L65 72Q87 75 90 101Z" fill="url(#'+uid+'-shirt)"/>'+
+      '<path d="M36 71L50 86L64 71L57 69L50 78L43 69Z" fill="#f3f5ee" opacity=".9"/>'+
+      '<path d="M43 63h14v13q-7 8-14 0Z" fill="'+skin+'"/>'+
+      '<ellipse cx="26" cy="50" rx="5" ry="8" fill="'+skin+'"/>'+
+      '<ellipse cx="74" cy="50" rx="5" ry="8" fill="'+skin+'"/>'+
+      '<ellipse cx="50" cy="47" rx="24" ry="29" fill="url(#'+uid+'-skin)"/>'+
+      '<path d="'+styles[style]+'" fill="url(#'+uid+'-hair)"/>'+
+      (style===1||style===4?'<path d="M27 37Q22 55 33 65M73 37Q77 54 66 66" stroke="'+hair+'" stroke-width="7" fill="none" stroke-linecap="round"/>':'')+
+      (style===3?'<ellipse cx="52" cy="16" rx="10" ry="7" fill="url(#'+uid+'-hair)"/>':'')+
+      '<path d="M34 42q5-3 10 0M56 42q5-3 10 0" fill="none" stroke="'+hair+'" stroke-width="2" stroke-linecap="round"/>'+
+      '<ellipse cx="40" cy="49" rx="2.4" ry="2.7" fill="#22232b"/><ellipse cx="60" cy="49" rx="2.4" ry="2.7" fill="#22232b"/>'+
+      '<circle cx="40.7" cy="48.3" r=".8" fill="#fff"/><circle cx="60.7" cy="48.3" r=".8" fill="#fff"/>'+
+      '<path d="M50 48q-3 9-1 11q2 2 5 0" stroke="#8b5d4b" opacity=".48" stroke-width="1.7" fill="none" stroke-linecap="round"/>'+
+      '<path d="M43 65q7 6 14 0" stroke="#874a4b" stroke-width="2" fill="none" stroke-linecap="round"/>'+
+      (freckles?'<g fill="#ab6c55" opacity=".5"><circle cx="35" cy="58" r="1"/><circle cx="39" cy="59" r=".9"/><circle cx="61" cy="59" r=".9"/><circle cx="65" cy="58" r="1"/></g>':'')+
+      (beard?'<path d="M31 60Q37 80 50 78Q64 80 69 60Q60 69 50 72Q40 69 31 60Z" fill="'+hair+'" opacity=".45"/>':'')+
+      (glasses?'<g fill="none" stroke="#385963" stroke-width="2.3"><rect x="30" y="44" width="18" height="13" rx="5"/><rect x="52" y="44" width="18" height="13" rx="5"/><path d="M48 49q2-2 4 0M27 49h3M70 49h3"/></g>':'')+
+      '<path d="M25 83Q34 76 41 78M75 83Q66 76 59 78" stroke="#fff" stroke-opacity=".23" stroke-width="3" fill="none" stroke-linecap="round"/>'+
+      '<circle cx="50" cy="50" r="48.5" fill="none" stroke="#fff" stroke-opacity=".56" stroke-width="2"/>'+
+      '</svg>';
+  }
+
   function updateProfile(){
     const user=status.user,name=user?.user_metadata?.full_name||user?.user_metadata?.name||user?.email?.split('@')[0]||'Sua conta';
     $('master-avatar').innerHTML=accountAvatar(user?.id);$('master-avatar').disabled=!status.ready;
+    const picker=$('master-avatar-picker');
+    if(picker && user){
+      const selected=avatarChoice(user.id);
+      picker.innerHTML='<p class="avatar-picker-caption">Escolha seu estilo 3D</p><div class="avatar-picker-grid">'+
+        Array.from({length:12},(_,i)=>'<button type="button" data-avatar-index="'+i+'" aria-label="Avatar '+(i+1)+'" aria-pressed="'+String(i===selected)+'">'+accountAvatar(user.id,i)+'</button>').join('')+
+        '</div><small>Preferência salva neste dispositivo.</small>';
+    }
+    if(picker)picker.hidden=true;
+    $('master-avatar-change')?.setAttribute('aria-expanded','false');
     $('master-avatar').setAttribute('aria-label',`Abrir menu da conta de ${name}`);
     $('master-profile-name').textContent=name;$('master-profile-email').textContent=user?.email||'';
   }
