@@ -12,7 +12,8 @@
 
   function frames(kind,enter){
     const sheet=kind==='sheet';
-    const from=sheet?'translate3d(28px,0,0) scale(.985)':'translate3d(0,14px,0) scale(.965)';
+    const mobileSheet=sheet&&window.matchMedia('(max-width: 800px)').matches;
+    const from=sheet?(mobileSheet?'translate3d(0,24px,0) scale(.985)':'translate3d(28px,0,0) scale(.985)'):'translate3d(0,14px,0) scale(.965)';
     const to='translate3d(0,0,0) scale(1)';
     return enter?
       [{opacity:0,transform:from},{opacity:1,transform:to}]:
