@@ -1,8 +1,10 @@
 /* Tutor: índice público sob demanda, histórico efêmero e proxy autenticado. */
 (()=>{'use strict';
 const script=document.currentScript,asset=new URL('ai-index.json',script.src);asset.search=new URL(script.src).search;
-let dialog,launch,dock,hide,restore,returnFocus,history,input,status,send,loader=null,index=null,documents=[],byId=new Map(),controller=null,generation=0,owner=null;
-const HIDDEN='master_ai_launcher_hidden_v1',NEWS='master_ai_news_20261116_lab20';
+let dialog,launch,dock,hide,restore,returnFocus,history,input,status,send,welcome,loader=null,index=null,documents=[],byId=new Map(),controller=null,generation=0,owner=null;
+const HIDDEN='master_ai_launcher_hidden_v1',NEWS='master_ai_news_20261116_lab20',WELCOME='master_ai_welcome_v1:';
+const welcomeUsedThisSession=new Set();
+let welcomeIntent='ask';
 const pref=key=>{try{return localStorage.getItem(key)==='1';}catch{return false;}};
 const savePref=key=>{try{localStorage.setItem(key,'1');}catch{}};
 let concealed=pref(HIDDEN),newsDismissed=pref(NEWS);
@@ -86,9 +88,61 @@ async function ask(mode='ask'){
  }catch(e){if(mine===generation&&(e.name!=='AbortError'||timedOut)){fail(timedOut?'A resposta demorou mais que o esperado. Tente novamente em instantes.':errors[e.message]||(e.message==='index'?'Não foi possível carregar a busca. Confira a conexão e tente novamente.':'Sem conexão ou serviço indisponível. Tente novamente.'),[],e.message!=='auth');state('Não foi possível concluir a pergunta.');}}
  finally{clearTimeout(requestTimer);if(mine===generation){controller=null;history.querySelector('.ai-tutor-pending')?.remove();history.setAttribute('aria-busy','false');send.disabled=false;input.disabled=false;dialog.querySelectorAll('[data-ai-mode]').forEach(b=>b.disabled=false);status.classList.remove('ai-tutor-dots');if(!submitted)input.focus();}}
 }
+
+function welcomeKey(){const id=auth()?.user()?.id;return id?WELCOME+id:null;}
+function shouldWelcome(){
+ const id=auth()?.user()?.id,key=welcomeKey();
+ if(!id||!key||welcomeUsedThisSession.has(id))return false;
+ try{return localStorage.getItem(key)!=='1';}catch{return true;}
+}
+function chooseWelcome(intent){
+ welcomeIntent=['ask','resumo','questoes'].includes(intent)?intent:'ask';
+ welcome?.querySelectorAll('[data-ai-intent]').forEach(button=>{
+  button.setAttribute('aria-pressed',String(button.dataset.aiIntent===welcomeIntent));
+ });
+}
+function finishWelcome({showHelp=false}={}){
+ if(!welcome||welcome.hidden)return;
+ const id=auth()?.user()?.id,key=welcomeKey();
+ if(id)welcomeUsedThisSession.add(id);
+ if(welcome.querySelector('[data-ai-never-show]')?.checked&&key){
+  try{localStorage.setItem(key,'1');}catch{}
+ }
+ welcome.hidden=true;
+ dialog.classList.remove('ai-tutor-intro');
+ const help=dialog.querySelector('.ai-tutor-help');
+ help.open=showHelp;
+ dialog.querySelector('[data-ai-help-toggle]').setAttribute('aria-expanded',String(showHelp));
+ if(showHelp){help.querySelector('summary')?.focus({preventScroll:true});}
+ else if(welcomeIntent==='resumo'||welcomeIntent==='questoes'){
+  dialog.querySelector('.ai-tutor-tools').open=true;
+  state('Abra uma aula e toque no atalho de revisão. Nenhuma pergunta foi enviada.');
+  dialog.querySelector('[data-ai-mode="'+welcomeIntent+'"]')?.focus({preventScroll:true});
+ }else{input.focus({preventScroll:true});}
+ load().catch(()=>state('A busca não carregou. Confira a conexão e tente novamente.'));
+}
+
 function restoreFocus(){if(!unlocked())return;const mobile=document.querySelector('#sidebar')?.inert&&returnFocus?.closest('#sidebar');const target=mobile?document.querySelector('.menu-button'):returnFocus?.isConnected&&returnFocus.getClientRects().length?returnFocus:!launch.hidden?launch:document.querySelector('[data-ai-open]');target?.focus({preventScroll:true});}
 function close(){if(dialog.open)dialog.close();restoreFocus();}
-function show(from=launch,help=false){if(!unlocked())return;returnFocus=from;if(typeof closeMobileNav==='function')closeMobileNav(false);dialog.showModal();dialog.querySelector('.ai-tutor-help').open=help;dialog.querySelector('[data-ai-help-toggle]').setAttribute('aria-expanded',String(help));if(help)dialog.querySelector('.ai-tutor-help summary').focus();else input.focus();load().catch(()=>state('A busca não carregou. Confira a conexão e tente novamente.'));}
+function show(from=launch,help=false){
+ if(!unlocked())return;
+ returnFocus=from;
+ if(typeof closeMobileNav==='function')closeMobileNav(false);
+ const firstVisit=!help&&shouldWelcome();
+ chooseWelcome('ask');
+ welcome.hidden=!firstVisit;
+ welcome.querySelector('[data-ai-never-show]').checked=false;
+ dialog.classList.toggle('ai-tutor-intro',firstVisit);
+ dialog.showModal();
+ dialog.querySelector('.ai-tutor-help').open=help;
+ dialog.querySelector('[data-ai-help-toggle]').setAttribute('aria-expanded',String(help));
+ if(firstVisit)welcome.querySelector('[data-ai-start]')?.focus({preventScroll:true});
+ else{
+  if(help)dialog.querySelector('.ai-tutor-help summary')?.focus({preventScroll:true});
+  else input.focus({preventScroll:true});
+  load().catch(()=>state('A busca não carregou. Confira a conexão e tente novamente.'));
+ }
+}
 function installEntry(){const nav=document.getElementById('sidebar-nav');if(!nav||nav.querySelector('[data-ai-open]'))return;const entry=document.createElement('button');entry.type='button';entry.className='nav-destination ai-tutor-menu';entry.dataset.aiOpen='';entry.title='Assistente de estudo';entry.setAttribute('aria-haspopup','dialog');entry.innerHTML='<svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M4 4h16v12H9l-5 4V4Z"/><path d="M8 8h8M8 12h5"/></svg><span>Assistente de estudo</span>';const first=nav.querySelector('.nav-group');if(first)first.after(entry);else nav.append(entry);}
 function showNews(){const main=document.getElementById('main-content');if(!main||typeof ui==='undefined'||ui.route!=='dashboard'||!unlocked()||newsDismissed||main.querySelector('.ai-tutor-news'))return;const news=document.createElement('section');news.className='card pad ai-tutor-news';news.setAttribute('aria-label','Novas funções do MASTER');news.innerHTML='<div class="ai-tutor-news-head"><h2>Novidades do MASTER</h2><button type="button" class="btn" data-ai-dismiss aria-label="Dispensar aviso de novas funções">Dispensar</button></div><p class="ai-tutor-news-lead">Laboratório Master ampliado: 20 trilhas, laudos comentados e casos para praticar o raciocínio.</p><details class="ai-tutor-news-details"><summary>Ver o que mudou</summary><ul><li><strong>Assistente de estudo:</strong> encontre aulas e use atalhos de revisão em um só painel. Confira sempre a aula citada na resposta.</li><li><strong>POCUS:</strong> imagens do acervo em destaque, com treino por desenhos separado.</li><li><strong>Laboratório Master:</strong> 20 trilhas de interpretação, 26 novas aulas, laudos didáticos e casos em etapas.</li></ul></details><div class="btn-row"><button type="button" class="btn primary" onclick="navigate(\'labmaster\')">Explorar Laboratório Master</button><button type="button" class="btn" data-ai-open>Abrir assistente</button><button type="button" class="btn" data-ai-open data-ai-help>Como usar</button></div>';news.querySelector('[data-ai-dismiss]').onclick=()=>{newsDismissed=true;savePref(NEWS);news.remove();};main.prepend(news);}
 
