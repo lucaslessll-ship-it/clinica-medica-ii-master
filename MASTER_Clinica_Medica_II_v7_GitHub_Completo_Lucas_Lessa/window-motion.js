@@ -19,7 +19,7 @@
       [{opacity:1,transform:to},{opacity:0,transform:sheet?'translate3d(20px,0,0) scale(.99)':'translate3d(0,9px,0) scale(.975)'}];
   }
   function targetOf(el,kind){
-    return kind==='overlay'?el.querySelector('.hig-dialog')||el:el;
+    return kind==='overlay'?el.querySelector('.hig-dialog,.focus-end-card')||el:el;
   }
   function cancel(el){
     const old=running.get(el);
