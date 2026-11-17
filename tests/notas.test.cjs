@@ -519,3 +519,27 @@ test('a nota geral também pode ser excluída do painel de comentários da aula'
  assert.equal(await p.locator('.nota-painel-geral-editor').inputValue(),'');
  await t.close();
 });
+
+
+test('nota de ECG também é excluída pelo caderno central sem alterar outra página',async()=>{
+ const t=await abrirAula(),p=t.page;
+ await p.evaluate(async()=>{
+   if(window.RouteAssets)await RouteAssets.ensure('ecg');
+   navigate('ecg');ECGCourse.open(0);
+ });
+ await p.waitForSelector('#nota-atalho-pagina');
+ await p.locator('#nota-atalho-pagina').click();
+ await p.locator('.nota-painel-geral-editor').fill('Apagar via caderno central');
+ await p.locator('.nota-painel-salvar-geral').click();
+ const key=await p.locator('.nota-caixa').getAttribute('data-aula');
+ await p.evaluate(()=>navigate('notes'));
+ await p.waitForSelector('.caderno-unificado');
+ const card=p.locator('.caderno-aula-corpo[data-materia="estudo"][data-chave="'+key+'"]');
+ await card.waitFor();
+ p.once('dialog',d=>d.accept());
+ await card.locator('.caderno-excluir-nota').click();
+ const value=await p.evaluate(k=>JSON.parse(localStorage.getItem('master_p2_hig_v2')||'{}').notes?.[k],key);
+ assert.equal(value,'');
+ assert.equal(await p.locator('.caderno-aula-corpo[data-chave="'+key+'"]').count(),0);
+ await t.close();
+});
