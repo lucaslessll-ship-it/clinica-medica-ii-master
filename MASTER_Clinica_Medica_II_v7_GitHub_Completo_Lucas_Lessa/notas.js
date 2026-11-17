@@ -426,7 +426,7 @@
     const salvar = document.createElement('button');
     salvar.type = 'button'; salvar.className = 'nota-salvar'; salvar.textContent = 'Salvar';
     const apagar = document.createElement('button');
-    apagar.type = 'button'; apagar.className = 'nota-apagar'; apagar.textContent = 'Excluir marcação';
+    apagar.type = 'button'; apagar.className = 'nota-apagar nota-acao-excluir'; apagar.textContent = 'Excluir marcação';
     const voltar=document.createElement('button');
     voltar.type='button'; voltar.className='nota-voltar-trecho';voltar.textContent='Voltar ao trecho';
     acoes.append(salvar,voltar,apagar);
