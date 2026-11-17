@@ -276,10 +276,44 @@
     if (status) status.textContent = 'Salvo';
   }
 
+  function notaGeralDaAula() {
+    const rota=caixa?.dataset.rota || rotaAtual(), chave=caixa?.dataset.aula || aulaAtual();
+    const materia=rota==='p1topic'?'p1':rota==='cirtopic'?'cir':'p2';
+    const storage=materia==='p1'?'master_p1_lucas_v4':materia==='cir'?'master_cir_lucas_v1':'master_p2_hig_v2';
+    let dados={};
+    try{dados=JSON.parse(localStorage.getItem(storage)||'{}')||{}}catch{}
+    return {materia,chave,valor:String(dados.notes?.[chave]||'')};
+  }
+
+  function salvarNotaGeral() {
+    const campo=caixa?.querySelector('.nota-painel-geral-editor');
+    if(!campo || campo.dataset.sujo!=='sim')return;
+    const {materia,chave}=notaGeralDaAula();
+    if(!chave||chave!==caixa.dataset.aula)return;
+    if(materia==='p2')window.HIG?.saveNote?.(chave,campo.value);
+    else (materia==='p1'?window.P1:window.CIR)?.saveExternalNote?.(chave,campo.value);
+    campo.dataset.sujo='nao';
+    const estado=caixa.querySelector('.nota-painel-geral-status');
+    if(estado)estado.textContent='Salvo no caderno da aula';
+  }
+
+  function montarNotaGeral() {
+    const info=notaGeralDaAula();
+    const secao=document.createElement('section');
+    secao.className='nota-painel-geral';
+    secao.innerHTML='<div class="nota-painel-linha"><strong>Anotação geral da aula</strong><small class="nota-painel-geral-status" aria-live="polite"></small></div>'+
+      '<label for="nota-geral-editor">Seu resumo, dúvidas e associações</label>'+
+      '<textarea id="nota-geral-editor" class="nota-painel-geral-editor" rows="3" placeholder="Anote o que deseja revisar nesta aula"></textarea>'+
+      '<button type="button" class="nota-painel-salvar-geral">Salvar nota da aula</button>';
+    secao.querySelector('textarea').value=info.valor;
+    return secao;
+  }
+
   function salvarTodos() {
     clearTimeout(rascunhoTimer);
     if (!caixa || caixa.hidden) return;
     caixa.querySelectorAll('.nota-painel-entrada').forEach(salvarEntrada);
+    salvarNotaGeral();
   }
 
   function montarEntrada(marca, indice, total) {
@@ -311,7 +345,9 @@
     salvar.type = 'button'; salvar.className = 'nota-salvar'; salvar.textContent = 'Salvar';
     const apagar = document.createElement('button');
     apagar.type = 'button'; apagar.className = 'nota-apagar'; apagar.textContent = 'Excluir marcação';
-    acoes.append(salvar,apagar);
+    const voltar=document.createElement('button');
+    voltar.type='button'; voltar.className='nota-voltar-trecho';voltar.textContent='Voltar ao trecho';
+    acoes.append(salvar,voltar,apagar);
     item.append(topo,citacao,label,acoes);
     return item;
   }
@@ -326,6 +362,7 @@
     const lugar = caixa.querySelector('.nota-painel-conteudo');
     lugar.replaceChildren();
     itens.forEach((item,i)=>lugar.append(montarEntrada(item,i,itens.length)));
+    if(modoPainel==='todas')lugar.append(montarNotaGeral());
     const info = caixa.querySelector('.nota-painel-quantidade');
     info.textContent = todas.length === 1 ? '1 anotação nesta aula' :
       todas.length + ' anotações nesta aula';
@@ -364,9 +401,16 @@
         salvarTodos();
         modoPainel = botao.dataset.modo;
         renderizarPainel();
+      } else if (botao.classList.contains('nota-painel-salvar-geral')) {
+        const campo=caixa.querySelector('.nota-painel-geral-editor');
+        if(campo)campo.dataset.sujo='sim';
+        salvarNotaGeral();
       } else if (botao.classList.contains('nota-salvar')) {
         clearTimeout(rascunhoTimer);
         salvarEntrada(botao.closest('.nota-painel-entrada'));
+      } else if (botao.classList.contains('nota-voltar-trecho')) {
+        salvarTodos();
+        voltarAoTrecho(botao.closest('.nota-painel-entrada')?.dataset.nota,caixa.dataset.aula);
       } else if (botao.classList.contains('nota-apagar')) {
         const entrada = botao.closest('.nota-painel-entrada');
         const id = entrada?.dataset.nota;
@@ -386,6 +430,14 @@
       }
     });
     caixa.addEventListener('input', evento => {
+      if(evento.target.matches('.nota-painel-geral-editor')) {
+        evento.target.dataset.sujo='sim';
+        const estado=caixa.querySelector('.nota-painel-geral-status');
+        if(estado)estado.textContent='Editando…';
+        clearTimeout(rascunhoTimer);
+        rascunhoTimer=setTimeout(()=>salvarNotaGeral(),900);
+        return;
+      }
       if (!evento.target.matches('.nota-painel-entrada textarea')) return;
       const entrada = evento.target.closest('.nota-painel-entrada');
       entrada.querySelector('.nota-painel-salvo').textContent = 'Editando…';
@@ -405,8 +457,10 @@
     salvarTodos();
     if (!marca.comentario && !marca.comentarioAtivo) { api()?.marcaEdita(aula,id,{comentarioAtivo:true}); agendar(); }
     caixa.dataset.aula = aula;
+    caixa.dataset.rota = rotaAtual();
     caixa.dataset.nota = id;
     modoPainel = modo;
+    window.CadernoUnificado?.fecharPainel?.();
     caixa.hidden = false;
     renderizarPainel(true);
   }
@@ -416,6 +470,37 @@
     salvarTodos();
     caixa.hidden = true;
     if (!minimizar) delete caixa.dataset.nota;
+  }
+
+
+  /* O caderno leva de volta exatamente à marca citada, nunca só ao início. */
+  function voltarAoTrecho(id, aulaEsperada = '') {
+    if (!id) return;
+    let tentativas=0;
+    const procurar=()=>{
+      const aula=aulaAtual();
+      const marcas=[...document.querySelectorAll('#main-content .nota-marca[data-nota]')];
+      const alvo=marcas.find(el=>el.dataset.nota===id);
+      if (alvo && (!aulaEsperada || aula===aulaEsperada)) {
+        fecharCaixa(false);
+        alvo.tabIndex=-1;
+        alvo.scrollIntoView({block:'center',inline:'nearest',behavior:'auto'});
+        alvo.focus({preventScroll:true});
+        alvo.classList.add('nota-trecho-destino');
+        setTimeout(()=>alvo.classList.remove('nota-trecho-destino'),2400);
+        return;
+      }
+      if (++tentativas < 30) {
+        if(tentativas===4)agendar();
+        setTimeout(procurar,120);
+      }
+    };
+    procurar();
+  }
+
+  function abrirTodas() {
+    const primeira=api()?.marcas(aulaAtual()).find(m=>m.comentario||m.comentarioAtivo);
+    if(primeira)abrirCaixa(primeira.id,'todas');
   }
 
   /* ---------- eventos ---------- */
@@ -456,5 +541,5 @@
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', iniciar, { once: true });
   else iniciar();
-  window.Notas = { aplicar: agendar, abrirCaixa };
+  window.Notas = { aplicar: agendar, abrirCaixa, fecharCaixa, abrirTodas, voltarAoTrecho };
 })();
