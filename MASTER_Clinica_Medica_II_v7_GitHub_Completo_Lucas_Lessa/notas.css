@@ -383,3 +383,5 @@ body[data-theme="dark"] .caderno-icone-3d{color:#c6ede1;background:linear-gradie
 .caderno-acoes .nota-acao-excluir,.caderno-painel-acoes .nota-acao-excluir{margin-left:auto}
 .nota-painel-geral-acoes{margin-top:8px}
 .nota-painel-lateral .nota-acao-excluir{flex-shrink:0}
+
+.nota-acao-excluir::before{content:'🗑';display:inline-block;margin-right:5px;font-size:14px;vertical-align:middle}
