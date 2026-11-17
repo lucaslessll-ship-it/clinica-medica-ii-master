@@ -5,13 +5,28 @@ let questions;
 if(filename.endsWith('.json'))questions=JSON.parse(fs.readFileSync(filename,'utf8'));
 else {const c={window:{}};vm.runInNewContext(fs.readFileSync(filename,'utf8'),c);questions=c.window.MASTER_CIR_QUESTIONS;}
 const ids=new Set(),stems=new Set(),counts=[0,0,0,0],flags=[];
-const cues=/\b(sempre|nunca|obrigatoriamente|em todo caso|qualquer paciente|dispensa qualquer)\b/i;
+const LOTE1=new Set(['cirpanc-14','cirremit-14','cirvb-05','cirvb-17','ciresof-04','cirvasc-28','cirestom-11']);
+const LOTE2=new Set(['cirrad-09','cirproc-13','cirproc-27','cirtabd-23','ciruro-27','cirremit-16','cirvasc-09','ciruro-02','cirtabd-29','cirvasc-29','cirestom-21','cirestom-25','cirestom-26','cirfig-20','ciruro-28']);
+const REVISADAS=new Set([...LOTE1,...LOTE2]);
+const revisadasConferidas=[];
+const cues=/\b(sempre|nunca|apenas|exclusivamente|dispensar|ignorar|sem avaliação|sem investigar|isolad[oa]|não precisa|inevitável|todos os casos)\b/i;
 for(const q of questions){
  assert.ok(q.id&&!ids.has(q.id),'ID duplicado: '+q.id);ids.add(q.id);
  assert.ok(!stems.has(q.q),'Enunciado repetido: '+q.id);stems.add(q.q);
  assert.equal(q.o.length,4,q.id);assert.equal(new Set(q.o).size,4,q.id);
  assert.ok(Number.isInteger(q.a)&&q.a>=0&&q.a<4,q.id);
  assert.ok(q.why&&q.why.length>60,'Comentário insuficiente: '+q.id);counts[q.a]++;
+ if(REVISADAS.has(q.id)){
+  assert.equal(q.revision,LOTE2.has(q.id)?'cir-20261117-a2':'cir-20261117-a1','Versão da revisão: '+q.id);
+  assert.ok(Array.isArray(q.refs)&&q.refs.length>0,'Sem referências: '+q.id);
+  for(const fonte of q.refs){
+   assert.ok(typeof fonte.title==='string'&&fonte.title.trim(),'Fonte sem título: '+q.id);
+   assert.match(fonte.url||'',/^https:\/\/[a-z0-9.-]+\//i,'URL de fonte inválida: '+q.id);
+  }
+  const media=q.o.reduce((n,o,i)=>n+(i===q.a?0:o.length),0)/3;
+  assert.ok(q.o[q.a].length/media<1.4,'Pista de comprimento na alternativa correta: '+q.id);
+  revisadasConferidas.push(q.id);
+ }
  const sizes=q.o.map(o=>o.length),sorted=[...sizes].sort((a,b)=>b-a);
  const reasons=[];
  if(q.q.split(/\s+/).length<40)reasons.push('caso curto');
@@ -20,5 +35,11 @@ for(const q of questions){
  if(q.o.some(o=>cues.test(o)))reasons.push('absolutismo nas alternativas');
  if(reasons.length)flags.push({id:q.id,reasons});
 }
-console.log(JSON.stringify({questions:questions.length,answers:counts,longestCorrect:questions.filter(q=>q.o[q.a].length===Math.max(...q.o.map(o=>o.length))).length,flags},null,2));
+assert.equal(ids.size,questions.length,'IDs não únicos');
+assert.equal(revisadasConferidas.length,REVISADAS.size,'Faltam questões revisadas');
+if(questions.length===432)assert.deepEqual(counts,[108,108,108,108],'Gabaritos perderam o equilíbrio');
+for(const id of LOTE2){const q=questions.find(x=>x.id===id);assert.ok(q,'Questão ausente '+id);assert.ok(!q.o.filter((o,i)=>i!==q.a&&cues.test(o)).length,'Distrator com pista absoluta '+id);}
+console.log(JSON.stringify({questions:questions.length,answers:counts,
+ longestCorrect:questions.filter(q=>q.o[q.a].length===Math.max(...q.o.map(o=>o.length))).length,
+ revisadasComFontes:revisadasConferidas,lot1:LOTE1.size,lot2:LOTE2.size,flags},null,2));
 if(process.env.STRICT_EDITORIAL==='1'&&flags.length)process.exitCode=1;

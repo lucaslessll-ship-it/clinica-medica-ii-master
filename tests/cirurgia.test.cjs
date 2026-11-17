@@ -66,7 +66,7 @@ test('plano do dia abre a próxima aula, credita conclusões e limita o treino �
 });
 test('Hoje soma evocação e revisões de Cirurgia e o botão usa o filtro devidas',async()=>{
  const t=await open({width:1280,height:900},'2026-11-13T09:00:00-03:00'),p=t.page;
- await p.evaluate(()=>{const id=CIR.own[0].id;localStorage.setItem(CIR.KEY,JSON.stringify({results:{[id]:{correct:false,next:'2026-11-12T12:00:00Z'}}}));CIR.reload();store.study={deep:{recall:{'neuro1_0#0':{d:'2026-11-12',n:0}},days:{}}};render();});
+ await p.evaluate(()=>{const q=CIR.own[0],id=q.id;localStorage.setItem(CIR.KEY,JSON.stringify({results:{[id]:{revision:q.revision,correct:false,next:'2026-11-12T12:00:00Z'}}}));CIR.reload();store.study={deep:{recall:{'neuro1_0#0':{d:'2026-11-12',n:0}},days:{}}};render();});
  assert.equal(await p.locator('.dash-today-nums strong').nth(1).textContent(),'2');await p.getByRole('button',{name:'Revisar Cirurgia: 1',exact:true}).click();assert.equal(await p.evaluate(()=>ui.route),'cirpractice');assert.match(await p.locator('.cir-q .status-row').innerText(),/Questão 1 de 1/);await t.close();
 });
 test('o plano preserva conclusões com doneAt da versão publicada',async()=>{
@@ -84,7 +84,7 @@ test('Hoje atualiza revisões do banco privado quando o carregamento termina',as
 });
 test('desempenho ordena percentuais conhecidos e não mostra percentual com poucos dados',async()=>{
  const t=await open(),p=t.page;
- const ids=await p.evaluate(()=>{const ids=CIR.topics.slice(0,3).map(topic=>topic.id),results={};ids.forEach((id,k)=>CIR.own.filter(q=>q.t===id).slice(0,k===2?4:5).forEach((q,i)=>results[q.id]={correct:k===0?i===0:true}));localStorage.setItem(CIR.KEY,JSON.stringify({results}));CIR.reload();CIR.go('cir');return ids;});
+ const ids=await p.evaluate(()=>{const ids=CIR.topics.slice(0,3).map(topic=>topic.id),results={};ids.forEach((id,k)=>CIR.own.filter(q=>q.t===id).slice(0,k===2?4:5).forEach((q,i)=>results[q.id]={revision:q.revision,correct:k===0?i===0:true}));localStorage.setItem(CIR.KEY,JSON.stringify({results}));CIR.reload();CIR.go('cir');return ids;});
  const rows=p.locator('.cir-perf-row');assert.equal(await rows.count(),14);assert.match(await rows.nth(0).innerText(),/Abdome agudo/);assert.match(await rows.nth(0).innerText(),/20%/);assert.match(await rows.nth(1).innerText(),/Pâncreas/);assert.match(await rows.nth(1).innerText(),/100%/);
  const scarce=rows.filter({hasText:'Hérnias da parede abdominal'});assert.match(await scarce.innerText(),/4 respondidas/);assert.match(await scarce.innerText(),/poucos dados/);assert.ok(!(await scarce.innerText()).includes('%'));await scarce.getByRole('button',{name:/Treinar este tema/}).click();assert.equal(await p.evaluate(()=>ui.route),'cirpractice');await t.close();
 });
@@ -274,4 +274,32 @@ test('banco privado adaptado embaralha alternativas e corrige pelo índice canô
  assert.equal(await p.evaluate(()=>CIR.pool().find(q=>q.id==='b:adaptada').shuffle),true);
  await p.getByRole('button',{name:/Conduta delta/}).click();
  const saved=await p.evaluate(()=>JSON.parse(localStorage.getItem(CIR.KEY)).results['b:adaptada']);assert.equal(saved.correct,true);assert.equal(saved.answer,3);assert.equal(saved.revision,'cir-20261116');await t.close();
+});
+
+
+test('alternativas autorais são embaralhadas sem mudar gabarito ou ordem ao voltar',async()=>{
+ const t=await open(),p=t.page;
+ const result=await p.evaluate(()=>{
+  const id=CIR.own[0].id,q=CIR.own[0],seen=new Set();
+  const sequences=[];
+  for(let i=0;i<8;i++){
+   CIR.startPractice({t:q.t,src:'own',mode:'all',ids:[id]});
+   const options=[...document.querySelectorAll('.cir-q .p1-option strong')].map(e=>e.textContent);
+   if(options.length!==4)throw Error('Questão sem quatro alternativas');
+   if(!options.every(t=>q.o.includes(t)))throw Error('Alternativa não corresponde ao registro de origem');
+   sequences.push(options);
+   seen.add(options.join('||'));
+  }
+  const orderBefore=sequences.at(-1);
+  CIR.jump(0);
+  const orderAfter=[...document.querySelectorAll('.cir-q .p1-option strong')].map(e=>e.textContent);
+  CIR.answer(q.a);
+  const data=JSON.parse(localStorage.getItem(CIR.KEY));
+  return {unique:seen.size,before:orderBefore,after:orderAfter,correct:data.results[id].correct,revision:data.results[id].revision};
+ });
+ assert.ok(result.unique>=2,'A ordem não variou em oito tentativas independentes');
+ assert.deepEqual(result.after,result.before,'A ordem da tentativa mudou ao voltar');
+ assert.equal(result.correct,true);
+ assert.equal(result.revision,'cir-20261116');
+ await t.close();
 });
