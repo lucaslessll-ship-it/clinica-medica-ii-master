@@ -248,3 +248,30 @@ test('Hemograma and Antimicrobianos courses render every module and case, save a
  assert.equal(await p.locator('#sidebar-nav .nav-featured').count(),3);
  await t.close();
 });
+
+test('questões revisadas reaparecem sem apagar tentativas antigas e salvam a revisão atual',async()=>{
+ const t=await open(),p=t.page;
+ const result=await p.evaluate(()=>{
+  const q=CIR.own.find(q=>q.revision),other=CIR.own.find(x=>x.id!==q.id);
+  localStorage.setItem(CIR.KEY,JSON.stringify({results:{[q.id]:{correct:true,answer:0,attempts:7,box:4,next:null}},notes:{kept:'anotação anterior'},completed:{[q.t+'_0']:true}}));
+  CIR.reload();CIR.startPractice({t:q.t,src:'own',mode:'new',ids:[q.id]});
+  const visible=document.querySelector('.cir-q .p1-question')?.textContent===q.q;
+  CIR.answer(q.a);const saved=JSON.parse(localStorage.getItem(CIR.KEY));
+  CIR.startPractice({t:q.t,src:'own',mode:'new',ids:[q.id]});
+  return {visible,result:saved.results[q.id],note:saved.notes.kept,completed:saved.completed[q.t+'_0'],currentRevision:q.revision,excluded:!document.querySelector('.cir-q')};
+ });
+ assert.equal(result.visible,true);assert.equal(result.result.attempts,8);assert.equal(result.result.correct,true);assert.equal(result.result.box,0);assert.equal(result.result.revision,result.currentRevision);assert.equal(result.note,'anotação anterior');assert.equal(result.completed,true);assert.equal(result.excluded,true);await t.close();
+});
+
+test('banco privado adaptado embaralha alternativas e corrige pelo índice canônico',async()=>{
+ const t=await open(),p=t.page;
+ await p.waitForFunction(()=>CIR.pool().some(q=>q.bank));
+ await p.evaluate(async()=>{
+  const client=MASTER_AUTH.client(),original=client.from.bind(client);
+  client.from=table=>{if(table!=='cir_bank')return original(table);const q={select(){return q},order(){return q},range:async()=>({data:[{id:'adaptada',topic:'cirher',source:'Revisão didática · Fixture',year:2024,stem:'Caso sintético para conferir embaralhamento e preservação do gabarito.',options:['Conduta alfa','Conduta beta','Conduta gama','Conduta delta'],answer:3,comment:'Comentário sintético sem referência a letras.',image_url:null}],error:null})};return q;};
+  await CIR.loadBank();Math.random=()=>0;CIR.startPractice({t:'cirher',src:'bank',mode:'all'});
+ });
+ assert.equal(await p.evaluate(()=>CIR.pool().find(q=>q.id==='b:adaptada').shuffle),true);
+ await p.getByRole('button',{name:/Conduta delta/}).click();
+ const saved=await p.evaluate(()=>JSON.parse(localStorage.getItem(CIR.KEY)).results['b:adaptada']);assert.equal(saved.correct,true);assert.equal(saved.answer,3);assert.equal(saved.revision,'cir-20261116');await t.close();
+});

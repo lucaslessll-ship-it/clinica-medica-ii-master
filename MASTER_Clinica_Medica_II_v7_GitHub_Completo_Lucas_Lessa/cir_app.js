@@ -14,6 +14,7 @@ const esc=s=>escapeHtml(String(s??'')),ph=s=>esc(s).replace(/\n/g,'<br>');
 const topic=id=>topics.find(t=>t.id===id)||topics[0];
 const pool=()=>own.concat(bank);
 const byId=id=>pool().find(q=>q.id===id);
+const isCurrent=(q,r=state.results[q.id])=>!!r&&(!q.revision||r.revision===q.revision);
 const nLessons=topics.reduce((n,t)=>n+t.chapters.length,0);
 const done=(t,i)=>!!state.completed[t+'_'+i];
 function isDue(id){const r=state.results[id];return !!r&&!!r.next&&Date.parse(r.next)<=Date.now();}
@@ -57,7 +58,7 @@ async function loadBank(){
  try{
   let rows=[],from=0;
   for(;;){const {data:part,error}=await client.from('cir_bank').select('id,topic,source,year,stem,options,answer,comment,image_url').order('id').range(from,from+999);if(error)throw error;rows=rows.concat(part||[]);if(!part||part.length<1000)break;from+=1000;}
-  bank=rows.map(r=>({id:'b:'+r.id,t:r.topic,q:r.stem,o:Array.isArray(r.options)?r.options:[],a:r.answer,why:r.comment||'',src:[r.source,r.year].filter(Boolean).join(' · ')||'Banco de questões',img:r.image_url||'',shuffle:false,bank:true}));
+  bank=rows.map(r=>({id:'b:'+r.id,t:r.topic,q:r.stem,o:Array.isArray(r.options)?r.options:[],a:r.answer,why:r.comment||'',src:[r.source,r.year].filter(Boolean).join(' · ')||'Banco de questões',img:r.image_url||'',shuffle:String(r.source||'').startsWith('Revisão didática · '),revision:String(r.source||'').startsWith('Revisão didática · ')?'cir-20261116':undefined,bank:true}));
   bankStatus=rows.length?'ready':'empty';
  }catch(e){bank=[];bankStatus='error';}
  if(ui.route==='dashboard'||ui.route.startsWith('cir'))render();
@@ -105,13 +106,13 @@ function topicView(){
 /* Questões */
 const shuffle=a=>{const o=[...a];for(let i=o.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[o[i],o[j]]=[o[j],o[i]]}return o;};
 const orderOf=q=>q.shuffle?shuffle(q.o.map((_,i)=>i)):q.o.map((_,i)=>i);
-function select(f){return pool().filter(q=>(f.t==='all'||q.t===f.t)&&(f.src==='all'||(f.src==='bank'?q.bank:!q.bank))&&(f.mode==='all'||(f.mode==='new'&&!state.results[q.id])||(f.mode==='wrong'&&state.results[q.id]&&!state.results[q.id].correct)||(f.mode==='due'&&isDue(q.id))));}
+function select(f){return pool().filter(q=>(f.t==='all'||q.t===f.t)&&(f.src==='all'||(f.src==='bank'?q.bank:!q.bank))&&(f.mode==='all'||(f.mode==='new'&&!isCurrent(q))||(f.mode==='wrong'&&state.results[q.id]&&!state.results[q.id].correct)||(f.mode==='due'&&isDue(q.id))));}
 function startPractice(f){const {ids:plannedIds,...filters}=f||{},allowed=Array.isArray(plannedIds)?new Set(plannedIds):null;filt={...filt,...filters};const ids=shuffle(select(filt).filter(q=>!allowed||allowed.has(q.id)).map(q=>q.id));practice={ids,step:0,chosen:null,revealed:false,order:ids.length?orderOf(byId(ids[0])):[],hits:0,done:{}};go('cirpractice');}
 function record(q,a){
- const prev=state.results[q.id],ok=a===q.a;let box=ok?Math.min((prev?.box??-1)+1,LADDER.length-1):0;
+ const prev=state.results[q.id],ok=a===q.a,current=isCurrent(q,prev);let box=ok?Math.min(((current?prev?.box:undefined)??-1)+1,LADDER.length-1):0;
  if(!prev&&own.some(item=>item.id===q.id)){const day=planActivity();day.questions=day.questions||[];if(!day.questions.includes(q.id))day.questions.push(q.id);}
  const next=new Date();next.setDate(next.getDate()+(ok?LADDER[box]:1));
- state.results[q.id]={correct:ok,answer:a,attempts:(prev?.attempts||0)+1,date:new Date().toISOString(),box,next:ok&&box>=LADDER.length-1?null:next.toISOString()};
+ state.results[q.id]={revision:q.revision,correct:ok,answer:a,attempts:(prev?.attempts||0)+1,date:new Date().toISOString(),box,next:ok&&box>=LADDER.length-1?null:next.toISOString()};
 }
 function answer(a){if(!practice||practice.revealed)return;const q=byId(practice.ids[practice.step]);practice.chosen=a;practice.revealed=true;if(a===q.a)practice.hits++;(practice.done=practice.done||{})[q.id]={chosen:a,ok:a===q.a,order:practice.order};record(q,a);window.QNav?.registrar('cir',q.id,a===q.a,{tid:q.t,tema:topic(q.t).short,q:q.q});save();render();}
 function jump(k){if(!practice)return;practice.step=Math.max(0,Math.min(practice.ids.length,k));const id=practice.ids[practice.step],q=id!==undefined?byId(id):null,d=q&&practice.done?.[id];practice.chosen=d?d.chosen:null;practice.revealed=!!d;if(q)practice.order=d?d.order:orderOf(q);render();requestAnimationFrame(()=>document.querySelector('.cir-q,.qnav-resumo')?.scrollIntoView({block:'start'}));}
@@ -125,7 +126,7 @@ function applyFilters(form){const f=new FormData(form);startPractice({t:f.get('t
 function qdots(){if(!window.QNav||!practice)return '';return QNav.dots({total:practice.ids.length,step:practice.step,estado:k=>{const d=practice.done?.[practice.ids[k]];return d?(d.ok?'certa':'errada'):'';},ir:'CIR.jump'})+`<p class="qnav-fim"><button type="button" class="btn small ghost" onclick="CIR.jump(${practice.ids.length})">Ver resultado</button></p>`;}
 function practiceView(){
  const active=practice&&practice.ids.length&&practice.step<practice.ids.length;
- const head=(active?`<div class="p1-back"><button type="button" class="btn ghost" onclick="CIR.go('cir')">← Cirurgia</button></div><details class="cir-filter-box"><summary>Trocar tema ou filtro</summary>${filterBar()}</details>`:header('CIRURGIA · QUESTÕES','Treine <em>a decisão cirúrgica.</em>','Escolha tema, fonte e tipo de revisão. Cada erro volta para revisão no dia seguinte e se espaça conforme você acerta.')+`<div class="p1-back"><button type="button" class="btn ghost" onclick="CIR.go('cir')">← Cirurgia</button></div>`+filterBar()+bankLine());
+ const head=(active?`<div class="p1-back"><button type="button" class="btn ghost" onclick="CIR.go('cir')">← Cirurgia</button></div><details class="cir-filter-box"><summary>Trocar tema ou filtro</summary>${filterBar()}</details>`:header('CIRURGIA · QUESTÕES','Treine <em>a decisão cirúrgica.</em>','As tentativas anteriores são preservadas; questões revisadas reaparecem em Não respondidas. Escolha tema, fonte e tipo de revisão. Cada erro volta para revisão no dia seguinte e se espaça conforme você acerta.')+`<div class="p1-back"><button type="button" class="btn ghost" onclick="CIR.go('cir')">← Cirurgia</button></div>`+filterBar()+bankLine());
  if(!practice)return head;
  if(!practice.ids.length)return head+`<div class="card pad empty-state"><h2>Nenhuma questão neste filtro</h2><p>Troque o tema, a fonte ou o tipo de revisão.</p></div>`;
  if(practice.step>=practice.ids.length)return head+qdots()+`<div class="card pad"><h2>Treino concluído</h2><p>${Object.values(practice.done||{}).filter(d=>d.ok).length} de ${practice.ids.length} corretas nesta rodada.</p></div>`+(window.QNav?QNav.resumo({bank:'cir',itens:practice.ids.map(id=>{const q=byId(id),d=practice.done?.[id];return {id,ok:d?d.ok:null,tid:q.t,tema:topic(q.t).short};}),refazer:`<button type="button" class="btn primary" onclick="CIR.startPractice({mode:'wrong'})">Refazer as que errei</button><button type="button" class="btn" onclick="CIR.go('cir')">Voltar à Cirurgia</button>`}):'');

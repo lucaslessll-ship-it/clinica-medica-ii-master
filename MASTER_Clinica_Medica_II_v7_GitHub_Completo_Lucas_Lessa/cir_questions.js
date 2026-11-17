@@ -1,472 +1,6051 @@
-/* Questões AUTORAIS de cirurgia, em formato de caso clínico. Não reproduzem provas.
-   Formato: Q(tema, enunciado, alternativas, índice da correta, comentário). */
-(()=>{
-const q=[];let n={};
-const Q=(t,stem,o,a,why)=>{n[t]=(n[t]||0)+1;q.push({id:t+'-'+String(n[t]).padStart(2,'0'),t,q:stem,o,a,why});};
-
-/* ===== Abdome agudo ===== */
-Q('ciraa','Homem de 58 anos, com fibrilação atrial sem anticoagulação, chega com dor abdominal intensa há 4 horas. Está agitado, FC 118 bpm, abdome flácido, pouco doloroso à palpação, sem descompressão dolorosa. Lactato 2,1 mmol/L. Qual a conduta mais adequada?',['Observação clínica e nova avaliação em 6 horas, já que o abdome está inocente','Radiografia de abdome em pé e deitado e alta se normal','AngioTC de abdome imediata e heparina plena','Endoscopia digestiva alta para excluir úlcera'],2,'Dor desproporcional ao exame físico em paciente com fibrilação atrial é isquemia mesentérica até prova em contrário. Lactato quase normal no início não exclui. A angioTC não deve ser atrasada e a heparina plena começa assim que se suspeita, enquanto se prepara a revascularização.');
-Q('ciraa','Mulher de 24 anos, dor em fossa ilíaca direita há 12 horas, sem febre. Última menstruação há 7 semanas. PA 88/50 mmHg, FC 124 bpm. Qual é o primeiro exame a ser solicitado?',['Tomografia de abdome com contraste','Beta-hCG e ultrassonografia à beira-leito','Escore de Alvarado','Urina tipo 1 e urocultura'],1,'Mulher em idade fértil com atraso menstrual, dor e choque: gravidez ectópica rota até prova em contrário. Beta-hCG e ultrassonografia procurando líquido livre resolvem rápido. Paciente instável não vai para tomografia.');
-Q('ciraa','Sobre a analgesia no paciente com abdome agudo no pronto-socorro, é correto afirmar:',['Opioides devem ser evitados até a avaliação do cirurgião, pois mascaram a peritonite','Analgesia precoce, inclusive com opioide, não reduz a acurácia diagnóstica','Só dipirona é permitida antes do diagnóstico','Analgesia só deve ser dada após a tomografia'],1,'Revisões sistemáticas mostram que a analgesia não atrasa nem piora o diagnóstico. Deixar o paciente com dor não tem justificativa.');
-Q('ciraa','Homem de 21 anos com dor periumbilical que migrou para fossa ilíaca direita, anorexia, um episódio de vômito, dor e descompressão dolorosa em fossa ilíaca direita, temperatura 37,9 °C, leucócitos 15.200 com 12% de bastões. Qual é o escore de Alvarado?',['6','7','9','10'],3,'Migração 1, anorexia 1, vômito 1, dor em FID 2, descompressão 1, febre 1, leucocitose 2, desvio 1: total 10. Alta probabilidade, em homem jovem a conduta é cirúrgica.');
-Q('ciraa','Menino de 9 anos com suspeita de apendicite e Alvarado de 6 pontos. Qual o exame de imagem inicial mais adequado?',['Tomografia com contraste','Ressonância magnética','Ultrassonografia de abdome','Radiografia simples de abdome'],2,'Em criança, ultrassonografia é o exame inicial para evitar radiação. Se inconclusiva, ressonância ou tomografia em baixa dose conforme disponibilidade.');
-Q('ciraa','Homem de 45 anos com dor em fossa ilíaca direita há 7 dias, febre baixa, estável, massa palpável dolorosa. Tomografia: fleimão periapendicular com abscesso de 5 cm, sem pneumoperitônio livre. Qual a melhor conduta?',['Apendicectomia de urgência por laparotomia','Antibiótico e drenagem percutânea guiada por imagem, com colonoscopia posterior','Alta com antibiótico oral','Colectomia direita de urgência'],1,'Plastrão com abscesso em paciente estável e evolução longa: tratamento não operatório com antibiótico e drenagem percutânea. Operar um bloco inflamatório aumenta lesão e ressecções desnecessárias. Acima de 40 anos, colonoscopia depois para excluir neoplasia.');
-Q('ciraa','Após apendicectomia laparoscópica de apendicite não complicada, qual a conduta em relação ao antibiótico?',['Manter por 7 dias por via oral','Manter por 4 dias intravenoso','Não manter: a dose profilática antes da incisão é suficiente','Manter até normalizar o leucograma'],2,'Na apendicite não complicada, o antibiótico pós-operatório não traz benefício. Antibiótico por cerca de 4 dias após controle do foco vale para a apendicite complicada.');
-Q('ciraa','Paciente com apendicite não complicada confirmada por tomografia deseja evitar cirurgia. Qual achado mais aumenta a chance de falha do tratamento só com antibiótico?',['Leucocitose de 13 mil','Apendicolito na tomografia','Idade de 30 anos','Dor há 24 horas'],1,'No estudo CODA, a presença de apendicolito aumentou a falha do tratamento com antibiótico e a chance de complicação. É o principal argumento para indicar cirurgia nesses casos.');
-Q('ciraa','Mulher de 52 anos, dor no hipocôndrio direito há 2 dias, febre de 38,4 °C, Murphy positivo, 14 mil leucócitos. Ultrassonografia: vesícula distendida com parede de 6 mm, cálculo impactado no infundíbulo e líquido perivesicular. Sem disfunção orgânica. Qual é a classificação e a conduta?',['Grau I; colecistectomia eletiva após 6 semanas','Grau I; colecistectomia laparoscópica precoce na mesma internação','Grau III; colecistostomia percutânea','Grau II; CPRE de urgência'],1,'Diagnóstico definitivo por Tóquio (local, sistêmico e imagem). Sem critérios de grau II (leucócitos acima de 18 mil, mais de 72 horas, massa ou complicação local) nem de grau III. Conduta: colecistectomia laparoscópica precoce.');
-Q('ciraa','Idoso de 80 anos com colecistite aguda, em uso de noradrenalina e com creatinina de 2,8 mg/dL após reanimação, em hospital sem cirurgião hepatobiliar experiente. Qual a melhor conduta além do suporte e antibiótico?',['Colecistectomia aberta imediata','Colecistostomia percutânea','CPRE com papilotomia','Apenas antibiótico por 14 dias'],1,'Colecistite grau III (disfunção cardiovascular e renal). Cirurgia precoce só em centro experiente com fatores favoráveis. Nos demais, drenagem da vesícula por colecistostomia e cirurgia depois.');
-Q('ciraa','Mulher de 66 anos com febre e calafrios, icterícia e dor no hipocôndrio direito. PA 82/50 mmHg após volume, confusa. Bilirrubina 7,2 mg/dL. Ultrassonografia: colédoco de 12 mm. A melhor sequência terapêutica é:',['Antibiótico por 48 horas e CPRE eletiva','Colecistectomia de urgência','Reanimação, antibiótico e drenagem biliar urgente por CPRE','Colangiorressonância antes de qualquer conduta'],2,'Pêntade de Reynolds e disfunção orgânica: colangite grau III. Após estabilização inicial, drenagem biliar urgente, preferencialmente por CPRE. Antibiótico isolado não resolve a obstrução.');
-Q('ciraa','Qual achado define colecistite aguda grau II pelos critérios de Tóquio 2018?',['Plaquetas abaixo de 100 mil','Necessidade de vasopressor','Sintomas há mais de 72 horas','INR acima de 1,5'],2,'Grau II é a gravidade local: leucócitos acima de 18 mil, massa palpável, mais de 72 horas de sintomas ou inflamação local acentuada. As demais alternativas são disfunções orgânicas, que definem grau III.');
-Q('ciraa','Homem de 63 anos com dor em fossa ilíaca esquerda há 3 dias e febre. Tomografia: diverticulite do sigmoide com abscesso pélvico de 6 cm, sem ar ou líquido livre difuso. Estável. Qual a conduta?',['Hartmann de urgência','Drenagem percutânea do abscesso e antibiótico','Colonoscopia para confirmar','Antibiótico oral ambulatorial'],1,'Hinchey II com abscesso de 4 cm ou mais: drenagem percutânea guiada por imagem e antibiótico. Cirurgia de urgência fica para peritonite generalizada ou falha.');
-Q('ciraa','Homem de 70 anos, chocado, com abdome em tábua. Tomografia: diverticulite perfurada com peritonite fecal difusa. Qual a cirurgia mais adequada?',['Lavagem laparoscópica','Colectomia com anastomose primária sem estomia','Operação de Hartmann','Drenagem percutânea'],2,'Hinchey IV em paciente instável: ressecção do sigmoide com colostomia terminal (Hartmann). Anastomose primária é reservada a pacientes estáveis em centros experientes.');
-Q('ciraa','Sobre a diverticulite aguda não complicada em paciente imunocompetente, sem sinais de sepse e tolerando dieta, assinale a correta:',['Exige internação e antibiótico intravenoso','Colonoscopia deve ser feita na fase aguda para excluir câncer','Pode ser tratada ambulatorialmente, e o antibiótico pode ser omitido em casos selecionados','Indica colectomia eletiva após o primeiro episódio'],2,'Estudos randomizados mostraram que a observação sem antibiótico é segura nesse grupo. Colonoscopia é contraindicada na fase aguda e feita 6 a 8 semanas depois. A colectomia é decidida caso a caso.');
-Q('ciraa','Mulher de 74 anos sem cirurgias prévias apresenta vômitos, cólica e distensão há 2 dias. Ao exame, abaulamento doloroso e endurecido abaixo do ligamento inguinal direito. Qual o diagnóstico mais provável?',['Obstrução por bridas','Hérnia femoral encarcerada','Volvo de sigmoide','Íleo biliar'],1,'Obstrução de delgado em abdome virgem obriga a examinar regiões herniárias. Mulher idosa com abaulamento abaixo do ligamento inguinal sugere hérnia femoral, que tem alto risco de encarceramento e estrangulamento.');
-Q('ciraa','Paciente com obstrução de delgado por bridas, estável, sem sinais de sofrimento. Recebeu contraste hidrossolúvel pela sonda e, na radiografia de 24 horas, o contraste está no cólon. Qual a interpretação?',['Indica falha do tratamento clínico e necessidade de cirurgia','Indica alta probabilidade de resolução sem cirurgia','Indica perfuração intestinal','Não tem valor prognóstico'],1,'Pela diretriz de Bolonha, contraste chegando ao cólon em até 24 horas prediz resolução não operatória com alta acurácia, além de ter efeito terapêutico.');
-Q('ciraa','Idoso chagásico com constipação crônica tem distensão abdominal enorme e parada de eliminação. Radiografia: alça sigmoide muito dilatada em forma de U invertido. Sem peritonite, lactato normal. Qual a conduta?',['Hartmann imediato','Descompressão por retossigmoidoscopia e sigmoidectomia na mesma internação','Neostigmina intravenosa','Descompressão endoscópica e alta sem cirurgia'],1,'Volvo de sigmoide sem sinais de gangrena: descompressão endoscópica. Como a recorrência passa de metade dos casos, a sigmoidectomia é feita na mesma internação.');
-Q('ciraa','Qual é a tríade radiológica de Rigler e a que ela se refere?',['Pneumoperitônio, alças dilatadas e níveis hidroaéreos; úlcera perfurada','Pneumobilia, obstrução de delgado e cálculo ectópico; íleo biliar','Grão de café, ausência de ar no reto e níveis; volvo de sigmoide','Ar portal, pneumatose e líquido livre; isquemia mesentérica'],1,'A tríade de Rigler é do íleo biliar. Não confundir com o sinal de Rigler, que é a visualização das duas faces da parede intestinal no pneumoperitônio.');
-Q('ciraa','Na obstrução do cólon com válvula ileocecal competente, qual segmento tem maior risco de perfuração e por quê?',['Sigmoide, por ter menor diâmetro','Ceco, por ter maior diâmetro e maior tensão na parede','Reto, por ser extraperitoneal','Ângulo esplênico, por ser zona de transição vascular'],1,'Pela lei de Laplace, a tensão na parede é proporcional ao raio. O ceco tem o maior diâmetro do cólon e, numa alça fechada, é o primeiro a perfurar, em especial acima de 12 cm.');
-Q('ciraa','Homem de 40 anos, usuário de anti-inflamatório, dor epigástrica súbita em facada há 3 horas, abdome em tábua. Radiografia de tórax em pé mostra ar sob as cúpulas. Qual a conduta?',['Endoscopia digestiva alta urgente','Tratamento conservador com sonda e IBP','Reanimação, antibiótico, IBP e cirurgia com rafia e omentoplastia','Tomografia antes de qualquer decisão'],2,'Úlcera perfurada com peritonite: cirurgia de urgência, com rafia e remendo de omento (Graham), por laparoscopia ou laparotomia. Depois, erradicar H. pylori e suspender AINE. Endoscopia é contraindicada.');
-Q('ciraa','O escore de Boey, usado na úlcera péptica perfurada, considera:',['Idade, leucocitose e tamanho da perfuração','Choque à admissão, doença clínica grave e perfuração há mais de 24 horas','Lactato, creatinina e plaquetas','Tabagismo, uso de AINE e H. pylori'],1,'Três fatores: choque à admissão, comorbidade grave e mais de 24 horas de perfuração. Quanto mais fatores, maior a mortalidade.');
-Q('ciraa','Idosa internada em UTI por choque cardiogênico, em uso de noradrenalina, desenvolve dor e distensão abdominal com acidose. AngioTC sem oclusão arterial ou venosa, com alças hipoperfundidas. Qual o diagnóstico mais provável?',['Embolia da artéria mesentérica superior','Trombose venosa mesentérica','Isquemia mesentérica não oclusiva','Colite pseudomembranosa'],2,'Isquemia não oclusiva ocorre em estados de baixo débito e uso de vasoconstritores, sem trombo ou êmbolo. Tratamento: corrigir o débito, reduzir vasoconstritores se possível e vasodilatador intra-arterial.');
-Q('ciraa','Idoso de 72 anos, hipertenso, apresenta dor abdominal leve seguida, em 24 horas, de diarreia com sangue vivo. Abdome com dor discreta em flanco esquerdo, estável. Qual a hipótese e conduta mais provável?',['Isquemia mesentérica aguda; laparotomia','Colite isquêmica; suporte clínico e colonoscopia','Diverticulite perfurada; Hartmann','Câncer de reto; quimioterapia'],1,'Colite isquêmica: idoso, dor leve, diarreia sanguinolenta precoce, cólon esquerdo. A maioria resolve com suporte. Cirurgia só para gangrena ou perfuração.');
-Q('ciraa','Homem de 74 anos, tabagista, chega com dor lombar súbita, PA 76/40 mmHg, sonolento mas responsivo, e massa pulsátil abdominal. Qual a melhor conduta?',['Tomografia de abdome com contraste para planejar o reparo','Reposição com 3 litros de cristaloide até PA sistólica de 120 mmHg','Hipotensão permissiva, transfusão e encaminhamento direto ao centro cirúrgico','Analgesia e investigação de cólica renal'],2,'Tríade do aneurisma roto em paciente instável: centro cirúrgico sem tomografia. Hipotensão permissiva com transfusão evita aumentar o sangramento antes do controle da aorta.');
-Q('ciraa','Qual sinal clínico indica dor referida ao ombro esquerdo por sangue sob o diafragma, típico da ruptura esplênica?',['Sinal de Cullen','Sinal de Kehr','Sinal de Jobert','Sinal de Murphy'],1,'Kehr é a dor referida ao ombro esquerdo por irritação diafragmática. Cullen é equimose periumbilical, Jobert é timpanismo hepático por pneumoperitônio, Murphy é da colecistite.');
-
-/* ===== Pâncreas ===== */
-Q('cirpanc','Mulher de 45 anos com dor epigástrica em faixa há 10 horas, lipase 5 vezes acima do limite. Ultrassonografia mostra colelitíase sem dilatação biliar. Sem disfunção orgânica. Qual exame deve ser solicitado agora para confirmar o diagnóstico de pancreatite?',['Tomografia de abdome com contraste','Nenhum: dor típica e lipase elevada já fecham dois de três critérios','Colangiorressonância','Amilase sérica'],1,'Dor típica e enzima pelo menos 3 vezes acima do normal preenchem dois de três critérios. Tomografia não é necessária para diagnóstico e, se indicada para complicações, deve ser feita após 72 a 96 horas.');
-Q('cirpanc','Na pancreatite aguda, o que define a forma grave segundo Atlanta revisado?',['Lipase acima de 10 vezes o limite superior','Necrose pancreática na tomografia','Falência orgânica persistente por mais de 48 horas','Ranson de 3 ou mais'],2,'A gravidade é definida pela falência orgânica persistente. Necrose e coleções caracterizam complicação local (forma moderadamente grave se não houver falência persistente). O valor da enzima não mede gravidade.');
-Q('cirpanc','Homem de 52 anos com pancreatite aguda necrosante, estável, afebril, no 5º dia. Tomografia: necrose de 40% do pâncreas, sem gás. Qual a conduta em relação ao antibiótico?',['Iniciar carbapenêmico profilático','Não iniciar antibiótico, pois não há infecção','Iniciar antibiótico e fazer punção da necrose','Indicar necrosectomia'],1,'Antibiótico profilático não reduz mortalidade nem infecção na necrose estéril. Só se usa se houver infecção comprovada ou fortemente suspeita.');
-Q('cirpanc','Mulher de 38 anos com pancreatite biliar leve, já sem dor e aceitando dieta no 3º dia. Qual a conduta em relação à vesícula?',['Colecistectomia em 6 a 8 semanas','Colecistectomia na mesma internação','CPRE com papilotomia e alta','Ácido ursodesoxicólico e observação'],1,'O estudo PONCHO mostrou que a colecistectomia na mesma internação reduz recidivas e complicações biliares em relação à cirurgia tardia na pancreatite biliar leve.');
-Q('cirpanc','Paciente com pancreatite biliar desenvolve febre de 39 °C, icterícia crescente e hipotensão. Qual a conduta?',['CPRE urgente associada a antibiótico','Colecistectomia de urgência','Tomografia e aguardar','Antibiótico isolado por 7 dias'],0,'Colangite associada à pancreatite biliar indica CPRE urgente para desobstruir a via biliar, junto com antibiótico. Sem colangite, a CPRE de rotina não traz benefício.');
-Q('cirpanc','Sobre a hidratação na pancreatite aguda, segundo evidência recente, é correto:',['Infundir 20 mL/kg em bolus e 3 mL/kg/h nas primeiras 24 horas em todos','Hidratação moderada guiada por metas, com Ringer lactato, evita sobrecarga sem piorar desfechos','Soro glicosado é a solução de escolha','A hidratação deve ser restrita a 1 litro por dia'],1,'O estudo WATERFALL (2022) foi interrompido porque a hidratação agressiva causou mais sobrecarga hídrica sem melhorar desfechos. A conduta atual é hidratação moderada, guiada por metas, com Ringer lactato.');
-Q('cirpanc','Paciente na 5ª semana de pancreatite necrosante volta a ter febre e leucocitose. Tomografia: coleção encapsulada com conteúdo heterogêneo e bolhas de gás. Qual a melhor conduta inicial?',['Necrosectomia aberta imediata','Antibiótico e drenagem percutânea ou endoscópica, com escalonamento se necessário','Apenas antibiótico por 6 semanas','Observação'],1,'Necrose encapsulada infectada: abordagem em degraus (step-up). Antibiótico e drenagem minimamente invasiva; necrosectomia endoscópica ou retroperitoneal se não houver melhora. Necrosectomia aberta é exceção.');
-Q('cirpanc','Homem de 48 anos, 10 semanas após pancreatite alcoólica intersticial, assintomático, com coleção de 7 cm de parede fina e conteúdo líquido homogêneo. Qual a conduta?',['Drenagem endoscópica, pois tem mais de 6 cm','Drenagem percutânea','Observação clínica','Pancreatectomia corpo-caudal'],2,'Pseudocisto assintomático se observa independentemente do tamanho. A regra antiga dos 6 cm e 6 semanas foi abandonada. Drena-se quando há sintomas ou complicações.');
-Q('cirpanc','Paciente com antecedente de pancreatite apresenta hematêmese por varizes gástricas isoladas. Fígado normal à ultrassonografia, sem varizes esofágicas. Qual a causa mais provável?',['Cirrose alcoólica','Trombose da veia esplênica','Trombose da veia porta','Síndrome de Budd-Chiari'],1,'Trombose da veia esplênica causa hipertensão portal segmentar (sinistra), com varizes gástricas isoladas. A esplenectomia é curativa quando há sangramento.');
-Q('cirpanc','Na pancreatite crônica, qual cirurgia está indicada para dor refratária com ducto pancreático principal dilatado (10 mm) e sem massa na cabeça?',['Duodenopancreatectomia','Pancreatojejunostomia longitudinal látero-lateral (Partington-Rochelle)','Pancreatectomia total','Esplenectomia'],1,'Ducto dilatado se drena: a anastomose longitudinal com alça jejunal descomprime o ducto. Doença predominante na cabeça pede Frey ou Beger; suspeita de câncer pede Whipple.');
-Q('cirpanc','A tríade clássica da pancreatite crônica é composta por:',['Dor, icterícia e febre','Calcificações pancreáticas, esteatorreia e diabetes','Dor, vômitos e distensão','Hipercalcemia, hipertrigliceridemia e álcool'],1,'A tríade é calcificação, esteatorreia e diabetes. Aparece completa em poucos pacientes, e tardiamente.');
-Q('cirpanc','Homem de 70 anos, tabagista, com icterícia progressiva sem dor, prurido, perda de 8 kg e vesícula palpável e indolor. Qual a hipótese principal?',['Coledocolitíase','Colecistite aguda','Neoplasia periampular, como adenocarcinoma de cabeça de pâncreas','Hepatite viral aguda'],2,'Icterícia indolor com vesícula palpável (Courvoisier-Terrier) sugere obstrução maligna distal ao cístico. Na litíase, a vesícula costuma ser fibrosada e não distende.');
-Q('cirpanc','Adenocarcinoma de cabeça de pâncreas com contato de 90° com a veia mesentérica superior, sem irregularidade, sem contato arterial e sem metástases. Classificação e conduta:',['Ressecável; duodenopancreatectomia seguida de quimioterapia adjuvante','Localmente avançado; quimiorradioterapia paliativa','Metastático; cuidados paliativos','Irressecável; derivação biliar'],0,'Contato venoso de até 180° sem irregularidade e sem contato arterial é considerado ressecável. Conduta: Whipple e quimioterapia adjuvante, com FOLFIRINOX modificado nos aptos.');
-Q('cirpanc','Sobre o CA 19-9 no câncer de pâncreas, é correto:',['É o melhor exame de rastreamento populacional','Pode estar elevado na colestase benigna e é útil para prognóstico e seguimento','É específico para câncer de pâncreas','Tem sensibilidade de 100% em tumores menores que 2 cm'],1,'CA 19-9 não serve para rastreamento, eleva em obstrução biliar benigna e não é expresso em pessoas Lewis negativas. Seu papel é prognóstico e de seguimento.');
-Q('cirpanc','Mulher de 35 anos com hipoglicemias em jejum, sintomas neuroglicopênicos que melhoram com glicose, insulina e peptídeo C elevados durante a hipoglicemia. Qual o diagnóstico e o tratamento habitual?',['Glucagonoma; pancreatectomia total','Insulinoma; enucleação ou ressecção do tumor','Gastrinoma; IBP em dose alta','Uso sub-reptício de insulina; psicoterapia'],1,'Tríade de Whipple com insulina e peptídeo C elevados: insulinoma, o tumor neuroendócrino pancreático funcionante mais comum, em geral benigno e único. Insulina exógena teria peptídeo C baixo.');
-Q('cirpanc','Mulher de 72 anos com cisto pancreático microcístico em favo de mel, com cicatriz central calcificada, assintomática. Qual a conduta?',['Ressecção pancreática','Observação','Punção e drenagem','Quimioterapia'],1,'Cistoadenoma seroso é praticamente sempre benigno. Assintomático, observa-se. As lesões mucinosas, o IPMN de ducto principal e a neoplasia sólida pseudopapilar é que costumam ser ressecadas.');
-
-/* ===== Hérnias ===== */
-Q('cirher','Durante herniorrafia, o cirurgião observa que o saco herniário emerge medialmente aos vasos epigástricos inferiores, pelo assoalho do canal. Trata-se de hérnia:',['Indireta','Direta','Femoral','De Spiegel'],1,'Medial aos vasos epigástricos inferiores, pelo triângulo de Hesselbach, é hérnia direta. Lateral, pelo anel interno, é indireta. Abaixo do ligamento inguinal é femoral.');
-Q('cirher','Qual é a hérnia mais comum na mulher?',['Femoral','Umbilical','Inguinal indireta','Obturadora'],2,'A inguinal indireta é a mais comum em ambos os sexos. A femoral é proporcionalmente mais frequente nas mulheres do que nos homens, mas não é a mais comum nelas.');
-Q('cirher','Os limites do triângulo de Hesselbach são:',['Ligamento inguinal, vasos epigástricos inferiores e borda lateral do reto abdominal','Ligamento de Cooper, veia femoral e ligamento lacunar','Crista ilíaca, grande dorsal e oblíquo externo','Anel interno, anel externo e tendão conjunto'],0,'O triângulo de Hesselbach é limitado pelos vasos epigástricos inferiores (lateral), borda lateral do reto (medial) e ligamento inguinal (inferior). É por ele que passam as hérnias diretas.');
-Q('cirher','Na classificação de Nyhus, a hérnia femoral corresponde ao tipo:',['II','IIIa','IIIb','IIIc'],3,'Nyhus: I indireta com anel normal, II indireta com anel alargado, IIIa direta, IIIb indireta que destrói o assoalho, IIIc femoral, IV recidivada.');
-Q('cirher','Homem de 50 anos com hérnia inguinal bilateral sintomática. Qual a abordagem preferencial?',['Lichtenstein bilateral no mesmo tempo','Reparo laparoscópico (TEP ou TAPP)','Shouldice bilateral','Observação'],1,'Hérnia bilateral é uma das indicações clássicas de laparoscopia, junto com recidiva após via anterior e hérnias em mulheres.');
-Q('cirher','Homem de 62 anos com recidiva de hérnia inguinal após reparo de Lichtenstein. Qual a via recomendada?',['Nova via anterior com Lichtenstein','Via posterior (laparoscópica)','Shouldice','Observação definitiva'],1,'Recidiva se opera pela via ainda não utilizada: após via anterior, via posterior laparoscópica, que trabalha em plano ainda não dissecado.');
-Q('cirher','Mulher de 68 anos com abaulamento indolor e redutível abaixo do ligamento inguinal. Conduta:',['Observação, pois é assintomática','Cirurgia eletiva, pois hérnia femoral tem alto risco de estrangulamento','Ultrassonografia anual','Uso de funda'],1,'Toda hérnia femoral deve ser operada, mesmo assintomática, pelo colo estreito e rígido com alto risco de encarceramento e estrangulamento.');
-Q('cirher','Homem de 58 anos com hérnia inguinal pequena e sem sintomas. Qual afirmação é correta?',['A cirurgia é obrigatória pelo risco alto de estrangulamento','A conduta expectante vigilante é aceitável, embora muitos acabem operando por sintomas','Deve-se usar funda permanentemente','Deve-se operar apenas se ficar irredutível'],1,'Em homens com hérnia inguinal assintomática ou pouco sintomática, o risco de encarceramento é baixo, e a observação vigilante é opção aceita. A maioria evolui com sintomas e é operada depois.');
-Q('cirher','Qual é a complicação mais relevante a longo prazo após herniorrafia inguinal e quais nervos estão envolvidos na via anterior?',['Recidiva; nervo femoral','Dor inguinal crônica; ilioinguinal, ílio-hipogástrico e ramo genital do genitofemoral','Atrofia testicular; nervo obturador','Infecção de tela; nervo pudendo'],1,'Dor crônica é a complicação mais importante. Na via anterior, os nervos em risco são ilioinguinal, ílio-hipogástrico e ramo genital do genitofemoral.');
-Q('cirher','Criança de 2 anos com hérnia umbilical de 1 cm, assintomática. Conduta:',['Cirurgia imediata','Observação, pois a maioria fecha até 4 a 5 anos','Curativo compressivo com moeda','Cirurgia com tela'],1,'A maioria das hérnias umbilicais da infância fecha espontaneamente até 4 a 5 anos. Opera-se se persistir, se o anel for grande ou se houver complicação. Compressão com moeda não tem benefício.');
-Q('cirher','Idosa magra, multípara, com obstrução de delgado, sem cirurgia prévia e sem abaulamento visível. Refere dor na face medial da coxa direita. Qual a hipótese?',['Hérnia de Spiegel','Hérnia obturadora','Hérnia de Richter femoral','Hérnia lombar de Petit'],1,'Hérnia obturadora: idosa magra multípara, obstrução sem abaulamento e sinal de Howship-Romberg (dor medial da coxa por compressão do nervo obturador). Diagnóstico por tomografia.');
-Q('cirher','O que caracteriza a hérnia de Richter?',['Presença de apêndice no saco inguinal','Divertículo de Meckel no saco herniário','Pinçamento apenas da borda antimesentérica da alça, que pode necrosar sem obstrução completa','Duas alças em W com estrangulamento da alça intra-abdominal'],2,'Na hérnia de Richter, só parte da circunferência da alça é pinçada. O trânsito pode continuar e a necrose passa despercebida. Apêndice inguinal é Amyand, Meckel é Littré, alças em W é Maydl.');
-Q('cirher','Qual medida reduz a incidência de hérnia incisional após laparotomia mediana?',['Pontos separados com fio absorvível rápido','Sutura contínua com pontos pequenos (small bites) e relação fio para ferida de pelo menos 4 para 1','Fechamento só da pele','Uso de dreno subcutâneo'],1,'O estudo STITCH mostrou que a técnica de pontos pequenos reduz hérnia incisional. A relação fio para comprimento da ferida de 4 para 1 é recomendada pela sociedade europeia de hérnia.');
-Q('cirher','Homem com hérnia inguinal irredutível há 2 horas, pouco dolorosa, sem hiperemia, sem febre e sem sinais de obstrução. Qual a conduta inicial?',['Cirurgia de urgência imediata','Tentativa de redução manual com analgesia e Trendelenburg, e cirurgia eletiva precoce se reduzir','Alta com analgésico','Tomografia de abdome antes de qualquer manobra'],1,'Encarceramento recente sem sinais de estrangulamento permite tentar a redução. Depois, observação e reparo eletivo precoce. Com sinais de estrangulamento, não se tenta reduzir.');
-Q('cirher','Paciente com hérnia inguinal encarcerada, dolorosa, quente, com hiperemia da pele, febre e leucocitose. Qual a conduta?',['Redução manual sob sedação','Cirurgia de urgência sem tentar reduzir','Antibiótico e observação por 24 horas','Punção do saco herniário'],1,'Sinais de estrangulamento contraindicam a redução, pelo risco de devolver alça necrosada para a cavidade ou de redução em bloco. Cirurgia de urgência, com avaliação da viabilidade da alça.');
-Q('cirher','Sobre o uso de tela no reparo de hérnia encarcerada na urgência, é correto:',['É proibido em qualquer situação de urgência','Pode ser usada em campo limpo e limpo-contaminado; em contaminação grosseira, preferir reparo tecidual ou tela biológica','Só pode ser usada se houver ressecção intestinal','Deve ser sempre biológica'],1,'A diretriz de hérnias complicadas da sociedade mundial de cirurgia de emergência permite tela sintética em campo limpo e limpo-contaminado, com baixa taxa de infecção. Na peritonite, evita-se tela sintética.');
-
-/* ===== Trauma abdominal ===== */
-Q('cirtabd','Segundo a 11ª edição do ATLS, qual é o primeiro passo do exame primário?',['Via aérea com proteção da coluna cervical','Controle de hemorragia externa exsanguinante','Avaliação neurológica pela escala de Glasgow','Exposição completa do paciente'],1,'O ATLS 11 (2025) adotou o xABCDE: o "x" é o controle da hemorragia externa exsanguinante antes da via aérea, porque o sangramento não controlado é a principal causa de morte evitável no trauma.');
-Q('cirtabd','Motociclista com PA 78/40 mmHg e FC 136 bpm após reposição inicial. FAST com líquido livre no espaço hepatorrenal. Qual a conduta?',['Tomografia de abdome com contraste','Laparotomia','Lavado peritoneal para confirmar','Angioembolização'],1,'Instabilidade hemodinâmica com FAST positivo é indicação de laparotomia. Paciente instável não vai para tomografia.');
-Q('cirtabd','Paciente vítima de atropelamento, hipotenso, com FAST negativo e radiografia de tórax normal. Pelve instável à inspeção, com rotação externa dos membros. Qual a medida imediata mais importante?',['Laparotomia exploradora','Cinta pélvica ou lençol na altura dos trocânteres, transfusão e ácido tranexâmico','Tomografia de pelve','Sondagem vesical para medir diurese'],1,'Choque com FAST negativo obriga a procurar outra fonte. Fratura de pelve instável: fechar a pelve com cinta na altura dos trocânteres, transfusão maciça e ácido tranexâmico, seguida de angioembolização ou tamponamento pré-peritoneal.');
-Q('cirtabd','Qual achado no lavado peritoneal diagnóstico após trauma contuso indica positividade?',['50 mil hemácias por mm³','Mais de 100 mil hemácias por mm³','200 leucócitos por mm³','Amilase normal'],1,'Critérios de positividade: aspiração de 10 mL ou mais de sangue ou conteúdo entérico; no lavado, mais de 100 mil hemácias, mais de 500 leucócitos por mm³ ou bactérias no Gram.');
-Q('cirtabd','Jovem com ferimento por arma branca no hipocôndrio esquerdo, estável, sem peritonite e sem evisceração. A exploração local mostra violação da aponeurose posterior. Quais são condutas aceitas?',['Alta hospitalar','Exame físico seriado por 24 horas, tomografia ou laparoscopia diagnóstica','Laparotomia obrigatória em todos os casos','Lavado peritoneal de rotina'],1,'Ferimento por arma branca em paciente estável sem peritonite pode ser manejado de forma seletiva. Se a aponeurose foi violada: exame seriado, tomografia ou laparoscopia. No toracoabdominal esquerdo, a laparoscopia ajuda a excluir lesão diafragmática.');
-Q('cirtabd','Paciente com ferimento por arma de fogo cujo trajeto atravessa a cavidade peritoneal, PA 120/80. Qual a conduta?',['Observação com exame seriado','Laparotomia','Tomografia e alta se normal','Lavado peritoneal'],1,'Ferimento por arma de fogo transperitoneal tem alta probabilidade de lesão visceral e é indicação de laparotomia, mesmo com estabilidade.');
-Q('cirtabd','Homem de 30 anos, estável, com lesão esplênica grau IV e blush na tomografia, sem outras lesões. Qual a conduta mais adequada em centro com radiologia intervencionista?',['Esplenectomia imediata pelo grau da lesão','Angioembolização e tratamento não operatório monitorizado','Alta com repouso','Esplenorrafia laparoscópica'],1,'A estabilidade, não o grau, define o tratamento não operatório. Blush em paciente estável é indicação de angioembolização.');
-Q('cirtabd','Após esplenectomia por trauma, qual conduta reduz o risco de sepse fulminante?',['Antibiótico profilático contínuo por toda a vida para todos','Vacinação contra pneumococo, meningococo e Haemophilus influenzae tipo b','Vacina contra hepatite B apenas','Nenhuma medida específica'],1,'O esplenectomizado tem risco de sepse por germes encapsulados. Vacinação contra pneumococo, meningococo e Haemophilus influenzae tipo b, idealmente cerca de 14 dias após a cirurgia, e influenza anual.');
-Q('cirtabd','Durante laparotomia por trauma, a manobra de Pringle não controla o sangramento hepático. Qual a fonte mais provável?',['Artéria hepática própria','Veia porta','Veias hepáticas ou cava retro-hepática','Colédoco'],2,'Pringle clampeia artéria hepática, porta e colédoco no ligamento hepatoduodenal. Sangramento persistente vem do retorno venoso: veias hepáticas ou cava retro-hepática.');
-Q('cirtabd','Na laparotomia por trauma contuso, encontra-se hematoma retroperitoneal pélvico (zona III) não expansivo. Qual a conduta?',['Explorar o hematoma','Não explorar; estabilizar a pelve e considerar embolização ou tamponamento','Ligar as artérias ilíacas internas de rotina','Drenar o hematoma'],1,'Hematoma de zona III no trauma contuso não deve ser aberto: o sangramento é venoso e ósseo, e a abertura desfaz o tamponamento. No penetrante, a zona III é explorada.');
-Q('cirtabd','Paciente com fratura de pelve e sangue no meato uretral. Qual a conduta antes de passar sonda vesical?',['Passar a sonda com cuidado','Uretrocistografia retrógrada','Ultrassonografia de rins','Cistoscopia'],1,'Sangue no meato, hematoma perineal e próstata alta sugerem lesão de uretra. A sonda está contraindicada até a uretrocistografia retrógrada. Se houver lesão, cistostomia suprapúbica.');
-Q('cirtabd','Qual é o esquema e a janela do ácido tranexâmico no trauma com hemorragia significativa?',['1 g em 10 minutos e 1 g em 8 horas, iniciado em até 3 horas do trauma','2 g em bolus, a qualquer momento','1 g a cada 6 horas por 3 dias','Contraindicado no trauma'],0,'O estudo CRASH-2 mostrou redução da mortalidade por sangramento com ácido tranexâmico iniciado em até 3 horas. Depois disso, o benefício desaparece.');
-Q('cirtabd','Qual conjunto define a tríade letal no trauma?',['Hipotensão, taquicardia e oligúria','Hipotermia, acidose e coagulopatia','Hipóxia, hipercapnia e acidose','Anemia, hipocalcemia e hipercalemia'],1,'Hipotermia, acidose e coagulopatia se retroalimentam. É o principal motivo para indicar cirurgia de controle de danos.');
-Q('cirtabd','Paciente politraumatizado em laparotomia, com temperatura de 34 °C, pH 7,12, sangramento difuso e 12 concentrados transfundidos. Qual estratégia?',['Completar todas as anastomoses e fechar a parede','Controle de danos: controle do sangramento e da contaminação, fechamento temporário e UTI','Interromper e transferir sem controle do sangramento','Fazer colostomia e fechar a parede'],1,'Com a tríade letal, opta-se pela cirurgia abreviada: hemostasia (inclusive empacotamento), controle da contaminação, abdome aberto temporário e correção fisiológica na UTI antes da reconstrução.');
-Q('cirtabd','No pós-operatório de controle de danos, o paciente tem abdome tenso, oligúria e aumento da pressão nas vias aéreas. A pressão vesical é de 27 mmHg. Qual o diagnóstico e a conduta?',['Íleo paralítico; procinético','Síndrome compartimental abdominal; descompressão se não responder a medidas clínicas imediatas','Insuficiência renal pré-renal; volume','Pneumotórax; dreno'],1,'Pressão intra-abdominal acima de 20 mmHg com nova disfunção orgânica é síndrome compartimental abdominal. Tratamento: medidas clínicas e, se não resolver, laparotomia descompressiva.');
-Q('cirtabd','O escore ABC para prever transfusão maciça inclui:',['Idade, Glasgow e lactato','Ferimento penetrante, PAS de 90 mmHg ou menos, FC de 120 bpm ou mais e FAST positivo','Hemoglobina, plaquetas e INR','Mecanismo, tempo de transporte e temperatura'],1,'Cada item vale 1 ponto; 2 ou mais predizem necessidade de transfusão maciça.');
-Q('cirtabd','Criança de 8 anos com trauma de guidão de bicicleta no epigástrio evolui com vômitos biliosos no 2º dia, estável e sem peritonite. Tomografia: hematoma da parede duodenal. Conduta:',['Laparotomia e drenagem do hematoma','Tratamento conservador com sonda nasogástrica e nutrição','Gastrojejunostomia','Duodenopancreatectomia'],1,'Hematoma intramural de duodeno em criança costuma regredir em 1 a 3 semanas com descompressão gástrica e suporte nutricional.');
-
-/* ===== Trauma torácico ===== */
-Q('cirttor','Vítima de colisão com dispneia intensa, PA 70/40 mmHg, turgência jugular, traqueia desviada para a esquerda, murmúrio abolido e hipertimpanismo à direita. Qual a próxima conduta?',['Radiografia de tórax','Descompressão torácica imediata','Pericardiocentese','Intubação orotraqueal antes de qualquer medida'],1,'Pneumotórax hipertensivo é diagnóstico clínico. A descompressão é imediata, sem esperar radiografia, seguida de drenagem.');
-Q('cirttor','Qual o local recomendado para descompressão com agulha do pneumotórax hipertensivo no adulto?',['2º espaço intercostal na linha hemiclavicular','4º ou 5º espaço intercostal entre as linhas axilares anterior e média','7º espaço intercostal na linha escapular','Subxifoide'],1,'O ATLS recomenda no adulto o 4º ou 5º espaço entre as linhas axilares anterior e média, onde a parede é mais fina. Na criança, mantém-se o 2º espaço na linha hemiclavicular.');
-Q('cirttor','Após drenagem de hemotórax direito, saem 1.700 mL de sangue imediatamente. Qual a conduta?',['Observar o débito nas próximas 6 horas','Toracotomia','Segundo dreno','Videotoracoscopia eletiva'],1,'Saída imediata de 1.500 mL ou mais define hemotórax maciço com indicação de toracotomia. Também indicam toracotomia mais de 200 mL por hora por 2 a 4 horas ou necessidade persistente de transfusão.');
-Q('cirttor','Ferimento por arma branca no precórdio. PA 70/50 mmHg, jugulares distendidas, bulhas abafadas, murmúrio presente bilateralmente. FAST pericárdico com líquido. Qual o diagnóstico e o tratamento definitivo?',['Pneumotórax hipertensivo; drenagem','Tamponamento cardíaco; toracotomia ou esternotomia para reparo','Contusão cardíaca; observação','Hemotórax maciço; drenagem'],1,'Tríade de Beck com FAST pericárdico positivo: tamponamento. O tratamento definitivo é cirúrgico; pericardiocentese só como ponte quando não há cirurgião.');
-Q('cirttor','Qual é o curativo adequado no pneumotórax aberto antes da drenagem?',['Curativo oclusivo fixado nos quatro lados','Curativo oclusivo fixado em três lados','Compressa seca solta','Sutura da ferida no pronto-socorro'],1,'O curativo de três pontas funciona como válvula: deixa o ar sair na expiração e impede a entrada na inspiração. Fechado nos quatro lados, pode gerar pneumotórax hipertensivo. Depois, dreno em outro local.');
-Q('cirttor','Idoso com quatro costelas fraturadas em dois pontos cada, à direita, com movimento paradoxal e hipoxemia. Qual é a principal causa da insuficiência respiratória e o cuidado essencial?',['O segmento instável; fixação imediata de todas as costelas','A contusão pulmonar subjacente; analgesia potente, oxigênio e evitar excesso de cristaloide','O pneumotórax; dreno de rotina','A dor; apenas anti-inflamatório'],1,'No tórax instável, a hipoxemia vem principalmente da contusão pulmonar. Analgesia (incluindo bloqueios), oxigênio, ventilação se necessário e cuidado com volume. A fixação cirúrgica é seletiva.');
-Q('cirttor','Qual o local correto para inserir o dreno de tórax no trauma?',['2º espaço intercostal, linha hemiclavicular, pela borda inferior da costela','5º espaço intercostal, à frente da linha axilar média, pela borda superior da costela inferior','7º espaço intercostal, linha axilar posterior','Qualquer local, desde que se use trocarte'],1,'O dreno é inserido no 5º espaço, no triângulo de segurança, pela borda superior da costela de baixo, porque o feixe vasculonervoso passa na borda inferior.');
-Q('cirttor','Em qual paciente a toracotomia de reanimação na sala de emergência tem maior chance de sucesso?',['Trauma contuso com assistolia há 20 minutos','Ferimento penetrante torácico por arma branca com parada testemunhada na chegada','Queda de altura com TCE grave e pupilas fixas','Trauma contuso sem sinais de vida no local'],1,'O melhor resultado é no ferimento penetrante torácico, sobretudo cardíaco por arma branca, com parada recente e sinais de vida. No trauma contuso, a sobrevida é muito baixa.');
-Q('cirttor','Motorista em colisão frontal a 100 km/h. Radiografia de tórax: mediastino alargado, apagamento do botão aórtico e desvio da sonda nasogástrica para a direita. Qual o próximo passo?',['Toracotomia de urgência','AngioTC de tórax','Ecocardiograma transtorácico','Repetir radiografia em 6 horas'],1,'Desaceleração com sinais radiológicos sugere lesão traumática de aorta no istmo. A angioTC confirma. Em seguida, controle de FC e PA e reparo, preferencialmente endovascular.');
-Q('cirttor','Paciente drenado por pneumotórax traumático mantém borbulhamento intenso e contínuo, enfisema subcutâneo crescente e pulmão que não expande. Qual a principal hipótese?',['Mau posicionamento simples do dreno','Lesão da árvore traqueobrônquica','Contusão pulmonar','Hemotórax retido'],1,'Fuga aérea persistente com pulmão que não expande sugere lesão de brônquio ou traqueia. Broncoscopia confirma e o tratamento costuma ser cirúrgico.');
-Q('cirttor','Sobre a contusão pulmonar, é correto afirmar:',['Aparece completa na radiografia inicial e melhora nas primeiras 24 horas','Tende a piorar em 24 a 48 horas e o excesso de volume agrava a lesão','Exige antibiótico profilático','Respeita os limites segmentares'],1,'A contusão pulmonar evolui nas primeiras 24 a 48 horas, não respeita segmentos e piora com sobrecarga hídrica. Tratamento de suporte.');
-Q('cirttor','Ferimento por arma branca no hemitórax esquerdo abaixo do mamilo, paciente estável, radiografia normal. Qual exame é mais indicado para excluir lesão de diafragma?',['Radiografia em 24 horas','Laparoscopia diagnóstica','Tomografia apenas','Ultrassonografia de abdome'],1,'Lesões pequenas do diafragma esquerdo passam despercebidas na imagem e evoluem para hérnia diafragmática tardia. A laparoscopia (ou toracoscopia) é o método mais confiável.');
-
-/* ===== Coloproctologia ===== */
-Q('cirproc','Homem de 32 anos com sangramento vivo no papel e prolapso à evacuação que retorna sozinho. Sem dor. Qual o grau e o tratamento ambulatorial mais indicado se as medidas clínicas falharem?',['Grau III; hemorroidectomia','Grau II; ligadura elástica','Grau I; escleroterapia obrigatória','Grau IV; ligadura elástica'],1,'Prolapso que reduz espontaneamente é grau II. A ligadura elástica é o tratamento ambulatorial mais eficaz para graus I a III.');
-Q('cirproc','Mulher de 40 anos com nódulo perianal azulado, muito doloroso, há 30 horas. Qual a conduta?',['Ligadura elástica','Excisão do trombo sob anestesia local','Hemorroidectomia de três mamilos','Antibiótico'],1,'Trombose hemorroidária externa com menos de 72 horas: excisão traz alívio rápido. Depois de 72 horas, tratamento clínico. Ligadura na externa causa dor intensa.');
-Q('cirproc','Homem de 62 anos com sangramento retal vivo atribuído a hemorroidas há 6 meses, agora com anemia ferropriva. Qual a conduta?',['Hemorroidectomia','Colonoscopia','Ligadura elástica','Suplementar ferro e observar'],1,'Idade de rastreamento e anemia ferropriva exigem colonoscopia antes de atribuir o sangramento a hemorroidas.');
-Q('cirproc','Paciente com dor intensa ao evacuar, "como cortar vidro", e sangramento pequeno há 3 meses. Ao exame, ulceração na linha média posterior com plicoma sentinela. Tratamento de primeira linha:',['Esfincterotomia lateral interna imediata','Fibras, banho de assento e diltiazem ou nitrato tópico','Fistulotomia','Antibiótico tópico'],1,'Fissura crônica: primeira linha é o relaxamento químico do esfíncter (bloqueador de canal de cálcio ou nitrato tópico), com medidas gerais. Esfincterotomia para refratárias.');
-Q('cirproc','Fissura anal lateral, indolor e múltipla deve levantar suspeita de:',['Fissura idiopática típica','Doença de Crohn, HIV, tuberculose, sífilis ou câncer','Hemorroida interna','Prolapso retal'],1,'Fissuras típicas são posteriores e dolorosas. Atípicas exigem investigação de causas secundárias.');
-Q('cirproc','Homem diabético com dor perianal contínua há 3 dias, febre e abaulamento endurecido e doloroso, sem flutuação. Conduta:',['Antibiótico oral e aguardar flutuação','Drenagem cirúrgica imediata, com antibiótico pelo diabetes','Banho de assento','Colonoscopia'],1,'Abscesso anorretal se drena assim que diagnosticado, sem esperar flutuação. O antibiótico é coadjuvante em diabéticos, imunossuprimidos ou com celulite extensa.');
-Q('cirproc','Pela regra de Goodsall, uma fístula com orifício externo posterior à linha transversal que passa pelo ânus terá orifício interno:',['Radialmente no mesmo quadrante','Na linha média posterior, por trajeto curvo','Na linha média anterior','No reto acima do elevador'],1,'Orifícios posteriores seguem trajeto curvo até a linha média posterior; anteriores seguem trajeto reto e radial (exceto os situados a mais de 3 cm do ânus).');
-Q('cirproc','Qual é o tipo mais comum de fístula anal pela classificação de Parks?',['Extraesfinctérica','Supraesfinctérica','Transesfinctérica','Interesfinctérica'],3,'A interesfinctérica é a mais frequente e, por envolver pouco esfíncter, costuma ser tratada por fistulotomia.');
-Q('cirproc','Pelas diretrizes americanas atuais, o rastreamento do câncer colorretal em pessoas de risco médio deve começar aos:',['40 anos','45 anos','55 anos','60 anos'],1,'A USPSTF (2021) e a Sociedade Americana de Câncer começam aos 45 anos. Muitas referências brasileiras ainda usam 50, então leia o que a questão pede.');
-Q('cirproc','Homem de 45 anos cujo pai teve câncer colorretal aos 52 anos. Qual a recomendação de rastreamento?',['Iniciar aos 50 anos com FIT anual','Colonoscopia aos 40 anos ou 10 anos antes do caso índice, repetida a cada 5 anos','Nenhum rastreamento especial','Tomografia anual'],1,'Parente de primeiro grau com câncer antes dos 60 anos: colonoscopia aos 40 anos ou 10 anos antes da idade do diagnóstico do parente, o que vier primeiro, a cada 5 anos.');
-Q('cirproc','Adenocarcinoma de reto médio, T3N1 na ressonância, sem metástases. Qual a sequência terapêutica?',['Cirurgia imediata e quimioterapia adjuvante','Terapia neoadjuvante seguida de excisão total do mesorreto','Radioterapia isolada','Quimioterapia paliativa'],1,'Câncer de reto médio ou baixo localmente avançado: neoadjuvância (quimiorradioterapia ou terapia neoadjuvante total) e depois excisão total do mesorreto.');
-Q('cirproc','Qual achado favorece câncer de cólon direito em vez de esquerdo?',['Fezes afiladas e obstrução','Tenesmo e puxo','Anemia ferropriva sem alteração do hábito intestinal','Hematoquezia com urgência'],2,'O cólon direito tem luz larga e conteúdo líquido: sangra de forma oculta e obstrui pouco. O esquerdo obstrui e altera o hábito; o reto dá tenesmo.');
-Q('cirproc','Homem HIV positivo com carcinoma espinocelular de canal anal, sem metástases. Tratamento inicial:',['Amputação abdominoperineal','Quimiorradioterapia com 5-fluorouracil e mitomicina','Excisão local','Quimioterapia isolada'],1,'O esquema de Nigro (quimiorradioterapia) é a primeira linha e preserva o esfíncter. Amputação para doença residual ou recidiva.');
-Q('cirproc','Idosa com exteriorização do reto com pregas concêntricas. Muito frágil, com alto risco anestésico. Qual cirurgia é mais adequada?',['Retopexia abdominal aberta','Procedimento perineal (Altemeier ou Delorme)','Hemorroidectomia','Colectomia total'],1,'Prolapso retal em paciente frágil: via perineal, com menor agressão, embora com mais recidiva que a retopexia abdominal.');
-
-/* ===== REMIT, cicatrização e queimaduras ===== */
-Q('cirremit','Qual hormônio tem sua ação efetiva reduzida na fase catabólica da resposta ao trauma, favorecendo hiperglicemia?',['Cortisol','Glucagon','Insulina, por resistência periférica','Catecolaminas'],2,'Cortisol, glucagon e catecolaminas sobem. A insulina cai no início e depois, embora aumente, há resistência à sua ação.');
-Q('cirremit','No pós-operatório imediato de colectomia, paciente perfundido apresenta diurese de 0,4 mL/kg/h, sódio urinário baixo e potássio urinário alto. A explicação mais provável é:',['Lesão renal aguda por contraste','Resposta endócrina ao trauma, com ADH e aldosterona elevados','Hipervolemia','Síndrome de secreção inapropriada isolada sem relação com a cirurgia'],1,'ADH e aldosterona elevados retêm água e sódio e eliminam potássio. Com perfusão adequada, evita-se corrigir com excesso de volume.');
-Q('cirremit','Qual citocina melhor reflete a magnitude da agressão cirúrgica?',['Interleucina 2','Interleucina 6','Interferon gama','Interleucina 10'],1,'A IL-6 sobe proporcionalmente ao porte da agressão e induz a síntese hepática de proteínas de fase aguda.');
-Q('cirremit','Diferente do jejum simples, no trauma grave:',['A proteólise muscular diminui após alguns dias pela cetose','A proteólise continua intensa, pois é dirigida por hormônios e citocinas','Não há gliconeogênese','O consumo energético cai'],1,'No jejum simples, a cetose poupa proteína. No trauma, a resposta hormonal e inflamatória mantém a proteólise, causando rápida perda muscular.');
-Q('cirremit','Qual célula é indispensável à cicatrização por coordenar a fase inflamatória e a transição para a proliferativa?',['Neutrófilo','Linfócito B','Macrófago','Mastócito'],2,'Sem macrófagos a cicatrização não progride. Os neutrófilos não são indispensáveis.');
-Q('cirremit','Paciente em uso crônico de prednisona será submetido a cirurgia. Qual suplemento ajuda a reverter o efeito do corticoide na cicatrização?',['Vitamina C','Vitamina A','Vitamina E','Vitamina K'],1,'A vitamina A reverte parcialmente a inibição da fase inflamatória causada pelo corticoide. A vitamina C participa da síntese de colágeno.');
-Q('cirremit','Cicatriz elevada, que ultrapassa os limites da incisão no lóbulo da orelha, surgiu meses após a cirurgia e não regride. Diagnóstico e conduta:',['Cicatriz hipertrófica; observar','Queloide; corticoide intralesional, e se excisar associar terapia adjuvante','Queloide; excisão isolada','Úlcera de Marjolin; amputação'],1,'Queloide ultrapassa os limites e não regride. A excisão isolada tem alta recidiva; associa-se corticoide intralesional, silicone, compressão ou radioterapia.');
-Q('cirremit','Ferida crônica que não cicatriza sobre cicatriz de queimadura antiga deve ser biopsiada pela suspeita de:',['Carcinoma basocelular','Úlcera de Marjolin, carcinoma espinocelular','Melanoma','Pioderma gangrenoso'],1,'A úlcera de Marjolin é o carcinoma espinocelular em cicatriz crônica, classicamente de queimadura.');
-Q('cirremit','Homem de 70 kg com queimaduras de segundo grau em todo o tronco anterior e todo o membro superior direito, e primeiro grau na face. Qual a superfície corporal queimada para o cálculo?',['27%','36%','18%','30%'],0,'Tronco anterior 18% mais membro superior 9% = 27%. Queimaduras de primeiro grau não entram no cálculo.');
-Q('cirremit','Pelo ATLS, homem de 80 kg com 40% de superfície queimada (segundo e terceiro graus). Qual o volume de Ringer lactato para as primeiras 24 horas e quanto nas primeiras 8 horas?',['6.400 mL; 3.200 mL nas primeiras 8 horas a partir da queimadura','12.800 mL; 6.400 mL nas primeiras 8 horas a partir da chegada','3.200 mL; 1.600 mL nas primeiras 8 horas','6.400 mL; 2.133 mL nas primeiras 8 horas'],0,'2 mL × 80 × 40 = 6.400 mL, metade nas primeiras 8 horas contadas da queimadura. Pela fórmula de Parkland (4 mL), seriam 12.800 mL. A infusão é ajustada pela diurese.');
-Q('cirremit','Pela fórmula de Parkland, quanto se prescreve nas primeiras 24 horas para um adulto de 60 kg com 50% de superfície queimada?',['6.000 mL','12.000 mL','3.000 mL','9.000 mL'],1,'Parkland: 4 mL × 60 × 50 = 12.000 mL, metade nas primeiras 8 horas. É a fórmula clássica ainda cobrada em provas, embora o ATLS e a associação americana usem 2 mL como ponto de partida.');
-Q('cirremit','Qual é a meta de diurese na reposição volêmica do adulto queimado sem lesão elétrica?',['0,5 mL/kg/h','2 mL/kg/h','0,1 mL/kg/h','3 mL/kg/h'],0,'Adulto: 0,5 mL/kg/h, cerca de 30 a 50 mL/h. Criança: 1 mL/kg/h. Elétrica com mioglobinúria: 1 a 1,5 mL/kg/h até clarear.');
-Q('cirremit','Vítima de incêndio em apartamento fechado, com queimadura facial, vibrissas chamuscadas, escarro com fuligem e rouquidão que piora. Conduta:',['Observar e reavaliar em 24 horas','Intubação orotraqueal precoce','Nebulização com broncodilatador','Corticoide sistêmico'],1,'Sinais de lesão inalatória com rouquidão progressiva indicam intubação precoce, antes que o edema impeça o acesso à via aérea.');
-Q('cirremit','Vítima de incêndio confusa, com saturação de 99% no oxímetro de pulso. Qual a interpretação e conduta?',['Oxigenação adequada, sem necessidade de oxigênio','O oxímetro pode estar falsamente normal pela carboxi-hemoglobina: oxigênio a 100% e gasometria com cooximetria','Hipoglicemia; glicose','Intoxicação alcoólica'],1,'O oxímetro comum não diferencia carboxi-hemoglobina de oxi-hemoglobina. Oxigênio a 100% reduz a meia-vida do monóxido de carbono.');
-Q('cirremit','Queimadura de terceiro grau circunferencial no braço, com mão fria e enchimento capilar lento. Conduta:',['Elevação e observação','Escarotomia','Amputação','Curativo compressivo'],1,'Queimadura circunferencial de espessura total que compromete a circulação indica escarotomia.');
-Q('cirremit','Eletricista com queimadura por alta tensão em mão e pé, urina escura. Qual cuidado é essencial?',['Reposição como queimadura térmica com 2 mL e meta de 0,5 mL/kg/h','Reposição mais generosa e meta de diurese de 1 a 1,5 mL/kg/h até a urina clarear, ECG e vigilância de síndrome compartimental','Restrição hídrica','Apenas curativo local'],1,'A lesão profunda da corrente elétrica é maior do que a da pele. Mioglobinúria pede diurese mais alta para proteger o rim. ECG e monitorização de compartimentos são obrigatórios.');
-
-/* ===== Vascular ===== */
-Q('cirvasc','Homem de 66 anos, tabagista, com dor em panturrilha ao caminhar 150 m que alivia com repouso. ITB 0,62. Classificação de Fontaine e tratamento inicial:',['IIa; revascularização','IIb; cessar tabagismo, estatina, antiagregante e exercício supervisionado','III; amputação','IV; cilostazol isolado'],1,'Claudicação a menos de 200 m é Fontaine IIb. O tratamento inicial é clínico, com exercício supervisionado e prevenção cardiovascular.');
-Q('cirvasc','Diabético com ITB de 1,6. Qual a interpretação?',['Normal','Artérias incompressíveis; usar índice hálux-braquial','Doença arterial grave','Erro do aparelho, repetir no braço'],1,'ITB acima de 1,4 sugere calcificação da média, comum em diabéticos e renais crônicos. O índice hálux-braquial é mais confiável.');
-Q('cirvasc','Qual medicação melhora a distância de marcha na claudicação, mas é contraindicada na insuficiência cardíaca?',['AAS','Clopidogrel','Cilostazol','Atorvastatina'],2,'O cilostazol é inibidor da fosfodiesterase 3, contraindicado em insuficiência cardíaca de qualquer grau.');
-Q('cirvasc','Homem com claudicação de nádegas e coxas, disfunção erétil e pulsos femorais ausentes. Diagnóstico:',['Síndrome de Leriche (oclusão aortoilíaca)','Estenose de artéria poplítea','Síndrome do desfiladeiro torácico','Trombose venosa ilíaca'],0,'A tríade de Leriche indica doença oclusiva aortoilíaca.');
-Q('cirvasc','Idosa com fibrilação atrial sem anticoagulação apresenta dor súbita na perna direita há 3 horas, pé frio e pálido, sem pulso femoral, com membro contralateral normal. Sensibilidade e força preservadas. Diagnóstico e conduta:',['Trombose venosa profunda; anticoagulação','Embolia arterial; heparina e embolectomia com Fogarty','Trombose arterial; trombólise sistêmica','Isquemia irreversível; amputação'],1,'Início súbito, fonte cardíaca e membro contralateral normal sugerem embolia. Heparina imediata e embolectomia com cateter de Fogarty.');
-Q('cirvasc','Na isquemia arterial aguda, qual achado classifica o membro como Rutherford IIb, imediatamente ameaçado?',['Sensibilidade e força normais','Perda sensitiva além dos dedos e fraqueza motora leve a moderada','Paralisia e rigidez muscular','Claudicação a 50 m'],1,'IIb tem déficit sensitivo além dos dedos e fraqueza: revascularização imediata. Paralisia com rigidez e anestesia é classe III, irreversível.');
-Q('cirvasc','Após embolectomia de isquemia com 10 horas de evolução, o paciente apresenta dor intensa na panturrilha à extensão passiva do pé e perna tensa. Conduta:',['Elevar o membro e observar','Fasciotomia dos quatro compartimentos','Nova embolectomia','Anti-inflamatório'],1,'Síndrome compartimental após reperfusão exige fasciotomia, com abertura dos quatro compartimentos da perna.');
-Q('cirvasc','Logo após a revascularização de isquemia prolongada, o paciente desenvolve arritmia. Qual distúrbio deve ser procurado primeiro?',['Hipocalemia','Hipercalemia','Hipernatremia','Hipermagnesemia'],1,'A síndrome de reperfusão libera potássio, ácido e mioglobina do músculo isquêmico, causando hipercalemia, acidose, lesão renal e arritmias.');
-Q('cirvasc','Homem de 68 anos com aneurisma de aorta abdominal infrarrenal de 5,7 cm, assintomático, com boa condição clínica. Conduta:',['Ultrassonografia anual','Correção eletiva, endovascular ou aberta conforme anatomia','Betabloqueador e observação','Correção apenas se ficar sintomático'],1,'Em homens, o limiar de correção eletiva é 5,5 cm. Em mulheres, 5,0 cm.');
-Q('cirvasc','Quem deve fazer rastreamento único de aneurisma de aorta abdominal por ultrassonografia, segundo a USPSTF?',['Mulheres de 50 anos','Homens de 65 a 75 anos que já fumaram','Todos os hipertensos','Jovens com história familiar apenas'],1,'A recomendação é ultrassonografia única para homens de 65 a 75 anos com história de tabagismo.');
-Q('cirvasc','Homem hipertenso com dor torácica súbita rasgando para o dorso, PA 190/110 no braço direito e 150/90 no esquerdo. AngioTC: dissecção envolvendo aorta ascendente. Conduta:',['Tratamento clínico isolado','Betabloqueador intravenoso e cirurgia de urgência','Trombólise','Angioplastia coronária'],1,'Stanford A é emergência cirúrgica. Controle de FC e PA com betabloqueador antes, sem atrasar a cirurgia.');
-Q('cirvasc','Na dissecção aguda de aorta, qual é a ordem correta do controle hemodinâmico?',['Nitroprussiato e depois betabloqueador','Betabloqueador intravenoso primeiro, depois vasodilatador se necessário','Diurético e depois nitroprussiato','Apenas analgesia'],1,'O betabloqueador vem antes para evitar a taquicardia reflexa do vasodilatador, que aumentaria a força de cisalhamento na parede aórtica.');
-Q('cirvasc','Mulher com varizes, edema e hiperpigmentação ocre no terço distal da perna, sem úlcera. Qual a classe CEAP clínica?',['C2','C3','C4','C6'],2,'Alterações de pele como pigmentação e eczema são C4a. C3 é edema; C5 úlcera cicatrizada; C6 úlcera ativa.');
-Q('cirvasc','Paciente com Wells de baixa probabilidade para TVP e D-dímero negativo. Conduta:',['Duplex venoso obrigatório','TVP excluída; investigar outra causa','Anticoagular por 3 meses','Venografia'],1,'Com probabilidade baixa, D-dímero negativo exclui TVP com segurança.');
-Q('cirvasc','Paciente com TVP proximal aguda e hemorragia intracraniana recente. Qual a conduta?',['Anticoagulação plena','Filtro de veia cava inferior','Trombólise sistêmica','Apenas meia elástica'],1,'Filtro de veia cava é indicado na TVP proximal aguda com contraindicação absoluta à anticoagulação.');
-
-/* ===== Esôfago ===== */
-Q('ciresof','Homem de 35 anos com pirose típica há 4 meses, sem disfagia, perda de peso ou anemia. Conduta inicial:',['Endoscopia imediata','IBP por 8 semanas e medidas comportamentais','pHmetria de 24 horas','Fundoplicatura'],1,'Sem sinais de alarme e sem fatores de risco para Barrett, a prova terapêutica com IBP é adequada.');
-Q('ciresof','Paciente com pirose típica, endoscopia normal e indicação de cirurgia antirrefluxo. Qual exame confirma o refluxo antes de operar?',['Esofagograma','pHmetria de 24 horas fora do IBP','Tomografia de tórax','Teste respiratório para H. pylori'],1,'Sem esofagite erosiva significativa, a pHmetria (ou impedanciopHmetria) fora do IBP comprova o refluxo patológico. A manometria também é feita antes, para excluir distúrbio motor.');
-Q('ciresof','Qual paciente é o melhor candidato à fundoplicatura?',['Pirose que não melhora com IBP em dose dobrada','Refluxo comprovado que responde ao IBP e não deseja uso contínuo','Dispepsia funcional','Acalasia com regurgitação'],1,'Resposta ao IBP prediz bom resultado cirúrgico. Ausência de resposta exige rever o diagnóstico.');
-Q('ciresof','Biópsia de esôfago distal mostra epitélio colunar com metaplasia intestinal sem displasia em segmento de 4 cm. Conduta:',['Esofagectomia','Ablação imediata','IBP e endoscopia de vigilância a cada 3 anos','Nenhum seguimento'],2,'Barrett longo sem displasia: vigilância a cada 3 anos (a cada 5 se menor que 3 cm). Displasia é que indica tratamento endoscópico.');
-Q('ciresof','Mulher de 38 anos com disfagia para sólidos e líquidos há 2 anos, regurgitação noturna e perda de 6 kg. Esofagograma com afilamento distal em bico de pássaro. Qual exame confirma o diagnóstico?',['Endoscopia','Manometria de alta resolução','pHmetria','Tomografia'],1,'A manometria de alta resolução é o padrão-ouro da acalasia (relaxamento ausente e aperistalse). A endoscopia é obrigatória para excluir pseudoacalasia.');
-Q('ciresof','Homem de 74 anos com disfagia há 3 meses, emagrecimento de 12 kg e esofagograma em bico de pássaro. Antes de tratar como acalasia, é obrigatório:',['Iniciar nifedipina','Endoscopia com avaliação da cárdia para excluir neoplasia','Dilatação pneumática','POEM'],1,'Idoso, história curta e emagrecimento importante sugerem pseudoacalasia por câncer da junção esofagogástrica.');
-Q('ciresof','Qual tratamento cirúrgico clássico da acalasia, e com o que é associado?',['Esofagectomia com fundoplicatura de Nissen','Miotomia de Heller laparoscópica com fundoplicatura parcial','Gastrostomia isolada','Vagotomia troncular'],1,'A miotomia de Heller é associada à fundoplicatura parcial (Dor ou Toupet) para evitar refluxo após a abertura do esfíncter.');
-Q('ciresof','Idoso com disfagia alta, halitose e regurgitação de alimentos ingeridos dias antes. Qual o diagnóstico mais provável?',['Divertículo de Zenker','Acalasia','Câncer de esôfago distal','Esofagite eosinofílica'],0,'Zenker é divertículo de pulsão no triângulo de Killian, típico do idoso, com halitose e regurgitação de alimento antigo.');
-Q('ciresof','Adenocarcinoma de esôfago distal T3N1, sem metástases, em paciente apto. Conduta:',['Esofagectomia imediata','Neoadjuvância (quimiorradioterapia ou quimioterapia perioperatória) e esofagectomia','Ressecção endoscópica','Prótese esofágica'],1,'Tumor localmente avançado: neoadjuvância seguida de cirurgia. Ressecção endoscópica só para T1a.');
-
-/* ===== Estômago ===== */
-Q('cirestom','Paciente com melena, estável, Glasgow-Blatchford 0. Conduta:',['Internar em UTI','Manejo ambulatorial com endoscopia eletiva','Transfusão','Endoscopia de urgência em 2 horas'],1,'Glasgow-Blatchford 0 ou 1 identifica pacientes de baixo risco que podem ser manejados ambulatorialmente.');
-Q('cirestom','Na endoscopia, úlcera duodenal com vaso visível não sangrante. Classificação e conduta:',['Forrest III; apenas IBP','Forrest IIa; terapia endoscópica combinada e IBP em dose alta','Forrest IIc; alta','Forrest Ia; cirurgia imediata'],1,'Vaso visível é Forrest IIa, alto risco de ressangramento, e exige terapia endoscópica.');
-Q('cirestom','Qual é o alvo transfusional na hemorragia digestiva alta em paciente sem doença cardiovascular?',['Hemoglobina de 7 g/dL','Hemoglobina de 10 g/dL','Hematócrito de 40%','Transfundir sempre 2 concentrados'],0,'A transfusão restritiva (alvo em torno de 7 g/dL) reduziu mortalidade e ressangramento em relação à liberal.');
-Q('cirestom','Úlcera da parede posterior do bulbo duodenal com sangramento refratário. Qual artéria está envolvida?',['Gástrica esquerda','Gastroduodenal','Esplênica','Mesentérica superior'],1,'A artéria gastroduodenal passa atrás do bulbo. Se a endoscopia falha, embolização ou sutura cirúrgica do vaso.');
-Q('cirestom','Paciente com vômitos de alimentos ingeridos no dia anterior, sem bile, e passado de úlcera. Gasometria e urina mostram alcalose metabólica com cloro e potássio baixos e urina ácida. Diagnóstico e reposição:',['Obstrução intestinal baixa; Ringer','Estenose pilórica; soro fisiológico com potássio','Cetoacidose; insulina','Pancreatite; jejum'],1,'Obstrução pilórica causa alcalose metabólica hipoclorêmica e hipocalêmica com acidúria paradoxal. Corrige-se com soro fisiológico e potássio.');
-Q('cirestom','Paciente submetido a gastrectomia apresenta, 30 minutos após as refeições, sudorese, palpitação, cólica e diarreia. Qual o diagnóstico?',['Dumping tardio','Dumping precoce','Síndrome da alça aferente','Gastrite alcalina'],1,'Dumping precoce ocorre cerca de 30 minutos após a refeição, pela chegada rápida de conteúdo hiperosmolar ao delgado. O tardio, após 2 a 3 horas, é hipoglicemia reativa.');
-Q('cirestom','Mulher de 32 anos com adenocarcinoma gástrico com células em anel de sinete e espessamento difuso da parede (linite plástica). Classificações:',['Lauren intestinal; Borrmann I','Lauren difuso; Borrmann IV','Lauren intestinal; Borrmann III','Lauren difuso; Borrmann II'],1,'Jovem, células em anel de sinete e infiltração difusa: Lauren difuso, Borrmann IV.');
-Q('cirestom','O que define câncer gástrico precoce?',['Tumor menor que 2 cm','Tumor limitado à mucosa ou submucosa, independentemente de linfonodos','Ausência de linfonodos comprometidos','Tumor sem úlcera'],1,'A definição é pela profundidade: mucosa ou submucosa, com ou sem linfonodos positivos.');
-Q('cirestom','Adenocarcinoma gástrico de antro T3N1, sem metástases e sem carcinomatose na laparoscopia. Tratamento:',['Gastrectomia subtotal com D1 isolada','Quimioterapia perioperatória (FLOT) e gastrectomia subtotal com linfadenectomia D2','Dissecção endoscópica','Gastrojejunostomia paliativa'],1,'No ocidente, tumores T2 ou mais ou N positivos recebem quimioterapia perioperatória, com gastrectomia e linfadenectomia D2.');
-
-/* ===== Vias biliares ===== */
-Q('cirvb','Mulher de 45 anos com colelitíase assintomática, cálculos de 8 mm. Conduta:',['Colecistectomia','Observação','Ácido ursodesoxicólico obrigatório','CPRE'],1,'Colelitíase assintomática sem fatores de risco especiais é observada. Indicações em assintomáticos incluem vesícula em porcelana, cálculo grande, pólipo de 10 mm ou mais e anemia hemolítica.');
-Q('cirvb','Ultrassonografia mostra pólipo de vesícula de 12 mm em paciente assintomático. Conduta:',['Repetir em 1 ano','Colecistectomia','Nenhum seguimento','CPRE'],1,'Pólipo de 10 mm ou mais tem risco de neoplasia e indica colecistectomia.');
-Q('cirvb','Quais são os três critérios da visão crítica de segurança na colecistectomia?',['Identificar colédoco, hepático comum e cístico','Triângulo hepatocístico limpo, terço inferior da vesícula separado do leito e apenas duas estruturas entrando na vesícula','Colangiografia, ultrassonografia e clipagem dupla','Ligadura da artéria hepática, do cístico e da porta'],1,'A visão crítica de Strasberg deve ser obtida antes de clipar e seccionar, para evitar lesão da via biliar.');
-Q('cirvb','Paciente com icterícia e cálculo grande impactado no infundíbulo comprimindo o ducto hepático comum. Qual é a síndrome?',['Síndrome de Mirizzi','Síndrome de Bouveret','Íleo biliar','Colangite esclerosante'],0,'Na síndrome de Mirizzi, o cálculo no infundíbulo ou no cístico comprime o ducto hepático comum. Bouveret é obstrução gástrica por cálculo no duodeno.');
-Q('cirvb','Paciente com colelitíase, bilirrubina total de 5,2 mg/dL e colédoco de 9 mm na ultrassonografia, sem febre. Risco de coledocolitíase e conduta:',['Baixo; colecistectomia','Intermediário; colangiorressonância','Alto; CPRE pré-operatória','Alto; observação'],2,'Bilirrubina acima de 4 com colédoco dilatado é critério de alto risco (ASGE 2019): CPRE, seguida de colecistectomia.');
-Q('cirvb','Paciente de 60 anos com colelitíase, fosfatase alcalina elevada, colédoco de 5 mm e bilirrubina de 1,8. Conduta:',['CPRE','Colangiorressonância ou ecoendoscopia','Colecistectomia sem investigação','Tomografia'],1,'Provas alteradas e idade acima de 55 anos sem critério de alto risco: risco intermediário, confirmar com colangiorressonância ou ecoendoscopia.');
-Q('cirvb','Após CPRE com extração de cálculo do colédoco, quando fazer a colecistectomia?',['Nunca, se a papilotomia foi feita','Na mesma internação','Após 6 meses','Só se houver novo episódio'],1,'Retirar a vesícula na mesma internação reduz recidiva de eventos biliares.');
-Q('cirvb','Paciente com colangite esclerosante primária evolui com piora da icterícia e estenose na confluência dos ductos hepáticos, vesícula não palpável. Hipótese:',['Coledocolitíase','Tumor de Klatskin (colangiocarcinoma peri-hilar)','Câncer de cabeça de pâncreas','Síndrome de Mirizzi'],1,'Colangite esclerosante é o principal fator de risco ocidental. Obstrução hilar acima do cístico deixa a vesícula murcha.');
-Q('cirvb','Peça de colecistectomia revela adenocarcinoma de vesícula invadindo a camada muscular (T1b), sem metástases. Conduta:',['Nenhuma, a colecistectomia foi suficiente','Reoperação com ressecção dos segmentos IVb e V e linfadenectomia','Quimioterapia paliativa','Radioterapia isolada'],1,'T1a com margem livre não precisa de reoperação. A partir de T1b, ressecção do leito hepático e linfadenectomia.');
-
-/* ===== Fígado ===== */
-Q('cirfig','Mulher de 35 anos com nódulo hepático de 4 cm incidental. Ressonância: realce nodular periférico com enchimento centrípeto. Conduta:',['Biópsia','Ressecção','Observação','Embolização'],2,'Padrão típico de hemangioma, a lesão benigna mais comum. Assintomático: observar. Biópsia é desnecessária e arriscada.');
-Q('cirfig','Mulher jovem com lesão hepática de 5 cm com cicatriz central, captante na fase hepatobiliar da ressonância. Diagnóstico e conduta:',['Adenoma; ressecção','Hiperplasia nodular focal; observação','Hepatocarcinoma fibrolamelar; transplante','Hemangioma; embolização'],1,'Cicatriz central e captação na fase hepatobiliar indicam hiperplasia nodular focal, que não maligniza nem costuma sangrar.');
-Q('cirfig','Mulher de 30 anos, usuária de anticoncepcional, com adenoma hepático de 6 cm. Conduta:',['Observação sem mudanças','Suspender o estrogênio e indicar ressecção','Apenas suspender o anticoncepcional','Quimioembolização'],1,'Adenoma de 5 cm ou mais tem risco de sangramento e malignização: suspender estrogênio e ressecar.');
-Q('cirfig','Homem de 28 anos de área endêmica com febre, dor no hipocôndrio direito e lesão única de 6 cm no lobo direito. Sorologia para Entamoeba positiva. Conduta inicial:',['Drenagem cirúrgica','Metronidazol seguido de amebicida luminal','Ressecção hepática','Albendazol'],1,'O abscesso amebiano responde ao metronidazol na maioria dos casos. Drena-se se houver risco de ruptura, falha clínica ou dúvida diagnóstica.');
-Q('cirfig','Idoso diabético com febre, calafrios e abscesso hepático de 7 cm após episódio de colangite. Conduta:',['Apenas antibiótico oral','Antibiótico e drenagem percutânea, tratando a causa biliar','Metronidazol isolado','Observação'],1,'Abscesso piogênico grande se trata com antibiótico e drenagem percutânea. A origem biliar é a mais comum e precisa ser tratada.');
-Q('cirfig','Cirrótico com nódulo de 2,5 cm na ultrassonografia. A ressonância mostra hiper-realce na fase arterial e washout na fase portal. Conduta diagnóstica:',['Biópsia obrigatória','O diagnóstico de hepatocarcinoma está feito sem biópsia','Repetir a ultrassonografia em 6 meses','PET-CT'],1,'Em cirrótico, nódulo de 1 cm ou mais com hiper-realce arterial e washout é diagnóstico de hepatocarcinoma (LI-RADS 5).');
-Q('cirfig','Quais são os critérios de Milão para transplante no hepatocarcinoma?',['Até 5 nódulos de 5 cm','Nódulo único de até 5 cm ou até 3 nódulos de até 3 cm, sem invasão vascular ou metástase','Qualquer tumor sem metástase','Nódulo único de até 2 cm'],1,'Os critérios de Milão definem bons resultados do transplante.');
-Q('cirfig','Cirrótico Child B com hematêmese volumosa. Além da reanimação, quais medidas devem começar antes da endoscopia?',['Omeprazol isolado','Vasoativo (terlipressina, somatostatina ou octreotide) e ceftriaxona','Balão de Sengstaken de rotina','Betabloqueador intravenoso'],1,'Vasoativo e antibiótico profilático reduzem mortalidade e devem começar já na suspeita. Endoscopia com ligadura em até 12 horas.');
-Q('cirfig','Paciente com esquistossomose mansônica, função hepática preservada, esplenomegalia volumosa e sangramentos varicosos repetidos. Cirurgia clássica:',['Transplante hepático','Desconexão ázigo-portal com esplenectomia','Gastrectomia','Hepatectomia'],1,'Na hipertensão portal esquistossomótica, com fígado funcionante, a desconexão ázigo-portal com esplenectomia é a cirurgia clássica.');
-
-/* ===== Radiologia ===== */
-Q('cirrad','Na radiografia de abdome, alças dilatadas centrais com pregas que cruzam toda a largura da alça indicam:',['Cólon dilatado','Delgado dilatado','Volvo de sigmoide','Pneumoperitônio'],1,'Pregas coniventes atravessam toda a alça e dão o aspecto de pilha de moedas no delgado. Haustrações do cólon não cruzam toda a alça.');
-Q('cirrad','Radiografia de abdome deitado em que as duas faces da parede intestinal ficam visíveis. Qual sinal e o que indica?',['Tríade de Rigler; íleo biliar','Sinal de Rigler; pneumoperitônio','Grão de café; volvo','Alça sentinela; pancreatite'],1,'O sinal de Rigler (dupla parede) aparece quando há gás dentro e fora da alça, ou seja, pneumoperitônio.');
-Q('cirrad','Ar em ramificações que chegam à periferia do fígado em paciente grave com distensão abdominal sugere:',['Pneumobilia após papilotomia','Gás no sistema porta, por isquemia intestinal grave','Abscesso hepático','Esteatose'],1,'Gás portal se distribui até a periferia, ao contrário da pneumobilia, que é central. Em adultos sugere isquemia mesentérica avançada.');
-Q('cirrad','Paciente com pancreatite aguda tem radiografia com uma alça de delgado dilatada isolada no quadrante superior esquerdo. Como se chama o sinal?',['Sinal do cólon amputado','Alça sentinela','Sinal de Rigler','Sinal do duplo ducto'],1,'Alça sentinela é íleo localizado de uma alça vizinha ao foco inflamatório.');
-Q('cirrad','Qual afirmação sobre cálculos na radiografia simples é correta?',['A maioria dos cálculos biliares é radiopaca','A maioria dos cálculos urinários é radiopaca, e o de ácido úrico é radiotransparente','Cálculos de ácido úrico aparecem bem na radiografia','A radiografia é o exame de escolha para litíase'],1,'Cerca de 90% dos cálculos urinários são radiopacos, mas o de ácido úrico não aparece na radiografia. Só 10 a 15% dos biliares são radiopacos.');
-Q('cirrad','Na tomografia de pancreatite, pâncreas aumentado com uma coleção líquida peripancreática corresponde a qual grau de Balthazar?',['B','C','D','E'],2,'Balthazar D é uma coleção; E são duas ou mais coleções ou gás.');
-Q('cirrad','Paciente com dor abdominal e TC mostrando o mesentério torcido em espiral em volta dos vasos. Qual o sinal e o diagnóstico?',['Sinal do alvo; intussuscepção','Sinal do redemoinho; volvo','Sinal da dupla bolha; atresia duodenal','Sinal do anel; abscesso'],1,'O redemoinho representa a torção do mesentério em volta do eixo vascular, característica do volvo.');
-Q('cirrad','Qual exame de imagem é o padrão na suspeita de cólica renal no adulto não gestante?',['Urografia excretora','TC sem contraste em baixa dose','TC com contraste na fase portal','Radiografia simples'],1,'A TC sem contraste em baixa dose tem a maior acurácia e mostra cálculos de qualquer composição.');
-Q('cirrad','No eFAST, qual achado é o mais específico para pneumotórax?',['Linhas B','Ponto pulmonar (lung point)','Deslizamento pleural presente','Derrame pleural'],1,'O ponto pulmonar marca o local onde a pleura visceral volta a tocar a parietal e é praticamente específico de pneumotórax.');
-Q('cirrad','Qual janela do FAST é a mais sensível para líquido livre no adulto em decúbito dorsal?',['Pericárdica','Hepatorrenal (Morison)','Esplenorrenal','Pélvica'],1,'O espaço de Morison é o ponto mais dependente do abdome superior no adulto deitado.');
-Q('cirrad','Idoso com hematoquezia volumosa e instabilidade. EDA normal. AngioTC mostra extravasamento de contraste no cólon direito. Próximo passo:',['Colonoscopia sem preparo','Arteriografia com embolização','Cintilografia com hemácias marcadas','Cápsula endoscópica'],1,'AngioTC positiva localiza o sangramento ativo; a arteriografia permite embolizar.');
-Q('cirrad','Qual exame detecta sangramento digestivo com o menor fluxo, embora com localização imprecisa?',['Arteriografia','AngioTC','Cintilografia com hemácias marcadas','Colonoscopia'],2,'A cintilografia detecta fluxos de cerca de 0,05 a 0,1 mL/min e sangramentos intermitentes, mas não localiza com precisão nem trata.');
-Q('cirrad','Criança de 2 anos com sangramento retal indolor volumoso. Exame indicado para a hipótese mais provável:',['Colonoscopia','Cintilografia com pertecnetato de tecnécio','Enema opaco','TC com contraste'],1,'Divertículo de Meckel com mucosa gástrica ectópica capta o pertecnetato.');
-Q('cirrad','Esofagograma com afilamento distal liso em bico de pássaro e esôfago dilatado sugere:',['Espasmo esofágico distal','Acalasia','Divertículo de Zenker','Hérnia paraesofágica'],1,'Bico de pássaro é o padrão da acalasia. Saca-rolhas é espasmo esofágico distal.');
-Q('cirrad','Qual contraste usar primeiro na suspeita de perfuração esofágica?',['Bário','Contraste hidrossolúvel iodado','Gadolínio','Ar'],1,'O bário extravasado causa mediastinite química. Começa-se com hidrossolúvel e, se negativo, bário para maior detalhe.');
-Q('cirrad','Recém-nascido com vômitos biliosos. Estudo contrastado mostra junção duodenojejunal à direita da coluna e duodeno em saca-rolhas. Conduta:',['Observação','Cirurgia de urgência por má rotação com volvo do intestino médio','Sonda e procinético','Repetir em 24 horas'],1,'Vômito bilioso no recém-nascido com sinais de má rotação e volvo é emergência cirúrgica pelo risco de necrose de todo o intestino médio.');
-Q('cirrad','Lesão hepática com realce periférico nodular descontínuo e enchimento centrípeto progressivo nas fases tardias corresponde a:',['Hepatocarcinoma','Hemangioma','Metástase de cólon','Abscesso'],1,'Padrão típico do hemangioma, que segue o comportamento do sangue.');
-Q('cirrad','Dilatação simultânea do colédoco e do ducto pancreático principal (sinal do duplo ducto) sugere:',['Coledocolitíase isolada','Tumor de cabeça de pâncreas ou periampular','Klatskin','Pancreatite aguda leve'],1,'A obstrução na confluência distal do colédoco e do Wirsung, na cabeça do pâncreas ou ampola, dilata os dois ductos.');
-
-/* ===== Urologia ===== */
-Q('ciruro','Hematúria presente apenas no final da micção sugere origem em:',['Rim','Uretra anterior','Colo vesical ou próstata','Ureter'],2,'Inicial é uretral; terminal, colo vesical ou próstata; total, bexiga ou trato superior.');
-Q('ciruro','Homem de 62 anos, tabagista, com hematúria macroscópica indolor. Urocultura negativa, sem dismorfismo. Investigação:',['Repetir urina em 6 meses','Urotomografia e cistoscopia','Apenas ultrassonografia','Biópsia renal'],1,'Hematúria macroscópica em tabagista exige avaliação do trato superior (urotomografia) e da bexiga (cistoscopia), que não se substituem.');
-Q('ciruro','Qual dos sintomas abaixo é de armazenamento?',['Jato fraco','Hesitação','Noctúria','Gotejamento terminal'],2,'Frequência, urgência, noctúria e incontinência de urgência são de armazenamento. Jato fraco, hesitação, esforço e gotejamento terminal são de esvaziamento.');
-Q('ciruro','Homem de 40 anos com cólica renal. TC sem contraste: cálculo de 6 mm no ureter distal, sem hidronefrose importante, sem febre, função renal normal, dor controlada. Conduta:',['Ureteroscopia imediata','Tansulosina, analgesia e reavaliação','Nefrostomia','Nefrolitotripsia percutânea'],1,'Cálculo de ureter distal acima de 5 mm sem complicações: terapia expulsiva com alfabloqueador, segundo a diretriz europeia de 2025.');
-Q('ciruro','Mulher com cálculo obstrutivo de 8 mm no ureter proximal, febre de 39,2 °C e calafrios. Conduta:',['Ureteroscopia com laser imediata','Desobstrução com duplo J ou nefrostomia e antibiótico','Tansulosina e antibiótico oral','LECO de urgência'],1,'Rim obstruído e infectado é emergência: drenar o sistema coletor e tratar a infecção. O cálculo é tratado depois.');
-Q('ciruro','Cálculo de 3 cm ocupando pelve e cálices renais (coraliforme). Melhor tratamento:',['LECO','Nefrolitotripsia percutânea','Tansulosina','Dissolução com citrato'],1,'Cálculos renais acima de 2 cm e coraliformes são tratados por nefrolitotripsia percutânea.');
-Q('ciruro','Paciente com cálculos recorrentes de oxalato de cálcio e hipercalciúria. Qual orientação está correta?',['Restringir cálcio da dieta','Manter cálcio dietético normal, aumentar água, reduzir sódio e considerar tiazídico','Aumentar proteína animal','Suspender a ingestão de água à noite'],1,'Restringir cálcio aumenta a absorção de oxalato e piora a litíase. Tiazídico reduz a calciúria.');
-Q('ciruro','Qual cálculo é radiotransparente na radiografia e pode ser dissolvido com alcalinização urinária?',['Oxalato de cálcio','Estruvita','Ácido úrico','Fosfato de cálcio'],2,'O cálculo de ácido úrico forma-se em urina ácida e se dissolve com citrato de potássio.');
-Q('ciruro','Homem de 68 anos com IPSS 21, próstata de 65 mL e sem complicações. Melhor tratamento clínico:',['Observação vigilante','Alfabloqueador associado a inibidor da 5-alfa-redutase','Antimuscarínico isolado','Antibiótico'],1,'Sintomas graves e próstata grande: a combinação reduz sintomas e progressão (retenção e cirurgia).');
-Q('ciruro','Paciente em uso de finasterida há 1 ano tem PSA de 2,5 ng/mL. Como interpretar?',['Normal, sem correção','Multiplicar por 2: equivale a cerca de 5 ng/mL','Dividir por 2','O PSA não é alterado pela finasterida'],1,'Inibidores da 5-alfa-redutase reduzem o PSA em cerca de 50% após 6 a 12 meses.');
-Q('ciruro','Durante RTU de próstata com energia monopolar e irrigação com glicina, o paciente fica confuso, bradicárdico e hipertenso. Sódio de 118 mEq/L. Diagnóstico:',['Síndrome pós-RTU','Reação alérgica','AVC','Hipoglicemia'],0,'A absorção de líquido de irrigação sem eletrólitos causa hiponatremia dilucional. A energia bipolar com soro fisiológico reduz esse risco.');
-Q('ciruro','Qual é uma indicação absoluta de cirurgia na hiperplasia prostática benigna?',['IPSS de 10','Próstata de 40 mL','Retenção urinária refratária à retirada da sonda','PSA de 3'],2,'Indicações absolutas: retenção refratária, ITU de repetição, cálculo vesical, hematúria refratária e insuficiência renal por obstrução.');
-Q('ciruro','Adolescente de 14 anos com dor testicular súbita há 3 horas, testículo alto e horizontalizado, reflexo cremastérico ausente. Conduta:',['Doppler e reavaliação em 6 horas','Exploração cirúrgica imediata com distorção e orquidopexia bilateral','Antibiótico para epididimite','Analgesia e alta'],1,'Quadro clássico de torção. A cirurgia não deve ser atrasada por exames; a viabilidade cai muito após 6 horas.');
-Q('ciruro','Homem de 25 anos com dor escrotal progressiva há 2 dias, febre, disúria e alívio da dor ao elevar o testículo. Tratamento:',['Cirurgia imediata','Ceftriaxona e doxiciclina','Nitrofurantoína','Observação'],1,'Epididimite em homem jovem é causada principalmente por clamídia e gonococo. Prehn positivo favorece epididimite.');
-Q('ciruro','Idosa assintomática com urocultura de 100 mil UFC/mL de E. coli em exame de rotina. Conduta:',['Tratar por 7 dias','Não tratar','Fazer urotomografia','Profilaxia contínua'],1,'Bacteriúria assintomática só se trata em gestantes e antes de procedimento urológico com sangramento de mucosa.');
-Q('ciruro','Paciente com leucocitúria persistente, urocultura comum negativa, urina ácida e hematúria microscópica. Qual hipótese deve ser investigada?',['Cistite bacteriana simples','Tuberculose urogenital','Litíase de oxalato','Câncer de próstata'],1,'Piúria estéril com urina ácida é a pista clássica da tuberculose urogenital. Pesquisar BAAR, teste molecular e cultura em 3 a 6 amostras da primeira urina da manhã.');
-Q('ciruro','Diabético com dor e crepitação na bolsa escrotal e no períneo, febre e áreas de necrose. Conduta:',['Antibiótico oral e retorno','Desbridamento cirúrgico urgente e antibiótico de amplo espectro','Ultrassonografia escrotal e observação','Compressas mornas'],1,'Gangrena de Fournier é fasciite necrosante com alta mortalidade; o desbridamento não pode esperar.');
-Q('ciruro','Sobre o rastreamento do câncer de próstata no Brasil, é correto afirmar:',['O Ministério da Saúde recomenda PSA anual para todos os homens a partir de 40 anos','O Ministério da Saúde e o INCA não recomendam rastreamento populacional, enquanto a SBU recomenda avaliação individual a partir de 50 anos','A SBU não recomenda PSA','O toque retal isolado é o rastreamento oficial'],1,'As duas posições coexistem. O MS e o INCA orientam decisão informada sem rastreamento populacional; a SBU recomenda avaliação individual a partir de 50 anos, ou 45 em grupos de maior risco.');
-Q('ciruro','Homem com PSA de 6 ng/mL confirmado e toque normal. Qual o próximo exame recomendado antes da biópsia?',['Cintilografia óssea','Ressonância multiparamétrica da próstata','TC de abdome','PET-PSMA'],1,'A ressonância multiparamétrica antes da biópsia orienta a decisão e permite biópsia dirigida às lesões PI-RADS 3 ou mais.');
-Q('ciruro','Câncer de próstata com PSA de 6, Gleason 3+3 (grupo ISUP 1) e T1c. Conduta preferencial:',['Prostatectomia radical imediata','Vigilância ativa','Bloqueio androgênico','Quimioterapia'],1,'Baixo risco: vigilância ativa evita tratamento excessivo, tratando só se houver progressão.');
-Q('ciruro','Após RTU, tumor de bexiga urotelial T1 de alto grau, sem músculo detrusor na amostra. Conduta:',['Cistectomia imediata','Nova RTU e depois BCG intravesical com manutenção','Apenas cistoscopia anual','Quimioterapia sistêmica'],1,'T1 de alto grau ou amostra sem detrusor exige nova RTU. Depois, BCG com manutenção. Cistectomia se falha ao BCG ou características de altíssimo risco.');
-Q('ciruro','Carcinoma urotelial de bexiga T2 (invade músculo), sem metástases. Tratamento padrão:',['BCG intravesical','RTU isolada','Quimioterapia neoadjuvante com cisplatina e cistectomia radical','Radioterapia paliativa'],2,'Músculo-invasivo: quimioterapia neoadjuvante seguida de cistectomia radical com linfadenectomia e derivação urinária.');
-Q('ciruro','Massa renal sólida de 3 cm com realce, achada incidentalmente em homem de 55 anos saudável. Conduta:',['Nefrectomia radical','Nefrectomia parcial','Quimioterapia','Biópsia e observação obrigatórias'],1,'T1a (até 4 cm): nefrectomia parcial preserva função renal com resultado oncológico equivalente.');
-Q('ciruro','Homem de 28 anos com nódulo testicular endurecido. Qual a abordagem cirúrgica correta?',['Biópsia transescrotal','Orquiectomia radical por via inguinal','Orquiectomia por via escrotal','Aspiração por agulha'],1,'A via inguinal com ligadura alta do cordão evita alterar a drenagem linfática e a disseminação para linfonodos inguinais.');
-Q('ciruro','Paciente com tumor testicular cuja histologia mostra seminoma, mas a alfafetoproteína está elevada. Interpretação:',['Seminoma puro típico','Há componente não seminomatoso e deve ser tratado como tal','Erro laboratorial sem importância','Indica tumor de Leydig'],1,'Seminoma puro não eleva alfafetoproteína; AFP alta indica componente não seminomatoso (como saco vitelino).');
-Q('ciruro','Criança de 3 anos com massa abdominal assintomática no flanco esquerdo que não cruza a linha média e hipertensão. Hipótese mais provável:',['Neuroblastoma','Tumor de Wilms','Linfoma','Hidronefrose'],1,'Wilms é massa renal assintomática que não costuma cruzar a linha média. Neuroblastoma cruza a linha média e calcifica.');
-
-/* Complementos autorais: prioridade-e-hernias. */
-Q('ciraa','Paciente com apendicite complicada operada apresenta melhora inicial e depois volta a ter dor, febre e intolerância alimentar. Está perfundido e a tomografia identifica coleção acessível. Qual é o princípio mais adequado para o próximo passo?',['Manter apenas antibiótico até desaparecer toda alteração inflamatória','Avaliar drenagem da coleção e investigar eventual comunicação persistente, junto ao tratamento antimicrobiano','Atribuir o quadro à recuperação habitual e suspender a investigação','Indicar colectomia de rotina, sem avaliar a anatomia da complicação'],1,'A coleção definida exige discussão de controle da fonte, com drenagem apropriada e pesquisa de falha do coto ou lesão intestinal quando sugeridas pela evolução. Manter apenas antibiótico pode deixar uma fonte sem controle. Chamar a piora após melhora inicial de recuperação habitual ignora uma trajetória de complicação. Colectomia não é resposta universal: a intervenção precisa corresponder ao defeito e aos achados.');
-Q('ciraa','Durante colecistectomia por inflamação intensa, a equipe não consegue obter identificação segura das estruturas do triângulo hepatocístico. Qual decisão melhor previne uma lesão importante da via biliar?',['Clipar a primeira estrutura tubular que parece chegar à vesícula','Prosseguir a dissecção profunda, mesmo sem referências anatômicas, para concluir a técnica planejada','Converter para aberta e dividir as estruturas sem necessidade de confirmar sua identidade','Interromper a dissecção insegura e discutir auxílio, definição anatômica e uma estratégia de resgate'],3,'Interromper a progressão perigosa e escolher uma estratégia de resgate protege contra identificação equivocada da via biliar principal. Clipar uma estrutura apenas pela aparência não demonstra que ela seja o ducto cístico. A insistência em dissecção sem referências aumenta risco de lesão. Converter para aberta pode melhorar a exposição, mas não dispensa confirmar a anatomia antes de dividir estruturas.');
-Q('ciraa','Depois de colecistectomia, paciente apresenta dor crescente, febre e saída de bile pelo dreno. Qual interpretação orienta melhor a avaliação?',['Pode haver fístula ou lesão biliar; é necessário avaliar controle da contaminação e definir a anatomia para orientar o tratamento','A presença do dreno garante que qualquer vazamento já está resolvido','Bile pelo dreno demonstra obrigatoriamente lesão completa do colédoco e permite dispensar investigação','A melhor medida é retirar o dreno imediatamente, pois ele é a causa do vazamento'],0,'A avaliação deve considerar desde vazamento do coto cístico ou de ducto acessório até lesão da via principal, com controle da fonte e definição anatômica. A presença de dreno não garante drenagem de toda coleção. Bile exteriorizada não determina sozinha o nível ou a extensão da lesão. Retirar o dreno sem esclarecer a situação pode perder uma via de controle e favorecer acúmulo de bile.');
-Q('ciraa','Paciente com diverticulite e coleção pélvica está perfundido. A equipe de radiologia intervencionista informa que não existe trajeto percutâneo seguro. Qual é a melhor forma de interpretar esse dado?',['O diagnóstico de diverticulite fica excluído, pois todo abscesso diverticular é drenável','O tamanho da coleção basta para obrigar uma punção, mesmo atravessando estruturas de risco','A estratégia deve integrar anatomia, evolução e possibilidade de outro controle da fonte, em discussão com a cirurgia','A ausência de acesso seguro demonstra que não há risco de falha do tratamento clínico'],2,'A acessibilidade é parte da escolha do controle da fonte, junto de evolução, estabilidade e alternativas cirúrgicas. Nem todo abscesso possui trajeto seguro, portanto isso não exclui o diagnóstico. Um limiar de diâmetro não autoriza punção por caminho perigoso. Não conseguir drenar não prova segurança do tratamento clínico: exige vigilância e reavaliação da estratégia se houver falha.');
-Q('ciraa','Pessoa com obstrução intestinal em tratamento não operatório passa a ter dor contínua e defesa localizada. A tomografia mostra alça fechada e alteração preocupante do realce da parede. O que mais deve orientar a conduta?',['Completar o prazo previamente previsto de observação, independentemente da mudança clínica','Reavaliar como possível comprometimento vascular e organizar abordagem cirúrgica urgente com suporte','Administrar estimulante de motilidade para vencer a obstrução','Considerar que cirurgia abdominal anterior garante a benignidade do quadro atual'],1,'A mudança do padrão da dor e os sinais de comprometimento da parede sugerem estrangulamento e podem exigir cirurgia urgente. Um prazo de observação não deve prevalecer sobre deterioração. Estímulo à motilidade não resolve uma alça mecanicamente fechada e pode ser inadequado. Cirurgia prévia favorece aderências, mas não impede que elas comprometam a vascularização.');
-Q('ciraa','Após operação abdominal, paciente apresenta distensão difusa e atraso do trânsito. Há distúrbio eletrolítico e uso de medicamentos que reduzem motilidade. A avaliação não demonstra bloqueio mecânico, peritonite ou outra complicação. Qual é a abordagem mais coerente?',['Laparotomia imediata em todo caso de ausência de trânsito','Diagnosticar uma nova brida apenas pela distensão','Tratar como pseudo-obstrução específica sem rever os medicamentos e sem monitorar evolução','Corrigir fatores reversíveis e acompanhar a trajetória, reabrindo a investigação se surgirem sinais de complicação'],3,'Íleo funcional exige correção de causas reversíveis e acompanhamento clínico; piora ou novos sinais podem mudar a hipótese. Ausência de trânsito isoladamente não indica laparotomia. Distensão não demonstra por si só uma brida. Aplicar uma terapia específica sem rever causas e sem vigilância transforma uma hipótese provisória em diagnóstico fechado e pode atrasar o reconhecimento de complicações.');
-Q('ciraa','Adulto apresenta dor abdominal súbita e defesa. A radiografia não mostra pneumoperitônio, mas a suspeita de perfuração permanece forte. Está perfundido e há condições de obter imagem adicional sem atraso perigoso. Qual afirmação é correta?',['A radiografia negativa não exclui perfuração; a tomografia pode esclarecer a fonte e a extensão enquanto se mantém avaliação cirúrgica','A ausência de ar livre permite alta mesmo com defesa persistente','Só existe perfuração quando o sinal de Jobert pode ser demonstrado','A próxima etapa deve ser colonoscopia para qualquer suspeita de víscera perfurada'],0,'A tomografia pode demonstrar defeito e contaminação não vistos na radiografia, inclusive em perfuração contida ou retroperitoneal. Dar alta apenas pelo exame negativo ignora a suspeita clínica persistente. Jobert não tem presença obrigatória e não funciona como teste de exclusão. Colonoscopia não é uma investigação universal de perfuração e pode ser inadequada diante da ameaça de contaminação e peritonite.');
-Q('ciraa','Paciente grave com baixo débito e necessidade de suporte vasoativo desenvolve distensão e suspeita de isquemia intestinal. A avaliação não demonstra êmbolo na artéria mesentérica principal. Qual interpretação é mais adequada?',['Isquemia intestinal fica excluída se não houver êmbolo arterial','O tratamento obrigatório é retirar um êmbolo, mesmo que ele não exista','A isquemia não oclusiva permanece possível e exige tratar a hipoperfusão, revisar agravantes e procurar sinais de necrose','A ausência de uma oclusão arterial torna desnecessária qualquer avaliação cirúrgica posterior'],2,'A isquemia não oclusiva decorre de hipoperfusão e vasoconstrição e pode ocorrer com a artéria principal permeável. Ausência de êmbolo exclui apenas aquele mecanismo demonstrável, não toda isquemia. Embolectomia não trata um quadro sem êmbolo identificado. Avaliação cirúrgica continua necessária quando há suspeita de necrose, peritonite ou deterioração.');
-Q('ciraa','Pessoa com trombose venosa mesentérica confirmada apresenta intestino sem sinais de necrose e não tem peritonite. Qual estratégia corresponde ao mecanismo principal?',['Embolectomia da artéria mesentérica como resposta automática','Anticoagulação quando apropriada, avaliação de contraindicações e vigilância para deterioração intestinal','Ressecção de todo o território venoso comprometido mesmo com alças viáveis','Observação sem tratamento porque a circulação arterial está permeável'],1,'A obstrução da drenagem venosa é tratada principalmente com anticoagulação quando não há contraindicação, mantendo vigilância para necrose e indicação de operação se surgir. Embolectomia arterial atua sobre outro mecanismo. Ressecar tecido viável desnecessariamente aumenta perda funcional e não é o objetivo inicial. Artéria permeável não impede congestão e isquemia por trombose venosa.');
-Q('ciraa','Idoso com dor lombar súbita e perfusão ruim apresenta aorta dilatada na ultrassonografia, mas não há líquido livre nas janelas peritoneais do FAST. Qual é a conclusão correta?',['A ausência de líquido livre exclui ruptura de aneurisma','O quadro deve ser classificado como cólica renal sem avaliação vascular','O FAST negativo demonstra que a hemoglobina permanecerá estável','A hemorragia pode ser retroperitoneal; a hipótese vascular exige avaliação e organização urgente de controle da fonte'],3,'A ruptura de aneurisma pode sangrar predominantemente no retroperitônio, sem líquido livre peritoneal evidente. Por isso o FAST negativo não afasta a ameaça. Atribuir o quadro a cólica renal ignora alteração da perfusão e o achado aórtico. FAST não prevê a evolução da hemoglobina, que também pode não refletir imediatamente a magnitude da perda aguda.');
-Q('cirpanc','Adulto com pancreatite aguda típica tem febre e leucocitose, mas mantém perfusão, não apresenta colangite e não há foco infeccioso identificado. A equipe propõe antibiótico para impedir infecção da necrose. Qual é a melhor análise?',['Prescrever antibiótico para todo quadro febril, pois inflamação pancreática é sempre bacteriana','Procurar sinais de infecção e acompanhar a evolução, sem indicar profilaxia apenas pela resposta inflamatória','Indicar CPRE porque a febre demonstra obstrução infectada do colédoco','Substituir alimentação enteral por nutrição parenteral para prevenir contaminação intestinal'],1,'A inflamação estéril pode produzir febre e leucocitose. A conduta correta é procurar foco e reavaliar, reservando antibiótico para infecção documentada ou fortemente suspeita. A proposta de tratar toda febre como bacteriana confunde resposta inflamatória com infecção. A indicação de CPRE exige avaliar colangite ou obstrução persistente, e não febre isolada. Trocar a via enteral por parenteral não é estratégia de profilaxia infecciosa e ignora os benefícios e a indicação da alimentação pelo tubo digestivo.');
-Q('cirpanc','Paciente com pancreatite permanece com dor e, após reposição venosa, desenvolve dispneia e crepitações. Qual raciocínio deve orientar a próxima prescrição?',['Aumentar o volume até a dor desaparecer, pois a dor mede hipovolemia','Manter o esquema fixo porque o pâncreas necessita sempre de hidratação máxima','Interromper definitivamente todo suporte, pois a dispneia exclui gravidade da pancreatite','Reavaliar perfusão, congestão, função renal e necessidade de suporte respiratório para individualizar a reposição'],3,'A reposição precisa responder ao estado hemodinâmico e à tolerância. Dispneia com crepitações exige avaliar sobrecarga e outras causas de insuficiência respiratória. Aumentar volume pela persistência de dor usa uma meta inadequada, pois analgesia e perfusão são problemas distintos. Manter reposição máxima ignora dano por sobrecarga. Abandonar todo suporte é igualmente errado: a dispneia pode demonstrar uma complicação que exige tratamento mais intensivo, e não ausência de gravidade.');
-Q('cirpanc','Adulta com pancreatite leve apresenta melhora da dor, não vomita e deseja alimentar-se. A lipase ainda está elevada. Qual conduta é mais coerente?',['Reintroduzir alimentação conforme tolerância, sem exigir normalização isolada da lipase','Manter jejum até a lipase normalizar, mesmo com boa tolerância clínica','Iniciar nutrição parenteral porque alimentação oral causa necessariamente necrose','Solicitar tomografia apenas para autorizar a primeira refeição'],0,'A tolerância clínica orienta a alimentação na forma leve. Persistência de lipase elevada, isoladamente, não exige jejum. A proposta de esperar normalização da enzima prolonga uma restrição sem usar a evolução clínica. A nutrição parenteral não é primeira escolha em alguém com tubo digestivo utilizável e não existe inevitabilidade de necrose pela refeição. A tomografia tem indicações diagnósticas e de complicações; não funciona como autorização rotineira para alimentar uma pessoa em melhora.');
-Q('cirpanc','Adulto recebe hipótese de pancreatite, mas a dor tornou-se abruptamente difusa, há irritação peritoneal e o diagnóstico permanece incerto. A equipe sugere não investigar outra causa porque a tomografia da pancreatite costuma ser adiada. Qual é a melhor resposta?',['Adiar qualquer imagem até a janela habitual de avaliação da necrose','Usar somente novas dosagens de lipase para decidir se existe outra emergência','Reavaliar imediatamente o diagnóstico e investigar emergência alternativa, com avaliação cirúrgica e imagem conforme a estabilidade','Dar alta se o valor da lipase começar a cair'],2,'A janela habitual para avaliar necrose não proíbe investigação precoce quando há dúvida diagnóstica ou suspeita de outra emergência. Peritonite exige reavaliação e decisão conforme estabilidade. Adiar toda investigação aplica uma regra fora do contexto. A lipase não exclui perfuração, isquemia ou outra causa cirúrgica e não deve ser o único exame de decisão. Uma queda enzimática também não justifica alta de quem desenvolveu sinais peritoneais.');
-Q('cirpanc','Paciente recuperado de pancreatite intersticial está assintomático e alimenta-se bem. A imagem descreve coleção líquida homogênea com parede, sem detritos, sem obstrução e sem sinais de infecção. A única justificativa proposta para drenagem é o tamanho. Qual conduta é mais adequada?',['Drenar obrigatoriamente qualquer coleção com parede','Organizar acompanhamento, pois tamanho isolado não demonstra indicação de drenagem','Realizar necrosectomia aberta porque toda coleção contém necrose','Prescrever antibiótico para esterilizar um pseudocisto sem evidência de infecção'],1,'O contexto é compatível com pseudocisto sem complicação e permite acompanhamento individualizado. Tamanho isolado não determina intervenção. Drenar toda coleção ignora sintomas, complicações e benefício esperado. Necrosectomia é inadequada para uma coleção descrita como líquida sem necrose e expõe o paciente a um procedimento mais invasivo sem objetivo. Antibiótico não substitui indicação de controle do foco e não tem justificativa como tratamento automático de uma coleção estéril.');
-Q('cirpanc','Após pancreatite necrosante, a imagem de um paciente com indicação de intervenção mostra coleção encapsulada com líquido e grande quantidade de detritos. Qual explicação ajuda a escolher o tratamento?',['A presença de parede demonstra que se trata de pseudocisto composto só por líquido','Qualquer detrito determina ressecção total do pâncreas como primeiro procedimento','A passagem de líquido pelo dreno garante que todo o conteúdo já foi tratado','O componente sólido sugere necrose encapsulada e pode exigir etapas além da drenagem inicial conforme resposta e anatomia'],3,'Necrose encapsulada contém material necrótico, que pode persistir mesmo após a saída de líquido. A abordagem em degraus relaciona a drenagem e eventual desbridamento à resposta clínica e à anatomia. Chamar toda coleção com parede de pseudocisto desconsidera seu conteúdo. Ressecção total não é consequência automática de detritos e não corresponde à estratégia menos invasiva de controle do foco. Dreno funcionando também não comprova resolução: é preciso observar repercussão clínica e avaliar material residual.');
-Q('cirpanc','Paciente com necrose pancreática infectada deteriora apesar de suporte e antibiótico. A parede da coleção ainda não está bem definida. Qual decisão é mais apropriada?',['Reavaliar urgentemente o controle do foco com equipe experiente, pois postergar intervenção depende da condição clínica','Esperar obrigatoriamente pela encapsulação, independentemente da deterioração','Trocar automaticamente o antibiótico por profilaxia oral e manter observação sem nova avaliação','Concluir que a infecção está excluída porque a coleção ainda não tem parede'],0,'O benefício de adiar procedimentos invasivos precisa ser equilibrado com a necessidade de controlar infecção em deterioração. A equipe deve revisar a drenagem possível e a estratégia conforme a anatomia. Espera obrigatória ignora falha do tratamento. Uma troca automática para profilaxia oral não corresponde ao manejo de uma infecção complicada com piora. A parede define maturação da coleção, mas sua ausência não exclui infecção nem torna o paciente seguro para espera sem reavaliação.');
-Q('cirpanc','Paciente com coleção pancreática passa a apresentar sangramento digestivo e queda da condição circulatória. O exame anterior mostrava coleção próxima de vasos. Qual prioridade é mais adequada?',['Puncionar a coleção sem avaliar vasos, para confirmar se contém sangue','Tratar como pseudocisto simples e planejar somente seguimento ambulatorial','Reanimar e investigar complicação vascular, com controle urgente conforme a estabilidade','Prescrever apenas antibiótico, pois todo sangramento após pancreatite é sinal de infecção'],2,'Pseudoaneurisma e erosão vascular precisam ser considerados em sangramento após pancreatite. A prioridade combina reanimação e definição do controle vascular ou cirúrgico conforme a estabilidade. Puncionar sem avaliação vascular pode agravar uma hemorragia. Seguimento ambulatorial ignora repercussão circulatória. Antibiótico pode fazer parte de um quadro infectado, mas não controla a origem de uma hemorragia e sangramento não demonstra, por si só, que a única causa seja infecção.');
-Q('cirpanc','Adulta com pancreatite crônica e esteatorreia informa que usa as enzimas pancreáticas sempre afastadas dos alimentos. Qual medida deve integrar a reavaliação?',['Suspender toda alimentação porque a esteatorreia demonstra que o intestino não pode ser usado','Rever o uso das enzimas junto às refeições, a adesão e o estado nutricional','Concluir falha definitiva das enzimas e indicar cirurgia apenas pela forma de uso relatada','Tratar apenas a glicemia, pois a esteatorreia é manifestação exclusivamente endócrina'],1,'A reposição enzimática precisa encontrar o alimento para auxiliar a digestão. Rever administração, adesão, alimentação e nutrição é parte essencial do manejo. Suspender toda alimentação agrava risco nutricional sem resolver a deficiência. Indicar cirurgia apenas porque o uso está inadequado ignora uma causa corrigível e não define um alvo cirúrgico. A esteatorreia aponta para insuficiência exócrina; o tratamento do diabetes não substitui a correção da má digestão.');
-Q('cirpanc','Adulto com pancreatite crônica tem dor refratária e ducto principal dilatado com cálculos, sem massa suspeita. Qual é o raciocínio correto para discutir uma intervenção?',['O ducto dilatado obriga retirada de todo o pâncreas em qualquer paciente','Apenas o valor da lipase determina qual operação deve ser feita','Uma operação de drenagem garante desaparecimento de toda dor e dispensa seguimento','Correlacionar sintomas e anatomia e discutir descompressão endoscópica ou cirúrgica em equipe experiente'],3,'A dilatação com cálculos oferece um possível alvo obstrutivo, mas a escolha depende da anatomia, do estado clínico, da experiência e do objetivo. Não obriga pancreatectomia total. A lipase isolada não escolhe a operação nem mede os mecanismos de dor crônica. A promessa de cura de toda dor ignora componente neural, inflamação e outras causas; insuficiência exócrina, diabetes e risco nutricional continuam exigindo seguimento depois de uma intervenção.');
-Q('cirpanc','Paciente com diabetes associado à pancreatite crônica apresenta ingestão irregular e episódios de hipoglicemia durante o tratamento. Qual interpretação é mais adequada?',['A perda de função pancreática, a contrarregulação e a alimentação podem aumentar o risco, exigindo plano individualizado','A pancreatite crônica impede hipoglicemia porque o paciente sempre deixa de produzir insulina','A presença de hipoglicemia exclui a necessidade de acompanhar a insuficiência exócrina','O esquema usado em outro paciente com diabetes deve ser mantido sem ajustes, independentemente da ingestão'],0,'A doença pancreática pode comprometer a produção de insulina e a resposta contrarregulatória, somando-se à ingestão irregular e à má absorção. Isso exige reavaliação individualizada. A afirmação de que não pode ocorrer hipoglicemia é falsa. O evento não exclui insuficiência exócrina; nutrição e reposição podem influenciar o controle glicêmico. Copiar um esquema fixo de outro tipo ou de outro paciente ignora diferenças relevantes da doença pancreática e da alimentação.');
-Q('cirpanc','Idoso com icterícia obstrutiva e massa pancreática apresenta CA 19-9 elevado. Ainda não foi avaliada a relação da lesão com vasos nem a presença de doença à distância. Qual interpretação é mais correta?',['O marcador elevado dispensa imagem de estadiamento e comprova ressecabilidade','A icterícia determina obrigatoriamente drenagem biliar antes de qualquer discussão','Completar estadiamento e avaliação clínica, pois o marcador pode ser influenciado pela colestase e não define sozinho diagnóstico ou operação','A localização na cabeça torna uma operação curativa apropriada para qualquer extensão da doença'],2,'O plano exige avaliar extensão, relação vascular, condição clínica e necessidade de confirmação tecidual conforme a sequência terapêutica. CA 19-9 pode elevar com colestase e não substitui esses dados. Dispensa de estadiamento e garantia de ressecabilidade pelo marcador são incorretas. Drenagem biliar tem indicações, mas não é uma rotina automática em todo cenário operável. A localização anatômica orienta a técnica possível, porém não neutraliza metástases, comprometimento vascular ou falta de condição clínica.');
-Q('cirpanc','Adulta tem lesão cística pancreática com características mucinosas, sem sintomas e sem achados claramente definidos de alto risco no exame inicial. Qual afirmação evita uma decisão inadequada?',['Todo cisto mucinoso precisa de ressecção imediata, sem considerar subtipo ou operabilidade','É necessário caracterizar subtipo, sinais de risco, evolução e condição clínica para discutir vigilância ou cirurgia','Somente o sexo da paciente determina se a lesão é maligna','A ausência de dor exclui qualquer possibilidade de acompanhamento ou investigação adicional'],1,'Cistos mucinosos não são um grupo de conduta uniforme. Características de risco, subtipo, evolução e operabilidade orientam vigilância ou ressecção conforme critérios atualizados. Operar automaticamente ignora o balanço de riscos. Sexo pode compor um perfil epidemiológico, mas não demonstra malignidade. A ausência de dor não elimina potencial de progressão nem torna desnecessário caracterizar e acompanhar a lesão; apenas é um dos elementos da avaliação clínica.');
-Q('cirpanc','Paciente após duodenopancreatectomia apresenta sangue no dreno e sinais de piora circulatória, com suspeita de fístula associada. Qual conduta tem prioridade?',['Considerar o sangramento esperado e aguardar apenas pela próxima dosagem de enzima','Retirar o dreno e dar alta se o volume aparente for pequeno','Tratar exclusivamente a dieta, pois a hemorragia não se relaciona a complicações locais','Reanimar, acionar a equipe e definir controle do sangramento, considerando complicação vascular e foco associado'],3,'Fístula e infecção podem favorecer erosão vascular. Sangramento com repercussão exige reanimação e controle urgente conforme a condição clínica. Considerá-lo esperado e esperar uma enzima ignora a gravidade. O volume visível no dreno não mede todo o sangramento, e retirar o dispositivo não trata a causa nem justifica alta. Suporte nutricional continua relevante, mas não substitui investigação de hemorragia nem controle da complicação local.');
-Q('cirher','Durante reparo de uma hérnia inguinal, o cirurgião identifica o saco entrando pelo anel profundo, lateral aos vasos epigástricos inferiores. Como classificar o defeito descrito?',['Hérnia inguinal indireta, pela relação lateral com os vasos e trajeto pelo anel profundo','Hérnia inguinal direta, porque todo saco na virilha atravessa o triângulo de Hesselbach','Hérnia femoral, porque o anel profundo fica abaixo do ligamento inguinal','Diástase dos retos, porque a relação com vasos demonstra ausência de defeito fascial'],0,'O trajeto pelo anel profundo e a posição lateral aos vasos caracterizam a indireta. A direta está medial aos vasos e atravessa a região de fraqueza da parede posterior, não sendo qualquer hérnia da virilha. A femoral passa abaixo do ligamento inguinal e tem outro trajeto. Diástase é afastamento da linha média sem esse saco herniário; a descrição operatória demonstra uma hérnia, não ausência de defeito.');
-Q('cirher','Idosa apresenta pequeno abaulamento doloroso na virilha, abaixo do ligamento inguinal e medial à veia femoral. Qual hipótese merece atenção prioritária?',['Hérnia inguinal direta, situada obrigatoriamente abaixo do ligamento inguinal','Diástase dos retos, uma causa comum de massa femoral dolorosa','Hérnia femoral, com necessidade de avaliar encarceramento e perfusão do conteúdo','Hidrocele, cuja localização medial à veia femoral é diagnóstica'],2,'A posição abaixo do ligamento e medial à veia orienta para hérnia femoral. Seu colo pode comprometer o conteúdo mesmo com abaulamento pequeno. A direta pertence à região inguinal acima do ligamento, e não ao trajeto femoral descrito. Diástase ocorre na linha média da parede e não explica essa massa. Hidrocele exige relação com estruturas escrotais ou do canal; a referência à veia femoral não estabelece esse diagnóstico.');
-Q('cirher','Durante uma prova prática de anatomia cirúrgica, o examinador pede que o aluno identifique as paredes posterior e inferior do canal inguinal antes do reparo. Qual resposta é mais precisa?',['Posterior é o ligamento inguinal e inferior é a fáscia transversal','Posterior é principalmente a fáscia transversal; inferior é o ligamento inguinal, com contribuição lacunar medial','Ambas são exclusivamente formadas pela aponeurose do oblíquo externo','Ambas correspondem ao triângulo da dor da visão laparoscópica'],1,'A fáscia transversal constitui a parede posterior, e o ligamento inguinal com contribuição lacunar medial forma a inferior. Inverter essas relações confunde a anatomia. O oblíquo externo participa principalmente da parede anterior, não define sozinho posterior e inferior. O triângulo da dor é uma referência de risco neural na via posterior; não é o nome das paredes do canal inguinal. Usar as palavras posterior e inferior evita a ambiguidade do termo informal assoalho.');
-Q('cirher','Adulto sintomático apresenta recidiva após hernioplastia inguinal pela via anterior. Não há urgência e a condição clínica permite planejamento. Qual estratégia deve ser discutida?',['Repetir obrigatoriamente a mesma via, pois a cicatriz sempre facilita identificar nervos','Observar sem orientação porque toda recidiva é inofensiva','Realizar apenas retirada de pele, sem avaliar o defeito recorrente','Considerar reparo posterior em plano menos dissecado, após revisar anatomia, operação anterior e experiência disponível'],3,'Um plano não previamente dissecado pode reduzir dificuldades associadas à cicatriz, por isso a via posterior é uma opção importante depois da anterior. A cicatriz não garante uma dissecção mais segura nem obriga repetir o caminho. Observação sem orientação ignora sintomas e avaliação do risco. Retirar apenas pele não corrige a falha fascial e sequer responde à anatomia do defeito recorrente. A escolha final deve integrar condições clínicas e experiência.');
-Q('cirher','Homem com hérnia inguinal redutível e poucos sintomas pergunta se pode adiar a cirurgia. Não há suspeita de hérnia femoral nem de complicação. Qual orientação é adequada?',['Discutir observação vigilante ou reparo eletivo, incluindo sinais de alarme e acesso à reavaliação','Afirmar que observar significa que nunca será necessário operar','Indicar redução forçada diária pelo próprio paciente como prevenção de estrangulamento','Tratar toda hérnia redutível como emergência operatória, independentemente do contexto'],0,'Homens selecionados com poucos sintomas podem discutir observação vigilante, que inclui acompanhamento e orientação. Dizer que nunca será necessária cirurgia ignora progressão e sintomas futuros. Recomendar manobras forçadas não é uma estratégia preventiva e pode gerar dano. Transformar toda hérnia redutível em emergência também é inadequado: a urgência depende de complicação, sintomas e contexto, enquanto a decisão eletiva deve ser compartilhada.');
-Q('cirher','Após hernioplastia, um paciente apresenta dor em queimação na virilha, sem abaulamento evidente. A equipe cogita nova cirurgia imediatamente por suposta recidiva. Qual é a melhor análise?',['Dor persistente demonstra necessariamente que a tela se rompeu','A falta de abaulamento exclui qualquer causa relevante e permite abandonar o seguimento','É preciso investigar dor neural, recidiva e outras causas antes de escolher um novo procedimento','Toda dor pós-reparo deve ser tratada exclusivamente com outra tela no mesmo plano'],2,'A dor pode ter mecanismo neural, musculoesquelético ou decorrer de recidiva e outras complicações. Caracterizar a causa evita uma operação inadequada. Queimação não prova rompimento de tela. Ausência de abaulamento também não exclui problema relevante nem justifica abandonar quem tem sintomas. Acrescentar tela sem diagnóstico pode falhar e agravar lesão neural, por isso não é tratamento universal para dor depois do reparo.');
-Q('cirher','Ao discutir reparo laparoscópico de uma hérnia bilateral, o aluno precisa comparar TEP e TAPP. Qual explicação está correta?',['TEP e TAPP colocam obrigatoriamente o reforço no plano anterior ao canal inguinal','Ambas usam reforço pré-peritoneal; TAPP acessa a cavidade e abre o peritônio, enquanto TEP desenvolve o espaço extraperitoneal','TAPP dispensa reconhecer vasos e nervos porque a tela elimina o risco anatômico','TEP consiste apenas em ligar o saco, sem tratar o defeito da parede do adulto'],1,'As técnicas compartilham o objetivo de reforçar o espaço pré-peritoneal, mas diferem no acesso planejado. Descrevê-las como reparos anteriores troca o plano. A presença de tela não elimina riscos vasculares ou neurais e exige orientação anatômica. Ligar o saco sem reforçar o defeito não descreve a TEP de um adulto; confunde o procedimento com princípios de outra situação, como tratamento pediátrico selecionado.');
-Q('cirher','Adulta percebe elevação alongada da linha média ao contrair o abdome. O exame mostra afastamento dos retos sem orifício fascial definido. Qual interpretação é mais adequada?',['Trata-se obrigatoriamente de hérnia estrangulada, mesmo sem defeito ou sinais de isquemia','O achado exclui a possibilidade de qualquer hérnia associada, sem necessidade de exame dirigido','Toda diástase exige operação de urgência porque sua luz intestinal está comprimida','O achado sugere diástase, que deve ser distinguida de hérnia verdadeira e avaliada quanto a sintomas e defeitos associados'],3,'Diástase é afastamento da linha média sem o orifício herniário descrito nas hérnias verdadeiras. Pode coexistir com defeito e ser avaliada funcionalmente. Classificá-la como estrangulada ignora a anatomia e a ausência de sinais correspondentes. Garantir que nunca há hérnia associada também é incorreto e impede exame dirigido. A diástase isolada não cria um anel que comprime intestino, portanto não implica emergência por esse mecanismo.');
-Q('cirher','Idosa magra apresenta vômitos, distensão e dor na face medial da coxa. Não há cicatriz abdominal nem abaulamento inguinal evidente. Qual diagnóstico deve ser lembrado?',['Hérnia obturadora, que pode provocar obstrução sem massa externa perceptível','Diástase dos retos, que normalmente comprime o nervo obturador','Hérnia inguinal indireta obrigatoriamente visível no escroto em todas as pessoas','Lipoma subcutâneo, cujo aspecto clínico dispensa investigar obstrução'],0,'Hérnia obturadora pode produzir obstrução e dor pela relação com o nervo obturador, sem abaulamento superficial. Diástase não explica o trajeto nervoso nem uma obstrução por colo herniário. A indireta não é necessariamente escrotal e essa descrição não esclarece a dor medial da coxa. Um lipoma subcutâneo não deve ser usado para encerrar a investigação de uma síndrome obstrutiva com sinais sugestivos de hérnia pélvica.');
-Q('cirher','Paciente com pequena hérnia dolorosa mantém eliminação de parte dos gases e das fezes. O examinador pergunta se isso afasta sofrimento intestinal. Qual resposta é correta?',['Sim, porque qualquer isquemia exige obstrução completa do trânsito','Sim, pois a parede intestinal só sofre quando o saco contém toda a circunferência da alça','Não, porque uma hérnia de Richter pode comprometer apenas parte da parede e manter alguma luz intestinal','Não há necessidade de examinar a hérnia se o paciente ainda evacua'],2,'Na hérnia de Richter, parte da parede pode ficar presa e isquêmica enquanto a luz permanece parcialmente permeável. Por isso evacuação não comprova viabilidade. Exigir obstrução completa confunde trânsito e perfusão. A parede pode sofrer sem aprisionamento de toda a circunferência. Deixar de examinar uma hérnia dolorosa por haver evacuação elimina justamente os dados locais que ajudam a reconhecer a ameaça intestinal.');
-Q('cirher','Paciente com hérnia incisional sintomática será avaliado para reparo eletivo. Apresenta tabagismo, estado nutricional ruim e ascite sem controle adequado. Qual atitude melhora o planejamento?',['Escolher somente o material da tela, pois fatores clínicos não influenciam cicatrização','Avaliar e otimizar fatores modificáveis, mapear o defeito e planejar a técnica sem usar a otimização para adiar uma emergência','Ignorar a nutrição porque o defeito já existe e não pode haver melhora de risco','Indicar operação de urgência apenas pela presença de cicatriz, sem pesquisar complicação'],1,'O planejamento envolve condições que alteram pressão, cicatrização e risco de infecção, além da anatomia do defeito. Material isolado não compensa fatores clínicos inadequados. A existência da hérnia não elimina a utilidade de melhorar nutrição e controle de doenças. Cicatriz com defeito não define urgência sozinha; sintomas agudos, comprometimento do conteúdo e condição sistêmica é que podem exigir tratamento imediato. Essa diferença impede atrasar emergência sob pretexto de otimização eletiva.');
-Q('cirher','Adulto com hérnia irredutível tem dor contínua, pele inflamada e sinais de comprometimento sistêmico. Qual é a conduta inicial mais coerente?',['Insistir em redução manual vigorosa até o abaulamento desaparecer','Dar alta com observação domiciliar porque toda hérnia presa ainda tem perfusão normal','Aguardar normalização de todos os exames antes de solicitar avaliação cirúrgica','Iniciar suporte e obter tratamento cirúrgico urgente diante de suspeita de estrangulamento'],3,'O conjunto sugere ameaça vascular e exige suporte e avaliação cirúrgica urgente. Redução vigorosa pode ocultar ou devolver tecido comprometido à cavidade. Irredutibilidade não prova viabilidade normal e sinais sistêmicos tornam a alta inadequada. Esperar normalizar todos os exames pode atrasar controle da causa; reanimação e preparação da operação precisam ocorrer de forma coordenada, não como etapas que impedem o contato precoce com a equipe.');
-Q('cirher','Depois de uma manobra, o abaulamento herniário desaparece, mas o paciente mantém dor importante e vômitos. Qual é a melhor interpretação?',['A redução aparente não prova liberação nem viabilidade; investigar redução em bloco ou lesão intestinal','O desaparecimento da massa autoriza alta independentemente dos sintomas','A dor persistente demonstra somente efeito da ansiedade, sem necessidade de exame abdominal','A redução elimina a possibilidade de uma causa mecânica para os vômitos'],0,'Na redução em bloco, saco e constrição podem voltar juntos à cavidade, mantendo comprometimento. Também pode haver lesão intestinal prévia à redução. Isso exige reavaliação urgente. Alta baseada só no aspecto externo ignora a evolução clínica. Atribuir a dor à ansiedade sem avaliação encerra prematuramente o diagnóstico. Causa mecânica não está excluída pelo desaparecimento da massa, exatamente porque a alça pode continuar presa internamente.');
-Q('cirher','Na operação de uma hérnia complicada, foi necessária ressecção intestinal. A equipe discute o reparo da parede. Qual princípio é mais adequado?',['A palavra ressecção torna qualquer tela proibida em todos os cenários','Tela biológica é obrigatória e comprovadamente superior em qualquer contaminação','Grau de contaminação, derramamento de conteúdo, controle do foco e estado clínico devem orientar a escolha individualizada','A escolha do reparo depende só do tamanho externo do abaulamento antes da anestesia'],2,'Ressecção e contaminação não são informações equivalentes. A escolha considera as condições do campo, a fisiologia do paciente e as opções técnicas. Proibir toda tela apenas por ter havido ressecção cria uma regra absoluta inadequada. Impor tela biológica em qualquer contaminação também ignora limitações e variações de indicação. O volume externo inicial não descreve o estado do campo operatório, a viabilidade do conteúdo ou a possibilidade de fechamento da parede.');
-Q('cirtabd','Adulto após colisão apresenta hipoperfusão e líquido livre no FAST. Melhora brevemente após sangue e volta a deteriorar. Qual a interpretação e o próximo princípio de conduta?',['A melhora transitória comprova estabilidade para tomografia demorada','A resposta transitória sugere sangramento não controlado e exige controle urgente da fonte','O FAST deve ser descartado porque não identifica o órgão lesado','A reposição isolada deve prosseguir até que o abdome fique rígido'],1,'A resposta transitória sugere hemorragia ativa; líquido livre em paciente deteriorando exige controle urgente da fonte, com reanimação simultânea. A melhora breve não garante segurança de transporte e permanência no tomógrafo. O FAST não precisa identificar o órgão para ser útil na decisão do instável. Esperar rigidez ou insistir apenas em reposição atrasa hemostasia.');
-Q('cirtabd','Politraumatizado em choque tem FAST inicial sem líquido livre e fratura de pelve suspeita. Qual raciocínio é mais apropriado?',['FAST negativo exclui sangramento importante','A ausência de líquido prova choque neurogênico','A investigação deve se limitar ao abdome até repetir o FAST positivo','É necessário procurar fontes torácica, pélvica, externa e em membros e tratar a suspeita pélvica'],3,'FAST negativo não exclui hemorragia pélvica, retroperitoneal ou em outros compartimentos. A avaliação e o tratamento da pelve devem acompanhar a busca de outras fontes. Concluir ausência de sangramento ignora a limitação do exame. Choque neurogênico não se comprova por FAST negativo. Limitar a busca ao abdome perde outras causas tratáveis.');
-Q('cirtabd','Adulto com marca de cinto apresenta dor abdominal progressiva. A imagem mostra líquido livre sem lesão sólida que o explique. Qual hipótese não pode ser negligenciada?',['Lesão intestinal ou mesentérica, com necessidade de avaliação e vigilância cirúrgica','Contusão de parede necessariamente benigna, permitindo alta sem plano','Lesão esplênica obrigatória, mesmo sem achado correspondente','Ausência de lesão abdominal, pois o FAST não demonstra perfuração'],0,'Líquido sem lesão sólida e evolução dolorosa aumentam a suspeita de lesão intestinal ou mesentérica. Rotular como contusão benigna ignora o mecanismo e a progressão. Não há base para impor lesão esplênica ausente na imagem. O FAST não é um teste de exclusão de perfuração e não demonstra a integridade intestinal.');
-Q('cirtabd','Paciente estável tem lesão esplênica extensa, sem peritonite ou outra indicação de laparotomia. O hospital dispõe de monitorização, sangue, embolização e cirurgia de resgate. Qual afirmação está correta?',['O grau alto obriga esplenectomia em qualquer contexto','Tratamento não operatório significa dispensar exames seriados','A estabilidade e a estrutura permitem considerar tratamento não operatório, com atenção aos achados vasculares','A preservação do baço deve ser mantida mesmo se surgir deterioração'],2,'A decisão reúne fisiologia, anatomia, lesões associadas e capacidade de resgate; grau alto isolado não impõe esplenectomia. A alternativa que obriga operação apenas pelo grau transforma classificação em indicação. Tratamento não operatório exige vigilância ativa, não ausência de exames. Deterioração deve levar à reavaliação e pode exigir embolização ou cirurgia.');
-Q('cirtabd','Durante tratamento não operatório de lesão esplênica, um adulto mantém perfusão preservada, mas a avaliação mostra lesão vascular com risco de sangramento. Qual estratégia faz sentido discutir?',['Esperar choque obrigatório antes de agir','Angioembolização conforme a anatomia e a avaliação da equipe','Alta porque a pressão está normal','Antibiótico isolado para fechar a lesão arterial'],1,'A angioembolização pode controlar uma fonte vascular no paciente que comporta a estratégia, conforme anatomia e recursos. Esperar choque perde a oportunidade de controle antes da deterioração. Pressão preservada não elimina risco vascular e não autoriza alta automática. Antibiótico não produz hemostasia de lesão arterial.');
-Q('cirtabd','Em laparotomia por trauma hepático, o sangramento posterior persiste após controle do pedículo pela manobra de Pringle. Qual origem merece consideração?',['Veias hepáticas ou cava retro-hepática, com estratégia de controle vascular apropriada','Exclusivamente artéria hepática, pois a manobra nunca interfere nela','Colédoco como fonte habitual de hemorragia venosa maciça','Ausência de lesão vascular, porque o pedículo já foi controlado'],0,'Pringle atua sobre o fluxo de entrada portal e arterial; persistência posterior faz considerar veias hepáticas ou cava retro-hepática, além de rever outras fontes. Dizer que não interfere na artéria hepática inverte a função da manobra. Lesão biliar pode coexistir, mas o colédoco não explica esse padrão de hemorragia venosa. Controlar o pedículo não exclui lesão vascular de saída.');
-Q('cirtabd','Após trauma hepático, um paciente desenvolve sangramento digestivo com manifestações hepatobiliares. Qual raciocínio é o mais adequado?',['Atribuir todo sangramento a gastrite e encerrar a investigação','Considerar apenas hemorragia de lesão esplênica','Usar antibiótico como tratamento hemostático definitivo','Considerar hemobilia e investigar comunicação vascular com abordagem especializada'],3,'Hemobilia é sangramento para a via biliar e deve ser lembrada após lesão hepática, com investigação da fonte vascular. Encerrar como gastrite ignora o contexto hepatobiliar. Lesão esplênica isolada não explica sangramento para a via biliar. Antibiótico pode ser necessário em infecção associada, mas não controla por si a comunicação hemorrágica.');
-Q('cirtabd','Adulto com trauma pélvico tem sangue no meato e necessidade de acompanhar a diurese. Qual é a conduta mais segura?',['Repetir sondagens forçadas até superar a resistência','Passar sonda cega e investigar apenas se não houver urina','Investigar a uretra e definir drenagem segura com avaliação especializada','Presumir contusão renal e ignorar o meato'],2,'Sangue no meato exige suspeita de lesão uretral e investigação dirigida antes de instrumentação cega, com estratégia de drenagem segura. Forçar repetidamente pode agravar a lesão. A passagem cega não se justifica pela necessidade de diurese. Presumir apenas lesão renal ignora um sinal relevante de trauma uretral.');
-Q('cirtabd','Paciente estável apresenta pequena ferida toracoabdominal esquerda. O exame inicial é pouco expressivo. Qual lesão precisa ser especificamente considerada pelo trajeto?',['Lesão diafragmática, que pode ser discreta e evoluir com herniação tardia','Apenas lesão cutânea, pois o ferimento é pequeno','Apenas lesão esplênica, sem avaliar o tórax','Lesão de uretra, independentemente do mecanismo e dos sinais'],0,'O trajeto toracoabdominal pode atravessar o diafragma e uma lesão pequena pode passar despercebida e gerar herniação tardia. Tamanho da pele não define profundidade. Limitar a análise ao baço perde estruturas torácicas e o diafragma. A uretra não é a hipótese dirigida por esse trajeto sem sinais adicionais.');
-Q('cirtabd','Na exploração por trauma intestinal, há perfuração em segmento com mesentério avulsionado e perfusão comprometida. Qual princípio deve guiar a decisão?',['Suturar o orifício sem avaliar a viabilidade do segmento','Ressecar o tecido inviável e definir reconstrução ou derivação conforme a fisiologia e a contaminação','Fazer colostomia para toda lesão intestinal, qualquer que seja o local','Apenas lavar a cavidade e manter o segmento isquêmico'],1,'Controlar contaminação exige considerar a viabilidade do segmento, não apenas fechar o furo; a reconstrução depende também de fisiologia e contaminação. Sutura isolada em alça desvitalizada não corrige a isquemia. Derivação universal ignora anatomia e condições do paciente. Lavagem sem tratar tecido inviável não oferece controle de foco.');
-Q('cirtabd','Em suspeita de instabilidade pélvica com choque, uma equipe prepara cinta pélvica. Onde o dispositivo deve ser corretamente relacionado à anatomia?',['Na cintura, sobre as cristas ilíacas, para comprimir o abdome','Na região torácica inferior, para reduzir toda a cavidade','Na altura dos trocânteres maiores, com reanimação e plano de hemostasia','Em qualquer altura, desde que o exame de abertura seja repetido vigorosamente'],2,'A cinta deve se relacionar aos trocânteres maiores para estabilizar adequadamente a pelve, enquanto se reanima e planeja hemostasia. Colocar na cintura não reproduz a ação adequada. Compressão torácica não trata a instabilidade pélvica. A altura não é indiferente e manobras vigorosas repetidas podem desfazer tamponamento e coágulos.');
-Q('cirtabd','Durante cirurgia por múltiplas lesões abdominais, o paciente se torna progressivamente frio, hipoperfundido e coagulopático. Qual estratégia é mais coerente?',['Completar uma reconstrução longa a qualquer custo antes de sair da sala','Adiar todo controle hemorrágico para depois da terapia intensiva','Fechar definitivamente o abdome sem considerar edema ou reavaliação','Abreviar para controlar sangramento e contaminação, proteger temporariamente e planejar recuperação e reoperação'],3,'O controle de danos prioriza hemostasia e contenção da contaminação, seguido de recuperação fisiológica e reconstrução planejada. A reconstrução prolongada pode aprofundar colapso. A terapia intensiva não substitui controlar sangramento cirurgicamente tratável. Fechamento definitivo indiscriminado pode agravar pressão abdominal e impede considerar a necessidade de reavaliação.');
-Q('cirtabd','Após reanimação e cirurgia abdominal, um paciente apresenta abdome tenso, piora ventilatória e oligúria. Qual raciocínio evita uma conduta reflexa inadequada?',['Investigar pressão intra-abdominal com técnica correta e correlacionar nova disfunção, enquanto procura outras causas de deterioração','Administrar volume repetidamente porque oligúria sempre significa falta de líquido','Diagnosticar síndrome compartimental apenas ao palpar abdome tenso','Excluir problema abdominal porque o paciente já foi operado'],0,'O conjunto exige avaliação de possível síndrome compartimental, medida adequada e correlação com disfunção, sem esquecer choque persistente, lesões torácicas e obstrução urinária. Mais volume indiscriminado pode aumentar edema e pressão. Palpação isolada não substitui medida e contexto. A operação prévia não exclui complicação abdominal e pode aumentar o risco.');
-Q('cirttor','Paciente com trauma torácico sofre deterioração respiratória e circulatória, com ventilação muito reduzida unilateralmente e forte suspeita de pneumotórax hipertensivo. Qual é o princípio de conduta?',['Aguardar desvio traqueal e radiografia confirmatória','Tratar clinicamente a ameaça imediata com descompressão por equipe treinada e reavaliar, sem atraso por imagem','Observar até completar todos os sinais clássicos','Tratar apenas com diurético para reduzir a pressão pleural'],1,'Pneumotórax hipertensivo é uma ameaça de diagnóstico clínico e precisa de intervenção imediata, seguida de reavaliação e tratamento definitivo. Esperar desvio e radiografia atrasa uma medida salvadora. A tríade completa pode faltar. Diurético não remove ar sob pressão nem corrige a obstrução ao retorno venoso.');
-Q('cirttor','Adulto politraumatizado com suspeita de hemorragia tem choque e assimetria ventilatória compatível com pneumotórax hipertensivo, mas jugulares pouco visíveis. Como interpretar esse achado?',['A ausência de distensão exclui definitivamente choque obstrutivo','Veias pouco visíveis provam que o pulmão está normal','É necessário esperar a distensão aparecer para descomprimir','A hipovolemia pode mascarar distensão jugular, e o conjunto clínico continua decisivo'],3,'A hipovolemia concomitante pode impedir jugulares evidentes em causa obstrutiva. Portanto, sua ausência não exclui pneumotórax hipertensivo. A aparência venosa não demonstra normalidade pulmonar. Esperar um sinal potencialmente ausente ou tardio pode atrasar a intervenção exigida pelo restante do quadro.');
-Q('cirttor','Paciente com ferimento penetrante torácico apresenta choque e achados pericárdicos compatíveis com tamponamento. Há equipe cirúrgica disponível. Qual afirmação é a mais adequada?',['A pericardiocentese isolada é sempre o tratamento definitivo da lesão traumática','O líquido pericárdico prova que não há ferida cardíaca','O tratamento deve considerar controle cirúrgico da lesão; punção pode ser ponte em situações selecionadas','A abordagem deve ser adiada até surgir a tríade completa de Beck'],2,'Tamponamento traumático pode resultar de ferida que exige reparo e controle cirúrgico; a punção, quando utilizada, é ponte e pode ser limitada por coágulos. Punção isolada não trata toda lesão causal. Líquido não exclui ferida cardíaca, justamente a sugere no contexto. Esperar tríade completa atrasa o manejo e ela pode faltar.');
-Q('cirttor','Após drenagem por hemotórax, o adulto permanece instável e dependente de transfusão. O frasco não atingiu o volume clássico descrito no resumo de prova. Qual a melhor interpretação?',['A fisiologia pode indicar operação mesmo sem o limite volumétrico, e é preciso conferir permeabilidade e fonte','A operação é proibida até o frasco atingir um número fixo','A baixa drenagem prova ausência de sangue retido','O dreno deve ser clampeado para aumentar o tamponamento sem avaliação'],0,'A decisão operatória também depende de instabilidade e necessidade de sangue; dreno obstruído pode subestimar a perda. Um valor de referência não proíbe operar paciente em deterioração. Débito baixo não exclui sangue retido. Clampear empiricamente pode agravar o problema e não substitui avaliação do sistema e hemostasia.');
-Q('cirttor','Um dreno torácico apresenta borbulhamento persistente. Antes de concluir que existe ruptura brônquica extensa, qual avaliação é indispensável?',['Assumir que todo borbulhamento é normal e retirar o dreno','Conferir conexões, posição, orifícios e integridade do sistema, além de reavaliar o paciente','Fechar o dreno sem outra avaliação para silenciar o borbulhamento','Administrar apenas antibiótico, pois bolhas provam infecção'],1,'Fuga aérea pode ter causa mecânica e exige revisar sistema e posição, mantendo a avaliação de lesão intratorácica. Retirar empiricamente pode deixar ar acumulando. Fechar apenas para silenciar o sinal pode criar hipertensão pleural. Bolhas não demonstram infecção e antibiótico não corrige uma conexão ou ruptura de via aérea.');
-Q('cirttor','Após trauma e drenagem, o pulmão não reexpande e há fuga aérea persistente apesar de sistema e posição revisados. Qual hipótese exige investigação dirigida?',['Lesão de via aérea traqueobrônquica, com avaliação especializada e broncoscopia conforme o quadro','Alta imediata, pois o dreno já representa tratamento completo','Apenas ansiedade, mesmo com falha objetiva de expansão','Contusão renal como explicação direta da fuga aérea pleural'],0,'Persistência de fuga e falha de expansão após revisão mecânica sugerem lesão traqueobrônquica e justificam investigação especializada. Drenagem não encerra o cuidado quando não há resposta. Ansiedade não explica ar persistente e falha de expansão. Lesão renal não produz diretamente essa comunicação com a pleura.');
-Q('cirttor','Um paciente apresenta coleção de sangue coagulado residual após drenagem pleural. Qual é o objetivo de uma estratégia ativa para o hemotórax retido?',['Manter indefinidamente o dreno sem avaliar a coleção','Prescrever apenas analgesia, pois sangue retido não complica','Definir evacuação dirigida, frequentemente por videotoracoscopia, para permitir expansão e reduzir complicações','Concluir que febre futura obrigatoriamente será de origem urinária'],2,'Sangue retido pode impedir expansão e favorecer infecção e organização pleural; deve haver avaliação para evacuação dirigida. Espera indefinida não trata retenção relevante. Analgesia é útil, mas não remove coágulo. Febre exige investigar também a coleção pleural, sem impor uma fonte distante.');
-Q('cirttor','Após desaceleração importante, o quadro e as lesões associadas mantêm suspeita de lesão aórtica. A radiografia não mostra mediastino claramente alargado. Qual conclusão está correta?',['Radiografia normal encerra a investigação vascular','A lesão só existe se houver fratura de esterno','É necessário aguardar choque para investigar','Radiografia normal não exclui, e angioTC pode ser indicada conforme o contexto e a segurança clínica'],3,'A radiografia tem limitações; mecanismo e contexto podem justificar angioTC mesmo sem mediastino largo. Encerrar pela radiografia perde lesão vascular. Fratura de esterno não é requisito para dano aórtico. Esperar choque transforma investigação de uma lesão potencialmente tratável em atraso perigoso.');
-Q('cirttor','Uma angioTC identifica lesão limitada da parede aórtica em paciente com perfusão preservada e outras lesões traumáticas. Qual resposta evita generalização?',['Toda lesão aórtica exige o mesmo reparo imediato, sem considerar sua morfologia','A avaliação vascular deve definir morfologia, risco e prioridade, incluindo a possibilidade de vigilância em lesões selecionadas','A presença de perfusão normal permite alta sem seguimento','O tratamento pode ser decidido apenas pela largura mediastinal da radiografia'],1,'Lesões aórticas variam em extensão e risco; avaliação vascular integra morfologia, fisiologia e lesões associadas para decidir vigilância ou reparo. Reparo imediato universal ignora essa heterogeneidade. Perfusão preservada não autoriza alta sem plano. A largura radiográfica não substitui a caracterização da lesão na angioTC.');
-Q('cirttor','Paciente com contusão pulmonar evolui com aumento de trabalho respiratório. Qual conduta representa melhor o manejo fisiopatológico?',['Reexaminar causas associadas, adequar analgesia e suporte e evitar sobrecarga sem abandonar reanimação necessária','Tratar qualquer piora como inevitável e dispensar novo exame','Administrar grandes volumes apenas porque há opacidade pulmonar','Suspender analgesia para não interferir no exame respiratório'],0,'Contusão pode evoluir e exige suporte, analgesia e reavaliação de causas tratáveis associadas. Chamar a piora de inevitável perde pneumotórax, atelectasia e outros problemas. Opacidade não indica volume indiscriminado e sobrecarga pode agravar edema. Dor sem controle reduz ventilação e não melhora a avaliação.');
-Q('cirttor','Um adulto com segmento torácico instável mantém oxigenação e esforço satisfatórios após analgesia e suporte. Qual afirmação é correta?',['O nome tórax instável determina intubação em todos','O movimento da parede dispensa investigar contusão associada','A necessidade ventilatória depende da função respiratória e da evolução, não apenas do rótulo anatômico','Analgesia deve ser evitada para preservar o movimento paradoxal visível'],2,'Função respiratória, contusão, esforço e resposta ao suporte orientam a necessidade de ventilação. O rótulo não impõe intubação universal. Instabilidade da parede não exclui dano pulmonar e requer avaliação associada. Evitar analgesia piora hipoventilação e não é uma meta preservar um sinal doloroso para observação.');
-Q('cirttor','Idoso com fraturas costais respira superficialmente por dor e tem dificuldade de eliminar secreções. Qual medida integra a prevenção de complicações?',['Orientar a não respirar fundo para proteger todas as fraturas','Imobilizar rigidamente todo o tórax sem considerar ventilação','Esperar pneumonia antes de intervir na dor','Oferecer analgesia adequada e cuidado respiratório, acompanhando função e evolução'],3,'Analgesia e cuidado respiratório favorecem ventilação e eliminação de secreções, com vigilância da evolução. Inibir inspiração agrava hipoventilação. Compressão rígida indiscriminada pode limitar ventilação. Esperar pneumonia deixa de tratar um mecanismo prevenível de complicação.');
-Q('cirttor','Após trauma, a imagem sugere víscera abdominal no hemitórax. Qual conduta evita uma complicação iatrogênica?',['Presumir que toda imagem torácica escura é pneumotórax e introduzir dreno às cegas','Considerar ruptura diafragmática com herniação e organizar avaliação cirúrgica dirigida','Dar alta porque a lesão está fora da cavidade abdominal','Tratar apenas com broncodilatador para reposicionar a víscera'],1,'Víscera intratorácica sugere lesão diafragmática e exige avaliação cirúrgica; punção ou drenagem cega pode lesar a estrutura herniada. Toda lucência não é ar pleural. A herniação não é benigna por estar no tórax. Broncodilatador não corrige a descontinuidade do diafragma nem a posição visceral.');
-Q('cirttor','Paciente com ferimento transmediastinal apresenta dor e pneumomediastino. Por que a avaliação não pode parar na descrição de ar livre?',['Porque todo pneumomediastino prova ruptura esofágica sem precisar localizar a lesão','Porque o ar elimina a possibilidade de lesão da via aérea','Porque mecanismo, trajeto e investigação dirigida precisam distinguir lesão esofágica, de via aérea e outras origens','Porque ar mediastinal é sempre um achado sem repercussão após trauma'],2,'Ar mediastinal tem origens diferentes; lesão esofágica perdida pode evoluir para mediastinite e a via aérea também precisa ser considerada. A imagem de ar isolada não prova ruptura de uma estrutura específica. Não elimina lesão traqueobrônquica. Chamá-lo sempre de benigno ignora o risco do trajeto transmediastinal.');
-Q('cirttor','Após trauma torácico fechado, surgem alteração eletrocardiográfica e instabilidade sem fonte evidente. Qual abordagem é mais coerente?',['Investigar lesão cardíaca com ECG e biomarcador no contexto, usando ecocardiograma para avaliar repercussão quando indicado','Excluir lesão cardíaca se não houver fratura de esterno','Fazer apenas radiografia de costelas, pois o ECG não modifica o cuidado','Atribuir toda alteração a ansiedade e dispensar monitorização'],0,'ECG, biomarcador e contexto ajudam a investigar lesão cardíaca contusa; instabilidade ou suspeita funcional tornam o ecocardiograma relevante. Fratura de esterno não é requisito. Radiografia de costelas não avalia arritmia ou função cardíaca. Ansiedade não deve explicar automaticamente uma alteração objetiva com instabilidade.');
-Q('cirttor','Durante preparo de drenagem torácica por técnica aberta, qual princípio evita lesão iatrogênica?',['Empurrar trocarte pontiagudo até sentir perda súbita de resistência','Dispensar confirmação da cavidade se houver choque','Manter orifícios fora da pleura para melhorar a fixação','Usar dissecção romba e confirmação apropriada da cavidade, respeitando o feixe intercostal'],3,'Dissecção romba e confirmação apropriada reduzem risco de avanço cego e lesão de estruturas, com respeito ao feixe intercostal. Trocarte empurrado às cegas pode transfixar estruturas. Urgência não torna dispensáveis os cuidados essenciais de acesso. Orifícios fora da pleura provocam drenagem inadequada e fuga aérea pelo trajeto.');
-Q('cirttor','Após cobertura de ferida torácica aberta, um paciente piora respiratória e circulatoriamente. Qual resposta é mais adequada?',['Manter a cobertura intocada até a radiografia, mesmo com deterioração','Reavaliar o selo e a ventilação, tratar hipertensão pleural se presente e providenciar drenagem apropriada','Aumentar apenas sedação porque a cobertura exclui pneumotórax hipertensivo','Prescrever antibiótico como única resposta à piora imediata'],1,'A cobertura pode impedir a saída de ar e precisa ser revista diante de deterioração, com tratamento da ameaça e drenagem definitiva quando indicada. Aguardar imagem com o paciente piorando atrasa intervenção. Sedação não corrige ar sob pressão e a cobertura não exclui o problema. Antibiótico não explica nem resolve isoladamente a piora mecânica imediata.');
-Q('cirttor','Uma equipe avalia toracotomia de reanimação em parada traumática. Qual informação é central para uma seleção apropriada?',['A existência de trauma, independentemente de mecanismo ou evolução, já impõe o procedimento','A possibilidade de radiografia perfeita antes de iniciar qualquer decisão','Mecanismo, sinais de vida, contexto da parada e capacidade de intervenção imediata da equipe','Apenas a idade, sem considerar o restante do quadro'],2,'A seleção depende do mecanismo, dos sinais de vida, do contexto temporal da parada e da estrutura para agir, com melhor perspectiva em cenários penetrantes selecionados. Trauma por si só não indica o procedimento universalmente. A radiografia não deve atrasar uma intervenção de reanimação indicada. Idade isolada não substitui os critérios clínicos e do mecanismo.');
-
-/* Complementos autorais: demais-temas. */
-Q('cirproc','Uma pessoa relata sangue vivo ao evacuar e a anuscopia mostra hemorroidas internas. Também há anemia ferropriva e mudança recente do hábito intestinal. Qual a melhor interpretação?',['Investigar outra fonte de sangramento apesar do achado anal','Encerrar a investigação porque uma lesão sangrante já foi vista','Repetir apenas anuscopia até o sangramento desaparecer','Usar resposta a fibras como teste para excluir neoplasia'],0,'Hemorroidas podem coexistir com neoplasia e outras fontes de perda. Sinais de alarme exigem investigação diagnóstica própria. A opção Encerrar a investigação porque uma lesão sangrante já foi vista não é adequada: identificar uma fonte possível não prova que ela explique toda a repercussão clínica. A opção Repetir apenas anuscopia até o sangramento desaparecer não é adequada: o exame avalia o canal anal e não exclui doença proximal. A opção Usar resposta a fibras como teste para excluir neoplasia não é adequada: melhora sintomática não tem função de teste de exclusão para câncer.');
-Q('cirproc','Uma paciente precisa reduzir manualmente o prolapso depois de evacuar. Apresenta também componente hemorroidário externo volumoso e sintomas persistentes após medidas clínicas. O que deve orientar a decisão?',['Definir tratamento apenas pela cor do sangramento','Escolher ligadura interna como solução de todo componente externo','Ignorar preferência e continência prévia ao escolher cirurgia','Integrar grau do prolapso, componente externo, sintomas e resposta prévia'],3,'Goligher descreve o prolapso interno, mas a doença mista e o impacto dos sintomas também definem quais intervenções podem resolver a queixa. A opção Definir tratamento apenas pela cor do sangramento não é adequada: cor não resume anatomia, impacto funcional ou gravidade. A opção Escolher ligadura interna como solução de todo componente externo não é adequada: a ligadura atua no coxim interno e não resolve necessariamente doença externa volumosa. A opção Ignorar preferência e continência prévia ao escolher cirurgia não é adequada: objetivos e riscos funcionais fazem parte da decisão individualizada.');
-Q('cirproc','Durante ligadura elástica de hemorroida interna, o paciente apresenta dor intensa imediatamente após a aplicação da banda. Qual é a resposta mais apropriada?',['Aplicar outra banda mais distal para reduzir a primeira','Atribuir toda dor à ansiedade sem examinar a banda','Reavaliar o posicionamento e a possibilidade de tecido sensível ter sido incluído','Considerar a dor prova de que o tratamento foi bem executado'],2,'A região abaixo da linha pectínea tem sensibilidade somática. Dor intensa imediata sugere posicionamento inadequado e exige correção, não simples aceitação. A opção Considerar a dor prova de que o tratamento foi bem executado não é adequada: a dor intensa não é um objetivo nem confirma localização correta. A opção Aplicar outra banda mais distal para reduzir a primeira não é adequada: aproximar-se do anoderma pode ampliar o problema doloroso. A opção Atribuir toda dor à ansiedade sem examinar a banda não é adequada: é necessário excluir uma causa técnica reversível.');
-Q('cirproc','Após procedimento hemorroidário, uma pessoa apresenta dor progressiva, febre e dificuldade para urinar. Qual é a melhor conduta conceitual?',['Esperar uma secreção visível antes de reavaliar','Avaliar imediatamente complicação infecciosa ou outra causa relevante','Orientar apenas que toda dor faz parte da recuperação','Tratar a retenção sem investigar a febre'],1,'Febre com dor progressiva e sintomas urinários exige avaliação de possível infecção profunda, retenção e outras complicações; não é seguro presumir evolução habitual. A opção Orientar apenas que toda dor faz parte da recuperação não é adequada: a associação com febre e piora muda a avaliação. A opção Tratar a retenção sem investigar a febre não é adequada: resolver um sintoma não exclui foco infeccioso ou séptico. A opção Esperar uma secreção visível antes de reavaliar não é adequada: complicações profundas podem não drenar para a pele.');
-Q('cirproc','Um paciente apresenta dor anal contínua, febre e grande desconforto ao sentar, mas sem abaulamento evidente à inspeção. Qual hipótese precisa continuar sendo considerada?',['Abscesso anorretal profundo','Fissura idiopática como única hipótese pela ausência de massa','Ausência de infecção porque não há flutuação','Indicação de antibiótico como substituto definitivo da drenagem'],0,'Coleções profundas podem ter poucos sinais externos. O quadro deve orientar avaliação especializada e controle da fonte conforme localização e gravidade. A opção Fissura idiopática como única hipótese pela ausência de massa não é adequada: a dor contínua febril não é o padrão típico da fissura simples. A opção Ausência de infecção porque não há flutuação não é adequada: a profundidade da coleção pode impedir esse achado. A opção Indicação de antibiótico como substituto definitivo da drenagem não é adequada: quando existe coleção, o controle mecânico da fonte costuma ser necessário.');
-Q('cirproc','Uma mulher com lesão obstétrica prévia e continência limitada apresenta fístula anal que atravessa parte importante do esfíncter. O que deve ser priorizado no planejamento?',['Fistulotomia extensa como regra por ser o método mais direto','Escolha baseada apenas no orifício externo','Fechamento externo sem controlar comunicação ou sepse','Mapeamento do trajeto e estratégia que preserve a função esfincteriana'],3,'Anatomia e função prévia devem orientar controle séptico e tratamento definitivo. Abrir indiscriminadamente o trajeto pode agravar incontinência. A opção Fistulotomia extensa como regra por ser o método mais direto não é adequada: a divisão muscular pode ser funcionalmente inaceitável nesse contexto. A opção Escolha baseada apenas no orifício externo não é adequada: ele não mostra toda a relação do trajeto e das ramificações com os músculos. A opção Fechamento externo sem controlar comunicação ou sepse não é adequada: pode manter a doença e favorecer nova coleção.');
-Q('cirproc','Uma pessoa com fissuras laterais e múltiplas apresenta sintomas intestinais associados. Qual abordagem é mais adequada?',['Concluir que o achado não pode ser fissura por estar lateral','Usar melhora temporária da dor para excluir doença de base','Investigar causa secundária antes de tratar como fissura idiopática típica','Indicar esfincterotomia para toda fissura que não é posterior'],2,'Localização atípica e multiplicidade pedem investigação de doença inflamatória, infecção ou neoplasia conforme o caso. A opção Indicar esfincterotomia para toda fissura que não é posterior não é adequada: a causa secundária e o risco funcional precisam ser esclarecidos. A opção Concluir que o achado não pode ser fissura por estar lateral não é adequada: fissuras podem existir nessa posição, mas o padrão é atípico. A opção Usar melhora temporária da dor para excluir doença de base não é adequada: controle sintomático não afasta a causa secundária.');
-Q('cirproc','Depois de drenagem de abscesso, um paciente evolui com orifício que elimina secreção e episódios recorrentes de inflamação. A ressonância mostra ramificações. Qual interpretação orienta o tratamento?',['Antibiótico isolado para eliminar definitivamente qualquer trajeto','Possível fístula complexa que exige planejamento anatômico e controle séptico','Cicatrização normal que dispensa reavaliação','Aplicação da regra de Goodsall como substituto suficiente da imagem'],1,'Drenagem persistente e ramificações sugerem comunicação e extensão que não podem ser resumidas por uma regra de trajeto externo. A opção Cicatrização normal que dispensa reavaliação não é adequada: recorrência e comunicação persistente devem ser investigadas. A opção Aplicação da regra de Goodsall como substituto suficiente da imagem não é adequada: a regra tem limitações especialmente em trajetos complexos e recidivados. A opção Antibiótico isolado para eliminar definitivamente qualquer trajeto não é adequada: o manejo definitivo depende da anatomia e do controle da comunicação.');
-Q('cirproc','Um paciente com massa suspeita na colonoscopia apresenta CEA dentro do intervalo de referência. Qual é a interpretação correta?',['O marcador normal não exclui a neoplasia e não substitui biópsia','O resultado exclui câncer colorretal','A biópsia só pode ser realizada se o marcador subir','É preferível acompanhar apenas o CEA e ignorar a lesão'],0,'CEA tem utilidade em contextos de prognóstico e seguimento, mas sua normalidade não invalida uma lesão suspeita nem dispensa confirmação histológica. A opção O resultado exclui câncer colorretal não é adequada: o teste não tem desempenho para excluir câncer nessa situação. A opção A biópsia só pode ser realizada se o marcador subir não é adequada: a indicação de histologia vem da lesão e do contexto, não desse pré-requisito. A opção É preferível acompanhar apenas o CEA e ignorar a lesão não é adequada: isso pode atrasar diagnóstico e estadiamento.');
-Q('cirproc','A biópsia de uma lesão retal confirma adenocarcinoma. A ressonância mostra ameaça à margem circunferencial. Qual é a melhor próxima etapa de planejamento?',['Operar sem considerar a imagem porque a histologia já está definida','Escolher cirurgia somente pelo sangramento relatado','Usar CEA como substituto da ressonância','Discutir estadiamento e estratégia integrada em equipe multidisciplinar'],3,'O risco para a margem e a anatomia pélvica influenciam tratamento neoadjuvante, cirurgia e controle local; o reto não deve ser planejado apenas como cólon distal. A opção Operar sem considerar a imagem porque a histologia já está definida não é adequada: histologia confirma o diagnóstico, mas não resolve o planejamento da extensão local. A opção Escolher cirurgia somente pelo sangramento relatado não é adequada: o sintoma não resume extensão, margem ou possibilidade de preservação funcional. A opção Usar CEA como substituto da ressonância não é adequada: o marcador não informa o plano mesorretal ou a margem circunferencial.');
-Q('cirproc','Uma pessoa assintomática apresenta teste de sangue oculto fecal positivo em rastreamento. Qual é a abordagem apropriada?',['Presumir hemorroida porque não existe dor abdominal','Dosar CEA como único exame confirmatório','Completar investigação diagnóstica com colonoscopia conforme indicação','Repetir o teste até obter um resultado negativo'],2,'Um teste de rastreamento positivo precisa de investigação capaz de localizar e caracterizar a lesão; repetir o mesmo teste não encerra a avaliação. A opção Repetir o teste até obter um resultado negativo não é adequada: a negatividade posterior não invalida o achado inicial que exigiu investigação. A opção Presumir hemorroida porque não existe dor abdominal não é adequada: neoplasias e outras lesões podem ser assintomáticas. A opção Dosar CEA como único exame confirmatório não é adequada: CEA não confirma nem exclui a causa do teste fecal positivo.');
-Q('cirproc','No pós-operatório colorretal, uma pessoa evolui com piora clínica, dor abdominal e sinais sistêmicos inesperados. Qual raciocínio é prioritário?',['Tratar apenas o sintoma doloroso sem reavaliar','Investigar complicação como deiscência e necessidade de controle da fonte','Atribuir todos os achados ao íleo fisiológico','Aguardar alteração da ferida de pele para suspeitar de vazamento'],1,'Uma evolução sistêmica desfavorável exige buscar causa, incluindo vazamento anastomótico e coleção, e definir tratamento conforme estabilidade e extensão. A opção Atribuir todos os achados ao íleo fisiológico não é adequada: isso pode atrasar reconhecimento de complicação séptica. A opção Aguardar alteração da ferida de pele para suspeitar de vazamento não é adequada: a complicação pode estar profunda com ferida externa preservada. A opção Tratar apenas o sintoma doloroso sem reavaliar não é adequada: analgesia deve acompanhar investigação do mecanismo e não substituí-la.');
-Q('cirproc','Uma paciente apresenta exteriorização de parede retal com pregas concêntricas e incontinência. Como interpretar esse achado?',['Prolapso retal que exige avaliação anatômica e funcional','Prolapso hemorroidário definido apenas pela exteriorização','Indicação de uma única via operatória para todas as pessoas','Garantia de que a operação eliminará toda disfunção prévia'],0,'Pregas concêntricas sugerem prolapso de parede retal. O tratamento deve considerar continência, constipação, reserva fisiológica e anatomia. A opção Prolapso hemorroidário definido apenas pela exteriorização não é adequada: hemorroidas geralmente formam coxins separados por sulcos radiais. A opção Indicação de uma única via operatória para todas as pessoas não é adequada: risco e função tornam a escolha individualizada. A opção Garantia de que a operação eliminará toda disfunção prévia não é adequada: a correção anatômica pode não resolver todos os componentes funcionais.');
-Q('cirproc','Uma pessoa com doença pilonidal crônica desenvolve área dolorosa, quente e com coleção na fenda interglútea. Qual é a prioridade?',['Adiar todo tratamento até uma excisão eletiva','Usar antibiótico como substituto obrigatório da drenagem','Tratar como fístula anal sem examinar a localização e os orifícios','Controlar o abscesso e depois reavaliar a estratégia definitiva'],3,'A fase aguda com pus exige controle da coleção. O tratamento definitivo da doença crônica pode ser planejado após essa avaliação e controle. A opção Adiar todo tratamento até uma excisão eletiva não é adequada: isso mantém uma coleção dolorosa e potencialmente complicada. A opção Usar antibiótico como substituto obrigatório da drenagem não é adequada: medicação não elimina mecanicamente a coleção. A opção Tratar como fístula anal sem examinar a localização e os orifícios não é adequada: doença pilonidal e fístula anal têm anatomias e estratégias diferentes.');
-Q('cirproc','A biópsia de lesão do canal anal revela carcinoma escamoso. Sem uma emergência cirúrgica associada, qual é a orientação geral mais adequada?',['Tratar como condiloma sem estadiamento por associação com HPV','Aplicar automaticamente o protocolo de câncer de cólon','Estadiar e discutir quimiorradioterapia em equipe especializada','Indicar amputação como rotina inicial em qualquer estágio'],2,'A histologia escamosa do canal anal costuma orientar estratégia diferente da cirurgia primária do adenocarcinoma retal; o plano é definido por estágio e particularidades. A opção Indicar amputação como rotina inicial em qualquer estágio não é adequada: cirurgia radical não é a conduta inicial universal desse tumor. A opção Tratar como condiloma sem estadiamento por associação com HPV não é adequada: neoplasia confirmada exige avaliação oncológica própria. A opção Aplicar automaticamente o protocolo de câncer de cólon não é adequada: localização e histologia modificam o tratamento.');
-Q('cirproc','Uma lesão descrita como verruga perianal passa a ter área endurecida, ulcerada e com sangramento. Qual é a atitude mais apropriada?',['Escolher cirurgia radical sem confirmação histológica','Reavaliar o diagnóstico e biopsiar a região suspeita quando indicado','Aplicar apenas tratamento tópico sem examinar a área ulcerada','Excluir neoplasia porque a pessoa já teve condiloma'],1,'Alteração persistente e características suspeitas exigem investigar neoplasia ou outra causa, mesmo quando há verrugas concomitantes. A opção Aplicar apenas tratamento tópico sem examinar a área ulcerada não é adequada: isso pode ocultar ou retardar o diagnóstico de uma lesão distinta. A opção Excluir neoplasia porque a pessoa já teve condiloma não é adequada: condiloma prévio não protege contra câncer ou outras lesões. A opção Escolher cirurgia radical sem confirmação histológica não é adequada: a investigação deve definir diagnóstico e extensão antes de uma estratégia oncológica eletiva.');
-Q('cirremit','Uma pessoa sem diabetes apresenta hiperglicemia depois de grande trauma. Qual mecanismo explica melhor esse achado?',['Resposta ao estresse com resistência à insulina e produção hepática de glicose','Ausência obrigatória de qualquer produção de insulina','Efeito exclusivo do alimento oferecido','Sinal de que o músculo deixou de sofrer catabolismo'],0,'Hormônios contrarreguladores e inflamação podem manter glicose elevada mesmo com insulina circulante; o contexto não se resume à ingestão de açúcar. A opção Ausência obrigatória de qualquer produção de insulina não é adequada: a resistência pode coexistir com níveis circulantes de insulina. A opção Efeito exclusivo do alimento oferecido não é adequada: produção endógena e resposta hormonal também participam. A opção Sinal de que o músculo deixou de sofrer catabolismo não é adequada: hiperglicemia e perda muscular podem coexistir no estresse grave.');
-Q('cirremit','No pós-operatório, uma pessoa apresenta oligúria, edema e balanço muito positivo. Qual é a melhor abordagem antes de prescrever nova infusão?',['Oferecer volume repetidamente até normalizar a diurese','Classificar toda oligúria como retenção hormonal benigna','Suspender qualquer avaliação por haver edema','Reavaliar perfusão, congestão, função renal e causas obstrutivas'],3,'Diurese baixa isolada não demonstra responsividade a fluidos. O mecanismo precisa ser definido para evitar agravamento da sobrecarga. A opção Oferecer volume repetidamente até normalizar a diurese não é adequada: pode piorar edema e não corrigir o mecanismo dominante. A opção Classificar toda oligúria como retenção hormonal benigna não é adequada: hipoperfusão, obstrução e lesão renal precisam ser consideradas. A opção Suspender qualquer avaliação por haver edema não é adequada: edema não descreve sozinho a perfusão nem a causa da disfunção.');
-Q('cirremit','Uma pessoa com inflamação persistente apresenta albumina baixa. A equipe quer usar o resultado isolado para quantificar desnutrição aguda. Qual é a crítica correta?',['Albumina normal excluiria todo risco nutricional','Albumina baixa prova que suporte nutricional não terá benefício','Albumina também é influenciada por fase aguda e distribuição de fluidos','Albumina mede exclusivamente ingestão proteica recente'],2,'A avaliação nutricional deve integrar história, ingestão, perda funcional e contexto. A concentração de uma proteína de fase aguda negativa não é um medidor isolado da nutrição. A opção Albumina mede exclusivamente ingestão proteica recente não é adequada: inflamação e outras condições alteram sua concentração. A opção Albumina normal excluiria todo risco nutricional não é adequada: um resultado isolado não substitui avaliação clínica e funcional. A opção Albumina baixa prova que suporte nutricional não terá benefício não é adequada: o achado não define inutilidade do tratamento nutricional.');
-Q('cirremit','Após uma cirurgia de grande porte, a equipe aplica medidas de analgesia, mobilização, nutrição e cuidado com fluidos. Qual é o objetivo integrado?',['Manter repouso e jejum prolongados como metas universais','Reduzir efeitos da agressão e favorecer recuperação funcional segura','Garantir alta precoce independentemente da evolução','Eliminar completamente a resposta inflamatória com uma medida isolada'],1,'Recuperação acelerada é um conjunto de medidas coordenadas, com indicação adaptada à segurança e à condição clínica, não uma ordem de alta apressada. A opção Garantir alta precoce independentemente da evolução não é adequada: critérios clínicos e reconhecimento de complicações continuam essenciais. A opção Eliminar completamente a resposta inflamatória com uma medida isolada não é adequada: o estresse é multifatorial e não desaparece por um único componente. A opção Manter repouso e jejum prolongados como metas universais não é adequada: esses fatores podem dificultar a recuperação quando não há indicação específica.');
-Q('cirremit','Uma ferida apresenta tecido desvitalizado e contaminação, embora seja tecnicamente possível aproximar as bordas. Qual princípio deve orientar a decisão?',['Preparar o leito e escolher o momento de fechamento conforme viabilidade e contaminação','Suturar sob maior tensão para impedir deiscência','Priorizar aparência fechada mesmo mantendo fonte infecciosa','Considerar que toda ferida precisa ficar aberta definitivamente'],0,'Fechar pele não corrige tecido sem perfusão nem controla uma fonte infecciosa; a estratégia de cobertura deve respeitar o estado do leito. A opção Suturar sob maior tensão para impedir deiscência não é adequada: estrangular bordas pode agravar isquemia e falha do reparo. A opção Priorizar aparência fechada mesmo mantendo fonte infecciosa não é adequada: o objetivo é reparo seguro, não apenas ocultar a ferida. A opção Considerar que toda ferida precisa ficar aberta definitivamente não é adequada: algumas podem ser fechadas depois de preparo e reavaliação adequados.');
-Q('cirremit','Uma cicatriz ultrapassa os limites da lesão original e reaparece após excisão isolada. Qual é a interpretação mais adequada?',['Cicatriz hipertrófica definida por ultrapassar as bordas','Prova de infecção que exige antibiótico em todos os casos','Garantia de cura com excisões repetidas isoladas','Queloide com necessidade de discutir abordagem multimodal'],3,'Extensão além das bordas e recorrência são compatíveis com queloide. Excisão isolada pode não controlar a doença e a escolha depende do caso. A opção Cicatriz hipertrófica definida por ultrapassar as bordas não é adequada: essa característica favorece queloide, enquanto hipertrófica permanece nos limites originais. A opção Prova de infecção que exige antibiótico em todos os casos não é adequada: cicatrização anormal não é sinônimo de infecção. A opção Garantia de cura com excisões repetidas isoladas não é adequada: a recorrência pode persistir sem estratégia complementar.');
-Q('cirremit','Uma pessoa com cicatriz antiga de queimadura desenvolve úlcera endurecida e de evolução atípica. Qual é o próximo raciocínio?',['Escolher antibiótico como teste que exclui neoplasia','Desconsiderar a lesão por estar em área já cicatrizada','Investigar possível neoplasia, incluindo biópsia quando indicada','Atribuir sempre a lesão à fragilidade da cicatriz'],2,'Uma lesão nova ou que muda em cicatriz antiga pode representar malignização, entre outros diagnósticos. A investigação não deve ser substituída por curativo indefinido. A opção Atribuir sempre a lesão à fragilidade da cicatriz não é adequada: essa explicação pode atrasar o diagnóstico de carcinoma. A opção Escolher antibiótico como teste que exclui neoplasia não é adequada: melhora infecciosa não afasta tumor subjacente. A opção Desconsiderar a lesão por estar em área já cicatrizada não é adequada: uma cicatriz não torna o tecido imune a doença nova.');
-Q('cirremit','Uma pessoa usa corticoide e apresenta cicatrização desfavorável. Qual é a abordagem mais completa?',['Suspender por conta própria todo tratamento corticoide','Rever perfusão, infecção, nutrição e necessidade do fármaco, sem prescrição automática de vitamina','Atribuir toda a falha exclusivamente ao corticoide','Usar vitamina A como substituto do controle de infecção'],1,'Corticoide é um fator possível, mas cicatrização é multifatorial. A eventual suplementação exige indicação e avaliação de risco, não uma regra descontextualizada. A opção Atribuir toda a falha exclusivamente ao corticoide não é adequada: isso ignora causas tratáveis que podem coexistir. A opção Usar vitamina A como substituto do controle de infecção não é adequada: suplementação não drena coleção nem resolve tecido desvitalizado. A opção Suspender por conta própria todo tratamento corticoide não é adequada: a retirada pode ter riscos e deve ser planejada segundo a indicação e o contexto.');
-Q('cirremit','Uma queimadura tem regiões rosadas e úmidas ao lado de áreas pálidas e pouco sensíveis. Qual avaliação é mais adequada?',['Classificar profundidade por áreas e reavaliar sua evolução','Classificar toda a lesão como superficial porque existe uma bolha','Considerar área indolor necessariamente menos grave','Tratar a classificação inicial como imutável'],0,'Queimaduras podem ser heterogêneas e evolutivas. Perfusão, sensibilidade e aspecto do leito ajudam a definir potencial de cicatrização e necessidade de cobertura. A opção Classificar toda a lesão como superficial porque existe uma bolha não é adequada: bolha não define sozinha a profundidade de todas as áreas. A opção Considerar área indolor necessariamente menos grave não é adequada: lesão profunda pode destruir terminações nervosas. A opção Tratar a classificação inicial como imutável não é adequada: a zona de estase pode recuperar ou aprofundar conforme a evolução.');
-Q('cirremit','Uma pessoa tem queimadura pequena em extensão, porém profunda na mão. Qual fator impede decidir a gravidade apenas pela superfície?',['Toda área pequena é de manejo doméstico','A ausência de grande extensão exclui risco de sequela','A dor é o único critério para necessidade de encaminhamento','O risco funcional da região e a profundidade exigem avaliação específica'],3,'A extensão é apenas um componente da gravidade. Mãos, mecanismo e profundidade podem justificar cuidado especializado mesmo em área pequena. A opção Toda área pequena é de manejo doméstico não é adequada: função, profundidade e mecanismo podem tornar o quadro complexo. A opção A ausência de grande extensão exclui risco de sequela não é adequada: retrações e dano profundo podem gerar limitação importante. A opção A dor é o único critério para necessidade de encaminhamento não é adequada: sensibilidade isolada não resume perfusão, profundidade e função.');
-Q('cirremit','Na evolução de uma queimadura, uma área antes intermediária fica mais profunda após hipoperfusão e edema. Qual conceito explica melhor esse fenômeno?',['Hiperemia periférica significa sempre necrose irreversível','Aprofundamento confirma que a área inicial era apenas eritema inofensivo','Perda de tecido potencialmente viável na zona de estase','Toda queimadura já tem profundidade definitiva no primeiro exame'],2,'A zona de estase tem perfusão vulnerável e pode aprofundar quando há agressão adicional; isso justifica reavaliação e cuidado sistêmico e local. A opção Toda queimadura já tem profundidade definitiva no primeiro exame não é adequada: a lesão pode evoluir e o primeiro aspecto tem limitações. A opção Hiperemia periférica significa sempre necrose irreversível não é adequada: a zona de hiperemia tende a recuperar se não houver agressão adicional. A opção Aprofundamento confirma que a área inicial era apenas eritema inofensivo não é adequada: a evolução deve ser interpretada pelo mecanismo e pela perfusão, não por essa conclusão simplista.');
-Q('cirremit','Uma pessoa com queimadura extensa mantém oligúria enquanto recebe progressivamente mais fluidos e passa a apresentar edema importante. Qual é o passo mais apropriado?',['Recomeçar o cálculo a partir da internação','Reavaliar os mecanismos da oligúria e titular suporte pelo conjunto clínico','Aumentar fluidos indefinidamente porque toda oligúria é falta de volume','Desconsiderar todo volume administrado antes da chegada'],1,'Fórmulas orientam o início, mas diurese reduzida pode ter múltiplas causas. Sobrecarga agrava edema e pode causar novas complicações. A opção Aumentar fluidos indefinidamente porque toda oligúria é falta de volume não é adequada: lesão renal, obstrução e sobrecarga precisam entrar no raciocínio. A opção Desconsiderar todo volume administrado antes da chegada não é adequada: o suporte prévio faz parte do balanço e do planejamento. A opção Recomeçar o cálculo a partir da internação não é adequada: o referencial temporal é o evento da queimadura, conforme a fórmula usada.');
-Q('cirremit','Após queimadura elétrica, um membro fica tenso, doloroso e com disfunção, apesar de pouca área de pele lesada. Qual distinção técnica é essencial?',['Escarotomia libera escara restritiva, enquanto fasciotomia aborda compartimentos musculares','Escarotomia e fasciotomia são nomes intercambiáveis','Pouca pele queimada exclui dano muscular','Pulso detectável exclui toda síndrome compartimental'],0,'Dano elétrico profundo pode causar síndrome compartimental. Liberar a pele queimada não garante descompressão dos compartimentos musculares. A opção Escarotomia e fasciotomia são nomes intercambiáveis não é adequada: os procedimentos atuam em estruturas e indicações diferentes. A opção Pouca pele queimada exclui dano muscular não é adequada: a eletricidade pode causar lesão interna desproporcional à pele. A opção Pulso detectável exclui toda síndrome compartimental não é adequada: pressão compartimental relevante pode existir com pulso presente.');
-Q('cirremit','Uma pessoa retirada de incêndio em ambiente fechado apresenta sintomas compatíveis com intoxicação, mas a oximetria habitual parece normal. Qual interpretação é correta?',['A leitura normal demonstra ausência de exposição tóxica','Apenas a área de queimadura cutânea define intoxicação inalatória','Sintomas só podem ser atribuídos à ansiedade se a saturação estiver normal','A leitura não exclui intoxicação por monóxido de carbono'],3,'A carboxi-hemoglobina pode tornar a leitura habitual enganosa. A história, a avaliação clínica e a mensuração específica orientam a investigação. A opção A leitura normal demonstra ausência de exposição tóxica não é adequada: o método tem limitação nessa situação. A opção Apenas a área de queimadura cutânea define intoxicação inalatória não é adequada: exposição respiratória pode ser relevante sem grande lesão de pele. A opção Sintomas só podem ser atribuídos à ansiedade se a saturação estiver normal não é adequada: essa inferência ignora intoxicação potencialmente grave.');
-Q('cirvasc','Uma pessoa com diabetes apresenta ferida no pé e pulsos distais reduzidos. O índice tornozelo-braquial é elevado. Qual interpretação é mais adequada?',['Excluir doença arterial porque o índice não está baixo','Tratar a ferida apenas com curativo e ignorar a circulação','Considerar artérias incompressíveis e complementar a avaliação de perfusão','Interpretar o índice alto como prova de perfusão excelente'],2,'Calcificação pode impedir compressão adequada e gerar índice enganoso. Ferida e exame físico exigem correlação com testes distais e avaliação vascular. A opção Interpretar o índice alto como prova de perfusão excelente não é adequada: o valor pode refletir rigidez vascular e não fluxo adequado. A opção Excluir doença arterial porque o índice não está baixo não é adequada: a incompressibilidade é uma limitação conhecida do exame. A opção Tratar a ferida apenas com curativo e ignorar a circulação não é adequada: a falta de perfusão pode impedir cicatrização e ameaçar o membro.');
-Q('cirvasc','Uma pessoa tabagista tem dor de panturrilha que aparece de forma reprodutível durante a caminhada e melhora ao parar. Sem ferida ou dor em repouso, qual é a abordagem inicial mais adequada?',['Desconsiderar doença arterial porque o pulso pode ainda ser detectado','Confirmar a hipótese vascular e otimizar exercício e prevenção cardiovascular','Revascularizar toda lesão antes de tentar tratamento apropriado','Tratar apenas a dor sem abordar tabagismo e risco sistêmico'],1,'Claudicação estável pede avaliação diagnóstica e tratamento do risco sistêmico. Revascularização é considerada de acordo com limitação persistente e contexto. A opção Revascularizar toda lesão antes de tentar tratamento apropriado não é adequada: intervenção não é obrigatória para toda claudicação. A opção Tratar apenas a dor sem abordar tabagismo e risco sistêmico não é adequada: doença arterial periférica marca risco cardiovascular importante. A opção Desconsiderar doença arterial porque o pulso pode ainda ser detectado não é adequada: pulso presente não exclui estenose hemodinamicamente relevante no esforço.');
-Q('cirvasc','Uma pessoa com dor em repouso, úlcera e suspeita de doença arterial também apresenta infecção no pé. Qual organização do raciocínio é mais útil?',['Integrar ferida, isquemia e infecção na avaliação da ameaça ao membro','Definir gravidade apenas pelo diâmetro da úlcera','Tratar infecção como prova de que não há isquemia','Prescrever exercício como única resposta para toda dor em repouso'],0,'A ameaça não se resume a uma estenose ou a um sintoma isolado. A estrutura WIfI ajuda a combinar componentes que orientam tratamento e possibilidade de salvamento. A opção Definir gravidade apenas pelo diâmetro da úlcera não é adequada: tamanho isolado não informa perfusão e infecção. A opção Tratar infecção como prova de que não há isquemia não é adequada: as condições frequentemente coexistem e se agravam. A opção Prescrever exercício como única resposta para toda dor em repouso não é adequada: esse quadro exige avaliação de ameaça ao membro e possibilidade de revascularização.');
-Q('cirvasc','Uma pessoa com claudicação também tem insuficiência cardíaca. A equipe considera cilostazol. Qual é o cuidado correto?',['Usar o fármaco sem considerar a comorbidade','Abandonar toda prevenção vascular porque esse fármaco não serve','Indicar amputação porque uma opção medicamentosa está limitada','Reconhecer a contraindicação e planejar alternativas de tratamento'],3,'Cilostazol é contraindicado em insuficiência cardíaca. O manejo da claudicação continua com exercício, prevenção cardiovascular e avaliação de outras estratégias. A opção Usar o fármaco sem considerar a comorbidade não é adequada: a contraindicação deve ser respeitada. A opção Abandonar toda prevenção vascular porque esse fármaco não serve não é adequada: o tratamento envolve várias medidas independentes dele. A opção Indicar amputação porque uma opção medicamentosa está limitada não é adequada: não há justificativa para amputação por essa razão.');
-Q('cirvasc','Um paciente com membro frio passa de parestesia para fraqueza durante a avaliação. Qual é a implicação mais importante?',['Considerar melhora porque a dor pode diminuir com perda sensitiva','Usar ausência de lesão de pele como prova de viabilidade preservada','Há ameaça crescente que exige reavaliação vascular e ação sem atraso evitável','Aguardar terminar toda investigação da fonte embólica antes de tratar'],2,'Déficit motor sugere ameaça imediata à viabilidade. A prioridade é organizar o salvamento, usando exames que não adiem intervenção necessária. A opção Aguardar terminar toda investigação da fonte embólica antes de tratar não é adequada: a etiologia é importante, mas não pode atrasar um membro em deterioração. A opção Considerar melhora porque a dor pode diminuir com perda sensitiva não é adequada: redução da percepção pode refletir progressão neurológica e não recuperação. A opção Usar ausência de lesão de pele como prova de viabilidade preservada não é adequada: nervo e músculo podem sofrer antes de alterações cutâneas evidentes.');
-Q('cirvasc','Uma pessoa com fibrilação atrial apresenta isquemia súbita de um membro, enquanto o contralateral não tem sinais clínicos de doença arterial crônica. Qual mecanismo é mais sugerido?',['Neuropatia isolada como diagnóstico suficiente','Embolia arterial','Trombose venosa como explicação obrigatória de toda frialdade','Aterosclerose crônica como única causa possível'],1,'Início abrupto, contexto cardíaco embólico e ausência de doença contralateral importante favorecem embolia; a viabilidade deve ser avaliada em paralelo. A opção Trombose venosa como explicação obrigatória de toda frialdade não é adequada: o padrão precisa ser distinguido da isquemia arterial e do edema venoso maciço. A opção Aterosclerose crônica como única causa possível não é adequada: a história e a assimetria sugerem uma fonte embólica. A opção Neuropatia isolada como diagnóstico suficiente não é adequada: frialdade e alteração de perfusão exigem investigação vascular.');
-Q('cirvasc','Depois de revascularização, o membro tem pulso, porém fica tenso e com dor desproporcional, pior à movimentação passiva. Qual é a prioridade?',['Investigar síndrome compartimental e organizar tratamento quando indicado','Excluir complicação porque a macrocirculação foi restaurada','Esperar desaparecer o pulso para considerar descompressão','Tratar apenas com analgésico sem reavaliar o membro'],0,'A reperfusão pode gerar edema muscular em compartimentos fechados. Pulsos presentes não excluem pressão tecidual perigosa. A opção Excluir complicação porque a macrocirculação foi restaurada não é adequada: fluxo arterial e pressão compartimental são dimensões diferentes. A opção Esperar desaparecer o pulso para considerar descompressão não é adequada: esse é um sinal tardio e não deve ser aguardado. A opção Tratar apenas com analgésico sem reavaliar o membro não é adequada: analgesia não corrige compressão tecidual progressiva.');
-Q('cirvasc','Um membro apresenta anestesia, paralisia e rigidez em contexto de isquemia arterial aguda. Qual é o principal cuidado ao discutir revascularização?',['Restaurar fluxo a qualquer custo porque sempre haverá recuperação','Usar ausência de pulso como único critério de irreversibilidade','Adiar toda avaliação porque a dor pode já não ser intensa','Considerar irreversibilidade e risco sistêmico da reperfusão'],3,'Quando o membro já é irreversível, restaurar fluxo pode não recuperar função e pode liberar carga metabólica perigosa. A decisão deve ser especializada. A opção Restaurar fluxo a qualquer custo porque sempre haverá recuperação não é adequada: tecido irreversivelmente lesado não se torna viável apenas com fluxo. A opção Usar ausência de pulso como único critério de irreversibilidade não é adequada: a classificação integra exame neurológico, rigidez e sinais circulatórios. A opção Adiar toda avaliação porque a dor pode já não ser intensa não é adequada: a ausência de dor por anestesia pode representar gravidade.');
-Q('cirvasc','Uma pessoa com dissecção da aorta descendente desenvolve dor abdominal e evidência de má perfusão visceral. Qual é a interpretação correta?',['Dor visceral prova que a dissecção deixou de importar','Basta observar porque a classificação de Stanford não mudou','Tipo B complicado que exige avaliação para intervenção especializada','Tipo B sempre benigno por não envolver a ascendente'],2,'Comprometimento de ramos e órgãos muda a estratégia. A localização descendente não implica tratamento exclusivamente clínico em todos os casos. A opção Tipo B sempre benigno por não envolver a ascendente não é adequada: complicações podem ameaçar a vida e a viabilidade de órgãos. A opção Dor visceral prova que a dissecção deixou de importar não é adequada: pode ser consequência direta da má perfusão causada pela dissecção. A opção Basta observar porque a classificação de Stanford não mudou não é adequada: o estado de complicação é decisivo além da letra da classificação.');
-Q('cirvasc','Após reparo endovascular de aneurisma de aorta, um paciente assintomático quer abandonar o seguimento. Qual explicação é mais adequada?',['Só o tamanho da cicatriz de acesso define a durabilidade','Complicações da endoprótese e do saco podem ocorrer sem sintoma inicial','A ausência de dor garante que a endoprótese nunca falhará','EVAR elimina qualquer necessidade de imagem futura'],1,'Vigilância faz parte do EVAR. Endoleak, migração e crescimento do saco podem exigir reavaliação e eventualmente tratamento. A opção A ausência de dor garante que a endoprótese nunca falhará não é adequada: complicações tardias podem ser silenciosas. A opção EVAR elimina qualquer necessidade de imagem futura não é adequada: o método exige acompanhamento definido pela anatomia e evolução. A opção Só o tamanho da cicatriz de acesso define a durabilidade não é adequada: a cicatriz não informa vedação e integridade da reconstrução aórtica.');
-Q('cirvasc','A imagem de controle após EVAR mostra fluxo para o saco a partir de ramos, sem evidência descrita de falha nas zonas de vedação. Qual é a classificação conceitual mais compatível?',['Endoleak por fluxo retrógrado de ramos, cujo manejo depende da repercussão no saco','Falha de vedação obrigatória nas extremidades da prótese','Rotura livre confirmada apenas pela existência de qualquer endoleak','Achado que dispensa todo acompanhamento'],0,'Esse mecanismo corresponde ao endoleak de ramos. Tipo e evolução do saco orientam vigilância ou intervenção, sem uma conduta única para todo achado. A opção Falha de vedação obrigatória nas extremidades da prótese não é adequada: o mecanismo descrito é diferente de perda de selamento proximal ou distal. A opção Rotura livre confirmada apenas pela existência de qualquer endoleak não é adequada: endoleak precisa ser classificado e correlacionado com a repercussão clínica e anatômica. A opção Achado que dispensa todo acompanhamento não é adequada: o comportamento do saco e a evolução do vazamento precisam ser monitorados.');
-Q('cirvasc','Uma pessoa com dor torácica súbita para o dorso apresenta assimetria de pulsos. Antes de aplicar automaticamente um protocolo antitrombótico, qual hipótese precisa ser considerada?',['Dor musculoesquelética definida apenas pela localização dorsal','Infarto como única causa possível de toda dor torácica','Ausência de doença grave porque não foi vista massa pulsátil','Síndrome aórtica aguda'],3,'Dissecção pode imitar síndrome coronariana e pode ser agravada por tratamento antitrombótico indiscriminado no contexto agudo. A investigação deve integrar os sinais de alarme. A opção Dor musculoesquelética definida apenas pela localização dorsal não é adequada: o início e a assimetria de pulsos são sinais de alarme que pedem outra investigação. A opção Infarto como única causa possível de toda dor torácica não é adequada: as síndromes aórticas e outros diagnósticos precisam ser diferenciados. A opção Ausência de doença grave porque não foi vista massa pulsátil não é adequada: massa abdominal não é pré-requisito para suspeitar de síndrome aórtica torácica.');
-Q('cirvasc','Uma pessoa com úlcera próxima ao maléolo apresenta edema e pigmentação, mas também pulsos reduzidos e extremidade fria. O que deve preceder a escolha da compressão?',['Aplicar compressão sem avaliar a circulação porque todo edema responde igual','Descartar doença venosa porque existe sinal arterial','Avaliar perfusão arterial e possibilidade de doença mista','Assumir causa exclusivamente venosa pela localização'],2,'Características venosas não excluem componente arterial. A estratégia de compressão e tratamento deve respeitar a perfusão do membro. A opção Assumir causa exclusivamente venosa pela localização não é adequada: localização e aspecto não excluem doença arterial associada. A opção Aplicar compressão sem avaliar a circulação porque todo edema responde igual não é adequada: compressão inadequada pode ser problemática na isquemia relevante. A opção Descartar doença venosa porque existe sinal arterial não é adequada: mecanismos arteriais e venosos podem coexistir.');
-Q('cirvasc','Uma pessoa com probabilidade clínica alta de TVP tem primeiro ultrassom sem trombose no território avaliado. Qual é a melhor abordagem conceitual?',['Concluir que todo edema unilateral é linfedema quando a primeira imagem é negativa','Reavaliar probabilidade, território e necessidade de exame seriado ou complementar','Declarar exclusão definitiva independentemente da discordância clínica','Pedir D-dímero como substituto universal de toda imagem adicional'],1,'Resultados devem ser interpretados conforme técnica, território e contexto. Suspeita persistente pode demandar nova investigação conforme protocolo. A opção Declarar exclusão definitiva independentemente da discordância clínica não é adequada: um resultado isolado não resolve todas as situações de alta suspeita. A opção Pedir D-dímero como substituto universal de toda imagem adicional não é adequada: o teste tem papel específico e não substitui a avaliação dirigida em probabilidade alta. A opção Concluir que todo edema unilateral é linfedema quando a primeira imagem é negativa não é adequada: há vários diferenciais e a hipótese trombótica ainda pode exigir esclarecimento.');
-Q('cirvasc','Uma pessoa com TVP proximal aguda apresenta contraindicação relevante à anticoagulação. Qual é a interpretação correta sobre filtro de veia cava?',['Pode ser discutido por uma indicação específica, com plano de reavaliação','É o tratamento obrigatório de toda TVP','Permite ignorar a causa da contraindicação e o seguimento','Substitui todo tratamento e impede qualquer novo evento trombótico'],0,'Filtro não dissolve trombo nem é rotina para quem pode anticoagular. A indicação depende do contexto e da contraindicação, com reavaliação posterior. A opção É o tratamento obrigatório de toda TVP não é adequada: a maioria dos casos não exige filtro e é tratada conforme estratégia antitrombótica. A opção Permite ignorar a causa da contraindicação e o seguimento não é adequada: o risco hemorrágico e a necessidade futura de anticoagulação devem ser reavaliados. A opção Substitui todo tratamento e impede qualquer novo evento trombótico não é adequada: o dispositivo tem limitações e complicações e não garante essa proteção absoluta.');
-Q('ciresof','Adulto mantém pirose apesar de IBP. A endoscopia não demonstrou lesão conclusiva e nunca houve comprovação objetiva de refluxo. Ele pede fundoplicatura. Qual o próximo raciocínio?',['Indicar operação como teste terapêutico','Rever uso do tratamento e documentar o mecanismo dos sintomas','Considerar toda pirose persistente como Barrett','Aumentar indefinidamente o IBP sem reavaliar'],1,'Resposta esperada: a persistência do sintoma exige avaliar adesão, modo de uso e refluxo antes de escolher intervenção invasiva. Por que as demais não servem: A opção «Indicar operação como teste terapêutico» não é adequada porque a cirurgia não deve funcionar como teste para uma doença ainda não demonstrada. A opção «Considerar toda pirose persistente como Barrett» não é adequada porque Barrett depende de critérios endoscópicos e histológicos, não da intensidade da pirose. A opção «Aumentar indefinidamente o IBP sem reavaliar» não é adequada porque o sintoma pode ter outro mecanismo e a escalada cega não resolve o diagnóstico.');
-Q('ciresof','Pessoa com DRGE previamente comprovada continua sintomática durante tratamento adequadamente usado. A equipe quer saber se os sintomas ainda se relacionam a episódios de refluxo. Qual investigação pode responder a essa pergunta?',['Esofagograma isolado para quantificar exposição ácida','Endoscopia isolada para correlacionar todos os episódios com os sintomas','ImpedanciopHmetria no contexto do tratamento em curso, conforme indicação','Manometria como medida direta da acidez'],2,'Resposta esperada: na DRGE já comprovada, a investigação de sintomas persistentes pode avaliar refluxo apesar da terapia; a pergunta difere da comprovação inicial da doença. Por que as demais não servem: A opção «Esofagograma isolado para quantificar exposição ácida» não é adequada porque descreve anatomia e trânsito, mas não quantifica a associação entre refluxo e sintoma como o teste proposto. A opção «Endoscopia isolada para correlacionar todos os episódios com os sintomas» não é adequada porque a endoscopia pode mostrar lesões, mas não fornece a correlação temporal pretendida entre episódios de refluxo e sintomas. A opção «Manometria como medida direta da acidez» não é adequada porque a manometria estuda motilidade, não mede diretamente exposição ácida.');
-Q('ciresof','Paciente com refluxo comprovado foi selecionado para cirurgia. Refere também dificuldade para engolir. Qual etapa evita tratar um distúrbio motor como se fosse apenas refluxo?',['Estudo manométrico antes da operação','Dispensar investigação porque a pirose melhorou','Indicar fundoplicatura total sem estudar a disfagia','Usar apenas o grau da esofagite para excluir acalasia'],0,'Resposta esperada: avaliar a motilidade ajuda a excluir distúrbios como acalasia e a planejar a intervenção. Por que as demais não servem: A opção «Dispensar investigação porque a pirose melhorou» não é adequada porque a resposta da pirose não explica a disfagia nem exclui distúrbio motor. A opção «Indicar fundoplicatura total sem estudar a disfagia» não é adequada porque o estudo motor ajuda a evitar uma intervenção inadequada em distúrbio de motilidade e participa do planejamento. A opção «Usar apenas o grau da esofagite para excluir acalasia» não é adequada porque achados de mucosa não substituem avaliação do mecanismo da disfagia e da motilidade.');
-Q('ciresof','Durante seguimento de Barrett, endoscopia mostra nova área nodular. A pessoa estava sem displasia nas amostras anteriores. Qual a conduta mais coerente?',['Manter apenas o calendário anterior','Ablacionar toda a área sem estadiar a lesão visível','Considerar a lesão benigna porque não há dor','Avaliar a lesão visível para ressecção e estadiamento em equipe especializada'],3,'Resposta esperada: a lesão focal pode conter doença subestimada e a ressecção endoscópica fornece dados para o planejamento. Por que as demais não servem: A opção «Manter apenas o calendário anterior» não é adequada porque um achado novo suspeito exige investigação própria, independentemente das amostras antigas. A opção «Ablacionar toda a área sem estadiar a lesão visível» não é adequada porque a lesão visível precisa de avaliação de profundidade e histologia antes de uma estratégia apenas ablativa. A opção «Considerar a lesão benigna porque não há dor» não é adequada porque neoplasia superficial pode não causar dor.');
-Q('ciresof','Pessoa operada por refluxo apresenta disfagia persistente. A equipe suspeita de estreitamento ou migração da válvula. Qual decisão deve preceder uma nova intervenção?',['Prescrever apenas mais supressão ácida para todos','Reavaliar anatomia e função da junção','Classificar toda disfagia como falha antirrefluxo e repetir a válvula','Indicar nova fundoplicatura sem investigar'],1,'Resposta esperada: a disfagia após cirurgia pode ter causas anatômicas ou funcionais distintas, que precisam ser definidas antes do retratamento. Por que as demais não servem: A opção «Prescrever apenas mais supressão ácida para todos» não é adequada porque supressão ácida não corrige necessariamente obstrução ou problema anatômico. A opção «Classificar toda disfagia como falha antirrefluxo e repetir a válvula» não é adequada porque disfagia persistente também pode decorrer de obstrução, alteração anatômica ou distúrbio funcional. A opção «Indicar nova fundoplicatura sem investigar» não é adequada porque reoperar sem identificar o mecanismo pode repetir ou agravar o problema.');
-Q('ciresof','Paciente com DRGE objetiva relata melhora da queimação com IBP, mas mantém regurgitação volumosa. Qual explicação conecta corretamente mecanismo e sintoma?',['A supressão de ácido corrige diretamente o defeito do hiato','A melhora da pirose comprova normalização de todo refluxo de volume','Reduzir acidez não impede necessariamente refluxo de volume','Regurgitação volumosa dispensa investigar retenção e motilidade'],2,'Resposta esperada: o tratamento antissecretor muda a agressividade do conteúdo, mas o componente mecânico pode persistir. Por que as demais não servem: A opção «A supressão de ácido corrige diretamente o defeito do hiato» não é adequada porque o fármaco altera a acidez e não reconstrói a anatomia hiatal. A opção «A melhora da pirose comprova normalização de todo refluxo de volume» não é adequada porque resposta ao componente ácido não demonstra correção de todo mecanismo de regurgitação. A opção «Regurgitação volumosa dispensa investigar retenção e motilidade» não é adequada porque o mecanismo deve ser definido, sobretudo se houver sinais de retenção ou disfagia.');
-Q('ciresof','Pessoa com pirose persistente tem avaliação que não demonstra refluxo patológico nem associação consistente entre episódios e sintomas. Qual erro deve ser evitado?',['Reconhecer a possibilidade de pirose funcional','Investigar coerência entre sintomas e testes','Explicar que sintomas reais podem ter mecanismos de sensibilidade','Indicar fundoplicatura apenas pela intensidade da queixa'],3,'Resposta esperada: a intensidade isolada não demonstra que uma operação antirrefluxo corrigirá o mecanismo. Por que as demais não servem: A opção «Reconhecer a possibilidade de pirose funcional» não é adequada porque reconhecer pirose funcional é uma possibilidade adequada; não é o erro que o enunciado pede identificar. A opção «Investigar coerência entre sintomas e testes» não é adequada porque relacionar sintomas e testes é uma ação adequada; não é a conduta que deve ser evitada. A opção «Explicar que sintomas reais podem ter mecanismos de sensibilidade» não é adequada porque essa explicação pode ser apropriada e não representa o erro solicitado.');
-Q('ciresof','Adulto tem disfagia para sólidos e líquidos, regurgitação e afilamento distal no esofagograma. Antes de tratar como acalasia, qual avaliação é indispensável ao raciocínio?',['Excluir obstrução orgânica e confirmar o distúrbio motor','Indicar fundoplicatura isolada','Tratar como pirose funcional','Assumir que a imagem excluiu neoplasia'],0,'Resposta esperada: endoscopia e estudo motor integram a investigação, pois o aspecto radiológico não exclui pseudoacalasia. Por que as demais não servem: A opção «Indicar fundoplicatura isolada» não é adequada porque uma válvula isolada pode aumentar a resistência em uma junção que já não relaxa. A opção «Tratar como pirose funcional» não é adequada porque há sinais de retenção e distúrbio de trânsito que exigem investigação específica. A opção «Assumir que a imagem excluiu neoplasia» não é adequada porque obstrução tumoral pode produzir imagem semelhante.');
-Q('ciresof','Idoso com disfagia de evolução rápida e emagrecimento acentuado tem imagem que lembra acalasia. A endoscopia inicial não esclareceu a resistência na cárdia. Qual interpretação é mais segura?',['A imagem típica encerra a investigação','Pseudoacalasia neoplásica continua no diagnóstico diferencial','A perda ponderal é suficiente para confirmar acalasia primária','O exame inicial inconclusivo autoriza miotomia sem investigação adicional'],1,'Resposta esperada: história curta, perda ponderal e dificuldade na junção sustentam investigação adicional de causa estrutural. Por que as demais não servem: A opção «A imagem típica encerra a investigação» não é adequada porque o contexto de alarme exige excluir obstrução tumoral mesmo com exame inicial inconclusivo. A opção «A perda ponderal é suficiente para confirmar acalasia primária» não é adequada porque o achado é sinal de alarme e pode ocorrer na pseudoacalasia, não confirma doença motora primária. A opção «O exame inicial inconclusivo autoriza miotomia sem investigação adicional» não é adequada porque uma primeira investigação inconclusiva não elimina a suspeita estrutural sustentada pela clínica.');
-Q('ciresof','Paciente com acalasia pergunta por que a miotomia pode facilitar a alimentação se os neurônios já foram perdidos. Qual resposta está correta?',['A operação reconstitui o reflexo de relaxamento por restauração neural','A operação elimina a necessidade de seguimento','A operação reduz a resistência de saída, sem restaurar os neurônios perdidos','A operação resolve o quadro apenas por remover a mucosa distal'],2,'Resposta esperada: diminuir a resistência da junção favorece esvaziamento mesmo sem recuperar a peristalse normal. Por que as demais não servem: A opção «A operação reconstitui o reflexo de relaxamento por restauração neural» não é adequada porque o tratamento não repõe a inervação perdida, e sim reduz a resistência mecânica da junção. A opção «A operação elimina a necessidade de seguimento» não é adequada porque esvaziamento, refluxo e complicações ainda precisam de seguimento. A opção «A operação resolve o quadro apenas por remover a mucosa distal» não é adequada porque miotomia atua sobre a musculatura, preservando a mucosa como objetivo técnico.');
-Q('ciresof','Pessoa com acalasia espástica discute POEM com a equipe. Qual aspecto deve fazer parte da decisão compartilhada?',['POEM elimina completamente o risco de refluxo','O procedimento dispensa confirmação do diagnóstico','O tratamento sempre restaura peristalse normal','A possibilidade de tratar o segmento espástico deve ser balanceada com refluxo posterior'],3,'Resposta esperada: a escolha integra eficácia para o padrão motor, riscos e necessidade de acompanhamento de refluxo. Por que as demais não servem: A opção «POEM elimina completamente o risco de refluxo» não é adequada porque refluxo após POEM é uma preocupação relevante. A opção «O procedimento dispensa confirmação do diagnóstico» não é adequada porque a intervenção depende de diagnóstico e seleção adequados. A opção «O tratamento sempre restaura peristalse normal» não é adequada porque reduzir resistência não significa restaurar a inervação e a peristalse.');
-Q('ciresof','Após dilatação pneumática para acalasia, paciente apresenta dor intensa e sinais sistêmicos. Qual complicação precisa ser investigada prioritariamente?',['Perfuração esofágica','Estenose péptica como explicação suficiente da deterioração sistêmica','Espasmo transitório, dispensando avaliação de lesão da parede','Refluxo simples, tratado sem reavaliação clínica'],0,'Resposta esperada: perfuração é complicação relevante e a combinação de dor intensa com deterioração exige avaliação rápida. Por que as demais não servem: A opção «Estenose péptica como explicação suficiente da deterioração sistêmica» não é adequada porque estenose pode causar disfagia, mas não explica adequadamente dor intensa com deterioração após dilatação. A opção «Espasmo transitório, dispensando avaliação de lesão da parede» não é adequada porque a hipótese benigna não deve impedir investigação de perfuração diante de sinais sistêmicos. A opção «Refluxo simples, tratado sem reavaliação clínica» não é adequada porque refluxo não deve encerrar o diagnóstico diferencial de deterioração aguda após intervenção.');
-Q('ciresof','Idoso tem halitose, regurgitação de alimento antigo e episódios de aspiração. Exame demonstra divertículo de Zenker. Qual princípio explica um tratamento duradouro?',['Retirar a bolsa sem avaliar o cricofaríngeo','Resolver a disfunção cricofaríngea associada à bolsa','Realizar fundoplicatura para toda disfagia alta','Forçar passagem endoscópica para vencer a resistência'],1,'Resposta esperada: a dificuldade de abertura cricofaríngea participa da formação da bolsa e deve integrar o tratamento. Por que as demais não servem: A opção «Retirar a bolsa sem avaliar o cricofaríngeo» não é adequada porque deixar o mecanismo de pulsão ativo pode comprometer o resultado. A opção «Realizar fundoplicatura para toda disfagia alta» não é adequada porque a fundoplicatura atua na junção distal e não resolve esse mecanismo alto. A opção «Forçar passagem endoscópica para vencer a resistência» não é adequada porque instrumentação descuidada pode entrar na bolsa e causar perfuração.');
-Q('ciresof','Pessoa tratada por acalasia volta a apresentar disfagia e sintomas de refluxo. Qual abordagem é mais adequada antes de repetir um procedimento?',['Concluir automaticamente que a doença regenerou','Repetir dilatação sem exames','Investigar miotomia incompleta, fibrose, estenose péptica e anatomia','Atribuir a disfagia apenas à adaptação alimentar sem investigar'],2,'Resposta esperada: anatomia, esvaziamento e refluxo ajudam a distinguir causas que demandam tratamentos diferentes. Por que as demais não servem: A opção «Concluir automaticamente que a doença regenerou» não é adequada porque a recorrência tem diversos mecanismos e não demonstra regeneração neural. A opção «Repetir dilatação sem exames» não é adequada porque o retratamento sem esclarecer a causa pode ser ineficaz ou prejudicial. A opção «Atribuir a disfagia apenas à adaptação alimentar sem investigar» não é adequada porque sintoma recorrente pode refletir causas anatômicas ou funcionais tratáveis.');
-Q('ciresof','Adulto apresenta disfagia progressiva, primeiro para alimentos sólidos e depois para líquidos, associada a emagrecimento. Qual etapa estabelece o diagnóstico de suspeita?',['Tratar como refluxo sem investigar','Usar apenas sorologia para Chagas','Realizar dilatação empírica antes de obter diagnóstico da lesão','Realizar endoscopia com biópsia da lesão suspeita'],3,'Resposta esperada: a endoscopia permite identificar a lesão e obter confirmação histológica. Por que as demais não servem: A opção «Tratar como refluxo sem investigar» não é adequada porque a associação com progressão e perda ponderal exige investigar neoplasia e outras obstruções. A opção «Usar apenas sorologia para Chagas» não é adequada porque sorologia não exclui uma lesão mecânica e não substitui endoscopia neste cenário. A opção «Realizar dilatação empírica antes de obter diagnóstico da lesão» não é adequada porque disfagia progressiva com alarme precisa de definição etiológica e de avaliação da lesão antes de tratamento às cegas.');
-Q('ciresof','Biópsia confirma câncer de esôfago. O paciente pede cirurgia imediata antes dos exames de extensão. Qual resposta demonstra melhor planejamento?',['Completar estadiamento e avaliação funcional e nutricional antes de definir a estratégia','A biópsia já determina que a doença é localizada','A disfagia impede qualquer tratamento','Todo tumor deve receber o mesmo esquema independentemente da histologia'],0,'Resposta esperada: a intenção e a sequência terapêutica dependem de extensão, histologia, condição clínica e reserva nutricional. Por que as demais não servem: A opção «A biópsia já determina que a doença é localizada» não é adequada porque a histologia não demonstra ausência de metástases. A opção «A disfagia impede qualquer tratamento» não é adequada porque o sintoma pode ser tratado e não determina sozinho impossibilidade terapêutica. A opção «Todo tumor deve receber o mesmo esquema independentemente da histologia» não é adequada porque histologia, localização e estágio modificam as opções.');
-Q('ciresof','Pessoa com câncer esofágico potencialmente localizado precisa de avaliação mais detalhada da profundidade e de linfonodos regionais. Qual exame pode contribuir diretamente?',['PET-CT como melhor exame para detalhar camadas da parede','Ecoendoscopia, quando tecnicamente possível e indicada','Tomografia como exame que sempre define cada camada da parede','Broncoscopia como exame que define todos os linfonodos regionais'],1,'Resposta esperada: a ecoendoscopia contribui para profundidade e avaliação regional, integrada ao estadiamento sistêmico. Por que as demais não servem: A opção «PET-CT como melhor exame para detalhar camadas da parede» não é adequada porque o PET-CT contribui para pesquisa de doença metabolicamente ativa e metástases, mas não substitui o detalhamento local da ecoendoscopia. A opção «Tomografia como exame que sempre define cada camada da parede» não é adequada porque a tomografia participa do estadiamento, mas não fornece necessariamente o mesmo detalhamento de profundidade da ecoendoscopia. A opção «Broncoscopia como exame que define todos os linfonodos regionais» não é adequada porque a broncoscopia avalia a via aérea em situações indicadas e não substitui a avaliação locorregional proposta.');
-Q('ciresof','Paciente com carcinoma escamoso cervical discute tratamento com equipe especializada. Qual afirmação evita aplicar uma operação de forma automática?',['Toda lesão cervical exige esofagectomia imediata','Localização não interfere na decisão','Tratamento definitivo com quimiorradioterapia pode ser estratégia de preservação em casos adequados','A endoscopia dispensa biópsia quando a localização é cervical'],2,'Resposta esperada: a estratégia definitiva não operatória pode preservar estruturas e deve ser avaliada conforme o caso. Por que as demais não servem: A opção «Toda lesão cervical exige esofagectomia imediata» não é adequada porque a localização e a morbidade da operação exigem discutir estratégias específicas. A opção «Localização não interfere na decisão» não é adequada porque o segmento acometido modifica planejamento e riscos. A opção «A endoscopia dispensa biópsia quando a localização é cervical» não é adequada porque a localização não substitui confirmação histológica.');
-Q('ciresof','Após esofagectomia, pessoa apresenta taquicardia, febre e piora respiratória. Não há conteúdo alimentar no dreno. Qual conduta é mais segura?',['Aguardar saída de alimento para começar a investigação','Considerar a ausência de débito prova de anastomose íntegra','Tratar apenas atelectasia e encerrar o diferencial','Investigar prontamente fístula, complicações do conduto e causas pulmonares'],3,'Resposta esperada: deterioração pós-operatória pode sinalizar complicação grave e requer definição do foco e suporte. Por que as demais não servem: A opção «Aguardar saída de alimento para começar a investigação» não é adequada porque manifestações iniciais podem preceder drenagem característica. A opção «Considerar a ausência de débito prova de anastomose íntegra» não é adequada porque um dreno sem conteúdo digestivo não exclui vazamento. A opção «Tratar apenas atelectasia e encerrar o diferencial» não é adequada porque complicação pulmonar pode coexistir com fístula ou problema do conduto; a deterioração exige avaliação mais ampla.');
-Q('ciresof','Pessoa em seguimento após esofagectomia apresenta disfagia progressiva. Qual erro deve ser evitado ao investigar a anastomose?',['Presumir estenose benigna sem considerar recidiva','Avaliar a anatomia da reconstrução','Rever o contexto oncológico','Buscar a causa antes de escolher nova intervenção'],0,'Resposta esperada: recidiva tumoral deve ser considerada antes de atribuir toda disfagia à cicatriz. Por que as demais não servem: A opção «Avaliar a anatomia da reconstrução» não é adequada porque avaliar anatomia é uma ação adequada; não é a conduta que deve ser evitada. A opção «Rever o contexto oncológico» não é adequada porque rever o contexto oncológico é necessário e não corresponde ao erro perguntado. A opção «Buscar a causa antes de escolher nova intervenção» não é adequada porque investigar antes de intervir é um princípio adequado, não o erro solicitado.');
-Q('ciresof','Paciente com câncer de esôfago e perda de peso importante será avaliado para tratamento multimodal. Qual medida pertence ao planejamento, além do estadiamento tumoral?',['Ignorar nutrição até terminar o tratamento','Avaliar reserva funcional e oferecer suporte nutricional individualizado','Considerar peso irrelevante para o risco cirúrgico','Usar prótese esofágica obrigatória em todos os candidatos à cura'],1,'Resposta esperada: reserva funcional e estado nutricional influenciam riscos e execução do tratamento. Por que as demais não servem: A opção «Ignorar nutrição até terminar o tratamento» não é adequada porque desnutrição pode comprometer tolerância e recuperação. A opção «Considerar peso irrelevante para o risco cirúrgico» não é adequada porque perda ponderal pode refletir risco e necessidade de suporte. A opção «Usar prótese esofágica obrigatória em todos os candidatos à cura» não é adequada porque o recurso para alimentação e disfagia deve ser escolhido conforme a estratégia global, não automaticamente.');
-Q('cirestom','Paciente estabilizado após melena tem úlcera com vaso visível não sangrante na endoscopia. Qual interpretação orienta o tratamento?',['A ausência de jato torna a lesão de baixo risco','Só a presença de dor indicaria hemostasia','O vaso exposto mantém risco e requer abordagem hemostática indicada','A hemostasia deve esperar novo choque'],2,'Resposta esperada: a lesão pode voltar a sangrar e deve ser tratada conforme o estigma e a situação clínica. Por que as demais não servem: A opção «A ausência de jato torna a lesão de baixo risco» não é adequada porque o estigma de vaso visível permanece relevante mesmo sem sangramento naquele instante. A opção «Só a presença de dor indicaria hemostasia» não é adequada porque o risco endoscópico não depende apenas de dor. A opção «A hemostasia deve esperar novo choque» não é adequada porque esperar deterioração expõe a nova hemorragia evitável.');
-Q('cirestom','Durante hemostasia de úlcera com estigma de alto risco, uma injeção de adrenalina interrompe o sangramento. Qual afirmação descreve a limitação desse resultado?',['Toda resposta à injeção dispensa acompanhamento','Dispensar método térmico ou mecânico após qualquer controle por injeção','Concluir que a hemostasia dispensa tratamento da causa ulcerosa','O controle pode ser transitório e não substitui método definitivo quando indicado'],3,'Resposta esperada: a interrupção inicial por injeção não equivale necessariamente a hemostasia durável. Por que as demais não servem: A opção «Toda resposta à injeção dispensa acompanhamento» não é adequada porque risco de ressangramento e tratamento da causa continuam relevantes. A opção «Dispensar método térmico ou mecânico após qualquer controle por injeção» não é adequada porque controle inicial por injeção pode não fornecer hemostasia durável quando outro método definitivo está indicado. A opção «Concluir que a hemostasia dispensa tratamento da causa ulcerosa» não é adequada porque o fator etiológico, como H. pylori ou anti-inflamatório, deve ser tratado ou revisto para reduzir recorrência.');
-Q('cirestom','Pessoa volta a ter hematêmese após hemostasia endoscópica de úlcera. Depois de reavaliar a estabilidade, qual caminho costuma integrar o resgate?',['Reavaliação endoscópica, com estratégia adicional se o controle falhar','Alta porque já houve uma endoscopia','Apenas suspender dieta indefinidamente','Considerar que toda nova hematêmese é varicosa'],0,'Resposta esperada: a recorrência requer novo controle do foco, começando pela reavaliação apropriada e planejando embolização ou cirurgia quando indicadas. Por que as demais não servem: A opção «Alta porque já houve uma endoscopia» não é adequada porque o procedimento anterior não elimina a possibilidade de ressangramento. A opção «Apenas suspender dieta indefinidamente» não é adequada porque jejum isolado não promove hemostasia. A opção «Considerar que toda nova hematêmese é varicosa» não é adequada porque a origem precisa ser reavaliada; o histórico de úlcera não deve ser descartado sem evidência.');
-Q('cirestom','Hemorragia ulcerosa persiste apesar das abordagens endoscópicas indicadas. A equipe avalia embolização ou cirurgia. Qual princípio deve orientar a escolha?',['Escolher sempre a operação de maior ressecção','Integrar estabilidade, localização, recursos e possibilidade de controle do foco','Repetir indefinidamente a mesma abordagem sem reconsiderar','Evitar controle do foco porque a transfusão é suficiente'],1,'Resposta esperada: o resgate precisa ser efetivo e adaptado à anatomia, à repercussão e à experiência disponível. Por que as demais não servem: A opção «Escolher sempre a operação de maior ressecção» não é adequada porque a extensão deve responder ao problema e às condições clínicas, não a uma regra de máxima ressecção. A opção «Repetir indefinidamente a mesma abordagem sem reconsiderar» não é adequada porque falha persistente pede replanejamento do resgate. A opção «Evitar controle do foco porque a transfusão é suficiente» não é adequada porque reposição não fecha o vaso que continua sangrando.');
-Q('cirestom','Durante tratamento de hemorragia por úlcera posterior do bulbo duodenal, o cirurgião considera a relação vascular local. Qual vaso explica o sangramento clássico?',['Artéria gástrica esquerda','Artéria esplênica','Artéria gastroduodenal','Artéria mesentérica inferior'],2,'Resposta esperada: a artéria gastroduodenal passa posteriormente ao duodeno proximal e pode ser erodida. Por que as demais não servem: A opção «Artéria gástrica esquerda» não é adequada porque relaciona-se principalmente à pequena curvatura gástrica, e não é o vaso clássico da úlcera posterior do bulbo. A opção «Artéria esplênica» não é adequada porque a relação anatômica clássica da parede posterior do bulbo é com a gastroduodenal. A opção «Artéria mesentérica inferior» não é adequada porque irriga território intestinal distal e não corresponde ao vaso classicamente erodido nesse local.');
-Q('cirestom','Adulto com vômitos de estase por obstrução pilórica chega desidratado. Qual alteração deve ser lembrada ao planejar reposição?',['Acidose respiratória como consequência obrigatória do vômito','Hipercalemia obrigatória','Ausência de alterações eletrolíticas','Alcalose metabólica com depleção de cloro e potássio'],3,'Resposta esperada: a perda de conteúdo gástrico e a contração de volume explicam o distúrbio clássico. Por que as demais não servem: A opção «Acidose respiratória como consequência obrigatória do vômito» não é adequada porque perda de secreção gástrica produz mecanismo metabólico, não uma acidose respiratória obrigatória. A opção «Hipercalemia obrigatória» não é adequada porque a depleção de potássio é preocupação, e não hipercalemia universal. A opção «Ausência de alterações eletrolíticas» não é adequada porque vômitos e desidratação podem causar alterações relevantes.');
-Q('cirestom','Pessoa com suspeita de úlcera gástrica perfurada necessita controle de foco. Qual preocupação diferencia a avaliação da lesão gástrica?',['Investigar possibilidade de neoplasia na lesão, além de controlar a perfuração','Presumir que toda lesão gástrica é benigna','Adiar a investigação de neoplasia porque perfuração confirma úlcera benigna','Ignorar a condição clínica até obter todos os exames eletivos'],0,'Resposta esperada: a possibilidade de câncer deve integrar a avaliação e a estratégia de obtenção de histologia, sem abandonar a urgência do controle do foco. Por que as demais não servem: A opção «Presumir que toda lesão gástrica é benigna» não é adequada porque malignidade pode se apresentar com complicação ulcerosa. A opção «Adiar a investigação de neoplasia porque perfuração confirma úlcera benigna» não é adequada porque a perfuração não estabelece benignidade e a suspeita precisa integrar a avaliação da lesão. A opção «Ignorar a condição clínica até obter todos os exames eletivos» não é adequada porque a instabilidade e a contaminação exigem decisões oportunas.');
-Q('cirestom','Adulto com vômitos de alimento antigo e perda de peso tem história remota de úlcera. A equipe considera estenose pilórica benigna. Qual é o próximo raciocínio?',['A história de úlcera exclui câncer','Corrigir repercussões e investigar a causa atual, incluindo neoplasia','Indicar imediatamente uma reconstrução sem avaliação','Dar alta com antiácido, pois estase não causa risco'],1,'Resposta esperada: descompressão e correção de alterações devem acompanhar a investigação etiológica, inclusive endoscópica. Por que as demais não servem: A opção «A história de úlcera exclui câncer» não é adequada porque uma história prévia não exclui nova doença maligna. A opção «Indicar imediatamente uma reconstrução sem avaliação» não é adequada porque a escolha operatória depende da causa e da condição clínica. A opção «Dar alta com antiácido, pois estase não causa risco» não é adequada porque estase pode produzir desidratação, aspiração e distúrbios importantes.');
-Q('cirestom','Pessoa gastrectomizada apresenta dor persistente, febre e deterioração clínica. Qual diagnóstico por exclusão não deve ser usado para encerrar a avaliação?',['Complicação infecciosa','Problema mecânico da reconstrução','Dumping como explicação automática de todos os sintomas','Fístula ou coleção'],2,'Resposta esperada: dumping não explica automaticamente febre e deterioração; complicações precisam ser excluídas. Por que as demais não servem: A opção «Complicação infecciosa» não é adequada porque é hipótese relevante no diferencial, não um rótulo que justifique encerrar a avaliação. A opção «Problema mecânico da reconstrução» não é adequada porque é hipótese que precisa ser investigada, não uma explicação automática para dispensar avaliação. A opção «Fístula ou coleção» não é adequada porque são complicações a pesquisar, não rótulos benignos para encerrar a avaliação.');
-Q('cirestom','Após controle de hemorragia por úlcera, investigação confirma H. pylori. Qual plano reduz a chance de manter o fator etiológico?',['Manter apenas antiácido se o sangramento cessou','Concluir que hemostasia endoscópica erradicou a bactéria','Retomar anti-inflamatório sem revisão de risco','Tratar a infecção e rever fatores ulcerogênicos com seguimento'],3,'Resposta esperada: tratar a causa integra a prevenção de novos eventos; o esquema deve seguir protocolo atualizado. Por que as demais não servem: A opção «Manter apenas antiácido se o sangramento cessou» não é adequada porque o controle ácido não substitui tratamento etiológico. A opção «Concluir que hemostasia endoscópica erradicou a bactéria» não é adequada porque a hemostasia atua no sangramento e não elimina a infecção. A opção «Retomar anti-inflamatório sem revisão de risco» não é adequada porque a exposição pode contribuir para recorrência e deve ser reavaliada.');
-Q('cirestom','Laudo de câncer gástrico descreve acometimento até a submucosa, com avaliação linfonodal ainda suspeita. Como interpretar o termo precoce?',['Refere-se à profundidade e não implica, sozinho, ausência de risco linfonodal','Só pode ser usado se nenhum linfonodo existir','É sinônimo de tratamento endoscópico obrigatório','Significa doença sem necessidade de estadiamento'],0,'Resposta esperada: a definição anatômica pela profundidade deve ser separada da seleção terapêutica e do risco de disseminação. Por que as demais não servem: A opção «Só pode ser usado se nenhum linfonodo existir» não é adequada porque o conceito não depende de ausência de linfonodos acometidos. A opção «É sinônimo de tratamento endoscópico obrigatório» não é adequada porque tratamento local exige outros critérios de segurança oncológica. A opção «Significa doença sem necessidade de estadiamento» não é adequada porque mesmo doença superficial precisa de avaliação apropriada.');
-Q('cirestom','Pessoa com lesão gástrica superficial pergunta se pode realizar apenas dissecção endoscópica. Qual resposta evita uma indicação simplificada?',['Toda lesão superficial dispensa revisão histológica','Avaliar histologia, profundidade, ulceração, margens e risco linfonodal','Escolher pela intensidade da dispepsia','A localização no estômago elimina risco de metástase'],1,'Resposta esperada: a indicação depende de critérios combinados; limites numéricos e recomendações atuais devem ser conferidos. Por que as demais não servem: A opção «Toda lesão superficial dispensa revisão histológica» não é adequada porque histologia e risco de disseminação são componentes da seleção. A opção «Escolher pela intensidade da dispepsia» não é adequada porque a intensidade do sintoma não define segurança oncológica de ressecção local. A opção «A localização no estômago elimina risco de metástase» não é adequada porque o órgão de origem não elimina disseminação.');
-Q('cirestom','Paciente com saciedade precoce e perda de peso tem estômago pouco distensível, com infiltração difusa. Qual associação clássica ajuda a interpretar o padrão?',['Tumor polipoide restrito à luz como única explicação da rigidez difusa','Obstrução pilórica benigna como explicação obrigatória da parede infiltrada','Linite plástica e padrão infiltrativo difuso','Compressão extrínseca sem necessidade de investigar a parede'],2,'Resposta esperada: a infiltração reduz a complacência e se relaciona à apresentação de linite plástica. Por que as demais não servem: A opção «Tumor polipoide restrito à luz como única explicação da rigidez difusa» não é adequada porque uma massa polipoide não é a associação clássica do estômago difusamente infiltrado e pouco distensível. A opção «Obstrução pilórica benigna como explicação obrigatória da parede infiltrada» não é adequada porque obstrução benigna pode causar estase, mas não explica obrigatoriamente infiltração difusa da parede. A opção «Compressão extrínseca sem necessidade de investigar a parede» não é adequada porque o padrão infiltrativo descrito exige avaliação da doença parietal, não apenas de compressão externa.');
-Q('cirestom','Pessoa com tumor gástrico de risco para disseminação peritoneal tem tomografia sem metástase evidente. Qual avaliação pode modificar o planejamento curativo?',['Ecoendoscopia como exame que exclui toda disseminação peritoneal','PET-CT negativo como prova absoluta de ausência de implantes pequenos','Assumir que a tomografia exclui qualquer implante','Laparoscopia de estadiamento no cenário indicado'],3,'Resposta esperada: a inspeção e a avaliação peritoneal podem revelar doença oculta que altera a intenção e a sequência terapêutica. Por que as demais não servem: A opção «Ecoendoscopia como exame que exclui toda disseminação peritoneal» não é adequada porque a ecoendoscopia ajuda no estadiamento local, mas não substitui avaliação peritoneal no cenário indicado. A opção «PET-CT negativo como prova absoluta de ausência de implantes pequenos» não é adequada porque nenhum resultado isolado elimina toda possibilidade de doença peritoneal oculta nesse contexto de risco. A opção «Assumir que a tomografia exclui qualquer implante» não é adequada porque lesões pequenas podem não aparecer na imagem.');
-Q('cirestom','Tumor gástrico distal pode ser ressecado com margens adequadas preservando parte do órgão. Qual princípio orienta a extensão da operação?',['Escolher a extensão necessária para segurança oncológica, sem totalização automática','Todo câncer exige retirar todo o estômago','Preservar o estômago mesmo com margem comprometida','Definir a operação apenas pelo peso do paciente'],0,'Resposta esperada: localização, extensão e margens determinam a possibilidade de ressecção subtotal ou total. Por que as demais não servem: A opção «Todo câncer exige retirar todo o estômago» não é adequada porque totalização não é obrigatória quando ressecção menor é oncologicamente adequada. A opção «Preservar o estômago mesmo com margem comprometida» não é adequada porque preservação não deve comprometer margem e controle tumoral. A opção «Definir a operação apenas pelo peso do paciente» não é adequada porque reserva nutricional importa, mas não substitui avaliação oncológica e anatômica.');
-Q('cirestom','Durante discussão de gastrectomia oncológica, alguém define linfadenectomia apenas como atingir uma contagem de linfonodos. Qual correção é mais adequada?',['Linfonodos não influenciam estadiamento','A qualidade inclui territórios anatômicos e ressecção apropriada, além da contagem','Biópsia de qualquer linfonodo substitui a operação indicada','Toda linfadenectomia deve incluir ressecção indiscriminada de órgãos vizinhos'],1,'Resposta esperada: o conceito anatômico da dissecção não pode ser reduzido a um número isolado de espécimes. Por que as demais não servem: A opção «Linfonodos não influenciam estadiamento» não é adequada porque a avaliação linfonodal integra estágio e planejamento. A opção «Biópsia de qualquer linfonodo substitui a operação indicada» não é adequada porque uma amostra isolada não equivale à dissecção oncológica apropriada. A opção «Toda linfadenectomia deve incluir ressecção indiscriminada de órgãos vizinhos» não é adequada porque ressecções adicionais dependem de indicação, não de máxima agressividade.');
-Q('cirestom','Pessoa após gastrectomia total entra em seguimento clínico. Qual necessidade decorre diretamente da alteração anatômica?',['Supor que absorção de todas as vitaminas permanece igual','Suspender qualquer acompanhamento nutricional','Planejar reposição e seguimento de vitamina B12 e outras deficiências','Considerar toda anemia como recidiva tumoral'],2,'Resposta esperada: a deficiência de fator intrínseco e outras alterações tornam o acompanhamento nutricional parte do tratamento. Por que as demais não servem: A opção «Supor que absorção de todas as vitaminas permanece igual» não é adequada porque a perda do estômago altera mecanismos de absorção e oferta nutricional. A opção «Suspender qualquer acompanhamento nutricional» não é adequada porque o seguimento é necessário para ingestão, peso e carências. A opção «Considerar toda anemia como recidiva tumoral» não é adequada porque anemia exige diferencial, incluindo deficiências, e não prova recidiva.');
-Q('cirestom','Após gastrectomia, paciente apresenta febre, taquicardia e dor persistente. Qual atitude é mais adequada?',['Atribuir sempre à dieta reiniciada','Esperar a consulta de rotina sem reavaliar','Tratar como dumping sem outros exames','Investigar fístula, coleção e outras complicações conforme estabilidade'],3,'Resposta esperada: o manejo exige definir o foco, oferecer suporte e controlar a complicação identificada. Por que as demais não servem: A opção «Atribuir sempre à dieta reiniciada» não é adequada porque sinais sistêmicos podem indicar complicação e não devem ser explicados automaticamente pela alimentação. A opção «Esperar a consulta de rotina sem reavaliar» não é adequada porque a deterioração pede avaliação oportuna. A opção «Tratar como dumping sem outros exames» não é adequada porque dumping não encerra o diferencial de febre e dor persistente.');
-Q('cirestom','Mulher com câncer gástrico tem massa ovariana suspeita de disseminação. Qual associação anatômica é clássica?',['Metástase ovariana chamada tumor de Krukenberg','Linfonodo de Virchow, que é supraclavicular esquerdo','Nódulo da Irmã Maria José, que é umbilical','Prateleira de Blumer, identificada no fundo de saco ao toque'],0,'Resposta esperada: Krukenberg designa metástase ovariana no contexto clássico de neoplasias digestivas, entre outras origens. Por que as demais não servem: A opção «Linfonodo de Virchow, que é supraclavicular esquerdo» não é adequada porque esse sinal descreve um linfonodo cervical e não a metástase ovariana. A opção «Nódulo da Irmã Maria José, que é umbilical» não é adequada porque é um sinal de disseminação na região umbilical e não o nome da lesão ovariana. A opção «Prateleira de Blumer, identificada no fundo de saco ao toque» não é adequada porque corresponde a outro sinal anatômico de disseminação, não à metástase ovariana.');
-Q('cirestom','Pessoa gastrectomizada emagrece e reduz ingestão. A investigação de recidiva está em andamento. Qual abordagem deve ocorrer em paralelo?',['Aguardar recidiva ser excluída para qualquer suporte','Avaliar ingestão, reconstrução e carências nutricionais','Atribuir toda perda de peso ao comportamento','Reoperar automaticamente sem definir a causa'],1,'Resposta esperada: a perda ponderal pode envolver ingestão, complicações anatômicas e carências, além de recorrência. Por que as demais não servem: A opção «Aguardar recidiva ser excluída para qualquer suporte» não é adequada porque suporte nutricional e avaliação clínica não precisam esperar o encerramento da investigação oncológica. A opção «Atribuir toda perda de peso ao comportamento» não é adequada porque a hipótese comportamental não substitui investigação objetiva. A opção «Reoperar automaticamente sem definir a causa» não é adequada porque uma nova operação depende do mecanismo identificado.');
-Q('cirestom','Endoscopia mostra massa gástrica, mas a histologia ainda não está disponível. Qual decisão evita tratar neoplasias diferentes como se fossem iguais?',['Indicar FLOT para toda massa gástrica','Definir adenocarcinoma apenas pela dispepsia','Obter confirmação histológica e estadiar antes de escolher estratégia','Dispensar biópsia porque a massa é grande'],2,'Resposta esperada: linfoma, adenocarcinoma e outras lesões podem exigir estratégias diferentes. Por que as demais não servem: A opção «Indicar FLOT para toda massa gástrica» não é adequada porque o tratamento depende da natureza histológica e não se aplica automaticamente a toda neoplasia gástrica. A opção «Definir adenocarcinoma apenas pela dispepsia» não é adequada porque sintoma não define tipo tumoral. A opção «Dispensar biópsia porque a massa é grande» não é adequada porque a dimensão não substitui diagnóstico histológico.');
-Q('cirvb','Pessoa sem sintomas biliares recebe diagnóstico incidental de cálculo na vesícula. Qual orientação evita sobretratamento?',['Indicar colecistectomia obrigatória para qualquer cálculo','Usar CPRE para retirar cálculo exclusivamente vesicular','Prescrever antibiótico contínuo sem infecção','Avaliar risco e indicações específicas antes de propor operação'],3,'Resposta esperada: a decisão considera sintomas, risco individual e situações específicas, com atualização dos critérios. Por que as demais não servem: A opção «Indicar colecistectomia obrigatória para qualquer cálculo» não é adequada porque achado assintomático não é indicação universal de operação. A opção «Usar CPRE para retirar cálculo exclusivamente vesicular» não é adequada porque CPRE atua na via biliar principal e não é o tratamento rotineiro do cálculo apenas vesicular. A opção «Prescrever antibiótico contínuo sem infecção» não é adequada porque não há infecção descrita que justifique esse plano.');
-Q('cirvb','Adulto apresenta episódios compatíveis com dor biliar, sem síndrome inflamatória persistente. Qual mecanismo explica melhor a cólica biliar?',['Obstrução transitória da drenagem vesicular','Infecção sistêmica obrigatória em todo episódio','Colestase por cálculo na via principal como requisito para toda cólica','Pancreatite necessariamente presente'],0,'Resposta esperada: o bloqueio transitório pode produzir dor sem inflamação sustentada da parede. Por que as demais não servem: A opção «Infecção sistêmica obrigatória em todo episódio» não é adequada porque cólica não implica colangite ou sepse obrigatórias. A opção «Colestase por cálculo na via principal como requisito para toda cólica» não é adequada porque a cólica vesicular não exige obstrução do colédoco nem icterícia. A opção «Pancreatite necessariamente presente» não é adequada porque pancreatite exige dados próprios e não acompanha todo episódio.');
-Q('cirvb','Durante colecistectomia, uma estrutura tubular foi identificada apenas pela posição presumida. O cirurgião pretende clipá-la. Qual princípio deve interromper essa decisão?',['A posição aparente é suficiente','É necessário demonstrar anatomia segura antes de dividir estruturas','Sangramento pequeno autoriza divisão às cegas','Usar o calibre presumido do ducto como único critério de identificação'],1,'Resposta esperada: a identificação segura reduz o risco de lesão da via biliar principal. Por que as demais não servem: A opção «A posição aparente é suficiente» não é adequada porque variações e distorção inflamatória tornam presunção posicional insegura. A opção «Sangramento pequeno autoriza divisão às cegas» não é adequada porque perda de orientação exige controle e reavaliação, não divisão cega. A opção «Usar o calibre presumido do ducto como único critério de identificação» não é adequada porque variações e distorção inflamatória tornam calibre isolado insuficiente para identificação segura.');
-Q('cirvb','Colecistectomia encontra inflamação intensa e impossibilidade de demonstrar visão crítica com segurança. Qual estratégia é mais apropriada?',['Insistir na dissecção até completar o plano inicial','Clipar o primeiro ducto visível','Reavaliar e escolher estratégia de saída segura, com ajuda quando necessário','Ignorar o problema porque a operação é frequente'],2,'Resposta esperada: subtotal, mudança de abordagem e recursos de definição anatômica podem evitar dissecção perigosa. Por que as demais não servem: A opção «Insistir na dissecção até completar o plano inicial» não é adequada porque persistir sem orientação pode causar lesão grave. A opção «Clipar o primeiro ducto visível» não é adequada porque uma estrutura visível não foi necessariamente identificada. A opção «Ignorar o problema porque a operação é frequente» não é adequada porque frequência do procedimento não elimina risco anatômico.');
-Q('cirvb','Diante de dificuldade anatômica, a equipe converte colecistectomia para operação aberta. Qual afirmação permanece verdadeira?',['A conversão elimina qualquer risco de lesão biliar','A visão crítica passa a ser irrelevante','Toda estrutura sob o infundíbulo pode ser dividida','A identificação anatômica segura continua indispensável'],3,'Resposta esperada: converter é um recurso, não uma confirmação anatômica automática. Por que as demais não servem: A opção «A conversão elimina qualquer risco de lesão biliar» não é adequada porque melhorar acesso não garante identificação dos ductos. A opção «A visão crítica passa a ser irrelevante» não é adequada porque o princípio de segurança anatômica permanece. A opção «Toda estrutura sob o infundíbulo pode ser dividida» não é adequada porque a distorção pode persistir mesmo na operação aberta.');
-Q('cirvb','Pessoa tem icterícia e cálculo impactado junto ao infundíbulo, com compressão da via biliar adjacente. Qual hipótese muda o planejamento cirúrgico?',['Síndrome de Mirizzi','Coledocolitíase com cálculo exclusivamente dentro da via principal','Colangiocarcinoma peri-hilar como diagnóstico já comprovado','Tumor de cabeça pancreática como causa obrigatória de icterícia'],0,'Resposta esperada: a compressão da via principal por cálculo impactado caracteriza o mecanismo de Mirizzi e aumenta a complexidade anatômica. Por que as demais não servem: A opção «Coledocolitíase com cálculo exclusivamente dentro da via principal» não é adequada porque o enunciado descreve compressão externa por cálculo impactado no infundíbulo, mecanismo de Mirizzi. A opção «Colangiocarcinoma peri-hilar como diagnóstico já comprovado» não é adequada porque a obstrução maligna é diferencial, mas o mecanismo explicitamente demonstrado é compressão por cálculo. A opção «Tumor de cabeça pancreática como causa obrigatória de icterícia» não é adequada porque icterícia tem várias causas; aqui a imagem demonstra mecanismo junto à vesícula.');
-Q('cirvb','Pessoa evolui com dor, febre e coleção no leito após colecistectomia. Qual plano integra as prioridades?',['Apenas observar até sumir a icterícia','Avaliar estabilidade, controlar coleção e investigar vazamento ou lesão biliar','Retirar a possibilidade de lesão porque a cirurgia foi laparoscópica','Realizar reparos repetidos sem mapear a via biliar'],1,'Resposta esperada: suporte e definição anatômica orientam drenagem e tratamento apropriado. Por que as demais não servem: A opção «Apenas observar até sumir a icterícia» não é adequada porque coleção e sinais de infecção exigem avaliação e possível controle do foco. A opção «Retirar a possibilidade de lesão porque a cirurgia foi laparoscópica» não é adequada porque a via de acesso não exclui complicações biliares. A opção «Realizar reparos repetidos sem mapear a via biliar» não é adequada porque reparos sem planejamento anatômico podem piorar o resultado.');
-Q('cirvb','Pessoa com suspeita intermediária de cálculo na via principal não tem colangite e o cálculo não foi visto. Qual caminho pode evitar risco desnecessário?',['CPRE diagnóstica obrigatória para todos','Repetir apenas provas hepáticas, descartando investigação por imagem','Confirmar por colangiorressonância ou ecoendoscopia conforme indicação','Indicar exploração cirúrgica obrigatória sem confirmar ou estratificar'],2,'Resposta esperada: métodos menos invasivos permitem selecionar quem necessita de intervenção terapêutica. Por que as demais não servem: A opção «CPRE diagnóstica obrigatória para todos» não é adequada porque procedimento invasivo sem probabilidade ou objetivo terapêutico adequados pode causar dano evitável. A opção «Repetir apenas provas hepáticas, descartando investigação por imagem» não é adequada porque a suspeita intermediária pode exigir confirmação apropriada para definir necessidade de intervenção. A opção «Indicar exploração cirúrgica obrigatória sem confirmar ou estratificar» não é adequada porque a escolha do procedimento depende da probabilidade, dos exames e da estratégia global.');
-Q('cirvb','Adulto tem infecção sistêmica associada a obstrução da via biliar. Recebeu antibiótico, mas o foco permanece obstruído. Qual elemento não deve ser esquecido?',['O antibiótico sempre resolve sozinho','Basta controlar a dor','A icterícia prova ausência de foco infeccioso','A necessidade de descompressão biliar integrada ao suporte'],3,'Resposta esperada: o tratamento da colangite integra suporte, antimicrobiano e drenagem no contexto indicado. Por que as demais não servem: A opção «O antibiótico sempre resolve sozinho» não é adequada porque a obstrução infectada pode exigir drenagem para controle do foco. A opção «Basta controlar a dor» não é adequada porque analgesia é importante, mas não desobstrui a via. A opção «A icterícia prova ausência de foco infeccioso» não é adequada porque icterícia pode acompanhar justamente a obstrução infectada.');
-Q('cirvb','Após CPRE terapêutica, pessoa apresenta dor abdominal importante e deterioração. Qual abordagem é correta?',['Investigar pancreatite, perfuração e outras complicações do procedimento','Considerar qualquer dor pós-CPRE benigna','Supor que a extração exclui sangramento','Esperar apenas a queda da bilirrubina'],0,'Resposta esperada: a repercussão clínica exige avaliar complicações, e não somente o sucesso da desobstrução. Por que as demais não servem: A opção «Considerar qualquer dor pós-CPRE benigna» não é adequada porque dor pode sinalizar complicação relevante. A opção «Supor que a extração exclui sangramento» não é adequada porque intervenção papilar pode produzir sangramento, entre outros riscos. A opção «Esperar apenas a queda da bilirrubina» não é adequada porque o marcador de colestase não resume a causa da deterioração.');
-Q('cirvb','CPRE retira cálculo da via principal em pessoa que mantém vesícula com cálculos. Qual raciocínio evita recorrência de eventos?',['A retirada do cálculo impede qualquer evento futuro','Planejar tratamento da fonte vesicular conforme a condição e a estratégia global','Manter a vesícula porque CPRE equivale a colecistectomia','Antibiótico indefinido substitui a avaliação cirúrgica'],1,'Resposta esperada: desobstruir a via e tratar a fonte vesicular são etapas relacionadas, mas distintas. Por que as demais não servem: A opção «A retirada do cálculo impede qualquer evento futuro» não é adequada porque a fonte de novos cálculos e eventos pode permanecer. A opção «Manter a vesícula porque CPRE equivale a colecistectomia» não é adequada porque os procedimentos atuam em estruturas e problemas diferentes. A opção «Antibiótico indefinido substitui a avaliação cirúrgica» não é adequada porque antimicrobiano não substitui tratamento da litíase e não deve ser mantido sem indicação.');
-Q('cirvb','Pessoa com colangite permanece séptica após colocação de prótese biliar. Qual avaliação é prioritária?',['Aguardar sem reavaliar porque prótese sempre drena toda a árvore','Atribuir a piora apenas à ansiedade','Verificar efetividade da drenagem, obstrução residual e complicações','Concluir que toda febre é reação ao contraste'],2,'Resposta esperada: controle insuficiente do foco e complicações precisam ser pesquisados. Por que as demais não servem: A opção «Aguardar sem reavaliar porque prótese sempre drena toda a árvore» não é adequada porque a presença de prótese não garante drenagem adequada de todos os segmentos relevantes. A opção «Atribuir a piora apenas à ansiedade» não é adequada porque há sinais de infecção que exigem avaliação orgânica. A opção «Concluir que toda febre é reação ao contraste» não é adequada porque reação ao contraste não deve explicar automaticamente sepse persistente.');
-Q('cirvb','Pessoa tem cálculo formado na própria via biliar em contexto de estase e infecção, sem migração vesicular demonstrada. Qual conceito se aplica?',['Cálculo secundário que migrou obrigatoriamente da vesícula','Cálculo exclusivamente vesicular, sem doença da via principal','Obstrução maligna como única causa de qualquer cálculo ductal','Cálculo primário da via biliar'],3,'Resposta esperada: formação local associada a estase e infecção corresponde ao conceito de cálculo primário. Por que as demais não servem: A opção «Cálculo secundário que migrou obrigatoriamente da vesícula» não é adequada porque o enunciado destaca formação na própria via, que corresponde ao cálculo primário. A opção «Cálculo exclusivamente vesicular, sem doença da via principal» não é adequada porque a localização descrita é a própria via principal. A opção «Obstrução maligna como única causa de qualquer cálculo ductal» não é adequada porque estase e infecção podem participar da formação primária; malignidade não é requisito universal.');
-Q('cirvb','Pessoa necessita de tratamento de cálculo da via principal, mas a abordagem endoscópica não é possível no contexto anatômico. Qual afirmação é adequada?',['A exploração cirúrgica pode ser opção conforme caso e experiência','Considerar a colangiorressonância um tratamento definitivo do cálculo','Ressecar a via biliar principal rotineiramente para qualquer cálculo','Manter a obstrução sem avaliar alternativas de drenagem ou tratamento'],0,'Resposta esperada: a escolha de acesso integra anatomia, experiência e recursos, podendo incluir exploração da via biliar. Por que as demais não servem: A opção «Considerar a colangiorressonância um tratamento definitivo do cálculo» não é adequada porque é exame diagnóstico e não remove o cálculo que precisa de tratamento. A opção «Ressecar a via biliar principal rotineiramente para qualquer cálculo» não é adequada porque essa ressecção não é a solução habitual e automática para litíase ductal. A opção «Manter a obstrução sem avaliar alternativas de drenagem ou tratamento» não é adequada porque a impossibilidade de uma via de acesso exige avaliar outras estratégias adequadas, não abandonar o controle do problema.');
-Q('cirvb','Tumor peri-hilar foi descrito por Bismuth-Corlette. Ainda faltam informações sobre vasos, disseminação e fígado remanescente. O que se pode concluir?',['A classe ductal basta para decidir qualquer operação','A classificação organiza o mapa ductal, mas não define sozinha a ressecabilidade','A ausência de vesícula palpável comprova benignidade','Marcador tumoral substitui todo o estadiamento'],1,'Resposta esperada: invasão vascular, doença à distância e reserva do remanescente precisam ser integradas ao mapa ductal. Por que as demais não servem: A opção «A classe ductal basta para decidir qualquer operação» não é adequada porque a possibilidade de ressecção depende de fatores anatômicos e funcionais adicionais. A opção «A ausência de vesícula palpável comprova benignidade» não é adequada porque obstrução alta pode ocorrer em doença maligna sem vesícula distendida. A opção «Marcador tumoral substitui todo o estadiamento» não é adequada porque o marcador é complementar e não substitui estadiamento.');
-Q('cirvb','Pessoa ictérica e com inflamação biliar tem marcador tumoral elevado. Qual interpretação evita um diagnóstico precipitado?',['O marcador confirma câncer isoladamente','Colestase impede qualquer investigação','Colestase e inflamação podem elevar o marcador, que deve ser contextualizado','Todo marcador elevado define irressecabilidade'],2,'Resposta esperada: marcadores precisam ser interpretados junto à clínica e à imagem, especialmente durante obstrução ou infecção. Por que as demais não servem: A opção «O marcador confirma câncer isoladamente» não é adequada porque a elevação não é prova histológica nem anatômica de câncer. A opção «Colestase impede qualquer investigação» não é adequada porque o contexto deve orientar investigação, não interrompê-la. A opção «Todo marcador elevado define irressecabilidade» não é adequada porque ressecabilidade depende de extensão e condição clínica, não de marcador isolado.');
-Q('cirvb','Câncer de vesícula foi descoberto na peça de uma colecistectomia. Qual deve ser a primeira organização da avaliação oncológica?',['Declarar cura sem ler o laudo','Reoperar imediatamente sem estadiar','Ignorar margens porque a vesícula foi removida','Revisar profundidade, margens e disseminação antes de definir ampliação'],3,'Resposta esperada: a revisão anatomopatológica e o estadiamento orientam a possibilidade e a necessidade de ressecção complementar. Por que as demais não servem: A opção «Declarar cura sem ler o laudo» não é adequada porque a suficiência da operação depende do estágio e das margens. A opção «Reoperar imediatamente sem estadiar» não é adequada porque a ampliação precisa ser planejada com base em dados oncológicos. A opção «Ignorar margens porque a vesícula foi removida» não é adequada porque margens são parte importante da avaliação.');
-Q('cirvb','Após colecistectomia incidentalmente oncológica, a peça indica invasão além da mucosa e a investigação identifica disseminação à distância. Qual erro deve ser evitado?',['Aplicar uma regra de reoperação sem considerar a doença disseminada','Reavaliar intenção terapêutica','Discutir o caso em equipe especializada','Integrar condição clínica e objetivos do tratamento'],0,'Resposta esperada: a indicação de ampliação oncológica não pode ignorar disseminação e possibilidade real de benefício. Por que as demais não servem: A opção «Reavaliar intenção terapêutica» não é adequada porque reavaliar a intenção é adequado diante da disseminação, não um erro a evitar. A opção «Discutir o caso em equipe especializada» não é adequada porque a discussão especializada é adequada para o cenário e não representa o erro perguntado. A opção «Integrar condição clínica e objetivos do tratamento» não é adequada porque integrar condição clínica e objetivos é necessário, não a aplicação automática que deve ser evitada.');
-Q('cirvb','Pessoa com dilatação congênita da via biliar tem episódios de colangite. A equipe discute cisto de colédoco. Qual princípio evita manter o risco da doença?',['Apenas drenar todo cisto, sem avaliar sua anatomia','Planejar tratamento definitivo conforme tipo anatômico, não apenas drenagem sintomática','Tratar como cisto simples hepático sem seguimento','Considerar o diagnóstico sempre benigno e sem complicações'],1,'Resposta esperada: o manejo depende do tipo, da extensão e do risco, com abordagem hepatobiliar especializada. Por que as demais não servem: A opção «Apenas drenar todo cisto, sem avaliar sua anatomia» não é adequada porque drenagem isolada pode deixar o segmento doente e seus riscos. A opção «Tratar como cisto simples hepático sem seguimento» não é adequada porque a anatomia e os riscos não equivalem aos de um cisto hepático simples. A opção «Considerar o diagnóstico sempre benigno e sem complicações» não é adequada porque colangite, pancreatite e neoplasia podem integrar as complicações.');
-Q('cirvb','Pessoa com obstrução biliar maligna sem opção curativa apresenta prurido importante. Qual pergunta deve orientar um procedimento paliativo?',['É possível colocar o maior número de próteses?','Toda icterícia exige procedimento, independentemente de benefício','Qual objetivo clínico a drenagem atende e qual risco ela acrescenta?','A técnica disponível substitui a discussão de objetivos'],2,'Resposta esperada: alívio de sintomas, controle de infecção e possibilidade de terapia sistêmica são objetivos que precisam ser definidos. Por que as demais não servem: A opção «É possível colocar o maior número de próteses?» não é adequada porque quantidade de dispositivos não equivale a benefício clínico. A opção «Toda icterícia exige procedimento, independentemente de benefício» não é adequada porque o balanço entre benefício e risco depende do contexto. A opção «A técnica disponível substitui a discussão de objetivos» não é adequada porque planejamento paliativo também exige decisão compartilhada e finalidade clara.');
-Q('cirvb','Pessoa com suspeita de tumor biliar potencialmente tratável foi encaminhada para obtenção de tecido. Qual cuidado é importante antes da punção?',['Toda via de biópsia tem o mesmo efeito no planejamento','O diagnóstico deve sempre ser obtido por punção aleatória','Não é necessário mapear a anatomia','Discutir necessidade e via de obtenção de tecido na estratégia especializada'],3,'Resposta esperada: necessidade e acesso para amostra devem ser planejados em conjunto com o tratamento pretendido. Por que as demais não servem: A opção «Toda via de biópsia tem o mesmo efeito no planejamento» não é adequada porque a via pode interferir em riscos e estratégias posteriores. A opção «O diagnóstico deve sempre ser obtido por punção aleatória» não é adequada porque a investigação deve ser dirigida e contextualizada. A opção «Não é necessário mapear a anatomia» não é adequada porque o mapa anatômico é central em doença biliar.');
-Q('cirfig','Pessoa assintomática tem nódulo hepático com padrão vascular típico de hemangioma em avaliação adequada. Qual decisão evita dano desnecessário?',['Valorizar o diagnóstico por imagem e evitar biópsia de rotina','Biopsiar qualquer nódulo vascular para confirmar','Ressecar todo achado incidental','Realizar embolização profilática apenas pelo achado assintomático'],0,'Resposta esperada: uma caracterização típica pode estabelecer a natureza da lesão sem punção desnecessária. Por que as demais não servem: A opção «Biopsiar qualquer nódulo vascular para confirmar» não é adequada porque lesão vascular típica não deve ser puncionada reflexamente. A opção «Ressecar todo achado incidental» não é adequada porque o balanço benefício-risco não favorece operação universal de achados benignos. A opção «Realizar embolização profilática apenas pelo achado assintomático» não é adequada porque o padrão típico benigno sem repercussão não determina intervenção preventiva automática.');
-Q('cirfig','Pessoa tem lesão hepática inicialmente chamada de benigna, mas a diferenciação entre hiperplasia nodular focal e adenoma ainda não foi resolvida. Por que essa distinção importa?',['As duas têm obrigatoriamente o mesmo comportamento','O risco de sangramento e transformação modifica a orientação','Toda cicatriz central dispensa correlação com outras fases e contexto','O contraste hepatobiliar é irrelevante para essa diferenciação'],1,'Resposta esperada: caracterizar a lesão evita tanto tratamento excessivo quanto observação inadequada de adenoma de risco. Por que as demais não servem: A opção «As duas têm obrigatoriamente o mesmo comportamento» não é adequada porque os riscos e as indicações de intervenção não são equivalentes. A opção «Toda cicatriz central dispensa correlação com outras fases e contexto» não é adequada porque uma característica isolada não substitui caracterização completa de uma lesão indeterminada. A opção «O contraste hepatobiliar é irrelevante para essa diferenciação» não é adequada porque o comportamento nas fases de imagem pode contribuir para distinguir essas lesões.');
-Q('cirfig','Pessoa com adenoma hepático usa estrogênio. Sem sangramento ativo, inicia discussão de tratamento. Qual medida faz parte do raciocínio inicial?',['Manter a exposição sem reavaliar','Chamar a lesão de hemangioma sem revisão','Rever exposição hormonal e estratificar os riscos da lesão','Biopsiar às cegas toda lesão hipervascular'],2,'Resposta esperada: retirada de fatores associados e avaliação de risco orientam observação ou intervenção conforme o caso. Por que as demais não servem: A opção «Manter a exposição sem reavaliar» não é adequada porque a exposição pode participar do contexto biológico da lesão. A opção «Chamar a lesão de hemangioma sem revisão» não é adequada porque as lesões têm comportamento e manejo distintos. A opção «Biopsiar às cegas toda lesão hipervascular» não é adequada porque punção exige indicação e planejamento, não deve ser reflexa.');
-Q('cirfig','Pessoa com adenoma hepático apresenta hemorragia e repercussão clínica. Qual princípio orienta a sequência do tratamento?',['Discutir apenas seguimento eletivo sem estabilizar','Priorizar biópsia para subtipagem antes de controlar a hemorragia','Indicar ressecção imediata como regra sem reanimação nem avaliação vascular','Estabilizar e avaliar controle vascular do sangramento antes do plano definitivo'],3,'Resposta esperada: o controle da urgência e a definição posterior do tratamento definitivo devem ser integrados. Por que as demais não servem: A opção «Discutir apenas seguimento eletivo sem estabilizar» não é adequada porque hemorragia com repercussão exige abordagem inicial do sangramento. A opção «Priorizar biópsia para subtipagem antes de controlar a hemorragia» não é adequada porque a prioridade imediata é estabilizar e controlar a perda sanguínea, não acrescentar risco com amostra antes da hemostasia. A opção «Indicar ressecção imediata como regra sem reanimação nem avaliação vascular» não é adequada porque a sequência deve considerar estabilização, gravidade e alternativas de controle do sangramento.');
-Q('cirfig','Pessoa com abscesso hepático piogênico mantém febre apesar de tratamento inicial. Há antecedente de obstrução biliar. O que não deve faltar na reavaliação?',['Pesquisar e tratar a fonte, além de avaliar antibiótico e drenagem','Trocar repetidamente antibiótico sem investigar o foco','Supor que toda coleção desaparece sem controle da causa','Considerar a febre sempre medicamentosa'],0,'Resposta esperada: persistência de fonte biliar, drenagem insuficiente ou outro diagnóstico podem explicar a falha. Por que as demais não servem: A opção «Trocar repetidamente antibiótico sem investigar o foco» não é adequada porque mudar droga sem avaliar a origem pode manter a infecção. A opção «Supor que toda coleção desaparece sem controle da causa» não é adequada porque o controle da causa é parte do tratamento. A opção «Considerar a febre sempre medicamentosa» não é adequada porque reação medicamentosa não deve ser presumida diante de possível foco persistente.');
-Q('cirfig','Pessoa com abscesso amebiano responde ao tratamento tecidual. Qual componente etiológico não deve ser esquecido no plano?',['Drenagem obrigatória em todos os casos','Tratamento da infecção luminal conforme protocolo','Suspender qualquer tratamento etiológico quando a febre desaparecer','Apenas analgésico depois da resposta clínica'],1,'Resposta esperada: o tratamento luminal integra o manejo da infecção e não se confunde com a drenagem da coleção. Por que as demais não servem: A opção «Drenagem obrigatória em todos os casos» não é adequada porque drenagem é seletiva e não substitui o tratamento etiológico. A opção «Suspender qualquer tratamento etiológico quando a febre desaparecer» não é adequada porque resposta clínica inicial não substitui completar o tratamento da infecção conforme o protocolo. A opção «Apenas analgésico depois da resposta clínica» não é adequada porque alívio de sintomas não garante eliminação da infecção.');
-Q('cirfig','Pessoa de área rural tem cisto hepático com vesículas filhas. A equipe considera doença hidática. Qual medida de segurança é correta?',['Puncionar como qualquer cisto simples','Fazer biópsia sem planejamento para ganhar tempo','Planejar abordagem especializada pelo risco de extravasamento e reação anafilática','Descartar doença parasitária porque a lesão é cística'],2,'Resposta esperada: a suspeita muda o planejamento percutâneo ou cirúrgico e requer medidas específicas. Por que as demais não servem: A opção «Puncionar como qualquer cisto simples» não é adequada porque o conteúdo pode gerar disseminação e reação grave. A opção «Fazer biópsia sem planejamento para ganhar tempo» não é adequada porque a obtenção de material não deve ignorar o diagnóstico provável e os riscos. A opção «Descartar doença parasitária porque a lesão é cística» não é adequada porque a natureza cística pode ser justamente uma pista para hidatidose.');
-Q('cirfig','Cirrótico tem tumor hepático aparentemente removível, mas sinais relevantes de descompensação. Qual argumento deve entrar antes de indicar ressecção?',['Basta o tumor caber na peça','A reserva hepática não interfere no resultado','Toda doença localizada tem a mesma operação','A ressecabilidade funcional precisa acompanhar a possibilidade anatômica'],3,'Resposta esperada: carga tumoral e reserva do fígado devem ser integradas, incluindo alternativas em pacientes selecionados. Por que as demais não servem: A opção «Basta o tumor caber na peça» não é adequada porque a retirada pode deixar remanescente incapaz de sustentar função. A opção «A reserva hepática não interfere no resultado» não é adequada porque reserva e hipertensão portal influenciam risco e opções. A opção «Toda doença localizada tem a mesma operação» não é adequada porque condição do parênquima muda as estratégias.');
-Q('cirfig','Pessoa com hepatite B sem cirrose tem lesão suspeita. A equipe discute se critérios não invasivos de imagem podem ser aplicados. Qual afirmação é mais correta?',['Avaliar se o paciente pertence a grupo em que esses critérios foram validados','Decidir a indicação de biópsia apenas pela ausência de cirrose','Usar marcador tumoral isolado para confirmar a lesão','Qualquer realce isolado dispensa avaliação do contexto'],0,'Resposta esperada: alguns grupos de risco sem cirrose também podem ser elegíveis; a aplicação precisa considerar a população e o padrão completo. Por que as demais não servem: A opção «Decidir a indicação de biópsia apenas pela ausência de cirrose» não é adequada porque o grupo de risco e a validade dos critérios não invasivos também precisam ser avaliados. A opção «Usar marcador tumoral isolado para confirmar a lesão» não é adequada porque marcador isolado não substitui avaliação por imagem ou histológica quando necessária. A opção «Qualquer realce isolado dispensa avaliação do contexto» não é adequada porque o padrão e a população de aplicação precisam ser adequados.');
-Q('cirfig','Pessoa com hepatocarcinoma tem doença tumoral limitada, mas importante comprometimento funcional. Qual componente do planejamento evita usar apenas o tamanho da lesão?',['Escolher tratamento pela dor isoladamente','Integrar tumor, função hepática e estado geral','Ignorar a doença de base até a recidiva','Usar somente o marcador tumoral para definir a estratégia'],1,'Resposta esperada: o benefício e a tolerância dependem da carga tumoral e da reserva clínica e hepática. Por que as demais não servem: A opção «Escolher tratamento pela dor isoladamente» não é adequada porque sintoma isolado não substitui estadiamento e avaliação funcional. A opção «Ignorar a doença de base até a recidiva» não é adequada porque a doença de base interfere desde a decisão inicial. A opção «Usar somente o marcador tumoral para definir a estratégia» não é adequada porque o marcador é complementar e não define sozinho o tratamento.');
-Q('cirfig','Pessoa com hepatocarcinoma apresenta invasão vascular e a equipe avalia tratamento sistêmico. Qual fator deve ser integrado à seleção do esquema?',['Selecionar o esquema apenas pela presença de invasão vascular','Presumir ausência de risco de sangramento','Função hepática, condição clínica, risco de sangramento e diretriz atual','Aplicar o mesmo esquema a qualquer pessoa sem avaliação'],2,'Resposta esperada: o tratamento deve ser individualizado e a preferência mais recente por subgrupo precisa ser conferida. Por que as demais não servem: A opção «Selecionar o esquema apenas pela presença de invasão vascular» não é adequada porque a extensão tumoral importa, mas reserva hepática, estado clínico e contraindicações também determinam a escolha. A opção «Presumir ausência de risco de sangramento» não é adequada porque o risco pode modificar elegibilidade e preparação para terapias. A opção «Aplicar o mesmo esquema a qualquer pessoa sem avaliação» não é adequada porque função e contraindicações não podem ser ignoradas.');
-Q('cirfig','Pessoa tratada por câncer colorretal tem metástases hepáticas selecionadas e potencialmente controláveis. Qual decisão é mais adequada?',['Excluir qualquer intenção curativa pelo termo metástase','Considerar o número de lesões a única informação necessária','Indicar transplante automaticamente','Discutir ressecabilidade e controle global em equipe hepatobiliar e oncológica'],3,'Resposta esperada: o planejamento precisa integrar anatomia, doença fora do fígado e sequência de tratamentos. Por que as demais não servem: A opção «Excluir qualquer intenção curativa pelo termo metástase» não é adequada porque alguns pacientes podem integrar estratégias com intenção curativa. A opção «Considerar o número de lesões a única informação necessária» não é adequada porque distribuição, reserva e biologia também importam. A opção «Indicar transplante automaticamente» não é adequada porque não é indicação automática para o cenário descrito.');
-Q('cirfig','Ao planejar hepatectomia, a equipe consegue retirar a lesão, mas tem dúvida sobre função do remanescente. Qual é a prioridade?',['Avaliar reserva funcional e anatomia vascular e biliar do fígado que ficará','Prosseguir porque margens são o único objetivo','Considerar irrelevante a hipertensão portal','Definir a segurança apenas pelo lado do fígado a ressecar'],0,'Resposta esperada: o remanescente precisa manter perfusão, drenagem e função adequadas para tolerar a operação. Por que as demais não servem: A opção «Prosseguir porque margens são o único objetivo» não é adequada porque controle oncológico sem segurança funcional pode produzir desfecho grave. A opção «Considerar irrelevante a hipertensão portal» não é adequada porque hipertensão portal pode influenciar risco e seleção. A opção «Definir a segurança apenas pelo lado do fígado a ressecar» não é adequada porque lateralidade isolada não resume volume funcional e qualidade do parênquima.');
-Q('cirfig','Depois de tratamento de hepatocarcinoma, pessoa apresenta ascite e piora funcional apesar de controle aparente do foco tumoral tratado. Qual interpretação é adequada?',['Todo sintoma novo significa falha local do tumor','A doença hepática de base pode descompensar e precisa de avaliação própria','O controle tumoral elimina o risco de doença hepática','A ascite dispensa investigação porque era esperada'],1,'Resposta esperada: seguimento deve monitorar tumor e reserva do parênquima simultaneamente. Por que as demais não servem: A opção «Todo sintoma novo significa falha local do tumor» não é adequada porque o quadro pode ter causas hepáticas e outras além de recidiva local. A opção «O controle tumoral elimina o risco de doença hepática» não é adequada porque o parênquima continua sujeito a complicações e progressão. A opção «A ascite dispensa investigação porque era esperada» não é adequada porque a nova descompensação altera manejo e prognóstico.');
-Q('cirfig','Cirrótico com hematêmese tem suspeita de sangramento varicoso. A equipe organiza endoscopia. Qual conjunto deve acompanhar o suporte inicial?',['Aguardar a endoscopia antes de qualquer medida específica','Usar apenas IBP e ignorar o risco infeccioso','Tratamento vasoativo e profilaxia antibiótica conforme protocolo, com controle endoscópico','Priorizar dieta oral para testar tolerância'],2,'Resposta esperada: controle hemodinâmico, tratamento portal, prevenção de infecção e endoscopia integram o manejo. Por que as demais não servem: A opção «Aguardar a endoscopia antes de qualquer medida específica» não é adequada porque a suspeita clínica já pode justificar medidas específicas indicadas. A opção «Usar apenas IBP e ignorar o risco infeccioso» não é adequada porque o pacote do sangramento portal não se resume ao antissecretor. A opção «Priorizar dieta oral para testar tolerância» não é adequada porque há risco de nova hemorragia e aspiração, que exige planejamento clínico.');
-Q('cirfig','O primeiro episódio de sangramento varicoso foi controlado por ligadura. Qual plano deve ser discutido antes da alta?',['Encerrar seguimento porque a variz foi ligada','Suspender toda avaliação da doença hepática','Reservar qualquer prevenção para novo choque','Planejar profilaxia secundária e acompanhamento da doença de base'],3,'Resposta esperada: terapia e seguimento após o episódio integram o tratamento, conforme tolerância e indicação. Por que as demais não servem: A opção «Encerrar seguimento porque a variz foi ligada» não é adequada porque a hipertensão portal e o risco de recorrência podem persistir. A opção «Suspender toda avaliação da doença hepática» não é adequada porque o parênquima e as outras complicações precisam de acompanhamento. A opção «Reservar qualquer prevenção para novo choque» não é adequada porque a prevenção busca evitar um novo evento, não apenas reagir a ele.');
-Q('cirfig','Hemorragia portal não foi controlada pela abordagem inicial e um recurso temporário contém o sangramento. Qual é a função correta dessa medida?',['Servir de ponte para tratamento definitivo, com vigilância de complicações','Substituir indefinidamente qualquer resgate','Eliminar a hipertensão portal','Tornar desnecessária reavaliação da via aérea'],0,'Resposta esperada: o recurso temporário controla a emergência enquanto se organiza uma solução adequada ao mecanismo e ao paciente. Por que as demais não servem: A opção «Substituir indefinidamente qualquer resgate» não é adequada porque o tempo e os riscos limitam a função dessas medidas. A opção «Eliminar a hipertensão portal» não é adequada porque contenção local não necessariamente reduz a causa da pressão portal. A opção «Tornar desnecessária reavaliação da via aérea» não é adequada porque risco de aspiração e segurança respiratória continuam relevantes.');
-Q('cirfig','Pessoa com sangramento portal recorrente será avaliada para TIPS e já tem episódios de encefalopatia. Qual efeito precisa ser discutido?',['A redução da pressão portal impede qualquer descompensação hepática','O desvio portossistêmico pode aumentar o risco de encefalopatia','O procedimento elimina qualquer necessidade de transplante','Encefalopatia nunca interfere na seleção'],1,'Resposta esperada: desviar sangue do fígado altera a depuração e pode agravar encefalopatia, exigindo balanço individual de risco e benefício. Por que as demais não servem: A opção «A redução da pressão portal impede qualquer descompensação hepática» não é adequada porque a derivação pode controlar hipertensão portal, mas não cura o parênquima nem exclui outras descompensações. A opção «O procedimento elimina qualquer necessidade de transplante» não é adequada porque o plano de transplante pode continuar relevante. A opção «Encefalopatia nunca interfere na seleção» não é adequada porque o histórico neurológico e a reserva influenciam a decisão.');
-Q('cirfig','Pessoa com hipertensão portal de mecanismo pré-sinusoidal tem esplenomegalia e função hepática relativamente preservada. Qual cuidado evita interpretar um marcador de forma inadequada?',['Presumir que toda hipertensão portal é cirrose','Concluir ausência de hipertensão portal por um único dado hemodinâmico','Reconhecer que o gradiente venoso hepático não representa igualmente todos os mecanismos','Dispensar estudo da anatomia vascular'],2,'Resposta esperada: o método reflete melhor determinados componentes da resistência; causa e anatomia precisam ser integradas. Por que as demais não servem: A opção «Presumir que toda hipertensão portal é cirrose» não é adequada porque as causas pré-sinusoidais têm fisiopatologia distinta. A opção «Concluir ausência de hipertensão portal por um único dado hemodinâmico» não é adequada porque a interpretação depende do nível da resistência e do contexto. A opção «Dispensar estudo da anatomia vascular» não é adequada porque o território vascular e o mecanismo são parte central da investigação.');
-Q('cirfig','Pessoa com antecedente pancreático apresenta varizes gástricas e suspeita de hipertensão portal segmentar. Qual mecanismo deve entrar no diferencial?',['Trombose de veias hepáticas como mecanismo segmentar esplênico típico','Cirrose sinusoidal como única explicação de varizes gástricas','Obstrução da via biliar como causa direta da hipertensão venosa esplênica','Trombose da veia esplênica'],3,'Resposta esperada: a obstrução do escoamento esplênico pode produzir colaterais e varizes em território segmentar. Por que as demais não servem: A opção «Trombose de veias hepáticas como mecanismo segmentar esplênico típico» não é adequada porque a obstrução do efluxo hepático produz outro padrão fisiopatológico, não o mecanismo regional clássico associado ao pâncreas. A opção «Cirrose sinusoidal como única explicação de varizes gástricas» não é adequada porque há causas segmentares e a história pancreática faz pensar em obstrução do território esplênico. A opção «Obstrução da via biliar como causa direta da hipertensão venosa esplênica» não é adequada porque a obstrução ductal não explica por si só o mecanismo vascular segmentar descrito.');
-Q('cirfig','Antes de TIPS, pessoa com hipertensão portal também apresenta doença cardíaca relevante. Qual avaliação pertence à seleção?',['Balancear a repercussão cardíaca esperada da derivação com o benefício portal','Ignorar o coração porque a indicação é hepática','Indicar o procedimento apenas pela disponibilidade técnica','Afirmar que qualquer derivação reduz obrigatoriamente a sobrecarga cardíaca'],0,'Resposta esperada: o aumento do retorno circulatório após desvio portossistêmico pode ter consequências, e a avaliação cardíaca integra risco e contraindicações. Por que as demais não servem: A opção «Ignorar o coração porque a indicação é hepática» não é adequada porque a interação hemodinâmica faz parte da segurança. A opção «Indicar o procedimento apenas pela disponibilidade técnica» não é adequada porque possibilidade técnica não substitui benefício e elegibilidade clínica. A opção «Afirmar que qualquer derivação reduz obrigatoriamente a sobrecarga cardíaca» não é adequada porque a repercussão pode ser desfavorável em situações selecionadas.');
-Q('cirrad','Adulto estável apresenta dor abdominal progressiva e defesa involuntária. A radiografia não mostra ar livre. A equipe ainda suspeita de perfuração. Qual interpretação melhor orienta o próximo passo?',['A ausência de pneumoperitônio exclui perfuração e permite alta','A radiografia pode ser negativa; manter avaliação cirúrgica e considerar TC conforme a condição clínica','Repetir apenas radiografias até aparecer ar sob o diafragma','Solicitar endoscopia como confirmação rotineira de qualquer perfuração suspeita'],1,'Radiografia negativa não afasta perfuração e a suspeita precisa ser integrada ao exame clínico, à avaliação cirúrgica e à TC quando apropriada. A alta baseada apenas na ausência de gás livre ignora a limitação do método. Repetir radiografias como única estratégia pode atrasar o diagnóstico. Endoscopia não é confirmação rotineira para toda suspeita de perfuração e sua indicação depende do cenário.');
-Q('cirrad','Paciente com dor abdominal tem gás ramificado na periferia hepática em exame de imagem. A história não inclui procedimento biliar recente. Qual descrição e interpretação são mais adequadas?',['Pneumobilia fisiológica, que sempre dispensa investigação','Gás portal, que por si só comprova necrose intestinal irreversível','Gás portal, a ser interpretado com perfusão, sintomas e demais achados para investigar sua causa','Artefato sem significado, pois gás não pode alcançar o fígado'],2,'A distribuição periférica favorece gás portal e exige integração clínica para definir causa e gravidade. Pneumobilia tende a distribuição central e não é fisiológica em qualquer contexto. Gás portal isolado não prova necrose irreversível, pois diferentes causas existem. Descartar como artefato ignora um achado possível e clinicamente relevante.');
-Q('cirrad','Adulto com dor abdominal de características pouco específicas apresenta apêndice de calibre limítrofe na TC, sem reação inflamatória importante na gordura adjacente. Qual é a melhor leitura?',['Um calibre limítrofe isolado exige integrar sintomas, parede e sinais adjacentes antes de concluir apendicite','O calibre isolado indica apendicectomia imediata em qualquer paciente','A ausência de abscesso exclui apendicite em qualquer estágio','Um apendicolito, se presente, confirma sozinho inflamação aguda'],0,'A interpretação de apendicite depende do conjunto e não apenas de uma medida. Operar todo calibre limítrofe desconsidera sobreposição com variações sem inflamação. Ausência de abscesso não exclui doença não complicada. Apendicolito pode existir sem inflamação e não deve ser usado isoladamente como confirmação.');
-Q('cirrad','Paciente com hipótese inicial de pancreatite evolui com dor atípica e sinais que levantam suspeita de outra causa de abdome agudo. O quadro é recente. Como deve ser discutida a TC?',['É proibida enquanto não chegar uma janela temporal fixa','É obrigatória para todo diagnóstico de pancreatite, mesmo típico e estável','Só pode ser usada depois de demonstrar necrose por outro método','Pode ser indicada para esclarecer a dúvida ou deterioração, reconhecendo que exame precoce pode subestimar necrose'],3,'A pergunta diagnóstica e a evolução podem justificar TC precoce; a limitação é não representar ainda toda a extensão da necrose. Proibir o exame por calendário pode atrasar outro diagnóstico grave. Torná-lo obrigatório em toda pancreatite também é inadequado, pois muitos quadros típicos não precisam de TC apenas para confirmação. Exigir necrose demonstrada antes inverte a finalidade da investigação.');
-Q('cirrad','Vítima de trauma apresenta piora da perfusão depois de FAST inicial sem líquido visível. O registro informa que a janela pélvica foi limitada. Qual raciocínio é mais adequado?',['Exame limitado equivale a FAST negativo de alta qualidade','A investigação deve continuar, revendo janelas e outras fontes de choque conforme a estabilidade','A ausência de líquido prova que não há hemorragia','Todo paciente deve ser transportado imediatamente à TC, independentemente da condição clínica'],1,'Uma janela limitada não oferece avaliação completa e mesmo FAST adequado não exclui toda lesão ou hemorragia. Equiparar limitação a negatividade confiável superestima o teste. Concluir ausência de sangramento ignora fontes não avaliadas e sangramento sem líquido detectável. Transportar qualquer paciente à TC sem considerar estabilidade pode atrasar controle urgente e ser inseguro.');
-Q('cirrad','Paciente traumatizado recém-intubado tem ventilação assimétrica e ausência de deslizamento pleural em uma região. Não foi identificado ponto pulmonar e a avaliação ainda é inconclusiva. Qual afirmação está correta?',['Ausência de deslizamento confirma pneumotórax e exclui intubação seletiva','O modo M sem praia informa apenas que o aparelho está defeituoso','Ausência de deslizamento tem diferenciais; revisar ventilação, tubo e sinais adicionais sem atrasar tratamento se houver quadro de tensão','A ausência de ponto pulmonar exclui qualquer pneumotórax'],2,'Ausência de deslizamento exige integração: pneumotórax, intubação seletiva e outras condições podem explicá-la. O achado isolado não confirma uma única causa nem elimina problemas do tubo. O padrão do modo M pode ser real e não representa necessariamente falha do aparelho. Não identificar ponto pulmonar tampouco exclui pneumotórax.');
-Q('cirrad','Idoso com episódios de hematoquezia realizou angioTC sem extravasamento. Depois do exame voltou a sangrar. Qual conclusão é mais adequada?',['A angioTC não mostrou extravasamento naquele momento; sangramento intermitente permanece possível e requer reavaliação','A angioTC negativa exclui fonte digestiva e torna desnecessário monitorar','A recorrência prova que a primeira leitura estava necessariamente errada','A única conduta possível é ressecção intestinal sem localização'],0,'A detecção depende da atividade do sangramento durante a aquisição e uma nova manifestação exige reavaliação clínica e do método apropriado. Um exame negativo não exclui fonte intermitente nem dispensa vigilância. A recorrência não prova erro de leitura, pois o sangramento pode ter cessado durante o exame. Ressecção sem localização pode falhar e não é a única estratégia disponível.');
-Q('cirrad','Na investigação de hemorragia digestiva, a TC mostra material hiperdenso dentro de uma alça já na aquisição sem contraste. Qual cuidado evita chamar esse material de sangramento ativo indevidamente?',['Ignorar a aquisição sem contraste e interpretar somente a imagem mais brilhante','Considerar qualquer conteúdo hiperdenso como extravasamento arterial','Definir a causa pelo nome do segmento intestinal, sem comparar imagens','Comparar as fases e avaliar aparecimento ou mudança do contraste no interior da alça'],3,'Comparar as fases permite separar material previamente hiperdenso de contraste extravasado que surge ou se modifica. Ignorar a aquisição inicial perde essa referência. Conteúdo hiperdenso pode ter outras causas e não confirma sangramento arterial. O segmento anatômico ajuda na localização, mas não substitui demonstrar o comportamento do achado.');
-Q('cirrad','Adulto com disfagia progressiva e perda ponderal importante tem afilamento distal em bico de pássaro no esofagograma. Qual etapa evita uma conclusão precipitada?',['Assumir acalasia primária e tratar sem examinar a mucosa ou a junção','Investigar causa obstrutiva e pseudoacalasia, integrando endoscopia e avaliação complementar','Concluir que bico de pássaro é sinal exclusivo de câncer','Dispensar investigação porque qualquer distúrbio motor é benigno'],1,'O padrão pode sugerir acalasia, mas a história exige excluir causa orgânica e pseudoacalasia. Tratar sem investigar pode deixar passar obstrução tumoral. O sinal também não é exclusivo de câncer. Chamar todo distúrbio motor de benigno e dispensar avaliação ignora diagnóstico diferencial e repercussão clínica.');
-Q('cirrad','Uma úlcera gástrica tem contornos regulares e pregas que chegam à cratera no estudo contrastado. O paciente pergunta se isso exclui câncer. Qual resposta é correta?',['O padrão prova benignidade e torna biópsia desnecessária','A regularidade confirma malignidade avançada','O aspecto favorece uma hipótese, mas não substitui endoscopia e avaliação histológica apropriada','O contraste informa a histologia com a mesma finalidade de uma amostra de tecido'],2,'A morfologia pode favorecer benignidade, mas não oferece confirmação histológica e não elimina a investigação endoscópica. Provar benignidade apenas pelo desenho é uma extrapolação. A regularidade também não define malignidade avançada. Um estudo contrastado e uma amostra histológica respondem perguntas diferentes.');
-Q('cirrad','Paciente assintomático tem lesão hepática incidental com realce periférico nodular e preenchimento progressivo em estudo dinâmico. Qual raciocínio melhor orienta a investigação?',['Reconhecer padrão compatível com hemangioma e confirmar caracterização antes de indicar procedimento invasivo','Indicar biópsia de rotina para toda lesão sólida, sem revisar as fases','Interpretar realce nodular como sinônimo de qualquer anel tumoral contínuo','Usar apenas uma fase isolada para confirmar definitivamente a natureza da lesão'],0,'O comportamento descrito é compatível com hemangioma típico e deve ser integrado ao estudo completo e ao contexto antes de qualquer intervenção. Biópsia de rotina ignora possibilidade de caracterização não invasiva e riscos desnecessários. Realce nodular não é o mesmo que anel contínuo. Uma fase isolada pode perder justamente o padrão temporal que ajuda a diferenciar a lesão.');
-Q('cirrad','Adulto com icterícia apresenta dilatação do colédoco e do ducto pancreático, mas o exame inicial não define massa. Como interpretar o chamado duplo ducto?',['Confirma histologicamente adenocarcinoma de pâncreas','Exclui tumor porque uma massa não foi vista','Significa apenas alteração fisiológica e dispensa correlação clínica','Sugere um nível de obstrução pancreático ou periampular e exige investigar a causa, incluindo neoplasia e processos benignos'],3,'O sinal orienta a investigação da obstrução, sem definir sua natureza. Não fornece histologia para confirmar adenocarcinoma. A ausência de massa no exame inicial não exclui lesão pequena ou limitações de técnica. Também não pode ser chamado de fisiológico sem correlacionar sintomas, exames e possíveis causas.');
-Q('ciruro','Idoso tabagista que usa anticoagulante apresenta hematúria visível indolor. Está estável e não há sintomas infecciosos claros. Qual interpretação é mais adequada?',['O anticoagulante explica toda hematúria e elimina a necessidade de investigação','O medicamento pode revelar sangramento de uma lesão; avaliar repercussão e investigar o trato urinário conforme o risco','Ausência de dor exclui doença relevante do trato urinário','Basta pedir citologia urinária, pois ela substitui toda avaliação anatômica e endoscópica'],1,'Anticoagulação pode facilitar sangramento de uma lesão subjacente e não resolve a etiologia. Atribuir tudo ao medicamento pode atrasar diagnóstico de neoplasia. Hematúria indolor é justamente uma apresentação possível de doença urotelial importante. Citologia tem uso selecionado e não substitui automaticamente imagem e cistoscopia quando indicadas.');
-Q('ciruro','Homem com doença neurológica tem jato fraco, esvaziamento incompleto e resíduo pós-miccional persistente. A próstata não parece explicar todo o quadro. Qual raciocínio é mais adequado?',['Resíduo elevado prova obstrução prostática e garante benefício de cirurgia','Sintomas de esvaziamento excluem disfunção do detrusor','Investigar obstrução e hipocontratilidade, usando avaliação funcional selecionada se ela puder mudar o tratamento','Escolher tratamento apenas pelo volume prostático na imagem'],2,'Jato fraco e resíduo podem resultar de resistência aumentada, contração insuficiente ou combinação. O resíduo não prova mecanismo nem garante resposta cirúrgica. Sintomas de esvaziamento também ocorrem em detrusor hipoativo. Volume prostático isolado não define a causa e ignora o antecedente neurológico.');
-Q('ciruro','Adulto com cálculo ureteral apresenta febre, sinais de infecção sistêmica e obstrução na imagem. Qual é a prioridade terapêutica?',['Suporte, antibiótico e descompressão do sistema obstruído por via adequada','Terapia expulsiva isolada até que o cálculo passe','Fragmentação definitiva do cálculo como primeira etapa, antes do controle infeccioso','Antibiótico sem avaliar drenagem, pois toda obstrução se resolve quando a febre cai'],0,'Sistema obstruído e infectado precisa de controle da fonte, com descompressão além do suporte e antimicrobiano. Terapia expulsiva não controla o foco em uma emergência infecciosa. Manipulação definitiva durante sepse ativa pode agravar o quadro e costuma ser planejada depois do controle. Antibiótico isolado não remove a barreira mecânica e pode ser insuficiente.');
-Q('ciruro','Paciente com litíase recorrente quer retirar todo cálcio da dieta por acreditar que o cálculo contém cálcio. Ainda não há análise do cálculo nem avaliação metabólica. Qual orientação está correta?',['Toda litíase exige o mesmo medicamento e a mesma dieta','A composição pode ser definida apenas pela intensidade da dor','Retirar completamente o cálcio é sempre protetor e dispensa investigar outros fatores','Individualizar prevenção, pois restrição indiscriminada de cálcio pode piorar a absorção de oxalato e não trata todos os mecanismos'],3,'Prevenção depende de composição, dieta e mecanismo metabólico; retirar cálcio de forma indiscriminada pode ser contraproducente. Um esquema igual para todos ignora diferenças entre tipos de cálculo. Intensidade da dor não identifica composição. A restrição total tampouco dispensa análise e avaliação quando indicadas.');
-Q('ciruro','Depois da drenagem de retenção urinária prolongada, um paciente apresenta débito urinário elevado, sede e sinais de redução do volume circulante. Qual cuidado é mais adequado?',['Dar alta sem vigilância porque urinar muito sempre indica recuperação completa','Monitorar balanço, perfusão e eletrólitos e individualizar suporte para possível diurese pós-obstrutiva','Clampear rotineiramente a drenagem até interromper toda diurese','Tratar o débito com restrição absoluta de líquidos sem avaliar repercussão'],1,'A diurese pós-obstrutiva pode causar perda de água e solutos e precisa de acompanhamento e suporte individualizados. Alto débito não garante recuperação sem riscos. Interromper rotineiramente a drenagem não trata o mecanismo e pode recriar obstrução. Restrição absoluta sem avaliar perfusão pode agravar hipovolemia e distúrbios.');
-Q('ciruro','Adolescente apresenta dor escrotal súbita e posição testicular suspeita. Refere alívio parcial ao elevar o escroto. Qual conduta de raciocínio é correta?',['O sinal de Prehn exclui torção e permite tratar somente como epididimite','A presença de qualquer alívio confirma infecção bacteriana','Manter avaliação cirúrgica urgente para torção; o sinal isolado não permite exclusão','Esperar o quadro mudar de intensidade antes de solicitar avaliação'],2,'O alívio à elevação não tem segurança para excluir torção e a apresentação exige prioridade cirúrgica. Prehn não é prova de ausência de torção nem confirmação de infecção bacteriana. Aguardar mudança da dor pode atrasar tratamento de uma emergência e não melhora a capacidade de decisão.');
-Q('ciruro','Adulto tem sintomas urinários persistentes, piúria e culturas habituais negativas. A história epidemiológica sugere possibilidade de tuberculose, mas ainda não há confirmação. Qual é o melhor raciocínio?',['Investigar tuberculose e outros diferenciais de piúria estéril com métodos apropriados, sem tratar a pista como diagnóstico confirmado','Considerar tuberculose comprovada apenas pela ausência de crescimento na cultura comum','Excluir qualquer infecção porque as culturas habituais vieram negativas','Repetir empiricamente o mesmo antibiótico sem revisar exposição prévia, uretrite, cálculo ou outras causas'],0,'Piúria estéril pede investigação contextual e pode envolver tuberculose, infecções não detectadas no método habitual e causas não infecciosas. Cultura comum negativa não confirma tuberculose e também não exclui todas as infecções. Repetir indefinidamente o mesmo antimicrobiano sem revisar o problema pode atrasar o diagnóstico e causar danos.');
-Q('ciruro','Paciente com tumor vesical foi submetido a ressecção endoscópica. O material não permite avaliar adequadamente a relação com o detrusor, em um cenário em que essa informação muda o tratamento. Qual conclusão é correta?',['Ausência de músculo na amostra prova ausência de invasão muscular','A profundidade é irrelevante para o tratamento de tumor urotelial','Todo paciente pode receber exatamente o mesmo esquema intravesical','O estadiamento está limitado e deve ser revista a necessidade de nova abordagem e amostragem adequada'],3,'A amostra precisa responder à pergunta de profundidade quando isso orienta tratamento; ausência de informação não equivale a ausência de invasão. Ignorar o detrusor pode causar subestadiamento. A profundidade tem importância prognóstica e terapêutica. Um único esquema intravesical para todos desconsidera risco e possível doença músculo-invasiva.');
-Q('ciruro','Paciente com doença renal prévia tem massa renal localizada e anatomia que pode permitir ressecção parcial. Qual princípio deve entrar na decisão?',['Toda massa suspeita exige retirar o rim inteiro, independentemente de anatomia e função','Equilibrar segurança oncológica e preservação de néfrons, discutindo alternativas conforme complexidade e condições clínicas','Usar apenas a presença ou ausência da tríade clássica para escolher cirurgia','Ignorar a função renal porque o tratamento oncológico não pode afetá-la'],1,'A reserva renal e a viabilidade de preservar parênquima fazem parte da decisão, junto ao controle tumoral. Nefrectomia radical não é obrigatória para toda massa. A tríade clássica não define sozinha estratégia nem representa a maioria das apresentações. A função renal pode ser afetada pelo tratamento e precisa ser considerada no planejamento.');
-Q('ciruro','Adulto com massa intratesticular suspeita recebe proposta de punção transescrotal para confirmar o diagnóstico. Qual orientação é mais adequada?',['A punção pelo escroto é o procedimento rotineiro para toda massa testicular suspeita','Marcadores normais excluem câncer e permitem ignorar a massa','Organizar avaliação urológica, marcadores e abordagem inguinal oncológica quando indicada, evitando violação escrotal de rotina','Retirar apenas a lesão por via escrotal antes de qualquer avaliação do cordão ou estadiamento'],2,'A via inguinal faz parte da estratégia oncológica da massa testicular suspeita e deve ser planejada com avaliação urológica e marcadores. Punção transescrotal de rotina pode alterar o planejamento regional e não é a via padrão. Marcadores normais não excluem tumor. Excisão escrotal sem planejamento desconsidera histologia, cordão e estadiamento.');
-
-window.MASTER_CIR_QUESTIONS=q;
-})();
+/* Questões autorais de Cirurgia, revisadas por item. IDs preservados; alternativas embaralhadas no treino e simulado. */
+window.MASTER_CIR_QUESTIONS=[
+  {
+    "id": "ciraa-01",
+    "t": "ciraa",
+    "q": "Homem de 58 anos tem dor abdominal contínua iniciada há quatro horas, acompanhada de um vômito. Interrompeu a anticoagulação da fibrilação atrial há três semanas. Está afebril, PA 112/70 mmHg e FC 118 bpm; refere dor intensa, mas apresenta apenas desconforto difuso à palpação, sem defesa. Hemoglobina e lipase são normais; lactato de 2,1 mmol/L. Não há sangramento digestivo ou contraindicação conhecida à anticoagulação. Qual estratégia é mais apropriada neste momento?",
+    "o": [
+      "Solicitar arteriografia eletiva e manter observação com exames abdominais seriados.",
+      "Solicitar angiotomografia arterial e venosa e iniciar heparina não fracionada.",
+      "Solicitar colonoscopia após preparo e reservar anticoagulação para o resultado.",
+      "Solicitar tomografia sem contraste e repetir o lactato antes de anticoagular."
+    ],
+    "a": 1,
+    "why": "O início abrupto, a fibrilação atrial sem proteção e a discrepância entre dor e palpação sustentam isquemia mesentérica, apesar do lactato pouco elevado. A angiotomografia avalia vasos e viabilidade intestinal; heparina é indicada na ausência de contraindicação, com avaliação vascular/cirúrgica concomitante. Tomografia sem contraste perde informação vascular. Colonoscopia não avalia adequadamente o território suspeito. Observação para confirmação laboratorial pode atrasar revascularização.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "ciraa-02",
+    "t": "ciraa",
+    "q": "Mulher de 24 anos procura atendimento por dor em baixo ventre, inicialmente à direita, seguida de tontura e quase desmaio. Refere última menstruação há sete semanas, ciclos previamente regulares e pequeno sangramento vaginal. PA 88/50 mmHg, FC 124 bpm, extremidades frias e dor difusa à palpação. Enquanto se obtêm acessos venosos, amostra para prova cruzada e avaliação ginecológica, qual investigação inicial pode orientar a decisão sem transferi-la para outro setor?",
+    "o": [
+      "Dosar beta-hCG e realizar ultrassonografia à beira-leito.",
+      "Dosar proteína C reativa e realizar ultrassonografia do apêndice.",
+      "Dosar progesterona e realizar ultrassonografia transvaginal eletiva.",
+      "Dosar hemoglobina e realizar tomografia contrastada da pelve."
+    ],
+    "a": 0,
+    "why": "Atraso menstrual, sangramento e hipoperfusão exigem considerar gestação ectópica rota. Teste de gravidez e ultrassom no atendimento podem mostrar gestação e hemoperitônio, sem postergar ressuscitação e controle hemorrágico. Hemoglobina inicial não quantifica a perda aguda. Progesterona não localiza a gestação. Investigar apendicite isoladamente não responde à emergência; resultados inconclusivos não justificam esperar diante da instabilidade.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "ciraa-03",
+    "t": "ciraa",
+    "q": "Homem de 34 anos está em investigação de dor abdominal há oito horas. Foi colhido exame físico inicial, mas a ultrassonografia ainda não está disponível. Mantém dor de intensidade 8/10 apesar de dipirona; PA 124/78 mmHg, sem depressão respiratória ou alteração do sensório. Um membro da equipe sugere aguardar o cirurgião antes de prescrever opioide. Qual é a melhor decisão?",
+    "o": [
+      "Aguardar a imagem e administrar opioide se a causa exigir operação.",
+      "Usar sedação benzodiazepínica e reservar analgesia para o pós-operatório.",
+      "Administrar analgesia titulada e repetir o exame durante a investigação.",
+      "Repetir a dipirona e adiar opioide até localizar o ponto de maior dor."
+    ],
+    "a": 2,
+    "why": "A analgesia titulada não exige diagnóstico definitivo e não demonstrou comprometer a acurácia diagnóstica no abdome agudo. Deve ser acompanhada de monitorização e reavaliação, sem substituir a investigação. Aguardar imagem ou definição cirúrgica prolonga sofrimento sem benefício diagnóstico. Benzodiazepínico não é substituto de analgesia e pode dificultar avaliação e monitorização.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "ciraa-04",
+    "t": "ciraa",
+    "q": "Homem de 21 anos relata dor que começou ao redor do umbigo e passou para a fossa ilíaca direita. Desde o início perdeu o apetite e vomitou uma vez. Temperatura axilar 37,9 °C; há dor à palpação da fossa ilíaca direita e descompressão dolorosa. O hemograma mostra 15.200 leucócitos/mm³, com 12% de bastões. A equipe calcula o Alvarado para estratificação inicial, antes de discutir exames e tratamento. Qual é a pontuação obtida?",
+    "o": [
+      "7 pontos.",
+      "8 pontos.",
+      "10 pontos.",
+      "9 pontos."
+    ],
+    "a": 2,
+    "why": "Migração, anorexia, náusea/vômito, descompressão, elevação da temperatura e desvio à esquerda somam um ponto cada. Dor em fossa ilíaca direita e leucocitose valem dois cada, totalizando dez. O erro de nove costuma vir da omissão do desvio ou da temperatura. O escore estima probabilidade e não substitui avaliação clínica nem define isoladamente operação.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "ciraa-05",
+    "t": "ciraa",
+    "q": "Menino de nove anos apresenta dor abdominal há 18 horas, inicialmente difusa e agora mais localizada à direita. Está hidratado, afebril no atendimento, sem sinais de peritonite generalizada; o Alvarado calculado foi seis. A hipótese de apendicite permanece após reavaliação. O hospital dispõe de ultrassonografista experiente, tomografia e ressonância, mas nenhum exame foi realizado. Qual método deve iniciar a investigação por imagem?",
+    "o": [
+      "Ressonância de abdome com sedação para aquisição imediata.",
+      "Ultrassonografia com compressão graduada da região apendicular.",
+      "Radiografia de abdome em duas posições para identificar o apêndice.",
+      "Tomografia de abdome com contraste intravenoso em dose convencional."
+    ],
+    "a": 1,
+    "why": "Na criança estável com probabilidade intermediária e equipe experiente, a ultrassonografia é a primeira opção por avaliar o apêndice sem radiação. Exame inconclusivo requer nova estratificação e eventual ressonância ou tomografia, não exclusão automática. A tomografia é valiosa como segunda etapa. Ressonância pode ser usada conforme fluxo local, mas sedação desnecessária não a torna preferível. Radiografia não resolve a suspeita habitual.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "ciraa-06",
+    "t": "ciraa",
+    "q": "Homem de 45 anos procura atendimento após sete dias de dor em fossa ilíaca direita e febre baixa. PA 128/76 mmHg, sem disfunção orgânica ou peritonite difusa. A tomografia mostra processo inflamatório periapendicular e abscesso de cinco centímetros, bem delimitado, com trajeto percutâneo seguro. A equipe não dispõe de cirurgião laparoscópico experiente em plastrão. Qual estratégia inicial é mais adequada?",
+    "o": [
+      "Internar para antibiótico e drenagem percutânea da coleção.",
+      "Programar apendicectomia aberta imediata e lavagem do quadrante.",
+      "Manter antibiótico oral em domicílio com retorno em uma semana.",
+      "Programar ileocolectomia direita imediata com anastomose primária."
+    ],
+    "a": 0,
+    "why": "O abscesso delimitado, a estabilidade e o acesso seguro favorecem antibiótico com drenagem guiada. Cirurgia laparoscópica pode ser alternativa em centros experientes; a indisponibilidade descrita torna o manejo não operatório particularmente adequado. Alta sem monitorização e sem discutir controle da coleção é insuficiente. Colectomia imediata é desproporcional. Após resolução, idade acima de quarenta anos exige investigação de neoplasia conforme o contexto, sem antecipar esse exame na fase aguda.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "ciraa-07",
+    "t": "ciraa",
+    "q": "Mulher de 28 anos foi submetida a apendicectomia laparoscópica. O apêndice estava inflamado, sem perfuração, gangrena, abscesso ou líquido purulento, com controle completo do foco. Recebeu profilaxia adequada antes da incisão. No primeiro pós-operatório está afebril, alimentando-se, com dor controlada; leucócitos caíram de 14.000 para 11.200/mm³. Qual prescrição antimicrobiana é mais apropriada?",
+    "o": [
+      "Prescrever antibiótico oral até completar três dias de tratamento.",
+      "Prescrever antibiótico oral até completar sete dias de tratamento.",
+      "Encerrar o antibiótico após a profilaxia perioperatória.",
+      "Manter antibiótico intravenoso até normalizar a contagem leucocitária."
+    ],
+    "a": 2,
+    "why": "Apendicite não complicada com ressecção adequada não exige antibiótico pós-operatório. Leucocitose residual discreta, isoladamente, não indica infecção persistente. Esquemas curtos após controle do foco se aplicam a infecção complicada, não a este cenário. Prolongar por três ou sete dias aumenta exposição sem benefício demonstrado.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "ciraa-08",
+    "t": "ciraa",
+    "q": "Homem de 30 anos tem apendicite confirmada por tomografia, sem perfuração, abscesso ou peritonite. Está estável, com sintomas há 24 horas e leucócitos de 13.000/mm³. Pergunta sobre tratamento com antibiótico, pois deseja evitar operação. Antes da decisão compartilhada, a equipe revê a imagem e discute os fatores de falha do manejo não operatório. Qual achado tem maior peso entre os apresentados?",
+    "o": [
+      "Apendicolito no lúmen apendicular.",
+      "Espessamento apendicular de nove milímetros.",
+      "Pequeno borramento da gordura adjacente.",
+      "Discreto aumento dos linfonodos regionais."
+    ],
+    "a": 0,
+    "why": "O apendicolito associa-se a maior risco de falha e complicações no tratamento com antibiótico, incluindo no estudo CODA. Borramento da gordura e aumento do diâmetro ajudam no diagnóstico, mas não têm o mesmo peso do apendicolito nesta seleção. Linfonodos regionais são inespecíficos. Isso orienta discussão de riscos e não equivale a afirmar que antibiótico nunca funcionará.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "ciraa-09",
+    "t": "ciraa",
+    "q": "Mulher de 52 anos apresenta dor contínua no hipocôndrio direito há 48 horas e febre de 38,4 °C. Há Murphy positivo, 14.000 leucócitos/mm³ e ultrassonografia com cálculo no infundíbulo, parede vesicular de seis milímetros e líquido perivesicular discreto. Está lúcida, normotensa, com creatinina, INR e plaquetas normais. Não há abscesso ou gangrena descritos. É candidata operatória em serviço com laparoscopia disponível. Qual classificação e planejamento são mais adequados?",
+    "o": [
+      "Grau I; drenagem vesicular seguida de cirurgia programada.",
+      "Grau III; colecistectomia aberta após compensação clínica.",
+      "Grau II; colecistectomia após seis semanas de antibiótico.",
+      "Grau I; colecistectomia laparoscópica nesta internação."
+    ],
+    "a": 3,
+    "why": "Há critérios diagnósticos locais, sistêmicos e de imagem, sem critério de grau II ou disfunção orgânica de grau III. Líquido perivesicular discreto não equivale, por si só, a complicação local acentuada. Na paciente apta, colecistectomia precoce na mesma internação é preferível ao adiamento rotineiro. Colecistostomia se destina a cenários selecionados de alto risco e não é a primeira escolha aqui.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "ciraa-10",
+    "t": "ciraa",
+    "q": "Homem de 80 anos, previamente dependente para atividades diárias, é internado com colecistite calculosa. Após ressuscitação inicial, ainda necessita de noradrenalina e mantém creatinina de 2,8 mg/dL, previamente normal. A tomografia não mostra dilatação do colédoco. Recebeu antimicrobiano e suporte de órgãos; o anestesista considera o risco operatório elevado, e não há equipe hepatobiliar especializada no hospital. Qual medida de controle do foco é mais adequada?",
+    "o": [
+      "Colecistectomia laparoscópica após vinte e quatro horas de antibiótico.",
+      "Colecistectomia aberta com exploração do colédoco no mesmo ato.",
+      "Drenagem percutânea da vesícula sob orientação de imagem.",
+      "Papilotomia endoscópica com passagem de prótese no colédoco."
+    ],
+    "a": 2,
+    "why": "A disfunção cardiovascular e renal caracteriza colecistite grave em paciente de elevado risco, sem as condições de um centro especializado para cirurgia precoce selecionada. Drenagem vesicular oferece controle do foco com menor agressão inicial. CPRE não drena de forma confiável a vesícula obstruída pelo cístico e não há obstrução do colédoco descrita. A resolução do risco não pode ser presumida após um prazo fixo de antibiótico.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "ciraa-11",
+    "t": "ciraa",
+    "q": "Mulher de 66 anos com antecedente de litíase apresenta dois dias de dor no hipocôndrio direito, febre e icterícia. Apesar do volume inicial, mantém PA 82/50 mmHg e confusão. Bilirrubina total de 7,2 mg/dL; ultrassom mostra colédoco de doze milímetros com material distal suspeito. A equipe iniciou suporte hemodinâmico e antimicrobiano. Qual próxima intervenção responde melhor ao mecanismo responsável pelo quadro?",
+    "o": [
+      "Providenciar colangiorressonância e aguardar a resposta ao antibiótico.",
+      "Providenciar colecistectomia laparoscópica após normalizar a bilirrubina.",
+      "Providenciar colecistostomia percutânea e reavaliar o colédoco em uma semana.",
+      "Providenciar drenagem biliar urgente por CPRE após suporte inicial."
+    ],
+    "a": 3,
+    "why": "A infecção de via biliar obstruída com disfunção orgânica exige descompressão urgente, em paralelo à estabilização. A CPRE é a via preferencial quando disponível e factível. Colecistectomia isolada não resolve necessariamente a obstrução do colédoco. A imagem adicional não deve postergar drenagem quando diagnóstico e gravidade estão claros. Colecistostomia não substitui de modo confiável a drenagem do ducto comprometido.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "ciraa-12",
+    "t": "ciraa",
+    "q": "Homem de 61 anos está internado com diagnóstico de colecistite aguda. Tem dor contínua há 96 horas e leucócitos de 15.500/mm³. Está lúcido, sem vasopressor, com diurese preservada, creatinina de 1,0 mg/dL, INR de 1,1 e plaquetas de 180.000/mm³. O ultrassom não descreve abscesso ou gangrena. Ao aplicar a classificação de Tóquio, que elemento justifica o grau II neste caso?",
+    "o": [
+      "A presença de leucocitose acima de quinze mil por milímetro cúbico.",
+      "A associação de febre com sinais inflamatórios na vesícula.",
+      "A duração dos sintomas acima de setenta e duas horas.",
+      "A presença de cálculo e espessamento da parede vesicular."
+    ],
+    "a": 2,
+    "why": "Sintomas por mais de setenta e duas horas são um dos critérios de grau II. O limiar leucocitário desse grau é superior a dezoito mil, não quinze mil. Febre e alterações de imagem integram o diagnóstico, mas não definem isoladamente grau II. Não há disfunção orgânica para grau III.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "ciraa-13",
+    "t": "ciraa",
+    "q": "Homem de 63 anos apresenta dor no quadrante inferior esquerdo e febre há três dias. Está estável, sem defesa difusa ou disfunção orgânica. A tomografia demonstra diverticulite do sigmoide e abscesso pélvico de seis centímetros; não há pneumoperitônio disseminado. A radiologia confirma acesso seguro à coleção e o hospital pode monitorar a evolução. Qual estratégia inicial oferece controle do foco mais apropriado?",
+    "o": [
+      "Realizar sigmoidectomia com colostomia terminal de urgência.",
+      "Tratar ambulatorialmente com antibiótico e nova imagem em um mês.",
+      "Associar antibiótico à drenagem percutânea do abscesso.",
+      "Associar antibiótico à retossigmoidoscopia com preparo intestinal."
+    ],
+    "a": 2,
+    "why": "Coleção grande e acessível em paciente estável favorece drenagem com antibiótico. Os limiares de tamanho variam entre diretrizes, mas seis centímetros excede os habitualmente usados para discutir drenagem. Colonoscopia na fase inflamatória não controla o abscesso. Hartmann pode ser necessário na deterioração ou falha, mas não é primeira escolha automática. Alta sem controle e vigilância é inadequada neste cenário.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "ciraa-14",
+    "t": "ciraa",
+    "q": "Homem de 70 anos chega com dor abdominal difusa e rigidez, após alguns dias de dor à esquerda. Durante a avaliação necessita de noradrenalina, com acidose e disfunção renal. É levado à operação após ressuscitação inicial. A exploração confirma perfuração de divertículo no sigmoide e contaminação fecal disseminada; o cólon é viável fora da área doente. Qual procedimento se ajusta melhor ao risco fisiológico descrito?",
+    "o": [
+      "Ressecção do sigmoide com colostomia terminal e fechamento do coto.",
+      "Lavagem peritoneal laparoscópica e drenagem junto à perfuração.",
+      "Fechamento da perfuração com epiploplastia e lavagem peritoneal.",
+      "Ressecção do sigmoide com anastomose primária sem derivação proximal."
+    ],
+    "a": 0,
+    "why": "Em peritonite fecal com choque e disfunção orgânica, Hartmann evita uma anastomose de alto risco e permite ressecar o foco. Anastomose primária pode ser opção em pacientes selecionados e estáveis, situação diferente da descrita. Lavagem isolada não é adequada para peritonite fecal por perfuração persistente. Sutura local não trata de modo confiável o segmento diverticular inflamado.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "ciraa-15",
+    "t": "ciraa",
+    "q": "Mulher de 48 anos tem o primeiro episódio de diverticulite do sigmoide, confirmado por tomografia sem coleção, perfuração ou obstrução. É imunocompetente, tem dor leve controlada, não apresenta sinais sistêmicos de gravidade e consegue ingerir líquidos. Dispõe de apoio domiciliar e retorno rápido se piorar. Qual planejamento inicial é mais adequado?",
+    "o": [
+      "Manejo ambulatorial com colonoscopia nas primeiras quarenta e oito horas.",
+      "Internação para preparo intestinal e sigmoidectomia após melhora da dor.",
+      "Internação para antibiótico intravenoso e dieta zero até desaparecer a dor.",
+      "Manejo ambulatorial com orientação e possibilidade de omitir antibiótico."
+    ],
+    "a": 3,
+    "why": "Casos leves selecionados, sem imunossupressão ou sinais sistêmicos, podem ser acompanhados fora do hospital e sem antibiótico, com orientações de retorno. Isso não se aplica a todo paciente com diverticulite. Não há indicação de operação por ser o primeiro episódio. Colonoscopia aguda aumenta riscos e não ajuda no controle; investigação posterior depende de fatores como exames prévios, evolução e suspeita de neoplasia.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "ciraa-16",
+    "t": "ciraa",
+    "q": "Mulher de 74 anos, sem operações abdominais prévias, apresenta cólicas, vômitos biliosos e ausência de flatos há 36 horas. A tomografia identifica obstrução do delgado com transição na região inguinal direita, sem pneumobilia ou massa intraluminal. Ao exame, há tumoração dolorosa abaixo do ligamento inguinal e medial aos vasos femorais. Qual causa melhor integra os achados?",
+    "o": [
+      "Hérnia femoral com encarceramento de alça delgada.",
+      "Hérnia inguinal indireta com encarceramento de alça delgada.",
+      "Íleo biliar com impactação de cálculo no íleo terminal.",
+      "Hérnia obturadora com encarceramento de alça delgada."
+    ],
+    "a": 0,
+    "why": "A posição abaixo do ligamento inguinal e medial à veia femoral corresponde ao canal femoral. Hérnias inguinais ficam acima do ligamento. A obturadora é profunda e costuma não produzir essa tumoração palpável. Íleo biliar pode ocorrer sem cirurgia prévia, mas não explica a transição no canal femoral nem a ausência de cálculo na tomografia.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "ciraa-17",
+    "t": "ciraa",
+    "q": "Homem de 57 anos, operado por trauma há anos, é internado com obstrução de delgado por aderências. A tomografia inicial não mostra alça fechada, redução do realce ou líquido livre significativo. Recebe descompressão, volume e contraste hidrossolúvel conforme protocolo. Após 24 horas, a radiografia mostra contraste no cólon; a dor e o débito da sonda diminuíram, sem febre ou defesa. Qual interpretação orienta melhor a continuidade do manejo?",
+    "o": [
+      "Há indicação de laparotomia porque persiste algum grau de dilatação.",
+      "Há indicação de colonoscopia para retirar o contraste retido.",
+      "Há necessidade de repetir contraste até ocorrer diarreia abundante.",
+      "Há elevada chance de resolução com tratamento não operatório."
+    ],
+    "a": 3,
+    "why": "Passagem do contraste ao cólon em até vinte e quatro horas prediz boa chance de resolução não operatória, particularmente com melhora clínica. Dilatação residual isolada não obriga operação. O teste não deve ser repetido para produzir diarreia nem indica colonoscopia. A decisão continua dependente da evolução; aparecimento de peritonite ou isquemia muda a estratégia mesmo após um teste favorável.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "ciraa-18",
+    "t": "ciraa",
+    "q": "Homem de 68 anos com megacólon chagásico e constipação de longa data apresenta distensão progressiva e parada de flatos. Está normotenso, sem febre, defesa ou elevação do lactato. A tomografia mostra torção do sigmoide e acentuada dilatação, sem sinais de perfuração ou isquemia. O hospital tem endoscopia e cirurgia disponíveis, e o risco operatório é aceitável. Qual sequência é mais adequada?",
+    "o": [
+      "Ressecção de urgência com colostomia terminal, sem tentativa endoscópica.",
+      "Destorção endoscópica, seguida de sigmoidectomia na mesma internação.",
+      "Destorção endoscópica, seguida de alta e cirurgia apenas se houver recidiva.",
+      "Neostigmina intravenosa, seguida de colonoscopia se a distensão persistir."
+    ],
+    "a": 1,
+    "why": "Sem sinais de sofrimento ou perfuração, a destorção endoscópica é apropriada. A alta sem tratamento definitivo mantém alta taxa de recorrência; no candidato operatório, recomenda-se ressecção na mesma internação. Neostigmina trata situações selecionadas de pseudo-obstrução, não uma torção mecânica. Ressecção de urgência é necessária em falha endoscópica ou intestino inviável.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "ciraa-19",
+    "t": "ciraa",
+    "q": "Mulher de 78 anos apresenta obstrução de delgado, com vômitos e distensão. Tem história de episódios de dor biliar, mas não foi operada. A tomografia identifica gás na árvore biliar, alças proximais dilatadas e estrutura calcificada de 3,2 centímetros no ponto de transição ileal. Não há ar livre. Qual mecanismo explica melhor a combinação dos achados?",
+    "o": [
+      "Migração de cálculo pelo colédoco com obstrução da papila duodenal.",
+      "Passagem de cálculo por fístula bilioentérica com impactação no intestino.",
+      "Fístula entre cólon e vesícula associada a torção do sigmoide.",
+      "Estenose ileal inflamatória associada à infecção ascendente da via biliar."
+    ],
+    "a": 1,
+    "why": "Obstrução intestinal, pneumobilia e cálculo ectópico compõem a tríade de Rigler do íleo biliar. O cálculo habitualmente entra no tubo digestivo por fístula bilioentérica e impacta distalmente. Migração pela papila não explica um cálculo desse porte no ponto de transição. Estenose e volvo não integram o achado intraluminal com o mecanismo biliar descrito.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "ciraa-20",
+    "t": "ciraa",
+    "q": "Homem de 72 anos tem obstrução por tumor de sigmoide. A tomografia mostra cólon proximal progressivamente dilatado, ceco de doze centímetros e delgado sem dilatação, sugerindo válvula ileocecal competente. O exame seriado passa a mostrar dor no quadrante inferior direito. Qual segmento preocupa mais quanto à perfuração por distensão e qual é o fundamento?",
+    "o": [
+      "Sigmoide, pelo menor raio e pela maior tensão parietal sob pressão semelhante.",
+      "Reto, pela transmissão da pressão proximal através da obstrução tumoral.",
+      "Íleo terminal, pela exposição direta à pressão de todo o segmento colônico.",
+      "Ceco, pelo maior raio e pela maior tensão parietal sob pressão semelhante."
+    ],
+    "a": 3,
+    "why": "Com a válvula competente e o tumor distal, o cólon fica em alça fechada. Pela relação de Laplace, o maior raio aumenta a tensão da parede; o ceco é particularmente vulnerável. O delgado não recebe a mesma descompressão retrógrada neste caso. O reto está distal à obstrução. A dor localizada e a evolução exigem avaliação urgente, não apenas consideração do diâmetro isolado.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "ciraa-21",
+    "t": "ciraa",
+    "q": "Homem de 40 anos usa anti-inflamatório diariamente por lombalgia. Apresenta dor epigástrica súbita que se tornou difusa em três horas. PA 102/64 mmHg, FC 116 bpm e abdome com rigidez generalizada. A radiografia mostra pneumoperitônio subdiafragmático. A equipe inicia ressuscitação e consulta cirúrgica, e há centro cirúrgico disponível. Qual planejamento é mais apropriado?",
+    "o": [
+      "Tomografia contrastada, adiando a avaliação operatória até o laudo.",
+      "Antibiótico e supressão ácida, com controle cirúrgico da perfuração.",
+      "Supressão ácida e sonda, com reavaliação clínica após doze horas.",
+      "Endoscopia digestiva alta, com hemostasia e biópsias da lesão."
+    ],
+    "a": 1,
+    "why": "Peritonite generalizada e ar livre indicam controle urgente de perfuração de víscera oca, com suporte, antibiótico e supressão ácida se provável origem péptica. A técnica depende da anatomia, do tamanho e da suspeita de neoplasia; não se deve impor a mesma rafia a toda perfuração. Manejo conservador fica para seleção rigorosa sem peritonite. Endoscopia ou tomografia não devem atrasar o tratamento quando não mudariam a indicação.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "ciraa-22",
+    "t": "ciraa",
+    "q": "Homem de 67 anos com insuficiência cardíaca limitante procura atendimento 30 horas após o início de dor súbita. Há úlcera duodenal perfurada, e a PA permanece em 82/48 mmHg após avaliação inicial. A equipe calcula o escore de Boey para comunicar risco perioperatório. Qual pontuação resulta das informações fornecidas?",
+    "o": [
+      "Um ponto, pela presença de comorbidade cardiovascular relevante.",
+      "Dois pontos, por choque e idade acima de sessenta e cinco anos.",
+      "Zero pontos, porque não foram fornecidos tamanho da úlcera e leucograma.",
+      "Três pontos, por choque, comorbidade grave e evolução acima de vinte e quatro horas."
+    ],
+    "a": 3,
+    "why": "O Boey clássico usa choque pré-operatório, doença clínica grave e duração da perfuração maior que vinte e quatro horas. Os três estão presentes. Idade e dimensões da lesão podem importar clinicamente, mas não são os três componentes desse escore. O cálculo auxilia estratificação, sem postergar ressuscitação e controle do foco.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "ciraa-23",
+    "t": "ciraa",
+    "q": "Mulher de 76 anos está na UTI por infarto extenso com baixo débito e necessidade de vasopressor. Passa a apresentar distensão, desconforto abdominal e acidose metabólica. A angiotomografia demonstra artérias e veias mesentéricas principais pérvias, com ramos distais afilados e realce reduzido de segmentos intestinais. Não havia diarreia antes da deterioração. Qual hipótese melhor explica o conjunto?",
+    "o": [
+      "Colite por Clostridioides difficile associada à internação prolongada.",
+      "Isquemia mesentérica não oclusiva associada à hipoperfusão.",
+      "Trombose venosa mesentérica com congestão de segmentos intestinais.",
+      "Embolia proximal da artéria mesentérica superior associada ao infarto."
+    ],
+    "a": 1,
+    "why": "Baixo débito, vasoconstrição e vasos principais pérvios favorecem isquemia não oclusiva. Embolia e trombose venosa exigiriam alterações vasculares compatíveis. Colite infecciosa pode ocorrer em internados, mas não explica melhor o padrão de hipoperfusão descrito. O diagnóstico requer correção da perfusão e vigilância de necrose; patência dos vasos não exclui sofrimento intestinal.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "ciraa-24",
+    "t": "ciraa",
+    "q": "Homem de 72 anos, hipertenso, foi desidratado por gastroenterite e teve episódio de hipotensão. No dia seguinte apresenta cólica moderada à esquerda, seguida de evacuações com sangue. Está estável, sem defesa ou dor desproporcional. A tomografia mostra espessamento segmentar do cólon descendente, sem pneumatoses, gás portal ou oclusão mesentérica proximal. Qual hipótese e investigação complementar são mais coerentes?",
+    "o": [
+      "Doença inflamatória intestinal; corticoide antes de avaliação endoscópica.",
+      "Diverticulite complicada; colonoscopia imediata para drenagem do segmento.",
+      "Isquemia mesentérica embólica; laparotomia e embolectomia sem imagem adicional.",
+      "Colite isquêmica; suporte e colonoscopia precoce com insuflação cuidadosa."
+    ],
+    "a": 3,
+    "why": "Dor seguida de hematoquezia após hipoperfusão, com alteração colônica segmentar e sem peritonite, favorece colite isquêmica. Suporte e endoscopia precoce limitada podem confirmar e avaliar gravidade se não houver contraindicações. O padrão não aponta para embolia mesentérica aguda. Colonoscopia não é drenagem de diverticulite. Corticoide empírico pode mascarar ou agravar outras causas de colite.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "ciraa-25",
+    "t": "ciraa",
+    "q": "Homem de 74 anos, tabagista, chega com dor lombar súbita e síncope. Está responsivo, com PA 76/40 mmHg, FC 126 bpm e massa pulsátil abdominal. O ultrassom à beira-leito mostra aneurisma de aorta abdominal de sete centímetros. A equipe vascular e a sala para reparo estão disponíveis, mas a tomografia exigiria deslocamento com atraso relevante. Qual estratégia inicial é mais adequada?",
+    "o": [
+      "Obter tomografia para confirmar extravasamento antes de iniciar transfusão.",
+      "Ativar reparo imediato, com hemocomponentes e ressuscitação restritiva.",
+      "Monitorar hemoglobina seriada antes de indicar abordagem vascular.",
+      "Normalizar a pressão com cristaloide antes de ativar a equipe vascular."
+    ],
+    "a": 1,
+    "why": "A suspeita de ruptura em instabilidade exige controle urgente da hemorragia. Hemocomponentes e ressuscitação restritiva evitam atrasos e excesso de pressão antes do controle, individualizando perfusão. Tomografia é útil quando tolerável e sem atraso perigoso; o enunciado exclui essa condição. Hemoglobina inicial pode ser enganosa e não é critério para aguardar intervenção.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "ciraa-26",
+    "t": "ciraa",
+    "q": "Homem de 29 anos sofreu queda de bicicleta com impacto no hemitórax inferior esquerdo. Está normotenso, mas refere dor no hipocôndrio esquerdo e no ombro do mesmo lado, sem lesão aparente nessa articulação; a dor aumenta ao inspirar. O FAST mostra líquido no espaço esplenorrenal. Qual mecanismo explica melhor a dor no ombro?",
+    "o": [
+      "Irritação peritoneal com aferência pelo nervo obturatório.",
+      "Irritação pleural com aferência pelos nervos intercostais inferiores.",
+      "Tração do plexo braquial por fratura de arcos costais inferiores.",
+      "Irritação diafragmática com aferência pelo nervo frênico."
+    ],
+    "a": 3,
+    "why": "Sangue junto ao diafragma pode produzir dor referida ao ombro via frênico, o sinal de Kehr. Lesão local de ombro ou plexo não é sustentada pelo exame descrito. Nervos intercostais explicam dor torácica segmentar, mas não o padrão clássico referido. O obturatório relaciona-se a outros sinais, sem explicar dor escapular por irritação diafragmática.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirpanc-01",
+    "t": "cirpanc",
+    "q": "Mulher de 45 anos apresenta dor epigástrica contínua, irradiada para o dorso, iniciada há dez horas, com náuseas e vômitos. A lipase é cinco vezes o limite superior do laboratório. Está normotensa, sem hipoxemia ou alteração renal. O ultrassom mostra cálculos na vesícula, sem dilatação da via biliar. Não há dúvida clínica relevante sobre outra emergência abdominal. Qual exame adicional é necessário para estabelecer o diagnóstico de pancreatite?",
+    "o": [
+      "Colangiorressonância para demonstrar cálculo no colédoco.",
+      "Tomografia contrastada para comprovar edema pancreático.",
+      "Nenhum exame adicional para confirmação neste momento.",
+      "Amilase sérica para confirmar a elevação da lipase."
+    ],
+    "a": 2,
+    "why": "Dor típica e lipase acima de três vezes o limite já cumprem dois dos três critérios diagnósticos. Imagem é útil quando há dúvida ou complicação, não obrigatória para confirmar um quadro inequívoco. Ultrassom investiga etiologia biliar. Ausência de dilatação não exclui toda litíase de colédoco, mas não cria necessidade de colangiorressonância para diagnosticar pancreatite. Amilase não acrescenta um critério independente.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirpanc-02",
+    "t": "cirpanc",
+    "q": "Homem de 58 anos é internado com pancreatite aguda. A tomografia realizada por deterioração demonstra necrose pancreática. Desde a admissão necessita de suporte respiratório por insuficiência respiratória, mantida após 60 horas, com relação PaO2/FiO2 de 220 apesar do tratamento. A pressão arterial está preservada e não houve sangramento. A equipe aplica a classificação de Atlanta revisada. Qual característica do caso determina a categoria grave?",
+    "o": [
+      "A associação entre alterações tomográficas e elevação de lipase.",
+      "A presença de necrose pancreática no estudo tomográfico.",
+      "A necessidade de internação e analgesia por mais de dois dias.",
+      "A falência respiratória mantida por mais de quarenta e oito horas."
+    ],
+    "a": 3,
+    "why": "A categoria grave é definida por falência orgânica persistente por mais de quarenta e oito horas, de um ou mais sistemas. Necrose ou complicação local sem falência persistente pode caracterizar doença moderadamente grave. Lipase, intensidade da dor e tempo de internação não definem a classificação. A gravidade deve ser reavaliada conforme a evolução e não apenas pelo primeiro exame.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirpanc-03",
+    "t": "cirpanc",
+    "q": "Homem de 52 anos está no quinto dia de pancreatite aguda. Após deterioração inicial, agora está afebril, normotenso e tolera alimentação enteral; não há novo foco clínico de infecção. A tomografia mostra necrose de aproximadamente quarenta por cento do pâncreas, sem gás ou coleção organizada. Leucócitos e marcadores inflamatórios estão em queda. Qual conduta em relação à área necrótica é mais adequada?",
+    "o": [
+      "Iniciar carbapenêmico até documentar redução da necrose.",
+      "Acompanhar a evolução sem instituir antibiótico profilático.",
+      "Indicar drenagem da necrose para reduzir o risco infeccioso.",
+      "Puncionar a necrose e iniciar antibiótico até sair a cultura."
+    ],
+    "a": 1,
+    "why": "Necrose sem evidência de infecção não justifica antibiótico profilático nem intervenção preventiva. A decisão considera evolução e focos alternativos; ausência de gás isoladamente não exclui infecção, mas o conjunto de melhora não a sustenta aqui. Punção diagnóstica não é rotineira para toda necrose. Drenar necrose estéril sem indicação pode introduzir infecção e acrescentar complicações.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirpanc-04",
+    "t": "cirpanc",
+    "q": "Mulher de 38 anos foi internada por pancreatite associada a cálculos na vesícula. Não apresentou falência orgânica ou coleções. No terceiro dia está sem dor importante, aceita dieta e tem bilirrubina em queda; não há sinais de cálculo residual no colédoco ou colangite. É candidata operatória, com equipe disponível. Qual estratégia reduz melhor novos eventos biliares?",
+    "o": [
+      "Colecistectomia após seis a oito semanas de recuperação em casa.",
+      "Colecistectomia durante a internação atual, após melhora clínica.",
+      "Tratamento com ácido ursodesoxicólico e seguimento ultrassonográfico.",
+      "CPRE com papilotomia e reavaliação da vesícula em seis meses."
+    ],
+    "a": 1,
+    "why": "Na pancreatite biliar leve, colecistectomia na mesma internação reduz recorrência e novos eventos. Adiamento pode ser necessário em doença grave com coleções, que não é o cenário descrito. Papilotomia pode ter papel quando cirurgia não é viável, mas não substitui automaticamente a colecistectomia em candidata apta. Ácido ursodesoxicólico não é prevenção definitiva adequada para esse episódio.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirpanc-05",
+    "t": "cirpanc",
+    "q": "Homem de 67 anos, internado com pancreatite de provável origem biliar, passa a apresentar febre de 39 °C, calafrios e icterícia crescente. Bilirrubina total de 6,5 mg/dL; ultrassom mostra colédoco dilatado e imagem distal compatível com cálculo. Mantém hipotensão após volume inicial e recebe suporte hemodinâmico. Qual abordagem específica deve ser organizada além do antimicrobiano e da ressuscitação?",
+    "o": [
+      "Tratamento da pancreatite e CPRE após resolução da inflamação.",
+      "Colangiorressonância após estabilização laboratorial da lipase.",
+      "Colecistectomia imediata para retirada do foco vesicular.",
+      "CPRE urgente para drenagem da via biliar obstruída."
+    ],
+    "a": 3,
+    "why": "O caso acrescenta colangite com disfunção orgânica à pancreatite biliar. A obstrução infectada precisa de drenagem urgente, preferencialmente endoscópica quando disponível. Colecistectomia não resolve de modo confiável cálculo distal. Não é necessário esperar normalização de lipase ou completar outra imagem quando a indicação está suficientemente estabelecida. Pancreatite biliar sem colangite teria outra discussão sobre CPRE.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirpanc-06",
+    "t": "cirpanc",
+    "q": "Mulher de 46 anos, sem insuficiência cardíaca ou renal, é admitida com pancreatite aguda há oito horas. Está alerta, PA 112/70 mmHg, com discreta redução de diurese e sinais leves de desidratação, sem choque ou congestão. A equipe planeja a reposição inicial e a reavaliação nas próximas horas. Qual estratégia é mais apropriada?",
+    "o": [
+      "Soro fisiológico em volume fixo, guiado pela queda progressiva da lipase.",
+      "Ringer lactato em reposição moderada, ajustada a perfusão e congestão.",
+      "Restrição hídrica inicial, deixando expansão para hipotensão documentada.",
+      "Ringer lactato em infusão agressiva fixa durante as primeiras vinte e quatro horas."
+    ],
+    "a": 1,
+    "why": "A reposição deve ser moderada, com reavaliações de volemia, diurese, função renal e sinais de sobrecarga; Ringer lactato é geralmente preferido. O ensaio WATERFALL identificou mais sobrecarga com regime agressivo sem ganho de desfecho. Isso não proíbe bolus na hipovolemia indicada nem autoriza restrição em choque. Lipase não é alvo de reposição volêmica.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirpanc-07",
+    "t": "cirpanc",
+    "q": "Homem de 60 anos está na quinta semana de pancreatite necrosante. Após melhora inicial, reapresenta febre e piora funcional, sem resposta suficiente ao antimicrobiano iniciado. A tomografia mostra coleção encapsulada, com líquido, detritos e gás; há acesso endoscópico e percutâneo factível. Não há hemorragia ou perfuração intestinal. Qual deve ser a primeira etapa intervencionista?",
+    "o": [
+      "Drenagem minimamente invasiva, com escalonamento conforme a resposta.",
+      "Pancreatectomia distal, com retirada do segmento necrótico na mesma sessão.",
+      "Necrosectomia aberta, com remoção ampla do tecido no primeiro procedimento.",
+      "Aspiração diagnóstica isolada, seguida de novo curso prolongado de antibiótico."
+    ],
+    "a": 0,
+    "why": "Necrose encapsulada infectada com indicação de controle do foco favorece abordagem em degraus: drenagem e suporte, com necrosectomia se necessário. Via endoscópica ou percutânea depende de anatomia e experiência. Antibiótico pode permitir adiar ou evitar intervenção em selecionados, mas a falha descrita exige reavaliar o foco. Ressecção e cirurgia aberta não são primeiras etapas habituais.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirpanc-08",
+    "t": "cirpanc",
+    "q": "Homem de 48 anos retorna dez semanas após pancreatite intersticial associada ao álcool. Está sem dor, ganhou peso e alimenta-se normalmente. A tomografia mostra coleção de sete centímetros, de parede fina, conteúdo líquido homogêneo e sem detritos, gás, obstrução ou alteração vascular. Não há dúvida diagnóstica relevante. Ele pergunta se o tamanho torna necessária uma intervenção. Qual conduta é mais adequada?",
+    "o": [
+      "Acompanhamento clínico, discutindo sinais de alerta e evolução da coleção.",
+      "Drenagem percutânea, usando o tempo de evolução como indicação principal.",
+      "Drenagem endoscópica, usando o diâmetro como indicação principal.",
+      "Ressecção pancreática, visando prevenir transformação maligna da coleção."
+    ],
+    "a": 0,
+    "why": "Pseudocisto bem caracterizado, assintomático e sem complicações pode ser observado, mesmo acima de seis centímetros. Tamanho e duração isolados não impõem drenagem. Sintomas, infecção, sangramento, obstrução ou incerteza diagnóstica mudam a avaliação. O pseudocisto não é uma neoplasia cística que exija ressecção para prevenir transformação.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirpanc-09",
+    "t": "cirpanc",
+    "q": "Homem de 55 anos com pancreatite crônica tem hematêmese e varizes de fundo gástrico na endoscopia, sem varizes esofágicas. Plaquetas e função sintética hepática estão preservadas; a imagem não mostra cirrose, mas identifica esplenomegalia e colaterais gástricas. A veia porta está pérvia. Qual alteração vascular é a causa mais provável desse padrão?",
+    "o": [
+      "Trombose da veia esplênica com hipertensão portal segmentar.",
+      "Trombose da veia cava inferior com aumento de pressão sistêmica.",
+      "Trombose da veia mesentérica superior com congestão do delgado.",
+      "Obstrução das veias hepáticas com hipertensão portal pós-hepática."
+    ],
+    "a": 0,
+    "why": "Doença pancreática pode comprometer a veia esplênica e produzir hipertensão portal sinistra, com varizes gástricas isoladas e fígado preservado. Trombose mesentérica não explica preferencialmente esse território. Obstrução de veias hepáticas ou cava tem outros sinais e não integra melhor o padrão. O tratamento do sangramento e a estratégia definitiva dependem da causa e da condição clínica, não apenas do achado endoscópico.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirpanc-10",
+    "t": "cirpanc",
+    "q": "Homem de 49 anos tem pancreatite crônica com dor incapacitante apesar de abstinência, suporte nutricional e tratamento medicamentoso. A imagem mostra ducto pancreático principal de dez milímetros com cálculos ao longo do corpo, sem massa cefálica ou suspeita neoplásica. A equipe considera cirurgia de drenagem em vez de ressecção ampla. Qual operação corresponde melhor à anatomia descrita?",
+    "o": [
+      "Duodenopancreatectomia com reconstrução pancreática e biliar.",
+      "Pancreatectomia total com reconstrução do trânsito digestivo.",
+      "Pancreatojejunostomia longitudinal do tipo Partington–Rochelle.",
+      "Pancreatectomia distal com preservação da cabeça pancreática."
+    ],
+    "a": 2,
+    "why": "Ducto dilatado longitudinalmente, sem massa cefálica, é cenário clássico para descompressão por pancreatojejunostomia. Doença dominante na cabeça pode favorecer Frey ou Beger; suspeita de câncer muda a estratégia. Ressecções extensas removem parênquima sem responder proporcionalmente ao mecanismo descrito. A escolha deve considerar também qualidade de vida, função e experiência da equipe.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirpanc-11",
+    "t": "cirpanc",
+    "q": "Homem de 57 anos, com consumo prolongado de álcool, tem dor epigástrica recorrente há anos, perda ponderal e fezes volumosas de difícil remoção. A glicemia passou a permanecer elevada e a tomografia demonstra calcificações difusas no pâncreas, sem massa focal. Qual conjunto traduz melhor o processo de perda funcional e alteração estrutural característico da doença?",
+    "o": [
+      "Espessamento gástrico, má absorção e hipergastrinemia.",
+      "Calcificações pancreáticas, colestase e hipoglicemia.",
+      "Dilatação do colédoco, ascite e hipoalbuminemia.",
+      "Calcificações pancreáticas, esteatorreia e diabetes."
+    ],
+    "a": 3,
+    "why": "Calcificações, insuficiência exócrina com esteatorreia e disfunção endócrina com diabetes compõem a tríade clássica da pancreatite crônica, geralmente tardia e nem sempre completa. A perda de peso não deve ser atribuída automaticamente à doença conhecida se houver mudança do padrão. As demais combinações incluem achados que podem aparecer em outros processos, mas não resumem os dados estruturais e funcionais fornecidos.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirpanc-12",
+    "t": "cirpanc",
+    "q": "Homem de 70 anos, tabagista, refere icterícia progressiva, colúria e prurido há três semanas, sem cólica biliar ou febre. Perdeu oito quilos em três meses. A vesícula é palpável e indolor; a ultrassonografia mostra dilatação das vias biliares e do ducto pancreático, sem cálculo no colédoco. Qual hipótese explica melhor o padrão de obstrução?",
+    "o": [
+      "Coledocolitíase com episódios de obstrução biliar transitória.",
+      "Adenocarcinoma da cabeça pancreática com obstrução biliar distal.",
+      "Hepatite colestática com distensão reativa da vesícula biliar.",
+      "Colangiocarcinoma hilar com obstrução acima da inserção do cístico."
+    ],
+    "a": 1,
+    "why": "Icterícia progressiva indolor, perda ponderal e dilatação dos ductos biliar e pancreático sugerem obstrução distal por neoplasia pancreática ou periampular. Vesícula palpável é uma pista, não um diagnóstico histológico. Cálculo continua no diferencial, mas a trajetória é menos típica. Obstrução hilar não explica tão bem o ducto pancreático dilatado. Hepatite não causa esse padrão mecânico de dilatação.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirpanc-13",
+    "t": "cirpanc",
+    "q": "Homem de 63 anos, em bom estado funcional, tem adenocarcinoma de cabeça de pâncreas confirmado. A tomografia com protocolo pancreático mostra contato tumoral de noventa graus com a veia mesentérica superior, sem deformidade ou irregularidade do contorno. Não há contato com artérias relevantes, linfonodo distante ou metástase. A discussão atual é a classificação anatômica, sem considerar marcadores biológicos adicionais. Como a lesão deve ser classificada?",
+    "o": [
+      "Anatomicamente ressecável.",
+      "Borderline por envolvimento arterial.",
+      "Metastática por contiguidade vascular.",
+      "Localmente avançada por invasão venosa."
+    ],
+    "a": 0,
+    "why": "Contato venoso de até cento e oitenta graus, sem irregularidade do contorno, e ausência de contato arterial sustentam ressecabilidade anatômica pelos critérios habitualmente utilizados. A simples proximidade venosa não define doença localmente avançada. Metástase exige disseminação distante. A classificação não dispensa decisão multidisciplinar sobre sequência terapêutica, condição clínica e fatores biológicos.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirpanc-14",
+    "t": "cirpanc",
+    "q": "Mulher de 64 anos está em investigação de icterícia obstrutiva. O CA 19-9 está elevado, mas a imagem ainda não definiu se a estenose é inflamatória ou tumoral. Não há diagnóstico histológico, e a equipe discute como usar o resultado. Qual interpretação é mais adequada?",
+    "o": [
+      "O resultado confirma adenocarcinoma, permitindo dispensar investigação anatômica.",
+      "O resultado define doença irressecável, permitindo dispensar avaliação vascular.",
+      "A colestase pode elevar o marcador, que deve ser integrado aos demais achados.",
+      "A dosagem é suficiente para rastrear familiares, antes de estratificar o risco."
+    ],
+    "a": 2,
+    "why": "CA 19-9 pode aumentar em obstrução e inflamação benignas e não confirma câncer ou extensão anatômica. Sua interpretação melhora após considerar colestase e evolução, com utilidade prognóstica e de seguimento em contextos apropriados. Pessoas Lewis negativas podem não expressá-lo. Não é exame de rastreamento populacional nem substitui a avaliação individual de famílias de alto risco.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirpanc-15",
+    "t": "cirpanc",
+    "q": "Mulher de 35 anos relata episódios de sudorese, confusão e tremor no jejum, com melhora após ingerir açúcar. Durante hipoglicemia documentada, insulina e peptídeo C estão inadequadamente elevados; pesquisa de sulfonilureias é negativa. A imagem localiza pequena lesão pancreática, sem doença disseminada. Qual combinação de hipótese e planejamento é mais apropriada?",
+    "o": [
+      "Hipoglicemia por jejum simples; dieta fracionada sem avaliação da lesão.",
+      "Gastrinoma; supressão ácida e ressecção baseada na dosagem de gastrina.",
+      "Uso de insulina exógena; suspensão da substância sem investigação tumoral.",
+      "Insulinoma; localização e cirurgia poupadora quando a anatomia permitir."
+    ],
+    "a": 3,
+    "why": "Hipoglicemia com insulina e peptídeo C inadequadamente elevados sugere hiperinsulinismo endógeno; exclusão de secretagogos e lesão localizada apoiam insulinoma. Insulina exógena costuma suprimir peptídeo C. Gastrinoma provoca outro quadro hormonal. Enucleação ou ressecção depende de localização, relação ductal e contexto, incluindo pesquisa de síndrome hereditária quando apropriada.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirpanc-16",
+    "t": "cirpanc",
+    "q": "Mulher de 72 anos tem lesão pancreática incidental, microcística em favo de mel, com cicatriz central calcificada. Não apresenta dor, perda ponderal, icterícia ou compressão de estruturas; a revisão das imagens considera o diagnóstico de neoplasia cística serosa bastante seguro. Não há componente sólido suspeito. Qual estratégia inicial se ajusta melhor ao balanço de riscos?",
+    "o": [
+      "Observação clínica, com seguimento individualizado conforme segurança diagnóstica.",
+      "Quimioterapia seguida de nova imagem para avaliar resposta das microcavidades.",
+      "Drenagem endoscópica da lesão para prevenir expansão das microcavidades.",
+      "Ressecção pancreática eletiva para prevenir progressão para adenocarcinoma."
+    ],
+    "a": 0,
+    "why": "Neoplasia cística serosa bem caracterizada e assintomática é usualmente benigna e pode ser observada. A segurança diagnóstica, os sintomas e a compressão importam na decisão. Drenagem é estratégia de determinadas coleções, não tratamento de neoplasia serosa. Quimioterapia não tem indicação nesse cenário. Lesões mucinosas e outras neoplasias císticas exigem estratificação diferente.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirher-01",
+    "t": "cirher",
+    "q": "Homem de 64 anos tem abaulamento inguinal que aumenta com esforço e reduz ao deitar. Durante reparo eletivo, identifica-se defeito na parede posterior do canal; o saco protrui medialmente aos vasos epigástricos inferiores e não entra pelo anel profundo. O ligamento inguinal está íntegro, e não há extensão abaixo dele. Qual classificação anatômica corresponde ao achado operatório?",
+    "o": [
+      "Hérnia de Spiegel.",
+      "Hérnia inguinal direta.",
+      "Hérnia femoral.",
+      "Hérnia inguinal indireta."
+    ],
+    "a": 1,
+    "why": "A relação medial aos vasos epigástricos inferiores e a protrusão pela parede posterior identificam a hérnia direta. A indireta entra pelo anel profundo, lateral aos vasos. A femoral aparece abaixo do ligamento inguinal, no canal femoral. A de Spiegel atravessa a região da linha semilunar, não o defeito inguinal descrito. A classificação depende dessas relações anatômicas, não da idade isolada.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirher-02",
+    "t": "cirher",
+    "q": "Mulher de 59 anos, sem cirurgia abdominal prévia, procura avaliação por abaulamento redutível na virilha. Uma estudante afirma que a hérnia femoral deve ser a mais frequente porque esse defeito é proporcionalmente mais encontrado em mulheres. Não há encarceramento, e a equipe discutirá a anatomia antes de escolher a abordagem. Entre as hérnias da virilha, qual tipo é mais frequente também na população feminina?",
+    "o": [
+      "Femoral.",
+      "Inguinal indireta.",
+      "Inguinal direta.",
+      "Obturadora."
+    ],
+    "a": 1,
+    "why": "A hérnia inguinal continua sendo a mais frequente da virilha na mulher, predominando o tipo indireto. A femoral tem maior representação relativa em mulheres e maior risco de complicação, mas isso não a torna a mais comum. A direta é menos frequente nesse grupo, e a obturadora é rara. A pergunta restringe a comparação às hérnias da virilha para não misturar populações de hérnias ventrais e incisionais.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirher-03",
+    "t": "cirher",
+    "q": "Durante hernioplastia inguinal de um homem de 67 anos, o residente precisa delimitar o triângulo de Hesselbach antes de tratar uma protrusão medial aos vasos epigástricos. O preceptor pede os limites anatômicos, pois a identificação inadequada pode confundir defeitos diretos, indiretos e femorais. Qual conjunto descreve corretamente os limites lateral, medial e inferior dessa região?",
+    "o": [
+      "Anel inguinal profundo, tendão conjunto e ligamento lacunar.",
+      "Linha semilunar, borda lateral do reto e ligamento de Cooper.",
+      "Vasos epigástricos inferiores, borda lateral do reto e ligamento inguinal.",
+      "Vasos epigástricos inferiores, veia femoral e ligamento de Cooper."
+    ],
+    "a": 2,
+    "why": "Os vasos epigástricos inferiores limitam lateralmente o triângulo, a borda lateral do reto o limita medialmente e o ligamento inguinal constitui seu limite inferior. Veia femoral, Cooper e ligamento lacunar são referências importantes em outras regiões, mas não substituem esses limites. Anel profundo e linha semilunar também não delimitam o triângulo usado para reconhecer a hérnia direta.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirher-04",
+    "t": "cirher",
+    "q": "Mulher de 71 anos será submetida ao reparo de uma hérnia da virilha. A exploração demonstra saco atravessando o canal femoral, abaixo do ligamento inguinal e medial à veia femoral, sem reparo prévio nesse lado. O residente registra a classificação de Nyhus para descrever o defeito primário. Qual subtipo deve ser anotado para esse achado?",
+    "o": [
+      "Tipo IIIa.",
+      "Tipo IVc.",
+      "Tipo IIIb.",
+      "Tipo IIIc."
+    ],
+    "a": 3,
+    "why": "Na classificação de Nyhus, o tipo IIIc corresponde ao defeito femoral primário. O IIIa descreve a hérnia direta e o IIIb, a indireta com comprometimento importante do anel ou da parede posterior. O grupo IV reúne recidivas, e por isso não se aplica a uma paciente sem reparo prévio. A localização anatômica, junto à informação de primariedade, resolve a classificação.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirher-05",
+    "t": "cirher",
+    "q": "Homem de 50 anos tem hérnias inguinais bilaterais redutíveis, com dor ao caminhar e limitação do trabalho. Deseja tratamento operatório; tem bom estado funcional, tolera anestesia geral e não foi submetido a cirurgia pélvica ou reparo pré-peritoneal. O hospital dispõe de equipe experiente nas abordagens aberta e laparoendoscópica. Qual estratégia é especialmente apropriada para corrigir os dois lados?",
+    "o": [
+      "Reparo pré-peritoneal laparoendoscópico bilateral, por TEP ou TAPP.",
+      "Reparo anterior bilateral, repetindo a dissecção em cada virilha.",
+      "Reparo tecidual bilateral, sem reforço protético em ambos os lados.",
+      "Reparo anterior unilateral, adiando o lado contralateral sintomático."
+    ],
+    "a": 0,
+    "why": "Em candidato apto e com experiência disponível, a via laparoendoscópica oferece acesso aos dois defeitos pelo plano posterior e é favorecida em hérnias bilaterais. Reparos anteriores também podem ser válidos em contextos específicos, mas não aproveitam a mesma abordagem bilateral. Técnica sem tela exige seleção e experiência próprias. Adiar o outro lado sintomático não é a melhor estratégia proposta para este paciente.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirher-06",
+    "t": "cirher",
+    "q": "Homem de 62 anos apresenta recidiva inguinal sintomática três anos após Lichtenstein. O relatório confirma tela na via anterior; não houve infecção. O defeito é redutível, e o paciente pode receber anestesia geral. A equipe domina TEP e TAPP e deseja evitar a dissecção cicatricial dos nervos na abordagem anterior já operada. Qual plano deve ser preferido?",
+    "o": [
+      "Reparo anterior tecidual após retirar a tela íntegra.",
+      "Reparo posterior pré-peritoneal por equipe experiente.",
+      "Novo Lichtenstein no mesmo plano anterior cicatricial.",
+      "Retirada da tela anterior sem reconstrução do defeito."
+    ],
+    "a": 1,
+    "why": "Após recidiva de reparo anterior, recomenda-se em geral utilizar o plano posterior ainda não dissecado, quando há experiência e condições clínicas. Repetir a mesma via aumenta dificuldades ligadas à fibrose e requer motivos específicos. Remover tela sem infecção não é etapa obrigatória, e sua retirada isolada não corrige a recidiva. A recomendação é de estratégia anatômica, não de uma técnica única para todas as recidivas.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirher-07",
+    "t": "cirher",
+    "q": "Mulher de 68 anos, independente e sem comorbidade limitante, tem hérnia femoral pequena, indolor e redutível, confirmada por exame e ultrassonografia. Não apresenta sinais de obstrução ou sofrimento do conteúdo. Ela pergunta se a ausência de sintomas permite apenas acompanhar, como aconteceu com a hérnia inguinal de seu marido. Qual orientação se ajusta melhor ao risco específico do defeito?",
+    "o": [
+      "Planejar reparo em tempo oportuno após avaliação pré-operatória.",
+      "Adotar observação prolongada com retorno apenas se surgir dor.",
+      "Usar suporte compressivo e reconsiderar reparo após encarceramento.",
+      "Solicitar ultrassom anual como principal medida de prevenção."
+    ],
+    "a": 0,
+    "why": "Hérnia femoral apresenta risco de encarceramento e estrangulamento maior que o de muitas hérnias inguinais redutíveis. Em candidata apta, favorece-se reparo em tempo oportuno, mesmo com poucos sintomas. Não se trata de emergência na ausência de complicação, mas de evitar acompanhamento passivo até encarcerar. Ultrassom ou suporte compressivo não previnem de forma confiável esse mecanismo. Fragilidade e objetivos de cuidado podem modificar decisões em outros pacientes.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirher-08",
+    "t": "cirher",
+    "q": "Homem de 58 anos percebe pequena hérnia inguinal redutível ao fazer força, mas mantém suas atividades sem dor ou limitação. Não há suspeita de defeito femoral, mudança recente do abaulamento ou episódio de encarceramento. Tem acesso a atendimento e prefere evitar cirurgia por enquanto. Qual orientação traduz melhor uma decisão compartilhada baseada nesse cenário?",
+    "o": [
+      "Oferecer observação vigilante, explicando sinais de alarme e possível cirurgia futura.",
+      "Indicar suporte compressivo como correção definitiva do defeito inguinal.",
+      "Condicionar qualquer reparo futuro à ocorrência de um episódio obstrutivo.",
+      "Programar reparo urgente, antes de permitir retorno às atividades habituais."
+    ],
+    "a": 0,
+    "why": "Homens selecionados com hérnia inguinal assintomática ou pouco sintomática podem optar por observação vigilante. O risco agudo é baixo, mas muitos passam a necessitar de reparo por sintomas ao longo do tempo. Isso requer orientação e acesso à reavaliação. Não há urgência obrigatória neste caso; suporte compressivo não corrige o defeito, e surgimento de sintomas pode justificar operação antes de ocorrer obstrução.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirher-09",
+    "t": "cirher",
+    "q": "Homem de 46 anos mantém queimação e hipersensibilidade na virilha quatro meses após reparo anterior com tela. Não há febre, secreção ou recidiva evidente no exame. O residente revê a anatomia neural da operação para compreender uma possível dor neuropática persistente. Qual grupo contém os nervos mais diretamente relacionados ao campo do reparo anterior inguinal?",
+    "o": [
+      "Pudendo, glúteo inferior e ramo femoral do genitofemoral.",
+      "Ilioinguinal, ílio-hipogástrico e ramo genital do genitofemoral.",
+      "Ciático, cutâneo lateral da coxa e nervo subcostal.",
+      "Femoral, obturatório e cutâneo posterior da coxa."
+    ],
+    "a": 1,
+    "why": "Na via anterior, ilioinguinal, ílio-hipogástrico e ramo genital do genitofemoral podem sofrer lesão, aprisionamento ou irritação. Dor persistente é complicação relevante e não prova, sozinha, mecanismo neural. Os outros grupos incluem nervos fora desse campo ou mais relacionados a outros acessos. A avaliação também deve procurar recidiva e causas musculoesqueléticas antes de decidir por nova intervenção.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirher-10",
+    "t": "cirher",
+    "q": "Menino de dois anos é levado à consulta porque o umbigo se projeta ao chorar. O anel mede cerca de um centímetro, o conteúdo é facilmente redutível e a pele está normal. Alimenta-se, cresce e evacua normalmente, sem episódios dolorosos. A família gostaria de colocar uma moeda sobre o local para evitar aumento. Qual planejamento é mais apropriado?",
+    "o": [
+      "Aplicar curativo compressivo até o fechamento completo do anel.",
+      "Programar correção com tela antes do próximo aniversário.",
+      "Acompanhar a evolução, sem compressão, com orientação sobre sinais de complicação.",
+      "Encaminhar para exploração urgente pelo risco atual de estrangulamento."
+    ],
+    "a": 2,
+    "why": "Hérnias umbilicais pequenas e assintomáticas na infância frequentemente fecham espontaneamente, permitindo acompanhamento até a idade habitual de reavaliação cirúrgica. Persistência, tamanho e complicações podem mudar a decisão. Tela e operação precoce não são indicadas pelo quadro descrito. Moedas ou curativos não promovem fechamento confiável e podem lesar a pele; uma hérnia dolorosa ou irredutível exigiria nova avaliação.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirher-11",
+    "t": "cirher",
+    "q": "Mulher de 82 anos, magra e multípara, apresenta vômitos biliosos e distensão há dois dias, sem operação abdominal prévia. Não se identifica abaulamento em virilha ou cicatriz. Ao estender a coxa direita, a dor se irradia pela sua face medial. A tomografia mostra alça de delgado insinuando-se por um canal profundo na pelve. Qual defeito explica melhor o conjunto?",
+    "o": [
+      "Hérnia lombar inferior.",
+      "Hérnia de Spiegel.",
+      "Hérnia obturadora.",
+      "Hérnia femoral superficial."
+    ],
+    "a": 2,
+    "why": "A hérnia obturadora pode causar obstrução sem massa superficial e comprimir o nervo obturatório, produzindo dor medial da coxa. Idade, magreza e multiparidade reforçam a hipótese, mas não a confirmam sem anatomia. Spiegel ocorre na parede lateral anterior; a femoral costuma relacionar-se ao canal abaixo do ligamento inguinal; a lombar está na parede posterior, sem explicar o trajeto pélvico descrito.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirher-12",
+    "t": "cirher",
+    "q": "Mulher de 73 anos tem pequena tumoração femoral dolorosa e sinais locais de inflamação. Ainda elimina gases e evacuou pela manhã. Na exploração, apenas parte da borda antimesentérica do delgado está aprisionada no anel, com área isquêmica; o restante da luz permanece permeável. Qual denominação corresponde ao mecanismo que permitiu sofrimento intestinal sem obstrução completa?",
+    "o": [
+      "Hérnia de Littré.",
+      "Hérnia de Amyand.",
+      "Hérnia de Maydl.",
+      "Hérnia de Richter."
+    ],
+    "a": 3,
+    "why": "Richter corresponde ao aprisionamento de parte da circunferência intestinal, frequentemente antimesentérica. Assim, trânsito preservado não garante viabilidade. Littré envolve divertículo de Meckel, Amyand envolve apêndice no saco inguinal e Maydl envolve configuração em W com segmento intra-abdominal em risco. Esses conteúdos ou arranjos não são os descritos. O reconhecimento evita atrasar a abordagem de uma hérnia pequena e dolorosa.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirher-13",
+    "t": "cirher",
+    "q": "Homem de 61 anos será submetido a laparotomia mediana eletiva. Na discussão do fechamento, a equipe deseja reduzir hérnia incisional sem aumentar isquemia da aponeurose. Não há contaminação, perda de parede ou necessidade de fechamento temporário. Qual estratégia de sutura da linha média é mais coerente com esse objetivo?",
+    "o": [
+      "Sutura contínua de pontos largos com fio rapidamente absorvível e tensão elevada.",
+      "Sutura separada de grandes blocos musculares com fio rapidamente absorvível.",
+      "Sutura contínua de pontos pequenos com fio lentamente absorvível e relação fio/ferida adequada.",
+      "Sutura restrita à pele e subcutâneo, aproximando a aponeurose por compressão."
+    ],
+    "a": 2,
+    "why": "Em laparotomia eletiva mediana, pontos pequenos, distribuídos na aponeurose e com fio lentamente absorvível, reduzem hérnia incisional quando corretamente executados. Recomenda-se relação de fio para ferida de pelo menos quatro para um, sem estrangulamento dos tecidos. Grandes blocos e tensão excessiva podem prejudicar perfusão. Fechar apenas planos superficiais não restaura a continuidade fascial necessária. Condições de alto risco podem exigir medidas adicionais individualizadas.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirher-14",
+    "t": "cirher",
+    "q": "Homem de 44 anos chega com hérnia inguinal antes redutível, presa há duas horas após esforço. Tem desconforto leve, sem dor crescente, vômitos, distensão ou alteração da pele. Está afebril, normotenso e sem peritonite; a avaliação não encontra sinais de estrangulamento. Em ambiente monitorado, com avaliação cirúrgica e possibilidade de operação se necessário, qual conduta inicial pode ser tentada?",
+    "o": [
+      "Laparotomia mediana imediata antes de considerar avaliação do conteúdo herniado.",
+      "Redução vigorosa sem analgesia, encerrando o atendimento após desaparecer a massa.",
+      "Redução manual suave após analgesia, com observação e reparo planejado se bem-sucedida.",
+      "Alta com analgesia e retorno eletivo, sem tentar avaliar a irredutibilidade recente."
+    ],
+    "a": 2,
+    "why": "Encarceramento recente, sem sinais de isquemia, permite considerar redução cuidadosa por equipe habilitada. A manobra não deve ser forçada e sucesso aparente exige melhora clínica e observação. Dor persistente, suspeita de estrangulamento ou falha mudam a conduta para abordagem urgente. Alta sem resolver ou avaliar a irredutibilidade é inadequada; laparotomia não é etapa obrigatória antes de uma tentativa bem indicada.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirher-15",
+    "t": "cirher",
+    "q": "Homem de 66 anos tem hérnia inguinal irredutível há doze horas, dor progressiva, vômitos e pele hiperemiada. Apresenta FC 118 bpm, febre e defesa localizada, embora a pressão permaneça preservada. A equipe iniciou acesso venoso e reposição. Um profissional propõe reduzir o abaulamento para adiar a operação. Qual decisão é mais adequada?",
+    "o": [
+      "Tratar a hiperemia com antibiótico e reavaliar a hérnia após um dia.",
+      "Tentar redução sob sedação profunda e dar alta se a massa desaparecer.",
+      "Preparar abordagem cirúrgica urgente sem insistir em redução manual.",
+      "Aguardar o lactato se elevar para decidir sobre viabilidade do conteúdo."
+    ],
+    "a": 2,
+    "why": "O conjunto sugere estrangulamento e exige suporte com avaliação e tratamento cirúrgico urgentes. Redução pode devolver alça comprometida ou produzir redução em bloco, mascarando o problema. Pressão preservada e lactato inicial não excluem isquemia. Antibiótico pode integrar a preparação conforme o caso, mas não libera o conteúdo nem restaura sua perfusão e não justifica postergar o controle da causa.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirher-16",
+    "t": "cirher",
+    "q": "Homem de 59 anos é operado por hérnia inguinal encarcerada. Após liberação, o delgado recupera perfusão, não há enterotomia, pus ou derramamento de conteúdo, e não é necessária ressecção. O paciente está estável. Ao discutir o reforço do defeito adulto, qual afirmação descreve melhor o uso de tela nesse campo operatório?",
+    "o": [
+      "A situação exige tela biológica para permitir fechamento definitivo.",
+      "A urgência, por si só, exige substituir tela por reparo tecidual.",
+      "A tela depende de realizar uma ressecção intestinal associada.",
+      "Tela sintética pode ser utilizada, considerando técnica e risco individual."
+    ],
+    "a": 3,
+    "why": "A urgência não torna o campo contaminado automaticamente. Com intestino viável e ausência de contaminação, tela sintética é opção aceita e reduz risco de recidiva em comparação a determinados reparos sem tela. Ressecção não é requisito para empregá-la. Material biológico não tem indicação obrigatória nem superioridade universal. Outros cenários, especialmente derramamento grosseiro e sepse, exigem discussão diferente.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirtabd-01",
+    "t": "cirtabd",
+    "q": "Homem de 27 anos é trazido após colisão de motocicleta, com ferida profunda na coxa e sangramento externo pulsátil, formando rapidamente uma poça na maca. Consegue falar frases completas, sem ruído de via aérea, mas está pálido e progressivamente confuso. Um profissional mantém estabilização cervical e outro prepara acesso vascular. Segundo a lógica do exame primário xABCDE, qual intervenção deve ganhar prioridade imediata enquanto a avaliação prossegue?",
+    "o": [
+      "Comprimir a ferida e aplicar torniquete se necessário.",
+      "Expor o dorso e terminar a busca de lesões antes de comprimir.",
+      "Completar o exame neurológico antes de iniciar a hemostasia.",
+      "Intubar preventivamente antes de abordar a ferida do membro."
+    ],
+    "a": 0,
+    "why": "A hemorragia externa exsanguinante é uma ameaça imediatamente tratável e integra o x do xABCDE. A via aérea permanece sob avaliação e pode ser abordada simultaneamente por outro profissional; falar não encerra essa vigilância. Contudo, no cenário apresentado, intubação preventiva não deve atrasar a hemostasia. Avaliação neurológica e exposição são necessárias, mas sua sequência não justifica manter sangramento externo importante sem controle.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirtabd-02",
+    "t": "cirtabd",
+    "q": "Motociclista de 31 anos sofreu impacto de alta energia e chega com dor abdominal, PA 78/40 mmHg e FC 136 bpm. Recebe hemocomponentes e medidas iniciais de ressuscitação, mas permanece hipoperfundido. Há ventilação bilateral e o FAST identifica líquido livre no espaço hepatorrenal. Não se encontra hemorragia externa importante; a sala cirúrgica e a equipe estão disponíveis. Qual é o próximo destino mais apropriado?",
+    "o": [
+      "Sala de observação para repetir o FAST após mais reposição.",
+      "Centro cirúrgico para exploração abdominal e controle hemorrágico.",
+      "Radiologia intervencionista para embolização sem avaliação operatória.",
+      "Tomografia contrastada para identificar primeiro o órgão lesado."
+    ],
+    "a": 1,
+    "why": "Instabilidade persistente com líquido intraperitoneal no trauma torna prioritário controlar uma provável hemorragia abdominal, com ressuscitação simultânea. O FAST não precisa nomear o órgão para orientar essa decisão. Tomografia implica deslocamento e atraso que o paciente descrito não tolera. Embolização pode ter papel em situações selecionadas, mas não substitui a abordagem da fonte em deterioração com esse quadro. Repetir exames não deve adiar a hemostasia.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirtabd-03",
+    "t": "cirtabd",
+    "q": "Mulher de 36 anos foi atropelada há quarenta minutos. Está pálida, com PA 82/48 mmHg e FC 132 bpm, apesar do início da transfusão. O tórax não apresenta achado que explique o choque, e o FAST inicial é negativo. Há deformidade pélvica e rotação externa de um membro; a pelve ainda não foi estabilizada. Qual medida deve ser realizada agora, junto à busca das demais fontes e ao planejamento de hemostasia?",
+    "o": [
+      "Realizar laparotomia transperitoneal para abrir o hematoma pélvico.",
+      "Estabilizar a pelve nos trocânteres e continuar a transfusão.",
+      "Aplicar tração longitudinal dos membros e levar diretamente à tomografia.",
+      "Repetir a abertura manual da pelve para graduar a instabilidade."
+    ],
+    "a": 1,
+    "why": "O mecanismo e a deformidade sustentam hemorragia pélvica, que pode não produzir líquido no FAST. A cinta bem posicionada reduz movimento e auxilia estabilização, sem substituir transfusão e controle definitivo conforme recursos. Manobras repetidas de abertura podem desfazer coágulos. Tomografia depende de resposta fisiológica e não deve atrasar uma intervenção disponível. Abrir um hematoma pélvico contido por via transperitoneal pode agravar o sangramento.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirtabd-04",
+    "t": "cirtabd",
+    "q": "Homem de 42 anos sofreu trauma abdominal contuso e mantém exame pouco confiável por rebaixamento do sensório. Após estabilização inicial, a equipe não dispõe de ultrassom ou tomografia em tempo útil e realiza lavado peritoneal diagnóstico. Não houve aspiração inicial de sangue franco ou conteúdo entérico. O líquido retorna para contagem celular. Qual resultado ultrapassa o critério clássico de positividade para sangue no trauma contuso?",
+    "o": [
+      "Dosagem de amilase dentro da referência do laboratório.",
+      "Contagem de 45.000 hemácias por milímetro cúbico.",
+      "Contagem de 140.000 hemácias por milímetro cúbico.",
+      "Contagem de 180 leucócitos por milímetro cúbico."
+    ],
+    "a": 2,
+    "why": "No critério clássico de lavado para trauma contuso, mais de cem mil hemácias por milímetro cúbico constitui positividade. Sangue franco na aspiração inicial, conteúdo entérico, bactérias ou contagem elevada de leucócitos podem fornecer outros critérios em contexto apropriado. Os demais resultados apresentados não atingem esses critérios. O método tem limitações, pode induzir exploração não terapêutica e não substitui recursos mais informativos quando disponíveis e seguros.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirtabd-05",
+    "t": "cirtabd",
+    "q": "Homem de 24 anos apresenta ferimento por arma branca no abdome anterior, sem trajeto torácico suspeito. Está lúcido, normotenso e sem peritonite ou evisceração. A exploração local demonstra penetração além da fáscia, mas não define lesão visceral. O serviço tem cirurgia presencial, capacidade de exame abdominal confiável e resgate operatório imediato. Qual estratégia é aceitável neste momento?",
+    "o": [
+      "Observação cirúrgica seriada, com investigação dirigida.",
+      "Lavado peritoneal como requisito para qualquer decisão posterior.",
+      "Tomografia e alta imediata se não houver extravasamento arterial.",
+      "Laparotomia imediata baseada apenas na violação da fáscia abdominal."
+    ],
+    "a": 0,
+    "why": "A penetração fascial não equivale a lesão visceral que exija laparotomia em todo paciente. Manejo seletivo é possível com exame confiável, vigilância e capacidade de operar se surgirem indicações; imagem e laparoscopia são escolhidas conforme trajetória e contexto. Alta precoce não é sustentada pelos dados. Lavado não é um requisito universal. O caso exclui trajetória toracoabdominal suspeita, que exigiria consideração dirigida de lesão diafragmática.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirtabd-06",
+    "t": "cirtabd",
+    "q": "Homem de 29 anos apresenta ferimento abdominal por projétil. Após ressuscitação, mantém PA 120/80 mmHg e está consciente. Ao exame há defesa involuntária e descompressão dolorosa difusa. Não há lesão torácica que explique os sintomas. A equipe cirúrgica está disponível e considera provável violação peritoneal com lesão intestinal. Qual conduta se justifica pelos achados atuais, além do suporte e do antibiótico indicados?",
+    "o": [
+      "Lavado peritoneal para decidir se a defesa tem significado cirúrgico.",
+      "Exploração abdominal para controlar a lesão e a contaminação.",
+      "Tomografia seguida de alta se não houver sangramento arterial ativo.",
+      "Observação seriada baseada na pressão arterial atualmente preservada."
+    ],
+    "a": 1,
+    "why": "Peritonite após trauma penetrante constitui indicação de exploração, independentemente de a pressão estar preservada. Estabilidade isolada não afasta perfuração ou outra lesão relevante. O enunciado não sustenta observação ou alta, e um teste adicional não precisa confirmar uma indicação já estabelecida. A revisão evita a regra de que todo trajeto transperitoneal por projétil obrigue laparotomia: seleção não operatória pode existir em outros cenários, com critérios e estrutura adequados.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirtabd-07",
+    "t": "cirtabd",
+    "q": "Homem de 30 anos sofreu colisão e apresenta lesão esplênica extensa na tomografia, com extravasamento arterial de contraste. Permanece perfundido após suporte inicial, sem necessidade crescente de transfusão e sem peritonite ou outra indicação de laparotomia. Está em centro com monitorização, banco de sangue, radiologia intervencionista e cirurgia de resgate imediata. Qual estratégia inicial melhor combina preservação do órgão e controle do risco hemorrágico?",
+    "o": [
+      "Esplenectomia imediata determinada apenas pela classificação anatômica.",
+      "Esplenorrafia laparoscópica como primeira etapa obrigatória.",
+      "Angioembolização associada a tratamento não operatório monitorizado.",
+      "Observação em enfermaria, reservando intervenção para choque instalado."
+    ],
+    "a": 2,
+    "why": "O paciente pode ser considerado para preservação esplênica porque sua fisiologia e a estrutura permitem vigilância e resgate. O extravasamento vascular favorece embolização, sem esperar choque. Grau anatômico alto não impõe isoladamente esplenectomia, mas tampouco autoriza observação de baixa intensidade. Laparoscopia reparadora não é a primeira etapa obrigatória nesse contexto. Qualquer deterioração exige reavaliar prontamente a estratégia.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirtabd-08",
+    "t": "cirtabd",
+    "q": "Mulher de 33 anos precisou de esplenectomia por trauma e está em recuperação, com alta prevista e retorno organizado. Não há registro confiável de imunização específica para asplenia. A equipe explica o risco de infecção grave, revisa vacinas e orienta procurar atendimento rápido diante de febre. Qual conjunto de agentes deve ser contemplado no planejamento vacinal específico, conforme esquemas e histórico individuais?",
+    "o": [
+      "Meningococo, hepatite A e varicela-zóster.",
+      "Haemophilus influenzae tipo b, dengue e febre amarela.",
+      "Pneumococo, hepatite B e vírus do papiloma humano.",
+      "Pneumococo, meningococo e H. influenzae tipo b."
+    ],
+    "a": 3,
+    "why": "A perda da função esplênica aumenta especialmente o risco de infecção por bactérias encapsuladas. Pneumococo, meningococo e Hib devem ser considerados com esquemas ajustados à idade, às doses anteriores e às recomendações vigentes. Outras vacinas de rotina continuam importantes, mas não substituem essa cobertura. Vacinação não elimina o risco; educação sobre febre e acesso rápido ao atendimento são essenciais. Profilaxia antimicrobiana depende de avaliação individual e protocolo.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirtabd-09",
+    "t": "cirtabd",
+    "q": "Homem de 38 anos está em laparotomia por trauma hepático grave. Após compressão e medidas iniciais, a equipe aplica adequadamente uma pinça ao ligamento hepatoduodenal. O sangramento da superfície anterior diminui, mas persiste hemorragia importante proveniente da região posterior do fígado. A equipe confirma que o pedículo está efetivamente ocluído. Qual território merece maior suspeita como fonte persistente?",
+    "o": [
+      "Ramo principal da artéria hepática própria.",
+      "Veias hepáticas ou veia cava retro-hepática.",
+      "Ramo principal da veia porta no pedículo.",
+      "Artéria gastroduodenal junto ao pedículo ocluído."
+    ],
+    "a": 1,
+    "why": "A manobra de Pringle reduz o fluxo de entrada arterial hepático e portal. Persistência de sangramento posterior, apesar de oclusão adequada, faz suspeitar de lesão venosa de saída, nas veias hepáticas ou na cava retro-hepática. Fontes extra-hepáticas e circulação variante também precisam ser consideradas, sem tratar a manobra como teste infalível. Os territórios arteriais e portais listados não explicam melhor a persistência após controle eficaz do influxo.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirtabd-10",
+    "t": "cirtabd",
+    "q": "Homem de 45 anos é operado após colisão de alta energia. A laparotomia controla uma lesão intestinal, e a inspeção revela hematoma retroperitoneal pélvico contido, não pulsátil nem expansivo. Há fratura pélvica já estabilizada com cinta. A pressão melhora com transfusão, e não existe evidência de lesão vascular que imponha exploração dirigida. Como deve ser manejado esse hematoma de zona III relacionado ao trauma contuso?",
+    "o": [
+      "Ligar bilateralmente as artérias ilíacas internas como etapa preventiva.",
+      "Abrir o hematoma para retirar os coágulos e localizar o sangramento.",
+      "Drenar o espaço retroperitoneal pela laparotomia antes do fechamento.",
+      "Manter o tamponamento e planejar hemostasia pélvica dirigida."
+    ],
+    "a": 3,
+    "why": "Abrir hematoma pélvico contido após trauma contuso pode desfazer tamponamento de sangramento ósseo e venoso. Estabilização, ressuscitação e, conforme persistência hemorrágica, tamponamento pré-peritoneal ou embolização são estratégias a considerar. Isso difere de indicações dirigidas por lesão vascular ou outros mecanismos. Drenagem de coágulos não é controle hemorrágico, e ligadura arterial preventiva não é solução rotineira para esse padrão de sangramento.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirtabd-11",
+    "t": "cirtabd",
+    "q": "Homem de 28 anos sofreu trauma pélvico por esmagamento. Está estabilizado, necessita de monitorização urinária e ainda não foi sondado. Há sangue no meato e hematoma perineal, sem informação sobre continuidade uretral. O hospital dispõe de radiologia e urologia. Qual investigação deve ser priorizada antes de tentativa de cateterização transuretral cega?",
+    "o": [
+      "Uretrografia retrógrada para avaliar a integridade da uretra.",
+      "Cistografia por enchimento através de sonda passada sem imagem.",
+      "Ultrassonografia renal para excluir lesão do trato urinário inferior.",
+      "Tomografia venosa da pelve sem avaliação dirigida da uretra."
+    ],
+    "a": 0,
+    "why": "Sangue no meato após trauma pélvico exige suspeita de lesão uretral. A uretrografia retrógrada pode esclarecer continuidade e orientar drenagem segura com avaliação especializada. Cistografia estuda a bexiga e não justifica passar antes uma sonda cega na situação descrita. Ultrassom renal e tomografia não dirigida não excluem lesão uretral. O método de drenagem posterior depende do achado, da urgência e dos recursos, não de uma regra única para toda lesão.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirtabd-12",
+    "t": "cirtabd",
+    "q": "Homem de 34 anos chega 70 minutos após colisão, com hemorragia importante e necessidade de transfusão. As medidas de hemostasia e ressuscitação já estão em curso, e não há contraindicação identificada ao antifibrinolítico. A equipe adota o esquema clássico estudado no CRASH-2. Qual prescrição corresponde a esse regime e à sua janela de início?",
+    "o": [
+      "Dois gramas em oito horas sem dose inicial, iniciando até doze horas do trauma.",
+      "Um grama em dez minutos e um grama em oito horas, iniciando até três horas do trauma.",
+      "Um grama em uma hora e um grama no dia seguinte, iniciando até seis horas do trauma.",
+      "Um grama em dez minutos e doses diárias subsequentes, iniciando após três horas do trauma."
+    ],
+    "a": 1,
+    "why": "O regime clássico é um grama intravenoso em dez minutos, seguido de um grama em oito horas, com início o mais cedo possível dentro das três primeiras horas. O tempo decorre do trauma, não da chegada ao hospital. Início tardio não reproduz o benefício e pode ser prejudicial no sangramento traumático. Existem protocolos locais distintos, mas a pergunta delimita o esquema estudado; antifibrinolítico não substitui hemostasia nem ressuscitação.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirtabd-13",
+    "t": "cirtabd",
+    "q": "Mulher de 41 anos está em operação por múltiplas lesões após atropelamento. Durante a transfusão, a temperatura cai para 33,8 °C, o pH para 7,15 e surge sangramento difuso de superfícies sem vaso isolado identificável, acompanhado de piora das provas de coagulação. A equipe considera abreviar o procedimento. Qual conjunto fisiológico descreve melhor a deterioração que sustenta essa decisão?",
+    "o": [
+      "Hipotensão, taquicardia e redução da diurese.",
+      "Hipoxemia, hipercapnia e broncoespasmo.",
+      "Hipotermia, acidose e coagulopatia.",
+      "Hiperglicemia, hiponatremia e anemia."
+    ],
+    "a": 2,
+    "why": "Hipotermia, acidose e coagulopatia formam a tríade clássica que se retroalimenta no trauma hemorrágico. Os dados apresentados documentam seus componentes e favorecem discutir controle de danos. Hipocalcemia e outros fatores também merecem correção, embora não sejam os três termos clássicos. Hipotensão e taquicardia são sinais de choque, mas não nomeiam esse ciclo. Os demais conjuntos não correspondem aos achados descritos.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirtabd-14",
+    "t": "cirtabd",
+    "q": "Homem de 32 anos apresenta lesões hepática e intestinal após ferimento penetrante. Durante a laparotomia já recebeu doze concentrados de hemácias, mantém temperatura de 34 °C, pH de 7,12 e sangramento difuso. Há contaminação intestinal controlável por medidas rápidas, mas a reconstrução definitiva seria demorada. Qual estratégia operatória é mais adequada ao estado fisiológico atual?",
+    "o": [
+      "Abreviar com hemostasia e controle de contaminação, deixando fechamento temporário.",
+      "Concluir anastomoses e fechamento definitivo antes de iniciar correção intensiva.",
+      "Realizar reconstrução prolongada, usando a estabilidade transitória da pressão como critério.",
+      "Transferir à UTI com hemorragia ativa para completar a ressuscitação primeiro."
+    ],
+    "a": 0,
+    "why": "Controle de danos procura interromper o ciclo de deterioração: hemostasia e contenção da contaminação, proteção temporária e ressuscitação intensiva, seguidas de reoperação planejada. A pressão momentaneamente preservada não apaga acidose, hipotermia e coagulopatia. Reconstrução longa pode aprofundar a disfunção. Por outro lado, abreviar não significa deixar sem controle uma fonte hemorrágica cirurgicamente tratável e apenas transferir o paciente.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirtabd-15",
+    "t": "cirtabd",
+    "q": "Homem de 44 anos, após ressuscitação maciça e cirurgia abdominal, desenvolve abdome progressivamente tenso, oligúria e aumento das pressões ventilatórias. A pressão intra-abdominal, medida por via vesical com técnica adequada e repetida, é de 27 mmHg. A equipe não identifica obstrução da sonda ou pneumotórax que explique a deterioração. Há nova disfunção renal e respiratória. Qual conduta melhor corresponde ao quadro?",
+    "o": [
+      "Tratar íleo pós-operatório com pró-cinético e aguardar recuperação do trânsito.",
+      "Manter observação até ocorrer hipotensão, pois a pressão isolada não autoriza preocupação.",
+      "Tratar síndrome compartimental abdominal e preparar descompressão se medidas imediatas falharem.",
+      "Aumentar cristaloide até normalizar a diurese, antes de considerar intervenção abdominal."
+    ],
+    "a": 2,
+    "why": "Pressão sustentada acima de vinte milímetros de mercúrio associada a nova disfunção orgânica caracteriza síndrome compartimental abdominal. Medidas imediatas para reduzir pressão podem ser tentadas enquanto se organiza o tratamento; falha exige descompressão sem demora indevida. A definição não depende de hipotensão. Volume indiscriminado pode agravar edema e pressão. O caso fornece medida adequada e disfunção, indo além de abdome tenso por palpação.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirtabd-16",
+    "t": "cirtabd",
+    "q": "Homem de 30 anos chega após colisão de carro, com PA sistólica de 88 mmHg, FC de 128 bpm e FAST positivo. Não há ferimento penetrante. A hemoglobina inicial é de 11 g/dL, e a equipe considera ativar o protocolo de transfusão maciça, usando o escore Assessment of Blood Consumption como apoio. Quais dados do caso entram diretamente nesse escore e qual pontuação resultam?",
+    "o": [
+      "Hipotensão e hemoglobina; dois pontos.",
+      "Taquicardia e mecanismo contuso; dois pontos.",
+      "Hipotensão, taquicardia e FAST positivo; três pontos.",
+      "Mecanismo contuso, hemoglobina e FAST positivo; três pontos."
+    ],
+    "a": 2,
+    "why": "O ABC atribui um ponto a mecanismo penetrante, pressão sistólica até noventa, frequência cardíaca de pelo menos cento e vinte e FAST positivo. O mecanismo é contuso, portanto não pontua; os outros três critérios estão presentes. Hemoglobina não integra esse escore e pode estar inicialmente pouco alterada na hemorragia. A ferramenta apoia, mas não substitui julgamento clínico ou deve atrasar ativação de transfusão em sangramento grave.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirtabd-17",
+    "t": "cirtabd",
+    "q": "Menino de oito anos bateu o epigástrio no guidão da bicicleta. No segundo dia passa a ter vômitos biliosos, mas permanece normotenso, sem febre ou peritonite. A tomografia mostra hematoma intramural do duodeno com estreitamento, sem gás extraluminal, extravasamento ou sinais de lesão pancreática ductal. A equipe dispõe de monitorização e revisão cirúrgica. Qual estratégia inicial é mais apropriada?",
+    "o": [
+      "Ressecção duodenopancreática por risco de obstrução persistente.",
+      "Descompressão gástrica, observação e suporte nutricional.",
+      "Exploração imediata para evacuar o hematoma e suturar o duodeno.",
+      "Gastrojejunostomia imediata para desviar o segmento obstruído."
+    ],
+    "a": 1,
+    "why": "Hematoma duodenal isolado, em criança estável e sem perfuração, costuma resolver com manejo não operatório. Descompressão, correção de perdas e suporte nutricional conforme duração e possibilidade de uso do tubo digestivo são essenciais. Persistência inesperada, deterioração ou novos achados exigem reavaliação. Evacuação, derivação e ressecção extensa não são primeiras medidas rotineiras para o quadro delimitado.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirttor-01",
+    "t": "cirttor",
+    "q": "Homem de 32 anos sofreu colisão e apresenta dispneia intensa, agitação e PA 70/40 mmHg. A expansão torácica está reduzida à direita, com murmúrio quase ausente e hipertimpanismo desse lado. Há turgência jugular e piora rápida, sem hemorragia externa que explique o quadro. A equipe dispõe de material e treinamento para intervenção imediata. Qual medida deve ser priorizada antes de transportar o paciente para imagem?",
+    "o": [
+      "Descompressão imediata do hemitórax direito, seguida de drenagem definitiva.",
+      "Pericardiocentese guiada, deixando a investigação pleural para após estabilização.",
+      "Expansão com cristaloide, aguardando confirmação radiográfica da causa do choque.",
+      "Intubação com pressão positiva, deixando a pleura para depois da radiografia."
+    ],
+    "a": 0,
+    "why": "O conjunto favorece pneumotórax hipertensivo com choque obstrutivo. A descompressão por técnica apropriada e equipe treinada não deve aguardar imagem, e é seguida de drenagem e reavaliação. Ventilação positiva antes de aliviar pressão pode agravar a fisiologia. Tamponamento é outro diagnóstico obstrutivo, mas a assimetria ventilatória e o hipertimpanismo favorecem causa pleural. Volume isolado não remove a obstrução.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirttor-02",
+    "t": "cirttor",
+    "q": "Homem de 45 anos sofre deterioração circulatória e respiratória após trauma, com quadro compatível com pneumotórax hipertensivo. O serviço inicia descompressão emergencial e segue protocolo que utiliza acesso lateral com cateter apropriado, enquanto prepara drenagem definitiva. Qual referência anatômica corresponde melhor ao local usual desse acesso, respeitando o feixe intercostal e evitando punção excessivamente baixa?",
+    "o": [
+      "Quarto ou quinto espaço intercostal, junto à margem paravertebral.",
+      "Sexto ou sétimo espaço intercostal, junto à borda esternal direita.",
+      "Sétimo ou oitavo espaço intercostal, junto à linha axilar posterior.",
+      "Quarto ou quinto espaço intercostal, entre linhas axilares anterior e média."
+    ],
+    "a": 3,
+    "why": "Acesso lateral no quarto/quinto espaço, próximo à região axilar anterior/média conforme protocolo, é uma referência usual para descompressão no adulto. Comprimento do cateter e técnica influenciam sucesso. O acesso anterior no segundo espaço pode ser alternativa em determinados protocolos, mas não é o acesso lateral solicitado. Punções baixas ou muito posteriores elevam riscos e não correspondem ao sítio descrito.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirttor-03",
+    "t": "cirttor",
+    "q": "Homem de 28 anos chega após ferimento torácico penetrante, com hipoperfusão e redução do murmúrio à direita. A drenagem pleural retorna imediatamente 1.700 mL de sangue. Apesar de hemocomponentes e suporte inicial, permanece instável e com necessidade de transfusão; o dreno está pérvio. A equipe de cirurgia torácica está disponível. Qual planejamento é mais apropriado neste momento?",
+    "o": [
+      "Organizar exploração torácica urgente para controle da hemorragia.",
+      "Colocar outro dreno como principal tratamento da perda contínua.",
+      "Aguardar seis horas de débito antes de discutir controle operatório.",
+      "Programar videotoracoscopia eletiva após normalização da hemoglobina."
+    ],
+    "a": 0,
+    "why": "Retorno inicial volumoso associado a instabilidade e transfusão sustenta necessidade urgente de controle cirúrgico. Limiares clássicos ajudam, mas fisiologia, permeabilidade e lesões associadas também orientam. Outro dreno pode não controlar a fonte e não substitui reparo. Esperar uma janela fixa ou melhora laboratorial completa pode atrasar hemostasia em hemorragia ativa.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirttor-04",
+    "t": "cirttor",
+    "q": "Homem de 24 anos chega após facada na região precordial, ainda responsivo, com PA 70/50 mmHg e jugulares distendidas. O murmúrio está presente bilateralmente, sem hipertimpanismo. O ultrassom identifica líquido pericárdico e sinais compatíveis com repercussão hemodinâmica. Há equipe cirúrgica capaz de realizar abordagem imediata. Qual diagnóstico e estratégia de controle melhor integram os achados?",
+    "o": [
+      "Hemotórax maciço; drenagem bilateral antes de investigar o pericárdio.",
+      "Contusão miocárdica; monitorização após infusão inicial de cristaloide.",
+      "Pneumotórax hipertensivo; drenagem pleural como tratamento definitivo.",
+      "Tamponamento traumático; abordagem cirúrgica para descompressão e reparo."
+    ],
+    "a": 3,
+    "why": "Ferimento precordial, choque e derrame pericárdico com repercussão favorecem tamponamento por lesão cardíaca. Tratamento definitivo envolve descompressão e controle/reparo da lesão por acesso apropriado. Punção pode ter papel de ponte em situações selecionadas, mas não substitui reparo e pode falhar com sangue coagulado. O exame pulmonar não favorece as causas pleurais apresentadas; contusão não explica melhor o derrame traumático com choque.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirttor-05",
+    "t": "cirttor",
+    "q": "Mulher de 29 anos tem ferida aberta no hemitórax, com passagem audível de ar e dificuldade respiratória. Está recebendo oxigênio e avaliação de outras lesões. A equipe dispõe de selo torácico comercial valvulado e está preparando drenagem em local separado da ferida. Qual cuidado temporário é mais apropriado enquanto se organiza o tratamento definitivo e se acompanha a ventilação?",
+    "o": [
+      "Manter a ferida descoberta até finalizar a investigação por imagem.",
+      "Comprimir firmemente o tórax com faixa para reduzir a entrada de ar.",
+      "Suturar a ferida antes de avaliar a necessidade de drenagem.",
+      "Aplicar selo valvulado e monitorar sinais de hipertensão pleural."
+    ],
+    "a": 3,
+    "why": "Selo valvulado é opção temporária apropriada quando disponível, com vigilância para falha e pneumotórax hipertensivo. A drenagem costuma ser feita por outro local, e o defeito é tratado no plano definitivo. Curativo de três lados é descrito como alternativa em certos contextos, mas não oferece a mesma previsibilidade de um dispositivo apropriado. Fechar sem tratar a pleura ou atrasar o cuidado pode agravar a ventilação.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirttor-06",
+    "t": "cirttor",
+    "q": "Homem de 73 anos sofreu trauma fechado e tem várias costelas fraturadas em dois pontos, com segmento instável. Apesar de oxigênio, apresenta hipoxemia; a tomografia mostra contusão pulmonar importante sob a área de impacto, sem pneumotórax significativo. A dor limita inspiração e tosse. Qual combinação aborda melhor os principais mecanismos da insuficiência respiratória, sem atribuí-la apenas ao movimento da parede?",
+    "o": [
+      "Imobilização compressiva do tórax como forma de normalizar a oxigenação.",
+      "Fixação de todas as costelas como substituto do suporte da contusão.",
+      "Drenagem pleural de rotina como tratamento das opacidades pulmonares.",
+      "Analgesia e suporte respiratório, com fluidos guiados pela perfusão."
+    ],
+    "a": 3,
+    "why": "Contusão, dor e alteração mecânica podem contribuir para insuficiência respiratória. Analgesia, higiene pulmonar e suporte conforme necessidade são centrais; excesso de fluidos pode agravar edema, sem impedir ressuscitação necessária. Fixação pode beneficiar pacientes selecionados, mas não substitui cuidado fisiológico. Dreno não trata contusão sem indicação pleural. Compressão externa pode limitar ainda mais ventilação.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirttor-07",
+    "t": "cirttor",
+    "q": "Homem de 36 anos precisa de drenagem pleural por pneumotórax traumático. Durante a preparação por técnica aberta, a equipe identifica o triângulo de segurança, confirma lado e reúne material para dissecção romba. Qual referência descreve melhor o acesso usual no adulto, com atenção ao feixe neurovascular e à posição de estruturas abaixo do diafragma?",
+    "o": [
+      "Oitavo espaço intercostal lateral, pela borda superior da costela inferior.",
+      "Quarto ou quinto espaço intercostal, pela borda superior da costela inferior.",
+      "Sétimo espaço intercostal posterior, pela borda inferior da costela superior.",
+      "Segundo espaço intercostal anterior, pela borda inferior da costela superior."
+    ],
+    "a": 1,
+    "why": "Acesso no quarto/quinto espaço na região do triângulo de segurança é usual no trauma; a passagem respeita o feixe principal sob a costela superior e inclui técnica e confirmação adequadas. Não se define segurança apenas por contar espaços, pois anatomia varia. Acesso muito baixo pode lesar estruturas abdominais. A drenagem não deve ser confundida com um ponto alternativo de descompressão por agulha.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirttor-08",
+    "t": "cirttor",
+    "q": "Uma equipe treinada dispõe de sala e material para toracotomia de reanimação e avalia vítimas de parada traumática. Considera mecanismo, sinais de vida antes da parada, duração e possibilidade de corrigir uma causa reversível. Entre os cenários abaixo, qual tende a oferecer melhor possibilidade de benefício, sem transformar a seleção em uma indicação baseada apenas no fato de ter ocorrido trauma?",
+    "o": [
+      "Trauma contuso extenso, sem sinais de vida desde um transporte prolongado.",
+      "Trauma contuso craniano devastador com parada não testemunhada durante transporte.",
+      "Facada torácica, sinais de vida recentes e parada testemunhada na chegada.",
+      "Queda de altura, assistolia prolongada e ausência de sinais de vida no local."
+    ],
+    "a": 2,
+    "why": "Melhores resultados são descritos em trauma penetrante torácico, especialmente com sinais de vida e parada recente testemunhada, quando há capacidade imediata de corrigir a causa. Não há garantia de sucesso. Trauma contuso com ausência prolongada de sinais de vida e lesões incompatíveis com recuperação tem prognóstico muito inferior. Decisão depende de protocolo, tempo, achados e recursos, não de um único dado isolado.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirttor-09",
+    "t": "cirttor",
+    "q": "Homem de 39 anos sofreu colisão frontal em alta velocidade. Após suporte inicial mantém pressão e perfusão suficientes para tomografia, sem ameaça imediata à via aérea. A radiografia mostra mediastino alargado, apagamento do contorno aórtico e desvio de estruturas mediastinais. Há suspeita de lesão vascular por desaceleração, mas a radiografia não localiza a ruptura. Qual exame deve ser priorizado?",
+    "o": [
+      "Angiotomografia de tórax com protocolo adequado.",
+      "Ecocardiograma transtorácico como único exame de exclusão.",
+      "Radiografia repetida após seis horas de observação.",
+      "Ressonância de tórax como estudo inicial durante a avaliação aguda."
+    ],
+    "a": 0,
+    "why": "Angiotomografia é método central para avaliar lesão traumática da aorta em paciente que tolera o exame, permitindo classificar morfologia e planejar conduta. A radiografia contém sinais de alerta, mas não confirma nem exclui lesão. Ecocardiograma transtorácico tem limitações para essa pergunta. Espera por nova radiografia e ressonância como exame agudo inicial não atendem à necessidade descrita.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirttor-10",
+    "t": "cirttor",
+    "q": "Homem de 25 anos foi drenado por pneumotórax após trauma de alta energia. Mesmo após conferir conexões, posição e permeabilidade, persiste fuga aérea intensa, enfisema subcutâneo crescente e falha de expansão pulmonar. Não há grande coleção sanguínea que explique a imagem. A equipe organiza avaliação especializada e investigação da via aérea. Qual hipótese deve receber prioridade?",
+    "o": [
+      "Lesão traqueobrônquica importante.",
+      "Hemotórax retido com dreno obstruído.",
+      "Atelectasia simples por dor isolada.",
+      "Contusão pulmonar sem comunicação aérea."
+    ],
+    "a": 0,
+    "why": "Fuga aérea persistente e não expansão, após excluir falha do sistema, sugerem lesão traqueobrônquica e podem exigir broncoscopia e planejamento especializado. Contusão e atelectasia podem prejudicar ventilação, mas não explicam tão bem a fuga objetiva intensa. Hemotórax retido é outro mecanismo de não expansão, porém não integra os dados descritos. A suspeita não dispensa manter suporte e procurar lesões associadas.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirttor-11",
+    "t": "cirttor",
+    "q": "Mulher de 56 anos sofreu impacto torácico e tem pequenas opacidades pulmonares na radiografia inicial. Nas 24 horas seguintes aumenta a necessidade de oxigênio; a imagem mostra maior extensão das opacidades, sem nova coleção pleural ou evidência de infecção. Está sendo avaliada para contusão pulmonar. Qual característica evolutiva deve orientar a vigilância e o manejo de fluidos?",
+    "o": [
+      "A contusão pode se tornar mais evidente em 24–48 horas e piorar com sobrecarga.",
+      "A contusão respeita limites segmentares e deve ser tratada com expansão hídrica fixa.",
+      "A progressão radiológica confirma infecção bacteriana e exige profilaxia para todo caso.",
+      "A contusão fica completamente definida no primeiro exame e dispensa imagem se piorar."
+    ],
+    "a": 0,
+    "why": "Contusão pode evoluir nas primeiras horas, e exame inicial pouco expressivo não garante ausência de deterioração. Excesso de fluidos pode agravar edema, mas ressuscitação indicada não deve ser omitida. Progressão de opacidade não confirma por si só infecção, e antibiótico profilático não é rotina da contusão isolada. A avaliação deve procurar causas associadas quando houver piora, em vez de assumir evolução inevitável.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirttor-12",
+    "t": "cirttor",
+    "q": "Homem de 27 anos sofreu ferimento por arma branca na transição toracoabdominal esquerda. Está estável, sem peritonite, e a radiografia não mostra hérnia de vísceras. A tomografia não define bem o trajeto e permanece suspeita de pequena lesão diafragmática. O serviço tem equipe e condições para exploração minimamente invasiva. Qual investigação pode avaliar diretamente o diafragma nesse cenário selecionado?",
+    "o": [
+      "Ultrassonografia abdominal como exame único.",
+      "Laparoscopia diagnóstica.",
+      "Observação clínica sem plano adicional de avaliação.",
+      "Radiografia torácica repetida isoladamente."
+    ],
+    "a": 1,
+    "why": "Pequenas lesões diafragmáticas penetrantes podem passar despercebidas na radiografia e na tomografia. Persistindo suspeita em paciente estável, laparoscopia pode permitir inspeção direta e tratamento conforme achado, em serviço apropriado. Toracoscopia pode ter papel em determinados contextos. Exame isolado negativo ou observação sem estratégia não exclui com segurança o defeito, cujo reconhecimento tardio pode trazer complicações.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirproc-01",
+    "t": "cirproc",
+    "q": "Homem de 32 anos apresenta sangue vivo no papel e prolapso durante a evacuação, com redução espontânea ao terminar. Não há dor, anemia ou história familiar relevante, e a avaliação dirigida não sugere outra fonte. Após ajuste de fibras, hidratação e hábito evacuatório, mantém sintomas incômodos. A anuscopia confirma componente interno, sem doença externa importante. Qual combinação de classificação e tratamento ambulatorial é mais apropriada?",
+    "o": [
+      "Grau III; considerar hemorroidectomia excisional.",
+      "Grau II; considerar ligadura elástica.",
+      "Grau IV; considerar escleroterapia dos coxins.",
+      "Grau I; considerar ligadura elástica dos coxins."
+    ],
+    "a": 1,
+    "why": "Prolapso que reduz espontaneamente caracteriza grau II; quando medidas clínicas falham, ligadura elástica é uma opção ambulatorial eficaz para doença interna selecionada. Grau III exige redução manual e grau IV é irredutível. Grau I não prolapsa. A classificação, a intensidade dos sintomas e o componente externo orientam a escolha; sangramento não deve ser atribuído às hemorroidas se houver dados que exijam investigação adicional.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirproc-02",
+    "t": "cirproc",
+    "q": "Mulher de 40 anos apresenta nódulo perianal azulado e dor intensa iniciada há trinta horas. Não tem febre, celulite extensa ou prolapso interno encarcerado. O exame é compatível com trombose hemorroidária externa recente. Após discutir a possibilidade de melhora conservadora, ela prefere uma opção que ofereça alívio mais rápido, e não possui contraindicação ao procedimento local. Qual intervenção pode ser oferecida?",
+    "o": [
+      "Escleroterapia no centro do segmento trombosado.",
+      "Excisão da trombose sob anestesia local.",
+      "Ligadura elástica do nódulo perianal externo.",
+      "Hemorroidectomia de todos os coxins anais."
+    ],
+    "a": 1,
+    "why": "Em paciente selecionada com trombose externa recente e dor importante, excisão local pode acelerar o alívio e reduzir recorrência, conforme avaliação e preferência. Tratamento conservador também pode ser adequado em outros cenários, não havendo obrigação de operar pelo relógio isolado. Ligadura e escleroterapia se destinam à doença interna e não são a abordagem desse nódulo doloroso. Excisão de todos os coxins é desproporcional ao achado focal.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirproc-03",
+    "t": "cirproc",
+    "q": "Homem de 62 anos relata sangramento retal há seis meses, tratado como hemorroidas sem investigação do cólon. Agora apresenta anemia microcítica, ferritina baixa e perda de fôlego ao esforço. A anuscopia mostra hemorroidas internas, mas ele nunca fez rastreamento colorretal. Está estável, sem sangramento volumoso no atendimento. Qual investigação deve ter prioridade, além do tratamento da anemia?",
+    "o": [
+      "Reposição de ferro seguida apenas de controle do hemograma.",
+      "Retossigmoidoscopia limitada, dispensando avaliação proximal.",
+      "Colonoscopia para avaliar outras fontes.",
+      "Nova anuscopia após ligadura dos coxins internos."
+    ],
+    "a": 2,
+    "why": "Anemia ferropriva e sangramento persistente nessa faixa etária exigem investigação de fonte colorretal, mesmo com hemorroidas visíveis. Colonoscopia permite avaliar segmentos proximais que exames anais ou retossigmoidoscopia limitada não examinam. Ferro e tratamento hemorroidário podem integrar o cuidado, mas resposta hematológica não exclui neoplasia ou outra causa. A extensão da investigação da deficiência de ferro é completada conforme história e achados.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirproc-04",
+    "t": "cirproc",
+    "q": "Mulher de 36 anos tem dor cortante ao evacuar e pequeno sangramento há três meses. O exame mostra fissura posterior, plicoma sentinela e hipertonia, sem lesões laterais ou outros sinais de doença secundária. Ela ainda não realizou tratamento clínico organizado e deseja evitar inicialmente uma intervenção que possa afetar continência. Qual estratégia não operatória é a mais apropriada?",
+    "o": [
+      "Programar esfincterotomia antes de ajustar a consistência fecal.",
+      "Regularizar as fezes e usar relaxante tópico.",
+      "Indicar fistulotomia para abrir o leito da fissura.",
+      "Prescrever antibiótico oral e manter o hábito evacuatório."
+    ],
+    "a": 1,
+    "why": "Fibras, medidas para fezes macias e terapia tópica que reduza o tônus, como diltiazem ou nitrato, são opções iniciais para fissura crônica típica. Esfincterotomia é eficaz, mas requer discussão de risco e seleção; a paciente deseja começar por manejo não operatório e ainda não o tentou. Fistulotomia trata outra doença. Antibiótico não corrige o mecanismo habitual da fissura idiopática e não substitui essas medidas.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirproc-05",
+    "t": "cirproc",
+    "q": "Homem de 41 anos apresenta pequenas ulcerações anais laterais, pouco dolorosas e múltiplas. Relata diarreia recorrente e perda ponderal, diferentemente de episódios anteriores de dor com fezes endurecidas. O exame não mostra uma fissura posterior isolada, e a equipe considera uma causa secundária antes de planejar procedimento esfincteriano. Qual abordagem é mais apropriada?",
+    "o": [
+      "Investigar inflamação, infecção e neoplasia.",
+      "Tratar apenas hemorroidas internas e observar as úlceras.",
+      "Tratar como fissura idiopática e programar cirurgia precoce.",
+      "Indicar dilatação anal para esclarecer a origem das lesões."
+    ],
+    "a": 0,
+    "why": "Fissuras ou úlceras laterais, múltiplas ou atípicas exigem avaliação de condições como Crohn, infecções e neoplasia, guiada por história, exame e eventual biópsia. O achado não define sozinho uma dessas causas. Tratá-lo de imediato como fissura idiopática pode atrasar diagnóstico e expor a procedimento inadequado. Hemorroidas não explicam as ulcerações e dilatação não é método diagnóstico apropriado para esse problema.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirproc-06",
+    "t": "cirproc",
+    "q": "Homem de 58 anos com diabetes mal controlado apresenta dor perianal contínua há três dias, febre de 38,6 °C e edema doloroso. Não há flutuação superficial, mas o exame especializado e a imagem obtida pela suspeita de extensão demonstram coleção. Não há necrose de pele ou instabilidade. Qual estratégia oferece tratamento adequado do foco e do contexto infeccioso?",
+    "o": [
+      "Iniciar preparo intestinal antes de decidir sobre drenagem.",
+      "Usar antibiótico até aparecer flutuação superficial.",
+      "Aspirar uma amostra e observar a resposta ao analgésico.",
+      "Drenar a coleção e associar antibiótico."
+    ],
+    "a": 3,
+    "why": "Abscesso anorretal requer drenagem; não é necessário esperar flutuação visível quando a coleção já está demonstrada. Febre, diabetes descompensado e contexto sistêmico favorecem associação de antibiótico, sem que ele substitua controle da fonte. Aspiração isolada pode não drenar adequadamente a cavidade. Preparo intestinal não é condição para tratar o foco e pode atrasar a abordagem necessária.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirproc-07",
+    "t": "cirproc",
+    "q": "Homem de 39 anos tem drenagem intermitente por orifício posterior, próximo à margem anal, após abscesso. Não há sinais de Crohn ou operação prévia. Antes do exame sob anestesia, o residente usa a regra de Goodsall como orientação preliminar, sabendo que a confirmação do trajeto depende da avaliação anatômica. Para esse orifício posterior típico, qual localização interna e percurso são esperados?",
+    "o": [
+      "Linha média anterior, com trajeto curvo.",
+      "Mesmo quadrante posterior, com trajeto radial.",
+      "Linha média posterior, com trajeto curvo.",
+      "Acima do elevador, com trajeto extraesfinctérico."
+    ],
+    "a": 2,
+    "why": "Pela regra de Goodsall, orifícios posteriores tendem a comunicar-se com a linha média posterior por percurso curvo. Trata-se de orientação e não de substituto para mapeamento, sobretudo em fístulas complexas ou recidivadas. A previsão radial se aplica a determinados orifícios anteriores. A regra não estabelece, por si só, comunicação supralevadora nem permite escolher uma operação sem considerar a relação com os esfíncteres.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirproc-08",
+    "t": "cirproc",
+    "q": "Homem de 44 anos apresenta fístula anal após drenagem de abscesso. No estudo do trajeto, o orifício interno comunica-se com um canal que segue entre os esfíncteres interno e externo e chega à pele, sem atravessar o esfíncter externo. A equipe utiliza a classificação de Parks, que relaciona o trajeto ao aparelho esfincteriano. Qual subtipo descreve esse achado e é também frequente nessa classificação?",
+    "o": [
+      "Fístula extraesfinctérica.",
+      "Fístula transesfinctérica alta.",
+      "Fístula supraesfinctérica.",
+      "Fístula interesfinctérica."
+    ],
+    "a": 3,
+    "why": "O trajeto limitado ao plano entre os esfíncteres, sem atravessar o externo, define fístula interesfinctérica, o tipo mais frequente na classificação clássica. Transesfinctérica cruza o externo; supraesfinctérica contorna superiormente o aparelho e extraesfinctérica tem percurso diferente, usualmente sem origem criptoglandular típica nesse plano. Identificar o subtipo é necessário, mas continência e outras características ainda orientam a operação.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirproc-09",
+    "t": "cirproc",
+    "q": "Mulher de 44 anos, assintomática e sem anemia, pergunta quando iniciar rastreamento colorretal. Não há história pessoal de pólipos, doença inflamatória intestinal, câncer ou familiar de primeiro grau afetado. A equipe utiliza a recomendação da USPSTF dos Estados Unidos para adultos de risco médio e discutirá depois o método conforme acesso e preferências. Qual idade marca o início recomendado nessa diretriz?",
+    "o": [
+      "50 anos.",
+      "45 anos.",
+      "40 anos.",
+      "55 anos."
+    ],
+    "a": 1,
+    "why": "A USPSTF recomenda iniciar o rastreamento de risco médio aos quarenta e cinco anos. Isso se refere a pessoas assintomáticas; sangramento, anemia ou outros achados exigem investigação diagnóstica independentemente dessa idade. Histórias familiares e síndromes hereditárias também podem antecipar e mudar o método. A fonte foi explicitada porque recomendações e programas de diferentes instituições e países não usam necessariamente o mesmo limite.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirproc-10",
+    "t": "cirproc",
+    "q": "Homem de 40 anos está assintomático e nunca realizou colonoscopia. Seu pai teve câncer colorretal aos 52 anos; não há síndrome hereditária conhecida nem outros familiares afetados. Ele deseja iniciar prevenção e não apresenta contraindicação ao exame. Considerando a recomendação de colonoscopia para familiar de primeiro grau diagnosticado antes dos sessenta anos, qual plano é mais apropriado se o exame inicial for normal?",
+    "o": [
+      "Colonoscopia aos cinquenta, repetindo em dez anos.",
+      "Colonoscopia agora, repetindo apenas se surgirem sintomas.",
+      "Colonoscopia agora, repetindo em cinco anos.",
+      "FIT anual até os cinquenta, seguido de colonoscopia."
+    ],
+    "a": 2,
+    "why": "Esse padrão familiar favorece colonoscopia a partir dos quarenta anos ou dez anos antes do diagnóstico mais precoce, o que ocorrer primeiro, geralmente com intervalo de cinco anos se normal. Neste caso, quarenta antecede quarenta e dois. FIT e intervalos de risco médio não são a proposta preferencial descrita. O intervalo também deve ser revisto se houver achados no exame ou novas informações familiares.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirproc-11",
+    "t": "cirproc",
+    "q": "Homem de 56 anos tem adenocarcinoma de reto médio confirmado, a sete centímetros da margem anal. A ressonância mostra cT3N1 e margem circunferencial ameaçada; o estadiamento não identifica metástases. Tem bom estado funcional e não há obstrução ou sangramento que exija intervenção urgente. Qual estratégia geral deve ser discutida pela equipe multidisciplinar para tratamento com intenção curativa?",
+    "o": [
+      "Ressecção imediata, ignorando o risco para a margem.",
+      "Excisão local isolada, seguida apenas de observação clínica.",
+      "Quimioterapia paliativa, sem reavaliar possibilidade de cirurgia.",
+      "Tratamento neoadjuvante seguido de cirurgia mesorretal."
+    ],
+    "a": 3,
+    "why": "Doença retal localmente avançada com margem ameaçada favorece estratégia neoadjuvante, frequentemente terapia neoadjuvante total, seguida de avaliação de resposta e tratamento cirúrgico com excisão mesorretal quando indicado. A escolha concreta depende de características tumorais, incluindo biologia molecular, e discussão especializada. Excisão local não trata adequadamente o estágio descrito. Não há metástase que imponha intenção paliativa, e operar sem considerar a margem perde informação essencial.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirproc-12",
+    "t": "cirproc",
+    "q": "Mulher de 67 anos tem cansaço, anemia microcítica e ferritina baixa, sem sangramento visível ou mudança marcante na frequência de evacuações. O exame anal não demonstra causa suficiente e ela nunca fez colonoscopia. Na investigação de possível neoplasia colorretal, qual localização pode manifestar-se dessa forma, sem que a ausência de obstrução ou hematoquezia exclua o diagnóstico?",
+    "o": [
+      "Reto distal.",
+      "Canal anal.",
+      "Cólon direito.",
+      "Sigmoide distal."
+    ],
+    "a": 2,
+    "why": "Tumores do cólon direito podem sangrar de modo oculto e apresentar anemia ferropriva sem sintomas obstrutivos precoces. Tumores distais podem causar sangue visível, tenesmo ou alterações do trânsito, mas essas diferenças não são regras diagnósticas absolutas. A localização não pode ser confirmada por hemograma e ferritina. Colonoscopia deve avaliar todo o cólon, e outras causas de deficiência de ferro são consideradas conforme o contexto.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirproc-13",
+    "t": "cirproc",
+    "q": "Homem de 47 anos, vivendo com HIV em tratamento e com condição clínica preservada, tem carcinoma escamoso do canal anal confirmado por biópsia. A avaliação mostra doença localizada regionalmente, sem metástases, e não há obstrução, sepse ou sangramento incontrolável. A equipe prepara tratamento oncológico com intenção curativa. Qual abordagem inicial é a mais apropriada para o cenário apresentado?",
+    "o": [
+      "Quimioterapia sistêmica isolada seguida de observação.",
+      "Amputação abdominoperineal como primeira etapa.",
+      "Excisão local isolada do tumor do canal.",
+      "Quimiorradioterapia com esquema combinado."
+    ],
+    "a": 3,
+    "why": "Carcinoma escamoso do canal anal é tratado habitualmente com quimiorradioterapia, com esquemas como fluoropirimidina e mitomicina conforme indicação. Cirurgia radical é reservada a situações específicas, incluindo persistência ou recidiva selecionada. Excisão local se aplica a casos muito particulares, não ao tumor de canal regionalmente comprometido descrito. HIV exige cuidado integrado, mas não muda automaticamente o tratamento para amputação ou intenção paliativa.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirproc-14",
+    "t": "cirproc",
+    "q": "Mulher de 83 anos apresenta prolapso retal de espessura total, redutível, com pregas concêntricas e episódios de incontinência. Não há isquemia ou encarceramento, mas os sintomas comprometem o cuidado diário. Tem doença cardiopulmonar importante e fragilidade, tornando uma operação abdominal prolongada de risco elevado. Após avaliação funcional, qual família de abordagens pode ser especialmente adequada nesse perfil?",
+    "o": [
+      "Reparo por via perineal.",
+      "Retopexia abdominal aberta extensa.",
+      "Hemorroidectomia excisional dos coxins internos.",
+      "Colectomia total com reconstrução ileorretal."
+    ],
+    "a": 0,
+    "why": "Procedimentos perineais, como Altemeier ou Delorme em casos apropriados, podem ser considerados em pacientes frágeis por características de acesso e carga operatória. A escolha depende do comprimento, sintomas, continência, constipação e experiência. Não há uma única técnica para todo prolapso. Hemorroidectomia trata coxins, não o prolapso de toda a parede retal. Colectomia total não corresponde ao tratamento proporcional do achado descrito.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirremit-01",
+    "t": "cirremit",
+    "q": "Homem de 38 anos, sem diabetes, está nas primeiras 24 horas após laparotomia por trauma. Mantém glicemia de 210 mg/dL, apesar de não ter iniciado dieta, e apresenta concentrações elevadas de cortisol e catecolaminas. A hemoglobina glicada prévia era normal. A equipe discute por que a glicose permanece elevada mesmo com secreção pancreática de insulina preservada. Qual alteração melhor explica esse fenômeno?",
+    "o": [
+      "Redução da ação periférica da insulina associada à produção hepática de glicose.",
+      "Redução da atividade de cortisol associada à supressão da gliconeogênese hepática.",
+      "Redução da secreção de glucagon associada à maior utilização muscular de glicose.",
+      "Redução da liberação de catecolaminas associada ao bloqueio da glicogenólise."
+    ],
+    "a": 0,
+    "why": "O estresse traumático aumenta hormônios contrarreguladores e mediadores inflamatórios, promovendo resistência à insulina e produção hepática de glicose. Assim, insulina detectável não garante ação efetiva normal. Glucagon, cortisol e catecolaminas não estão funcionalmente reduzidos no mecanismo descrito; sua ativação favorece, em vez de impedir, hiperglicemia e mobilização de substratos.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirremit-02",
+    "t": "cirremit",
+    "q": "Mulher de 59 anos está no primeiro dia após colectomia, com pressão preservada, extremidades aquecidas e lactato em queda. A diurese é de 0,4 mL/kg/h; a sonda está pérvia, sem retenção vesical. Não recebeu contraste ou nefrotóxico e a creatinina está estável. Há baixa excreção urinária de sódio e aumento da excreção de potássio. Qual resposta fisiológica perioperatória mais contribui para esse padrão?",
+    "o": [
+      "Expansão volêmica com liberação de peptídeos natriuréticos predominante.",
+      "Lesão tubular estabelecida com incapacidade persistente de reabsorver sódio.",
+      "Ativação de aldosterona e vasopressina, com retenção hidrossalina.",
+      "Supressão de aldosterona e vasopressina, com perda tubular de sódio."
+    ],
+    "a": 2,
+    "why": "A resposta neuroendócrina ao trauma pode elevar vasopressina e ativar o sistema renina–angiotensina–aldosterona, reduzindo excreção de água e sódio e aumentando excreção de potássio. Isso é compatível com o contexto, sem provar que toda oligúria seja fisiológica. Natriurese por expansão e lesão tubular não explicam melhor o padrão descrito. A tendência clínica e renal deve ser monitorada antes de administrar fluidos adicionais.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirremit-03",
+    "t": "cirremit",
+    "q": "Um estudo compara pacientes submetidos a operações de extensões diferentes, coletando amostras nas primeiras horas e medindo resposta inflamatória e síntese hepática de proteínas de fase aguda. A equipe procura um mediador cuja elevação circulante se relacione com a magnitude da agressão e estimule produção de proteína C reativa. Qual citocina melhor corresponde a essa descrição entre as opções?",
+    "o": [
+      "Interleucina 6.",
+      "Interleucina 4.",
+      "Interleucina 2.",
+      "Interleucina 10."
+    ],
+    "a": 0,
+    "why": "A interleucina 6 participa da resposta inflamatória sistêmica e da indução hepática de proteínas de fase aguda, com associação entre sua elevação e a magnitude da agressão. Isso não a torna medida isolada suficiente de gravidade ou prognóstico. Interleucina 2 se relaciona à ativação/proliferação linfocitária; IL-4 à diferenciação imune específica; IL-10 tem importante papel regulador anti-inflamatório, sem ser a melhor correspondência à descrição.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirremit-04",
+    "t": "cirremit",
+    "q": "Homem de 41 anos permanece internado por politrauma, com inflamação persistente, perda muscular e balanço nitrogenado negativo, apesar de suporte nutricional adequado. A equipe compara seu metabolismo com o de uma pessoa saudável em jejum prolongado. Não há hipertiroidismo ou outra doença catabólica prévia. Qual diferença explica melhor a manutenção da perda proteica no paciente traumatizado?",
+    "o": [
+      "A cetose interrompe precocemente a proteólise, como ocorre na adaptação ao jejum.",
+      "A redução da demanda metabólica mantém a proteína muscular como reserva estável.",
+      "A supressão hepática da gliconeogênese desloca todo consumo para o tecido adiposo.",
+      "O estímulo hormonal e inflamatório mantém proteólise e demanda de substratos."
+    ],
+    "a": 3,
+    "why": "No jejum simples há adaptação com uso de gordura e cetonas que reduz a demanda por aminoácidos. No trauma importante, hormônios contrarreguladores e inflamação sustentam proteólise e gliconeogênese, limitando essa economia proteica. Nutrição atenua perdas, mas não elimina imediatamente o estímulo catabólico. As alternativas que pressupõem supressão da gliconeogênese ou preservação muscular espontânea não refletem essa fisiologia.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirremit-05",
+    "t": "cirremit",
+    "q": "Uma ferida cirúrgica apresenta, após a fase inicial de hemostasia, recrutamento de células inflamatórias. Durante os dias seguintes ocorre remoção de detritos, liberação de fatores de crescimento e início de angiogênese e atividade fibroblástica. Em um modelo experimental, a depleção de uma população celular compromete essa transição para reparação. Qual célula melhor integra essas funções de coordenação?",
+    "o": [
+      "Macrófago.",
+      "Neutrófilo.",
+      "Eosinófilo.",
+      "Linfócito B."
+    ],
+    "a": 0,
+    "why": "Macrófagos removem material, modulam inflamação e liberam mediadores que organizam a transição para a fase proliferativa. Neutrófilos são importantes na resposta inicial, especialmente contra contaminação, mas não representam da mesma forma a coordenação da transição. Linfócitos e outras células também participam do reparo; a questão busca a população com o conjunto de funções descrito, e não uma célula exclusiva da cicatrização.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirremit-06",
+    "t": "cirremit",
+    "q": "Mulher de 62 anos usa prednisona há meses e será submetida a uma operação eletiva. Durante a discussão pré-operatória, a equipe revisa os efeitos de glicocorticoides sobre inflamação e reparo. Um aluno cita uma vitamina estudada por antagonizar parcialmente esses efeitos em modelos de cicatrização, mas reconhece que isso não estabelece suplementação rotineira nem substitui avaliação nutricional. A qual vitamina ele se refere?",
+    "o": [
+      "Vitamina C.",
+      "Vitamina E.",
+      "Vitamina K.",
+      "Vitamina A."
+    ],
+    "a": 3,
+    "why": "Retinoides/vitamina A foram estudados pela capacidade de modular respostas prejudicadas pelos glicocorticoides no reparo. Isso não autoriza prescrição automática: dose, toxicidade e benefício clínico precisam de avaliação. Vitamina C participa da síntese de colágeno e sua deficiência prejudica cicatrização, mas é outro mecanismo. Vitamina K atua na coagulação; vitamina E não é estratégia estabelecida para reversão dos efeitos do corticoide.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirremit-07",
+    "t": "cirremit",
+    "q": "Mulher de 25 anos desenvolve lesão firme e pruriginosa no lóbulo da orelha meses após retirada de um piercing. A massa ultrapassa o limite da perfuração original e continuou crescendo; não há secreção ou ulceração. Ela solicita remoção por desconforto estético e pergunta sobre recorrência. Qual interpretação e estratégia inicial são mais apropriadas?",
+    "o": [
+      "Carcinoma cutâneo; indicar ressecção ampla antes de confirmar a natureza da lesão.",
+      "Cicatriz hipertrófica; programar excisão isolada por baixo risco de recorrência.",
+      "Granuloma infeccioso; iniciar antibiótico antes de avaliar a cicatriz.",
+      "Queloide; discutir tratamento intralesional e associação de medidas se houver excisão."
+    ],
+    "a": 3,
+    "why": "Crescimento além dos limites da lesão original, persistência e localização favorecem queloide. Corticoide intralesional e outras modalidades podem compor o manejo; excisão, quando escolhida, costuma exigir estratégia adjuvante pelo risco de recorrência. Cicatriz hipertrófica permanece confinada à lesão inicial. Ausência de sinais infecciosos e padrão cicatricial não justificam antibiótico ou abordagem oncológica sem avaliação específica.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirremit-08",
+    "t": "cirremit",
+    "q": "Homem de 66 anos tem cicatriz extensa de queimadura na perna desde a infância. Nos últimos meses apareceu ulceração de bordas endurecidas, crescimento progressivo e sangramento ao toque. Curativos e tratamento de uma colonização local não produziram cicatrização. Não há trauma recente que explique a mudança. Qual hipótese deve ser investigada com amostragem histológica adequada?",
+    "o": [
+      "Carcinoma espinocelular surgindo em cicatriz crônica.",
+      "Queloide desencadeado por estímulo mecânico recente.",
+      "Cicatriz hipertrófica em fase de remodelamento tardio.",
+      "Dermatite irritativa limitada ao contato com o curativo."
+    ],
+    "a": 0,
+    "why": "Ulceração nova e persistente em cicatriz antiga, especialmente com induração e sangramento, exige investigar transformação maligna, classicamente carcinoma espinocelular associado à úlcera de Marjolin. Infecção e irritação podem coexistir, mas não explicam com segurança a trajetória. Queloide e cicatriz hipertrófica não devem ser assumidos diante de ulceração atípica. Biópsia esclarece a natureza; o sinal clínico não substitui histologia.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirremit-09",
+    "t": "cirremit",
+    "q": "Homem de 70 kg sofreu queimadura térmica. O exame identifica lesões de espessura parcial em todo o tronco anterior e em todo o membro superior direito. Na face há apenas eritema doloroso, sem bolhas ou perda epidérmica. A equipe aplica a regra dos nove para estimar a área usada na reposição inicial, excluindo lesões superficiais. Qual estimativa é mais adequada?",
+    "o": [
+      "36% da superfície corporal.",
+      "18% da superfície corporal.",
+      "27% da superfície corporal.",
+      "31,5% da superfície corporal."
+    ],
+    "a": 2,
+    "why": "No adulto, tronco anterior corresponde a dezoito por cento e membro superior completo a nove por cento, somando vinte e sete. Eritema superficial da face não entra no cálculo usado para ressuscitação de queimaduras de espessura parcial ou total. A regra dos nove é estimativa inicial e pode exigir refinamento por métodos apropriados, especialmente em crianças ou padrões corporais diferentes.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirremit-10",
+    "t": "cirremit",
+    "q": "Homem de 80 kg tem queimaduras de espessura parcial e total em quarenta por cento da superfície corporal. O serviço adota estimativa inicial de Ringer lactato de 2 mL/kg/% nas primeiras 24 horas, metade nas primeiras oito horas contadas do acidente. Ele chega duas horas após a queimadura, sem reposição prévia. Qual par de volumes corresponde ao cálculo inicial e à parcela prevista até a oitava hora?",
+    "o": [
+      "6.400 mL em 24 horas; 1.600 mL até a oitava hora.",
+      "12.800 mL em 24 horas; 6.400 mL até a oitava hora.",
+      "6.400 mL em 24 horas; 3.200 mL até a oitava hora.",
+      "3.200 mL em 24 horas; 1.600 mL até a oitava hora."
+    ],
+    "a": 2,
+    "why": "Pelo protocolo explicitado, dois vezes oitenta vezes quarenta resulta em 6.400 mL; metade, 3.200 mL, corresponde às primeiras oito horas após o acidente, não após a admissão. Como duas horas transcorreram, a equipe considera o tempo restante e titula pela resposta, sem tratar o cálculo como volume rígido. A opção de 12.800 mL usa coeficiente quatro, diferente do solicitado.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirremit-11",
+    "t": "cirremit",
+    "q": "Mulher de 60 kg foi admitida após queimadura de espessura parcial e total em cinquenta por cento da superfície corporal. Em uma discussão didática, solicita-se calcular especificamente a fórmula clássica de Parkland, com coeficiente de 4 mL/kg/% para as primeiras 24 horas. Não se pretende substituir a titulação por perfusão e diurese. Qual volume corresponde a essa fórmula antes dos ajustes clínicos?",
+    "o": [
+      "9.000 mL.",
+      "6.000 mL.",
+      "12.000 mL.",
+      "15.000 mL."
+    ],
+    "a": 2,
+    "why": "A fórmula clássica de Parkland utiliza quatro vezes sessenta vezes cinquenta, totalizando doze litros nas primeiras vinte e quatro horas. Seis litros corresponderiam ao coeficiente dois, utilizado em outros protocolos iniciais. A questão explicita a fórmula para evitar confundir recomendações de estimativa. Qualquer regime precisa ser revisto conforme resposta e risco de sobrecarga, além de considerar o tempo desde a queimadura e fluidos já recebidos.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirremit-12",
+    "t": "cirremit",
+    "q": "Homem de 70 kg com queimadura térmica extensa está em ressuscitação, com sonda urinária pérvia. Não houve lesão elétrica, mioglobinúria ou doença renal prévia. A equipe acompanha pressão, perfusão, balanço e diurese para ajustar a infusão, evitando expansão guiada apenas pela fórmula. Qual débito urinário horário aproxima-se da meta inicial habitualmente usada nesse adulto?",
+    "o": [
+      "210 mL por hora.",
+      "105 mL por hora.",
+      "7 mL por hora.",
+      "35 mL por hora."
+    ],
+    "a": 3,
+    "why": "Uma referência inicial comum no adulto queimado sem circunstância especial é cerca de 0,5 mL/kg/h, que corresponde a 35 mL/h para setenta quilos. Metas maiores podem ser discutidas em lesão elétrica com pigmentúria, entre outros contextos. A diurese não deve ser perseguida isoladamente com fluidos progressivos se houver disfunção renal, obstrução ou congestão. Débito muito baixo exige reavaliação, não simples aceitação do cálculo.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirremit-13",
+    "t": "cirremit",
+    "q": "Mulher de 34 anos foi retirada de incêndio em apartamento fechado. Apresenta queimaduras faciais, fuligem no escarro e rouquidão progressiva durante a avaliação. A saturação está em 96% com oxigênio, mas há esforço respiratório crescente e ruído inspiratório. A equipe percebe edema orofaríngeo e tem material e profissional experiente para controle da via aérea. Qual conduta é mais apropriada?",
+    "o": [
+      "Iniciar broncodilatador e adiar intubação até após a tomografia.",
+      "Manter observação até ocorrer queda persistente da saturação.",
+      "Garantir a via aérea precocemente com intubação preparada.",
+      "Administrar corticoide e reavaliar a via aérea no dia seguinte."
+    ],
+    "a": 2,
+    "why": "Progressão de rouquidão, edema e esforço inspiratório sugere ameaça à via aérea; intubação precoce planejada pode ser mais segura que esperar obstrução estabelecida. Saturação preservada não garante permeabilidade futura. Broncodilatador pode ajudar broncoespasmo, mas não resolve edema obstrutivo superior. Corticoide não substitui controle da via aérea e não é tratamento rotineiro que justifique adiar esse passo.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirremit-14",
+    "t": "cirremit",
+    "q": "Homem de 46 anos é retirado de um incêndio em local fechado, com cefaleia e confusão. A glicemia é normal; o oxímetro convencional registra 99%, apesar de relato de exposição intensa à fumaça. Não há outra explicação imediata para a alteração neurológica. Enquanto se avaliam outras lesões e gases tóxicos, qual interpretação e medida inicial são mais adequadas?",
+    "o": [
+      "Aguardar queda da saturação para iniciar oxigênio e coletar gasometria comum.",
+      "Excluir intoxicação por monóxido de carbono e investigar apenas sedativos.",
+      "Usar a pressão arterial de oxigênio isolada para decidir sobre intoxicação.",
+      "Suspeitar de monóxido de carbono, oferecer oxigênio e obter cooximetria."
+    ],
+    "a": 3,
+    "why": "O oxímetro convencional não distingue adequadamente oxiemoglobina de carboxiemoglobina e pode parecer normal. Oxigênio em alta concentração e cooximetria são apropriados enquanto se avalia gravidade e necessidade de medidas adicionais. PaO2 também pode estar normal e não exclui exposição. Confusão em incêndio pede ainda considerar hipóxia, cianeto e outros diagnósticos, sem atrasar o tratamento inicial.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirremit-15",
+    "t": "cirremit",
+    "q": "Homem de 40 anos tem queimadura profunda circunferencial do antebraço. Durante a reposição, a escara torna-se tensa e a mão fica fria, com enchimento capilar lento e piora do sinal Doppler distal. A avaliação sugere restrição externa pela escara, sem evidência inicial de lesão arterial focal. A equipe de queimados está disponível. Qual intervenção deve ser discutida com prioridade?",
+    "o": [
+      "Escarotomia para aliviar a constrição produzida pela escara.",
+      "Fasciotomia como substituto automático da abertura da escara.",
+      "Elevação isolada com reavaliação após completar a reposição.",
+      "Curativo compressivo para reduzir o edema do membro."
+    ],
+    "a": 0,
+    "why": "Escara rígida circunferencial pode comprometer perfusão com o edema e exigir escarotomia. Elevação ajuda, mas não deve retardar descompressão quando há sinais de compromisso. Compressão adicional pioraria a restrição. Fasciotomia trata pressão nos compartimentos musculares e pode ser necessária em outro mecanismo ou persistência de comprometimento, mas não é sinônimo de escarotomia.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirremit-16",
+    "t": "cirremit",
+    "q": "Eletricista de 32 anos sofreu contato de alta tensão, com pequenas lesões de entrada e saída na mão e no pé. Apresenta dor muscular e urina escura; a creatinoquinase está muito elevada. A área cutânea queimada é pequena, mas a equipe suspeita de lesão muscular profunda. Qual plano inicial responde melhor a esse risco?",
+    "o": [
+      "Calcular a reposição apenas pela área de pele e limitar a avaliação aos curativos.",
+      "Usar diurético para obter diurese elevada sem rever perfusão ou função renal.",
+      "Monitorar ritmo, eletrólitos e compartimentos, titulando fluidos para a pigmentúria.",
+      "Restringir fluidos para evitar diluição da urina e seguir apenas a creatinoquinase."
+    ],
+    "a": 2,
+    "why": "Lesão elétrica pode causar rabdomiólise, arritmias e síndrome compartimental desproporcionais à pele. Reposição é individualizada e costuma buscar débito maior, frequentemente cerca de 1–1,5 mL/kg/h na pigmentúria, com monitorização de resposta, congestão e eletrólitos. Urina clara ou queda de enzima não são metas isoladas suficientes. Fluidos ou diuréticos não substituem diagnóstico e descompressão de compartimentos quando indicados.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirvasc-01",
+    "t": "cirvasc",
+    "q": "Homem de 66 anos, tabagista, apresenta dor na panturrilha direita ao caminhar cerca de 150 metros, com alívio em poucos minutos de repouso. Não há dor noturna, ferida ou limitação articular que explique o sintoma. O índice tornozelo-braquial é 0,62 e o duplex confirma doença femoropoplítea. Ainda não realizou programa de exercício ou prevenção cardiovascular estruturada. Qual classificação de Fontaine e estratégia inicial são mais adequadas?",
+    "o": [
+      "Estágio IIb; exercício estruturado e tratamento do risco cardiovascular.",
+      "Estágio IIa; angioplastia como primeira medida após o diagnóstico.",
+      "Estágio IV; cilostazol como substituto da avaliação de revascularização.",
+      "Estágio III; revascularização prioritária por ameaça imediata ao membro."
+    ],
+    "a": 0,
+    "why": "Claudicação com distância inferior a duzentos metros corresponde ao estágio IIb de Fontaine; dor em repouso e perda tecidual caracterizam estágios posteriores. Tratamento inicial inclui cessação do tabagismo, exercício, estatina e antitrombótico conforme indicação e risco. Revascularização pode ser discutida se a limitação persistir apesar de tratamento adequado, não apenas pelo ITB reduzido.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirvasc-02",
+    "t": "cirvasc",
+    "q": "Homem de 70 anos, diabético e com doença renal crônica, relata redução da distância de caminhada. Os pulsos pediosos são difíceis de palpar, mas o índice tornozelo-braquial medido foi 1,60 nos dois lados, com dificuldade para comprimir as artérias no exame. A equipe discute se o resultado exclui doença arterial. Qual próximo raciocínio é mais apropriado?",
+    "o": [
+      "Solicitar angiotomografia para programar intervenção antes de outro teste hemodinâmico.",
+      "Considerar perfusão normal e investigar exclusivamente causa ortopédica.",
+      "Repetir a pressão braquial e interpretar o mesmo índice como definitivo.",
+      "Suspeitar de incompressibilidade e complementar com índice hálux-braquial."
+    ],
+    "a": 3,
+    "why": "Diabetes e doença renal favorecem calcificação medial e artérias incompressíveis, que podem produzir ITB falsamente elevado. Índice hálux-braquial e outras medidas de perfusão ajudam quando o ITB não é confiável. O número alto não prova boa perfusão nem quantifica sozinho isquemia grave. A decisão deve integrar sintomas, exame e avaliação vascular complementar.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirvasc-03",
+    "t": "cirvasc",
+    "q": "Mulher de 63 anos com doença arterial periférica segue com claudicação limitante apesar de exercício e tratamento cardiovascular. A equipe considera acrescentar uma medicação para aumentar a distância de marcha. Ao revisar os antecedentes, encontra internação recente por insuficiência cardíaca. Qual fármaco, embora tenha benefício sintomático na claudicação, deve ser evitado por essa comorbidade?",
+    "o": [
+      "Clopidogrel.",
+      "Ácido acetilsalicílico.",
+      "Cilostazol.",
+      "Atorvastatina."
+    ],
+    "a": 2,
+    "why": "Cilostazol pode melhorar a distância de caminhada, mas é contraindicado em insuficiência cardíaca. A limitação não elimina a necessidade de exercício e redução do risco cardiovascular. Estatina e antiagregantes têm papéis próprios na prevenção de eventos e não são a medicação sintomática contraindicada descrita. A escolha entre eles depende das indicações e do risco individual.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirvasc-04",
+    "t": "cirvasc",
+    "q": "Homem de 61 anos, tabagista e hipertenso, apresenta desconforto em nádegas e coxas ao caminhar, bilateral, com piora progressiva em dois anos. Refere disfunção erétil recente. Os pulsos femorais estão muito reduzidos, assim como os distais; não há edema importante ou sinais neurológicos focais. Qual localização de doença arterial explica melhor a associação dos sintomas e do exame?",
+    "o": [
+      "Compressão extrínseca da artéria poplítea.",
+      "Obstrução aterosclerótica aortoilíaca.",
+      "Obstrução isolada da artéria tibial posterior.",
+      "Obstrução trombótica do sistema venoso ilíaco."
+    ],
+    "a": 1,
+    "why": "Claudicação proximal, redução de pulsos femorais e disfunção erétil formam a apresentação clássica da síndrome de Leriche, relacionada à doença aortoilíaca. Lesões tibiais ou poplíteas isoladas não explicam a perda femoral nem o conjunto proximal. Obstrução venosa costuma produzir edema e congestão, não a redução arterial descrita. A localização deve ser confirmada conforme o planejamento terapêutico.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirvasc-05",
+    "t": "cirvasc",
+    "q": "Mulher de 78 anos com fibrilação atrial, sem anticoagulação, apresenta dor súbita na perna direita há três horas. O membro está pálido e frio, sem sinais arteriais distais ao Doppler; no lado esquerdo os pulsos são palpáveis. A sensibilidade e a força ainda estão preservadas. Não há sangramento ativo ou contraindicação à heparina. Qual abordagem inicial é mais adequada?",
+    "o": [
+      "Heparina terapêutica e avaliação vascular urgente para definir reperfusão.",
+      "Antiagregação isolada e investigação ambulatorial da fonte embólica.",
+      "Trombólise sistêmica imediata antes de avaliar a anatomia vascular.",
+      "Anticoagulação oral e observação até surgirem alterações motoras."
+    ],
+    "a": 0,
+    "why": "Início abrupto, fonte cardíaca e membro contralateral preservado favorecem embolia arterial. A heparina evita propagação e a equipe vascular define método e urgência de revascularização conforme viabilidade e anatomia. Embolectomia pode ser apropriada, mas não é escolhida apenas pelo diagnóstico presumido. Observação até déficit motor perde uma janela útil; trombólise sistêmica não é a estratégia inicial habitual.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirvasc-06",
+    "t": "cirvasc",
+    "q": "Homem de 69 anos tem isquemia aguda de membro inferior. O pé está frio, sem sinal arterial distal, mas mantém sinal venoso ao Doppler. A parestesia ultrapassa os dedos e ele já não consegue dorsifletir o pé com força normal, embora ainda movimente a articulação e não haja rigidez. Qual categoria de Rutherford melhor expressa a ameaça atual ao membro?",
+    "o": [
+      "IIb, com ameaça imediata à viabilidade.",
+      "IIa, com ameaça marginal sem déficit motor.",
+      "I, com viabilidade preservada sem ameaça.",
+      "III, com isquemia estabelecida irreversível."
+    ],
+    "a": 0,
+    "why": "Perda sensitiva além dos dedos associada a fraqueza caracteriza membro imediatamente ameaçado, Rutherford IIb, exigindo revascularização sem atraso evitável. Na categoria IIa não há déficit motor. A categoria I não apresenta perda sensitiva relevante. Anestesia profunda, paralisia e rigidez apontariam para irreversibilidade; a ausência desses achados impede classificar o caso automaticamente como III.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirvasc-07",
+    "t": "cirvasc",
+    "q": "Homem de 64 anos foi submetido a embolectomia após cerca de dez horas de isquemia. O pé aqueceu e há sinal arterial distal, porém a panturrilha torna-se progressivamente tensa e muito dolorosa, sobretudo à mobilização passiva do tornozelo. A dor piora apesar da analgesia e surge parestesia. A equipe vascular está presente. Qual medida deve ser priorizada?",
+    "o": [
+      "Descompressão cirúrgica dos compartimentos da perna.",
+      "Compressão elástica para reduzir o edema de reperfusão.",
+      "Nova embolectomia baseada na persistência da dor muscular.",
+      "Elevação do membro acima do coração e observação seriada."
+    ],
+    "a": 0,
+    "why": "O quadro após reperfusão é compatível com síndrome compartimental aguda. Pulsos podem persistir e não afastam aumento da pressão compartimental. Quando o diagnóstico clínico é claro, fasciotomia dos compartimentos envolvidos, usualmente os quatro da perna, não deve aguardar perda de pulso. Elevação excessiva e compressão podem prejudicar perfusão; nova embolectomia não trata a pressão tecidual.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirvasc-08",
+    "t": "cirvasc",
+    "q": "Mulher de 73 anos recebe reperfusão de um membro após isquemia prolongada. Minutos depois apresenta alargamento do QRS e arritmia no monitor, sem alteração importante de sódio previamente documentada. Há lesão muscular extensa e urina escurecida. Enquanto se inicia suporte e se colhem exames urgentes, qual distúrbio eletrolítico relacionado à reperfusão deve ser procurado prioritariamente?",
+    "o": [
+      "Hipernatremia por saída de sódio do compartimento muscular.",
+      "Hipocalemia por captação de potássio pelo músculo reperfundido.",
+      "Hipercalemia por liberação de potássio do tecido isquêmico.",
+      "Hipermagnesemia por redistribuição aguda do meio intracelular."
+    ],
+    "a": 2,
+    "why": "A reperfusão pode liberar potássio e metabólitos do músculo lesado, causando arritmia e acidose, além de rabdomiólise e lesão renal. ECG e dosagem rápida orientam tratamento, sem aguardar resultado se houver forte suspeita de hipercalemia ameaçadora. A alteração de QRS não é específica, mas o contexto torna a hipercalemia prioridade. Os outros distúrbios não explicam melhor esse mecanismo.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirvasc-09",
+    "t": "cirvasc",
+    "q": "Homem de 68 anos tem aneurisma infrarrenal fusiforme de aorta abdominal, assintomático, com diâmetro máximo confirmado de 5,7 centímetros. É independente, tem expectativa de vida razoável e avaliação cardiopulmonar favorável a intervenção. A equipe dispõe de reparo aberto e endovascular, mas ainda precisa caracterizar o colo e os acessos. Qual planejamento é mais apropriado?",
+    "o": [
+      "Avaliar reparo eletivo, escolhendo a técnica conforme anatomia e risco.",
+      "Realizar EVAR sem imagem adicional, usando apenas o diâmetro máximo.",
+      "Manter ultrassonografia anual e intervir apenas se aparecer dor.",
+      "Prescrever betabloqueador para reduzir o aneurisma antes de nova imagem."
+    ],
+    "a": 0,
+    "why": "Em homem apto com aneurisma fusiforme assintomático de pelo menos 5,5 centímetros, costuma-se discutir reparo eletivo. Anatomia, risco, expectativa de vida e preferências orientam técnica e oportunidade. O tamanho não autoriza escolher EVAR sem planejamento. Betabloqueador não faz o aneurisma regredir de modo a substituir a avaliação. Sintomas ou crescimento rápido podem indicar intervenção em diâmetros menores.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirvasc-10",
+    "t": "cirvasc",
+    "q": "Homem de 68 anos comparece à atenção primária para revisão de prevenção. Fumou durante trinta anos, interrompeu há cinco e nunca realizou exame da aorta abdominal. Não tem dor abdominal, massa conhecida ou história de aneurisma. Considerando a recomendação de rastreamento da USPSTF para esse perfil, qual medida é indicada?",
+    "o": [
+      "Angiotomografia de aorta abdominal anualmente.",
+      "Ultrassonografia de aorta abdominal uma vez.",
+      "Palpação abdominal como único método de rastreamento.",
+      "Ultrassonografia apenas após surgir sintoma abdominal."
+    ],
+    "a": 1,
+    "why": "A USPSTF recomenda ultrassonografia única para homens de 65 a 75 anos que já fumaram. Trata-se de rastreamento em assintomáticos, distinto da investigação de dor ou massa. Tomografia anual não é a estratégia inicial e acrescenta exposição desnecessária. Palpação tem sensibilidade insuficiente para substituir o ultrassom. Outros grupos exigem avaliação segundo recomendações e riscos específicos.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirvasc-11",
+    "t": "cirvasc",
+    "q": "Homem de 59 anos, hipertenso, apresenta dor torácica súbita irradiada para o dorso e diferença de pressão entre os braços. A angiotomografia identifica dissecção envolvendo a aorta ascendente, sem tamponamento no momento. Está hipertenso e taquicárdico, com perfusão preservada. A cirurgia cardiovascular é acionada. Qual conduta inicial e definitiva se ajusta melhor ao quadro?",
+    "o": [
+      "Controle pressórico oral e observação para decidir cirurgia após uma semana.",
+      "Anticoagulação terapêutica seguida de controle tomográfico em vinte e quatro horas.",
+      "Trombólise intravenosa seguida de avaliação da perfusão coronariana.",
+      "Controle anti-impulso intravenoso e preparação para reparo cirúrgico urgente."
+    ],
+    "a": 3,
+    "why": "Dissecção que envolve a ascendente é Stanford A e geralmente requer reparo urgente, com analgesia e controle anti-impulso durante a preparação. A estabilidade inicial não elimina risco de ruptura ou tamponamento. Tratamento clínico isolado é a base de muitos casos B não complicados, não deste quadro. Trombólise e anticoagulação automática podem agravar sangramento e não tratam a dissecção.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirvasc-12",
+    "t": "cirvasc",
+    "q": "Mulher de 62 anos tem dissecção aguda de aorta, pressão de 190/105 mmHg e frequência de 118 bpm. Está perfundida, sem bloqueio cardíaco, broncoespasmo importante ou outra contraindicação ao betabloqueador. A equipe prepara esmolol e um vasodilatador titulável. Qual sequência reduz melhor o estresse sobre a parede aórtica sem provocar taquicardia reflexa?",
+    "o": [
+      "Administrar diurético e aguardar normalizar a frequência antes de outros fármacos.",
+      "Reduzir pressão com vasodilatador e acrescentar betabloqueador após a queda.",
+      "Controlar frequência com betabloqueador e acrescentar vasodilatador se necessário.",
+      "Administrar nitrato isolado e reservar controle da frequência para dor persistente."
+    ],
+    "a": 2,
+    "why": "Controle anti-impulso envolve reduzir frequência e contratilidade antes de vasodilatação isolada, que pode gerar taquicardia reflexa. As metas dependem de manter perfusão adequada, com analgesia e monitorização. Diurético não é a primeira ferramenta para esse mecanismo. Contraindicações ao betabloqueador mudam a escolha, mas foram afastadas no caso, permitindo uma resposta inequívoca.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirvasc-13",
+    "t": "cirvasc",
+    "q": "Mulher de 58 anos apresenta varizes, peso nas pernas ao fim do dia e edema maleolar. Ao exame há hiperpigmentação acastanhada e eczema no terço distal da perna direita, sem úlcera atual ou cicatriz de úlcera anterior. O duplex demonstra refluxo superficial. Considerando a manifestação clínica mais avançada, em qual classe CEAP o membro deve ser enquadrado?",
+    "o": [
+      "C2, por presença de veias varicosas clinicamente visíveis.",
+      "C5, por doença cutânea sem ulceração no momento do exame.",
+      "C3, por edema que aumenta durante a permanência em pé.",
+      "C4, por alteração cutânea relacionada à doença venosa."
+    ],
+    "a": 3,
+    "why": "A classe clínica registra a manifestação mais avançada: pigmentação e eczema correspondem a C4, especificamente C4a. Varizes e edema também estão presentes, mas C2 ou C3 subestimariam o membro. C5 exige úlcera cicatrizada, negada no enunciado; úlcera aberta seria C6. O duplex complementa a etiologia e a anatomia, sem alterar esse critério clínico.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirvasc-14",
+    "t": "cirvasc",
+    "q": "Mulher de 39 anos apresenta dor discreta na panturrilha após caminhada incomum. Não houve imobilização, câncer, trombose prévia ou aumento mensurável do membro; há hipótese musculoesquelética mais provável. O algoritmo validado usado no serviço classifica TVP como improvável e o D-dímero de alta sensibilidade é negativo. Qual é a melhor próxima conduta nesse contexto?",
+    "o": [
+      "Investigar outra causa, sem anticoagulação ou imagem venosa rotineira.",
+      "Iniciar anticoagulação e solicitar duplex após uma semana de tratamento.",
+      "Solicitar venografia para excluir trombose apesar do algoritmo negativo.",
+      "Repetir D-dímero diariamente até desaparecer o sintoma da panturrilha."
+    ],
+    "a": 0,
+    "why": "Probabilidade clínica baixa/improvável combinada a D-dímero de alta sensibilidade negativo permite afastar TVP no algoritmo apropriado. Essa conclusão não vale automaticamente para alta probabilidade, teste inadequado ou apresentação discordante. Anticoagulação e venografia não estão justificadas aqui. Evolução diferente exige reavaliação clínica; não há utilidade em acompanhar D-dímero diariamente para documentar resolução da dor.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirvasc-15",
+    "t": "cirvasc",
+    "q": "Homem de 67 anos tem TVP femoropoplítea aguda confirmada por ultrassom. Está internado após hemorragia intracraniana ocorrida há quatro dias, e a equipe responsável considera anticoagulação terapêutica temporariamente contraindicada. Não há instabilidade por embolia pulmonar. A equipe espera reconsiderar a anticoagulação após estabilização do sangramento. Qual estratégia deve ser discutida para proteção enquanto essa contraindicação persiste?",
+    "o": [
+      "Trombólise sistêmica em dose reduzida, seguida de anticoagulação oral.",
+      "Filtro recuperável de veia cava, com plano de reavaliação e retirada.",
+      "Compressão elástica como única medida até a resolução da trombose proximal.",
+      "Antiagregação plaquetária como substituta do tratamento antitrombótico."
+    ],
+    "a": 1,
+    "why": "TVP proximal aguda com contraindicação absoluta temporária à anticoagulação é uma indicação selecionada de filtro. Deve haver reavaliação para anticoagular quando seguro e remover o dispositivo quando possível. O filtro não trata o trombo nem elimina eventos e pode causar complicações. Trombólise é especialmente problemática após hemorragia intracraniana. Antiagregação e compressão não oferecem proteção equivalente nesse cenário.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "ciresof-01",
+    "t": "ciresof",
+    "q": "Homem de 35 anos apresenta queimação retroesternal após refeições e regurgitação ao deitar há quatro meses. O desconforto melhora com antiácido. Não tem disfagia, odinofagia, perda ponderal, anemia ou sangramento; o exame físico é normal. Nunca recebeu tratamento regular e não há fatores que imponham investigação de outra doença no momento. Qual estratégia inicial é mais apropriada?",
+    "o": [
+      "Teste terapêutico com IBP e revisão de hábitos relacionados aos sintomas.",
+      "Manometria esofágica para selecionar a modalidade de tratamento.",
+      "pHmetria prolongada antes de qualquer tratamento empírico.",
+      "Endoscopia e biópsias esofágicas antes de iniciar supressão ácida."
+    ],
+    "a": 0,
+    "why": "Sintomas típicos sem sinais de alarme permitem tratamento empírico com IBP, habitualmente por oito semanas, além de orientações individualizadas. Endoscopia passa a ser importante com alarmes, fatores de risco ou evolução inadequada. Monitorização de refluxo esclarece cenários selecionados, não é exigência inicial aqui. Manometria investiga motilidade e não confirma DRGE como primeiro exame nessa apresentação.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "ciresof-02",
+    "t": "ciresof",
+    "q": "Mulher de 42 anos tem pirose recorrente que melhora com IBP e deseja discutir tratamento cirúrgico. A endoscopia, realizada sem esofagite e sem Barrett, foi normal. Não há exame anterior que documente refluxo patológico. Antes de decidir sobre fundoplicatura, a equipe quer demonstrar objetivamente a exposição ácida e sua relação com a queixa. Qual investigação responde melhor a essa etapa?",
+    "o": [
+      "Tomografia da junção esofagogástrica fora da supressão ácida.",
+      "Manometria de alta resolução durante uso da supressão ácida.",
+      "Esofagograma contrastado durante uso da supressão ácida.",
+      "Monitorização ambulatorial do refluxo fora da supressão ácida."
+    ],
+    "a": 3,
+    "why": "Quando DRGE ainda não foi demonstrada e a endoscopia não é conclusiva, a monitorização fora do IBP busca comprovar exposição patológica. Manometria também integra a avaliação pré-operatória, mas responde à motilidade, não à exposição ácida. Esofagograma e tomografia podem esclarecer anatomia em situações selecionadas, sem substituir a demonstração objetiva de refluxo necessária à decisão descrita.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "ciresof-03",
+    "t": "ciresof",
+    "q": "Quatro pacientes procuram avaliação para cirurgia antirrefluxo. Todos estão clinicamente aptos, mas apresentam mecanismos de sintomas diferentes. A equipe deseja selecionar quem tem maior chance de benefício antes de estudar a técnica. Em qual situação a indicação de fundoplicatura está mais bem sustentada, desde que a avaliação anatômica e motora pré-operatória seja adequada?",
+    "o": [
+      "Refluxo comprovado, resposta ao IBP e preferência informada por alternativa ao uso contínuo.",
+      "Disfagia e regurgitação com manometria compatível com acalasia não tratada.",
+      "Pirose intensa, pHmetria normal e ausência de associação entre refluxo e sintomas.",
+      "Plenitude pós-prandial, endoscopia normal e investigação compatível com dispepsia funcional."
+    ],
+    "a": 0,
+    "why": "DRGE documentada e sintomas típicos responsivos à supressão ácida favorecem resultado cirúrgico, após discussão dos riscos e expectativas. Pirose funcional não é corrigida por uma barreira antirrefluxo. Acalasia exige tratar a obstrução funcional da saída esofágica; fundoplicatura isolada pode piorá-la. Dispepsia funcional tem outro mecanismo. A recusa de medicação, sozinha, não estabelece indicação sem comprovação e avaliação prévia.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "ciresof-04",
+    "t": "ciresof",
+    "q": "Homem de 56 anos, com refluxo controlado, tem endoscopia de boa qualidade demonstrando segmento de Barrett de quatro centímetros. Biópsias sistemáticas confirmam metaplasia intestinal sem displasia, e não há nódulos ou lesões visíveis. Os achados foram revisados e não há dúvida de amostragem. Qual planejamento é mais adequado para esse segmento, considerando recomendações usuais de vigilância por extensão?",
+    "o": [
+      "Ablação endoscópica do segmento e vigilância apenas se houver recidiva.",
+      "IBP e nova endoscopia apenas se surgirem disfagia ou sangramento.",
+      "IBP e vigilância endoscópica em aproximadamente três anos.",
+      "Esofagectomia profilática e acompanhamento da reconstrução."
+    ],
+    "a": 2,
+    "why": "Barrett não displásico com extensão de pelo menos três centímetros costuma ser acompanhado a cada três anos, após exame inicial adequado e conforme protocolo aplicável. Ablação não é rotina em ausência de displasia ou lesão focal. Esofagectomia seria desproporcional. Ausência de sintomas não elimina o risco que fundamenta vigilância, e o IBP não substitui esse seguimento.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "ciresof-05",
+    "t": "ciresof",
+    "q": "Mulher de 38 anos apresenta disfagia para líquidos e sólidos, regurgitação noturna e perda de seis quilos ao longo de dois anos. A endoscopia não identifica tumor ou estenose orgânica. O esofagograma mostra retenção de contraste, dilatação do corpo esofágico e afilamento distal. Qual exame estabelece o distúrbio motor e permite sua subclassificação para orientar o tratamento?",
+    "o": [
+      "Monitorização ambulatorial de pH esofágico.",
+      "Tomografia contrastada de tórax e abdome.",
+      "Manometria esofágica de alta resolução.",
+      "Cintilografia de esvaziamento gástrico."
+    ],
+    "a": 2,
+    "why": "A manometria demonstra relaxamento inadequado da junção e alterações de peristalse, permitindo classificar a acalasia. A endoscopia exclui causas orgânicas e o esofagograma contribui para a avaliação, mas a pergunta é sobre confirmação motora. pHmetria mede refluxo; tomografia busca alterações anatômicas selecionadas. Esvaziamento gástrico não caracteriza o padrão de motilidade esofágica apresentado.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "ciresof-06",
+    "t": "ciresof",
+    "q": "Homem de 74 anos desenvolve disfagia para sólidos e líquidos em três meses, com perda de doze quilos. O esofagograma mostra afilamento distal semelhante ao observado na acalasia. Ainda não foi realizada endoscopia, e a equipe considera dilatação pneumática. Qual investigação deve preceder uma intervenção dirigida ao esfíncter para reduzir o risco de tratar equivocadamente o quadro?",
+    "o": [
+      "Cintilografia gástrica para quantificar retenção após uma refeição padronizada.",
+      "pHmetria prolongada para demonstrar exposição ácida do esôfago distal.",
+      "Teste terapêutico com bloqueador de canal de cálcio antes de nova avaliação.",
+      "Endoscopia com avaliação cuidadosa da cárdia e obtenção de amostras se indicadas."
+    ],
+    "a": 3,
+    "why": "Idade avançada, evolução rápida e emagrecimento acentuado levantam suspeita de pseudoacalasia, inclusive neoplásica. A avaliação endoscópica da junção precede a terapia e pode exigir complementação por tomografia ou ecoendoscopia se persistir suspeita. pHmetria não exclui obstrução tumoral. Estudo gástrico e resposta a relaxante muscular também não esclarecem com segurança essa hipótese.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "ciresof-07",
+    "t": "ciresof",
+    "q": "Mulher de 41 anos tem acalasia confirmada, sem neoplasia, com sintomas persistentes e anatomia favorável a tratamento laparoscópico. A equipe explica uma operação que divide fibras musculares distais para reduzir a resistência da junção. Como a intervenção pode facilitar refluxo, planeja-se associar uma barreira antirrefluxo que não recrie obstrução importante. Qual combinação corresponde a essa estratégia clássica?",
+    "o": [
+      "Vagotomia troncular com fundoplicatura total.",
+      "Miotomia de Heller com fundoplicatura total apertada.",
+      "Esofagectomia subtotal com fundoplicatura parcial.",
+      "Miotomia de Heller com fundoplicatura parcial."
+    ],
+    "a": 3,
+    "why": "A miotomia de Heller reduz a resistência da junção; fundoplicatura parcial, como Dor ou Toupet, ajuda a limitar refluxo sem impor a mesma resistência de uma válvula total apertada. Esofagectomia fica para situações selecionadas de doença avançada ou falha, não para esse caso favorável. Vagotomia não trata o mecanismo principal da acalasia.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "ciresof-08",
+    "t": "ciresof",
+    "q": "Homem de 77 anos apresenta dificuldade para iniciar a deglutição, halitose e regurgitação de alimento não digerido horas após comer. Teve episódios de tosse noturna e uma pneumonia aspirativa. A endoscopia prévia foi interrompida por resistência logo na entrada esofágica. O esofagograma demonstra bolsa posterior acima do esfíncter esofágico superior. Qual diagnóstico melhor integra os achados?",
+    "o": [
+      "Divertículo faringoesofágico de Zenker.",
+      "Esofagite eosinofílica com anéis difusos.",
+      "Divertículo epifrênico associado a acalasia.",
+      "Estenose péptica do esôfago distal."
+    ],
+    "a": 0,
+    "why": "A bolsa posterior alta, com retenção de alimento e aspiração, caracteriza Zenker. Divertículo epifrênico fica próximo ao diafragma e requer avaliação motora correspondente. Estenose péptica distal não produz a bolsa descrita. Esofagite eosinofílica pode causar disfagia, mas seus achados e mecanismo são diferentes. A anatomia deve ser conhecida antes de instrumentação que possa entrar na bolsa e perfurá-la.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "ciresof-09",
+    "t": "ciresof",
+    "q": "Homem de 59 anos tem adenocarcinoma de esôfago distal, classificado como cT3N1 após avaliação adequada. Não há metástases, invasão de estrutura que impeça ressecção ou contraindicação funcional importante. Recebe suporte nutricional e é discutido em equipe especializada. Qual planejamento terapêutico é mais compatível com esse estágio, sem presumir que o mesmo esquema seja adequado para todas as histologias e localizações?",
+    "o": [
+      "Ressecção endoscópica da mucosa como tratamento definitivo do tumor e dos linfonodos.",
+      "Prótese esofágica como tratamento oncológico definitivo em intenção curativa.",
+      "Estratégia multimodal com tratamento sistêmico e cirurgia conforme avaliação da equipe.",
+      "Esofagectomia imediata, reservando avaliação oncológica para recidiva."
+    ],
+    "a": 2,
+    "why": "Doença localmente avançada ressecável costuma exigir abordagem multimodal; o regime e sua sequência dependem de histologia, localização, evidências atuais e condições clínicas. Cirurgia isolada não é a estratégia preferida de modo automático nesse cenário. Ressecção endoscópica não trata um T3N1. Prótese pode aliviar obstrução em contextos selecionados, mas não equivale a tratamento curativo desse estágio.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirestom-01",
+    "t": "cirestom",
+    "q": "Homem de 38 anos relata uma evacuação escura, com aspecto de melena, sem hematêmese, síncope ou dor importante. Está assintomático no atendimento, PA 128/78 mmHg e FC 76 bpm. Hemoglobina e ureia são normais; não tem doença hepática ou insuficiência cardíaca. O Glasgow-Blatchford calculado é um, devido à melena. Há apoio domiciliar e acesso garantido a retorno e investigação. Qual planejamento é mais adequado?",
+    "o": [
+      "Indicar angiografia para excluir sangramento arterial oculto.",
+      "Considerar manejo ambulatorial com orientação e endoscopia programada.",
+      "Internar em terapia intensiva para endoscopia nas próximas duas horas.",
+      "Indicar transfusão antes de definir o local da investigação."
+    ],
+    "a": 1,
+    "why": "Pacientes selecionados de muito baixo risco, usualmente GBS zero ou um, podem receber manejo ambulatorial com orientações, retorno e investigação apropriada. A decisão não depende apenas do número, mas também de contexto e acesso. Não há indicação de transfusão, terapia intensiva ou angiografia pelos achados apresentados. Melena soma um ponto no GBS, portanto a combinação melena com escore zero da versão anterior precisava ser corrigida.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirestom-02",
+    "t": "cirestom",
+    "q": "Mulher de 63 anos foi estabilizada após melena. Na endoscopia, há úlcera duodenal com estrutura vascular saliente no leito, sem sangramento ativo ou coágulo que impeça avaliação. Não há varizes. O endoscopista dispõe de clipes e terapia térmica. Qual associação entre classificação de Forrest e planejamento é mais apropriada?",
+    "o": [
+      "Forrest III; cirurgia indicada pela exposição do vaso.",
+      "Forrest IIa; hemostasia endoscópica e IBP em esquema de alta dose.",
+      "Forrest Ib; observação sem intervenção até ocorrer novo sangramento.",
+      "Forrest IIc; tratamento apenas medicamentoso e alta imediata."
+    ],
+    "a": 1,
+    "why": "Vaso visível não sangrante caracteriza Forrest IIa, um estigma de alto risco que requer hemostasia, por método apropriado, e supressão ácida de alta dose após o procedimento. Forrest IIc é mancha plana pigmentada; Forrest III é base limpa. Ausência de sangramento no instante do exame não transforma vaso exposto em lesão de baixo risco nem determina cirurgia de primeira linha.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirestom-03",
+    "t": "cirestom",
+    "q": "Homem de 54 anos, sem doença cardiovascular, está em observação após hemorragia ulcerosa. Recebeu reposição inicial e controle endoscópico; está normotenso, sem hematêmese atual ou sintomas isquêmicos. A hemoglobina repetida é 6,8 g/dL. A equipe discute um protocolo transfusional restritivo para esse contexto, distinguindo limiar de transfusão de meta após reposição. Qual estratégia é a mais apropriada?",
+    "o": [
+      "Evitar transfusão até cinco e buscar retorno à hemoglobina basal.",
+      "Transfundir abaixo de dez e buscar faixa aproximada de dez a doze g/dL.",
+      "Transfundir abaixo de nove e buscar hematócrito acima de quarenta por cento.",
+      "Transfundir abaixo de sete e buscar faixa aproximada de sete a nove g/dL."
+    ],
+    "a": 3,
+    "why": "Em paciente estável, sem doença cardiovascular ou outra situação que exija individualização, a estratégia restritiva utiliza habitualmente limiar de sete g/dL e faixa pós-transfusão de cerca de sete a nove. Hemorragia exsanguinante e isquemia não podem ser conduzidas apenas por uma dosagem. Normalizar a hemoglobina basal não é o objetivo rotineiro e aumenta exposição transfusional desnecessária.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirestom-04",
+    "t": "cirestom",
+    "q": "Homem de 66 anos apresenta hemorragia por úlcera profunda da parede posterior do bulbo duodenal, refratária à abordagem endoscópica. Após suporte inicial, a equipe prepara controle direcionado e revê a anatomia vascular próxima ao leito ulceroso. Qual artéria passa em relação posterior ao duodeno proximal e explica o sangramento arterial classicamente associado a essa topografia?",
+    "o": [
+      "Artéria gastroepiploica esquerda.",
+      "Artéria cólica média.",
+      "Artéria gástrica esquerda.",
+      "Artéria gastroduodenal."
+    ],
+    "a": 3,
+    "why": "A artéria gastroduodenal está em relação posterior ao duodeno proximal e pode ser erodida por úlcera posterior do bulbo. A gástrica esquerda se relaciona sobretudo à pequena curvatura gástrica; a gastroepiploica esquerda irriga parte da grande curvatura e a cólica média pertence ao território do mesocólon. A localização orienta controle, sem dispensar avaliação de variantes e colaterais.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirestom-05",
+    "t": "cirestom",
+    "q": "Homem de 58 anos, com antecedente de úlcera, apresenta vômitos volumosos de alimento ingerido no dia anterior, sem bile, e importante desidratação. A imagem sugere obstrução da saída gástrica. O laboratório mostra alcalose metabólica, cloro e potássio baixos; a urina está ácida. A função renal deve ser monitorada durante a correção. Qual reposição inicial trata melhor o mecanismo predominante?",
+    "o": [
+      "Solução salina isotônica com reposição monitorizada de potássio.",
+      "Bicarbonato intravenoso para tratar a acidúria observada.",
+      "Solução glicosada isolada para corrigir a perda de ácido gástrico.",
+      "Restrição de sódio e água até cessar o débito da sonda."
+    ],
+    "a": 0,
+    "why": "Perdas gástricas produzem depleção de cloro, volume e potássio, sustentando alcalose metabólica responsiva a cloreto. A contração volêmica pode levar à acidúria paradoxal. Solução salina e potássio são ajustados conforme função renal e monitorização. Urina ácida não indica bicarbonato; glicosado isolado e restrição não corrigem o mecanismo, além de poderem agravar as repercussões.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirestom-06",
+    "t": "cirestom",
+    "q": "Mulher de 47 anos, submetida a gastrectomia parcial, apresenta palpitação, sudorese, cólica e diarreia vinte a trinta minutos após refeições volumosas, principalmente ricas em carboidratos simples. Não há febre, dor persistente ou hipoglicemia durante os sintomas. Fora desse período está bem e a avaliação não sugere obstrução. Qual síndrome melhor explica a temporalidade e o conjunto de manifestações?",
+    "o": [
+      "Estenose da anastomose gástrica.",
+      "Síndrome da alça aferente.",
+      "Dumping tardio.",
+      "Dumping precoce."
+    ],
+    "a": 3,
+    "why": "Dumping precoce ocorre logo após a refeição e envolve trânsito rápido de conteúdo hiperosmolar, alterações de volume e resposta neuro-hormonal. Dumping tardio aparece mais tarde, tipicamente com hipoglicemia reativa. Alça aferente e estenose têm manifestações mecânicas e não explicam tão bem episódios vasomotores e diarreicos nesse intervalo. Ausência de sinais sistêmicos persistentes ajuda a separar essa apresentação de uma complicação aguda.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirestom-07",
+    "t": "cirestom",
+    "q": "Mulher de 32 anos apresenta saciedade precoce, perda ponderal e redução difusa da distensibilidade gástrica. A endoscopia mostra estômago rigidamente infiltrado, sem massa polipoide delimitada. Biópsias profundas identificam adenocarcinoma pouco coeso com células em anel de sinete. Qual associação entre padrão histológico de Lauren e aspecto macroscópico de Borrmann melhor descreve esse quadro?",
+    "o": [
+      "Lauren intestinal e Borrmann I.",
+      "Lauren difuso e Borrmann II.",
+      "Lauren difuso e Borrmann IV.",
+      "Lauren intestinal e Borrmann III."
+    ],
+    "a": 2,
+    "why": "Células pouco coesas e em anel de sinete associam-se ao padrão difuso de Lauren; infiltração extensa e rigidez caracterizam Borrmann IV, a linite plástica. Borrmann I é polipoide, II é ulcerado delimitado e III ulceroinfiltrativo. As classificações descrevem dimensões distintas e não substituem estadiamento. Idade jovem e histologia também podem motivar avaliação de risco hereditário conforme critérios.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirestom-08",
+    "t": "cirestom",
+    "q": "Homem de 62 anos tem adenocarcinoma gástrico com invasão até a submucosa na avaliação histológica. A lesão mede três centímetros e há suspeita de comprometimento de um linfonodo regional, ainda em investigação. A equipe utiliza a expressão câncer gástrico precoce e explica que ela não determina, por si só, a modalidade de tratamento. Qual característica fundamenta essa classificação?",
+    "o": [
+      "Ausência comprovada de linfonodos metastáticos.",
+      "Diâmetro máximo inferior a dois centímetros.",
+      "Invasão limitada à mucosa ou submucosa.",
+      "Ausência de ulceração na superfície do tumor."
+    ],
+    "a": 2,
+    "why": "A definição de câncer gástrico precoce é baseada na profundidade, limitada à mucosa ou submucosa, independentemente do estado linfonodal. Tamanho e ulceração influenciam risco e seleção terapêutica, mas não essa definição. Um tumor precoce pode ter metástase linfonodal e não ser candidato a tratamento endoscópico isolado. O termo não equivale a baixo risco em todas as dimensões.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirestom-09",
+    "t": "cirestom",
+    "q": "Homem de 59 anos tem adenocarcinoma do antro, cT3N1, sem metástases distantes. A laparoscopia de estadiamento e a citologia não demonstram disseminação peritoneal. Está clinicamente apto, com suporte nutricional, e a equipe planeja tratamento curativo em centro com experiência em gastrectomia oncológica. Qual estratégia é mais compatível com esse contexto?",
+    "o": [
+      "Gastrojejunostomia sem ressecção como tratamento definitivo de intenção curativa.",
+      "Gastrectomia subtotal com amostragem linfonodal mínima como tratamento isolado.",
+      "Dissecção endoscópica da lesão e vigilância dos linfonodos regionais.",
+      "Tratamento perioperatório e gastrectomia oncológica com linfadenectomia adequada."
+    ],
+    "a": 3,
+    "why": "Tumor localmente avançado ressecável em paciente apto costuma ser tratado em estratégia multimodal, frequentemente com quimioterapia perioperatória e ressecção com D2 em centro experiente. O esquema depende da discussão atual da equipe; FLOT é uma opção estabelecida em candidatos apropriados. Endoscopia isolada não trata T3N1. Derivação pode paliar obstrução, mas não substitui ressecção curativa quando indicada.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirvb-01",
+    "t": "cirvb",
+    "q": "Mulher de 45 anos realizou ultrassonografia durante investigação de alteração urinária. O exame mostrou cálculos móveis de oito milímetros, parede vesicular fina e colédoco não dilatado. Ela nega episódios de dor epigástrica ou no hipocôndrio direito, icterícia e pancreatite. Não há hemólise, imunossupressão ou procedimento abdominal planejado. Qual orientação inicial é mais apropriada para o achado incidental?",
+    "o": [
+      "Iniciar ácido ursodesoxicólico e repetir ultrassom após dissolução dos cálculos.",
+      "Acompanhar clinicamente e orientar retorno se surgirem sintomas biliares.",
+      "Solicitar CPRE para reduzir o risco de migração para o colédoco.",
+      "Programar colecistectomia eletiva para prevenir pancreatite por microlitíase."
+    ],
+    "a": 1,
+    "why": "Colelitíase assintomática, sem indicação especial identificada, costuma ser observada. O tamanho descrito e o achado incidental não justificam operação preventiva por si sós. Dissolução medicamentosa tem indicações restritas e recorrência, não sendo rotina nesse contexto. CPRE trata problemas selecionados da via biliar principal, não cálculos confinados à vesícula. É importante explicar sintomas que exigem nova avaliação.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirvb-02",
+    "t": "cirvb",
+    "q": "Homem de 58 anos, sem dor biliar, tem lesão polipoide vesicular de doze milímetros em ultrassonografia feita por outro motivo. A revisão confirma que a lesão não se move nem produz sombra acústica, não corresponde a lama e não apresenta aspecto de adenomiomatose. Não há doença disseminada ou contraindicação operatória. Qual planejamento é mais adequado para o risco apresentado?",
+    "o": [
+      "Discutir colecistectomia eletiva pela dimensão confirmada da lesão.",
+      "Realizar CPRE com escovado para definir o tipo histológico do pólipo.",
+      "Prescrever ácido ursodesoxicólico e operar se o pólipo não desaparecer.",
+      "Repetir ultrassonografia em dois anos antes de considerar intervenção."
+    ],
+    "a": 0,
+    "why": "Uma lesão polipoide verdadeira de pelo menos dez milímetros costuma indicar colecistectomia em paciente apto, após confirmação e discussão clínica. Seguimento isolado prolongado não é a opção preferida para doze milímetros. CPRE não caracteriza adequadamente pólipo vesicular nem é teste de rotina para esse fim. Tratamento de cálculos com ácido biliar não trata uma lesão polipoide verdadeira.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirvb-03",
+    "t": "cirvb",
+    "q": "Durante colecistectomia laparoscópica por litíase sintomática, a equipe faz uma pausa antes da divisão do pedículo. O campo está sem sangramento relevante e o cirurgião quer documentar visão crítica de segurança, evitando confiar apenas no aspecto infundibular. Qual descrição reúne os três critérios que precisam estar presentes antes da clipagem e divisão das estruturas?",
+    "o": [
+      "Ducto cístico visível, colédoco dissecado circunferencialmente e duas artérias isoladas junto ao hilo.",
+      "Infundíbulo afunilado, artéria hepática exposta e ducto mais fino seguindo em direção à vesícula.",
+      "Colangiografia normal, fundo vesicular liberado e continuidade demonstrada entre cístico e colédoco.",
+      "Triângulo hepatocístico limpo, terço inferior descolado do leito e duas estruturas entrando na vesícula."
+    ],
+    "a": 3,
+    "why": "A visão crítica exige limpar tecido do triângulo hepatocístico, separar o terço inferior da vesícula da placa cística e demonstrar que somente duas estruturas entram na vesícula. Não depende de dissecção extensa do colédoco nem da artéria hepática. Colangiografia pode esclarecer anatomia, mas não substitui esses critérios. O aspecto infundibular isolado pode enganar especialmente na inflamação.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirvb-04",
+    "t": "cirvb",
+    "q": "Mulher de 62 anos apresenta icterícia e episódios prévios de dor biliar. A colangiorressonância demonstra cálculo volumoso impactado no infundíbulo, com compressão do ducto hepático comum e dilatação a montante. O colédoco distal tem calibre preservado e não há cálculo intraductal, massa pancreática ou fístula demonstrada. Qual diagnóstico deve orientar a estratégia operatória?",
+    "o": [
+      "Coledocolitíase distal por migração de cálculo vesicular.",
+      "Colangiocarcinoma distal com dilatação secundária da vesícula.",
+      "Síndrome de Mirizzi por compressão extrínseca da via biliar.",
+      "Síndrome de Bouveret por cálculo impactado no duodeno."
+    ],
+    "a": 2,
+    "why": "A relação entre cálculo infundibular e compressão do ducto hepático comum caracteriza Mirizzi; sem fístula demonstrada, o padrão é compressivo. Coledocolitíase pressupõe cálculo na luz do ducto, ausente na imagem. Bouveret produz obstrução de saída gástrica por cálculo ectópico. A massa distal não foi demonstrada. Reconhecer Mirizzi antes de operar ajuda a antecipar anatomia distorcida e risco de lesão biliar.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirvb-05",
+    "t": "cirvb",
+    "q": "Homem de 54 anos tem colelitíase sintomática e icterícia persistente. A bilirrubina total é de 5,2 mg/dL, com predomínio direto; o ultrassom mostra colédoco de nove milímetros, mas não visualiza cálculo. Está afebril e estável, sem colecistectomia prévia. O serviço usa a estratificação ASGE para decidir o próximo passo. Qual classificação e conduta se ajustam ao conjunto?",
+    "o": [
+      "Baixo risco; colecistectomia sem avaliação adicional da via principal.",
+      "Alto risco; planejar CPRE com intenção terapêutica.",
+      "Alto risco; indicar colecistostomia para descompressão do colédoco.",
+      "Risco intermediário; fazer apenas controle laboratorial antes da operação."
+    ],
+    "a": 1,
+    "why": "Bilirrubina acima de quatro miligramas por decilitro associada à dilatação do colédoco, com vesícula presente, preenche critério de alto risco na estratificação ASGE. A CPRE tem intenção terapêutica, embora a escolha também dependa de recursos e alternativas locais. A combinação não deve ser rebaixada apenas por ausência de cálculo visível. Colecistostomia não substitui drenagem confiável da via principal.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirvb-06",
+    "t": "cirvb",
+    "q": "Mulher de 60 anos aguarda colecistectomia por cólicas recorrentes. Teve urina escura durante uma crise, mas está afebril e sem dor atual. A bilirrubina total é de 1,8 mg/dL, a fosfatase alcalina está elevada e o colédoco mede cinco milímetros, sem cálculo visto. Não há colangite. Qual estratégia pré-operatória melhor equilibra investigação de cálculo ductal e risco do procedimento?",
+    "o": [
+      "Realizar CPRE diagnóstica para excluir cálculo antes de qualquer operação.",
+      "Dispensar estudo da via principal porque o colédoco não está dilatado.",
+      "Investigar com colangiorressonância ou ecoendoscopia conforme disponibilidade.",
+      "Solicitar tomografia sem contraste e considerar o exame negativo definitivo."
+    ],
+    "a": 2,
+    "why": "Alteração de enzimas hepáticas e idade acima de cinquenta e cinco anos sustentam risco intermediário, mesmo sem dilatação ductal. Colangiorressonância ou ecoendoscopia permitem selecionar quem necessita de intervenção; avaliação intraoperatória também pode integrar o plano. CPRE diagnóstica expõe a complicações sem benefício proporcional. Colédoco de calibre normal e tomografia sem contraste negativa não excluem cálculo pequeno.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirvb-07",
+    "t": "cirvb",
+    "q": "Mulher de 51 anos foi internada por coledocolitíase. A CPRE removeu o cálculo e a colangiografia final não mostrou defeito residual. Ela está afebril, sem pancreatite pós-procedimento, tolera dieta e tem risco operatório aceitável. A vesícula permanece com vários cálculos. Há equipe cirúrgica disponível nesta internação. Qual planejamento reduz melhor novos eventos biliares?",
+    "o": [
+      "Agendar colecistectomia seis meses depois para permitir cicatrização da papila.",
+      "Realizar colecistectomia na mesma internação após recuperação clínica.",
+      "Manter observação após papilotomia e operar se houver nova complicação.",
+      "Repetir CPRE preventivamente antes de discutir a retirada da vesícula."
+    ],
+    "a": 1,
+    "why": "Retirar cálculo do colédoco e realizar papilotomia não elimina a fonte vesicular. No paciente apto e sem complicação que exija adiar, colecistectomia durante a internação reduz recorrências. Espera prolongada expõe a novos eventos. Repetir CPRE sem indicação não substitui cirurgia da vesícula e acrescenta risco. O momento exato depende da condição clínica e dos recursos do serviço.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirvb-08",
+    "t": "cirvb",
+    "q": "Homem de 57 anos com colangite esclerosante primária apresenta piora progressiva da icterícia e perda ponderal. A ressonância mostra nova estenose dominante na confluência dos ductos hepáticos, com dilatação intra-hepática a montante; não há cálculo ou massa pancreática. A vesícula não está distendida. Qual hipótese deve ser investigada prioritariamente, sem tratar a imagem como confirmação histológica?",
+    "o": [
+      "Colecistite calculosa com edema e compressão do colédoco.",
+      "Colangiocarcinoma peri-hilar associado à doença biliar de base.",
+      "Síndrome de Bouveret com migração de cálculo para o duodeno.",
+      "Adenocarcinoma de cabeça pancreática causando obstrução distal."
+    ],
+    "a": 1,
+    "why": "Colangite esclerosante aumenta o risco de colangiocarcinoma; estenose progressiva peri-hilar com sintomas de alerta exige investigação especializada. Estenose benigna também permanece possível. Obstrução pancreática seria distal e não corresponde à topografia apresentada. Não há cálculo infundibular ou obstrução duodenal para sustentar os outros mecanismos. Ausência de vesícula palpável não comprova malignidade nem benignidade.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirvb-09",
+    "t": "cirvb",
+    "q": "Mulher de 63 anos teve adenocarcinoma incidental na peça de colecistectomia. A revisão anatomopatológica confirma invasão da muscular, sem invasão da serosa, margem cística negativa e ausência de outro tumor. O estadiamento não demonstra disseminação; ela é clinicamente apta para cirurgia. Qual discussão é mais apropriada na equipe hepatobiliar?",
+    "o": [
+      "Ressecar a via biliar extra-hepática por rotina, apesar da margem cística livre.",
+      "Ampliar a ressecção do leito hepático e realizar linfadenectomia regional.",
+      "Indicar tratamento sistêmico paliativo pelo diagnóstico incidental de carcinoma.",
+      "Considerar a colecistectomia simples suficiente por ausência de invasão serosa."
+    ],
+    "a": 1,
+    "why": "Para T1b em candidato apto, costuma-se recomendar ressecção oncológica complementar, incluindo leito hepático e linfonodos regionais. A extensão hepática pode ser cunha adequada ou segmentos IVb/V, conforme margens e anatomia; não há obrigação de uma única técnica. Via biliar não é ressecada rotineiramente com margem livre. Intenção paliativa não decorre do diagnóstico incidental sem disseminação.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirfig-01",
+    "t": "cirfig",
+    "q": "Mulher de 35 anos realizou ressonância por desconforto pélvico e teve nódulo hepático incidental de quatro centímetros. Nega dor no hipocôndrio direito, perda ponderal ou doença hepática. A lesão tem hiperintensidade em T2, realce nodular periférico descontínuo e preenchimento centrípeto nas fases tardias, considerado típico pela revisão radiológica. Não há outro achado suspeito. Qual conduta é mais apropriada?",
+    "o": [
+      "Observação clínica, sem biópsia ou tratamento da lesão típica.",
+      "Ressecção hepática eletiva para prevenir transformação maligna do nódulo.",
+      "Embolização arterial preventiva para reduzir o tamanho e o risco de ruptura.",
+      "Biópsia percutânea para confirmar o padrão vascular antes de acompanhar."
+    ],
+    "a": 0,
+    "why": "O padrão descrito caracteriza hemangioma com segurança suficiente em paciente sem contexto suspeito. Lesão típica e assintomática não exige biópsia nem intervenção apenas pelo diâmetro apresentado. Biópsia de lesão vascular pode acrescentar risco e não traz benefício rotineiro. Ressecção e embolização ficam para situações selecionadas, como complicações ou sintomas atribuíveis, após avaliação especializada.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirfig-02",
+    "t": "cirfig",
+    "q": "Mulher de 29 anos tem lesão hepática de cinco centímetros descoberta durante investigação não relacionada. Não apresenta sintomas, alterações laboratoriais ou doença hepática. Na ressonância, há realce arterial homogêneo, cicatriz central e retenção de contraste na fase hepatobiliar, sem cápsula suspeita ou hemorragia. A equipe considera o padrão diagnóstico típico. Qual combinação de hipótese e conduta melhor se ajusta ao caso?",
+    "o": [
+      "Hiperplasia nodular focal; observação sem ressecção rotineira.",
+      "Adenoma hepatocelular; ressecção pelo padrão hepatobiliar descrito.",
+      "Hemangioma cavernoso; embolização pela presença de cicatriz.",
+      "Carcinoma fibrolamelar; transplante sem investigação adicional."
+    ],
+    "a": 0,
+    "why": "Cicatriz e retenção hepatobiliar em padrão típico favorecem hiperplasia nodular focal, uma alteração benigna que geralmente não requer tratamento. A distinção do adenoma depende do conjunto de fases e do contexto, não de um achado isolado. Carcinoma fibrolamelar pode ter cicatriz, mas exige outras características e não implica transplante imediato. Hemangioma apresenta comportamento vascular diferente.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirfig-03",
+    "t": "cirfig",
+    "q": "Mulher de 30 anos usa contraceptivo combinado e recebeu diagnóstico de adenoma hepatocelular de seis centímetros. Após suspender estrogênio e adotar medidas para controle do peso, foi reavaliada seis meses depois: a lesão mantém o diâmetro, sem regressão ou hemorragia. A reserva hepática é adequada e a localização permite ressecção com baixo sacrifício de parênquima. Qual planejamento é mais apropriado?",
+    "o": [
+      "Retomar estrogênio e manter seguimento porque a lesão permaneceu estável.",
+      "Discutir ressecção pelo tamanho persistente após retirada do fator hormonal.",
+      "Prescrever quimioembolização como tratamento oncológico de primeira linha.",
+      "Acompanhar sem nova discussão até ocorrer dor ou sangramento significativo."
+    ],
+    "a": 1,
+    "why": "Em mulheres, suspensão hormonal e medidas de estilo de vida precedem reavaliação quando não há urgência. Lesão que permanece com pelo menos cinco centímetros após esse período costuma justificar ressecção por risco de sangramento e transformação, ponderando subtipo e operabilidade. Estabilidade não elimina esses riscos. Não se trata de indicar tratamento oncológico por presumir malignidade em todo adenoma.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirfig-04",
+    "t": "cirfig",
+    "q": "Homem de 28 anos, procedente de área endêmica, apresenta febre e dor no hipocôndrio direito. A imagem mostra abscesso único de seis centímetros no lobo direito, sem ameaça de ruptura ou extensão pleural; sorologia para Entamoeba é positiva em contexto compatível. Está estável, sem outra fonte bacteriana evidente. Qual tratamento etiológico inicial é mais adequado, com reavaliação da resposta?",
+    "o": [
+      "Albendazol, seguido de punção do cisto após negativação da sorologia.",
+      "Drenagem cirúrgica, seguida de antibiótico para flora entérica por sete dias.",
+      "Ressecção do segmento hepático, seguida de acompanhamento sem antiparasitário.",
+      "Amebicida tecidual, seguido de tratamento luminal para erradicação intestinal."
+    ],
+    "a": 3,
+    "why": "Abscesso amebiano não complicado costuma responder a metronidazol ou outro amebicida tecidual, seguido de agente luminal apropriado. O segundo componente trata colonização intestinal, mesmo sem diarreia. Drenagem é discutida em situações como dúvida diagnóstica, falta de resposta, risco de ruptura ou localização preocupante, não apenas pelo diâmetro de seis centímetros. Albendazol trata outros parasitas, não a amebíase.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirfig-05",
+    "t": "cirfig",
+    "q": "Homem de 74 anos, diabético, apresenta febre e calafrios após episódio de colangite. A tomografia mostra coleção hepática de sete centímetros com conteúdo compatível com abscesso, acessível por via percutânea, e persiste suspeita de obstrução biliar. Está estável após suporte inicial, mas ainda febril. Qual estratégia inicial oferece controle mais adequado da infecção e de sua causa?",
+    "o": [
+      "Ressecção hepática imediata, sem necessidade de esclarecer a anatomia biliar.",
+      "Antibiótico oral, com drenagem reservada para crescimento após duas semanas.",
+      "Antibiótico intravenoso, drenagem percutânea e avaliação da obstrução biliar.",
+      "Metronidazol isolado, usando sorologia amebiana para definir a necessidade de dreno."
+    ],
+    "a": 2,
+    "why": "O quadro favorece abscesso piogênico de fonte biliar. Antimicrobiano e drenagem guiada são apropriados para coleção grande acessível, além de tratar obstrução ou outra causa persistente. Antibiótico oral isolado não oferece controle inicial proporcional à gravidade e ao tamanho. Metronidazol isolado não cobre adequadamente o conjunto bacteriano habitual. Ressecção não é a primeira opção automática.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirfig-06",
+    "t": "cirfig",
+    "q": "Homem de 62 anos com cirrose em programa de vigilância apresenta nódulo de 2,5 centímetros. A ressonância com técnica adequada demonstra hiper-realce arterial não periférico e washout não periférico em fase apropriada, sem características de lesão alvo ou outra causa suspeita. A revisão especializada o classifica como diagnóstico por critérios de imagem aplicáveis à população de risco. Qual conclusão é mais adequada?",
+    "o": [
+      "O diagnóstico depende de PET-CT para demonstrar atividade metabólica da lesão.",
+      "A confirmação exige biópsia porque o nódulo mede menos de cinco centímetros.",
+      "A imagem deve ser repetida em seis meses antes de discutir diagnóstico ou tratamento.",
+      "O diagnóstico de hepatocarcinoma pode ser estabelecido sem biópsia neste contexto."
+    ],
+    "a": 3,
+    "why": "Em paciente de risco com estudo adequado e critérios diagnósticos completos, HCC pode ser diagnosticado não invasivamente. Isso não vale para qualquer realce ou para toda população. Nódulos indeterminados, padrões atípicos e determinadas estratégias exigem outra avaliação, inclusive biópsia. Aguardar seis meses ou usar PET como teste confirmatório obrigatório não é adequado ao padrão diagnóstico descrito.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirfig-07",
+    "t": "cirfig",
+    "q": "Uma equipe discute quatro pacientes com hepatocarcinoma para avaliação de transplante pelos critérios clássicos de Milão. Todos têm doença hepática de base e foram estadiados com imagem adequada; a discussão atual é apenas o limite oncológico desses critérios, não a indicação global ou a prioridade na lista. Qual perfil está dentro do limite clássico, sem necessidade de downstaging?",
+    "o": [
+      "Dois nódulos de dois centímetros, com invasão tumoral da veia porta principal.",
+      "Um nódulo de dois centímetros, com implante pulmonar metastático confirmado.",
+      "Três nódulos de 2,8 centímetros, sem invasão macrovascular ou doença extra-hepática.",
+      "Um nódulo de 5,8 centímetros, sem invasão macrovascular ou doença extra-hepática."
+    ],
+    "a": 2,
+    "why": "Milão compreende um tumor de até cinco centímetros ou até três tumores, cada um até três centímetros, sem invasão macrovascular ou disseminação extra-hepática. O perfil com três lesões de 2,8 centímetros se enquadra. Carga maior pode ser avaliada por outras estratégias e protocolos, mas não está dentro do critério clássico sem redução tumoral. O enquadramento não substitui seleção clínica e avaliação do centro transplantador.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirfig-08",
+    "t": "cirfig",
+    "q": "Homem de 58 anos com cirrose Child–Pugh B chega com hematêmese volumosa. Está taquicárdico, recebe ressuscitação e avaliação da via aérea, e a endoscopia foi acionada. Não há contraindicação conhecida ao tratamento vasoativo ou ao antibiótico indicado pelo protocolo local. Enquanto aguarda o controle endoscópico, qual combinação deve ser iniciada por suspeita de hemorragia varicosa?",
+    "o": [
+      "Fármaco vasoativo esplâncnico e profilaxia antibiótica apropriada.",
+      "Balão esofágico profilático e suspensão de todo tratamento farmacológico.",
+      "Diurético de alça e albumina para reduzir rapidamente a pressão portal.",
+      "Inibidor de bomba de prótons isolado e betabloqueador intravenoso."
+    ],
+    "a": 0,
+    "why": "Suspeita de hemorragia varicosa em cirrótico justifica iniciar vasoativo e antibiótico antes da endoscopia, em paralelo ao suporte. Ceftriaxona é opção frequente conforme perfil e protocolo. IBP não substitui essas medidas. Betabloqueador não é tratamento de controle agudo no choque. Balão ou stent são recursos de resgate temporário em contextos selecionados, não profilaxia rotineira.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirfig-09",
+    "t": "cirfig",
+    "q": "Homem de 44 anos com esquistossomose hepatoesplênica tem esplenomegalia importante e episódios recorrentes de hemorragia varicosa, apesar de tratamento endoscópico. A função sintética hepática está preservada. Após discussão especializada, escolhe-se operação de desvascularização com retirada do baço, sem criação de derivação portossistêmica. Qual procedimento corresponde ao princípio operatório definido pela equipe?",
+    "o": [
+      "Derivação portocava com anastomose laterolateral.",
+      "Derivação esplenorrenal distal com preservação do baço.",
+      "Transplante hepático com substituição da circulação portal.",
+      "Desconexão ázigo-portal associada à esplenectomia."
+    ],
+    "a": 3,
+    "why": "A desconexão ázigo-portal com esplenectomia é uma operação clássica em hipertensão portal esquistossomótica selecionada, sem criar um shunt portossistêmico. Derivações esplenorrenal e portocava têm outro princípio hemodinâmico. Transplante não decorre apenas de sangramento com função preservada. A pergunta identifica o procedimento já escolhido, sem afirmar que ele seja a única estratégia para todo paciente com esquistossomose.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirrad-01",
+    "t": "cirrad",
+    "q": "Mulher de 62 anos apresenta cólicas, vômitos e distensão, com antecedente de laparotomia. A radiografia mostra múltiplas alças dilatadas predominantemente centrais, nas quais pregas atravessam toda a largura do lúmen. Há pouco gás no cólon. A equipe reconhece que a radiografia não define sozinha a causa nem exclui sofrimento vascular. Qual segmento está predominantemente dilatado pelo padrão das pregas descritas?",
+    "o": [
+      "Intestino delgado.",
+      "Cólon sigmoide.",
+      "Cólon transverso.",
+      "Reto distendido."
+    ],
+    "a": 0,
+    "why": "Válvulas conniventes do delgado cruzam o lúmen inteiro e, em conjunto com a localização central, favorecem dilatação de delgado. Haustrações colônicas não costumam atravessar toda a largura. Distribuição e pregas devem ser integradas, porque anatomia e distensão podem variar. O reconhecimento do segmento não define a etiologia nem dispensa avaliação clínica e, quando indicada, tomografia.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirrad-02",
+    "t": "cirrad",
+    "q": "Homem de 57 anos está com dor abdominal súbita e não consegue permanecer em pé. Na radiografia em decúbito dorsal, algumas alças têm suas paredes delineadas tanto pelo lado luminal quanto pelo lado externo, sem uso de contraste. Há defesa à palpação. Qual sinal explica esse achado e qual hipótese deve ser investigada no contexto clínico?",
+    "o": [
+      "Sinal de Rigler; gás livre na cavidade peritoneal.",
+      "Tríade de Rigler; obstrução intestinal por cálculo biliar.",
+      "Sinal do grão de café; torção de segmento colônico.",
+      "Sinal de alça sentinela; íleo localizado adjacente à inflamação."
+    ],
+    "a": 0,
+    "why": "Visualização das duas faces da parede pode ocorrer quando há gás dentro da alça e gás livre fora dela, caracterizando o sinal de Rigler. É diferente da tríade de Rigler do íleo biliar. Alça sentinela é dilatação localizada e grão de café é padrão associado a volvo. O achado requer correlação para excluir imitadores, sem ignorar peritonite e necessidade de avaliação cirúrgica.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirrad-03",
+    "t": "cirrad",
+    "q": "Homem de 75 anos apresenta distensão, dor e piora circulatória após episódio de baixo débito. A tomografia mostra imagens gasosas ramificadas que chegam à periferia do fígado, além de alterações intestinais suspeitas. Não houve intervenção biliar recente. Qual identificação do padrão hepático é mais apropriada, sem concluir viabilidade intestinal apenas por esse sinal?",
+    "o": [
+      "Gás em abscesso hepático focal.",
+      "Gás no sistema venoso portal.",
+      "Ar livre subdiafragmático anterior.",
+      "Ar nas vias biliares centrais."
+    ],
+    "a": 1,
+    "why": "Gás portal costuma ter distribuição periférica pela direção do fluxo portal, enquanto pneumobilia tende a ser mais central. No contexto de hipoperfusão e alterações intestinais, isquemia é preocupação importante. Entretanto, gás portal também pode ter outras causas e não demonstra sozinho necrose irreversível. Abscesso seria lesão focal, e gás livre não segue ramificações intra-hepáticas.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirrad-04",
+    "t": "cirrad",
+    "q": "Mulher de 49 anos está em investigação de dor epigástrica e elevação de lipase. A radiografia obtida por distensão mostra uma única alça de delgado dilatada no quadrante superior esquerdo, sem padrão de obstrução mecânica difusa. A equipe interpreta o achado como redução localizada da motilidade próxima de um foco inflamatório. Qual denominação corresponde melhor a esse padrão?",
+    "o": [
+      "Sinal de Rigler.",
+      "Dupla bolha.",
+      "Duplo ducto.",
+      "Alça sentinela."
+    ],
+    "a": 3,
+    "why": "Alça sentinela descreve dilatação localizada por íleo regional adjacente à inflamação, podendo ocorrer perto do pâncreas, mas não é específica de pancreatite. Duplo ducto refere-se às vias biliar e pancreática; dupla bolha a distensão gástrica/duodenal em outro contexto; Rigler à visualização das duas faces da parede. O achado isolado não confirma etiologia ou substitui avaliação de obstrução.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirrad-05",
+    "t": "cirrad",
+    "q": "Homem de 52 anos apresenta cólica renal recorrente. A radiografia simples não identifica cálculo, mas a tomografia sem contraste demonstra cálculo ureteral. Não há gestação ou outro fator que limite a escolha inicial do método. Ele pergunta se a radiografia normal poderia ter afastado litíase e se cálculos de ácido úrico são detectáveis na tomografia. Qual interpretação é correta?",
+    "o": [
+      "Ausência de cálculo radiográfico torna litíase improvável, mesmo com tomografia positiva.",
+      "Cálculos de ácido úrico são melhor demonstrados pela radiografia que pela tomografia.",
+      "Alguns cálculos são radiotransparentes, mas podem ser vistos na tomografia.",
+      "Radiopacidade de um cálculo permite definir sua composição sem outra avaliação."
+    ],
+    "a": 2,
+    "why": "Muitos cálculos urinários são radiopacos, mas os de ácido úrico podem não aparecer na radiografia e são habitualmente detectados na tomografia sem contraste. Radiografia negativa não exclui litíase. Densidade e aspecto ajudam, porém não definem sozinhos toda composição. Existem exceções, como certos cálculos medicamentosos, e o método deve ser escolhido conforme contexto e necessidade de reduzir radiação.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirrad-06",
+    "t": "cirrad",
+    "q": "Homem de 58 anos apresenta pancreatite e realizou tomografia por evolução desfavorável. O laudo descreve pâncreas aumentado, inflamação peripancreática e uma única coleção líquida, sem gás. A equipe discute especificamente a classificação morfológica clássica de Balthazar, e não a categoria clínica de gravidade de Atlanta. A qual grau corresponde a presença de uma coleção nesse sistema?",
+    "o": [
+      "Grau D.",
+      "Grau B.",
+      "Grau C.",
+      "Grau E."
+    ],
+    "a": 0,
+    "why": "Na classificação clássica de Balthazar, uma coleção corresponde ao grau D; aumento glandular caracteriza B, alterações inflamatórias peripancreáticas C, e múltiplas coleções ou gás relacionam-se a E. O sistema morfológico não é equivalente à classificação clínica por falência orgânica de Atlanta, nem dispensa avaliar necrose e evolução. O enunciado delimita qual sistema está sendo aplicado para evitar mistura de índices.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirrad-07",
+    "t": "cirrad",
+    "q": "Mulher de 67 anos apresenta dor abdominal, vômitos e distensão progressiva. A tomografia identifica alças dilatadas e um ponto em que vasos e gordura mesentérica se dispõem em espiral, associados a convergência de segmentos intestinais. Não há massa intraluminal em anéis concêntricos. Qual sinal e mecanismo são mais coerentes com esse padrão?",
+    "o": [
+      "Sinal do alvo; invaginação de um segmento em outro.",
+      "Sinal de Rigler; ar delineando as duas faces da parede.",
+      "Sinal do duplo ducto; obstrução biliar e pancreática distal.",
+      "Sinal do redemoinho; torção do mesentério e de alças."
+    ],
+    "a": 3,
+    "why": "A disposição espiralada do mesentério e de seus vasos é chamada redemoinho e pode indicar volvo, exigindo integração com obstrução e sinais de isquemia. Não é uma prova isolada de qualquer tipo de torção em todo contexto. O alvo é associado a invaginação ou outros padrões concêntricos, duplo ducto a obstrução biliopancreática e Rigler a gás livre peritoneal.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirrad-08",
+    "t": "cirrad",
+    "q": "Homem de 44 anos tem dor lombar aguda irradiada para a virilha, com hematúria microscópica. Está afebril, com função renal preservada, mas o diagnóstico permanece incerto e não foi obtida imagem. Não há gestação ou necessidade específica de caracterização vascular. Em um adulto não gestante que necessita confirmar litíase ureteral, qual exame é habitualmente mais apropriado para essa finalidade?",
+    "o": [
+      "Tomografia contrastada em fase portal como protocolo inicial.",
+      "Tomografia sem contraste com protocolo de baixa dose.",
+      "Urografia excretora com imagens tardias como primeira escolha.",
+      "Radiografia abdominal isolada para excluir cálculo ureteral."
+    ],
+    "a": 1,
+    "why": "Tomografia sem contraste detecta a maioria dos cálculos, avalia localização, repercussão e diagnósticos alternativos, com baixa dose quando apropriado. Ultrassonografia pode ser preferida em determinados fluxos ou populações para reduzir radiação, mas não está entre as opções. Contraste portal e urografia não são escolhas habituais para a pergunta delimitada. Radiografia negativa não exclui litíase.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirrad-09",
+    "t": "cirrad",
+    "q": "Homem de 30 anos sofreu trauma torácico e está estável durante o eFAST. Em uma região anterior há ausência de deslizamento e de linhas B. Ao deslocar o transdutor lateralmente, observa-se transição respiratória entre área com deslizamento e área sem esse movimento, compatível com ponto pulmonar. Qual achado do conjunto acrescenta maior especificidade para pneumotórax nessa avaliação?",
+    "o": [
+      "A ausência isolada de linhas B na região.",
+      "A identificação isolada de linhas A horizontais.",
+      "A transição compatível com ponto pulmonar.",
+      "A ausência isolada de deslizamento pleural."
+    ],
+    "a": 2,
+    "why": "Ponto pulmonar é um achado particularmente específico quando corretamente identificado, embora existam imitadores e ele possa estar ausente em pneumotórax extenso. Ausência de deslizamento tem diferenciais como intubação seletiva e aderências; linhas A e ausência de B não bastam para diagnóstico. A interpretação integra técnica, contexto e outros sinais, sem atrasar tratamento de fisiologia de tensão.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirrad-10",
+    "t": "cirrad",
+    "q": "Mulher de 28 anos sofreu trauma fechado e é examinada em decúbito dorsal. Durante o FAST, o operador posiciona o transdutor no quadrante superior direito e identifica uma faixa anecoica entre o fígado e o rim direito. A imagem é tecnicamente adequada e será integrada às demais janelas e ao estado circulatório. Qual janela e espaço estão sendo avaliados?",
+    "o": [
+      "Janela esplenorrenal, incluindo o espaço pericárdico.",
+      "Janela pélvica, incluindo o fundo de saco posterior.",
+      "Janela hepatorrenal, incluindo o recesso de Morison.",
+      "Janela pericárdica, incluindo o espaço pleural posterior."
+    ],
+    "a": 2,
+    "why": "O recesso hepatorrenal de Morison é examinado na janela do quadrante superior direito e é importante para busca de líquido livre no paciente supino. A questão identifica a anatomia, sem afirmar sensibilidade universal superior em qualquer paciente. Líquido pode se distribuir em outros espaços e FAST negativo ou janela isolada não exclui lesão. As demais janelas avaliam regiões anatômicas diferentes.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirrad-11",
+    "t": "cirrad",
+    "q": "Homem de 78 anos apresenta hematoquezia volumosa, queda de hemoglobina e instabilidade, recebendo ressuscitação. A endoscopia alta não encontrou fonte. A angiotomografia localiza extravasamento ativo no cólon direito; não há condição favorável para preparo e colonoscopia imediata, e a radiologia intervencionista está disponível. Qual próxima estratégia oferece controle direcionado mais apropriado?",
+    "o": [
+      "Colonoscopia sem preparo como primeira tentativa de hemostasia.",
+      "Cintilografia com hemácias marcadas antes de tratar a fonte.",
+      "Cápsula endoscópica para definir o segmento antes da intervenção.",
+      "Arteriografia com possibilidade de embolização seletiva."
+    ],
+    "a": 3,
+    "why": "Extravasamento localizado em sangramento significativo favorece angiografia terapêutica com embolização, conforme estabilidade e recursos. Um exame adicional de localização não deve atrasar controle quando a fonte já foi demonstrada. Colonoscopia pode ter papel em outros cenários, mas ausência de preparo e sangramento volumoso limitam sua utilidade imediata. Cápsula não fornece tratamento e não é a prioridade descrita.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirrad-12",
+    "t": "cirrad",
+    "q": "Mulher de 69 anos tem episódios intermitentes de sangramento digestivo baixo, mas está estável após suporte. A equipe discute métodos de localização porque exames realizados fora do episódio não demonstraram extravasamento. Procura-se uma técnica capaz de detectar sangramento de baixo fluxo e observar por mais tempo, reconhecendo menor precisão anatômica e ausência de tratamento no mesmo exame. Qual método corresponde melhor a essa descrição?",
+    "o": [
+      "Arteriografia seletiva mesentérica.",
+      "Cintilografia com hemácias marcadas.",
+      "Colonoscopia com hemostasia endoscópica.",
+      "Angiotomografia com fase arterial."
+    ],
+    "a": 1,
+    "why": "Cintilografia com hemácias marcadas pode detectar sangramento de baixo fluxo e intermitente ao longo da aquisição, mas a localização pode ser menos precisa e não há intervenção terapêutica. Angiotomografia é rápida e fornece localização anatômica útil quando há sangramento; arteriografia permite embolizar. A escolha não deve ser feita apenas por um limiar numérico de fluxo, especialmente se houver instabilidade ou necessidade urgente de controle.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirrad-13",
+    "t": "cirrad",
+    "q": "Menina de dois anos apresenta sangramento retal vermelho-escuro de volume importante, sem dor em cólica, febre ou diarreia. Está estável após avaliação inicial, e não há massa abdominal palpável. A equipe considera divertículo de Meckel com mucosa gástrica ectópica como hipótese relevante. Qual exame investiga especificamente essa característica funcional da lesão?",
+    "o": [
+      "Enema contrastado para pesquisar obstrução colônica.",
+      "Ultrassonografia abdominal com pesquisa de invaginação.",
+      "Cintilografia com hemácias marcadas.",
+      "Cintilografia com pertecnetato de tecnécio."
+    ],
+    "a": 3,
+    "why": "Pertecnetato pode identificar mucosa gástrica ectópica associada ao divertículo de Meckel e é útil no contexto pediátrico apropriado. Hemácias marcadas procuram sangramento, não especificamente esse tecido. Enema é utilizado para outras perguntas e não demonstra a função descrita. Resultado negativo não afasta todas as causas nem exclui de forma absoluta Meckel; a avaliação depende da evolução e do protocolo.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirrad-14",
+    "t": "cirrad",
+    "q": "Mulher de 39 anos refere disfagia para líquidos e sólidos de evolução gradual, com regurgitação noturna. O esofagograma mostra esôfago dilatado e afilamento distal liso, sem irregularidade ou massa definida. Não há perda ponderal rápida, mas a equipe ainda planeja endoscopia para excluir obstrução e manometria para classificação funcional. Qual hipótese é mais compatível com o padrão contrastado?",
+    "o": [
+      "Acalasia.",
+      "Divertículo de Zenker.",
+      "Hérnia paraesofágica.",
+      "Espasmo esofágico distal."
+    ],
+    "a": 0,
+    "why": "Dilatação com afilamento distal liso em bico de pássaro é sugestiva de acalasia, integrada à disfagia e regurgitação. Não é sinal exclusivo e pseudoacalasia precisa ser excluída conforme contexto. Espasmo pode produzir padrão de contrações e aspecto em saca-rolhas; Zenker é divertículo proximal; hérnia paraesofágica altera a relação com o hiato. Manometria caracteriza o distúrbio motor, e endoscopia avalia causas estruturais.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirrad-15",
+    "t": "cirrad",
+    "q": "Homem de 61 anos apresenta dor torácica e enfisema subcutâneo após instrumentação esofágica. Está estável para estudo direcionado, e a equipe quer pesquisar extravasamento luminal com contraste oral sob supervisão. Há preocupação com aspiração, e a seleção do agente será feita pela radiologia. Qual classe costuma ser considerada inicialmente nesse estudo de suspeita de perfuração?",
+    "o": [
+      "Gadolínio por via oral como substituto rotineiro do iodo.",
+      "Contraste iodado hidrossolúvel, com formulação apropriada.",
+      "Ar sob alta pressão como agente de distensão preferencial.",
+      "Suspensão de bário concentrada como única etapa possível."
+    ],
+    "a": 1,
+    "why": "Contraste iodado hidrossolúvel é usado frequentemente como primeira etapa em estudo luminal de suspeita de perfuração, escolhendo formulação e técnica com atenção à aspiração. Um exame negativo pode requerer complementação conforme suspeita; tomografia com protocolo apropriado também tem papel importante. Bário pode ser considerado em situações selecionadas, mas não é a única opção inicial. Gadolínio oral e insuflação pressórica não são alternativas rotineiras para a pergunta.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirrad-16",
+    "t": "cirrad",
+    "q": "Recém-nascido apresenta vômitos biliosos e piora progressiva do estado geral. Após suporte inicial, um estudo contrastado realizado com equipe especializada mostra junção duodenojejunal à direita da posição esperada e configuração em saca-rolhas do duodeno. A hipótese de má rotação com volvo do intestino médio é considerada alta. Qual planejamento deve ser priorizado?",
+    "o": [
+      "Enema terapêutico como primeiro procedimento para desfazer o volvo médio.",
+      "Observação com repetição do contraste no dia seguinte antes de acionar cirurgia.",
+      "Avaliação cirúrgica urgente para corrigir a torção e avaliar a viabilidade.",
+      "Alimentação fracionada com procinético e acompanhamento da tolerância."
+    ],
+    "a": 2,
+    "why": "Vômito bilioso neonatal com sinais de má rotação e volvo é emergência pelo risco vascular, exigindo ressuscitação e avaliação cirúrgica urgente. Não se deve esperar novo exame para uma hipótese já suficientemente forte e em deterioração. Procinético não corrige o mecanismo, e enema usado em determinadas invaginações não trata volvo do intestino médio. A viabilidade é avaliada no contexto do controle da torção.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirrad-17",
+    "t": "cirrad",
+    "q": "Mulher de 45 anos, sem doença hepática conhecida, tem lesão focal incidental. O estudo dinâmico demonstra realce periférico nodular descontínuo na fase arterial e preenchimento centrípeto progressivo, acompanhando o contraste nas fases tardias. Não há sintomas ou sinais de infecção. Qual diagnóstico é mais compatível com esse conjunto antes de propor procedimento invasivo?",
+    "o": [
+      "Metástase hipovascular.",
+      "Hemangioma hepático.",
+      "Abscesso hepático.",
+      "Carcinoma hepatocelular."
+    ],
+    "a": 1,
+    "why": "O padrão nodular periférico descontínuo com preenchimento centrípeto progressivo é característico de hemangioma em estudo adequado. Não equivale a qualquer realce em anel. Hepatocarcinoma costuma ser avaliado por outro padrão e contexto de risco; abscesso depende de sinais morfológicos e clínicos compatíveis; metástases têm características diversas, mas não são a melhor correspondência aqui. Caracterização segura pode evitar biópsia desnecessária.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirrad-18",
+    "t": "cirrad",
+    "q": "Homem de 68 anos apresenta icterícia progressiva, prurido e perda ponderal. A imagem mostra dilatação simultânea do colédoco e do ducto pancreático principal, com interrupção distal próxima à cabeça pancreática. Não há definição histológica ou massa claramente caracterizada na primeira aquisição. Qual nível e grupo de causas devem orientar a investigação desse padrão?",
+    "o": [
+      "Obstrução hilar isolada, acima da confluência dos ductos hepáticos.",
+      "Obstrução exclusiva do ducto cístico por colecistite não complicada.",
+      "Obstrução proximal do ducto pancreático sem repercussão biliar.",
+      "Obstrução pancreática cefálica ou periampular, inclusive neoplasia."
+    ],
+    "a": 3,
+    "why": "O duplo ducto sugere obstrução próxima da cabeça pancreática ou região periampular; neoplasia é hipótese importante, sobretudo com icterícia e perda ponderal, mas há causas benignas. O sinal não oferece histologia. Obstrução hilar ou do cístico não explica de modo típico a dilatação pancreática associada. Investigação prossegue com caracterização anatômica e exames apropriados ao caso.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "ciruro-01",
+    "t": "ciruro",
+    "q": "Homem de 64 anos relata três episódios de sangue visível apenas ao terminar a micção. O início do jato parece claro, e ele também refere hesitação e sensação de esvaziamento incompleto. Não há cólica lombar, febre ou dismorfismo eritrocitário na amostra. A equipe considera a cronologia do sangramento como pista de localização, sem usá-la para dispensar investigação. Qual região é mais sugerida por esse padrão?",
+    "o": [
+      "Pelve renal e cálices superiores.",
+      "Colo vesical e uretra prostática.",
+      "Ureter médio e junção ureteropélvica.",
+      "Uretra anterior junto ao meato."
+    ],
+    "a": 1,
+    "why": "Hematúria terminal sugere origem em região do colo vesical ou uretra prostática. Sangramento inicial costuma apontar mais para uretra anterior; o total pode decorrer de diferentes níveis. A cronologia é apenas uma pista e não exclui lesões no restante do trato. Idade e hematúria visível continuam exigindo avaliação adequada, mesmo quando há sintomas compatíveis com doença prostática benigna.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "ciruro-02",
+    "t": "ciruro",
+    "q": "Homem de 62 anos, tabagista, apresenta hematúria macroscópica indolor em dois episódios. A urocultura é negativa; não há proteinúria importante ou dismorfismo eritrocitário. A função renal permite contraste, e não existe contraindicação conhecida à tomografia. Ele está estável, sem retenção por coágulos. Qual estratégia avalia de maneira mais adequada as principais fontes urológicas de sangramento neste perfil?",
+    "o": [
+      "Ultrassom renal isolado e controle de urina em seis meses.",
+      "Cistoscopia e imagem do trato superior por urotomografia.",
+      "Biópsia renal e seguimento clínico antes de estudar a bexiga.",
+      "Citologia urinária isolada e biópsia apenas se vier positiva."
+    ],
+    "a": 1,
+    "why": "Hematúria visível em tabagista merece investigação de neoplasia urotelial e outras causas. Cistoscopia avalia a bexiga e urotomografia o trato superior quando apropriada à função renal e ao risco. Ultrassom ou citologia isolados não substituem toda a avaliação. Ausência de sinais glomerulares torna biópsia renal uma prioridade menos coerente. Estabilidade permite investigação organizada, mas não justifica ignorar o sangramento.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "ciruro-03",
+    "t": "ciruro",
+    "q": "Homem de 67 anos preenche um diário miccional por sintomas urinários. Relata demora para iniciar a micção, jato intermitente e necessidade de esforço; também desperta três vezes à noite para urinar. A equipe separa manifestações de armazenamento das de esvaziamento, além de considerar causas não prostáticas para a queixa noturna. Qual sintoma pertence ao grupo de armazenamento?",
+    "o": [
+      "Intermitência do jato.",
+      "Esforço miccional.",
+      "Noctúria.",
+      "Hesitação."
+    ],
+    "a": 2,
+    "why": "Noctúria integra os sintomas de armazenamento, assim como urgência e frequência aumentada. Hesitação, esforço e intermitência são de esvaziamento. Essa classificação não identifica sozinha a causa: noctúria pode envolver produção urinária noturna, distúrbios do sono, condições sistêmicas ou disfunção vesical. A distinção ajuda a direcionar avaliação e tratamento, evitando atribuir todo sintoma ao volume da próstata.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "ciruro-04",
+    "t": "ciruro",
+    "q": "Homem de 40 anos tem cálculo de seis milímetros no ureter distal, confirmado por tomografia. Está afebril, com urina sem sinais infecciosos relevantes, função renal normal e dois rins funcionantes. A dor foi controlada e ele tolera líquidos. A dilatação a montante é discreta, e há possibilidade de retorno e imagem de controle. Qual estratégia inicial pode ser discutida com o paciente?",
+    "o": [
+      "Nefrostomia urgente para todo cálculo distal com dilatação a montante.",
+      "Nefrolitotripsia percutânea para retirar o cálculo do ureter distal.",
+      "Ureteroscopia imediata, sem discutir chance de eliminação ou preferência.",
+      "Observação com analgesia e terapia expulsiva, acompanhando eliminação e função."
+    ],
+    "a": 3,
+    "why": "Sem infecção, dor refratária ou ameaça renal, é possível manejo conservador com seguimento. Alfa-bloqueador pode ajudar na eliminação de cálculos distais acima de cinco milímetros, após discussão de benefícios e efeitos adversos. É preciso confirmar resolução e orientar retorno por febre, dor persistente ou piora. Intervenção eletiva também pode ser escolhida; drenagem de urgência e via percutânea não são primeiras escolhas impostas pelo caso.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "ciruro-05",
+    "t": "ciruro",
+    "q": "Mulher de 58 anos apresenta dor lombar, febre de 39,2 °C e calafrios. Está taquicárdica e hipotensa; a tomografia mostra cálculo de oito milímetros no ureter proximal com hidronefrose. A equipe inicia suporte, coleta culturas e administra antibiótico. A urologia está disponível para controle da fonte. Qual intervenção deve ser priorizada antes do tratamento definitivo do cálculo?",
+    "o": [
+      "Ureteroscopia com fragmentação completa do cálculo durante a sepse.",
+      "Terapia expulsiva com alfa-bloqueador até a redução da febre.",
+      "Litotripsia extracorpórea para restabelecer rapidamente a passagem urinária.",
+      "Drenagem por cateter ureteral ou nefrostomia, conforme viabilidade."
+    ],
+    "a": 3,
+    "why": "Infecção com obstrução é emergência que exige descompressão, além de antibiótico e suporte. Duplo J ou nefrostomia são escolhidos conforme anatomia, condição clínica e recursos. A fragmentação definitiva costuma ser adiada até controlar a infecção, pois manipulação pode agravar sepse. Litotripsia e terapia expulsiva não substituem drenagem urgente do sistema coletor infectado.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "ciruro-06",
+    "t": "ciruro",
+    "q": "Homem de 52 anos tem cálculo renal de três centímetros, ocupando a pelve e parte dos cálices. Está sem infecção ativa; cultura foi tratada quando necessária, função renal está preservada e não há contraindicação à intervenção. A equipe busca maior chance de retirar a carga litiásica com número aceitável de procedimentos. Qual abordagem costuma ser a primeira opção nesse cenário?",
+    "o": [
+      "Nefrolitotripsia percutânea com planejamento de acessos e etapas.",
+      "Pielolitotomia laparoscópica com extração da carga calicial.",
+      "Ureterorrenoscopia flexível em sessões para fragmentação da carga.",
+      "Litotripsia extracorpórea em sessões com eliminação dos fragmentos."
+    ],
+    "a": 0,
+    "why": "Para cálculos renais maiores que dois centímetros e cargas complexas, a via percutânea costuma oferecer melhor depuração, por vezes em etapas. Ureterorrenoscopia e litotripsia extracorpórea podem exigir múltiplas sessões e são selecionadas conforme anatomia e contraindicações. Cirurgia laparoscópica tem papel em casos particulares, mas não supera a escolha percutânea habitual para essa distribuição calicial. Cultura, função e risco hemorrágico precisam entrar no planejamento.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "ciruro-07",
+    "t": "ciruro",
+    "q": "Mulher de 46 anos eliminou cálculos de oxalato de cálcio em três episódios. A avaliação metabólica mostra hipercalciúria, e o diário alimentar revela consumo elevado de sal e baixa ingestão hídrica. Ela propõe retirar leite e outros alimentos com cálcio. A função renal e o cálcio sérico estão normais. Qual orientação inicial é mais apropriada?",
+    "o": [
+      "Manter cálcio alimentar adequado, aumentar líquidos e reduzir sódio.",
+      "Manter a dieta habitual e iniciar tiazídico antes de abordar sal e volume urinário.",
+      "Manter cálcio e priorizar restrição de oxalato, sem modificar sódio ou líquidos.",
+      "Restringir cálcio alimentar e manter sódio para compensar a calciúria."
+    ],
+    "a": 0,
+    "why": "Cálcio alimentar adequado ajuda a ligar oxalato no intestino; restrição indiscriminada pode aumentar sua absorção. A prevenção inclui volume urinário suficiente, menor sódio e ajuste de dieta conforme perfil metabólico. Fármacos, incluindo tiazídicos em situações selecionadas, exigem discussão de benefício, efeitos adversos e resposta às medidas dietéticas. Suplementação não é equivalente à ingestão alimentar e depende de indicação e horário.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "ciruro-08",
+    "t": "ciruro",
+    "q": "Homem de 57 anos, com síndrome metabólica, apresenta litíase recorrente. O cálculo é visível na tomografia, mas não aparece na radiografia simples. A urina mantém pH baixo em medidas repetidas, e não há evidência de infecção por bactéria produtora de urease. A equipe considera tratamento de dissolução após avaliar obstrução e função renal. Qual composição é mais compatível com esse conjunto?",
+    "o": [
+      "Fosfato de cálcio.",
+      "Ácido úrico.",
+      "Estruvita.",
+      "Oxalato de cálcio."
+    ],
+    "a": 1,
+    "why": "Cálculos de ácido úrico são radiotransparentes na radiografia, embora visíveis na tomografia, e se associam a urina ácida. Em condições apropriadas podem ser dissolvidos por alcalinização monitorada. Os cálculos cálcicos costumam ser radiopacos; estruvita relaciona-se a infecção por urease e urina mais alcalina. A proposta depende de segurança clínica e caracterização, não apenas de um exame negativo de radiografia.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "ciruro-09",
+    "t": "ciruro",
+    "q": "Homem de 68 anos tem sintomas urinários incômodos, IPSS de 21 e próstata estimada em 65 mL. Não há infecção, insuficiência renal obstrutiva, retenção refratária ou suspeita atual de neoplasia. Ele prefere iniciar tratamento medicamentoso e deseja tanto alívio dos sintomas quanto redução do risco de progressão. Qual estratégia se ajusta melhor ao volume e à intensidade do quadro?",
+    "o": [
+      "Alfa-bloqueador associado a inibidor da 5-alfa-redutase.",
+      "Antimuscarínico associado a agonista beta-3 adrenérgico.",
+      "Inibidor da 5-alfa-redutase como monoterapia inicial.",
+      "Alfa-bloqueador como monoterapia de manutenção."
+    ],
+    "a": 0,
+    "why": "Alfa-bloqueador oferece alívio relativamente rápido; inibidor da 5-alfa-redutase é útil em próstata aumentada e reduz progressão, com efeito mais lento. A combinação responde aos dois objetivos explicitados. Monoterapias podem ser escolhidas em outros contextos, mas não oferecem a mesma combinação de efeitos. Fármacos voltados ao armazenamento exigem que esse componente e o esvaziamento sejam avaliados; não são a resposta principal ao perfil obstrutivo apresentado.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "ciruro-10",
+    "t": "ciruro",
+    "q": "Homem de 66 anos usa finasterida regularmente há um ano por próstata aumentada. O PSA atual é 2,5 ng/mL, colhido sem infecção urinária ou manipulação recente. A equipe revisa valores anteriores, adesão e fatores que influenciam a dosagem antes de decidir investigação adicional. Qual interpretação é mais adequada para comparar o resultado com homens sem esse tratamento?",
+    "o": [
+      "Interpretar como 2,5 ng/mL sem considerar o efeito do medicamento.",
+      "Ajustar aproximadamente pelo fator dois e analisar a tendência individual.",
+      "Desconsiderar o PSA enquanto houver uso de inibidor da 5-alfa-redutase.",
+      "Dividir aproximadamente por dois para estimar o valor sem tratamento."
+    ],
+    "a": 1,
+    "why": "Após meses de uso, finasterida costuma reduzir o PSA em torno de metade; dobrar o valor é uma aproximação útil, não uma medida exata universal. Adesão, valor basal, nadir e elevação subsequente também importam. O medicamento não torna o exame inútil, nem permite concluir presença ou ausência de câncer pela correção isolada. A decisão de investigar considera o conjunto de risco.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "ciruro-11",
+    "t": "ciruro",
+    "q": "Homem de 73 anos é submetido a ressecção transuretral da próstata com sistema monopolar e glicina. Durante procedimento prolongado, apresenta confusão, náusea, bradicardia e hipertensão, sem hipoglicemia. O sódio, previamente normal, está em 118 mEq/L, e há sinais de sobrecarga de volume. Qual complicação explica melhor a deterioração e deve orientar a abordagem imediata?",
+    "o": [
+      "Sepse urinária precoce como causa da alteração neurológica e do sódio.",
+      "Reação anafilática ao anestésico com vasodilatação e hipovolemia.",
+      "Acidente vascular isquêmico isolado sem relação com a irrigação.",
+      "Síndrome de absorção do irrigante com hiponatremia e sobrecarga."
+    ],
+    "a": 3,
+    "why": "Absorção de irrigante hipotônico em RTU monopolar pode causar síndrome pós-RTU, com hiponatremia, alterações neurológicas e sobrecarga. É necessário interromper a exposição e tratar conforme gravidade, com monitorização cuidadosa da correção de sódio. AVC deve ser considerado se houver elementos próprios, mas não explica melhor a combinação temporal e laboratorial. Anafilaxia e sepse apresentam outros padrões fisiológicos.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "ciruro-12",
+    "t": "ciruro",
+    "q": "Homem de 72 anos tem hiperplasia prostática e precisou de sondagem por retenção urinária. Após tratamento medicamentoso e duas tentativas supervisionadas de retirada, mantém incapacidade de esvaziar a bexiga. Não há infecção, estenose uretral ou causa neurológica identificada. A equipe discute abordagem cirúrgica. Qual informação constitui a indicação por complicação, em vez de apenas um dado de tamanho ou escore?",
+    "o": [
+      "Retenção urinária persistente apesar das tentativas adequadas de tratamento.",
+      "IPSS de dez pontos em paciente pouco incomodado pelos sintomas.",
+      "PSA estável de três ng/mL sem outros achados suspeitos.",
+      "Volume prostático de quarenta mililitros em exame de ultrassonografia."
+    ],
+    "a": 0,
+    "why": "Retenção refratária ou recorrente atribuída à obstrução é indicação importante de tratamento cirúrgico, após avaliar condições e mecanismo. Volume, PSA e escore isolados não impõem operação. Suspeita de hipocontratilidade ou outra causa exige avaliação selecionada antes de assumir benefício. Neste caso, foram fornecidos elementos para atribuir a complicação à doença prostática e evitar resposta baseada apenas em tamanho.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "ciruro-13",
+    "t": "ciruro",
+    "q": "Adolescente de quatorze anos apresenta dor testicular súbita há três horas, acompanhada de náusea. O testículo está alto e horizontalizado, com reflexo cremastérico ausente. Não há febre ou sintomas urinários. A equipe urológica está disponível, mas o Doppler exigiria transferência e atraso. Qual conduta oferece melhor chance de preservar o testículo neste cenário de alta suspeita?",
+    "o": [
+      "Analgesia e repetição do exame após desaparecer a náusea.",
+      "Transferência para Doppler antes de qualquer decisão operatória.",
+      "Exploração imediata, com destorção e fixação conforme os achados.",
+      "Antibiótico e reavaliação após seis horas de observação clínica."
+    ],
+    "a": 2,
+    "why": "A suspeita clínica alta de torção testicular exige exploração sem atraso evitável por imagem. A viabilidade orienta preservação ou orquiectomia; o testículo contralateral costuma ser fixado pela predisposição anatômica. Doppler ajuda em casos duvidosos se não atrasar tratamento. Ausência de febre e início súbito reduzem suporte para epididimite, e esperar melhora da dor não protege a gônada.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "ciruro-14",
+    "t": "ciruro",
+    "q": "Homem de 25 anos tem dor escrotal progressiva há dois dias, disúria e secreção uretral após relação desprotegida. Há sensibilidade epididimária; o testículo mantém posição habitual e o Doppler mostra fluxo arterial preservado e hiperemia do epidídimo, sem sinais de torção. Foram colhidas amostras para investigação de infecções sexualmente transmissíveis. Qual esquema empírico é mais apropriado para provável etiologia gonocócica e clamidiana?",
+    "o": [
+      "Ceftriaxona associada a doxiciclina.",
+      "Amoxicilina com clavulanato isoladamente.",
+      "Nitrofurantoína como monoterapia inicial.",
+      "Levofloxacino como monoterapia inicial."
+    ],
+    "a": 0,
+    "why": "Ceftriaxona e doxiciclina cobrem a combinação provável de gonococo e clamídia, com doses e duração segundo protocolo e características do paciente. Levofloxacino isolado pode ser usado em contextos selecionados de etiologia entérica, não quando gonococo é provável sem exclusão adequada. Nitrofurantoína não alcança o tratamento necessário desse sítio. Parcerias, abstinência temporária e resultados dos testes também entram no cuidado.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "ciruro-15",
+    "t": "ciruro",
+    "q": "Mulher de 79 anos, não gestante, fez urocultura em exame de rotina. O resultado mostra E. coli em contagem significativa. Ela não apresenta disúria, urgência nova, dor suprapúbica, febre ou sintomas sistêmicos; está em seu estado habitual e não tem procedimento urológico invasivo programado. Qual conduta é mais apropriada diante desse resultado isolado?",
+    "o": [
+      "Iniciar profilaxia contínua para evitar uma primeira infecção febril.",
+      "Tratar conforme antibiograma e repetir cultura até negativar.",
+      "Não prescrever antibiótico para a bacteriúria assintomática.",
+      "Solicitar urotomografia antes de decidir sobre o antibiótico."
+    ],
+    "a": 2,
+    "why": "Bacteriúria assintomática geralmente não é tratada nesse perfil, porque o antibiótico não oferece benefício e aumenta efeitos adversos e resistência. Exceções relevantes incluem gestação e determinados procedimentos urológicos com trauma de mucosa, ausentes no caso. Contagem elevada ou idade não transformam bacteriúria em infecção sintomática. Não há indicação de imagem apenas por esse achado laboratorial.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "ciruro-16",
+    "t": "ciruro",
+    "q": "Homem de 48 anos apresenta sintomas urinários persistentes, hematúria microscópica e piúria em amostras repetidas. Culturas bacterianas usuais são negativas, sem uso recente de antibiótico. Relata contato domiciliar prévio com tuberculose e a imagem mostra estreitamento ureteral com irregularidade calicial, sem cálculo. Qual hipótese merece investigação específica, sem ser considerada confirmada apenas pelos achados iniciais?",
+    "o": [
+      "Cálculo de oxalato de cálcio.",
+      "Tuberculose urogenital.",
+      "Cistite bacteriana não complicada.",
+      "Hiperplasia prostática isolada."
+    ],
+    "a": 1,
+    "why": "Piúria estéril, exposição epidemiológica e alterações do trato superior justificam pesquisar tuberculose urogenital com métodos específicos. Urina ácida ou cultura comum negativa, isoladamente, não confirmam a doença. Cálculo, infecções sexualmente transmissíveis, antibiótico prévio e causas não infecciosas também podem causar piúria estéril. A investigação precisa ser direcionada pelo conjunto, evitando ciclos empíricos repetidos sem esclarecer a origem.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "ciruro-17",
+    "t": "ciruro",
+    "q": "Homem de 61 anos, diabético, apresenta dor intensa no períneo e escroto, febre e deterioração nas últimas horas. Há edema, crepitação e pequenas áreas escurecidas na pele; a dor se estende além da alteração cutânea visível. Está taquicárdico e recebe ressuscitação inicial. A equipe cirúrgica está disponível. Qual estratégia deve ser priorizada para controle do processo suspeito?",
+    "o": [
+      "Desbridamento urgente, antibiótico amplo e suporte da disfunção orgânica.",
+      "Drenagem de pequena incisão e alta após reduzir a febre.",
+      "Antibiótico oral e revisão da pele em quarenta e oito horas.",
+      "Ultrassom seriado para aguardar delimitação completa da área necrótica."
+    ],
+    "a": 0,
+    "why": "Gangrena de Fournier é infecção necrosante que exige controle cirúrgico precoce, antibiótico de amplo espectro e suporte. A extensão pode ultrapassar a lesão superficial, e podem ser necessários novos desbridamentos. Imagem é útil em situações selecionadas, mas não deve atrasar abordagem de um quadro convincente. Tratamento ambulatorial ou drenagem limitada não controla adequadamente necrose fascial extensa.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "ciruro-18",
+    "t": "ciruro",
+    "q": "Homem de 52 anos, assintomático, pergunta se deve fazer PSA porque recebeu convite para campanha de rastreamento. Não apresenta sinais que exijam investigação diagnóstica imediata. O médico precisa explicar benefícios potenciais, falsos positivos, sobrediagnóstico e diferenças entre recomendações institucionais brasileiras. Qual abordagem representa melhor a posição do Ministério da Saúde e do INCA?",
+    "o": [
+      "Definir o rastreamento pelo PSA isolado, sem discutir preferências e sobrediagnóstico.",
+      "Recomendar PSA bienal universal entre cinquenta e sessenta e nove anos.",
+      "Não recomendar rastreamento populacional e discutir riscos quando houver demanda individual.",
+      "Recomendar PSA anual universal após os quarenta anos, independentemente do risco."
+    ],
+    "a": 2,
+    "why": "Ministério da Saúde e INCA não recomendam rastreamento populacional organizado de câncer de próstata. Na demanda individual, deve-se informar benefícios e danos para decisão esclarecida; outras sociedades propõem avaliação individual de risco e idade. Não se deve confundir rastreamento com investigação de sintomas ou achados suspeitos. PSA e toque não confirmam câncer e não justificam biópsia preventiva indiscriminada.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "ciruro-19",
+    "t": "ciruro",
+    "q": "Homem de 59 anos tem PSA de seis ng/mL, confirmado após excluir infecção e fatores transitórios, com toque sem nódulos. Não foi submetido a biópsia e tem boa expectativa de vida. A equipe considera investigação adicional para estimar risco e orientar eventual amostragem. Qual exame costuma ser realizado antes da primeira biópsia em um fluxo diagnóstico contemporâneo?",
+    "o": [
+      "Cintilografia óssea de corpo inteiro.",
+      "Tomografia de abdome para avaliar linfonodos.",
+      "PET com PSMA como exame inicial de rastreamento.",
+      "Ressonância multiparamétrica da próstata."
+    ],
+    "a": 3,
+    "why": "Ressonância pré-biópsia ajuda a localizar lesões, estimar risco e orientar amostras, combinada a densidade de PSA e outros dados. Exame negativo não exclui câncer relevante em todos os perfis e não dispensa análise de risco residual. Cintilografia, tomografia e PET-PSMA têm papéis em estadiamento ou situações específicas, não são os substitutos habituais dessa etapa inicial.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "ciruro-20",
+    "t": "ciruro",
+    "q": "Homem de 62 anos tem câncer prostático de pequeno volume, PSA de seis ng/mL, estágio clínico T1c e grupo ISUP 1 em amostragem adequada. A ressonância e a revisão patológica não mostram elementos de maior risco. Ele tem boa expectativa de vida e aceita consultas, exames e reavaliação histológica quando indicada. Qual estratégia costuma ser preferida para esse perfil de baixo risco?",
+    "o": [
+      "Observação expectante sem intenção curativa futura.",
+      "Vigilância ativa com protocolo de acompanhamento.",
+      "Prostatectomia radical como estratégia inicial.",
+      "Radioterapia prostática como estratégia inicial."
+    ],
+    "a": 1,
+    "why": "Vigilância ativa é preferida para muitos cânceres de baixo risco bem selecionados e inclui reavaliações, com tratamento se houver reclassificação ou escolha informada. Cirurgia e radioterapia são opções definitivas, mas podem trazer tratamento desnecessário neste perfil e devem ser discutidas. Observação expectante tem outra intenção e costuma corresponder a contextos de menor expectativa de vida ou maior fragilidade; não é sinônimo de vigilância ativa.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "ciruro-21",
+    "t": "ciruro",
+    "q": "Homem de 68 anos foi submetido a ressecção endoscópica de tumor vesical. A revisão identifica carcinoma urotelial T1 de alto grau; não há músculo detrusor na amostra e a primeira operação não documentou ressecção completa com segurança. Está recuperado, sem metástase conhecida. Qual próximo passo é mais adequado antes de definir a estratégia intravesical e estimar o risco com maior confiança?",
+    "o": [
+      "Cistoscopia anual como acompanhamento após a primeira ressecção.",
+      "Quimioterapia intravesical seguida de vigilância trimestral, sem reavaliação profunda.",
+      "BCG imediato sem nova avaliação do leito ou da muscular.",
+      "Nova ressecção para completar tratamento e reavaliar profundidade."
+    ],
+    "a": 3,
+    "why": "T1 de alto grau e ausência de detrusor reforçam indicação de re-RTU para avaliar resíduo e subestadiamento. Após estadiamento adequado, BCG com manutenção pode ser opção em alto risco; cistectomia precoce também pode ser discutida conforme fatores de risco muito alto e preferências. Não se deve assumir doença não muscularmente invasiva apenas porque a primeira amostra não permite avaliá-la.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "ciruro-22",
+    "t": "ciruro",
+    "q": "Homem de 64 anos tem carcinoma urotelial T2, confirmado com músculo na amostra, sem metástases ou linfonodos suspeitos no estadiamento. É candidato a cistectomia, apresenta função renal e condição funcional compatíveis com cisplatina e aceita a estratégia cirúrgica após discussão multidisciplinar. Qual tratamento perioperatório clássico é mais adequado entre as opções?",
+    "o": [
+      "RTU completa seguida de quimioterapia intravesical.",
+      "Radioterapia isolada seguida de vigilância clínica.",
+      "BCG intravesical seguido de radioterapia pélvica.",
+      "Quimioterapia com cisplatina seguida de cistectomia radical."
+    ],
+    "a": 3,
+    "why": "Em candidato apto com doença músculo-invasiva localizada e estratégia cirúrgica definida, quimioterapia neoadjuvante baseada em cisplatina seguida de cistectomia é abordagem estabelecida. Opções perioperatórias evoluem e exigem discussão multidisciplinar. Preservação trimodal também pode ser considerada em selecionados, mas não é RTU isolada ou radioterapia paliativa. BCG não trata adequadamente invasão do detrusor.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "ciruro-23",
+    "t": "ciruro",
+    "q": "Homem de 55 anos, saudável, tem massa renal sólida com realce, de três centímetros, descoberta incidentalmente. O estadiamento não mostra disseminação; a lesão é periférica e a equipe considera a ressecção parcial tecnicamente viável com margem adequada. Ele prefere tratamento cirúrgico após discutir alternativas. Qual abordagem local costuma ser preferida nesse cenário?",
+    "o": [
+      "Nefrectomia parcial com preservação de parênquima.",
+      "Vigilância por imagem sem tratamento inicial da massa.",
+      "Nefrectomia radical com retirada do rim acometido.",
+      "Ablação percutânea como primeira escolha independente da localização."
+    ],
+    "a": 0,
+    "why": "Para massa pequena localizada com anatomia favorável e indicação cirúrgica, nefrectomia parcial costuma ser preferida por preservar néfrons com controle oncológico adequado. Radical pode ser necessária por complexidade ou outras condições, não apenas por suspeita de malignidade. Vigilância e ablação são alternativas em perfis selecionados, mas a pergunta definiu a escolha cirúrgica. Adrenal e linfonodos isolados não removem a lesão renal.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "ciruro-24",
+    "t": "ciruro",
+    "q": "Homem de 28 anos percebe aumento indolor e endurecido de um testículo. A ultrassonografia mostra nódulo sólido intratesticular suspeito; foram colhidos marcadores tumorais e o outro testículo é normal. Não há situação particular de preservação gonadal que mude o planejamento inicial. Qual via operatória é a usual para diagnóstico e tratamento da lesão suspeita?",
+    "o": [
+      "Orquiectomia simples por acesso escrotal.",
+      "Punção aspirativa do nódulo pelo escroto.",
+      "Orquiectomia radical por acesso inguinal.",
+      "Biópsia incisional por acesso transescrotal."
+    ],
+    "a": 2,
+    "why": "Massa testicular suspeita é habitualmente abordada por via inguinal, com controle alto do cordão e orquiectomia radical. Via escrotal e punção não são rotinas, por violarem planos e drenagem regionais. Marcadores normais não excluem neoplasia. Cirurgia poupadora pode ser discutida em circunstâncias específicas, como testículo único ou lesões selecionadas, que não foram dadas neste caso.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "ciruro-25",
+    "t": "ciruro",
+    "q": "Homem de 31 anos foi submetido a orquiectomia por massa testicular. O laudo inicial descreve seminoma, mas a alfafetoproteína está persistentemente elevada em medidas confirmadas. A equipe excluiu hepatopatia e outras explicações clínicas para essa elevação. A evolução do marcador não acompanha a queda esperada após a retirada do tumor. Qual interpretação deve orientar revisão patológica e classificação para tratamento?",
+    "o": [
+      "Desconsiderar a AFP após cirurgia se a primeira lâmina sugeriu seminoma.",
+      "Considerar componente não seminomatoso não representado na amostra inicial.",
+      "Considerar tumor de Leydig, pois a AFP define origem estromal.",
+      "Classificar como seminoma puro, pois a AFP acompanha a maioria dos seminomas."
+    ],
+    "a": 1,
+    "why": "Seminoma puro não produz AFP. Elevação confirmada e sem outra causa exige revisão e manejo como tumor germinativo não seminomatoso, mesmo que a amostra inicial tenha mostrado seminoma. Marcadores precisam ser acompanhados conforme sua meia-vida e o tempo pós-operatório. A AFP não define tumor de Leydig. A discrepância entre laboratório e histologia deve ser esclarecida, não ignorada.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "ciruro-26",
+    "t": "ciruro",
+    "q": "Criança de três anos tem massa palpável no flanco esquerdo descoberta ao banho, com hipertensão e hematúria microscópica, sem febre. A ultrassonografia mostra origem renal e a tomografia demonstra massa que expande o rim, deslocando estruturas, sem calcificações grosseiras ou envolvimento vascular circunferencial. Qual hipótese é mais provável e deve orientar encaminhamento oncológico pediátrico?",
+    "o": [
+      "Neuroblastoma adrenal.",
+      "Linfoma retroperitoneal.",
+      "Hidronefrose simples.",
+      "Tumor de Wilms."
+    ],
+    "a": 3,
+    "why": "Faixa etária, origem renal, massa expansiva e hipertensão favorecem nefroblastoma. Neuroblastoma costuma ter origem adrenal ou cadeia simpática e pode envolver vasos e calcificar. Linfoma tende a outro padrão de massa e distribuição. Hidronefrose apresenta dilatação do sistema coletor, não massa sólida expansiva. A lateralidade ou o cruzamento da linha média são pistas, mas não critérios isolados; a conduta segue protocolo pediátrico especializado.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "ciraa-27",
+    "t": "ciraa",
+    "q": "Mulher de 39 anos foi operada por apendicite perfurada, recebeu antibiótico e inicialmente voltou a alimentar-se. No sexto dia reapresenta febre, dor localizada e intolerância oral. Está estável, sem peritonite difusa. A tomografia mostra coleção de seis centímetros na pelve, acessível por drenagem guiada, sem extravasamento evidente de contraste. Qual próxima estratégia é mais apropriada?",
+    "o": [
+      "Drenar a coleção, ajustar antibiótico e avaliar possível foco persistente.",
+      "Suspender antibiótico para obter culturas e aguardar nova avaliação febril.",
+      "Reoperar por laparotomia para ressecção ileocecal e revisão da cavidade.",
+      "Prolongar antibiótico e repetir a tomografia ao fim de duas semanas."
+    ],
+    "a": 0,
+    "why": "A coleção acessível após melhora inicial sugere abscesso pós-operatório e requer discutir controle da fonte. Drenagem permite cultura e avaliação de débito, além de tratamento antimicrobiano. Antibiótico prolongado não substitui drenagem adequada. Ressecção intestinal exige indicação anatômica específica. Suspender tratamento para esperar febre ou cultura pode agravar uma infecção já documentada.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "ciraa-28",
+    "t": "ciraa",
+    "q": "Durante colecistectomia, a vesícula está contraída e aderida ao hilo, com intensa inflamação. A dissecção não expõe referências suficientes para obter visão crítica de segurança. A paciente está estável, e o serviço conta com apoio experiente e colangiografia. A equipe discute como proceder antes de dividir qualquer estrutura. Qual opção representa a melhor estratégia?",
+    "o": [
+      "Pausar, redefinir a anatomia e considerar técnica de resgate com auxílio.",
+      "Converter para laparotomia e manter a mesma sequência de dissecção do hilo.",
+      "Iniciar dissecção pelo fundo até dividir o pedículo próximo à via principal.",
+      "Clipar o ducto aparentemente mais fino após confirmar sua direção no campo."
+    ],
+    "a": 0,
+    "why": "A incapacidade de obter visão crítica é um ponto de interrupção da técnica insegura. Auxílio, imagem e resgate, como colecistectomia subtotal em contexto adequado, reduzem o risco de lesão. Conversão pode ser útil, mas não dispensa identificação anatômica. Dissecção fundo-primeiro também pode lesar a via em inflamação intensa. Calibre e direção visual isolados não identificam com segurança o ducto cístico.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "ciraa-29",
+    "t": "ciraa",
+    "q": "Homem de 54 anos, no terceiro dia após colecistectomia difícil, apresenta febre baixa, dor no hipocôndrio direito e débito de 350 mL/dia de líquido bilioso pelo dreno. Está estável, com bilirrubina discretamente elevada. A tomografia mostra pequena coleção sub-hepática, mas não define a continuidade da via biliar. Qual estratégia melhor orienta o próximo passo?",
+    "o": [
+      "Indicar hepaticojejunostomia pela presença de débito bilioso pós-operatório.",
+      "Iniciar antibiótico e aguardar queda do débito antes de investigar a via biliar.",
+      "Avaliar drenagem e anatomia biliar para distinguir vazamento de lesão maior.",
+      "Retirar o dreno e observar a bilirrubina para confirmar fechamento da fístula."
+    ],
+    "a": 2,
+    "why": "Débito bilioso pode decorrer de coto cístico, ducto acessório ou lesão da via principal; a conduta depende da anatomia e do controle da contaminação. Dreno não garante resolução, mas sua retirada precoce pode agravar coleção. Reconstrução não se indica apenas pelo aspecto do débito. CPRE, colangiorressonância ou outros métodos são selecionados conforme hipótese, sem adiar controle de sepse se presente.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "ciraa-30",
+    "t": "ciraa",
+    "q": "Mulher de 64 anos está internada por diverticulite com abscesso pélvico de cinco centímetros. Após 48 horas de antibiótico, mantém febre e dor, mas está perfundida e sem peritonite difusa. A radiologia intervencionista identifica alças e vasos interpostos em todos os trajetos percutâneos considerados. Qual decisão é mais apropriada neste cenário?",
+    "o": [
+      "Solicitar colonoscopia com preparo para drenagem do abscesso por via mucosa.",
+      "Puncionar pela trajetória mais curta usando o tamanho como principal critério.",
+      "Discutir com a cirurgia outra forma de controle da fonte conforme evolução.",
+      "Manter o mesmo esquema até completar quatorze dias antes de reavaliar a coleção."
+    ],
+    "a": 2,
+    "why": "Coleção sem acesso seguro exige reavaliar o plano e discutir controle alternativo, incluindo abordagem operatória se houver falha do manejo clínico. Tamanho não legitima punção através de estruturas de risco. Persistência de febre e dor exige reavaliação antes de um prazo fixo. Colonoscopia aguda com preparo não é solução rotineira para esse abscesso e pode acrescentar riscos.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "ciraa-31",
+    "t": "ciraa",
+    "q": "Homem de 59 anos, com laparotomia prévia, está em manejo não operatório de obstrução de delgado. Nas últimas horas a dor tornou-se contínua, a frequência cardíaca subiu para 116 bpm e surgiu defesa localizada. A nova tomografia mostra dois pontos de transição próximos, alça em C e redução do realce parietal. A pressão está preservada e o lactato é 2,0 mmol/L. Qual é a melhor conduta?",
+    "o": [
+      "Preparar exploração cirúrgica urgente durante a ressuscitação e monitorização.",
+      "Manter descompressão e completar setenta e duas horas de tratamento clínico.",
+      "Administrar contraste hidrossolúvel e aguardar radiografia após vinte e quatro horas.",
+      "Intensificar analgesia e repetir a tomografia após surgirem sinais sistêmicos."
+    ],
+    "a": 0,
+    "why": "A mudança clínica e a alça fechada com alteração de realce sugerem estrangulamento. Pressão e lactato pouco alterados não excluem comprometimento intestinal precoce. O limite habitual de observação para aderências sem sinais de gravidade não se aplica aqui. Contraste de trânsito e nova imagem tardia não devem postergar exploração quando já há suspeita de isquemia.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "ciraa-32",
+    "t": "ciraa",
+    "q": "Homem de 62 anos está no segundo dia após colectomia eletiva. Apresenta distensão e náusea, sem eliminação de flatos. Recebe opioide em doses frequentes; potássio é 2,9 mEq/L. Está afebril, normotenso e sem defesa. A tomografia mostra dilatação difusa de delgado e cólon, sem transição, coleção ou extravasamento. Qual abordagem inicial é mais apropriada?",
+    "o": [
+      "Iniciar antibiótico e programar drenagem abdominal por suspeita de deiscência.",
+      "Indicar laparotomia para desfazer provável aderência pós-operatória precoce.",
+      "Corrigir eletrólitos, reduzir opioide e acompanhar a recuperação do trânsito.",
+      "Administrar neostigmina para descompressão de uma obstrução do delgado."
+    ],
+    "a": 2,
+    "why": "O conjunto favorece íleo pós-operatório com fatores reversíveis, incluindo hipocalemia e opioide. Suporte, mobilização e revisão medicamentosa são medidas centrais, com descompressão se necessária. Não há transição que sustente obstrução por aderência nem coleção para drenar. Neostigmina não é tratamento habitual do íleo difuso. Deterioração ou persistência inesperada exige reabrir a investigação.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "ciraa-33",
+    "t": "ciraa",
+    "q": "Mulher de 56 anos apresenta dor epigástrica súbita após semanas de dispepsia e uso de anti-inflamatório. Está estável, com dor e defesa localizada, mas a radiografia em ortostase não mostra ar subdiafragmático. Não há diagnóstico estabelecido e a tomografia está disponível no próprio setor, sem atraso significativo. Qual é a melhor próxima etapa?",
+    "o": [
+      "Repetir a radiografia após seis horas e observar a evolução da defesa.",
+      "Tomografia contrastada, mantendo suporte e avaliação cirúrgica.",
+      "Teste respiratório para Helicobacter pylori antes de escolher a imagem.",
+      "Endoscopia com insuflação para localizar uma provável úlcera."
+    ],
+    "a": 1,
+    "why": "Radiografia negativa não exclui perfuração. Em paciente estável com suspeita relevante e diagnóstico ainda incerto, tomografia avalia ar, líquido e provável fonte, em paralelo à avaliação cirúrgica. Endoscopia e insuflação não são primeira escolha diante dessa hipótese. Aguardar uma nova radiografia pode atrasar diagnóstico. Teste de Helicobacter não responde à emergência.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "ciraa-34",
+    "t": "ciraa",
+    "q": "Homem de 71 anos, após cirurgia cardíaca, mantém baixo débito e recebe vasopressor. Evolui com distensão abdominal e dificuldade de progredir dieta; a acidose se acentua. Angiotomografia mostra a artéria mesentérica superior pérvia, ramos distais finos e áreas de realce intestinal reduzido, sem trombose venosa. Ainda não há peritonite. Qual estratégia aborda melhor o mecanismo suspeito?",
+    "o": [
+      "Otimizar perfusão, revisar vasoconstrição e vigiar sinais de necrose intestinal.",
+      "Aumentar dieta enteral e usar pró-cinético para corrigir a distensão pós-operatória.",
+      "Iniciar trombólise sistêmica para tratar provável trombose venosa oculta.",
+      "Realizar embolectomia da artéria mesentérica superior para restaurar o fluxo."
+    ],
+    "a": 0,
+    "why": "A patência proximal não afasta isquemia não oclusiva por hipoperfusão e vasoconstrição. É necessário corrigir o contexto hemodinâmico e discutir avaliação especializada, incluindo opções endovasculares selecionadas. Embolectomia não trata ausência de êmbolo, e não há trombose venosa indicada. Aumentar demanda intestinal ou apenas tratar motilidade não corrige sofrimento vascular. Peritonite ou necrose muda a prioridade para exploração.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "ciraa-35",
+    "t": "ciraa",
+    "q": "Mulher de 42 anos apresenta dor abdominal há dois dias. A tomografia confirma trombose de veia mesentérica superior, com edema mesentérico, realce intestinal preservado e sem pneumoperitônio. Está estável e sem defesa; não há sangramento ativo, plaquetopenia ou outra contraindicação à anticoagulação. A equipe inicia investigação de fatores predisponentes. Qual tratamento inicial é mais apropriado?",
+    "o": [
+      "Ressecção imediata das alças drenadas pela veia mesentérica comprometida.",
+      "Anticoagulação terapêutica com vigilância clínica da viabilidade intestinal.",
+      "Antiagregação plaquetária e nova tomografia ao fim de uma semana.",
+      "Trombólise sistêmica como primeira medida para dissolver o trombo venoso."
+    ],
+    "a": 1,
+    "why": "Na trombose venosa mesentérica sem peritonite ou necrose, anticoagulação precoce é o tratamento central, com vigilância para deterioração. Edema não significa intestino inviável e não justifica ressecção territorial automática. Trombólise pode ser discutida em situações selecionadas, não como regra inicial. Antiagregação não substitui anticoagulação no mecanismo venoso descrito.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "ciraa-36",
+    "t": "ciraa",
+    "q": "Homem de 76 anos chega após síncope, com dor lombar persistente e PA 84/52 mmHg. A ultrassonografia mostra aorta abdominal de 7,5 centímetros. O FAST não identifica líquido nas janelas hepatorrenal, esplenorrenal ou pélvica. Ele não relata trauma, e a avaliação inicial não encontra outra fonte de choque. Qual interpretação é mais adequada?",
+    "o": [
+      "A dilatação aórtica explica a dor, mas não a hipotensão sem líquido peritoneal.",
+      "O FAST negativo permite aguardar queda de hemoglobina antes de definir urgência.",
+      "A ausência de líquido favorece aneurisma íntegro e investigação renal prioritária.",
+      "A ruptura aórtica permanece possível por hemorragia retroperitoneal."
+    ],
+    "a": 3,
+    "why": "O FAST avalia principalmente líquido intraperitoneal e não exclui sangramento retroperitoneal. Dor, choque e aneurisma mantêm alta suspeita de ruptura e exigem organização urgente do controle hemorrágico. Hemoglobina pode estar inicialmente preservada. Se a condição permitir, angiotomografia ajuda no planejamento, mas um exame negativo de líquido peritoneal não reclassifica o quadro como benigno.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirpanc-17",
+    "t": "cirpanc",
+    "q": "Homem de 44 anos está nas primeiras 24 horas de pancreatite aguda. Tem febre de 38,2 °C e leucocitose, mas está perfundido, sem icterícia, sintomas urinários ou infiltrado pulmonar. A tomografia foi obtida por dúvida inicial e não mostra gás ou coleção infectada. A equipe cogita antibiótico para prevenir infecção futura. Qual decisão é mais apropriada?",
+    "o": [
+      "Iniciar antibiótico de amplo espectro enquanto persistirem febre e leucocitose.",
+      "Solicitar punção pancreática e tratar empiricamente até o resultado da cultura.",
+      "Suspender a nutrição enteral e usar antibiótico para reduzir translocação bacteriana.",
+      "Investigar focos conforme os achados, sem instituir profilaxia pela inflamação isolada."
+    ],
+    "a": 3,
+    "why": "Resposta inflamatória precoce pode causar febre e leucocitose sem infecção. Antibiótico profilático não previne de modo útil as complicações da pancreatite e não deve ser indicado apenas por esses sinais. A busca de foco é contextual e contínua. Punção não é rotina no início. Nutrição enteral, quando indicada, é preferível à parenteral e não deve ser retirada para prevenir uma infecção não documentada.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirpanc-18",
+    "t": "cirpanc",
+    "q": "Mulher de 73 anos, com doença renal crônica, recebe reposição venosa por pancreatite. Após horas de infusão, a diurese permanece baixa, mas aparecem dispneia, crepitações e maior necessidade de oxigênio. A pressão está em 118/72 mmHg; a dor abdominal persiste. Qual estratégia deve orientar a revisão da prescrição?",
+    "o": [
+      "Reavaliar perfusão e congestão para ajustar fluidos e suporte de órgãos.",
+      "Suspender monitorização da diurese e guiar o volume pela queda da lipase.",
+      "Manter o volume previsto e adicionar analgesia até desaparecer a dor.",
+      "Aumentar a infusão de cristaloide até a diurese superar o alvo isolado."
+    ],
+    "a": 0,
+    "why": "Oligúria pode refletir disfunção renal e não apenas déficit de volume. Novos sinais de congestão exigem avaliação clínica/hemodinâmica e ajuste do suporte, não escalonamento automático de fluidos. Dor e lipase não são metas de expansão. A reposição precisa ser individualizada, com suporte respiratório e renal quando indicado; não se trata de abandonar toda ressuscitação, mas de reconhecer a mudança fisiológica.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirpanc-19",
+    "t": "cirpanc",
+    "q": "Homem de 37 anos está no segundo dia de pancreatite leve. A dor melhorou, não vomita há doze horas e pede alimento. Está sem distensão importante, com deglutição preservada e sem procedimento iminente. A lipase permanece acima do limite normal. Qual prescrição nutricional é mais apropriada?",
+    "o": [
+      "Manter jejum até normalização da dosagem de lipase.",
+      "Reintroduzir dieta oral conforme tolerância clínica.",
+      "Iniciar nutrição parenteral até nova imagem pancreática.",
+      "Usar líquidos claros por uma semana antes de sólidos."
+    ],
+    "a": 1,
+    "why": "A realimentação precoce na pancreatite leve pode ocorrer conforme tolerância, sem exigir normalização da lipase nem progressão prolongada por líquidos claros. Persistência isolada de enzima elevada não demonstra intolerância alimentar. Nutrição parenteral fica para situações em que a via digestiva não pode suprir as necessidades. Náusea, vômito ou piora relevante exigem reavaliação individual.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirpanc-20",
+    "t": "cirpanc",
+    "q": "Homem de 63 anos recebeu hipótese inicial de pancreatite por dor epigástrica e lipase duas vezes o limite. Nas horas seguintes, a dor tornou-se abruptamente difusa e surgiu rigidez abdominal. Ele usa anti-inflamatório, mas o diagnóstico ainda não foi estabelecido. Mantém pressão suficiente para realizar imagem imediatamente. Qual é a melhor próxima decisão?",
+    "o": [
+      "Tratar como exacerbação inflamatória e intensificar hidratação fixa.",
+      "Repetir apenas a lipase até confirmar tendência de queda.",
+      "Adiar a imagem por setenta e duas horas para avaliar eventual necrose.",
+      "Reavaliar a hipótese e investigar perfuração ou outra emergência cirúrgica."
+    ],
+    "a": 3,
+    "why": "A recomendação de adiar tomografia para caracterizar necrose não se aplica à dúvida diagnóstica ou suspeita de outra emergência. Lipase inferior a três vezes o limite não confirma o quadro nesse contexto e pode subir em outras doenças. Peritonite exige avaliação cirúrgica e investigação rápida conforme estabilidade. Nenhuma tendência isolada de enzima substitui a reavaliação do paciente.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirpanc-21",
+    "t": "cirpanc",
+    "q": "Mulher de 50 anos foi tratada por pancreatite intersticial e retorna após oito semanas. Está sem febre, dor, saciedade precoce ou vômitos. A ressonância mostra coleção encapsulada homogênea, sem detritos, comunicação ductal problemática, nódulo ou sinal de infecção; não houve aumento relevante em relação ao exame anterior. Qual planejamento é mais adequado?",
+    "o": [
+      "Drenagem endoscópica para prevenir infecção de uma coleção com parede.",
+      "Acompanhamento, reservando intervenção para sintomas ou complicações.",
+      "Antibiótico prolongado para reduzir colonização do conteúdo líquido.",
+      "Necrosectomia minimamente invasiva para retirar o componente residual."
+    ],
+    "a": 1,
+    "why": "A descrição é compatível com pseudocisto sem indicação clínica de drenagem. Parede formada e persistência da coleção não bastam para intervir. Não há necrose sólida para necrosectomia ou infecção para antibiótico. A decisão exige segurança de que se trata de coleção pós-inflamatória, distinguindo-a de neoplasia cística, e seguimento orientado por evolução e sintomas.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirpanc-22",
+    "t": "cirpanc",
+    "q": "Homem de 59 anos tem coleção sintomática após pancreatite necrosante, com parede bem definida seis semanas após o início. A ressonância mostra líquido e grande volume de detritos sólidos. A equipe planeja drenagem endoscópica e explica que outros procedimentos poderão ser necessários. Qual característica justifica essa possibilidade?",
+    "o": [
+      "Neoplasia cística serosa, cujo conteúdo deve ser retirado por necrosectomia.",
+      "Abscesso peripancreático, cuja parede impede qualquer drenagem endoscópica.",
+      "Necrose encapsulada, cujo componente sólido pode exigir desbridamento em etapas.",
+      "Pseudocisto simples, cujo componente líquido exige ressecção pancreática."
+    ],
+    "a": 2,
+    "why": "Detritos em coleção madura após pancreatite necrosante caracterizam necrose encapsulada, e não pseudocisto puramente líquido. Drenagem pode ser suficiente ou precisar de necrosectomia conforme resposta e anatomia. Parede organizada não impede acesso endoscópico; frequentemente o facilita. Não há características que sustentem neoplasia serosa neste contexto evolutivo.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirpanc-23",
+    "t": "cirpanc",
+    "q": "Homem de 62 anos está no décimo oitavo dia de pancreatite necrosante. Passa a necessitar de vasopressor apesar de suporte e antimicrobiano; a tomografia mostra gás na necrose, sem outra fonte identificada. A coleção ainda não tem parede madura. Qual decisão melhor equilibra o benefício do adiamento com a deterioração atual?",
+    "o": [
+      "Trocar para antibiótico oral e aguardar maturação em acompanhamento externo.",
+      "Aguardar quatro semanas completas para qualquer intervenção na coleção.",
+      "Indicar pancreatectomia total como primeira medida de controle infeccioso.",
+      "Discutir controle precoce do foco, preferindo acesso menos invasivo factível."
+    ],
+    "a": 3,
+    "why": "Quando possível, adiar intervenção permite organização da necrose e menor agressão. Essa preferência não é uma regra que supere sepse em deterioração. A equipe deve discutir drenagem e estratégia de controle conforme anatomia e recursos. Cirurgia extensa não é primeira etapa automática. A ausência de parede não afasta infecção quando há gás e quadro compatível.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirpanc-24",
+    "t": "cirpanc",
+    "q": "Homem de 56 anos tem coleção pancreática após pancreatite necrosante. Evolui com melena e queda de hemoglobina, responde à ressuscitação inicial e permanece estável para angiotomografia. O exame identifica pseudoaneurisma de artéria esplênica junto à coleção, com sinal de sangramento. A radiologia intervencionista está disponível. Qual medida de controle é mais apropriada?",
+    "o": [
+      "Necrosectomia aberta antes de abordar o suprimento arterial.",
+      "Punção percutânea da coleção para confirmar conteúdo hemático.",
+      "Angiografia com embolização da lesão vascular.",
+      "Drenagem endoscópica da coleção como primeiro procedimento."
+    ],
+    "a": 2,
+    "why": "Pseudoaneurisma é complicação hemorrágica potencialmente grave. Em paciente estabilizado e com recurso disponível, embolização endovascular costuma oferecer controle direcionado. Drenar ou puncionar a coleção antes de reconhecer e controlar o vaso pode precipitar hemorragia. Cirurgia é necessária em cenários como instabilidade não controlada ou falha do tratamento endovascular, não a primeira opção obrigatória aqui.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirpanc-25",
+    "t": "cirpanc",
+    "q": "Mulher de 54 anos com pancreatite crônica mantém esteatorreia e perda ponderal. Foi prescrita reposição enzimática, mas ela toma as cápsulas em jejum, várias horas antes das refeições. Não há vômitos, obstrução ou lesão intestinal conhecida. Antes de considerar falha do tratamento, qual revisão é mais importante?",
+    "o": [
+      "Ajustar tomada das enzimas às refeições e conferir dose e adesão.",
+      "Trocar alimentação oral por nutrição parenteral até cessar a esteatorreia.",
+      "Indicar drenagem do ducto pancreático com base na presença de má absorção.",
+      "Suspender enzimas por um mês para evitar supressão da função residual."
+    ],
+    "a": 0,
+    "why": "As enzimas precisam acompanhar o alimento para atuar na digestão. Horário, dose, distribuição e adesão devem ser conferidos, além de estado nutricional e outras causas de sintomas persistentes. Esteatorreia não prova falha definitiva da reposição nem indica nutrição parenteral ou cirurgia isoladamente. Se a resposta continuar insuficiente após uso correto, há outras medidas e diferenciais a investigar.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirpanc-26",
+    "t": "cirpanc",
+    "q": "Homem de 46 anos tem pancreatite crônica calcificante e dor que exige internações repetidas. A imagem mostra ducto principal dilatado com cálculos obstrutivos, sem massa cefálica suspeita. Já houve tratamento clínico e avaliação nutricional. A equipe considera intervenção e discute a expectativa de melhora, riscos e experiência local. Qual princípio deve orientar essa decisão?",
+    "o": [
+      "Manter analgesia isolada até ocorrer insuficiência endócrina documentada.",
+      "Priorizar pancreatectomia total quando houver cálculos em mais de um segmento.",
+      "Correlacionar obstrução e sintomas para escolher descompressão endoscópica ou cirúrgica.",
+      "Usar a intensidade da elevação da lipase para escolher o tipo de ressecção."
+    ],
+    "a": 2,
+    "why": "Anatomia ductal, padrão de doença, duração da dor, tentativas anteriores e condição clínica orientam intervenção. Procedimentos endoscópicos ou cirurgia são selecionados conforme o caso, sem promessa de eliminar toda dor. Lipase pode ser pouco expressiva na doença crônica e não determina operação. Ressecção total não decorre da contagem de cálculos. Falência endócrina não é pré-requisito para tratar dor refratária.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirpanc-27",
+    "t": "cirpanc",
+    "q": "Homem de 60 anos, com pancreatite crônica, perda ponderal e insuficiência exócrina, usa insulina por diabetes. Após redução da ingestão alimentar, passa a ter hipoglicemias, algumas com poucos sintomas de alerta. A função renal está estável. Qual interpretação deve orientar a revisão do plano terapêutico?",
+    "o": [
+      "A insuficiência exócrina protege contra variações glicêmicas relacionadas às refeições.",
+      "A presença de hipoglicemia torna improvável diabetes associado à doença pancreática.",
+      "Perda de contrarregulação e ingestão irregular aumentam o risco de hipoglicemia.",
+      "A dose pode ser mantida, pois a glicemia depende principalmente da lipase sérica."
+    ],
+    "a": 2,
+    "why": "No diabetes pancreatogênico, perda de secreção de insulina e comprometimento de glucagon, associados a má absorção e alimentação variável, podem tornar o controle instável. É preciso individualizar insulina, nutrição e educação sobre hipoglicemia. Hipoglicemia não exclui a origem pancreática. A função exócrina deve continuar acompanhada e a lipase não orienta a dose de insulina.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirpanc-28",
+    "t": "cirpanc",
+    "q": "Homem de 69 anos tem icterícia obstrutiva e massa na cabeça pancreática. O CA 19-9 está elevado durante a colestase. A tomografia inicial foi sem protocolo pancreático e não permite avaliar bem o contato vascular; a pesquisa de doença à distância também está incompleta. Não há colangite. Qual etapa é mais adequada antes de definir intenção e sequência do tratamento?",
+    "o": [
+      "Iniciar quimioterapia paliativa com base no nível isolado do marcador.",
+      "Completar estadiamento anatômico e avaliação multidisciplinar.",
+      "Indicar duodenopancreatectomia pela associação de massa e marcador elevado.",
+      "Indicar drenagem biliar e classificar o tumor como irressecável."
+    ],
+    "a": 1,
+    "why": "O marcador não define ressecabilidade, metástase ou intenção paliativa e pode ser influenciado pela obstrução. Imagem adequada, estadiamento e condição clínica são essenciais à decisão. Drenagem pré-operatória não é automática na ausência de indicação específica, como colangite ou necessidade de adiar o tratamento definitivo. Massa na cabeça também não garante possibilidade de cirurgia curativa.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirpanc-29",
+    "t": "cirpanc",
+    "q": "Mulher de 58 anos tem cisto pancreático incidental com provável natureza mucinosa. Está assintomática, sem icterícia, e o primeiro exame não descreve nódulo mural ou dilatação importante do ducto principal. A relação ductal e o subtipo ainda não estão esclarecidos. A paciente é clinicamente apta e pergunta se já deve operar. Qual planejamento é mais apropriado?",
+    "o": [
+      "Caracterizar subtipo e sinais de risco para decidir vigilância ou ressecção.",
+      "Indicar drenagem endoscópica para reduzir o diâmetro e o risco de malignidade.",
+      "Indicar ressecção pelo diagnóstico presumido de lesão mucinosa, sem outros dados.",
+      "Encerrar acompanhamento porque a ausência de dor indica comportamento benigno."
+    ],
+    "a": 0,
+    "why": "Lesões mucinosas têm riscos distintos conforme subtipo, ducto envolvido, nódulos, diâmetro, evolução e outros fatores. Sem essa caracterização, não é apropriado indicar cirurgia ou alta indistintamente. Ausência de sintomas não exclui risco, e drenagem não é estratégia de redução de risco oncológico dessas neoplasias. A decisão considera ainda idade, preferências e risco operatório.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirpanc-30",
+    "t": "cirpanc",
+    "q": "Homem de 65 anos está no nono dia após duodenopancreatectomia. Apresentava débito do dreno com amilase elevada e, agora, surge sangue no dreno, acompanhado de taquicardia e queda da hemoglobina. Após suporte inicial recupera a pressão, mas o sangramento reaparece. Não há hemorragia evidente na ferida. Qual conduta deve ser priorizada?",
+    "o": [
+      "Administrar antibiótico e postergar estudo vascular até resolver a fístula.",
+      "Retirar o dreno e observar se o sangramento cessa com compressão da ferida.",
+      "Acionar a equipe e investigar fonte arterial para controle urgente do sangramento.",
+      "Ajustar a dieta e repetir amilase antes de investigar o débito sanguinolento."
+    ],
+    "a": 2,
+    "why": "Sangramento tardio, mesmo inicialmente pequeno, na presença de fístula pode anunciar erosão arterial ou pseudoaneurisma. Suporte e definição rápida do controle, frequentemente endovascular se houver estabilidade e recursos, têm prioridade. Retirada do dreno e espera por marcadores não tratam a causa. Controle da infecção e da fístula também importa, mas não deve adiar a abordagem da hemorragia.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirher-17",
+    "t": "cirher",
+    "q": "Homem de 35 anos tem hérnia que se projeta em direção ao escroto durante esforço. Na visão posterior, o cirurgião identifica o colo do saco lateral aos vasos epigástricos inferiores, atravessando o anel profundo. Não há defeito abaixo do ligamento inguinal. A extensão escrotal chamou atenção, mas a equipe deseja classificar pela referência anatômica mais confiável. Qual é o diagnóstico?",
+    "o": [
+      "Hérnia inguinal indireta.",
+      "Hérnia de Spiegel.",
+      "Hérnia inguinal direta.",
+      "Hérnia femoral."
+    ],
+    "a": 0,
+    "why": "A passagem pelo anel profundo lateralmente aos vasos define a hérnia indireta. Extensão escrotal pode acompanhá-la, mas não deve substituir a relação vascular na classificação. A direta é medial aos vasos; a femoral utiliza o canal abaixo do ligamento inguinal; Spiegel decorre de defeito na parede junto à linha semilunar. Nenhuma dessas topografias foi encontrada na exploração descrita.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirher-18",
+    "t": "cirher",
+    "q": "Mulher de 77 anos apresenta pequena massa dolorosa na virilha há quatro horas, acompanhada de náusea. O exame localiza o abaulamento abaixo do ligamento inguinal, e o ultrassom o situa medialmente à veia femoral, com conteúdo intestinal. Não há diagnóstico prévio de hérnia. A equipe deve avaliar perfusão do conteúdo e definir urgência. Qual é a hipótese anatômica mais provável?",
+    "o": [
+      "Hérnia inguinal direta.",
+      "Hérnia obturadora.",
+      "Hérnia inguinal indireta.",
+      "Hérnia femoral."
+    ],
+    "a": 3,
+    "why": "O canal femoral está abaixo do ligamento inguinal e medial à veia femoral, correspondendo ao defeito descrito. As hérnias inguinais ficam acima do ligamento, diferenciando-se pela relação com os epigástricos. A obturadora é mais profunda e não ocupa o canal demonstrado. Pequena dimensão não tranquiliza quanto à viabilidade, pois o colo femoral pode comprometer a alça; sintomas e perfusão determinam a urgência.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirher-19",
+    "t": "cirher",
+    "q": "Durante reparo anterior de hérnia inguinal, o residente chama o ligamento inguinal de parede posterior do canal. O preceptor pede a distinção entre parede posterior e inferior antes de continuar a dissecção, para evitar confusão entre o defeito da fáscia e as referências do canal. Qual par anatômico descreve melhor essas duas paredes, respectivamente?",
+    "o": [
+      "Tendão conjunto e aponeurose do oblíquo externo.",
+      "Fáscia transversal e ligamento inguinal.",
+      "Ligamento inguinal e fáscia transversal.",
+      "Aponeurose do oblíquo externo e músculo reto."
+    ],
+    "a": 1,
+    "why": "A parede posterior é formada principalmente pela fáscia transversal, reforçada medialmente pelo tendão conjunto; a inferior relaciona-se ao ligamento inguinal, com contribuição lacunar medial. O oblíquo externo participa sobretudo da parede anterior. Inverter os planos altera a compreensão do defeito direto e da reconstrução. Usar os termos posterior e inferior evita a ambiguidade do uso informal de assoalho do canal.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirher-20",
+    "t": "cirher",
+    "q": "Homem de 55 anos tem abaulamento e dor em virilha previamente operada por Lichtenstein. A ultrassonografia confirma recidiva redutível; não há coleção ou sinal de infecção da tela. Ele deseja reparo, e a equipe consegue revisar o relatório da primeira cirurgia. Qual estratégia de acesso tende a oferecer um plano menos cicatricial para tratar o defeito?",
+    "o": [
+      "Abordagem posterior pré-peritoneal, por equipe com experiência.",
+      "Abordagem anterior tecidual, sem considerar a posição da tela prévia.",
+      "Abordagem cutânea limitada, sem nova exposição do defeito fascial.",
+      "Abordagem anterior pelo mesmo plano, com retirada preventiva da tela."
+    ],
+    "a": 0,
+    "why": "Conhecer o plano anterior operado permite preferir uma via posterior ainda não dissecada na recidiva, se factível. A cicatriz não é motivo para repetir automaticamente o acesso; retirada de tela íntegra também não é rotina. Exposição limitada à pele não trata defeito fascial. Escolhas alternativas podem ser necessárias conforme anestesia, recursos e operações prévias, mas devem ser justificadas pelo contexto, não impostas sem revisar a anatomia.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirher-21",
+    "t": "cirher",
+    "q": "Homem de 70 anos tem hérnia inguinal redutível que provoca apenas desconforto após longas caminhadas. Exame não sugere hérnia femoral e não houve encarceramento. Ele cuida da esposa e prefere adiar uma operação, mas mora próximo a serviço de urgência e compreende orientações. Qual aconselhamento equilibra melhor o risco atual e a possibilidade de mudança do quadro?",
+    "o": [
+      "Indicar reparo urgente antes de discutir preferências e condições de cuidado.",
+      "Discutir observação vigilante e reparo eletivo, com retorno por piora ou sinais de complicação.",
+      "Adiar qualquer acompanhamento até surgir obstrução que comprove necessidade de operar.",
+      "Programar redução forçada diária para manter a hérnia redutível durante a espera."
+    ],
+    "a": 1,
+    "why": "Observação vigilante é opção para homens selecionados com sintomas mínimos, desde que haja orientação sobre dor crescente, irredutibilidade, vômitos e necessidade de reavaliação. Sintomas futuros podem motivar reparo antes de uma emergência. A decisão não elimina acompanhamento nem envolve manobras forçadas preventivas. O caso não impõe operação urgente, mas exige uma conversa real sobre benefícios e limitações de adiar o tratamento.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirher-22",
+    "t": "cirher",
+    "q": "Homem de 48 anos refere queimação ao vestir a roupa e dor ao caminhar seis meses após hernioplastia anterior. Não há febre, secreção ou abaulamento evidente. A dor interfere no trabalho, e a equipe cogita colocar nova tela por possível recidiva. Antes de propor reoperação, qual etapa é mais adequada?",
+    "o": [
+      "Encerrar seguimento porque a inspeção não demonstra protrusão herniária.",
+      "Programar nova tela no mesmo plano como teste terapêutico inicial.",
+      "Retirar a tela com base no caráter de queimação, sem investigação adicional.",
+      "Caracterizar a dor e investigar causas neurais, mecânicas e recidiva."
+    ],
+    "a": 3,
+    "why": "Dor persistente pode ser neuropática, relacionada à tela, musculoesquelética ou decorrente de recidiva, e requer avaliação dirigida. Queimação sugere componente neural, mas não demonstra qual estrutura foi afetada. Cirurgia sem diagnóstico pode piorar o problema; retirada ou acréscimo de tela não são testes iniciais. Ausência de abaulamento não invalida sintomas nem exclui recidiva oculta. A intensidade e o impacto funcional também orientam encaminhamento especializado.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirher-23",
+    "t": "cirher",
+    "q": "Homem de 52 anos, com hérnia inguinal bilateral, compara duas propostas de reparo posterior. Uma equipe utiliza TEP e outra TAPP; ambas planejam reforço pré-peritoneal com tela. Ele pergunta por que os nomes são diferentes se a área reparada é semelhante. Qual descrição distingue corretamente os acessos, sem confundir o plano da tela com a via de entrada?",
+    "o": [
+      "TAPP coloca tela sobre o oblíquo externo; TEP a coloca sob a pele.",
+      "TEP trata apenas o saco; TAPP reconstrói o defeito sem reforço protético.",
+      "TEP entra na cavidade peritoneal; TAPP desenvolve o espaço extraperitoneal.",
+      "TAPP entra na cavidade peritoneal; TEP desenvolve o espaço extraperitoneal."
+    ],
+    "a": 3,
+    "why": "As técnicas chegam ao espaço pré-peritoneal por vias diferentes: a TAPP atravessa a cavidade e abre o peritônio, enquanto a TEP desenvolve diretamente o espaço extraperitoneal. Ambas exigem reconhecimento anatômico e cobertura adequada do defeito. Não são reparos subcutâneos ou sobre o oblíquo externo. A simples ligadura do saco não descreve o objetivo do reparo laparoendoscópico adulto proposto.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirher-24",
+    "t": "cirher",
+    "q": "Mulher de 39 anos, após duas gestações, percebe elevação alongada da linha média quando levanta a cabeça deitada. O exame e a ultrassonografia mostram afastamento dos retos, sem orifício fascial localizado ou saco; não há dor aguda ou sinais obstrutivos. Ela teme que o intestino possa estar preso. Qual interpretação anatômica é mais adequada?",
+    "o": [
+      "Hérnia epigástrica, definida pelo aumento do abaulamento durante contração.",
+      "Hérnia umbilical encarcerada, apesar da ausência de anel e de sintomas agudos.",
+      "Diástase dos retos, sem mecanismo de encarceramento por esse afastamento isolado.",
+      "Hérnia incisional, mesmo sem cicatriz ou defeito fascial demonstrado."
+    ],
+    "a": 2,
+    "why": "A diástase é afastamento dos retos com alargamento da linha alba, não um orifício herniário localizado. Por isso, isoladamente, não produz o colo que encarceraria uma alça. Pode coexistir com hérnia verdadeira, que deve ser pesquisada conforme exame. Abaulamento durante contração não basta para classificar hérnia epigástrica ou umbilical. A ausência de cirurgia também torna incisional inadequada neste caso.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirher-25",
+    "t": "cirher",
+    "q": "Mulher de 86 anos, emagrecida e multípara, apresenta obstrução de delgado. Não há cirurgia prévia, massa abdominal ou abaulamento visível em virilha. A dor acompanha a face medial da coxa e piora com certos movimentos do quadril. A equipe solicita tomografia para pesquisar uma hérnia profunda da pelve. Qual localização deve ser examinada com particular atenção?",
+    "o": [
+      "Linha semilunar abdominal.",
+      "Canal obturatório.",
+      "Triângulo lombar inferior.",
+      "Canal femoral superficial."
+    ],
+    "a": 1,
+    "why": "A combinação sugere hérnia obturadora, cuja profundidade explica a ausência de abaulamento e cuja relação neural pode gerar dor medial da coxa. O sinal não é obrigatório nem específico isoladamente. Hérnia femoral tem outra relação com ligamento e vasos; Spiegel e hérnia lombar são defeitos da parede em regiões diferentes. A tomografia deve avaliar a causa e sinais de sofrimento, sem reduzir a investigação apenas à presença ou ausência de massa externa.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirher-26",
+    "t": "cirher",
+    "q": "Homem de 63 anos chega com pequena hérnia ventral muito dolorosa, com pele alterada, embora ainda elimine gases e tenha evacuado poucas horas antes. Na avaliação cirúrgica, cogita-se aprisionamento apenas parcial da parede do delgado. A família interpreta a evacuação como prova de que não há risco para o intestino. Qual explicação anatômica é mais correta?",
+    "o": [
+      "A isquemia exige aprisionamento de toda a circunferência intestinal.",
+      "A evacuação garante perfusão da alça que atravessa o anel herniário.",
+      "A ausência de distensão afasta lesão intestinal no saco doloroso.",
+      "A luz pode permanecer pérvia enquanto parte da parede sofre isquemia."
+    ],
+    "a": 3,
+    "why": "Na hérnia de Richter, parte da circunferência pode ficar comprimida e necrosar sem impedir completamente o trânsito. Além disso, evacuação recente pode refletir conteúdo distal. Fluxo luminal e perfusão não são equivalentes. Pele alterada e dor local precisam ser valorizadas, mesmo sem distensão. Os outros argumentos poderiam atrasar reconhecimento de sofrimento intestinal em uma hérnia aparentemente pequena.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirher-27",
+    "t": "cirher",
+    "q": "Homem de 58 anos tem hérnia incisional dolorosa ao esforço, mas redutível, sem obstrução. Fuma, perdeu massa muscular e apresenta ascite ainda pouco controlada por doença hepática. A tomografia já mapeou o defeito e não demonstra complicação aguda. Antes de definir o reparo eletivo, qual medida tem maior impacto na qualidade do planejamento?",
+    "o": [
+      "Programar operação imediata para evitar qualquer período de observação.",
+      "Escolher uma tela mais espessa e manter as condições clínicas atuais.",
+      "Adiar avaliação cirúrgica até que o defeito deixe de ser redutível.",
+      "Otimizar nutrição, tabagismo e ascite, reavaliando risco e viabilidade do reparo."
+    ],
+    "a": 3,
+    "why": "Fatores que prejudicam cicatrização ou elevam pressão abdominal influenciam infecção, complicações e recidiva. Otimização clínica e decisão compartilhada são particularmente importantes com ascite e perda muscular. Material protético não compensa isoladamente esses riscos. Não há indicação de urgência no quadro descrito, mas a otimização não deve se transformar em espera por encarceramento nem em impedimento para tratar eventual emergência.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirher-28",
+    "t": "cirher",
+    "q": "Mulher de 75 anos tem hérnia femoral presa desde o dia anterior. A dor tornou-se contínua, surgiram vômitos e a região está quente e avermelhada. Apresenta taquicardia, febre e sinais de desidratação; o abdome ainda não tem rigidez difusa. Qual estratégia inicial responde melhor ao risco de comprometimento vascular do conteúdo?",
+    "o": [
+      "Observação até surgirem sinais de peritonite generalizada.",
+      "Ressuscitar e organizar tratamento cirúrgico urgente.",
+      "Antibiótico oral e retorno após desaparecimento da hiperemia.",
+      "Sedação profunda e redução vigorosa para adiar a intervenção."
+    ],
+    "a": 1,
+    "why": "A suspeita de estrangulamento decorre da evolução da dor, das alterações locais e dos sinais sistêmicos, sem exigir peritonite difusa. Suporte e preparação operatória devem ocorrer em paralelo. A tentativa forçada de redução pode ocultar alça isquêmica ou causar redução em bloco. Antibiótico não desfaz a compressão, e aguardar peritonite pode significar reconhecer o problema apenas após necrose ou perfuração.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirher-29",
+    "t": "cirher",
+    "q": "Homem de 56 anos teve hérnia inguinal irredutível reduzida durante atendimento. O abaulamento desapareceu, mas persistem dor intensa, vômitos e distensão; não houve alívio sustentado. A equipe considera alta porque a massa não é mais palpável. Qual interpretação deve orientar a reavaliação antes dessa decisão?",
+    "o": [
+      "Pesquisar redução em bloco ou comprometimento intestinal persistente.",
+      "Classificar o episódio como resolvido pela ausência de massa externa.",
+      "Presumir íleo medicamentoso sem avaliar a hipótese mecânica residual.",
+      "Atribuir a dor à manipulação e dispensar novo exame abdominal."
+    ],
+    "a": 0,
+    "why": "Redução aparente sem melhora exige excluir alça ainda encarcerada no saco reduzido em bloco, isquemia ou outra lesão. O desaparecimento da massa é apenas parte da avaliação e não comprova liberação nem perfusão. Dor e vômitos persistentes não devem ser atribuídos de imediato à manobra ou aos medicamentos. Observação, exame e investigação ou exploração conforme o quadro previnem uma alta insegura.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirher-30",
+    "t": "cirher",
+    "q": "Homem de 64 anos é operado por hérnia estrangulada e necessita de ressecção de curto segmento intestinal. Não houve perfuração nem derramamento visível, a anastomose está adequada e ele recuperou estabilidade. A equipe debate reforço da parede e um residente afirma que a ressecção, por si só, proíbe tela. Qual análise é mais apropriada?",
+    "o": [
+      "Avaliar contaminação e contexto, pois ressecção sem derramamento não proíbe tela sintética.",
+      "Escolher tela biológica como requisito decorrente de qualquer ressecção intestinal.",
+      "Realizar reparo tecidual porque o nome da operação define campo infectado.",
+      "Definir o material apenas pela medida externa do abaulamento pré-operatório."
+    ],
+    "a": 0,
+    "why": "A classificação do campo depende de perfuração, conteúdo, infecção e execução da operação, não apenas da palavra ressecção. Em campo limpo-contaminado sem derramamento grosseiro, tela sintética pode ser considerada. Isso não torna seu emprego obrigatório nem extrapola para peritonite fecal. Material biológico não possui superioridade universal. Defeito, controle do foco, condições clínicas e experiência completam a decisão.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirtabd-18",
+    "t": "cirtabd",
+    "q": "Homem de 35 anos chega após colisão com PA 80/46 mmHg e FAST abdominal positivo. Após transfusão inicial, a sistólica sobe brevemente para 110 mmHg, mas volta a cair, com piora da perfusão. Não há fonte torácica ou externa predominante. O tomógrafo fica em outro setor, e a equipe cirúrgica está pronta. Como essa resposta deve modificar o próximo passo?",
+    "o": [
+      "Interpretar como ausência de sangramento se a hemoglobina inicial não cair.",
+      "Interpretar como choque não hemorrágico e reduzir a investigação abdominal.",
+      "Interpretar como estabilidade estabelecida e completar tomografia distante antes de agir.",
+      "Interpretar como resposta transitória e priorizar controle urgente da fonte abdominal."
+    ],
+    "a": 3,
+    "why": "A resposta breve seguida de deterioração sugere hemorragia ainda não controlada. Não constitui autorização para deslocamento demorado ou para substituir hemostasia por mais reposição. FAST positivo orienta a provável cavidade, embora não identifique o órgão. Hemoglobina inicial pode não refletir a perda e não reclassifica o paciente. Ressuscitação e controle da fonte devem ocorrer juntos, com revisão contínua de lesões associadas.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirtabd-19",
+    "t": "cirtabd",
+    "q": "Mulher de 46 anos chega após colisão lateral, com PA 78/44 mmHg e FC 134 bpm. O FAST inicial não mostra líquido peritoneal ou pericárdico. Há deformidade pélvica, uma fratura fechada de fêmur e discreta redução do murmúrio no hemitórax direito. Não existe hemorragia externa visível. Qual orientação deve organizar a avaliação e o tratamento nas próximas etapas?",
+    "o": [
+      "Buscar fontes torácica, pélvica e em membros, com ressuscitação e estabilização simultâneas.",
+      "Restringir a busca ao peritônio, repetindo FAST até localizar líquido abdominal.",
+      "Aguardar queda da hemoglobina para decidir se existe perda sanguínea relevante.",
+      "Classificar como choque neurogênico pela ausência de líquido livre abdominal."
+    ],
+    "a": 0,
+    "why": "FAST negativo não exclui hemorragia retroperitoneal, pélvica, torácica ou em membros e pode ser negativo no início de sangramento abdominal. O mecanismo e o exame direcionam busca simultânea e medidas disponíveis de controle. Choque neurogênico não é diagnosticado por esse exame. Esperar alteração laboratorial ou insistir em uma única cavidade pode atrasar tratamento de fontes relevantes já sugeridas.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirtabd-20",
+    "t": "cirtabd",
+    "q": "Homem de 26 anos sofreu colisão com desaceleração e apresenta equimose transversal pelo cinto. Está estável após atendimento inicial, mas a dor abdominal aumenta nas horas seguintes. A tomografia mostra líquido livre sem lesão evidente de fígado ou baço, discreto espessamento de alças e borramento mesentérico. Não há ar livre inequívoco. Qual hipótese deve orientar observação e investigação cirúrgica dirigidas?",
+    "o": [
+      "Lesão esplênica de alto grau não demonstrada, independentemente da evolução.",
+      "Íleo funcional pós-trauma, excluindo necessidade de reavaliação visceral.",
+      "Lesão intestinal ou mesentérica com manifestação inicial pouco específica.",
+      "Contusão de parede isolada, explicando também o líquido intraperitoneal."
+    ],
+    "a": 2,
+    "why": "Marca do cinto, piora da dor e líquido sem fonte sólida aumentam suspeita de lesão intestinal ou mesentérica. A ausência de ar livre não exclui lesão precoce. O caso exige exame seriado e decisão sobre nova imagem ou exploração conforme trajetória clínica, sem impor laparotomia apenas por um sinal isolado. Contusão de parede e íleo não explicam com segurança o conjunto, e não se deve presumir lesão esplênica ausente na imagem.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirtabd-21",
+    "t": "cirtabd",
+    "q": "Mulher de 39 anos tem lesão esplênica de alto grau após queda. Mantém perfusão adequada e não apresenta peritonite ou necessidade crescente de sangue. A tomografia não mostra outra lesão que exija operação. O centro oferece vigilância intensiva, controle laboratorial, radiologia intervencionista e cirurgia de resgate. A equipe discute preservação do órgão. Qual interpretação é mais adequada?",
+    "o": [
+      "O alto grau anatômico determina esplenectomia, mesmo com perfusão preservada.",
+      "A pressão normal permite observação sem revisão seriada de hemoglobina e exame.",
+      "A decisão de preservar o baço deve ser mantida mesmo se aumentar a necessidade transfusional.",
+      "Considerar preservação com vigilância e eventual embolização."
+    ],
+    "a": 3,
+    "why": "Tratamento não operatório é uma estratégia ativa de seleção, monitorização e resgate. Estabilidade, lesões associadas, achados vasculares e estrutura têm importância, não apenas a graduação. Alto grau pode aumentar a necessidade de intervenção associada, sem impor esplenectomia isoladamente. Deterioração, aumento transfusional ou peritonite obrigam reavaliar; a preservação do órgão não deve prevalecer sobre controle hemorrágico e segurança.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirtabd-22",
+    "t": "cirtabd",
+    "q": "Homem de 47 anos está monitorizado por trauma esplênico. A pressão e a diurese permanecem adequadas, mas a avaliação de controle identifica pseudoaneurisma intraesplênico. Não há peritonite, nem outra lesão com indicação de laparotomia, e o centro dispõe de radiologia intervencionista e cirurgia. Qual medida pode reduzir o risco de sangramento mantendo a estratégia de preservação?",
+    "o": [
+      "Realizar esplenectomia por laparotomia apenas pela existência de pseudoaneurisma.",
+      "Esperar hipotensão sustentada antes de avaliar tratamento da lesão vascular.",
+      "Manter repouso domiciliar sem seguimento porque a pressão está normal.",
+      "Discutir angioembolização conforme anatomia e avaliação especializada."
+    ],
+    "a": 3,
+    "why": "Lesões vasculares podem sangrar tardiamente mesmo com fisiologia inicialmente preservada. Embolização é uma opção de controle em paciente selecionado com estrutura adequada e faz parte, quando indicada, do tratamento não operatório. Pressão normal não torna o achado irrelevante. Por outro lado, pseudoaneurisma não obriga automaticamente esplenectomia em todo contexto. A decisão integra anatomia, evolução, recursos e capacidade de resgate.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirtabd-23",
+    "t": "cirtabd",
+    "q": "Durante laparotomia por esmagamento abdominal, há laceração hepática profunda e hemorragia posterior importante. A equipe comprime o fígado e oclui corretamente o pedículo com Pringle; o fluxo de entrada diminui, mas permanece sangramento escuro volumoso junto à região retro-hepática. Qual lesão deve ser especialmente procurada no planejamento do controle vascular, sem mobilização precipitada que agrave a perda?",
+    "o": [
+      "Lesão de veias hepáticas ou da cava retro-hepática.",
+      "Lesão isolada da veia porta dentro do ligamento hepatoduodenal.",
+      "Lesão do ducto hepático comum como fonte da hemorragia venosa.",
+      "Lesão isolada da artéria hepática comum antes da bifurcação."
+    ],
+    "a": 0,
+    "why": "Pringle controla influxo arterial e portal, não o retorno pelas veias hepáticas e cava retro-hepática. A persistência posterior sustenta suspeita dessas estruturas, exigindo estratégia apropriada e equipe experiente. É necessário conferir a efetividade da manobra e outras fontes, mas lesão biliar não explica hemorragia venosa volumosa. Mobilização não planejada pode desfazer tamponamento e agravar uma lesão de controle difícil.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirtabd-24",
+    "t": "cirtabd",
+    "q": "Homem de 50 anos foi tratado sem operação por trauma hepático e retorna após alguns dias com melena, dor no hipocôndrio direito e icterícia discreta. Está estabilizado após suporte inicial. A endoscopia não mostra úlcera ou variz sangrante, mas observa sangue junto à papila duodenal. Qual mecanismo deve ser investigado como explicação prioritária do sangramento?",
+    "o": [
+      "Comunicação de pseudoaneurisma esplênico com o ducto pancreático.",
+      "Hipertensão portal por trombose isolada da veia esplênica.",
+      "Comunicação de lesão vascular hepática com a via biliar.",
+      "Sangramento de erosão gástrica por resposta ao estresse."
+    ],
+    "a": 2,
+    "why": "Sangue pela papila após lesão hepática, com manifestações hepatobiliares, sugere hemobilia. A investigação deve procurar comunicação vascular, como pseudoaneurisma, e definir controle conforme estabilidade e recursos. Lesão esplênica com comunicação pancreática pode causar hemossuco pancreático, outro diagnóstico, mas não integra melhor o contexto hepático. Hipertensão segmentar e erosão gástrica não explicam diretamente o achado papilar.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirtabd-25",
+    "t": "cirtabd",
+    "q": "Homem de 33 anos com fratura de pelve foi estabilizado e será levado para tratamento ortopédico. A equipe deseja sondagem vesical para acompanhar diurese, mas identifica sangue no meato e hematoma perineal. Não houve avaliação uretral nem tentativa prévia de cateterização. O paciente está sem globo vesical doloroso importante e há apoio urológico. Qual sequência é mais segura?",
+    "o": [
+      "Repetir tentativas com cateter mais rígido se houver resistência inicial.",
+      "Aguardar insuficiência renal para decidir se a drenagem é necessária.",
+      "Avaliar a uretra por método dirigido e definir drenagem com a equipe especializada.",
+      "Tentar sondagem cega com cateter de menor calibre antes da investigação."
+    ],
+    "a": 2,
+    "why": "Os sinais exigem suspeita de trauma uretral e avaliação antes de instrumentação cega. Uretrografia retrógrada é a investigação habitual nesse cenário masculino, e a drenagem posterior depende do achado e da urgência. Menor calibre ou rigidez não torna tentativas cegas repetidas seguras; elas podem agravar a lesão. A necessidade de monitorização não elimina esse cuidado, nem é apropriado esperar lesão renal para organizar a drenagem.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirtabd-26",
+    "t": "cirtabd",
+    "q": "Mulher de 25 anos sofreu ferimento por arma branca na transição toracoabdominal esquerda. Está estável, sem peritonite, e a radiografia inicial é normal. A tomografia não demonstra lesão sólida, mas não consegue excluir pequeno defeito diafragmático pelo trajeto. O serviço tem equipe experiente e possibilidade de exploração minimamente invasiva. Qual preocupação deve orientar uma investigação dirigida em vez de alta baseada apenas nas imagens iniciais?",
+    "o": [
+      "Lesão diafragmática pequena, com risco de herniação posterior.",
+      "Fratura instável da pelve, mesmo sem achados ósseos ou locais.",
+      "Ruptura aórtica abdominal, comprovada pela radiografia normal.",
+      "Lesão uretral oculta, pelo mecanismo de penetração na região."
+    ],
+    "a": 0,
+    "why": "Pequenos ferimentos diafragmáticos, especialmente à esquerda, podem passar despercebidos e manifestar-se posteriormente por herniação. Trajetória, exame e qualidade da imagem orientam a escolha de laparoscopia ou outra investigação apropriada; não se deve equiparar radiografia normal a diafragma íntegro. As demais hipóteses não são dirigidas pelos dados fornecidos, e nenhum exame normal comprova lesão vascular.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirtabd-27",
+    "t": "cirtabd",
+    "q": "Homem de 36 anos é explorado após trauma abdominal. A equipe encontra perfuração jejunal em segmento com avulsão mesentérica, ausência de pulsação nos vasos correspondentes e coloração que não melhora após medidas iniciais. Há contaminação localizada, enquanto a ressuscitação continua. Qual princípio deve orientar o reparo, antes de decidir se a reconstrução será imediata ou em outro tempo?",
+    "o": [
+      "Suturar o orifício e manter a alça, usando lavagem como tratamento da isquemia.",
+      "Realizar derivação colônica, preservando o segmento jejunal sem perfusão.",
+      "Manter o segmento e adiar controle da contaminação até a próxima operação.",
+      "Ressecar o segmento inviável e ajustar a reconstrução à fisiologia e à contaminação."
+    ],
+    "a": 3,
+    "why": "Uma sutura não corrige a perda de suprimento do segmento. Tecido inviável precisa ser retirado para controlar contaminação e evitar necrose persistente. A escolha entre reconstrução imediata, anastomose diferida ou outra estratégia depende de fisiologia, anatomia e carga de contaminação. Derivação colônica não resolve uma alça jejunal desvitalizada. Controle de danos permite adiar reconstrução, mas não significa abandonar o foco tratável.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirtabd-28",
+    "t": "cirtabd",
+    "q": "Homem de 40 anos apresenta choque após trauma de alta energia e suspeita de fratura instável da pelve. A equipe colocou um lençol na cintura, ao nível das cristas ilíacas, mas a estabilização parece inadequada. A transfusão está em curso e será organizado controle hemorrágico. Qual correção técnica deve ser feita antes de considerar que o dispositivo falhou?",
+    "o": [
+      "Mover o lençol para o terço distal das coxas e aplicar tração.",
+      "Retirar o dispositivo para repetir manobras amplas de abertura pélvica.",
+      "Apertar a compressão sobre as cristas para reduzir o volume abdominal.",
+      "Reposicionar a compressão na altura dos trocânteres maiores."
+    ],
+    "a": 3,
+    "why": "O posicionamento adequado da cinta ou lençol é ao nível dos trocânteres maiores, permitindo melhor estabilização do anel pélvico. Compressão na cintura pode ser ineficaz. Tração distal não substitui essa manobra, e abrir repetidamente a pelve pode romper coágulos. O dispositivo é uma medida temporária e não dispensa ressuscitação, investigação das demais fontes e hemostasia definitiva conforme a evolução.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirtabd-29",
+    "t": "cirtabd",
+    "q": "Mulher de 29 anos está em cirurgia por múltiplas lesões abdominais. A fonte arterial principal foi controlada, mas há sangramento difuso, temperatura de 34 °C e acidose crescente. Resta uma reconstrução intestinal complexa, e o edema aumenta a dificuldade de fechar a parede sem tensão. Qual planejamento melhor responde à trajetória fisiológica, sem perder o controle das lesões já identificadas?",
+    "o": [
+      "Completar toda a reconstrução agora, usando pressão arterial isolada como sinal de recuperação.",
+      "Conter contaminação, realizar fechamento temporário e planejar reconstrução após ressuscitação.",
+      "Fechar a parede sob tensão para reduzir a perda de calor e dispensar reabordagem.",
+      "Interromper o procedimento deixando lesões abertas para corrigir primeiro a coagulação na UTI."
+    ],
+    "a": 1,
+    "why": "O objetivo do controle de danos é terminar medidas rápidas de hemostasia e contenção, proteger temporariamente e corrigir a fisiologia antes da reconstrução definitiva. A pressão isolada pode mascarar deterioração metabólica e coagulopatia. Fechamento sob tensão pode contribuir para hipertensão abdominal. Transferir sem controle viável de sangramento ou contaminação não é o mesmo que abreviar com estratégia organizada e reoperação planejada.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirtabd-30",
+    "t": "cirtabd",
+    "q": "Homem de 48 anos, após trauma e reposição volumosa, evolui com oligúria e aumento das pressões do ventilador. O abdome está distendido, mas o exame é limitado pela sedação. A equipe ainda não mediu a pressão intra-abdominal nem conferiu integralmente a sonda urinária e o sistema respiratório. Qual próxima abordagem evita tanto reposição automática quanto um diagnóstico baseado apenas na palpação?",
+    "o": [
+      "Repetir expansão venosa até a diurese subir, sem avaliação adicional.",
+      "Medir pressão intra-abdominal corretamente e investigar causas concorrentes da disfunção.",
+      "Atribuir a ventilação difícil à sedação e aguardar o despertar para examinar.",
+      "Diagnosticar síndrome compartimental pela distensão e iniciar pró-cinético."
+    ],
+    "a": 1,
+    "why": "Distensão e disfunções sugerem hipertensão abdominal, mas precisam de medida adequada e correlação clínica, além de avaliação de obstrução urinária, choque, pneumotórax e outras causas. Oligúria não significa necessariamente falta de volume, e expansão indiscriminada pode agravar edema. Palpação é insuficiente para quantificar pressão. Sedação não explica automaticamente deterioração objetiva nem justifica adiar investigação no paciente crítico.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirttor-13",
+    "t": "cirttor",
+    "q": "Homem de 43 anos, traumatizado e ventilado com pressão positiva, apresenta queda abrupta da pressão e piora da ventilação. O murmúrio está muito reduzido de um lado, e a equipe considera alta a probabilidade de hipertensão pleural. Ainda não há desvio traqueal demonstrável e não é possível obter radiografia sem atraso. Qual princípio deve orientar a resposta inicial?",
+    "o": [
+      "Aguardar a combinação completa de sinais clássicos antes de intervir.",
+      "Tratar a ameaça com descompressão imediata e reavaliar a resposta.",
+      "Elevar a pressão ventilatória e manter investigação radiográfica como primeira etapa.",
+      "Repetir expansão volêmica, deixando a abordagem pleural para depois da imagem."
+    ],
+    "a": 1,
+    "why": "Pneumotórax hipertensivo é diagnóstico clínico de fisiologia ameaçadora e pode ocorrer sem todos os sinais clássicos. Descompressão e drenagem por técnica apropriada não devem aguardar imagem em deterioração com alta suspeita. Pressão positiva adicional pode agravar o quadro. Fluidos podem ser necessários para lesões associadas, mas não corrigem a obstrução pleural. A resposta e a reavaliação de outras causas de choque continuam essenciais.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirttor-14",
+    "t": "cirttor",
+    "q": "Mulher de 38 anos tem politrauma com hemorragia em outro território e suspeita de pneumotórax hipertensivo. Está hipotensa e com ventilação bastante assimétrica, mas as veias cervicais não estão distendidas. A equipe considera se esse achado reduz a probabilidade da ameaça pleural a ponto de adiar a intervenção. Qual interpretação é mais adequada?",
+    "o": [
+      "Ausência de distensão jugular distingue choque hemorrágico de obstrutivo com segurança.",
+      "Veias cervicais pouco visíveis tornam necessária apenas reposição, sem reavaliar a pleura.",
+      "Ventilação assimétrica com jugulares planas exclui hipertensão pleural em paciente traumatizado.",
+      "Hipovolemia pode mascarar distensão jugular, sem afastar a causa obstrutiva."
+    ],
+    "a": 3,
+    "why": "Choque hemorrágico e obstrutivo podem coexistir, e baixo volume circulante pode impedir turgência jugular aparente. A decisão integra ventilação, perfusão e evolução; não depende da tríade completa. Ressuscitação hemorrágica é necessária quando indicada, mas não resolve a pressão pleural. Usar um sinal ausente para excluir uma ameaça fisiológica pode retardar controle de uma causa reversível.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirttor-15",
+    "t": "cirttor",
+    "q": "Homem de 22 anos apresenta facada precordial, choque e líquido pericárdico com repercussão ao ultrassom. Ainda tem pulso e há equipe cirúrgica pronta para tratamento. Um profissional sugere que aspirar o líquido seria suficiente para tratar definitivamente o trauma. Qual avaliação é mais apropriada sobre essa proposta, considerando sangue coagulado e possível lesão cardíaca ativa?",
+    "o": [
+      "Pericardiocentese confirma que não existe ferida cardíaca e permite observação.",
+      "Drenagem por punção pode ser ponte, mas a lesão pode exigir controle cirúrgico.",
+      "Punção isolada substitui o reparo porque o líquido não se acumula após aspiração.",
+      "A indicação de abordagem só surge quando aparecem todos os sinais de Beck."
+    ],
+    "a": 1,
+    "why": "Tamponamento traumático pode decorrer de ferida cardíaca que continua sangrando e requer reparo. Punção pode ser uma ponte em condições selecionadas, mas pode falhar com coágulos e não tratar a fonte. Com recursos disponíveis e choque, a estratégia deve priorizar controle definitivo apropriado. Não é necessário esperar todos os sinais clássicos, nem interpretar líquido drenado como prova de ausência de lesão.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirttor-16",
+    "t": "cirttor",
+    "q": "Mulher de 41 anos foi drenada após trauma com hemotórax. Saíram 900 mL inicialmente, mas ela continua hipotensa e necessita de hemocomponentes para manter perfusão. A imagem sugere sangue pleural residual; a equipe ainda confere se o dreno está pérvio e se há outra fonte de sangramento. O volume do frasco não atingiu o limiar clássico de um resumo. Qual interpretação é mais adequada?",
+    "o": [
+      "A indicação operatória deve aguardar o frasco atingir a marca numérica.",
+      "O débito abaixo do limiar garante que a fonte pleural não causa o choque.",
+      "A baixa drenagem favorece clampeamento para manter tamponamento pleural.",
+      "A instabilidade pode indicar operação mesmo sem atingir o limiar volumétrico."
+    ],
+    "a": 3,
+    "why": "Limiar de drenagem é referência, não substituto da fisiologia. Sangue retido ou dreno obstruído pode subestimar perda, e instabilidade persistente/transfusão justificam avaliação de controle operatório enquanto se procuram outras fontes. Clampear sem indicação pode prejudicar a drenagem e avaliação. O quadro não deve ser rotulado como estável apenas pelo número no coletor.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirttor-17",
+    "t": "cirttor",
+    "q": "Homem de 33 anos tem dreno pleural após trauma. O coletor passa a borbulhar continuamente, mas ele está estável e sem piora respiratória imediata. Uma conexão parece frouxa, e o curativo está parcialmente deslocado. Antes de atribuir a fuga a ruptura brônquica extensa, qual avaliação é mais apropriada para distinguir falha do sistema de problema intratorácico?",
+    "o": [
+      "Revisar conexões, orifícios, posição do dreno e integridade do sistema.",
+      "Administrar antibiótico porque o padrão confirma infecção da cavidade pleural.",
+      "Retirar o dreno porque o borbulhamento demonstra recuperação da ventilação.",
+      "Clampear por tempo prolongado para interromper as bolhas antes de examinar."
+    ],
+    "a": 0,
+    "why": "Entrada de ar por conexões, orifícios fora da pleura ou problemas de posição pode causar borbulhamento. Conferir o sistema e o paciente precede conclusão de lesão brônquica, sem ignorar instabilidade se surgir. Clampeamento sem controle pode precipitar tensão em fuga verdadeira. Bolhas não demonstram recuperação nem confirmam infecção; a investigação depende da evolução e dos achados após corrigir o sistema.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirttor-18",
+    "t": "cirttor",
+    "q": "Mulher de 26 anos apresenta pneumotórax após trauma fechado de alta energia. A drenagem foi realizada, o sistema foi testado e a posição intrapleural foi confirmada. Mesmo assim, mantém grande fuga de ar, enfisema subcutâneo e pulmão pouco expandido na imagem. A analgesia é adequada e não há coleção suficiente para explicar a falha. Qual investigação dirigida merece prioridade com a equipe especializada?",
+    "o": [
+      "Novos reposicionamentos do dreno, sem pesquisar outra fonte de fuga aérea.",
+      "Investigação inicial de pneumonia, aguardando culturas antes de rever a anatomia.",
+      "Observação de provável contusão, com nova imagem após reduzir a analgesia.",
+      "Avaliação da árvore traqueobrônquica, incluindo broncoscopia conforme estabilidade."
+    ],
+    "a": 3,
+    "why": "Persistência de fuga e não expansão após excluir falhas do sistema sustenta suspeita de lesão importante de via aérea. Broncoscopia pode definir anatomia e orientar tratamento, integrada à estabilidade e aos demais exames. Contusão não explica tão bem a comunicação aérea persistente. Infecção não está demonstrada nem justifica adiar avaliação anatômica. Reposicionar repetidamente um dreno adequado não substitui a busca da fonte.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirttor-19",
+    "t": "cirttor",
+    "q": "Homem de 50 anos está estável no terceiro dia após trauma torácico. Apesar de dreno inicialmente funcionante, a tomografia mostra coleção pleural sanguínea coagulada que impede expansão adequada. Não há hemorragia ativa volumosa, mas persistem dor e redução ventilatória. A equipe considera uma estratégia ativa para hemotórax retido. Qual objetivo melhor justifica evacuação dirigida, frequentemente por videotoracoscopia em contexto apropriado?",
+    "o": [
+      "Evitar avaliação da coleção porque ausência de choque exclui complicações.",
+      "Substituir a remoção do sangue por antibiótico profilático prolongado.",
+      "Facilitar expansão e reduzir risco de infecção e organização pleural.",
+      "Prolongar a permanência do dreno até que o coágulo seja absorvido sem vigilância."
+    ],
+    "a": 2,
+    "why": "Hemotórax retido pode dificultar expansão e favorecer empiema e organização/fibrose pleural. Em pacientes apropriados, evacuação precoce dirigida, frequentemente por videotoracoscopia, pode reduzir essas complicações. Estabilidade circulatória não elimina problema local. Antibiótico não remove coágulo, e manter dreno indefinidamente sem reavaliar anatomia não é uma estratégia suficiente.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirttor-20",
+    "t": "cirttor",
+    "q": "Mulher de 42 anos sofreu desaceleração importante, com fraturas associadas e dor torácica. Mantém pressão e oxigenação estáveis após avaliação inicial. A radiografia portátil não mostra mediastino claramente alargado, mas o mecanismo e as lesões mantêm preocupação com aorta torácica. Há condições seguras para exame seccional. Qual conclusão orienta melhor a investigação vascular?",
+    "o": [
+      "A investigação vascular depende de fratura de esterno confirmada antes da tomografia.",
+      "Radiografia sem alargamento não exclui lesão; angiotomografia pode ser indicada.",
+      "Radiografia sem alargamento exclui lesão aórtica e torna dispensável outro exame.",
+      "A investigação deve ser adiada até surgir hipotensão para aumentar o rendimento."
+    ],
+    "a": 1,
+    "why": "Radiografia tem limitações e não exclui lesão aórtica quando a probabilidade clínica permanece relevante. Em paciente que tolera, angiotomografia caracteriza a aorta e orienta conduta. Fratura esternal não é pré-requisito, e esperar choque pode perder oportunidade de diagnóstico antes da deterioração. A indicação deriva do conjunto de mecanismo e achados, não de um único sinal radiográfico.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirttor-21",
+    "t": "cirttor",
+    "q": "Homem de 36 anos tem lesão aórtica identificada em angiotomografia após desaceleração. O laudo descreve pequena lesão intimal, sem extravasamento, pseudoaneurisma ou repercussão circulatória. Há outras lesões traumáticas em tratamento, e o especialista revê a qualidade do exame e a classificação. Qual princípio evita indicar a mesma abordagem para toda alteração traumática da parede aórtica?",
+    "o": [
+      "Indicar reparo imediato por qualquer irregularidade intimal, sem outra análise.",
+      "Definir a conduta apenas pelo mediastino da radiografia inicial.",
+      "Estratificar morfologia e risco para decidir reparo ou vigilância selecionada.",
+      "Liberar sem seguimento porque a pressão permaneceu preservada."
+    ],
+    "a": 2,
+    "why": "Lesões aórticas traumáticas variam em extensão e risco. Alterações mínimas selecionadas podem ser acompanhadas com avaliação especializada, controle fisiológico quando apropriado e imagem de seguimento, enquanto outras demandam reparo. Pressão normal não autoriza alta sem plano. A classificação anatômica e lesões associadas são mais informativas que a largura mediastinal isolada para definir prioridade e modalidade.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirttor-22",
+    "t": "cirttor",
+    "q": "Mulher de 64 anos tem contusão pulmonar após trauma e passa a respirar com maior esforço. A dor está mal controlada e houve grande expansão volêmica por hemorragia já controlada. A equipe reavalia oxigenação, ausculta, ultrassom e imagem para excluir pneumotórax, hemotórax e outras complicações. Qual abordagem integra melhor a fisiopatologia e os riscos atuais?",
+    "o": [
+      "Suspender analgesia para que o exame respiratório reflita toda a intensidade da dor.",
+      "Ajustar analgesia e suporte respiratório, revendo também perfusão e sobrecarga.",
+      "Considerar a piora inevitável e manter o plano sem investigar causas associadas.",
+      "Aumentar cristaloide pela presença de opacidades, sem rever o balanço anterior."
+    ],
+    "a": 1,
+    "why": "Contusão requer suporte conforme gravidade e reavaliação quando há piora. Analgesia facilita ventilação e higiene pulmonar; fluidos precisam atender perfusão sem sobrecarga desnecessária. Opacidade não é indicação de expansão e não elimina a busca de outros mecanismos. Privar analgesia pode agravar hipoventilação. Reconhecer evolução esperada não equivale a ignorar diagnósticos reversíveis associados.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirttor-23",
+    "t": "cirttor",
+    "q": "Homem de 47 anos tem várias costelas fraturadas com segmento torácico instável. Após analgesia e oxigênio, mantém oxigenação satisfatória, boa eliminação de secreções e esforço respiratório aceitável. Não há deterioração neurológica ou necessidade atual de procedimento que exija via aérea. A equipe segue monitorando contusão associada. Qual interpretação sobre intubação é mais adequada nesse momento?",
+    "o": [
+      "A indicação depende da função e da evolução, não apenas do segmento instável.",
+      "A melhora após analgesia permite dispensar vigilância de contusão pulmonar.",
+      "A ausência de intubação impede discutir fixação de costelas em qualquer cenário.",
+      "A definição anatômica de tórax instável exige intubação mesmo com função adequada."
+    ],
+    "a": 0,
+    "why": "A necessidade de suporte ventilatório invasivo depende de oxigenação, ventilação, fadiga, consciência e evolução, não do rótulo anatômico isolado. Analgesia pode melhorar função, mas não elimina vigilância para contusão e outras complicações. Fixação é uma discussão distinta e individualizada, não condicionada de modo absoluto a já ter sido intubado. O plano deve mudar se surgirem sinais de falência.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirttor-24",
+    "t": "cirttor",
+    "q": "Mulher de 79 anos tem fraturas de quatro costelas após queda. Está estável, mas respira superficialmente por dor e não consegue tossir de forma eficaz. Há doença pulmonar prévia, sem pneumonia estabelecida ou grande coleção pleural. A equipe quer reduzir complicações respiratórias durante a observação. Qual cuidado deve ser incorporado desde já ao plano, com reavaliação da resposta?",
+    "o": [
+      "Restrição deliberada de inspiração para diminuir movimento das fraturas.",
+      "Faixa torácica compressiva como principal forma de recuperar a ventilação.",
+      "Analgesia adequada e medidas de expansão e higiene pulmonar.",
+      "Antibiótico como substituto da analgesia até que apareça infiltrado."
+    ],
+    "a": 2,
+    "why": "Dor limita inspiração e tosse, favorecendo atelectasia e retenção de secreções; analgesia e cuidado respiratório devem ser precoces e monitorados. Imobilização compressiva ou evitar inspiração pode agravar hipoventilação. Antibiótico não substitui essas medidas e não é indicado apenas pelo risco abstrato de pneumonia. Idade e comorbidades reforçam a necessidade de vigilância e ajuste de suporte.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirttor-25",
+    "t": "cirttor",
+    "q": "Homem de 34 anos sofreu trauma toracoabdominal esquerdo e está estável. A radiografia sugere nível hidroaéreo no hemitórax e a tomografia demonstra estômago acima do diafragma, com defeito diafragmático. O pulmão está comprimido, mas não há fisiologia clínica de tensão. Qual planejamento evita uma intervenção pleural inadequada e aborda a causa do achado?",
+    "o": [
+      "Organizar avaliação cirúrgica de ruptura diafragmática com herniação.",
+      "Indicar drenagem pleural guiada como tratamento definitivo do defeito.",
+      "Observar como atelectasia compressiva, repetindo apenas radiografia após um dia.",
+      "Drenar o nível hidroaéreo como hemopneumotórax antes de revisar o trajeto."
+    ],
+    "a": 0,
+    "why": "Víscera herniada no tórax por ruptura diafragmática pode imitar alterações pleurais. Inserir dreno dirigido ao conteúdo digestivo pode causar lesão iatrogênica e não corrige o defeito, mesmo com orientação de imagem. O caso está estável, permitindo planejamento para redução, inspeção e reparo apropriados. Observar como atelectasia sem abordar a causa não trata a lesão anatômica demonstrada.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirttor-26",
+    "t": "cirttor",
+    "q": "Mulher de 28 anos tem ferimento transmediastinal, dor torácica e pneumomediastino na tomografia. Está estável após suporte inicial; o trajeto se aproxima de estruturas aerodigestivas, sem definição completa da origem do ar. A equipe discute exames complementares dirigidos, conforme achados e recursos. Qual interpretação do pneumomediastino é mais apropriada para organizar essa investigação?",
+    "o": [
+      "O ar exclui lesão de via aérea porque o gás ficou restrito ao mediastino.",
+      "O ar define ruptura esofágica e permite dispensar localização da lesão.",
+      "O ar confirma alteração benigna pelo fato de a pressão arterial estar preservada.",
+      "O ar é um sinal que exige integrar trajeto e possível lesão de via aérea ou esôfago."
+    ],
+    "a": 3,
+    "why": "Pneumomediastino tem diferentes mecanismos e, em ferimento transmediastinal, exige avaliar estruturas próximas ao trajeto, incluindo esôfago e via aérea. Estabilidade permite investigação direcionada, mas não comprova benignidade. O sinal não é diagnóstico exclusivo de ruptura esofágica e não afasta lesão traqueobrônquica. Exames como avaliação contrastada/endoscópica e broncoscopia são selecionados pela suspeita e pelo protocolo especializado.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirttor-27",
+    "t": "cirttor",
+    "q": "Homem de 55 anos sofreu trauma fechado anterior do tórax. Após controlar fontes aparentes de hemorragia, mantém episódios de hipotensão e arritmia nova no monitor. O eletrocardiograma está alterado; não é necessário haver fratura esternal para a hipótese discutida. Qual abordagem é mais apropriada para investigar possível lesão cardíaca e sua repercussão no contexto traumático?",
+    "o": [
+      "Limitar a avaliação à radiografia de costelas porque o ritmo pode variar com a dor.",
+      "Acompanhar apenas a dor, adiando monitorização até repetir o ECG após seis horas.",
+      "Integrar ECG e troponina, usando ecocardiograma quando houver indicação.",
+      "Excluir lesão cardíaca se a radiografia não mostrar fratura do esterno."
+    ],
+    "a": 2,
+    "why": "Suspeita de lesão cardíaca contusa é avaliada com ECG e biomarcador apropriado no contexto; instabilidade ou arritmia relevante pode indicar ecocardiograma para esclarecer repercussão. Nenhum teste isolado substitui o quadro clínico e a busca de outras causas de choque. Fratura esternal não é necessária nem suficiente para definir lesão. Alteração nova não deve ser atribuída automaticamente à ansiedade.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirttor-28",
+    "t": "cirttor",
+    "q": "Mulher de 39 anos necessita de dreno torácico após trauma. A equipe escolhe técnica aberta e identifica ponto apropriado, mas um membro sugere avançar um trocarte pontiagudo até sentir perda de resistência. Antes de iniciar, o cirurgião revisa as etapas de segurança para evitar lesão de pulmão e de estruturas abdominais. Qual princípio deve ser mantido?",
+    "o": [
+      "Escolha de espaço baixo como forma de evitar contato com a borda pulmonar.",
+      "Dissecção romba e confirmação da cavidade, respeitando os planos e o feixe intercostal.",
+      "Avanço cego de instrumento pontiagudo, usando a resistência como única referência.",
+      "Avançar o dreno pela ferida traumática para evitar uma segunda incisão."
+    ],
+    "a": 1,
+    "why": "Técnica apropriada inclui dissecção romba, controle dos planos e confirmação intrapleural, com cuidado com o feixe intercostal. Instrumento pontiagudo avançado às cegas aumenta lesão iatrogênica. A ferida traumática não substitui a escolha de um acesso seguro próprio. Acesso excessivamente baixo aumenta risco de atravessar diafragma e vísceras, em vez de tornar o procedimento mais seguro.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirttor-29",
+    "t": "cirttor",
+    "q": "Homem de 30 anos recebeu cobertura temporária de ferida torácica aberta. Pouco depois, aumenta o esforço respiratório, cai a pressão e a ventilação do mesmo lado fica muito reduzida. O selo parece ocluído por sangue, e a drenagem definitiva ainda está sendo preparada. Qual resposta é mais adequada diante da possibilidade de acúmulo de ar sob pressão, enquanto a equipe mantém ressuscitação?",
+    "o": [
+      "Aumentar apenas a sedação porque cobertura oclusiva afasta pressão pleural elevada.",
+      "Manter o selo intocado até confirmar por radiografia, apesar da deterioração.",
+      "Reavaliar o selo e aliviar hipertensão pleural, providenciando drenagem adequada.",
+      "Prescrever antibiótico e aguardar resposta antes de rever a ventilação."
+    ],
+    "a": 2,
+    "why": "Uma cobertura pode perder função de escape e permitir hipertensão pleural. Deterioração exige reavaliar o selo, a ventilação e tratar imediatamente a fisiologia de tensão por técnica apropriada, com drenagem definitiva. Não se espera radiografia em ameaça clínica. Sedação e antibiótico não corrigem pressão acumulada. A cobertura inicial não elimina a necessidade de vigilância contínua.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirttor-30",
+    "t": "cirttor",
+    "q": "Uma equipe com treinamento e recursos para toracotomia de reanimação recebe aviso de parada após trauma. As informações iniciais são incompletas, e é necessário selecionar rapidamente quem pode se beneficiar de uma intervenção invasiva de resgate. Qual conjunto de dados é central para essa decisão, além das capacidades do serviço, sem reduzir a indicação a um único número ou ao rótulo de politrauma?",
+    "o": [
+      "Extensão das opacidades pulmonares e duração da dor torácica.",
+      "Idade e número de fraturas, independentemente da fisiologia.",
+      "Mecanismo, sinais de vida e duração/contexto da parada.",
+      "Volume do hemotórax na imagem, sem integrar o contexto da parada."
+    ],
+    "a": 2,
+    "why": "A seleção integra mecanismo penetrante ou contuso, sinais de vida, tempo e circunstâncias da parada, lesões compatíveis com recuperação e recursos imediatos. Esses dados ajudam a estimar benefício e limites, sem garantir resultado. Idade ou uma imagem isolada não substituem a avaliação. O procedimento não é indicado apenas por existir trauma torácico e não deve aguardar exame irrelevante quando a decisão é de ressuscitação imediata.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirproc-15",
+    "t": "cirproc",
+    "q": "Mulher de 51 anos tem sangue vivo ao evacuar e hemorroidas internas na anuscopia. Nos últimos meses, também desenvolveu mudança do hábito intestinal e anemia ferropriva. Não fez colonoscopia previamente e atribuiu todos os sintomas a uma gestação antiga. O sangramento melhorou parcialmente com fibras, mas a anemia persiste. Qual decisão diagnóstica é mais adequada neste momento?",
+    "o": [
+      "Programar ligadura como teste para excluir outra fonte.",
+      "Encerrar a investigação após documentar melhora com fibras.",
+      "Repetir apenas anuscopia até desaparecer a anemia.",
+      "Investigar o cólon, apesar do achado hemorroidário."
+    ],
+    "a": 3,
+    "why": "Uma lesão anal visível e melhora parcial não explicam necessariamente anemia e mudança do hábito intestinal. Esses sinais exigem avaliação de outra fonte, incluindo colonoscopia conforme o contexto. Resposta a fibras ou ligadura não é teste de exclusão de câncer. Repetir somente exame anal deixa o restante do cólon sem avaliação. Tratamento sintomático e investigação podem ocorrer de forma coordenada.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirproc-16",
+    "t": "cirproc",
+    "q": "Mulher de 49 anos necessita reduzir manualmente o prolapso após evacuar e tem componente externo volumoso, que dificulta higiene. Fibras, ajuste do hábito e medidas clínicas não resolveram os sintomas. A continência basal é preservada, e ela deseja discutir uma opção mais definitiva após compreender dor e riscos da recuperação. Qual procedimento deve entrar na discussão para tratar o conjunto anatômico descrito?",
+    "o": [
+      "Tratamento da pele sem abordar o prolapso interno.",
+      "Hemorroidectomia excisional individualizada.",
+      "Escleroterapia isolada de todos os segmentos externos.",
+      "Ligadura interna para remover o componente externo."
+    ],
+    "a": 1,
+    "why": "Redução manual caracteriza grau III, e componente externo relevante com falha clínica pode favorecer hemorroidectomia excisional em paciente selecionada. A decisão depende também de preferências, continência e risco operatório. Ligadura e escleroterapia tratam doença interna selecionada e não removem um componente externo volumoso. Intervir apenas na pele deixa o prolapso sem tratamento; isso não significa que toda hemorroida grau III exija a mesma operação.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirproc-17",
+    "t": "cirproc",
+    "q": "Homem de 42 anos está em ligadura elástica de hemorroida interna. Ao liberar uma banda, relata dor intensa e imediata, diferente da sensação de pressão das aplicações anteriores. Está estável e não havia dor anal basal. A equipe suspeita de captura de tecido sensível abaixo ou próximo da linha pectínea. Qual conduta deve ser tomada antes de encerrar o procedimento?",
+    "o": [
+      "Completar as demais bandas antes de avaliar a dor.",
+      "Tratar com analgesia e manter a banda sem inspeção.",
+      "Reavaliar e remover a banda mal posicionada.",
+      "Aplicar nova banda mais distal para reduzir a tensão."
+    ],
+    "a": 2,
+    "why": "Dor intensa imediata após a banda sugere inclusão de tecido somaticamente sensível e exige checar o posicionamento, removendo a aplicação inadequada quando identificada. A banda deve ficar em região apropriada, acima da linha pectínea. Acrescentar outra distal pode agravar o problema. Analgesia não substitui a correção de uma aplicação errada, e completar outras ligaduras antes de reavaliar prolonga uma lesão potencialmente evitável.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirproc-18",
+    "t": "cirproc",
+    "q": "Homem de 55 anos retorna após procedimento hemorroidário com dor anal progressiva, febre e dificuldade para urinar. A ferida externa não apresenta secreção evidente, mas ele está taquicárdico e relata mal-estar desproporcional ao dia anterior. A equipe discute se basta tratar retenção e aumentar analgesia. Qual é a prioridade diante dessa mudança de trajetória?",
+    "o": [
+      "Antibiótico tópico até a avaliação eletiva programada.",
+      "Avaliação urgente de complicação, incluindo sepse pélvica.",
+      "Cateterismo urinário e alta sem investigar a febre.",
+      "Ajuste de analgésico e retorno após surgir drenagem visível."
+    ],
+    "a": 1,
+    "why": "Dor crescente, febre e sintomas urinários após procedimento anorretal são sinais de alerta e podem indicar infecção profunda ou outra complicação relevante. Inspeção sem secreção não afasta sepse pélvica. Aliviar retenção e dor pode ser necessário, mas não deve encerrar a investigação. Avaliação cirúrgica, exames, antibiótico e controle de foco são definidos conforme gravidade e achados, sem aguardar manifestação externa tardia.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirproc-19",
+    "t": "cirproc",
+    "q": "Homem de 38 anos tem dor anal contínua, febre e dificuldade para sentar. A inspeção não mostra nódulo azulado ou coleção superficial. O toque, quando tolerado, provoca dor profunda e importante; não há história clara de fissura dolorosa à passagem de fezes. A equipe pretende descartar infecção porque não existe flutuação na pele. Qual hipótese ainda precisa ser pesquisada?",
+    "o": [
+      "Prolapso mucoso redutível sem complicação.",
+      "Fissura posterior idiopática isolada.",
+      "Abscesso anorretal profundo.",
+      "Trombose hemorroidária externa superficial."
+    ],
+    "a": 2,
+    "why": "Abscessos profundos podem não produzir massa ou flutuação visível. Dor contínua com febre e sensibilidade profunda requer avaliação especializada e imagem ou exame sob anestesia conforme o caso. Fissura costuma ter relação com evacuação, e trombose externa geralmente produz lesão superficial dolorosa. Prolapso não complicado não explica bem o componente sistêmico. Ausência de manifestação na pele não deve encerrar a pesquisa de foco séptico.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirproc-20",
+    "t": "cirproc",
+    "q": "Mulher de 46 anos apresenta fístula transesfinctérica que envolve parcela importante do esfíncter externo. Teve lesão obstétrica prévia e já apresenta escape de gases, embora controle as fezes. A ressonância não mostra abscesso não drenado. Ela procura tratamento definitivo, mas teme piora funcional. Qual princípio deve orientar a seleção da técnica após mapear o trajeto e avaliar o aparelho esfincteriano?",
+    "o": [
+      "Definir o procedimento pela posição externa sem considerar função.",
+      "Escolher fistulotomia extensa por ser a via mais curta.",
+      "Fechar apenas o orifício cutâneo e observar a comunicação.",
+      "Priorizar estratégia que preserve a continência."
+    ],
+    "a": 3,
+    "why": "Envolvimento esfincteriano relevante, lesão obstétrica e continência limitada elevam o risco de divisão muscular. O plano deve preservar função e pode envolver técnicas poupadoras e etapas conforme anatomia e atividade séptica. Fistulotomia não é solução automática para toda fístula. Fechamento externo isolado deixa a comunicação e pode favorecer novo abscesso. Local do orifício é apenas um dos dados necessários ao planejamento.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirproc-21",
+    "t": "cirproc",
+    "q": "Mulher de 29 anos apresenta fissuras laterais múltiplas e episódios de diarreia, dor abdominal e perda de peso. Um curso de anestésico tópico diminuiu a dor, mas as lesões persistem. Não há investigação prévia de doença inflamatória intestinal ou infecção. Antes de rotular o quadro como fissura idiopática resistente e propor esfincterotomia, qual etapa é mais apropriada?",
+    "o": [
+      "Investigar uma causa secundária das lesões.",
+      "Classificar as lesões como hemorroidas pela presença de sangramento.",
+      "Repetir anestésico e usar a melhora como exclusão de doença intestinal.",
+      "Programar esfincterotomia com base apenas no tempo dos sintomas."
+    ],
+    "a": 0,
+    "why": "Topografia lateral, multiplicidade e sintomas intestinais exigem buscar doença de base, incluindo Crohn e causas infecciosas ou neoplásicas conforme o contexto. Alívio sintomático não afasta essas hipóteses. Esfincterotomia antes da avaliação pode ser inadequada e comprometer função sem resolver o mecanismo. Sangramento não transforma úlceras ou fissuras em hemorroidas; a morfologia e o conjunto clínico devem guiar o diagnóstico.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirproc-22",
+    "t": "cirproc",
+    "q": "Homem de 43 anos foi submetido à drenagem de abscesso anal há meses. Desde então apresenta saída intermitente de secreção e novos episódios dolorosos. A ressonância mostra trajeto com ramificações, cruzando parte do esfíncter externo. Não há instabilidade, mas uma coleção pequena precisa ser controlada. Qual planejamento é o mais apropriado para reduzir recorrência sem sacrificar continência desnecessariamente?",
+    "o": [
+      "Controlar a sepse e planejar o tratamento pela anatomia.",
+      "Prescrever antibiótico até fechar o orifício, sem avaliar a comunicação.",
+      "Fechar a pele sobre a secreção e acompanhar o desaparecimento do canal.",
+      "Aplicar Goodsall como único mapa para dividir o trajeto na consulta."
+    ],
+    "a": 0,
+    "why": "Recorrência, drenagem persistente e ramificações sugerem fístula complexa, cuja abordagem depende de controle séptico, relação esfincteriana e função. Antibiótico não elimina de forma confiável uma comunicação persistente. Goodsall é orientação limitada e não substitui o mapeamento dessa anatomia. Fechar a saída cutânea sem tratar o foco pode recriar uma coleção. O tratamento pode exigir etapas e técnica poupadora, não uma solução uniforme.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirproc-23",
+    "t": "cirproc",
+    "q": "Homem de 59 anos faz colonoscopia por anemia e alteração do hábito intestinal. Há lesão vegetante suspeita no cólon, da qual foram colhidas biópsias. O CEA solicitado por outro serviço está dentro do intervalo de referência, e ele pergunta se isso torna o exame histológico desnecessário. Qual interpretação deve orientar a continuidade da investigação?",
+    "o": [
+      "CEA normal confirma adenoma benigno se houver sangramento pequeno.",
+      "CEA normal não exclui câncer; aguardar histologia.",
+      "CEA normal permite substituir biópsia por controle anual do marcador.",
+      "CEA normal dispensa estadiamento caso a biópsia demonstre neoplasia."
+    ],
+    "a": 1,
+    "why": "CEA não tem desempenho para confirmar ou excluir câncer colorretal em uma lesão suspeita. Biópsia e avaliação anatômica continuam necessárias, e estadiamento será definido conforme o diagnóstico. O marcador tem utilidade em contextos de prognóstico e seguimento, sobretudo comparado ao basal, mas não substitui histologia. Sangramento pequeno também não determina benignidade nem torna seguro acompanhar apenas a dosagem.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirproc-24",
+    "t": "cirproc",
+    "q": "Mulher de 60 anos tem adenocarcinoma de reto confirmado. A ressonância mostra extensão além da parede e tumor próximo à fáscia mesorretal, ameaçando a margem circunferencial. Não há metástases identificadas ou emergência obstrutiva. A paciente está apta a tratamento multimodal. Qual é a próxima etapa de planejamento mais adequada antes de escolher uma operação e sua sequência?",
+    "o": [
+      "Discutir estratégia multimodal em reunião especializada.",
+      "Escolher amputação apenas pelo relato de sangramento retal.",
+      "Usar a dosagem de CEA para substituir a avaliação pélvica.",
+      "Programar ressecção imediata sem considerar a margem radiológica."
+    ],
+    "a": 0,
+    "why": "A margem circunferencial e a extensão mesorretal influenciam risco de recidiva local e seleção de tratamento neoadjuvante, técnica e sequência. A discussão multidisciplinar integra imagem, histologia, biologia, função e preferências. Confirmar adenocarcinoma não resolve o planejamento da extensão. CEA não informa o plano cirúrgico pélvico, e o sintoma de sangramento não determina amputação nem possibilidade de preservação esfincteriana.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirproc-25",
+    "t": "cirproc",
+    "q": "Homem de 52 anos, assintomático, realiza teste imunoquímico fecal em programa de rastreamento e recebe resultado positivo. Não usa anticoagulante e não tem anemia conhecida. Relata hemorroidas antigas e solicita repetir o teste, esperando que um resultado negativo dispense investigação. Está clinicamente apto à avaliação endoscópica. Qual orientação é a mais apropriada neste momento?",
+    "o": [
+      "Completar a investigação com colonoscopia.",
+      "Dosar CEA para escolher se a colonoscopia será necessária.",
+      "Tratar hemorroidas e retornar ao rastreamento na próxima rodada.",
+      "Repetir o FIT e investigar apenas se persistir positivo."
+    ],
+    "a": 0,
+    "why": "Resultado positivo de rastreamento fecal exige avaliação diagnóstica, habitualmente colonoscopia, capaz de localizar e tratar ou biopsiar lesões. Repetir o teste não invalida a positividade anterior e pode atrasar o diagnóstico. Hemorroidas não devem ser presumidas como explicação exclusiva. CEA não confirma a fonte do sangue nem serve para decidir dispensar colonoscopia. O rastreamento só se completa com a investigação apropriada do resultado alterado.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirproc-26",
+    "t": "cirproc",
+    "q": "Homem de 66 anos está no sexto dia após ressecção colorretal com anastomose. Após melhora inicial, apresenta dor crescente, taquicardia, febre e redução da diurese; a ferida cutânea está limpa. A equipe iniciou suporte e chamou a cirurgia. Qual hipótese e objetivo devem orientar a investigação da deterioração, em vez de atribuí-la apenas ao íleo habitual?",
+    "o": [
+      "Pesquisar deiscência e necessidade de controle do foco.",
+      "Aumentar analgesia e usar a resposta para afastar vazamento.",
+      "Aguardar secreção na pele antes de investigar complicação profunda.",
+      "Confirmar íleo fisiológico apenas pela ausência de evacuação."
+    ],
+    "a": 0,
+    "why": "Deterioração após melhora inicial pode indicar vazamento anastomótico, abscesso ou outra complicação séptica, mesmo com ferida externa normal. Suporte, imagem e intervenção dependem da estabilidade e da extensão; peritonite ou choque podem acelerar a necessidade de controle da fonte. Ausência de trânsito é inespecífica, e resposta à analgesia não exclui uma complicação. Esperar manifestação cutânea pode atrasar o diagnóstico de um problema intra-abdominal.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirproc-27",
+    "t": "cirproc",
+    "q": "Mulher de 74 anos relata exteriorização de tecido pelo ânus, escape de fezes e constipação. Ao esforço, observa-se cilindro de parede retal com pregas concêntricas, redutível e sem isquemia. O exame difere de coxins separados por sulcos radiais. Antes de discutir via perineal ou abdominal, qual interpretação diagnóstica e funcional é mais apropriada?",
+    "o": [
+      "Prolapso hemorroidário; tratar apenas os coxins internos.",
+      "Retocele isolada; dispensar avaliação do aparelho esfincteriano.",
+      "Prolapso retal; avaliar constipação e continência.",
+      "Diástase anal; escolher operação pelo aspecto externo isolado."
+    ],
+    "a": 2,
+    "why": "Pregas concêntricas em exteriorização circunferencial favorecem prolapso retal de espessura total, enquanto hemorroidas usualmente apresentam sulcos radiais entre coxins. A escolha do tratamento requer avaliar anatomia, reserva clínica, constipação e continência. Corrigir a anatomia não garante recuperação de toda disfunção prévia. Aspecto externo isolado não informa todos esses componentes, e retocele não corresponde à exteriorização descrita.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirproc-28",
+    "t": "cirproc",
+    "q": "Homem de 24 anos tem pequenos orifícios crônicos na linha média da fenda interglútea. Nos últimos três dias surgiu aumento de volume muito doloroso e flutuante, com dificuldade para sentar. A lesão fica distante da margem anal e não há comunicação anal identificada no exame. Está estável. Qual medida deve ter prioridade antes de decidir o tratamento definitivo da doença de base?",
+    "o": [
+      "Usar antibiótico como substituto da drenagem da coleção.",
+      "Programar excisão eletiva e aguardar resolução espontânea.",
+      "Realizar fistulotomia do canal anal sem outro mapeamento.",
+      "Drenar o abscesso pilonidal."
+    ],
+    "a": 3,
+    "why": "A presença de abscesso exige controle da coleção; o tratamento definitivo da doença pilonidal crônica é reavaliado depois, conforme extensão e recorrência. Antibiótico pode ser adjuvante em situações selecionadas, mas não substitui drenagem. A localização e os orifícios diferem de fístula anal, não justificando fistulotomia. Adiar toda abordagem até uma excisão eletiva mantém um foco doloroso e pode permitir progressão infecciosa.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirproc-29",
+    "t": "cirproc",
+    "q": "Mulher de 58 anos tem lesão do canal anal com biópsia mostrando carcinoma escamoso. A imagem identifica tumor de alguns centímetros e linfonodo regional suspeito, sem metástases. Não há hemorragia incontrolável, obstrução ou contraindicação conhecida à radioterapia. A equipe discute a estratégia inicial, distinguindo esse tumor do adenocarcinoma retal. Qual proposta é mais apropriada?",
+    "o": [
+      "Tratar com medicação tópica dirigida a condiloma por HPV.",
+      "Estadiar e planejar quimiorradioterapia.",
+      "Programar amputação como tratamento inicial padrão.",
+      "Realizar colectomia segmentar com linfadenectomia mesocólica."
+    ],
+    "a": 1,
+    "why": "O carcinoma escamoso do canal anal costuma ter tratamento inicial combinado de quimioterapia e radioterapia, com estratégia definida pelo estágio e pelas condições clínicas. Cirurgia radical pode ser necessária em persistência ou recidiva e em circunstâncias específicas, não como primeira etapa uniforme. Colectomia segue outro território e histologia. Associação com HPV não torna um câncer invasivo equivalente a condiloma nem dispensa estadiamento.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirproc-30",
+    "t": "cirproc",
+    "q": "Homem de 50 anos usa tratamento tópico intermitente para verrugas perianais. Uma área cresceu, tornou-se endurecida, ulcerada e sangra ao contato, sem melhorar com o produto previamente eficaz nas outras lesões. Não há diagnóstico histológico dessa região. Está estável e procura nova prescrição. Qual etapa é mais apropriada antes de repetir tratamento destrutivo ou propor uma operação oncológica?",
+    "o": [
+      "Repetir o tratamento de verrugas sem avaliar a ulceração.",
+      "Indicar ressecção radical com base apenas na inspeção.",
+      "Examinar e biopsiar a área suspeita.",
+      "Observar até aparecer dor que confirme invasão local."
+    ],
+    "a": 2,
+    "why": "Mudança persistente de aspecto, endurecimento, ulceração e sangramento exigem reavaliação e confirmação histológica quando indicada. Verrugas coexistentes ou diagnóstico prévio de condiloma não excluem neoplasia ou outra doença. Repetir tratamento pode retardar o diagnóstico. Por outro lado, uma cirurgia radical não deve ser escolhida sem definir histologia e extensão; ausência de dor também não é critério seguro para esperar.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirremit-17",
+    "t": "cirremit",
+    "q": "Mulher de 51 anos, sem história de diabetes, apresenta glicemias elevadas após trauma importante. Não recebeu corticoide exógeno ou solução contendo glicose em quantidade que explique o achado. Mantém resposta inflamatória, e a avaliação prévia não indicava hiperglicemia crônica. Qual mecanismo é mais coerente com essa alteração, sem concluir imediatamente que existe falência completa das células beta?",
+    "o": [
+      "Redução do glucagon com interrupção da utilização muscular de gordura.",
+      "Resistência à insulina com aumento da produção hepática de glicose.",
+      "Aumento exclusivo da absorção intestinal de carboidratos da dieta recente.",
+      "Ausência de secreção de insulina por destruição autoimune aguda das ilhotas."
+    ],
+    "a": 1,
+    "why": "A hiperglicemia de estresse envolve menor ação de insulina e aumento de glicogenólise/gliconeogênese, mediados por hormônios e inflamação. Isso pode ocorrer mesmo sem ingestão ou diabetes prévio, mas não dispensa investigar predisposição e acompanhar a evolução. Destruição autoimune completa não é sustentada apenas pela glicemia peri-trauma. Redução do glucagon e absorção alimentar isolada não explicam o contexto fornecido.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirremit-18",
+    "t": "cirremit",
+    "q": "Homem de 68 anos está no segundo dia após cirurgia extensa. A diurese caiu, mas ele acumulou balanço positivo de quatro litros, ganhou peso e apresenta edema e crepitações. A pressão está preservada; a creatinina aumentou e a bolsa coletora tem pouco débito. Antes de prescrever outro bolus, qual abordagem é mais apropriada?",
+    "o": [
+      "Prescrever diurético em dose fixa antes de verificar circulação e sonda.",
+      "Repetir expansão até atingir a meta urinária, usando a diurese como único alvo.",
+      "Considerar retenção hormonal e adiar exames renais até desaparecer o edema.",
+      "Reavaliar perfusão, congestão, função renal e permeabilidade da drenagem urinária."
+    ],
+    "a": 3,
+    "why": "Oligúria tem causas pré-renais, renais e pós-renais; congestão e disfunção renal podem coexistir. Verificar a sonda e integrar dados hemodinâmicos evita expansão potencialmente prejudicial. Edema não prova perfusão adequada, mas também não legitima volume indiscriminado. Diurético pode ter indicação na sobrecarga, após avaliação; não substitui a identificação do mecanismo ou a correção de obstrução.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirremit-19",
+    "t": "cirremit",
+    "q": "Mulher de 60 anos está internada por complicação inflamatória após uma operação. A albumina caiu de 3,8 para 2,5 g/dL em poucos dias, com proteína C reativa elevada e balanço hídrico positivo. A equipe pretende usar essa queda como medida isolada da quantidade de proteína ingerida recentemente. Qual interpretação é mais adequada?",
+    "o": [
+      "A concentração baixa identifica deficiência proteica sem necessidade de avaliação clínica.",
+      "A queda quantifica diretamente a perda de massa muscular nos últimos dois dias.",
+      "Inflamação e distribuição de fluidos também influenciam a concentração de albumina.",
+      "A concentração baixa demonstra que a alimentação enteral não poderá beneficiar a paciente."
+    ],
+    "a": 2,
+    "why": "Albumina é reagente negativo de fase aguda e sofre influência de inflamação, redistribuição, perdas e hidratação. Pode associar-se a prognóstico, mas não mede isoladamente ingestão recente ou massa muscular. Avaliação nutricional integra trajetória de peso, ingestão, composição/funcionalidade e exame clínico. Não há base para concluir que suporte nutricional seja inútil a partir desse resultado.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirremit-20",
+    "t": "cirremit",
+    "q": "Homem de 63 anos será submetido a ressecção colorretal eletiva. O plano inclui educação pré-operatória, analgesia multimodal, manejo individualizado de fluidos, mobilização e alimentação precoces conforme tolerância. No pós-operatório, cada medida será revista à luz da evolução. Qual objetivo melhor integra esse conjunto, em vez de tratá-lo apenas como uma estratégia para abreviar a internação?",
+    "o": [
+      "Suprimir integralmente a inflamação e dispensar vigilância de complicações.",
+      "Reduzir repercussões da agressão e recuperar função com segurança.",
+      "Antecipar a alta usando um prazo fixo, mesmo se houver intolerância alimentar.",
+      "Manter jejum e imobilidade até normalização completa dos exames laboratoriais."
+    ],
+    "a": 1,
+    "why": "Protocolos de recuperação aprimorada buscam reduzir disfunções e favorecer recuperação funcional, com seleção e monitorização. A redução de permanência pode ser consequência, não objetivo que se sobreponha à segurança. Não eliminam toda resposta inflamatória nem dispensam avaliação de complicações. Jejum e imobilidade prolongados sem indicação contrariam os princípios apresentados.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirremit-21",
+    "t": "cirremit",
+    "q": "Mulher de 44 anos chega com ferida traumática extensa na perna, contendo detritos e áreas de tecido desvitalizado. Não há lesão arterial, mas a viabilidade de parte da borda ainda é incerta. As bordas poderiam ser aproximadas sob tensão após limpeza superficial. Qual princípio deve orientar o planejamento do fechamento, considerando o risco infeccioso e de necrose?",
+    "o": [
+      "Prescrever antibiótico como substituto do desbridamento antes de fechar a ferida.",
+      "Preparar o leito e definir o fechamento após avaliar viabilidade e contaminação.",
+      "Aproximar imediatamente sob tensão para reduzir a área exposta ao ambiente.",
+      "Cobrir a ferida com sutura cutânea e deixar o desbridamento para se houver secreção."
+    ],
+    "a": 1,
+    "why": "Viabilidade tecidual, desbridamento, contaminação e possibilidade de cobertura sem tensão orientam o momento e o método de fechamento. Um leito inadequado não se torna seguro por aproximar a pele. Antibiótico pode integrar o cuidado, mas não remove tecido necrótico ou corpo estranho. Fechamento posterior ou cobertura especializada pode ser apropriado; isso não significa manter toda ferida aberta indefinidamente.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirremit-22",
+    "t": "cirremit",
+    "q": "Homem de 29 anos teve lesão cicatricial no tórax retirada por excisão simples. Meses depois, a massa reapareceu, pruriginosa, estendendo-se além da incisão original. Não há calor, secreção ou febre. Ele pergunta se uma nova retirada com margem maior resolveria o problema. Qual orientação é mais apropriada?",
+    "o": [
+      "O padrão sugere queloide e favorece discussão de tratamento combinado.",
+      "A extensão sugere dermatite e indica excluir qualquer procedimento local.",
+      "O padrão sugere cicatriz hipertrófica e indica nova excisão isolada.",
+      "A recorrência sugere infecção e indica antibiótico antes de avaliar o relevo."
+    ],
+    "a": 0,
+    "why": "Queloides ultrapassam os limites da lesão e têm risco elevado de recorrência após excisão isolada. A estratégia pode associar modalidades intralesionais, compressão/silicone e outras medidas conforme localização e avaliação especializada. Cicatriz hipertrófica costuma ficar confinada à ferida original. Sem sinais infecciosos, antibiótico não trata o mecanismo. A recorrência exige explicar expectativas, não prometer cura por margens maiores.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirremit-23",
+    "t": "cirremit",
+    "q": "Mulher de 71 anos apresenta úlcera nova em cicatriz de queimadura antiga na coxa. Há três meses a área endurece, cresce e sangra ao contato. Não cicatrizou após medidas locais, e não há sinais sistêmicos de infecção. A família atribui a alteração à fragilidade da pele. Qual próximo passo é mais adequado para esclarecer a evolução atípica?",
+    "o": [
+      "Aplicar corticoide intralesional como teste terapêutico antes de investigar ulceração.",
+      "Solicitar avaliação e biópsia representativa da lesão e de suas bordas.",
+      "Repetir antibiótico empírico e usar a resposta como confirmação de benignidade.",
+      "Realizar excisão estética da cicatriz sem enviar material para anatomopatológico."
+    ],
+    "a": 1,
+    "why": "Úlcera persistente e endurecida em cicatriz crônica exige investigar neoplasia, especialmente carcinoma espinocelular, com amostra adequada. Colonização ou resposta parcial a medidas locais não exclui transformação maligna. Excisão sem estudo histológico e teste com corticoide podem atrasar diagnóstico. A indicação de biópsia deriva da mudança clínica, sem presumir que toda úlcera em cicatriz seja câncer.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirremit-24",
+    "t": "cirremit",
+    "q": "Homem de 65 anos usa prednisona por doença autoimune e apresenta deiscência parcial de ferida abdominal. Tem perda ponderal, glicemias elevadas e perfusão periférica reduzida. Não há evisceração. A equipe discute se bastaria prescrever vitamina A e suspender o corticoide. Qual abordagem é mais apropriada?",
+    "o": [
+      "Prescrever vitamina A e adiar avaliação de infecção até resposta à suplementação.",
+      "Manter apenas curativo, porque alterações nutricionais não modificam o reparo.",
+      "Atribuir a deiscência ao medicamento e suspendê-lo imediatamente sem outro ajuste.",
+      "Avaliar fatores locais e sistêmicos e revisar o corticoide com a equipe assistente."
+    ],
+    "a": 3,
+    "why": "Cicatrização depende de perfusão, controle de infecção, glicemia, nutrição e condições mecânicas, além de medicamentos. Corticoide crônico requer revisão coordenada, pois retirada abrupta pode causar descompensação e insuficiência adrenal. Vitamina não substitui controle de fatores reversíveis e não deve ser prescrita automaticamente. Também é necessário avaliar a profundidade da deiscência e urgências associadas.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirremit-25",
+    "t": "cirremit",
+    "q": "Mulher de 37 anos sofreu escaldadura no antebraço. Parte da área é rosada, úmida, muito dolorosa e apresenta enchimento capilar; outra parte é pálida, com menor sensibilidade e resposta vascular mais lenta. Ainda está nas primeiras horas, com edema em progressão. Qual forma de registrar e acompanhar a profundidade é mais adequada?",
+    "o": [
+      "Descrever áreas de profundidades diferentes e reavaliar a evolução local.",
+      "Classificar toda a lesão como superficial porque há região dolorosa e úmida.",
+      "Classificar toda a lesão como espessura total pela presença de palidez em parte.",
+      "Definir menor gravidade nas regiões pouco sensíveis e concentrar cuidado nas dolorosas."
+    ],
+    "a": 0,
+    "why": "Queimaduras podem ter profundidade heterogênea e evoluir, exigindo avaliação por áreas. Dor intensa não significa maior profundidade; perda de sensibilidade e perfusão pode sugerir lesão mais profunda. Palidez parcial não define automaticamente toda a área como espessura total. A descrição seriada, incluindo perfusão e contexto, é mais útil que um rótulo único rígido no primeiro exame.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirremit-26",
+    "t": "cirremit",
+    "q": "Homem de 48 anos sofreu queimadura profunda na mão dominante durante acidente ocupacional. A extensão total corresponde a pequena parcela da superfície corporal, mas há lesão sobre articulações e limitação dolorosa dos movimentos. Não apresenta instabilidade sistêmica. Qual aspecto justifica avaliação especializada mesmo sem grande área para ressuscitação volêmica?",
+    "o": [
+      "Profundidade e localização em região de alto impacto funcional.",
+      "Pequena área, que identifica baixo risco de contratura independentemente da profundidade.",
+      "Dor local, que permite excluir comprometimento de tendões e articulações.",
+      "Ausência de instabilidade, que indica necessidade de expansão agressiva."
+    ],
+    "a": 0,
+    "why": "A gravidade não depende apenas da superfície. Mãos, articulações e lesões profundas podem exigir abordagem especializada por risco funcional, necessidade de cobertura e reabilitação. Estabilidade circulatória não indica expansão agressiva nem elimina risco local. Dor não exclui dano profundo, e pequena área não protege contra contratura ou sequela incapacitante.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirremit-27",
+    "t": "cirremit",
+    "q": "Homem de 56 anos tem queimadura com área central necrótica e região adjacente inicialmente com perfusão reduzida, mas algum tecido viável. Após episódio de hipoperfusão e edema importante, essa região adjacente se torna mais pálida e profunda. A equipe revê a circulação e a evolução da ferida. Qual conceito explica melhor essa mudança?",
+    "o": [
+      "Regeneração da zona de coagulação por aumento do edema.",
+      "Conversão de tecido da zona de estase para necrose.",
+      "Remodelamento de colágeno maduro que se inicia nas primeiras horas.",
+      "Transformação da zona de hiperemia em pele normal por vasoconstrição."
+    ],
+    "a": 1,
+    "why": "A zona de estase ao redor da lesão central contém tecido potencialmente recuperável, vulnerável a hipoperfusão, edema e outros agravantes. Sua perda explica aprofundamento da queimadura. Zona de coagulação é a área de lesão mais irreversível, e hiperemia periférica costuma ter melhor viabilidade. Remodelamento de colágeno é fase posterior e não descreve a deterioração aguda fornecida.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirremit-28",
+    "t": "cirremit",
+    "q": "Mulher de 62 anos com queimadura extensa recebe volumes progressivamente maiores por diurese baixa. Está com edema acentuado, pressões ventilatórias em elevação e balanço bastante positivo; o cateter urinário foi verificado. A creatinina subiu e o abdome está mais tenso. Qual atitude deve preceder novo aumento automático da infusão?",
+    "o": [
+      "Desconsiderar os fluidos pré-hospitalares e completar integralmente a fórmula.",
+      "Reavaliar perfusão, sobrecarga e possíveis causas renais ou compartimentais.",
+      "Recalcular toda a reposição a partir da hora de admissão para reiniciar o esquema.",
+      "Aplicar outro bolus e aguardar apenas o débito urinário como resposta."
+    ],
+    "a": 1,
+    "why": "Oligúria persistente não prova déficit volêmico contínuo. Sobrecarga, lesão renal e hipertensão compartimental podem contribuir, sobretudo com edema e piora ventilatória. A avaliação integrada orienta ajuste de fluidos e tratamento específico. Fórmulas são estimativas contadas do acidente e incluem o que já foi administrado; reiniciá-las ou ignorar volume prévio favorece ressuscitação excessiva.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirremit-29",
+    "t": "cirremit",
+    "q": "Eletricista de 39 anos tem pequena queimadura cutânea após alta tensão, mas evolui com dor intensa no antebraço, dor à extensão passiva dos dedos e musculatura tensa. O pulso radial ainda é detectável. A equipe suspeita de lesão muscular profunda e discute formas de descompressão. Qual distinção técnica é correta?",
+    "o": [
+      "Escarotomia libera compartimentos musculares; fasciotomia limita-se à pele queimada.",
+      "Ambos os procedimentos são equivalentes quando a queimadura cutânea é pequena.",
+      "Ambos os procedimentos tratam apenas lesão arterial e exigem ausência de pulso.",
+      "Fasciotomia libera compartimentos musculares; escarotomia divide escara constritiva."
+    ],
+    "a": 3,
+    "why": "Síndrome compartimental muscular pode ocorrer em lesão elétrica com pouca área de pele, e pulso presente não a exclui. Fasciotomia abre a fáscia dos compartimentos; escarotomia alivia restrição pela escara e não substitui descompressão muscular quando essa é necessária. A escolha responde ao mecanismo e à avaliação clínica/pressórica apropriada, não apenas à extensão cutânea ou ao pulso.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirremit-30",
+    "t": "cirremit",
+    "q": "Mulher de 43 anos foi retirada de incêndio em garagem fechada. Está nauseada, com cefaleia e dificuldade de atenção, embora o oxímetro convencional mostre 98% e não haja grande queimadura cutânea. Um familiar sugere que isso exclui intoxicação e atribui os sintomas ao susto. Qual interpretação é mais adequada para orientar a investigação?",
+    "o": [
+      "A pressão arterial normal identifica ansiedade como causa mais provável.",
+      "A oximetria convencional preservada não exclui carboxiemoglobinemia.",
+      "A área pequena de pele queimada torna improvável exposição relevante à fumaça.",
+      "A ausência de dessaturação permite dispensar avaliação de gases tóxicos."
+    ],
+    "a": 1,
+    "why": "Exposição em ambiente fechado e sintomas neurológicos exigem considerar monóxido de carbono e outras causas. O oxímetro convencional pode exibir valor aparentemente normal na presença de carboxiemoglobina. Extensão cutânea e pressão preservada não medem a exposição inalatória. Oxigênio e avaliação apropriada, incluindo cooximetria quando disponível, não devem ser adiados pela leitura isolada.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirvasc-16",
+    "t": "cirvasc",
+    "q": "Homem de 72 anos, diabético e com doença renal crônica, apresenta ferida no hálux há seis semanas. O pé é frio, os pulsos distais são reduzidos e o índice tornozelo-braquial é 1,48, com artérias pouco compressíveis. A equipe considera uma intervenção local, mas quer estimar a chance de cicatrização. Qual exame pode complementar melhor a informação hemodinâmica obtida?",
+    "o": [
+      "Dosagem de proteína C reativa como medida isolada da perfusão do dedo.",
+      "Pressão digital e índice hálux-braquial, associados à avaliação vascular.",
+      "Radiografia do pé como substituta da avaliação do fluxo arterial distal.",
+      "Novo índice tornozelo-braquial após elevar a pressão do manguito braquial."
+    ],
+    "a": 1,
+    "why": "ITB elevado pode ser pouco confiável por calcificação, especialmente em diabetes e doença renal. Pressão digital, índice hálux-braquial, Doppler e outras medidas de perfusão ajudam a avaliar isquemia e cicatrização. Marcadores inflamatórios e radiografia têm papéis no estudo de infecção e osso, mas não substituem perfusão. Um resultado isolado não deve dispensar avaliação especializada da ferida.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirvasc-17",
+    "t": "cirvasc",
+    "q": "Mulher de 64 anos fuma e apresenta dor reprodutível na panturrilha ao caminhar, que desaparece após parar. Não há dor em repouso, ferida, edema ou sinal neurológico relevante. O ITB de 0,70 confirma doença arterial; ela ainda não recebeu orientação estruturada. Qual plano é mais apropriado como primeira etapa para sintomas e risco sistêmico?",
+    "o": [
+      "Analgesia regular, reservando abordagem do tabagismo para o pós-operatório.",
+      "Exercício estruturado, cessação do tabagismo e prevenção cardiovascular.",
+      "Angioplastia imediata, seguida de prevenção apenas se a dor persistir.",
+      "Repouso prolongado, com suspensão de caminhadas para proteger o membro."
+    ],
+    "a": 1,
+    "why": "Na claudicação sem ameaça ao membro, exercício e otimização do risco cardiovascular são centrais. Estatina e terapia antitrombótica devem ser individualizadas conforme indicação e sangramento. Revascularização pode ser considerada diante de limitação persistente apesar do tratamento, não como resposta automática ao diagnóstico. Repouso contínuo reduz condicionamento, e analgesia não corrige o risco sistêmico associado à aterosclerose.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirvasc-18",
+    "t": "cirvasc",
+    "q": "Homem de 69 anos, diabético, apresenta úlcera plantar, dor no antepé em repouso e pulsos distais ausentes. Há celulite ao redor da ferida e secreção, sem choque. A equipe precisa estimar risco de amputação e benefício de revascularização, além de planejar tratamento da infecção. Qual conjunto de elementos organiza melhor a avaliação por WIfI?",
+    "o": [
+      "Tempo de diabetes, glicemia atual e presença de neuropatia.",
+      "Localização da úlcera, nível da creatinina e duração da claudicação.",
+      "Extensão da ferida, intensidade da isquemia e gravidade da infecção.",
+      "Diâmetro da úlcera, intensidade da dor e idade do paciente."
+    ],
+    "a": 2,
+    "why": "WIfI integra wound, ischemia e foot infection: ferida, isquemia e infecção do pé. Esses eixos orientam ameaça ao membro e planejamento, sem substituir avaliação clínica e anatômica. Diâmetro isolado não traduz profundidade ou perda tecidual. Diabetes, neuropatia e função renal importam para o paciente, mas não correspondem aos três componentes do sistema perguntado.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirvasc-19",
+    "t": "cirvasc",
+    "q": "Homem de 71 anos tem claudicação limitante apesar de manejo inicial e pergunta sobre cilostazol. O prontuário registra insuficiência cardíaca com fração de ejeção reduzida e internação recente por congestão. Não há dor em repouso ou lesão de pele. Qual decisão é mais adequada ao discutir o tratamento sintomático e o restante do plano vascular?",
+    "o": [
+      "Priorizar revascularização imediata antes de rever o programa de exercício.",
+      "Substituir exercício por pentoxifilina, mantendo a prevenção cardiovascular.",
+      "Evitar cilostazol e revisar exercício, prevenção e indicação de revascularização.",
+      "Iniciar cilostazol em dose menor e dispensar reavaliação da insuficiência cardíaca."
+    ],
+    "a": 2,
+    "why": "Insuficiência cardíaca é contraindicação ao cilostazol, não apenas razão para redução de dose. O impedimento não elimina exercício adaptado e controle de fatores de risco nem obriga amputação. Pentoxifilina não tem benefício consistente que a torne substituição equivalente. Revascularização é discutida quando sintomas e anatomia justificam, considerando o risco e a resposta ao tratamento clínico.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirvasc-20",
+    "t": "cirvasc",
+    "q": "Mulher de 75 anos está sendo avaliada por dor súbita e frialdade no pé. No início movimentava os dedos normalmente; durante a espera, a hipoestesia se estende ao dorso e surge dificuldade para dorsifletir o tornozelo. O membro continua sem sinal arterial distal, com sinal venoso presente. Ainda se investigava a fonte do evento. Qual mudança no planejamento é mais importante?",
+    "o": [
+      "Aguardar alterações cutâneas fixas para confirmar necessidade de revascularização.",
+      "Concluir a investigação da fonte antes de decidir a intervenção no membro.",
+      "Reduzir a urgência porque a diminuição da sensibilidade pode reduzir a dor.",
+      "Priorizar reperfusão urgente diante de ameaça imediata à viabilidade."
+    ],
+    "a": 3,
+    "why": "Progressão para déficit motor sugere Rutherford IIb, com ameaça imediata ao membro. A investigação da origem embólica ou trombótica não deve atrasar controle do problema vascular atual. Ausência de necrose cutânea não garante tempo seguro de espera. Redução de dor por perda sensitiva pode indicar piora, não melhora. Ressuscitação, anticoagulação quando apropriada e avaliação vascular avançam em paralelo.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirvasc-21",
+    "t": "cirvasc",
+    "q": "Homem de 77 anos com fibrilação atrial e interrupção recente da anticoagulação apresenta dor intensa e abrupta na perna esquerda. Antes caminhava sem claudicação. Os pulsos distais desapareceram desse lado, enquanto os do membro oposto são preservados. A pele não mostra alterações tróficas crônicas e não há edema acentuado. Qual mecanismo deve ser considerado mais provável na investigação inicial?",
+    "o": [
+      "Trombose sobre estenose arterial crônica extensa.",
+      "Trombose venosa iliofemoral com congestão intensa.",
+      "Êmbolo arterial de provável origem cardíaca.",
+      "Neuropatia periférica descompensada pelo diabetes."
+    ],
+    "a": 2,
+    "why": "Fonte cardíaca, início súbito, ausência de claudicação prévia e pulsos contralaterais normais favorecem embolia. Trombose sobre aterosclerose frequentemente tem pistas de doença prévia ou bilateral, embora isso não seja absoluto. Trombose venosa extensa costuma causar edema e congestão marcantes. Neuropatia não explica perda aguda de pulsos com frialdade. O mecanismo provável orienta, mas não substitui a definição anatômica e de viabilidade.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirvasc-22",
+    "t": "cirvasc",
+    "q": "Homem de 56 anos teve restauração do fluxo após trombose arterial. Nas horas seguintes, os pulsos permanecem presentes, mas a perna fica tensa e a dor aumenta com estiramento passivo dos músculos. Há parestesia e necessidade crescente de analgésico. Não existe hematoma expansivo no acesso. Qual interpretação melhor explica por que os pulsos não tranquilizam a equipe?",
+    "o": [
+      "A pressão compartimental pode comprometer a microcirculação apesar de fluxo arterial.",
+      "O edema após reperfusão protege a microcirculação e permite aguardar regressão.",
+      "A presença de pulso indica que a dor decorre principalmente de neuropatia prévia.",
+      "A obstrução venosa proximal deve ser assumida como causa sem examinar compartimentos."
+    ],
+    "a": 0,
+    "why": "Síndrome compartimental pode coexistir com pulsos, pois a pressão compromete perfusão tecidual antes de interromper a macrocirculação. Dor ao estiramento, tensão e déficit sensitivo exigem avaliação imediata e descompressão se indicada. Neuropatia não deve ser presumida para explicar uma deterioração aguda. Edema não é protetor e investigação de outras causas não pode atrasar tratamento de um diagnóstico clínico convincente.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirvasc-23",
+    "t": "cirvasc",
+    "q": "Mulher de 80 anos é encontrada após período prolongado com membro inferior frio. Há anestesia profunda, paralisia e rigidez muscular; não se detectam sinais arterial ou venoso ao Doppler no segmento distal. A avaliação vascular considera o membro inviável. A família pergunta por que restaurar o fluxo pode não ser a melhor estratégia. Qual é o principal fundamento?",
+    "o": [
+      "A ausência isolada de pulso demonstra que o fluxo não pode ser restaurado tecnicamente.",
+      "A dor pouco intensa demonstra que o membro consegue tolerar mais tempo de observação.",
+      "A rigidez indica trombose venosa e favorece anticoagulação como único tratamento.",
+      "O tecido irreversivelmente lesado pode liberar metabólitos e agravar o risco sistêmico."
+    ],
+    "a": 3,
+    "why": "Anestesia profunda, paralisia e rigidez sustentam isquemia irreversível, não apenas ameaça recuperável. Reperfundir tecido inviável pode causar grande carga de potássio, acidose e produtos de lesão muscular, sem benefício funcional. A decisão depende da avaliação especializada e da condição global. Ausência de pulso isolada não define irreversibilidade, e redução da dor por anestesia não é sinal favorável.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirvasc-24",
+    "t": "cirvasc",
+    "q": "Homem de 60 anos tem dissecção limitada à aorta descendente, inicialmente tratada com controle anti-impulso. Evolui com dor abdominal persistente, lactato crescente e redução do realce intestinal; a nova imagem mostra comprometimento do fluxo mesentérico relacionado à dissecção. Não há envolvimento da ascendente. Como essa evolução deve modificar o planejamento?",
+    "o": [
+      "Programar reparo eletivo após resolver a acidose com reposição volêmica.",
+      "Indicar trombólise sistêmica para tratar a dor sem reavaliar a aorta.",
+      "Manter apenas controle clínico porque a classificação anatômica permanece B.",
+      "Classificar como tipo B complicada e discutir intervenção aórtica urgente."
+    ],
+    "a": 3,
+    "why": "Má perfusão visceral é complicação da dissecção B e exige avaliação especializada para intervenção, frequentemente endovascular se adequada à anatomia. Ausência de envolvimento da ascendente não significa doença benigna. Suporte e controle hemodinâmico continuam, mas não substituem tratamento da má perfusão. Trombólise não corrige o mecanismo da dissecção e pode ser perigosa.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirvasc-25",
+    "t": "cirvasc",
+    "q": "Homem de 74 anos realizou reparo endovascular de aneurisma infrarrenal há um ano. Está assintomático e os acessos cicatrizaram; não quer continuar exames por se considerar curado. O último controle mostrava saco excluído, sem expansão. A endoprótese foi implantada dentro das recomendações anatômicas do fabricante. Qual explicação melhor justifica o seguimento definido pela equipe, mesmo sem sintomas?",
+    "o": [
+      "A endoprótese precisa ser substituída em intervalos fixos mesmo sem alterações.",
+      "A cicatriz de acesso mostra a vedação aórtica e orienta o intervalo dos exames.",
+      "A ausência de dor permite dispensar imagem até haver nova massa pulsátil.",
+      "Endoleaks, migração e alterações do saco podem surgir antes de manifestações clínicas."
+    ],
+    "a": 3,
+    "why": "EVAR exige vigilância adaptada ao risco e aos achados por possíveis endoleaks, migração, falha de componentes e crescimento do saco. Um exame favorável reduz preocupação imediata, mas não elimina seguimento. Não há substituição programada universal de prótese íntegra. Acesso cicatrizado e ausência de dor não informam de modo suficiente a exclusão e a durabilidade do reparo.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirvasc-26",
+    "t": "cirvasc",
+    "q": "Mulher de 76 anos está em controle após EVAR. A angiotomografia identifica opacificação tardia do saco aneurismático por comunicação com artéria lombar, sem falha proximal ou distal de vedação e sem desconexão de componentes. O diâmetro do saco está estável e ela não tem sintomas. Qual tipo de endoleak descreve melhor esse achado?",
+    "o": [
+      "Tipo Ib, por falha de vedação distal da prótese.",
+      "Tipo Ia, por falha de vedação proximal da prótese.",
+      "Tipo II, por fluxo retrógrado de ramo arterial.",
+      "Tipo III, por desconexão ou defeito de componente."
+    ],
+    "a": 2,
+    "why": "Fluxo retrógrado de ramos, como lombares ou mesentérica inferior, caracteriza endoleak II. Falha de vedação proximal ou distal define tipos I; falha de componente corresponde ao III. A classificação importa porque risco e manejo diferem. No tipo II, repercussão sobre o saco e evolução orientam a decisão, não a simples presença de contraste isoladamente.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirvasc-27",
+    "t": "cirvasc",
+    "q": "Homem de 58 anos apresenta dor torácica abrupta, máxima no início, irradiada para o dorso. Há diferença de pulso e de pressão entre os braços; o ECG mostra alterações inespecíficas. A equipe prepara tratamento para síndrome coronariana, mas revê a hipótese antes de administrar antitrombóticos. Qual diagnóstico precisa ser investigado prioritariamente por modificar o risco dessa prescrição?",
+    "o": [
+      "Tromboembolismo pulmonar de baixo risco hemodinâmico.",
+      "Espasmo esofágico associado a refluxo gastroesofágico.",
+      "Pericardite aguda sem derrame significativo.",
+      "Síndrome aórtica aguda com possível dissecção."
+    ],
+    "a": 3,
+    "why": "Dor abrupta dorsal e assimetria de pulsos são pistas de síndrome aórtica aguda. O diagnóstico pode coexistir com alterações no ECG e até comprometimento coronariano. Antitrombóticos ou trombólise automáticos podem agravar hemorragia em dissecção. Os outros diagnósticos entram no diferencial de dor torácica, mas não explicam tão bem a assimetria vascular descrita.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirvasc-28",
+    "t": "cirvasc",
+    "q": "Mulher de 71 anos tem úlcera próxima ao maléolo medial, edema e pigmentação ocre. Também apresenta pé frio, pulsos distais reduzidos e relato de dor no antepé à noite. O curativo proposto inclui compressão de alta intensidade. Antes de definir o nível e a segurança da compressão, qual avaliação é mais importante?",
+    "o": [
+      "Quantificar perfusão arterial e considerar componente misto da úlcera.",
+      "Aguardar cicatrização para verificar a presença de doença arterial.",
+      "Confirmar refluxo venoso e dispensar investigação arterial adicional.",
+      "Medir apenas o diâmetro da úlcera e a intensidade do edema."
+    ],
+    "a": 0,
+    "why": "Sinais venosos não excluem isquemia concomitante. Compressão deve ser ajustada ou evitada conforme a gravidade arterial, com avaliação objetiva por ITB confiável, pressões digitais ou métodos apropriados. Edema e localização não bastam para escolher alta compressão. A investigação venosa tem valor, mas não substitui a avaliação da perfusão em uma lesão possivelmente mista.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirvasc-29",
+    "t": "cirvasc",
+    "q": "Homem de 63 anos tem câncer ativo, cirurgia recente e edema unilateral importante. A probabilidade clínica de TVP é alta. O primeiro ultrassom avaliou somente veias proximais e não mostrou trombo, mas não esclareceu a origem do edema nem avaliou adequadamente o território ilíaco. Qual interpretação deve orientar o seguimento do algoritmo diagnóstico?",
+    "o": [
+      "Usar D-dímero isolado para encerrar a investigação se o resultado for normal.",
+      "Rever cobertura do exame e indicar avaliação seriada ou complementar conforme a suspeita.",
+      "Repetir apenas o exame físico após um mês para avaliar a evolução do edema.",
+      "Excluir TVP definitivamente e tratar o edema como linfedema pós-operatório."
+    ],
+    "a": 1,
+    "why": "Exame inicial negativo não resolve toda apresentação de alta probabilidade, especialmente se o território suspeito não foi coberto. Ultrassom seriado ou método complementar depende do protocolo e da localização possível, incluindo ilíacas. D-dímero não deve substituir indiscriminadamente imagem na alta probabilidade. Anticoagulação enquanto se investiga depende de risco hemorrágico, acesso aos exames e avaliação clínica.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirvasc-30",
+    "t": "cirvasc",
+    "q": "Mulher de 70 anos tem TVP proximal recente e sangramento gastrointestinal ativo que impede anticoagulação terapêutica no momento. A equipe discute filtro de veia cava recuperável enquanto organiza controle da hemorragia. A contraindicação será reavaliada após endoscopia e estabilização hemostática. Qual componente é indispensável para que essa proposta não se transforme em tratamento indefinido sem revisão?",
+    "o": [
+      "Plano para manter o filtro e dispensar nova avaliação do sangramento.",
+      "Plano para reavaliar anticoagulação e retirar o filtro quando possível.",
+      "Plano para substituir anticoagulação por antiagregação ao receber alta.",
+      "Plano para repetir D-dímero até confirmar dissolução do trombo proximal."
+    ],
+    "a": 1,
+    "why": "Filtro é uma proteção selecionada contra embolia quando anticoagulação está contraindicada; não trata o trombo e não elimina riscos futuros. Precisa haver seguimento, reavaliação da contraindicação e retirada quando a proteção não for mais necessária e a remoção for factível. Antiagregante não é substituto equivalente. D-dímero não comprova resolução nem define sozinho o momento de retirada.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "ciresof-10",
+    "t": "ciresof",
+    "q": "Homem de 47 anos mantém queimação retroesternal apesar de prescrição de IBP. Usa o comprimido em horários variáveis e a endoscopia não mostrou esofagite conclusiva. Nunca houve monitorização de refluxo, e ele solicita uma operação para resolver o problema. Não há disfagia ou perda ponderal. Qual próximo passo é mais apropriado antes de selecionar tratamento invasivo?",
+    "o": [
+      "Diagnosticar Barrett pela persistência de pirose apesar da medicação.",
+      "Rever uso do IBP e buscar demonstração objetiva do mecanismo dos sintomas.",
+      "Manter escalonamento de dose sem rever adesão ou o diagnóstico inicial.",
+      "Indicar fundoplicatura usando a intensidade da queixa como critério principal."
+    ],
+    "a": 1,
+    "why": "Sintomas persistentes podem decorrer de uso inadequado, refluxo verdadeiro, hipersensibilidade ou mecanismos funcionais. É necessário corrigir a forma de uso e investigar conforme a comprovação prévia de DRGE. Operação não deve funcionar como teste diagnóstico. Pirose não estabelece Barrett, que depende de avaliação endoscópica e histológica. Escalonamento sem reavaliar pode prolongar tratamento ineficaz.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "ciresof-11",
+    "t": "ciresof",
+    "q": "Mulher de 52 anos tem DRGE previamente comprovada por exame objetivo e mantém regurgitação e queimação apesar de IBP corretamente utilizado. A endoscopia recente não esclarece a persistência dos sintomas. A dúvida da equipe é se há associação com episódios de refluxo durante o tratamento, inclusive fracamente ácido. Qual exame pode contribuir mais diretamente para essa pergunta?",
+    "o": [
+      "Manometria de alta resolução para registrar diretamente a acidez.",
+      "ImpedanciopHmetria ambulatorial durante o tratamento indicado.",
+      "Tomografia torácica para correlacionar cada regurgitação com refluxo.",
+      "Esofagograma contrastado para medir exposição ácida diária."
+    ],
+    "a": 1,
+    "why": "Em DRGE estabelecida com sintomas persistentes apesar de tratamento otimizado, impedanciopHmetria em uso de IBP pode avaliar refluxo residual e associação sintomática, conforme a indicação. A impedância detecta eventos não necessariamente ácidos. Manometria avalia motilidade; esofagograma e tomografia fornecem informações anatômicas, sem responder à correlação temporal proposta.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "ciresof-12",
+    "t": "ciresof",
+    "q": "Homem de 50 anos tem refluxo objetivamente documentado e deseja cirurgia. Ao detalhar a história, relata episódios de alimento parado no tórax e dificuldade também com líquidos, que não melhoraram com o IBP. A endoscopia não mostra estenose. Antes de definir uma fundoplicatura, qual avaliação é particularmente importante para evitar agravar um distúrbio motor não reconhecido?",
+    "o": [
+      "Teste respiratório para supercrescimento bacteriano.",
+      "Repetição isolada da pesquisa de Helicobacter pylori.",
+      "Manometria de alta resolução do esôfago.",
+      "Tomografia de abdome para medir gordura visceral."
+    ],
+    "a": 2,
+    "why": "Manometria pré-operatória identifica acalasia e outros distúrbios relevantes da junção ou peristalse, além de contribuir para planejamento. A presença de refluxo não exclui uma segunda causa de disfagia. Os demais exames podem responder a outros problemas, mas não avaliam o mecanismo motor que determina o risco de criar uma barreira inadequada à deglutição.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "ciresof-13",
+    "t": "ciresof",
+    "q": "Mulher de 61 anos acompanha Barrett previamente não displásico. Na endoscopia atual há uma área nodular de oito milímetros dentro do segmento, antes ausente. Não há estenose, perda ponderal ou metástase conhecida. A equipe considera tratamento endoscópico em centro experiente. Qual deve ser a prioridade para essa lesão visível antes de definir o tratamento do restante do Barrett?",
+    "o": [
+      "Ablação do segmento sem obter material da área nodular.",
+      "Esofagectomia sem avaliação histológica adicional do novo achado.",
+      "Manutenção do intervalo anterior de vigilância pela ausência prévia de displasia.",
+      "Ressecção endoscópica adequada da lesão para diagnóstico e estadiamento histológico."
+    ],
+    "a": 3,
+    "why": "Lesões visíveis em Barrett precisam de avaliação dirigida e, quando apropriado, ressecção endoscópica que permita determinar profundidade, margens e risco. A ablação não fornece esse mesmo estadiamento. O laudo anterior não garante que a nova lesão seja benigna. Esofagectomia depende de estágio e risco, não de nodularidade isolada sem completar a avaliação.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "ciresof-14",
+    "t": "ciresof",
+    "q": "Homem de 44 anos apresenta disfagia persistente três meses após fundoplicatura. Consegue ingerir líquidos, mas perdeu peso por restrição de sólidos. Não há febre ou dor torácica aguda. O relatório operatório descreve correção de hérnia hiatal, e a equipe cogita estreitamento ou migração da reconstrução. Qual investigação inicial orienta melhor uma eventual revisão?",
+    "o": [
+      "Tomografia de tórax e abdome com contraste para selecionar a técnica de revisão.",
+      "Endoscopia e esofagograma para avaliar passagem e anatomia da fundoplicatura.",
+      "Esofagograma isolado para indicar desmontagem da válvula se houver dilatação.",
+      "Manometria e pHmetria como avaliação inicial, adiando os exames de anatomia."
+    ],
+    "a": 1,
+    "why": "A disfagia persistente com perda de peso exige avaliação da reconstrução: endoscopia examina mucosa, lúmen e passagem, e esofagograma complementa a posição e a dinâmica anatômica. Testes funcionais podem ser acrescentados se a anatomia não explicar o quadro, mas não devem substituí-la na suspeita descrita. Tomografia pode ajudar em complicações ou anatomia complexa, sem ser primeira escolha habitual neste caso estável. Um achado isolado no esofagograma não basta para escolher nova operação sem integração dos exames e da clínica.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "ciresof-15",
+    "t": "ciresof",
+    "q": "Mulher de 48 anos tem DRGE comprovada, hérnia hiatal e melhora importante da pirose com IBP corretamente usado. Mesmo assim, relata retorno de grande volume de conteúdo ao se abaixar depois das refeições. Não apresenta disfagia ou vômitos, mas a equipe ainda avaliará anatomia e motilidade antes de discutir intervenção. Qual explicação melhor relaciona resposta ao remédio e persistência do sintoma?",
+    "o": [
+      "A supressão ácida deve reconstruir o hiato, tornando improvável refluxo residual.",
+      "A redução da acidez não corrige necessariamente a barreira mecânica ao refluxo de volume.",
+      "A melhora da pirose demonstra normalização da frequência de todos os episódios.",
+      "A regurgitação comprova acalasia, independentemente da avaliação motora."
+    ],
+    "a": 1,
+    "why": "IBP modifica a acidez do conteúdo, sem necessariamente impedir seu retorno pela junção. Assim, regurgitação pode persistir apesar de pirose controlada. A melhora sintomática não comprova normalização de todo refluxo e o fármaco não reconstrói o hiato. Acalasia e retenção são diferenciais a considerar conforme avaliação, mas o sintoma isolado não permite afirmá-las.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "ciresof-16",
+    "t": "ciresof",
+    "q": "Mulher de 39 anos tem queimação retroesternal intensa e deseja fundoplicatura. Endoscopia com avaliação apropriada não mostrou doença mucosa; manometria excluiu distúrbio motor maior. A monitorização fora do IBP apresentou exposição ácida fisiológica e nenhuma associação consistente entre eventos e sintomas. Após rever a qualidade dos exames, qual estratégia é mais adequada?",
+    "o": [
+      "Discutir mecanismo funcional e tratamento direcionado à sensibilidade e aos sintomas.",
+      "Indicar dilatação pneumática para reduzir a percepção de queimação.",
+      "Indicar fundoplicatura porque a intensidade da pirose supera os resultados dos testes.",
+      "Tratar como Barrett e estabelecer um calendário de ablação endoscópica."
+    ],
+    "a": 0,
+    "why": "O conjunto favorece pirose funcional, após exclusões e qualidade diagnóstica apropriadas. Os sintomas são reais, mas uma barreira antirrefluxo não tem indicação sustentada apenas pela intensidade quando não há refluxo patológico ou associação. Barrett não decorre da queixa e não foi demonstrado. Dilatação trata problemas de abertura em indicações específicas, não esse mecanismo de pirose.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "ciresof-17",
+    "t": "ciresof",
+    "q": "Homem de 46 anos tem disfagia para sólidos e líquidos, regurgitação noturna e esofagograma com afilamento distal. Nunca realizou endoscopia ou manometria. Não apresenta emergência respiratória, mas perdeu peso e limita a alimentação. A equipe considera tratamento da junção esofagogástrica. Qual sequência estabelece melhor as condições para uma decisão segura?",
+    "o": [
+      "Confirmar refluxo por pHmetria e escolher fundoplicatura pelo grau de pirose.",
+      "Solicitar apenas sorologia para Chagas e escolher operação conforme o resultado.",
+      "Excluir obstrução orgânica por endoscopia e caracterizar a motilidade por manometria.",
+      "Iniciar dilatação pela imagem e reservar investigação para eventual falha."
+    ],
+    "a": 2,
+    "why": "O padrão sugere acalasia, mas esofagograma não exclui tumor ou outra obstrução. Endoscopia avalia causas orgânicas e manometria define o distúrbio motor, direcionando a escolha terapêutica. Sorologia pode esclarecer etiologia em contexto epidemiológico adequado, sem substituir avaliação anatômica e funcional. Dilatação empírica ou fundoplicatura sem diagnóstico podem atrasar o tratamento correto.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "ciresof-18",
+    "t": "ciresof",
+    "q": "Homem de 78 anos passou a ter disfagia há dois meses e perdeu quinze quilos. O esofagograma lembra acalasia, mas a endoscopia encontrou resistência importante na cárdia, sem lesão mucosa evidente; biópsias superficiais foram inconclusivas. A equipe ainda suspeita de processo infiltrativo. Qual decisão é mais apropriada antes de miotomia ou dilatação?",
+    "o": [
+      "Complementar investigação da junção com imagem e amostragem dirigidas à suspeita de pseudoacalasia.",
+      "Prescrever IBP por oito semanas e reavaliar apenas se a disfagia piorar.",
+      "Realizar miotomia e aguardar anatomopatológico da mucosa coletada durante o procedimento.",
+      "Aceitar acalasia primária porque a mucosa não apresentou ulceração visível."
+    ],
+    "a": 0,
+    "why": "Tumores infiltrativos da junção podem produzir mucosa pouco alterada e biópsias superficiais negativas. A combinação de idade, rapidez e perda ponderal mantém pseudoacalasia no diferencial, justificando tomografia, ecoendoscopia e amostragem adequada conforme o caso. Aparência mucosa preservada não encerra a investigação. Tratamento motor precoce pode postergar o diagnóstico e não substitui estadiamento.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "ciresof-19",
+    "t": "ciresof",
+    "q": "Mulher de 43 anos, com acalasia confirmada, pergunta se a miotomia proposta fará o esôfago voltar a funcionar normalmente. A equipe explica que a doença envolve perda de neurônios do plexo mioentérico e ausência de peristalse adequada. Qual explicação descreve melhor o objetivo da intervenção, sem prometer recuperação funcional que o procedimento não assegura?",
+    "o": [
+      "Remover a mucosa distal para reconstituir a propagação das contrações.",
+      "Criar uma barreira mais resistente para impedir retenção no corpo esofágico.",
+      "Restituir os neurônios inibitórios e recuperar o reflexo fisiológico de relaxamento.",
+      "Diminuir a resistência da saída esofágica para facilitar o esvaziamento."
+    ],
+    "a": 3,
+    "why": "Miotomia atua na obstrução funcional da junção, facilitando o esvaziamento por menor resistência. Não regenera neurônios nem garante peristalse normal, razão pela qual orientações e seguimento continuam necessários. Remoção de mucosa não é seu mecanismo. Aumentar a barreira sem tratar a saída tenderia a piorar a retenção, embora medidas antirrefluxo possam ser associadas em técnicas apropriadas.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "ciresof-20",
+    "t": "ciresof",
+    "q": "Homem de 36 anos tem acalasia tipo III confirmada, com segmento espástico extenso. Endoscopia excluiu obstrução tumoral, e a equipe discute POEM em centro experiente por permitir miotomia de extensão ajustada. O paciente deseja entender os benefícios e consequências a acompanhar. Qual ponto deve fazer parte dessa decisão compartilhada?",
+    "o": [
+      "A expectativa de recuperar peristalse normal e dispensar avaliação de deglutição futura.",
+      "A possibilidade de aliviar o segmento espástico e o risco de refluxo após o procedimento.",
+      "A possibilidade de escolher a extensão sem considerar os achados manométricos.",
+      "A necessidade de esofagectomia associada para que a miotomia tenha efeito."
+    ],
+    "a": 1,
+    "why": "POEM permite tratar extensão maior de espasmo, o que pode ser vantajoso no tipo III, mas está associado a refluxo que requer avaliação e manejo. A técnica não exige esofagectomia nem regenera a inervação. O planejamento depende do padrão motor e da experiência local. A escolha entre opções inclui durabilidade, eventos adversos e preferências, sem promessa de cura de toda disfunção.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "ciresof-21",
+    "t": "ciresof",
+    "q": "Mulher de 51 anos foi submetida a dilatação pneumática por acalasia. Duas horas depois apresenta dor torácica intensa, taquicardia e dispneia, sem quadro semelhante antes do procedimento. A saturação caiu e a dor não melhora com analgesia habitual. A equipe inicia avaliação e suporte. Qual complicação deve ser investigada com prioridade, antes de atribuir os sintomas à adaptação ao tratamento?",
+    "o": [
+      "Persistência da acalasia como explicação da deterioração sistêmica aguda.",
+      "Perfuração esofágica com contaminação mediastinal ou pleural.",
+      "Estenose péptica crônica decorrente de refluxo após a dilatação.",
+      "Divertículo de Zenker como causa de dor após distensão distal."
+    ],
+    "a": 1,
+    "why": "Dor importante e sinais sistêmicos após dilatação exigem excluir perfuração prontamente. O risco de contaminação torna inadequado esperar uma evolução supostamente habitual. Estenose péptica é processo de outra temporalidade; persistência motora não explica bem a deterioração aguda. Zenker é uma alteração anatômica alta, sem relação adequada com o mecanismo e o momento descritos.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "ciresof-22",
+    "t": "ciresof",
+    "q": "Homem de 73 anos tem divertículo de Zenker com retenção alimentar, halitose e episódios de aspiração. O esofagograma define a bolsa e a relação com o segmento faringoesofágico. Está em avaliação para tratamento em centro experiente, por via endoscópica ou aberta conforme anatomia e condições clínicas. Qual componente funcional precisa ser abordado para reduzir persistência ou recorrência dos sintomas?",
+    "o": [
+      "A ausência de relaxamento do piloro que impede esvaziamento do divertículo.",
+      "A incompetência do esfíncter inferior associada a refluxo ácido distal.",
+      "A resistência do segmento cricofaríngeo associada à formação da bolsa.",
+      "A deficiência de secreção gástrica que dificulta a digestão dos alimentos retidos."
+    ],
+    "a": 2,
+    "why": "Zenker se relaciona à disfunção do segmento cricofaríngeo. O tratamento busca resolver essa resistência, por septotomia/miotomia ou técnica adequada ao caso, além de lidar com a bolsa quando indicado. A junção distal e o piloro não são o mecanismo de retenção alto apresentado. Retirar a bolsa sem considerar a resistência funcional pode produzir resultado inadequado.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "ciresof-23",
+    "t": "ciresof",
+    "q": "Mulher de 49 anos tratada por miotomia para acalasia voltou a apresentar disfagia, agora acompanhada de queimação. Teve melhora inicial por dois anos. O peso está em queda, sem sinais de perfuração ou infecção. A equipe cogita nova intervenção, mas ainda não conhece a anatomia atual, a passagem pela junção ou a exposição ácida. Qual abordagem é mais apropriada?",
+    "o": [
+      "Repetir miotomia atribuindo a recorrência à regeneração dos neurônios acometidos.",
+      "Investigar retenção, anatomia da junção e possível doença péptica antes de escolher o resgate.",
+      "Repetir dilatação pneumática com base apenas no diagnóstico histórico de acalasia.",
+      "Prescrever dieta líquida permanente e encerrar investigação da disfagia."
+    ],
+    "a": 1,
+    "why": "Recorrência pode decorrer de miotomia incompleta, fibrose, alterações anatômicas ou refluxo com estenose, entre outras causas. Endoscopia, esofagograma e estudos funcionais são selecionados conforme a pergunta. O diagnóstico antigo não define o mecanismo atual. Acalasia não recorre porque neurônios regeneram, e restrição alimentar não substitui investigação, particularmente com perda ponderal.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "ciresof-24",
+    "t": "ciresof",
+    "q": "Homem de 62 anos relata dificuldade progressiva para engolir, primeiro carne e pão e depois líquidos. Perdeu nove quilos em quatro meses e está anêmico. Não tem história que explique estenose benigna, e ainda não foi investigado. Está clinicamente estável para avaliação. Qual procedimento oferece a informação principal para estabelecer o diagnóstico da lesão suspeita?",
+    "o": [
+      "pHmetria prolongada com suspensão prévia de medicamentos.",
+      "Endoscopia digestiva alta com biópsia da alteração identificada.",
+      "Manometria de alta resolução com classificação da peristalse.",
+      "Dilatação esofágica empírica com observação da resposta à passagem."
+    ],
+    "a": 1,
+    "why": "Disfagia progressiva e emagrecimento exigem excluir lesão orgânica, inclusive câncer. Endoscopia localiza a alteração e permite histologia. Manometria pode ser apropriada depois de excluir obstrução em cenários selecionados. Dilatação sem diagnóstico pode causar complicações e retardar a investigação. pHmetria não estabelece a natureza da lesão suspeita.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "ciresof-25",
+    "t": "ciresof",
+    "q": "Mulher de 60 anos recebeu biópsia confirmando câncer de esôfago e solicita operação imediata. Tem disfagia, perda ponderal e nenhum exame de extensão concluído; a função cardiopulmonar também não foi avaliada. Não há sangramento ou perfuração que imponha intervenção emergencial. Qual planejamento é mais adequado antes de definir intenção curativa, sequência e modalidade terapêutica?",
+    "o": [
+      "Completar estadiamento, avaliação funcional e suporte nutricional em equipe multidisciplinar.",
+      "Programar esofagectomia usando o resultado da biópsia como prova de doença localizada.",
+      "Escolher quimiorradioterapia sem considerar histologia, localização ou reserva clínica.",
+      "Indicar prótese paliativa usando a disfagia como prova de impossibilidade de cura."
+    ],
+    "a": 0,
+    "why": "Histologia confirma a neoplasia, mas não define extensão, ressecabilidade ou tolerância ao tratamento. Estadiamento, estado funcional e nutrição podem mudar intenção e sequência. Disfagia requer suporte, sem significar doença necessariamente incurável. Cirurgia e tratamento sistêmico/radioterápico não são intercambiáveis sem considerar a situação oncológica e as condições do paciente.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "ciresof-26",
+    "t": "ciresof",
+    "q": "Homem de 57 anos tem câncer esofágico sem metástases identificadas na avaliação inicial. A tomografia não esclarece bem a profundidade de invasão nem a natureza de um linfonodo regional próximo. A lesão permite passagem do aparelho e o resultado poderá mudar o planejamento. Qual exame contribui mais diretamente para avaliação locorregional das camadas da parede e, quando indicada, amostragem linfonodal?",
+    "o": [
+      "Esofagograma como método para estabelecer invasão microscópica regional.",
+      "Broncoscopia como método para definir todos os linfonodos periesofágicos.",
+      "PET-CT como método principal para distinguir as camadas da parede.",
+      "Ecoendoscopia com punção do linfonodo quando apropriada."
+    ],
+    "a": 3,
+    "why": "Ecoendoscopia pode detalhar profundidade e linfonodos, com amostragem quando isso muda a estratégia. Não é obrigatória se inviável ou sem impacto decisório. PET-CT tem papel na pesquisa de disseminação, não na discriminação fina das camadas. Esofagograma avalia passagem/anatomia. Broncoscopia responde a suspeitas de envolvimento de via aérea em tumores de topografia pertinente.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "ciresof-27",
+    "t": "ciresof",
+    "q": "Homem de 58 anos tem carcinoma escamoso localizado no esôfago cervical, sem metástases distantes. A avaliação considera que uma operação implicaria grande perda funcional e possível necessidade de ressecção associada da laringe. Está apto a tratamento combinado, e a equipe especializada discute preservação de órgão. Qual estratégia pode ser apropriada nesse contexto?",
+    "o": [
+      "Esofagectomia imediata, sem considerar o impacto funcional da localização.",
+      "Ressecção endoscópica isolada para qualquer profundidade da lesão cervical.",
+      "Quimiorradioterapia definitiva, com avaliação de resposta e resgate conforme evolução.",
+      "Prótese esofágica como substituto do tratamento oncológico de intenção curativa."
+    ],
+    "a": 2,
+    "why": "Carcinoma escamoso cervical pode ser tratado com quimiorradioterapia definitiva em contexto adequado, buscando preservação funcional. A decisão é especializada e inclui estágio, função e possibilidade de resgate. Localização não torna toda lesão candidata a endoscopia nem impõe automaticamente cirurgia extensa. Prótese pode ter indicações de suporte ou paliação, sem equivaler a controle oncológico curativo.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "ciresof-28",
+    "t": "ciresof",
+    "q": "Mulher de 64 anos está no sexto dia após esofagectomia com reconstrução gástrica. Apresenta taquicardia persistente, febre e piora da oxigenação após evolução inicialmente favorável. O dreno não contém alimento e a radiografia mostra derrame pleural novo. A equipe ainda não avaliou a anastomose ou a viabilidade do conduto. Qual conduta é mais adequada?",
+    "o": [
+      "Aguardar conteúdo alimentar no dreno antes de investigar comunicação com a anastomose.",
+      "Reiniciar dieta para testar a integridade anastomótica pela variação do débito.",
+      "Investigar prontamente complicações anastomóticas, do conduto e pulmonares conforme estabilidade.",
+      "Tratar apenas atelectasia pela frequência de complicações pulmonares após a operação."
+    ],
+    "a": 2,
+    "why": "Fístula, comprometimento do conduto e infecção podem apresentar-se por sinais sistêmicos e respiratórios, sem conteúdo alimentar no dreno. É necessário suporte e investigação dirigida à gravidade, com imagem e endoscopia conforme o caso. Atelectasia não deve encerrar o diferencial. Oferecer alimento para testar uma possível falha acrescenta risco e não substitui avaliação adequada.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "ciresof-29",
+    "t": "ciresof",
+    "q": "Homem de 67 anos, operado por câncer esofágico há um ano, apresenta disfagia progressiva. Tinha passagem satisfatória após a recuperação e agora perdeu peso. A anastomose pode estar estreitada, mas não há avaliação recente nem diagnóstico histológico da alteração. Qual passo deve preceder uma sequência de dilatações destinadas a estenose benigna?",
+    "o": [
+      "Investigar a anastomose e considerar recidiva, com biópsia de achados suspeitos.",
+      "Assumir fibrose benigna pela localização na linha anastomótica.",
+      "Programar dilatações seriadas sem rever a evolução oncológica.",
+      "Indicar prótese definitiva usando o tempo pós-operatório como único critério."
+    ],
+    "a": 0,
+    "why": "Disfagia tardia progressiva exige diferenciar estenose benigna, recidiva e alterações da reconstrução. A presença de anastomose não explica automaticamente toda estenose como fibrose. Endoscopia com amostragem, imagem e outros estudos são escolhidos conforme achados. Dilatação ou prótese podem ser úteis depois de definir mecanismo e intenção, mas não substituem essa etapa.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "ciresof-30",
+    "t": "ciresof",
+    "q": "Mulher de 55 anos tem câncer de esôfago potencialmente ressecável e será avaliada para tratamento multimodal. Perdeu quinze por cento do peso, ingere pouca comida e está menos ativa, embora não tenha metástases detectadas. Não há obstrução completa. Além de finalizar estadiamento, qual medida faz parte do planejamento e pode influenciar tolerância às próximas etapas?",
+    "o": [
+      "Aguardar o término da terapia oncológica para iniciar avaliação das carências.",
+      "Colocar prótese esofágica em toda candidata a tratamento curativo antes da discussão.",
+      "Atribuir a perda ponderal à neoplasia sem investigar ingestão e composição corporal.",
+      "Avaliar capacidade funcional e oferecer suporte nutricional adaptado à via disponível."
+    ],
+    "a": 3,
+    "why": "Reserva funcional, sarcopenia, ingestão e carências influenciam risco e tolerância ao tratamento. O suporte deve ser individualizado e ocorrer em paralelo ao estadiamento, sem esperar o fim da terapia. Prótese não é obrigatória e pode ter consequências para estratégias curativas. A causa oncológica provável não elimina a necessidade de avaliar e tratar o impacto nutricional.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirestom-10",
+    "t": "cirestom",
+    "q": "Mulher de 71 anos teve melena e queda de hemoglobina, mas está estável após suporte inicial. A endoscopia revela úlcera gástrica com vaso visível, sem jato no momento do exame. Não há coagulopatia importante, e o endoscopista dispõe de meios de hemostasia. Qual interpretação deve orientar a conduta sobre o estigma observado?",
+    "o": [
+      "O vaso exposto justifica hemostasia pelo risco de ressangramento.",
+      "A ausência de jato permite tratar como base limpa, sem hemostasia.",
+      "A estabilidade atual elimina a necessidade de tratar o estigma.",
+      "A intervenção deve ser reservada à presença concomitante de dor epigástrica."
+    ],
+    "a": 0,
+    "why": "Um vaso visível mantém risco relevante mesmo sem sangramento ativo naquele instante. A estabilidade permite executar o tratamento com melhor suporte, mas não elimina a indicação endoscópica. Dor não é critério para hemostasia. O manejo inclui IBP e investigação/tratamento da etiologia; em úlcera gástrica, obtenção de amostras e seguimento são planejados conforme a segurança e os achados.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirestom-11",
+    "t": "cirestom",
+    "q": "Homem de 60 anos apresenta úlcera com sangramento ativo na endoscopia. A injeção local de adrenalina interrompe o fluxo e melhora a visualização, mas o vaso responsável permanece identificável. O aparelho dispõe de clipes e método térmico, e o paciente está estabilizado. Qual próxima medida oferece controle mais duradouro nesse cenário?",
+    "o": [
+      "Repetir apenas injeções até desaparecer toda pigmentação do leito.",
+      "Associar hemostasia mecânica ou térmica apropriada ao vaso identificado.",
+      "Substituir a hemostasia pela dose oral habitual de IBP.",
+      "Encerrar o procedimento e usar adrenalina como método definitivo isolado."
+    ],
+    "a": 1,
+    "why": "Adrenalina pode produzir tamponamento e vasoconstrição transitórios, facilitando o procedimento, mas não deve ser o único tratamento endoscópico de uma lesão que requer hemostasia definitiva. Clipes ou terapia térmica apropriada reduzem risco de recorrência em comparação com injeção isolada. O IBP é complementar, não substitui o controle do vaso. A aparência do leito deve ser interpretada pelo estigma, não pela perda de pigmentação.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirestom-12",
+    "t": "cirestom",
+    "q": "Mulher de 65 anos, tratada endoscopicamente por hemorragia ulcerosa, apresenta nova hematêmese no dia seguinte e queda de hemoglobina. Após reavaliação e suporte, está normotensa e o hospital dispõe de endoscopista experiente. Não há suspeita de perfuração. Qual estratégia de resgate costuma ser apropriada como próxima etapa, antes de definir necessidade de embolização ou cirurgia?",
+    "o": [
+      "Observação exclusiva até completar o esquema medicamentoso inicial.",
+      "Gastrectomia imediata porque qualquer recorrência invalida o tratamento endoscópico.",
+      "Nova endoscopia para avaliar e tratar o foco de ressangramento.",
+      "Colonoscopia porque uma primeira endoscopia já documentou a úlcera."
+    ],
+    "a": 2,
+    "why": "Ressangramento após hemostasia exige suporte e geralmente nova abordagem endoscópica quando viável. Falha desse controle leva a considerar embolização e cirurgia conforme gravidade e recursos. Recorrência não determina automaticamente gastrectomia. Aguardar tratamento medicamentoso pode postergar controle de hemorragia. Colonoscopia não responde primeiro a uma nova hematêmese com foco alto já conhecido.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirestom-13",
+    "t": "cirestom",
+    "q": "Homem de 78 anos, com elevado risco operatório, apresenta hemorragia por úlcera duodenal. Duas abordagens endoscópicas apropriadas por equipe experiente não obtiveram controle duradouro. Após transfusão e suporte, está suficientemente estável para transferência à radiologia intervencionista, disponível no hospital. A lesão arterial provável foi localizada. Qual estratégia de controle é preferível discutir antes de uma operação de maior agressão?",
+    "o": [
+      "Embolização arterial transcateter do território responsável.",
+      "Transfusão seriada como substituto do controle da fonte arterial.",
+      "Nova aplicação isolada de adrenalina pela mesma técnica inicial.",
+      "Gastrectomia total como primeira modalidade cirúrgica de resgate."
+    ],
+    "a": 0,
+    "why": "Após falha endoscópica, embolização é opção de resgate particularmente útil quando disponível e o paciente pode tolerar o procedimento, sobretudo com alto risco cirúrgico. Cirurgia continua necessária em falha ou indisponibilidade e em cenários de instabilidade, com técnica proporcional à fonte. Repetir indefinidamente a mesma injeção ou apenas transfundir não oferece controle adequado da hemorragia persistente.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirestom-14",
+    "t": "cirestom",
+    "q": "Durante exploração por hemorragia duodenal refratária, o cirurgião encontra úlcera profunda na parede posterior do bulbo. Ao planejar sutura e controle vascular, considera que um vaso passa atrás da primeira porção duodenal e se relaciona à borda superior do pâncreas. Qual estrutura corresponde mais diretamente à fonte arterial clássica dessa lesão?",
+    "o": [
+      "Artéria gastroepiploica esquerda.",
+      "Artéria cólica esquerda.",
+      "Artéria gastroduodenal.",
+      "Artéria gástrica curta."
+    ],
+    "a": 2,
+    "why": "A gastroduodenal passa posteriormente ao duodeno proximal e pode ser erodida por úlcera posterior. A descrição anatômica permite distingui-la das artérias gástricas curtas e gastroepiploica esquerda, ligadas ao território esplênico, e da cólica esquerda, do território mesentérico inferior. A técnica precisa considerar colaterais e anatomia individual para obter hemostasia, não apenas memorizar o nome do vaso.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirestom-15",
+    "t": "cirestom",
+    "q": "Mulher de 64 anos tem vômitos persistentes por obstrução da saída gástrica, com grande débito pela sonda. Está hipovolêmica; sódio 134 mEq/L, potássio 2,8 mEq/L, cloro 82 mEq/L e bicarbonato 36 mEq/L. Não há insuficiência respiratória. Antes do tratamento definitivo da obstrução, qual distúrbio e mecanismo devem orientar a reposição e a monitorização?",
+    "o": [
+      "Alcalose metabólica por perda gástrica com depleção de cloro e potássio.",
+      "Acidose respiratória primária por aumento da secreção ácida gástrica.",
+      "Alcalose respiratória primária por retenção pulmonar de dióxido de carbono.",
+      "Acidose metabólica por perda de bicarbonato contido no suco gástrico."
+    ],
+    "a": 0,
+    "why": "Vômitos gástricos retiram ácido e cloro; hipovolemia e perdas de potássio mantêm alcalose metabólica. A reposição costuma exigir cloreto e potássio, ajustados à perfusão, função renal e diurese. Perda de bicarbonato intestinal produz outro padrão. Os dados não sustentam um distúrbio respiratório primário, e o vínculo fisiológico proposto nas demais opções não corresponde aos mecanismos ácido-básicos.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirestom-16",
+    "t": "cirestom",
+    "q": "Homem de 68 anos apresenta perfuração de uma lesão gástrica, com peritonite e necessidade de controle cirúrgico urgente. Na operação, a área ulcerada tem bordas endurecidas e aspecto irregular. Ele relatara perda ponderal antes da dor aguda. A condição circulatória limita a extensão inicial da intervenção. Além de controlar a contaminação, qual preocupação deve orientar o planejamento imediato e o seguimento?",
+    "o": [
+      "Indicar ressecção oncológica extensa sem ponderar a condição fisiológica.",
+      "Adiar controle da perfuração até completar estadiamento oncológico eletivo.",
+      "Considerar a perfuração evidência suficiente de benignidade péptica.",
+      "Obter avaliação histológica adequada e considerar etiologia neoplásica."
+    ],
+    "a": 3,
+    "why": "Úlcera gástrica perfurada pode estar associada a malignidade; bordas suspeitas e perda ponderal reforçam a necessidade de histologia e planejamento. A forma de obter amostras e a extensão da operação dependem de anatomia e estabilidade. Nem a hipótese benigna nem uma ressecção oncológica extensa devem ser assumidas automaticamente. Controle urgente do foco não deve esperar todo o estadiamento eletivo.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirestom-17",
+    "t": "cirestom",
+    "q": "Homem de 67 anos tem vômitos de alimentos antigos, saciedade precoce e perda de oito quilos. Refere úlcera tratada há vinte anos, mas não realizou exames recentes. Está desidratado e a imagem mostra estômago muito distendido com estreitamento da saída. Não há peritonite. Qual planejamento melhor evita atribuir a estase atual a uma causa benigna apenas pela história remota?",
+    "o": [
+      "Corrigir repercussões e investigar a obstrução por endoscopia com amostragem indicada.",
+      "Iniciar quimioterapia usando a perda de peso como confirmação de neoplasia.",
+      "Indicar derivação gástrica definitiva com base no antecedente de úlcera.",
+      "Prescrever apenas supressão ácida e aguardar ganho ponderal para investigar."
+    ],
+    "a": 0,
+    "why": "A prioridade inclui descompressão, correção hidroeletrolítica e avaliação da causa, inclusive neoplasia. Uma úlcera remota não prova estenose cicatricial atual, assim como emagrecimento não confirma câncer sem investigação. A reconstrução ou terapia oncológica depende do diagnóstico e da extensão da doença. Aguardar recuperação nutricional sem esclarecer a obstrução perpetua suas repercussões.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirestom-18",
+    "t": "cirestom",
+    "q": "Mulher de 61 anos está no quarto dia após gastrectomia. Apresenta dor contínua, febre, taquicardia e piora da perfusão, sem relação clara com horários das refeições. A equipe ainda não avaliou a reconstrução ou a presença de coleção. Qual decisão é mais adequada para evitar que um diagnóstico funcional pós-gastrectomia encerre prematuramente a investigação?",
+    "o": [
+      "Tratar como dumping precoce porque houve alteração do reservatório gástrico.",
+      "Aguardar adaptação alimentar antes de reavaliar os sinais sistêmicos.",
+      "Tratar como dumping tardio porque a taquicardia ocorre no pós-operatório.",
+      "Investigar fístula, coleção e complicação mecânica conforme a estabilidade."
+    ],
+    "a": 3,
+    "why": "Dumping tem relação temporal característica com alimentação e não explica automaticamente febre, dor persistente e deterioração circulatória. Complicações anastomóticas, infecciosas ou mecânicas exigem avaliação e suporte urgentes. O tempo pós-operatório, isoladamente, não define dumping precoce ou tardio. A identificação de um síndrome funcional só deve ocorrer após considerar o conjunto e excluir causas ameaçadoras pertinentes.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirestom-19",
+    "t": "cirestom",
+    "q": "Homem de 52 anos recebeu hemostasia endoscópica de úlcera e está estável. A investigação confirma Helicobacter pylori, e ele usava anti-inflamatório com frequência. Não há indicação atual de nova hemostasia. Qual planejamento trata fatores associados a recorrência, em vez de considerar que o controle do sangramento resolveu a doença ulcerosa por completo?",
+    "o": [
+      "Repetir hemostasia endoscópica como método de erradicação da bactéria.",
+      "Erradicar a infecção, confirmar resposta e revisar a exposição ulcerogênica.",
+      "Manter apenas antiácido quando houver dor, sem investigar a resposta bacteriana.",
+      "Retomar anti-inflamatório na mesma dose após normalização da hemoglobina."
+    ],
+    "a": 1,
+    "why": "Controle endoscópico trata o evento hemorrágico, não erradica Helicobacter ou elimina risco medicamentoso. É necessário esquema de erradicação adequado ao contexto, confirmação de cura no momento apropriado e revisão do uso de anti-inflamatórios. Ausência de dor e hemoglobina recuperada não demonstram resolução etiológica. O seguimento depende também da localização e das características da úlcera.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirestom-20",
+    "t": "cirestom",
+    "q": "Mulher de 66 anos tem adenocarcinoma gástrico cuja avaliação demonstra invasão submucosa. Um linfonodo regional apresenta achados suspeitos e ainda precisa de esclarecimento. Ela ouviu o termo precoce e concluiu que isso garante tratamento endoscópico e ausência de disseminação. Qual explicação melhor corrige essa interpretação?",
+    "o": [
+      "O termo indica que a ulceração é a única informação necessária para escolher tratamento.",
+      "O termo descreve profundidade e não exclui risco linfonodal ou necessidade cirúrgica.",
+      "O termo é definido pelo tamanho, mesmo quando há invasão da muscular própria.",
+      "O termo exige ausência de linfonodos e invalida a descrição histológica apresentada."
+    ],
+    "a": 1,
+    "why": "Câncer precoce se limita à mucosa ou submucosa, independentemente de metástase linfonodal. A escolha de tratamento incorpora risco de linfonodos e outros fatores histológicos e anatômicos. Tamanho ou ulceração não substituem a profundidade nessa definição. Portanto, o rótulo não equivale a endoscopia obrigatória nem elimina estadiamento e discussão terapêutica.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirestom-21",
+    "t": "cirestom",
+    "q": "Homem de 70 anos apresenta lesão gástrica superficial e deseja dissecção endoscópica para evitar gastrectomia. A biópsia inicial confirmou adenocarcinoma, mas a profundidade e os critérios de risco ainda não foram definidos. Está estável e pode completar investigação. Qual conjunto de informações deve orientar a elegibilidade, além de considerar experiência do centro e condições do paciente?",
+    "o": [
+      "Apenas aparência superficial, sem incorporar a avaliação histológica inicial.",
+      "Intensidade da dispepsia, resposta ao antiácido e número de refeições diárias.",
+      "Apenas localização na pequena ou grande curvatura e idade cronológica.",
+      "Histologia, profundidade, ulceração, tamanho e risco de acometimento linfonodal."
+    ],
+    "a": 3,
+    "why": "Ressecção endoscópica é adequada para situações com risco linfonodal suficientemente baixo e critérios definidos, não para toda lesão superficial. Tipo histológico, dimensões, ulceração, profundidade e possibilidade de ressecção completa importam; o espécime pode revelar fatores que mudem a estratégia. Sintomas, localização ou idade isolados não substituem esse conjunto nem garantem segurança oncológica.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirestom-22",
+    "t": "cirestom",
+    "q": "Mulher de 49 anos apresenta saciedade precoce e perda de peso. A endoscopia mostra estômago pouco distensível, com pregas espessadas e infiltração difusa, sem tumor polipoide único. Biópsias superficiais foram inicialmente pouco representativas, e a equipe planeja amostragem adequada da parede suspeita. Qual padrão de neoplasia gástrica deve ser considerado nessa configuração?",
+    "o": [
+      "Estenose pilórica cicatricial focal do antro.",
+      "Adenoma polipoide pediculado restrito à mucosa.",
+      "Linite plástica com infiltração difusa da parede.",
+      "Pseudocisto extrínseco sem acometimento parietal."
+    ],
+    "a": 2,
+    "why": "Infiltração difusa e rigidez levantam a hipótese de linite plástica, frequentemente relacionada a adenocarcinoma pouco coeso. Amostras superficiais podem ser insuficientes em doença predominantemente infiltrativa, exigindo estratégia diagnóstica adequada. As alternativas focais ou extrínsecas não explicam tão bem a alteração difusa da parede. O padrão não dispensa confirmação histológica e avaliação de extensão.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirestom-23",
+    "t": "cirestom",
+    "q": "Homem de 58 anos tem adenocarcinoma gástrico localmente avançado, com padrão infiltrativo e risco de disseminação peritoneal. A tomografia não mostra metástases, mas a identificação de implantes pequenos ou citologia positiva mudaria a intenção terapêutica. Está em avaliação para tratamento curativo e tem condições de realizar procedimento de estadiamento. Qual investigação pode acrescentar diretamente essa informação?",
+    "o": [
+      "PET-CT como prova suficiente da ausência de carcinomatose microscópica.",
+      "Laparoscopia de estadiamento com avaliação peritoneal e lavado indicado.",
+      "Ecoendoscopia como método para excluir implantes na superfície peritoneal.",
+      "Esofagograma para determinar a presença de citologia peritoneal positiva."
+    ],
+    "a": 1,
+    "why": "Laparoscopia em cenários indicados pode revelar implantes não detectados na tomografia e permitir citologia, alterando o plano. A seleção depende do estágio e perfil tumoral. Ecoendoscopia avalia sobretudo extensão locorregional; PET-CT pode ter limitações, especialmente em certos subtipos, e não exclui doença microscópica. Esofagograma não responde à pergunta sobre disseminação peritoneal.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirestom-24",
+    "t": "cirestom",
+    "q": "Mulher de 62 anos tem adenocarcinoma restrito à região distal do estômago, após estadiamento e discussão multimodal. A equipe demonstra que gastrectomia subtotal pode obter margens adequadas e linfadenectomia apropriada, preservando um remanescente viável. Não há infiltração proximal difusa. Qual princípio deve orientar a extensão da ressecção neste cenário?",
+    "o": [
+      "Retirar todo o estômago pelo diagnóstico de adenocarcinoma, independentemente da extensão.",
+      "Realizar a extensão necessária ao controle oncológico, sem totalização automática.",
+      "Preservar o órgão mesmo quando a margem necessária não pode ser obtida.",
+      "Escolher a extensão apenas pela maior facilidade técnica da reconstrução."
+    ],
+    "a": 1,
+    "why": "A operação deve assegurar margens e tratamento linfonodal adequados, considerando localização e padrão de extensão. Quando subtotal atende aos requisitos, gastrectomia total não se torna obrigatória pelo nome histológico. Preservação não pode ocorrer à custa de margem inadequada. Facilidade técnica também não substitui planejamento oncológico e avaliação da anatomia e do paciente.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirestom-25",
+    "t": "cirestom",
+    "q": "Durante planejamento de gastrectomia por adenocarcinoma, um membro da equipe afirma que retirar qualquer conjunto de dezesseis linfonodos equivale a realizar uma D2. O paciente tem indicação de operação oncológica em centro experiente, e a discussão é sobre a qualidade da dissecção. Qual resposta melhor diferencia extensão anatômica da avaliação numérica do espécime?",
+    "o": [
+      "D2 corresponde apenas ao número de linfonodos, independentemente das estações retiradas.",
+      "D2 exige ressecção do pâncreas e baço mesmo sem acometimento tumoral.",
+      "D2 corresponde a estações anatômicas definidas; contagem adequada também importa para estadiamento.",
+      "D2 pode ser substituída por biópsia isolada de um linfonodo próximo ao tumor."
+    ],
+    "a": 2,
+    "why": "D1/D2 descrevem extensão anatômica conforme a operação; a contagem é importante para a qualidade do estadiamento, mas não define sozinha uma D2. Ressecções de órgãos adjacentes não devem ser indiscriminadas. Biópsia de um linfonodo não substitui dissecção indicada. O planejamento requer anatomia, segurança e princípios oncológicos, além do laudo quantitativo.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirestom-26",
+    "t": "cirestom",
+    "q": "Homem de 64 anos foi submetido a gastrectomia total e está em seguimento, com alimentação progressivamente adaptada. Não tem anemia importante no momento, mas perdeu peso e pergunta se pode interromper o acompanhamento nutricional por estar conseguindo comer. Qual necessidade decorre particularmente da perda do estômago e deve integrar um plano longitudinal de cuidados?",
+    "o": [
+      "Reposição e monitorização de vitamina B12, além de avaliar outras carências.",
+      "Aguardar anemia macrocítica para considerar qualquer reposição vitamínica.",
+      "Suspender avaliação de ferro porque a absorção ocorre apenas no cólon.",
+      "Usar apenas o peso atual para excluir deficiências de micronutrientes."
+    ],
+    "a": 0,
+    "why": "A perda de células produtoras de fator intrínseco compromete a absorção fisiológica de B12; reposição e seguimento são necessários mesmo antes de anemia manifesta. Ferro e outros nutrientes também merecem avaliação conforme ingestão e reconstrução. Peso isolado não exclui carências. Esperar sinais tardios pode permitir manifestações hematológicas ou neurológicas evitáveis.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirestom-27",
+    "t": "cirestom",
+    "q": "Mulher de 68 anos está no quinto dia após gastrectomia com reconstrução em Y de Roux. Surgem febre, taquicardia e dor abdominal persistente, com piora após melhora inicial. O dreno tem pequeno débito inespecífico, e a equipe ainda não identificou a causa. Qual atitude deve ser priorizada antes de atribuir os sintomas à adaptação da dieta?",
+    "o": [
+      "Alta com revisão ambulatorial porque o baixo débito do dreno afasta complicação.",
+      "Espera pelo aparecimento de conteúdo alimentar no dreno para iniciar investigação.",
+      "Suporte e investigação de fístula, coleção e complicação mecânica conforme estabilidade.",
+      "Redução das porções alimentares como tratamento suficiente de dumping precoce."
+    ],
+    "a": 2,
+    "why": "Deterioração sistêmica após operação exige procurar falha anastomótica, coleção, problema da reconstrução e outras causas. Débito pequeno ou ausência de alimento não exclui complicação. Dumping tem outro padrão e não explica automaticamente febre e dor contínua. A abordagem deve ajustar exame e tratamento à condição circulatória, sem esperar um sinal tardio para começar a avaliação.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirestom-28",
+    "t": "cirestom",
+    "q": "Mulher de 46 anos tem adenocarcinoma gástrico pouco coeso e aumento bilateral dos ovários durante o estadiamento. As lesões são predominantemente sólidas, e a avaliação anatomopatológica de uma delas identifica células produtoras de mucina em anel de sinete, compatíveis com a origem gastrointestinal. Qual denominação clássica se aplica a essa forma de disseminação?",
+    "o": [
+      "Tumor de Krukenberg.",
+      "Prateleira de Blumer.",
+      "Linfonodo de Virchow.",
+      "Nódulo de Irmã Maria José."
+    ],
+    "a": 0,
+    "why": "Krukenberg designa classicamente metástase ovariana, frequentemente bilateral e com células em anel de sinete, associada a primários gastrointestinais. Virchow é o linfonodo supraclavicular esquerdo; Irmã Maria José é metástase umbilical; Blumer descreve implante pélvico perceptível como prateleira ao toque. Os epônimos não dispensam correlação histológica e estadiamento da doença disseminada.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirestom-29",
+    "t": "cirestom",
+    "q": "Homem de 60 anos, gastrectomizado por câncer, apresenta perda ponderal progressiva e passou a reduzir refeições por saciedade e desconforto. A investigação de recidiva está sendo organizada. Não há obstrução completa ou emergência infecciosa, mas o exame sugere perda muscular. Qual abordagem deve ocorrer em paralelo, sem esperar o término da investigação oncológica?",
+    "o": [
+      "Reoperação para ampliar a anastomose sem conhecer o mecanismo da intolerância.",
+      "Atribuição da perda ponderal à adaptação esperada, sem avaliação funcional.",
+      "Avaliação da ingestão, da reconstrução e das carências, com suporte nutricional individualizado.",
+      "Observação do peso até excluir recidiva antes de qualquer orientação alimentar."
+    ],
+    "a": 2,
+    "why": "Perda de peso pode resultar de ingestão insuficiente, alteração da reconstrução, má absorção, carências ou recidiva, com coexistência de mecanismos. Suporte nutricional e avaliação funcional devem ocorrer enquanto se investiga a causa oncológica. Esperar ou normalizar a deterioração pode agravar risco. Reoperação depende de diagnóstico anatômico específico, não do emagrecimento isolado.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirestom-30",
+    "t": "cirestom",
+    "q": "Mulher de 57 anos tem massa gástrica ulcerada na endoscopia, sem histologia disponível. A imagem não define se a origem é epitelial, subepitelial ou linfoproliferativa, e não há emergência que imponha operação imediata. A equipe considera possibilidades terapêuticas bastante diferentes. Qual etapa evita aplicar um esquema de adenocarcinoma a uma neoplasia de outra natureza?",
+    "o": [
+      "Iniciar FLOT pela presença de massa ulcerada, sem confirmação histológica.",
+      "Definir linfoma pelo aspecto ulcerado e iniciar tratamento sistêmico correspondente.",
+      "Indicar gastrectomia total com base apenas na dimensão endoscópica.",
+      "Obter material diagnóstico adequado e completar estadiamento pertinente."
+    ],
+    "a": 3,
+    "why": "Massas gástricas podem representar doenças com estratégias distintas, como adenocarcinoma, GIST e linfoma. A obtenção de material deve ser apropriada à suspeita, e o estadiamento depende da natureza confirmada. Aspecto ou tamanho isolados não definem histologia. Em ausência de emergência, iniciar tratamento específico antes dessa definição pode acrescentar dano e comprometer o planejamento.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirvb-10",
+    "t": "cirvb",
+    "q": "Homem de 49 anos descobriu cálculos na vesícula ao investigar esteatose. Nega dor biliar, febre, icterícia ou pancreatite, e o exame mostra parede fina, sem pólipo ou massa. Um familiar operado por pancreatite recomenda cirurgia preventiva. Antes de definir a conduta, qual abordagem é mais adequada para decidir se o benefício operatório supera o risco neste caso?",
+    "o": [
+      "Usar o número de cálculos para indicar cirurgia em qualquer vesícula.",
+      "Prescrever antibiótico até que a cirurgia preventiva possa ser realizada.",
+      "Confirmar ausência de sintomas e procurar indicações especiais de intervenção.",
+      "Indicar CPRE preventiva se os cálculos forem pequenos e numerosos."
+    ],
+    "a": 2,
+    "why": "A decisão na colelitíase incidental começa por confirmar que não houve sintomas compatíveis e avaliar situações específicas, não pelo temor decorrente da experiência de outro paciente. Na ausência de indicação especial, observação costuma ser adequada. Número ou pequeno tamanho não impõem intervenção. CPRE não trata a fonte vesicular, e antibiótico não previne cólica ou migração em paciente sem infecção.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirvb-11",
+    "t": "cirvb",
+    "q": "Mulher de 42 anos refere três episódios de dor contínua no hipocôndrio direito após refeições, com duração de uma a três horas e resolução completa entre as crises. Não houve febre ou icterícia; exames laboratoriais atuais são normais. O ultrassom mostra cálculos móveis e parede vesicular fina. Qual mecanismo explica melhor a síndrome dolorosa descrita?",
+    "o": [
+      "Obstrução persistente do colédoco com infecção ascendente da bile.",
+      "Necrose da parede vesicular por trombose da artéria cística.",
+      "Inflamação pancreática por retenção prolongada de cálculo ampular.",
+      "Obstrução transitória do ducto cístico com distensão da vesícula."
+    ],
+    "a": 3,
+    "why": "A dor biliar resulta habitualmente de obstrução transitória da saída vesicular, com distensão e estímulo visceral. O nome cólica não exige dor oscilante. Resolução, ausência de febre, exames normais e parede fina tornam menos prováveis colangite, pancreatite ou colecistite complicada. A história deve ser correlacionada à litíase, pois cálculo incidental não explica automaticamente qualquer dor abdominal.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirvb-12",
+    "t": "cirvb",
+    "q": "Durante colecistectomia, o cirurgião encontra uma estrutura tubular sob o infundíbulo e presume tratar-se do ducto cístico. A inflamação impede demonstrar sua continuidade e o terço inferior da vesícula ainda está aderido ao leito. Não há sangramento que exija ação imediata. Antes da clipagem, qual conduta melhor reduz o risco de identificação equivocada?",
+    "o": [
+      "Converter para aberta e dividir a estrutura se a sua posição continuar semelhante.",
+      "Descolar o colédoco circunferencialmente para validar a estrutura por comparação.",
+      "Dividir após colocar dois clipes, usando a posição infundibular como referência.",
+      "Suspender a divisão e obter definição anatômica segura, com auxílio ou imagem."
+    ],
+    "a": 3,
+    "why": "A aparência infundibular e a posição não substituem demonstração de anatomia segura. Deve-se pausar e considerar auxílio, colangiografia e/ou estratégia de resgate conforme o caso. Clipagem mais cuidadosa não corrige identificação errada. Dissecção extensa da via principal pode acrescentar risco. Conversão pode ajudar, mas não transforma uma estrutura presumida em identificada.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirvb-13",
+    "t": "cirvb",
+    "q": "Homem de 68 anos é operado por colecistite com importante fibrose e aderências. Apesar de reposicionamento e dissecção inicial cuidadosa, não se consegue obter visão crítica de segurança. Está hemodinamicamente estável e há cirurgião experiente disponível. Qual estratégia é mais apropriada para evitar lesão biliar mantendo a prioridade de controle da doença vesicular?",
+    "o": [
+      "Prosseguir pelo hilo até expor toda a via principal antes de mudar a técnica.",
+      "Interromper a dissecção insegura e discutir auxílio e colecistectomia subtotal.",
+      "Mudar para técnica fundo-primeiro até dividir as estruturas sem novo mapeamento.",
+      "Ligar o pedículo em bloco após confirmar que ele segue para o infundíbulo."
+    ],
+    "a": 1,
+    "why": "A incapacidade de demonstrar anatomia segura é motivo para mudar o plano. Auxílio e técnica de resgate, como subtotal quando adequada, podem evitar uma lesão maior. Técnica fundo-primeiro e conversão têm lugar, mas não dispensam segurança na região do pedículo. Ligadura em bloco ou dissecção insistente junto à via principal não resolvem a incerteza anatômica.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirvb-14",
+    "t": "cirvb",
+    "q": "Uma colecistectomia laparoscópica foi convertida para aberta por inflamação e dificuldade de exposição. Após a conversão, duas estruturas permanecem parcialmente encobertas pelo processo inflamatório. O paciente está estável e não há necessidade de compressão por hemorragia. Qual princípio deve orientar a equipe antes de retomar a divisão do pedículo?",
+    "o": [
+      "Concluir pela via aberta, pois a palpação substitui a confirmação da anatomia.",
+      "Dividir primeiro o ducto mais calibroso para ampliar a exposição do triângulo.",
+      "Retomar a sequência planejada, pois a conversão já controla o risco de lesão.",
+      "Reavaliar a identificação das estruturas e manter a possibilidade de técnica de resgate."
+    ],
+    "a": 3,
+    "why": "A conversão modifica acesso e exposição, não elimina a possibilidade de identificação equivocada. Continuam necessários reconhecimento anatômico, auxílio e eventual resgate. Palpação não basta em anatomia distorcida. Dividir uma estrutura para obter exposição pode criar justamente a lesão que se deseja evitar. A meta é controle seguro da doença, e não completar a técnica inicialmente pretendida a qualquer custo.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirvb-15",
+    "t": "cirvb",
+    "q": "Mulher de 70 anos tem icterícia, episódios de dor biliar e ultrassom com cálculo fixo no colo vesicular. A colangiorressonância mostra estreitamento do hepático comum adjacente, sem cálculo dentro do colédoco e com dilatação acima da área comprimida. A equipe revê o exame antes da operação porque a relação entre infundíbulo e ducto pode estar alterada. Qual hipótese é mais coerente?",
+    "o": [
+      "Coledocolitíase distal com obstrução intraluminal persistente.",
+      "Síndrome de Mirizzi com compressão da via biliar adjacente.",
+      "Estenose ampular com distensão difusa da via extra-hepática.",
+      "Colangiocarcinoma distal com invasão secundária da vesícula."
+    ],
+    "a": 1,
+    "why": "O cálculo impactado junto ao infundíbulo comprimindo o hepático comum é o mecanismo de Mirizzi. Ele altera o planejamento e aumenta a preocupação com lesão biliar. Não se deve chamar o quadro de coledocolitíase se não foi demonstrado cálculo ductal. Neoplasia permanece diferencial de estenose em contextos específicos, mas a relação anatômica descrita favorece causa litiásica extrínseca.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirvb-16",
+    "t": "cirvb",
+    "q": "Homem de 59 anos apresenta dor, febre e anorexia cinco dias após colecistectomia difícil. Está normotenso, mas a tomografia demonstra coleção sub-hepática de sete centímetros. O dreno cirúrgico tem baixo débito e a continuidade da via biliar não foi definida. Qual planejamento inicial integra melhor o tratamento da complicação e a investigação necessária?",
+    "o": [
+      "Controlar a coleção e esclarecer se existe vazamento ou lesão da via biliar.",
+      "Retirar o dreno cirúrgico e usar antibiótico como único tratamento inicial.",
+      "Reoperar para suturar o provável coto cístico sem outro estudo anatômico.",
+      "Observar até a bilirrubina cair e repetir a imagem ao fim de duas semanas."
+    ],
+    "a": 0,
+    "why": "Coleção com sinais infecciosos exige avaliação de controle da fonte, geralmente com drenagem factível e antimicrobiano, enquanto se define a anatomia. Nem todo vazamento é do cístico e reparo sem mapeamento pode agravar lesão maior. Bilirrubina pouco alterada não exclui fístula. Presença de dreno não garante drenagem eficaz e sua retirada pode piorar a contaminação.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirvb-17",
+    "t": "cirvb",
+    "q": "Mulher de 56 anos teve cólica biliar com elevação transitória de enzimas hepáticas. Não apresenta febre, icterícia persistente ou pancreatite. O ultrassom confirma cálculos vesiculares, sem visualizar cálculo no colédoco; a probabilidade clínica de litíase ductal foi considerada intermediária. O serviço dispõe de ressonância e ecoendoscopia. Qual estratégia evita melhor uma CPRE sem benefício terapêutico?",
+    "o": [
+      "Confirmar ou excluir cálculo com colangiorressonância ou ecoendoscopia.",
+      "Programar exploração aberta do colédoco com base apenas nas enzimas.",
+      "Dispensar investigação porque a dor já desapareceu e não há febre.",
+      "Solicitar CPRE diagnóstica antes de qualquer outra definição terapêutica."
+    ],
+    "a": 0,
+    "why": "No risco intermediário, métodos menos invasivos selecionam pacientes para CPRE terapêutica. Resolução da cólica ou ausência de cálculo no ultrassom não exclui litíase ductal. CPRE diagnóstica tem risco de pancreatite e outras complicações. Exploração cirúrgica pode integrar estratégias apropriadas, mas não precisa ser indicada automaticamente sem confirmação ou avaliação intraoperatória planejada.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirvb-18",
+    "t": "cirvb",
+    "q": "Homem de 72 anos é internado com febre, icterícia e cálculo obstrutivo no colédoco. Recebeu antimicrobiano e suporte inicial, mas mantém sinais de infecção sistêmica. A equipe pergunta se deve primeiro completar alguns dias de antibiótico para tornar o procedimento mais seguro. Não há contraindicação anatômica ao acesso endoscópico. Qual medida deve integrar o plano desde já?",
+    "o": [
+      "Observação até a bilirrubina normalizar para reduzir o risco da CPRE.",
+      "Colecistectomia como primeira medida para desobstruir a via principal.",
+      "Drenagem biliar em tempo determinado pela gravidade, junto ao suporte.",
+      "Troca de antibiótico antes de considerar qualquer método de drenagem."
+    ],
+    "a": 2,
+    "why": "Colangite em via obstruída requer avaliar descompressão, sem presumir que antibiótico eliminará a barreira mecânica. O tempo depende da gravidade e da resposta ao suporte; disfunção orgânica exige urgência. Colecistectomia isolada não resolve necessariamente cálculo do colédoco. A bilirrubina pode permanecer elevada enquanto houver obstrução, e esperar sua normalização inverte a sequência terapêutica.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirvb-19",
+    "t": "cirvb",
+    "q": "Mulher de 64 anos realizou CPRE com papilotomia e extração de cálculo. Horas depois surge dor abdominal intensa, taquicardia e piora clínica, diferente da dor que motivou o procedimento. A bilirrubina está em queda, mas isso não explica a nova evolução. Qual abordagem diagnóstica é mais apropriada antes de atribuir os sintomas a desconforto habitual pós-endoscopia?",
+    "o": [
+      "Pesquisar pancreatite, perfuração e hemorragia conforme exame e evolução.",
+      "Tratar como cólica vesicular e programar cirurgia sem avaliar complicações.",
+      "Repetir a extração endoscópica presumindo cálculo residual como causa única.",
+      "Aguardar normalização das provas hepáticas antes de investigar a dor."
+    ],
+    "a": 0,
+    "why": "Nova dor importante com deterioração após CPRE exige investigar complicações do procedimento, incluindo pancreatite, perfuração e sangramento. O exame físico, sinais vitais, hemograma, enzimas e imagem são selecionados conforme a hipótese. Queda da bilirrubina mostra desobstrução, não ausência de complicação. Cálculo residual é um diferencial, mas não deve monopolizar o raciocínio.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirvb-20",
+    "t": "cirvb",
+    "q": "Homem de 47 anos teve colangite por coledocolitíase, resolvida após antibiótico e CPRE terapêutica. Recuperou-se sem falência orgânica ou pancreatite pós-procedimento. A vesícula ainda contém cálculos e ele tem baixo risco operatório. Ao planejar a alta, qual estratégia trata melhor a fonte de novos episódios, além do cálculo que já foi retirado?",
+    "o": [
+      "Manter a vesícula e repetir CPRE se as enzimas hepáticas voltarem a subir.",
+      "Programar trocas de prótese biliar para impedir migração vesicular futura.",
+      "Planejar colecistectomia precoce, preferencialmente na mesma internação.",
+      "Prescrever ácido ursodesoxicólico como substituto da avaliação cirúrgica."
+    ],
+    "a": 2,
+    "why": "A fonte vesicular persiste após a retirada do cálculo ductal. Em paciente recuperado e apto, colecistectomia precoce reduz novos eventos. Papilotomia não equivale à retirada da vesícula. Tratamento medicamentoso e trocas de prótese não substituem esse controle da fonte na situação descrita. Se houvesse alto risco ou complicação, o momento e a indicação deveriam ser individualizados.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirvb-21",
+    "t": "cirvb",
+    "q": "Mulher de 76 anos com colangite recebeu prótese biliar endoscópica. Após melhora parcial, volta a ter febre, hipotensão e aumento da bilirrubina, apesar de antimicrobiano ativo na cultura. A imagem inicial havia mostrado obstrução complexa e segmentos intra-hepáticos dilatados. Qual pergunta deve ser priorizada na reavaliação do foco, sem presumir que a presença da prótese garante sucesso?",
+    "o": [
+      "A elevação da bilirrubina determina necessidade imediata de colecistectomia?",
+      "A prótese permite suspender a investigação biliar e buscar apenas foco urinário?",
+      "A febre pode ser observada por mais uma semana antes de repetir exames?",
+      "A drenagem é efetiva e alcança os segmentos que permanecem obstruídos?"
+    ],
+    "a": 3,
+    "why": "Deterioração após drenagem exige avaliar oclusão ou deslocamento da prótese, drenagem incompleta, cálculo residual e outras complicações, além de focos alternativos. Uma prótese pode drenar somente parte de uma árvore complexa. Antibiótico adequado não substitui controle mecânico insuficiente. Colecistectomia não é resposta automática a obstrução ductal persistente.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirvb-22",
+    "t": "cirvb",
+    "q": "Homem de 68 anos, colecistectomizado há doze anos, tem colangites recorrentes e estenose biliar benigna com estase. A investigação identifica cálculos castanhos formados na via principal e não sugere cálculo retido da operação anterior. O colédoco permanece dilatado. Como esses cálculos devem ser classificados segundo o local e o mecanismo de formação descritos?",
+    "o": [
+      "Cálculos secundários da via biliar, migrados recentemente da vesícula.",
+      "Cálculos pancreáticos, migrados através da papila para o colédoco.",
+      "Cálculos vesiculares remanescentes, demonstrados pela dilatação ductal.",
+      "Cálculos primários da via biliar, associados a estase e infecção."
+    ],
+    "a": 3,
+    "why": "Cálculos que se formam na própria via biliar são primários; estase e infecção favorecem cálculos pigmentares castanhos. Secundários são aqueles que migram da vesícula. O longo intervalo e a anatomia apresentada apoiam formação ductal, embora a classificação não possa ser feita apenas pelo calendário em todo paciente. Dilatação do colédoco não demonstra vesícula remanescente nem origem pancreática.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirvb-23",
+    "t": "cirvb",
+    "q": "Mulher de 59 anos apresenta coledocolitíase confirmada após reconstrução digestiva que dificulta o acesso endoscópico convencional. Está estável, sem choque, e a equipe especializada conclui que a tentativa endoscópica local não é factível. O serviço dispõe de cirurgia biliar experiente e pode discutir outras vias de acesso. Qual estratégia é mais adequada para resolver a obstrução?",
+    "o": [
+      "Discutir exploração cirúrgica ou outro acesso terapêutico conforme anatomia.",
+      "Manter seguimento clínico porque a CPRE convencional não pode ser realizada.",
+      "Repetir colangiorressonância até demonstrar resolução espontânea do cálculo.",
+      "Ressecar a via biliar principal por haver dificuldade de acesso à papila."
+    ],
+    "a": 0,
+    "why": "Impossibilidade de CPRE convencional não encerra as opções. Exploração cirúrgica, endoscopia assistida ou drenagem/intervenção por outras vias são selecionadas conforme reconstrução, gravidade e experiência. Colangiorressonância é diagnóstica, não remove cálculo. Ressecção ductal não é rotina para litíase. Manter obstrução sem plano terapêutico pode levar a infecção e outras complicações.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirvb-24",
+    "t": "cirvb",
+    "q": "Homem de 66 anos tem suspeita de colangiocarcinoma peri-hilar classificado por Bismuth–Corlette em ressonância. O laudo descreve a extensão pelos ductos, mas ainda não avaliou adequadamente o contato vascular, a doença à distância nem o volume e a função do fígado que restaria após uma eventual ressecção. Qual conclusão é possível neste momento?",
+    "o": [
+      "A preservação da vesícula demonstra que a lesão pode ser ressecada com segurança.",
+      "A classe ductal determina a operação, dispensando avaliação vascular adicional.",
+      "A extensão ductal demonstra disseminação e define intenção exclusivamente paliativa.",
+      "A classificação descreve extensão ductal, mas falta definir ressecabilidade global."
+    ],
+    "a": 3,
+    "why": "Bismuth–Corlette organiza a extensão ao longo dos ductos. A possibilidade de ressecção depende também de vasos, disseminação, reserva e remanescente hepático, condição clínica e experiência do centro. Nem toda extensão ductal impede cirurgia, nem uma classe favorável garante segurança funcional. Aspecto da vesícula não substitui estadiamento e planejamento especializado.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirvb-25",
+    "t": "cirvb",
+    "q": "Mulher de 61 anos está internada com icterícia e colangite por estenose biliar ainda não caracterizada. O CA 19-9 está elevado, sem histologia ou estadiamento completo. Após suporte e drenagem quando indicada, a equipe planeja reavaliar a hipótese de tumor. Qual interpretação do marcador é mais adequada para evitar uma conclusão prematura?",
+    "o": [
+      "A elevação define invasão vascular, mesmo sem estudo anatômico dos vasos.",
+      "A queda após drenagem exclui neoplasia e permite encerrar o acompanhamento.",
+      "Colestase e inflamação podem elevá-lo, exigindo integração clínica e de imagem.",
+      "O nível confirma neoplasia biliar e permite dispensar amostragem quando necessária."
+    ],
+    "a": 2,
+    "why": "CA 19-9 não confirma sozinho malignidade ou extensão. Obstrução e infecção podem elevá-lo, e a evolução após tratamento ajuda a contextualizar o resultado sem excluir definitivamente câncer. Pessoas que não expressam o antígeno também limitam sua sensibilidade. A investigação depende da anatomia, evolução, risco clínico e necessidade de confirmação no planejamento terapêutico.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirvb-26",
+    "t": "cirvb",
+    "q": "Homem de 65 anos fez colecistectomia por litíase; o laudo revela carcinoma incidental. Ainda não foram revisados profundidade de invasão, margem cística ou possibilidade de doença residual. Ele está recuperado, sem urgência infecciosa ou hemorrágica. Qual organização inicial é mais adequada antes de definir necessidade e extensão de uma nova operação oncológica?",
+    "o": [
+      "Revisar anatomopatológico e completar estadiamento em equipe hepatobiliar.",
+      "Iniciar quimioterapia paliativa pelo fato de o diagnóstico ter sido incidental.",
+      "Considerar a retirada da vesícula curativa se não houver massa no ultrassom.",
+      "Indicar ressecção hepática ampliada antes de revisar margens e profundidade."
+    ],
+    "a": 0,
+    "why": "A conduta muda com profundidade, margens, disseminação e condição do paciente. Tumor restrito à mucosa não tem o mesmo planejamento de invasão muscular ou mais profunda. Reoperação sem estadiamento pode ser inútil ou inadequada. Achado incidental não significa doença disseminada, e ultrassom sem massa não estabelece ausência de doença residual.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirvb-27",
+    "t": "cirvb",
+    "q": "Mulher de 71 anos teve carcinoma de vesícula descoberto após colecistectomia. A revisão confirma invasão além da mucosa, mas o estadiamento demonstra implantes peritoneais e metástases hepáticas disseminadas. Ela apresenta perda funcional e pergunta se a regra de ampliar a cirurgia ainda se aplica. Qual planejamento é mais apropriado para o contexto atual?",
+    "o": [
+      "Rediscutir intenção terapêutica e medidas sistêmicas ou paliativas conforme a condição.",
+      "Realizar ressecção do leito vesicular e linfonodos por causa da profundidade isolada.",
+      "Adiar toda assistência até haver resposta radiológica a um tratamento sistêmico.",
+      "Indicar hepatectomia ampliada para retirar a vesícula previamente removida e os implantes."
+    ],
+    "a": 0,
+    "why": "Doença disseminada exige rever intenção e objetivos; uma indicação de ressecção complementar para tumor localizado não pode ser aplicada automaticamente. A cirurgia radical não se justifica apenas pela profundidade da lesão original. Tratamento sistêmico e cuidados de suporte são escolhidos conforme reserva e preferências, sem abandonar controle de sintomas durante a decisão.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirvb-28",
+    "t": "cirvb",
+    "q": "Mulher de 34 anos tem episódios de colangite e dilatação fusiforme congênita da via biliar extra-hepática. A investigação caracteriza cisto de colédoco tipo I, sem disseminação tumoral e sem contraindicação à cirurgia. A infecção aguda foi controlada. Qual estratégia trata mais adequadamente a doença estrutural, em vez de apenas aliviar um episódio obstrutivo?",
+    "o": [
+      "Drenagem interna do cisto para o duodeno, mantendo a parede dilatada.",
+      "Ressecção do segmento cístico extra-hepático com reconstrução biliodigestiva.",
+      "Aspiração percutânea seriada para manter o cisto abaixo do diâmetro inicial.",
+      "Colocação de prótese endoscópica como tratamento definitivo da malformação."
+    ],
+    "a": 1,
+    "why": "No tipo I em candidato apto, tratamento definitivo costuma envolver excisão da via cística extra-hepática e reconstrução, além da abordagem vesicular apropriada. A anatomia precisa ser definida, pois outros tipos têm planejamento diferente. Drenagens que mantêm a parede doente não eliminam os riscos estruturais e neoplásicos. Próteses podem resolver intercorrências, mas não equivalem ao tratamento definitivo descrito.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirvb-29",
+    "t": "cirvb",
+    "q": "Homem de 79 anos apresenta obstrução biliar maligna sem possibilidade de tratamento curativo. Tem prurido intenso, dificuldade para dormir e bilirrubina elevada, mas não está séptico. A condição funcional é limitada e ele valoriza permanecer em casa. Antes de escolher a via de drenagem, qual discussão é mais importante para justificar o procedimento proposto?",
+    "o": [
+      "Definir benefício sintomático esperado e compará-lo aos riscos e novas intervenções.",
+      "Indicar drenagem para corrigir o número da bilirrubina, independentemente dos sintomas.",
+      "Selecionar a prótese de maior calibre antes de discutir preferências e prognóstico.",
+      "Priorizar a técnica disponível sem considerar duração de internação e manutenção."
+    ],
+    "a": 0,
+    "why": "Paliação deve atender objetivos concretos, como alívio do prurido, controle de colangite ou viabilização de terapia, ponderando riscos, manutenção e condição global. A drenagem pode ser valiosa neste caso, mas não se justifica apenas por um número laboratorial. Preferências e custos clínicos de futuras intervenções fazem parte da escolha da via e do dispositivo.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirvb-30",
+    "t": "cirvb",
+    "q": "Mulher de 56 anos tem estenose peri-hilar suspeita e está em avaliação de estratégia potencialmente curativa em centro especializado. Foi sugerida punção percutânea da lesão primária antes de concluir o planejamento. Não há necessidade imediata de tecido para tratar uma emergência. Qual cuidado deve anteceder a coleta para não comprometer possibilidades terapêuticas futuras?",
+    "o": [
+      "Puncionar pelo trajeto mais curto e decidir a operação somente após a histologia.",
+      "Biopsiar a lesão primária por qualquer via porque o trajeto não altera o planejamento.",
+      "Discutir indicação e via de amostragem com a equipe responsável pela estratégia definitiva.",
+      "Priorizar punção transperitoneal antes de avaliar acesso endoluminal ou doença distante."
+    ],
+    "a": 2,
+    "why": "A necessidade de tecido depende da estratégia, e a via importa em tumor peri-hilar potencialmente tratável, inclusive pelo risco de disseminação do trajeto e implicações em protocolos de transplante. Isso não proíbe toda biópsia: escovado, amostragem endoluminal ou de outros locais podem ser apropriados. A decisão deve ser coordenada antes de uma punção que altere opções futuras.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirfig-10",
+    "t": "cirfig",
+    "q": "Mulher de 52 anos, sem neoplasia conhecida ou hepatopatia, tem nódulo incidental cujo padrão completo de ressonância é típico de hemangioma. Está assintomática e o exame não mostra crescimento, compressão ou sinais de complicação. Um profissional sugere biópsia para que ela receba alta do acompanhamento com maior segurança. Qual decisão melhor equilibra a certeza diagnóstica e o risco do procedimento?",
+    "o": [
+      "Ressecar a lesão para obter diagnóstico e prevenir degeneração maligna futura.",
+      "Embolizar antes da biópsia para confirmar a natureza da lesão após sua redução.",
+      "Aceitar o padrão típico revisado e evitar biópsia rotineira.",
+      "Biopsiar pela maior vascularização, que facilita obtenção de material representativo."
+    ],
+    "a": 2,
+    "why": "Um padrão típico de hemangioma em contexto apropriado pode estabelecer diagnóstico sem amostragem. Biópsia não acrescenta benefício rotineiro e pode causar sangramento. Se houvesse dúvida, a imagem deveria ser revista e o caso discutido, sem assumir que toda lesão vascular é hemangioma. Intervenção preventiva não se justifica por esse achado assintomático nem por suposta degeneração habitual.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirfig-11",
+    "t": "cirfig",
+    "q": "Mulher de 32 anos usa estrogênio e tem lesão hepática hipervascular de 4,8 centímetros. O exame inicial levantou hiperplasia nodular focal ou adenoma, mas não incluiu fase hepatobiliar e a cicatriz central não é convincente. Está assintomática, sem hemorragia. Por que vale aprofundar a caracterização antes de tratá-la como um nódulo benigno sem outras implicações?",
+    "o": [
+      "A presença de qualquer cicatriz central já estabelece adenoma relacionado ao estrogênio.",
+      "As duas lesões exigem ressecção pelo mesmo limiar de tamanho e pela mesma técnica.",
+      "A captação arterial isolada permite excluir risco hemorrágico em ambas as hipóteses.",
+      "Adenoma e hiperplasia nodular focal têm riscos e estratégias de acompanhamento diferentes."
+    ],
+    "a": 3,
+    "why": "FNH típica geralmente não requer intervenção, enquanto adenoma envolve avaliação hormonal, tamanho, subtipo e riscos de hemorragia ou transformação. Ressonância adequada pode ajudar nessa distinção. Cicatriz e realce arterial isolados não resolvem todos os casos. Reconhecer que as duas hipóteses são benignas não significa que tenham a mesma história natural ou o mesmo plano de cuidado.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirfig-12",
+    "t": "cirfig",
+    "q": "Mulher de 36 anos recebeu diagnóstico radiológico de adenoma hepatocelular de quatro centímetros. Usa contraceptivo com estrogênio e apresenta obesidade, mas não tem sangramento, dor persistente ou sinais de malignidade. A equipe discute medidas iniciais e nova avaliação de tamanho e características. Qual conjunto é mais apropriado antes de decidir intervenção imediata?",
+    "o": [
+      "Manter o estrogênio e tratar o nódulo como hiperplasia nodular focal confirmada.",
+      "Biopsiar de modo não planejado antes de revisar a ressonância e os riscos.",
+      "Rever exposição hormonal, orientar fatores modificáveis e estratificar a lesão.",
+      "Indicar quimioembolização por risco oncológico presumido em todo adenoma."
+    ],
+    "a": 2,
+    "why": "Cessar exposição estrogênica e abordar fatores metabólicos pode favorecer regressão em mulheres, com reavaliação individualizada. Tamanho, subtipo, crescimento e outros riscos orientam necessidade de ressecção. Isso não autoriza chamar adenoma de FNH nem presumir câncer. Amostragem pode ser necessária em dúvidas selecionadas, mas deve ser planejada e não substituir revisão clínica e radiológica.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirfig-13",
+    "t": "cirfig",
+    "q": "Mulher de 31 anos com adenoma hepático conhecido apresenta dor súbita, queda da hemoglobina e hemoperitônio. Após ressuscitação inicial, a pressão responde, e a angiotomografia identifica sangramento arterial da lesão. Há radiologia intervencionista disponível e não se identifica outra fonte. Qual sequência melhor prioriza o risco imediato antes de discutir ressecção ou subtipagem definitiva do adenoma?",
+    "o": [
+      "Estabilizar e considerar embolização para controle da hemorragia.",
+      "Aguardar a retirada do estrogênio reduzir o nódulo e repetir hemoglobina.",
+      "Indicar tratamento sistêmico oncológico antes de abordar o vaso sangrante.",
+      "Biopsiar a lesão antes de decidir se o sangramento exige tratamento."
+    ],
+    "a": 0,
+    "why": "Hemorragia ativa exige controle imediato e suporte; em paciente estabilizado e com recurso disponível, embolização é opção dirigida. Cirurgia pode ser necessária em instabilidade persistente ou falha e a estratégia definitiva depende de evolução e lesão residual. Biópsia e subtipagem não precedem o controle da hemorragia. Retirar estrogênio não resolve o sangramento agudo.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirfig-14",
+    "t": "cirfig",
+    "q": "Homem de 70 anos tem abscesso hepático piogênico tratado com antibiótico e drenagem. Apesar de redução da coleção, mantém febre e elevação de bilirrubina. A cultura é compatível com flora entérica e havia história de estenose biliar com episódios de colangite. Não há evidência de foco pulmonar ou urinário. Qual reavaliação é mais importante para evitar uma sequência ineficaz de trocas de antibiótico?",
+    "o": [
+      "Trocar o antibiótico pelo de maior espectro sem repetir a avaliação anatômica.",
+      "Retirar o dreno assim que a coleção diminuir, mesmo com febre persistente.",
+      "Atribuir a febre à reação medicamentosa antes de pesquisar infecção residual.",
+      "Verificar drenagem efetiva e investigar obstrução biliar que mantenha o foco."
+    ],
+    "a": 3,
+    "why": "Persistência de infecção exige revisar controle da fonte: posição e patência do dreno, coleções residuais e obstrução biliar. Antibiótico adequado pode falhar se persistir estase infectada. Febre medicamentosa é diferencial contextual, não conclusão antes dessa revisão. Redução do diâmetro não prova resolução quando sinais clínicos e biliares continuam alterados.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirfig-15",
+    "t": "cirfig",
+    "q": "Homem de 39 anos com abscesso amebiano teve boa resposta ao metronidazol: está afebril, com dor menor e sem indicação de drenagem. Ele não tem diarreia e pergunta se pode encerrar o tratamento porque a infecção hepática parece resolvida. Qual componente deve ser acrescentado ao planejamento etiológico para reduzir persistência do parasita em outro compartimento?",
+    "o": [
+      "Drenagem hepática eletiva para comprovar cura antes de suspender a medicação.",
+      "Albendazol para eliminar cistos hidáticos que permanecem na luz intestinal.",
+      "Antibiótico antibacteriano prolongado para esterilizar o conteúdo do cólon.",
+      "Amebicida luminal apropriado, mesmo na ausência de sintomas intestinais."
+    ],
+    "a": 3,
+    "why": "Tratamento tecidual não garante erradicação da colonização intestinal por Entamoeba. Agente luminal apropriado completa a abordagem, mesmo sem diarreia, conforme disponibilidade e protocolo. Antibióticos antibacterianos e albendazol não substituem esse componente. Resposta clínica favorável e ausência de características de alto risco não justificam drenagem apenas para comprovar cura.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirfig-16",
+    "t": "cirfig",
+    "q": "Mulher de 47 anos, que vive em área rural e tem contato com cães, apresenta cisto hepático com vesículas filhas. Não há sepse ou hemorragia. O exame foi inicialmente encaminhado como cisto simples para punção diagnóstica, mas a revisão levanta equinococose. Qual mudança no planejamento é mais apropriada antes de introduzir uma agulha na lesão?",
+    "o": [
+      "Realizar biópsia transcutânea para identificar o parasita antes de qualquer imagem adicional.",
+      "Definir estágio e abordagem especializada, considerando risco de extravasamento e anafilaxia.",
+      "Puncionar sem preparo para diferenciar líquido parasitário de conteúdo de cisto simples.",
+      "Drenar o cisto em sistema aberto e decidir antiparasitário conforme aspecto macroscópico."
+    ],
+    "a": 1,
+    "why": "Cisto hidático não deve ser puncionado como um cisto simples. O estágio, a comunicação biliar e o contexto orientam observação, medicamento, intervenção percutânea protocolada ou cirurgia. Procedimentos como PAIR podem ser apropriados em selecionados, mas exigem planejamento, prevenção de disseminação e estrutura para reações. O problema é punção desprotegida, não uma proibição absoluta de toda intervenção percutânea.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirfig-17",
+    "t": "cirfig",
+    "q": "Homem de 64 anos com cirrose apresenta hepatocarcinoma único localizado em segmento tecnicamente removível. Entretanto, teve ascite recente, albumina baixa e sinais de hipertensão portal relevante. Não há metástases. Antes de recomendar hepatectomia porque a margem anatômica parece possível, qual componente precisa mudar a discussão sobre a segurança e as alternativas terapêuticas?",
+    "o": [
+      "Valor isolado de alfafetoproteína para prever a função remanescente.",
+      "Reserva hepática e risco de descompensação após a ressecção.",
+      "Acessibilidade do segmento à palpação durante a operação aberta.",
+      "Intensidade da dor referida em relação ao tamanho da lesão."
+    ],
+    "a": 1,
+    "why": "Ressecabilidade anatômica e funcional são dimensões diferentes. Cirrose descompensada, hipertensão portal e reserva limitada elevam o risco de insuficiência pós-hepatectomia e podem favorecer outras estratégias, incluindo avaliação de transplante quando pertinente. Tumor localizado não implica a mesma operação para todos. Dor e marcador não substituem função, avaliação do remanescente e análise multidisciplinar.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirfig-18",
+    "t": "cirfig",
+    "q": "Homem de 57 anos, portador crônico de hepatite B e considerado de risco para HCC, não tem cirrose estabelecida. A ressonância identifica lesão com características que poderiam preencher critérios diagnósticos não invasivos. Antes de decidir entre diagnóstico por imagem e biópsia, qual informação é central para aplicar esses critérios de maneira válida, sem usar a ausência de cirrose como regra automática?",
+    "o": [
+      "A inclusão do paciente em população de risco para a qual os critérios foram validados.",
+      "A elevação isolada da alfafetoproteína como substituta de todos os critérios de imagem.",
+      "A presença de dor como requisito para aplicar diagnóstico não invasivo em hepatite B.",
+      "A ausência de ascite como prova de que qualquer realce arterial indica HCC."
+    ],
+    "a": 0,
+    "why": "Sistemas diagnósticos de imagem têm populações-alvo, que podem incluir pacientes com hepatite B crônica em grupos de risco, mesmo sem cirrose. É necessário conferir elegibilidade, técnica e critérios completos. Ausência de ascite, dor e AFP isolada não definem essa aplicação. Fora de populações apropriadas ou com imagem indeterminada, a estratégia de confirmação pode ser diferente.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirfig-19",
+    "t": "cirfig",
+    "q": "Mulher de 66 anos tem hepatocarcinoma pequeno e sem metástases, mas cirrose com episódios de ascite e limitação importante das atividades diárias. A avaliação inicial concentrou-se no diâmetro tumoral e sugeriu o mesmo tratamento usado em uma paciente com fígado preservado. Qual combinação de dimensões deve ser integrada para definir a estratégia e sua intenção neste caso?",
+    "o": [
+      "Carga tumoral, função hepática e estado funcional global.",
+      "Localização do nódulo, sexo e presença de cálculo vesicular.",
+      "Valor das transaminases, tempo de diagnóstico e técnica disponível.",
+      "Diâmetro tumoral, intensidade da dor e nível isolado de AFP."
+    ],
+    "a": 0,
+    "why": "O planejamento do HCC integra características do tumor, doença hepática e condição global. Mesma dimensão pode levar a propostas distintas conforme reserva, hipertensão portal, performance e possibilidades de transplante ou terapias locais. AFP e transaminases têm papel contextual, mas não substituem essas dimensões. Disponibilidade de uma técnica não deve determinar sozinha indicação ou intenção terapêutica.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirfig-20",
+    "t": "cirfig",
+    "q": "Homem de 63 anos tem HCC com invasão vascular, sem indicação de tratamento local curativo na discussão atual. A equipe considera esquema sistêmico que inclui agente antiangiogênico. Ele tem cirrose e antecedente de varizes esofágicas sem avaliação recente. Qual conjunto merece atenção antes da seleção e do início do tratamento proposto?",
+    "o": [
+      "Nível de transaminases isolado, considerando o antecedente varicoso sem relevância atual.",
+      "Contagem de nódulos isolada, reservando função e varizes para depois da primeira dose.",
+      "Função hepática, condição global e risco de hemorragia por hipertensão portal.",
+      "Ausência de metástase pulmonar, que por si só permite qualquer esquema sistêmico."
+    ],
+    "a": 2,
+    "why": "Seleção sistêmica depende de reserva hepática, performance, comorbidades e riscos específicos. Em esquemas com efeito antiangiogênico, avaliação e manejo de varizes e risco de sangramento são particularmente importantes. Invasão vascular não torna todos os tratamentos intercambiáveis. A decisão deve seguir recomendações atuais e condições do paciente, sem inferir segurança apenas da ausência de metástase em um órgão.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirfig-21",
+    "t": "cirfig",
+    "q": "Homem de 58 anos foi tratado por adenocarcinoma colorretal e apresenta duas metástases hepáticas, sem doença extra-hepática nos exames atuais. O primário está controlado, a função hepática é preservada e as lesões parecem removíveis deixando remanescente adequado. Ainda não houve discussão hepatobiliar. Qual planejamento é mais apropriado antes de rotular a doença como exclusivamente paliativa?",
+    "o": [
+      "Excluir ressecção antes de verificar vasos, margens e remanescente.",
+      "Considerar transplante automático pelo pequeno número de lesões.",
+      "Avaliar estratégia de intenção curativa em equipe hepatobiliar e oncológica.",
+      "Indicar tratamento apenas sintomático porque a origem é metastática."
+    ],
+    "a": 2,
+    "why": "Metástases colorretais selecionadas podem ser tratadas com intenção curativa por estratégia multimodal, incluindo ressecção e outras opções conforme contexto. É preciso avaliar controle global, remanescente, anatomia e biologia tumoral. Número de lesões isolado não resolve a decisão. O termo metástase não obriga paliação, e transplante não é resposta automática para doença hepática limitada.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirfig-22",
+    "t": "cirfig",
+    "q": "Mulher de 61 anos tem tumor hepático cujo controle exige hepatectomia extensa. A equipe estima que será possível obter margem, mas há dúvida sobre a quantidade e a qualidade do fígado remanescente após tratamento prévio e sobre sua drenagem venosa. Não há emergência operatória. Qual avaliação deve preceder a decisão de prosseguir com a ressecção planejada?",
+    "o": [
+      "Diâmetro da peça a retirar, tomando margem livre como único limite de segurança.",
+      "Ausência de ascite no dia da consulta, suficiente para garantir recuperação funcional.",
+      "Volume e função do remanescente, com influxo, efluxo e drenagem biliar adequados.",
+      "Número de segmentos tumorais, dispensando a análise da qualidade do parênquima."
+    ],
+    "a": 2,
+    "why": "A segurança depende de fígado remanescente funcional com suprimento vascular, drenagem venosa e biliar preservados. Volume necessário varia conforme qualidade do parênquima e condições prévias. Margem oncológica é essencial, mas não impede insuficiência hepática por remanescente inadequado. Ausência de ascite em um momento ou contagem anatômica isolada não substitui essa avaliação.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirfig-23",
+    "t": "cirfig",
+    "q": "Homem de 67 anos com cirrose e HCC tratado por ablação retorna com ascite nova e piora renal. A imagem do foco tratado sugere resposta local, mas ainda não há investigação da descompensação. Ele atribui o sintoma a uma recidiva e pergunta se é necessário tratar novamente o tumor. Qual interpretação deve orientar a avaliação inicial?",
+    "o": [
+      "Aguardar a ascite regredir para decidir se há necessidade de investigar a função renal.",
+      "Investigar descompensação hepática e seus precipitantes, além de rever o controle tumoral.",
+      "Repetir ablação porque ascite nova demonstra viabilidade do foco previamente tratado.",
+      "Suspender a avaliação da cirrose porque a lesão já recebeu tratamento local."
+    ],
+    "a": 1,
+    "why": "Doença hepática pode descompensar apesar de controle aparente do tumor. Infecção, sangramento, disfunção renal, trombose e outros fatores devem ser considerados conforme o quadro; ascite nova exige avaliação própria. A resposta local não comprova controle de toda doença tumoral, mas ascite também não comprova recidiva. Retratar sem esclarecer o problema pode acrescentar dano.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirfig-24",
+    "t": "cirfig",
+    "q": "Mulher de 60 anos com cirrose chega por hematêmese e melena. Foi iniciada ressuscitação, proteção de via aérea conforme necessidade e programação de endoscopia. Ainda não se sabe se a origem é varicosa, mas há varizes conhecidas e sinais de hipertensão portal. Qual intervenção específica deve acompanhar o suporte antes da confirmação endoscópica, na ausência de contraindicações?",
+    "o": [
+      "Usar IBP como única medida específica até identificar a lesão na endoscopia.",
+      "Iniciar vasoativo esplâncnico e profilaxia antibiótica conforme o protocolo.",
+      "Iniciar betabloqueador intravenoso para reduzir a pressão durante a hemorragia.",
+      "Programar tamponamento com balão antes de tentar tratamento endoscópico."
+    ],
+    "a": 1,
+    "why": "Alta suspeita de sangramento varicoso justifica vasoativo e antibiótico precoces no cirrótico. Endoscopia define e trata a fonte, sem que se espere por ela para iniciar essas medidas. IBP pode integrar avaliação de outras causas, mas não substitui a abordagem varicosa. Betabloqueio não é medida de ressuscitação aguda e balão é ponte de resgate em situações específicas.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirfig-25",
+    "t": "cirfig",
+    "q": "Homem de 56 anos sobreviveu ao primeiro sangramento por varizes esofágicas, controlado com ligadura. Está estável, recuperou a função renal e não foi selecionado para TIPS precoce. Não tem contraindicação atual a betabloqueador não seletivo. Antes da alta, qual plano reduz melhor o risco de novo sangramento, além do acompanhamento da doença hepática de base?",
+    "o": [
+      "Associar betabloqueador não seletivo e sessões de ligadura até controle adequado.",
+      "Indicar tamponamento profilático periódico para evitar ruptura das varizes restantes.",
+      "Prescrever IBP como substituto de profilaxia portal após a cicatrização inicial.",
+      "Programar ligaduras apenas se houver nova hematêmese ou queda de hemoglobina."
+    ],
+    "a": 0,
+    "why": "Profilaxia secundária habitual combina betabloqueador não seletivo e ligadura endoscópica, salvo contraindicações ou outra estratégia definida. Recorrência não deve ser o gatilho para começar prevenção. IBP não reduz a pressão portal e não substitui esse plano. Falha, intolerância e contexto de alto risco podem levar a TIPS ou outras decisões especializadas.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirfig-26",
+    "t": "cirfig",
+    "q": "Homem de 59 anos com cirrose mantém hemorragia varicosa apesar de fármaco vasoativo e tratamento endoscópico inicial. A equipe usa medida temporária de tamponamento, com controle inicial do sangramento, enquanto aciona um centro de referência. Qual deve ser a função dessa intervenção no planejamento, considerando também os riscos de via aérea e de lesão local?",
+    "o": [
+      "Substituir a investigação de resgate enquanto não houver novo sangramento.",
+      "Eliminar a hipertensão portal por tempo indeterminado após a expansão do dispositivo.",
+      "Permitir alta após controle inicial, mantendo o dispositivo até a próxima consulta.",
+      "Ganhar tempo para tratamento de resgate definitivo, com monitorização estreita."
+    ],
+    "a": 3,
+    "why": "Tamponamento ou stent em contexto apropriado funcionam como ponte, não tratamento permanente da hipertensão portal. Exigem vigilância e plano de resgate, frequentemente TIPS quando indicado e viável. O controle inicial não permite abandonar avaliação da via aérea ou das complicações do dispositivo. A permanência e o manejo devem obedecer protocolo e equipe experiente.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirfig-27",
+    "t": "cirfig",
+    "q": "Mulher de 62 anos, com sangramentos varicosos recorrentes, é avaliada para TIPS. Há episódios prévios de encefalopatia, precipitados por infecção e constipação, atualmente controlados. A equipe revisa o benefício de descompressão portal e os fatores de risco antes de recomendar o procedimento. Qual consequência fisiológica deve ser discutida especificamente com a paciente e a família?",
+    "o": [
+      "A redução da pressão portal elimina o risco de falência hepática futura.",
+      "A derivação portossistêmica pode favorecer episódios de encefalopatia.",
+      "O procedimento corrige a função hepatocelular e dispensa avaliar transplante.",
+      "A presença de encefalopatia prévia garante melhora cognitiva com a derivação."
+    ],
+    "a": 1,
+    "why": "TIPS desvia parte do fluxo portal e pode aumentar encefalopatia, particularmente em pacientes predispostos. Antecedente não deve ser ignorado nem implica automaticamente a mesma decisão em todos; gravidade, controle e alternativas importam. Redução de pressão não restaura hepatócitos nem remove o risco de outras descompensações. Seleção e acompanhamento devem integrar essa possibilidade.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirfig-28",
+    "t": "cirfig",
+    "q": "Homem de 46 anos com esquistossomose hepatoesplênica tem esplenomegalia, varizes esofágicas e função sintética preservada. O gradiente de pressão venosa hepática medido não está elevado na intensidade que a equipe esperava. Não há trombose portal na imagem. Qual interpretação explica melhor por que esse dado não deve excluir a hipertensão portal clinicamente demonstrada?",
+    "o": [
+      "O gradiente pode não refletir adequadamente uma obstrução predominantemente pré-sinusoidal.",
+      "A ausência de cirrose impede a formação de colaterais portossistêmicas clinicamente relevantes.",
+      "A medida normal demonstra que as varizes devem ter causa fora da circulação portal.",
+      "O gradiente mede diretamente a pressão esplênica e exclui obstrução antes dos sinusoides."
+    ],
+    "a": 0,
+    "why": "O gradiente venoso hepático estima especialmente o componente sinusoidal; na hipertensão pré-sinusoidal pode ser normal ou pouco alterado apesar de pressão portal elevada. Isso exige interpretar mecanismo, anatomia e clínica em conjunto. Varizes e esplenomegalia não são anuladas por um marcador que não representa igualmente todos os compartimentos. A medida não é uma punção direta da circulação esplênica.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirfig-29",
+    "t": "cirfig",
+    "q": "Homem de 53 anos com pancreatite crônica apresenta varizes de fundo gástrico, esplenomegalia e sangramento digestivo. Não há varizes esofágicas, cirrose ou alteração importante de função sintética; a veia porta está pérvia. A equipe suspeita de hipertensão portal segmentar. Qual alteração deve ser pesquisada para explicar melhor a distribuição das colaterais?",
+    "o": [
+      "Obstrução das veias hepáticas por síndrome de Budd–Chiari.",
+      "Trombose da veia esplênica relacionada à doença pancreática.",
+      "Estenose isolada do colédoco com congestão arterial esplênica.",
+      "Trombose da veia cava inferior acima das veias renais."
+    ],
+    "a": 1,
+    "why": "A veia esplênica passa próxima ao pâncreas e pode trombosar em doença pancreática, gerando hipertensão portal sinistra com varizes gástricas. O padrão segmentar e a função hepática preservada favorecem esse mecanismo. Budd–Chiari e obstrução de cava produzem outro contexto hemodinâmico. Estenose biliar não causa diretamente hipertensão venosa esplênica por congestão arterial.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirfig-30",
+    "t": "cirfig",
+    "q": "Homem de 68 anos com hipertensão portal e ascite refratária é avaliado para TIPS. Tem antecedente de insuficiência cardíaca e dispneia aos esforços; ainda não houve estudo cardíaco atualizado. A equipe quer ponderar o benefício portal com a repercussão da derivação. Qual avaliação é indispensável antes de considerar o procedimento seguro para este paciente?",
+    "o": [
+      "Indicar o procedimento com base na ascite, deixando avaliação cardíaca para o pós-operatório.",
+      "Usar apenas a bilirrubina para decidir, pois o efeito da derivação se limita ao fígado.",
+      "Presumir redução da pré-carga cardíaca porque haverá queda da pressão portal.",
+      "Investigar função cardíaca e capacidade de tolerar aumento do retorno venoso."
+    ],
+    "a": 3,
+    "why": "TIPS pode aumentar retorno venoso e precipitar descompensação cardíaca; insuficiência cardíaca relevante e hipertensão pulmonar exigem avaliação específica e podem contraindicar o procedimento. O benefício sobre a ascite não elimina esse risco. Bilirrubina e reserva hepática também importam, mas não substituem estudo cardiovascular. A decisão precisa anteceder, não seguir, a exposição ao shunt.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirrad-19",
+    "t": "cirrad",
+    "q": "Mulher de 58 anos tem dor abdominal progressiva e defesa involuntária. A radiografia em ortostase não demonstra ar livre, mas o exame clínico continua preocupante para perfuração. Está perfundida e há tomografia imediatamente disponível sem necessidade de transporte demorado. Qual interpretação orienta melhor o próximo passo, mantendo suporte e avaliação cirúrgica em paralelo?",
+    "o": [
+      "Radiografia negativa não exclui perfuração; tomografia pode esclarecer a hipótese.",
+      "Defesa com radiografia normal indica distúrbio funcional até nova alteração laboratorial.",
+      "Radiografia negativa torna suficiente observar até surgir ar subdiafragmático.",
+      "Ausência de ar livre favorece endoscopia como confirmação inicial de qualquer fonte."
+    ],
+    "a": 0,
+    "why": "Pequena quantidade de ar, localização da perfuração e técnica podem tornar a radiografia negativa. Tomografia oferece maior capacidade de detectar gás, líquido e provável foco em paciente que a tolere sem atraso perigoso. A suspeita clínica não deve ser abandonada nem se deve esperar o sinal radiográfico surgir. Endoscopia não é a resposta inicial universal à hipótese de perfuração.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirrad-20",
+    "t": "cirrad",
+    "q": "Homem de 55 anos tem desconforto abdominal após procedimento endoscópico recente. A tomografia mostra pequena quantidade de gás ramificado na periferia hepática, sem redução do realce intestinal, pneumatoses extensas ou líquido livre relevante. Está estável, sem peritonite, com lactato normal. Qual interpretação evita tanto banalização quanto indicação de necrose apenas por esse sinal?",
+    "o": [
+      "Gás portal exige correlação clínica e busca da causa, sem provar necrose isoladamente.",
+      "Gás periférico intra-hepático é um artefato que pode ser ignorado se não houver febre.",
+      "Gás portal demonstra isquemia irreversível e define ressecção intestinal imediata.",
+      "Pneumobilia periférica é um achado fisiológico e dispensa reavaliação dos sintomas."
+    ],
+    "a": 0,
+    "why": "A distribuição periférica favorece gás portal, que pode ocorrer em isquemia e em outros contextos, inclusive após procedimentos. A ausência dos outros sinais reduz, mas não zera, preocupação; evolução clínica orienta seguimento e necessidade de investigação. Não se pode diagnosticar necrose irreversível ou dispensar avaliação somente pelo achado. Pneumobilia tende a distribuição mais central.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirrad-21",
+    "t": "cirrad",
+    "q": "Homem de 27 anos tem dor abdominal pouco localizada, sem anorexia ou febre. A tomografia mostra apêndice de calibre limítrofe, com conteúdo gasoso, parede sem alteração convincente e mínima reação na gordura adjacente. Não há coleção ou outra complicação. O exame clínico ainda é inespecífico. Qual leitura é mais adequada para evitar uma decisão baseada em um único número?",
+    "o": [
+      "Indicar apendicectomia pela medida limítrofe, sem necessidade de correlação clínica.",
+      "Integrar calibre, parede, sinais adjacentes e evolução antes de concluir apendicite.",
+      "Excluir apendicite pela ausência de abscesso e encerrar a observação.",
+      "Definir apendicite se houver apendicolito, independentemente de outros sinais."
+    ],
+    "a": 1,
+    "why": "Calibre isolado tem limitações e deve ser interpretado com distensão luminal, parede, gordura, sintomas e evolução. Ausência de abscesso não exclui fase precoce, enquanto apendicolito isolado também não confirma inflamação aguda. O caso pede evitar tanto operar por um dado limítrofe quanto descartar indevidamente uma hipótese ainda em observação. A estratégia depende da probabilidade clínica e de reavaliação apropriada.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirrad-22",
+    "t": "cirrad",
+    "q": "Homem de 63 anos recebeu hipótese de pancreatite por dor epigástrica e elevação discreta da lipase. A dor se tornou difusa, surgiu defesa e o diagnóstico permanece incerto nas primeiras horas. Está estável para realizar imagem imediata. Um profissional propõe adiar a tomografia porque a avaliação da necrose costuma ser mais informativa após alguns dias. Qual resposta é mais apropriada?",
+    "o": [
+      "A investigação deve aguardar a janela da necrose mesmo diante de suspeita de perfuração.",
+      "A tomografia só pode ser solicitada após confirmação de necrose por ultrassonografia.",
+      "A tomografia precoce é necessária em qualquer pancreatite típica, independentemente da evolução.",
+      "A dúvida de outra emergência pode indicar tomografia precoce, com limitações para necrose."
+    ],
+    "a": 3,
+    "why": "Adiar imagem para caracterizar melhor necrose não equivale a proibi-la na dúvida diagnóstica ou deterioração. A tomografia pode procurar outra causa de abdome agudo e orientar a equipe, reconhecendo que exame precoce pode subestimar necrose pancreática. Apresentação típica sem complicação não exige confirmação tomográfica de rotina. Ultrassom não precisa demonstrar necrose antes da indicação.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirrad-23",
+    "t": "cirrad",
+    "q": "Mulher de 35 anos sofreu trauma e apresenta piora da perfusão após um FAST inicialmente sem líquido identificado. O registro informa que a janela pélvica foi limitada por técnica e que a avaliação abdominal durou pouco tempo. Não há fonte externa evidente. A equipe está ressuscitando e reavaliando a necessidade de controle hemorrágico. Qual interpretação é mais adequada?",
+    "o": [
+      "O resultado exige transporte à tomografia antes de qualquer decisão, mesmo em deterioração.",
+      "A ausência de líquido define choque não hemorrágico e permite suspender a busca.",
+      "O resultado exclui sangramento abdominal porque uma janela adequada seria suficiente.",
+      "O exame é limitado e a busca de hemorragia deve continuar conforme a estabilidade."
+    ],
+    "a": 3,
+    "why": "FAST limitado não equivale a exame negativo de alta qualidade, e mesmo um FAST bem realizado não exclui todas as fontes hemorrágicas. Repetição direcionada, avaliação de outros compartimentos e decisões de controle dependem da fisiologia e recursos. Tomografia é importante quando o paciente a tolera, não uma obrigação que se sobreponha à instabilidade. O achado inicial não justifica abandonar investigação.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirrad-24",
+    "t": "cirrad",
+    "q": "Homem de 31 anos foi intubado após trauma e apresenta ventilação assimétrica. Está temporariamente estável. Na ultrassonografia há ausência de deslizamento em região anterior, sem ponto pulmonar identificado; o tubo ainda não teve profundidade revisada e não há avaliação conclusiva das demais regiões. Qual interpretação deve orientar a equipe enquanto procura sinais de tensão e verifica o posicionamento do tubo?",
+    "o": [
+      "O padrão em modo M define defeito do aparelho e dispensa revisar a ventilação.",
+      "Ausência de ponto pulmonar afasta pneumotórax, mesmo em exame incompleto.",
+      "Ausência de deslizamento tem diferenciais e precisa ser integrada à avaliação ventilatória.",
+      "Ausência de deslizamento confirma pneumotórax e exclui intubação seletiva."
+    ],
+    "a": 2,
+    "why": "Ausência de deslizamento pode ocorrer em pneumotórax, intubação seletiva, apneia e alterações pleurais. Sem ponto pulmonar e com avaliação incompleta, o achado não resolve sozinho a etiologia. Revisar tubo, ventilação e sinais adicionais é importante. Isso não deve atrasar descompressão quando o conjunto clínico indica pneumotórax hipertensivo; ausência de ponto pulmonar não o exclui.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirrad-25",
+    "t": "cirrad",
+    "q": "Mulher de 76 anos tem hematoquezia intermitente e queda de hemoglobina. A angiotomografia foi realizada quando não havia evacuação sanguinolenta e não demonstrou extravasamento. Horas depois, ocorre novo episódio volumoso com taquicardia, embora ela responda ao suporte inicial. Qual conclusão melhor orienta a reavaliação e escolha do próximo método de localização ou controle?",
+    "o": [
+      "A recorrência demonstra erro de leitura e exige repetir o mesmo laudo sem nova avaliação.",
+      "O exame negativo elimina fonte digestiva e direciona investigação apenas hematológica.",
+      "O exame negativo naquele momento não exclui sangramento intermitente recorrente.",
+      "A recorrência define ressecção colônica sem necessidade de tentar localizar o segmento."
+    ],
+    "a": 2,
+    "why": "Angiotomografia depende de captar extravasamento durante a aquisição; sangramento intermitente pode não estar ativo naquele momento. A recorrência exige reavaliar gravidade e escolher investigação/controle conforme condições, recursos e padrão da hemorragia. Não prova erro do exame anterior nem obriga ressecção sem localização. Um resultado negativo não substitui monitorização de uma paciente que voltou a sangrar.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirrad-26",
+    "t": "cirrad",
+    "q": "Homem de 70 anos realiza protocolo tomográfico por sangramento digestivo. Na aquisição sem contraste há material hiperdenso no lúmen de uma alça. Após contraste, a equipe compara fases arterial e portal para decidir se existe extravasamento ativo, em vez de atribuir o brilho intraluminal imediatamente ao sangramento. Qual critério é mais útil nessa interpretação?",
+    "o": [
+      "Densidade elevada já na fase sem contraste como prova de sangramento ativo atual.",
+      "Aparecimento ou mudança do material contrastado ao comparar as diferentes fases.",
+      "Presença de qualquer conteúdo hiperdenso em uma única fase contrastada.",
+      "Localização no cólon direito como prova suficiente de extravasamento arterial."
+    ],
+    "a": 1,
+    "why": "Comparar aquisição sem contraste e fases contrastadas ajuda a distinguir conteúdo prévio hiperdenso, como coágulo ou material ingerido, de extravasamento novo com mudança de forma ou distribuição. Densidade isolada não define atividade atual. Localização pode orientar, mas não confirma a natureza do achado. A interpretação integra técnica do protocolo, dinâmica do contraste e quadro clínico.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirrad-27",
+    "t": "cirrad",
+    "q": "Homem de 74 anos apresenta disfagia de progressão rápida e perda ponderal acentuada em poucos meses. O esofagograma mostra afilamento distal em bico de pássaro e dilatação a montante. O início recente e o emagrecimento levantam preocupação além de um distúrbio motor primário. Qual etapa evita atribuir o achado exclusivamente à acalasia antes de escolher tratamento?",
+    "o": [
+      "Considerar câncer confirmado e iniciar tratamento oncológico sem amostragem.",
+      "Encerrar investigação estrutural, pois perda ponderal é suficiente para confirmar distúrbio motor.",
+      "Investigar obstrução e pseudoacalasia com endoscopia e complementação apropriada.",
+      "Iniciar tratamento definitivo de acalasia porque o aspecto contrastado define a causa."
+    ],
+    "a": 2,
+    "why": "Pseudoacalasia por neoplasia e outras causas pode reproduzir o padrão contrastado, especialmente em início rápido e perda de peso. Endoscopia e, conforme achados, imagem ou ecoendoscopia ajudam a investigar obstrução. O bico de pássaro não confirma sozinho acalasia primária nem câncer. Manometria caracteriza fisiologia, mas também deve ser interpretada após avaliação estrutural adequada.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirrad-28",
+    "t": "cirrad",
+    "q": "Mulher de 64 anos tem perda ponderal e anemia. Um estudo contrastado mostra úlcera gástrica de contornos regulares, com pregas convergindo para a cratera, sem grande massa evidente. Ela pergunta se a aparência permite dispensar endoscopia e biópsia. Qual interpretação é mais apropriada para explicar o próximo passo, considerando a limitação do método e os sinais clínicos?",
+    "o": [
+      "O estudo contrastado determina o subtipo histológico com precisão equivalente à biópsia.",
+      "A convergência de pregas confirma neoplasia avançada, dispensando a histologia.",
+      "O padrão pode favorecer benignidade, mas não substitui avaliação endoscópica e histológica.",
+      "A regularidade dos contornos comprova benignidade e permite encerrar a investigação."
+    ],
+    "a": 2,
+    "why": "Características contrastadas ajudam a estimar hipóteses, mas não oferecem diagnóstico histológico nem excluem câncer em uma úlcera gástrica. Anemia e perda ponderal reforçam a necessidade de investigação apropriada. Regularidade não prova benignidade e convergência de pregas não confirma malignidade. Endoscopia, amostragem e acompanhamento conforme contexto respondem a perguntas que o contraste não resolve sozinho.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirrad-29",
+    "t": "cirrad",
+    "q": "Homem de 48 anos, assintomático e sem neoplasia conhecida, apresenta lesão hepática incidental em exame de rotina. O estudo dinâmico demonstra realce periférico nodular descontínuo e preenchimento progressivo nas fases tardias. Não há sinais inflamatórios ou fatores clínicos que sugiram infecção. Qual estratégia é mais coerente antes de indicar uma punção apenas porque se trata de lesão sólida?",
+    "o": [
+      "Biopsiar a lesão por rotina antes de revisar as aquisições tardias disponíveis.",
+      "Confirmar caracterização de possível hemangioma no conjunto das fases e do contexto.",
+      "Classificar como abscesso pela ausência de sintomas e pelo enchimento progressivo.",
+      "Classificar como metástase por haver qualquer realce periférico na fase arterial."
+    ],
+    "a": 1,
+    "why": "O padrão é compatível com hemangioma e a caracterização não invasiva adequada pode evitar biópsia desnecessária. Realce nodular descontínuo não é equivalente a todo anel periférico. Metástase ou abscesso exigem achados e contexto que os sustentem; ausência de sintomas não confirma abscesso. Se o padrão for atípico ou houver contexto oncológico, a estratégia precisa ser individualizada, sem usar uma fase isolada como diagnóstico definitivo.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "cirrad-30",
+    "t": "cirrad",
+    "q": "Mulher de 67 anos apresenta icterícia e colúria. A ultrassonografia seguida de exame seccional mostra dilatação do colédoco e do ducto pancreático, mas a primeira avaliação não define massa. Não há diagnóstico histológico nem explicação segura para a obstrução. Qual leitura do duplo ducto melhor orienta os próximos passos, sem tratá-lo como confirmação ou exclusão de câncer?",
+    "o": [
+      "O padrão sugere obstrução distal e exige investigar causas neoplásicas e benignas.",
+      "O padrão comprova adenocarcinoma ductal mesmo sem caracterização da lesão.",
+      "A ausência de massa exclui neoplasia e permite limitar o cuidado à icterícia.",
+      "A dilatação simultânea é fisiológica na idade apresentada e dispensa correlação."
+    ],
+    "a": 0,
+    "why": "Duplo ducto aponta para obstrução na região pancreática cefálica ou periampular, incluindo neoplasia e causas benignas. A ausência de massa no exame inicial não encerra investigação, podendo ser necessário estudo dirigido, ecoendoscopia ou outros métodos conforme o caso. O sinal não fornece histologia e tampouco se torna fisiológico apenas pela idade. Sintomas e alterações laboratoriais orientam a urgência e a sequência.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "ciruro-27",
+    "t": "ciruro",
+    "q": "Homem de 74 anos, tabagista, usa anticoagulante por fibrilação atrial e apresenta dois episódios de hematúria visível indolor. Está estável e não há disúria ou febre. A função renal não se alterou e a anticoagulação está na faixa esperada para o tratamento. Ele pergunta se o medicamento dispensa investigação. Qual orientação é mais adequada?",
+    "o": [
+      "Tratar empiricamente infecção e investigar apenas se houver dor lombar.",
+      "Ajustar o anticoagulante e encerrar investigação se o sangramento cessar.",
+      "Solicitar citologia isolada e dispensar imagem e avaliação da bexiga.",
+      "Avaliar repercussão e investigar o trato urinário conforme o risco."
+    ],
+    "a": 3,
+    "why": "Anticoagulantes podem evidenciar sangramento de uma lesão e não eliminam indicação de avaliar hematúria, especialmente em tabagista idoso. A decisão sobre suspender ou ajustar o fármaco depende da gravidade e do risco tromboembólico. Citologia não substitui toda investigação anatômica e endoscópica. Ausência de dor ou resolução do episódio tampouco exclui neoplasia urológica.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "ciruro-28",
+    "t": "ciruro",
+    "q": "Homem de 70 anos com doença de Parkinson relata jato fraco, esforço e esvaziamento incompleto. O resíduo pós-miccional é persistentemente elevado, mas a próstata tem volume moderado e a gravidade dos sintomas parece desproporcional ao achado anatômico. Não há infecção ou obstrução uretral conhecida. Antes de indicar operação prostática, qual avaliação pode ajudar se o resultado mudar a decisão?",
+    "o": [
+      "Estudo pressão-fluxo selecionado para avaliar obstrução e contratilidade.",
+      "Ressonância para usar o volume prostático como explicação suficiente do mecanismo.",
+      "Cistoscopia para inferir contratilidade apenas pela impressão visual da próstata.",
+      "Urofluxometria isolada, tomando baixo fluxo como confirmação de obstrução."
+    ],
+    "a": 0,
+    "why": "Resíduo elevado e baixo fluxo podem decorrer de obstrução, hipocontratilidade ou combinação. Em contexto neurológico e dúvida relevante, estudo pressão-fluxo selecionado pode esclarecer o mecanismo e a expectativa de benefício de desobstrução. Não é obrigatório para todo paciente. Cistoscopia e imagem ajudam em questões anatômicas, mas não quantificam a função contrátil; urofluxometria isolada não distingue adequadamente as causas de baixo fluxo.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "ciruro-29",
+    "t": "ciruro",
+    "q": "Homem de 49 anos apresenta cálculo ureteral com hidronefrose, febre, hipotensão e piora da função renal. Recebeu suporte e antimicrobiano após coleta de culturas, mas mantém sinais de infecção sistêmica. O cálculo é tecnicamente tratável por ureteroscopia, e também há possibilidade de cateter ureteral ou nefrostomia. Qual deve ser a prioridade do procedimento inicial?",
+    "o": [
+      "Realizar litotripsia extracorpórea para evitar qualquer instrumentação urinária.",
+      "Aguardar ação do antibiótico até desaparecer a hidronefrose espontaneamente.",
+      "Fragmentar o cálculo completamente, prolongando o procedimento se necessário.",
+      "Descomprimir o sistema infectado, deixando a retirada definitiva para outra etapa."
+    ],
+    "a": 3,
+    "why": "Obstrução associada à infecção sistêmica exige drenagem urgente por via factível, junto ao suporte e antibiótico. A retirada definitiva é habitualmente postergada até controle infeccioso, reduzindo risco da manipulação. Antibiótico não remove a barreira mecânica. Litotripsia não oferece controle seguro da emergência infecciosa e não deve ser escolhida apenas para evitar um acesso de drenagem.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "ciruro-30",
+    "t": "ciruro",
+    "q": "Mulher de 43 anos tem litíase recorrente e ainda não realizou análise do cálculo ou avaliação metabólica. Por acreditar que todos os cálculos são causados por cálcio, retirou leite e derivados da dieta, mas manteve consumo alto de sal. Tem função renal preservada e não há hipercalcemia conhecida. Qual orientação corrige melhor o raciocínio sem prescrever um esquema igual para toda litíase?",
+    "o": [
+      "Manter restrição total de cálcio e iniciar tiazídico antes da caracterização.",
+      "Priorizar restrição de purinas sem avaliar a composição ou a urina de vinte e quatro horas.",
+      "Caracterizar o cálculo e o perfil metabólico, mantendo cálcio alimentar adequado.",
+      "Prescrever alcalinizante antes de caracterizar a composição e o perfil urinário."
+    ],
+    "a": 2,
+    "why": "Prevenção depende de composição e alterações metabólicas. Cálcio alimentar adequado, ingerido com alimentos, pode reduzir absorção de oxalato; restrição indiscriminada pode ser contraproducente e prejudicar osso. Sódio elevado pode aumentar calciúria. Água, dieta e fármacos são individualizados, com avaliação de recorrência e riscos. Dor ou cor da urina não identifica a composição nem escolhe a terapia preventiva.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "ciruro-31",
+    "t": "ciruro",
+    "q": "Homem de 76 anos foi sondado por retenção urinária prolongada, com grande volume inicial e hidronefrose bilateral. Nas horas seguintes elimina mais de trezentos mililitros por hora de forma persistente, apresenta sede, queda de pressão ao levantar e alterações de sódio. Qual cuidado é mais apropriado antes de considerar alta ou interromper a drenagem?",
+    "o": [
+      "Restringir líquidos e aguardar queda da diurese antes de dosar eletrólitos.",
+      "Clampear a sonda repetidamente para impedir a continuidade da diurese.",
+      "Monitorar balanço e eletrólitos, ajustando reposição à repercussão clínica.",
+      "Repor por via intravenosa todo o volume eliminado, em esquema fixo."
+    ],
+    "a": 2,
+    "why": "Diurese pós-obstrutiva pode causar perdas importantes de água e solutos e demanda vigilância, principalmente com hipotensão ou distúrbios eletrolíticos. A reposição deve ser individualizada, evitando tanto hipovolemia quanto perpetuação por excesso de fluidos. Clampeamento rotineiro não trata o mecanismo. Alto débito após desobstrução não garante recuperação completa nem segurança para alta imediata.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "ciruro-32",
+    "t": "ciruro",
+    "q": "Adolescente de quinze anos apresenta dor escrotal súbita há duas horas e náusea. O testículo doloroso parece alto e horizontalizado, com reflexo cremastérico ausente. A dor diminui parcialmente quando ele eleva o escroto, levando um examinador a sugerir epididimite. A equipe urológica está disponível. Qual decisão de raciocínio é mais segura diante dos achados conflitantes?",
+    "o": [
+      "Esperar reaparecer dor intensa para definir se a posição testicular importa.",
+      "Usar alívio à elevação como confirmação de epididimite e tratar clinicamente.",
+      "Manter suspeita de torção e organizar exploração sem atraso por sinal isolado.",
+      "Descartar torção se o alívio persistir durante observação de seis horas."
+    ],
+    "a": 2,
+    "why": "O chamado sinal de Prehn não tem confiabilidade para excluir torção. Início súbito, posição e ausência do reflexo tornam a hipótese urgente, apesar de alívio parcial. Exame complementar pode ajudar em dúvida se não atrasar tratamento, mas não se deve aguardar mudança da dor para reconhecer a ameaça. Antibioticoterapia isolada pode perder a janela de salvamento testicular.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "ciruro-33",
+    "t": "ciruro",
+    "q": "Homem de 50 anos tem disúria persistente, piúria e culturas bacterianas comuns negativas. Não recebeu antibiótico recentemente. A história inclui contato com tuberculose, mas ele também relata exposição sexual de risco e já teve cálculo urinário. A função renal está estável e não há sepse. Qual estratégia é mais apropriada para esclarecer a causa?",
+    "o": [
+      "Investigar tuberculose e outros diferenciais de piúria estéril conforme o contexto.",
+      "Repetir o mesmo antibiótico empírico até a urina deixar de mostrar leucócitos.",
+      "Concluir causa inflamatória não infecciosa e iniciar corticoide antes de outros testes.",
+      "Confirmar tuberculose apenas pela combinação de piúria e cultura negativa."
+    ],
+    "a": 0,
+    "why": "Cultura comum negativa não detecta todos os agentes e não confirma tuberculose. Métodos específicos para micobactérias, pesquisa de infecções sexualmente transmissíveis e avaliação de causas não infecciosas podem ser necessários. A seleção depende das exposições e da anatomia. Repetir antibiótico sem revisar hipóteses aumenta danos e pode atrasar o diagnóstico; uma pista epidemiológica não deve ser tratada como confirmação.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "ciruro-34",
+    "t": "ciruro",
+    "q": "Homem de 66 anos teve ressecção de lesão vesical. O laudo descreve carcinoma urotelial T1 de alto grau, mas não há detrusor identificável, e a descrição operatória menciona dificuldade de amostragem profunda. Não foi comprovada doença metastática. A equipe discute se já é possível excluir invasão muscular. Qual conclusão deve orientar a próxima etapa?",
+    "o": [
+      "Acompanhar por cistoscopia e escolher novo tratamento se houver crescimento visível.",
+      "Aplicar quimioterapia intravesical e postergar nova amostragem até a recorrência.",
+      "O estadiamento está limitado e deve ser discutida nova ressecção adequada.",
+      "Iniciar BCG e usar a primeira cistoscopia de controle para reavaliar profundidade."
+    ],
+    "a": 2,
+    "why": "Ausência de detrusor não equivale a ausência de invasão e pode levar a subestadiamento. T1 de alto grau reforça necessidade de re-RTU e definição adequada antes da escolha de preservação ou tratamento mais amplo. Estadiamento à distância e dimensão endoscópica não substituem profundidade local. A estratégia posterior depende dos achados, do risco e da discussão com o paciente.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "ciruro-35",
+    "t": "ciruro",
+    "q": "Mulher de 61 anos, com doença renal crônica e rim contralateral atrófico, tem massa renal localizada de 3,5 centímetros. Não há disseminação; a equipe considera possível ressecção parcial com segurança, embora a decisão exija avaliação anatômica detalhada. A função basal é estável, com filtração estimada de quarenta mL/min/1,73 m². Ela deseja tratamento ativo. Qual princípio deve orientar o planejamento operatório?",
+    "o": [
+      "Escolher vigilância apenas pela doença renal, sem discutir risco ou expectativa de vida.",
+      "Equilibrar controle oncológico e preservação de néfrons, com avaliação anatômica.",
+      "Indicar nefrectomia radical pelo realce, sem avaliar possibilidade de cirurgia poupadora.",
+      "Escolher ablação pelo diâmetro, sem avaliar localização e condições do procedimento."
+    ],
+    "a": 1,
+    "why": "Reserva renal é determinante, e preservação de néfrons é especialmente relevante quando viável com segurança oncológica. Radical pode ser necessária por anatomia ou outras condições, mas não decorre do realce isolado. A tríade clássica é pouco frequente e não escolhe a técnica. Risco de perda funcional, alternativas e preferências devem ser discutidos sem prometer que uma técnica serve a todas as massas.",
+    "revision": "cir-20261116"
+  },
+  {
+    "id": "ciruro-36",
+    "t": "ciruro",
+    "q": "Homem de 30 anos tem nódulo sólido intratesticular suspeito na ultrassonografia, com marcadores séricos dentro da referência. Recebe proposta de punção transescrotal antes de procurar o urologista. Não há antecedente que indique conduta poupadora excepcional, e o outro testículo é normal. Qual orientação é mais apropriada para preservar o planejamento oncológico?",
+    "o": [
+      "Observação da massa, pois marcadores normais tornam neoplasia improvável o suficiente.",
+      "Avaliação urológica e abordagem inguinal quando indicada, evitando punção escrotal rotineira.",
+      "Punção escrotal inicial, pois marcadores normais impedem decidir qualquer operação.",
+      "Excisão local pelo escroto antes de discutir a histologia provável."
+    ],
+    "a": 1,
+    "why": "Marcadores normais não excluem tumor testicular. A via inguinal permite controle adequado do cordão e é a abordagem habitual de massa suspeita; violação escrotal pode alterar o planejamento regional. Biópsia ou cirurgia poupadora existem em contextos selecionados e especializados, não como rotina indiscriminada. A decisão deve ser organizada antes de intervir, considerando exame, imagem e condições particulares.",
+    "revision": "cir-20261116"
+  }
+];
