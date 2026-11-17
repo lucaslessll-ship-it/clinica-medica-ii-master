@@ -254,15 +254,18 @@ test('caderno no topo reúne os registros de P1, P2 e Cirurgia sem mudar suas ch
  await p.click('#caderno-atalho-topo');
  await p.waitForSelector('.caderno-unificado');
  assert.equal(await p.locator('.caderno-materia').count(),3);
- assert.match(await p.locator('.caderno-materia').nth(1).innerText(),/Nota P1 preservada/);
- assert.match(await p.locator('.caderno-materia').nth(2).innerText(),/Nota da Cirurgia preservada/);
+ const p1aula=p.locator('#caderno-p1 .caderno-aula').first();
+ const ciraula=p.locator('#caderno-cir .caderno-aula').first();
+ await p1aula.locator('summary').click();
+ await ciraula.locator('summary').click();
+ assert.match(await p1aula.locator('.caderno-editor').inputValue(),/Nota P1 preservada/);
+ assert.match(await ciraula.locator('.caderno-editor').inputValue(),/Nota da Cirurgia preservada/);
  const notas=await p.evaluate(()=>[
    JSON.parse(localStorage.getItem('master_p1_lucas_v4')).notes.p1dm_0,
    JSON.parse(localStorage.getItem('master_cir_lucas_v1')).notes.ciraa_0
  ]);
  assert.deepEqual(notas,['Nota P1 preservada','Nota da Cirurgia preservada']);
  // O caderno pode editar diretamente o registro original da P1.
- const p1aula=p.locator('#caderno-p1 .caderno-aula').first();
  await p1aula.locator('.caderno-editor').fill('Nota P1 editada no caderno');
  await p1aula.locator('.caderno-salvar-nota').click();
  assert.equal(await p.evaluate(()=>JSON.parse(localStorage.getItem('master_p1_lucas_v4')).notes.p1dm_0),'Nota P1 editada no caderno');
