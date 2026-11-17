@@ -5141,16 +5141,26 @@ window.MASTER_CIR_QUESTIONS=[
   {
     "id": "cirestom-21",
     "t": "cirestom",
-    "q": "Homem de 70 anos apresenta lesão gástrica superficial e deseja dissecção endoscópica para evitar gastrectomia. A biópsia inicial confirmou adenocarcinoma, mas a profundidade e os critérios de risco ainda não foram definidos. Está estável e pode completar investigação. Qual conjunto de informações deve orientar a elegibilidade, além de considerar experiência do centro e condições do paciente?",
+    "q": "Homem de 70 anos apresenta adenocarcinoma gástrico em lesão superficial identificada por endoscopia. Deseja tratamento endoscópico para evitar gastrectomia, porém as biópsias iniciais não definiram toda a profundidade da invasão. A equipe revisa classificação endoscópica, histologia e extensão da lesão; não há evidência clínica de doença disseminada. Quais características mais influenciam a possibilidade de dissecção endoscópica com intenção curativa?",
     "o": [
-      "Apenas aparência superficial, sem incorporar a avaliação histológica inicial.",
-      "Intensidade da dispepsia, resposta ao antiácido e número de refeições diárias.",
-      "Apenas localização na pequena ou grande curvatura e idade cronológica.",
-      "Histologia, profundidade, ulceração, tamanho e risco de acometimento linfonodal."
+      "Aspecto endoscópico, localização e resposta sintomática à supressão ácida.",
+      "Diferenciação histológica, pesquisa de Helicobacter e padrão de gastrite adjacente.",
+      "Topografia, idade e tolerância à sedação como critérios principais de curabilidade.",
+      "Histologia, profundidade, ulceração, tamanho e risco de metástase linfonodal."
     ],
     "a": 3,
-    "why": "Ressecção endoscópica é adequada para situações com risco linfonodal suficientemente baixo e critérios definidos, não para toda lesão superficial. Tipo histológico, dimensões, ulceração, profundidade e possibilidade de ressecção completa importam; o espécime pode revelar fatores que mudem a estratégia. Sintomas, localização ou idade isolados não substituem esse conjunto nem garantem segurança oncológica.",
-    "revision": "cir-20261116"
+    "why": "A elegibilidade para ressecção endoscópica de neoplasia gástrica precoce depende de risco linfonodal suficientemente baixo e possibilidade de ressecção completa. Diferenciação histológica, profundidade presumida, dimensão, ulceração e características endoscópicas orientam a indicação; o estudo do espécime após ESD define ressecção curativa versus necessidade de tratamento complementar por invasão profunda, margens ou invasão linfovascular. Pesquisa de H. pylori, localização e comorbidades importam no cuidado global, mas não substituem os critérios oncológicos de curabilidade.",
+    "revision": "cir-20261117-a2",
+    "refs": [
+      {
+        "title": "ESGE/EHMSG/ESP — MAPS III, neoplasia gástrica precoce (2025)",
+        "url": "https://pubmed.ncbi.nlm.nih.gov/40112834/"
+      },
+      {
+        "title": "Diretrizes japonesas para câncer gástrico — 7ª edição (2025)",
+        "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12956939/"
+      }
+    ]
   },
   {
     "id": "cirestom-22",
@@ -5197,30 +5207,46 @@ window.MASTER_CIR_QUESTIONS=[
   {
     "id": "cirestom-25",
     "t": "cirestom",
-    "q": "Durante planejamento de gastrectomia por adenocarcinoma, um membro da equipe afirma que retirar qualquer conjunto de dezesseis linfonodos equivale a realizar uma D2. O paciente tem indicação de operação oncológica em centro experiente, e a discussão é sobre a qualidade da dissecção. Qual resposta melhor diferencia extensão anatômica da avaliação numérica do espécime?",
+    "q": "Durante uma gastrectomia por adenocarcinoma, um residente sugere que recuperar dezesseis linfonodos de qualquer localização já caracteriza linfadenectomia D2. A equipe revisa o mapa de estações linfonodais aplicável à gastrectomia planejada e o objetivo de estadiamento patológico. O paciente é operado em centro com experiência oncológica. Qual afirmação distingue corretamente extensão da dissecção e quantidade de linfonodos avaliados?",
     "o": [
-      "D2 corresponde apenas ao número de linfonodos, independentemente das estações retiradas.",
-      "D2 exige ressecção do pâncreas e baço mesmo sem acometimento tumoral.",
-      "D2 corresponde a estações anatômicas definidas; contagem adequada também importa para estadiamento.",
-      "D2 pode ser substituída por biópsia isolada de um linfonodo próximo ao tumor."
+      "Classificar D2 pelo total de linfonodos recuperados, sem considerar a distribuição das estações.",
+      "Incluir ressecção esplênica e pancreática de rotina como componentes da dissecção D2.",
+      "Definir D2 pelas estações anatômicas previstas e avaliar também a contagem para estadiamento.",
+      "Amostragem seletiva de gânglios suspeitos equivale à D2 quando o total é numericamente adequado."
     ],
     "a": 2,
-    "why": "D1/D2 descrevem extensão anatômica conforme a operação; a contagem é importante para a qualidade do estadiamento, mas não define sozinha uma D2. Ressecções de órgãos adjacentes não devem ser indiscriminadas. Biópsia de um linfonodo não substitui dissecção indicada. O planejamento requer anatomia, segurança e princípios oncológicos, além do laudo quantitativo.",
-    "revision": "cir-20261116"
+    "why": "D1 e D2 descrevem conjuntos anatômicos específicos de estações linfonodais, de acordo com a extensão e o tipo de gastrectomia. A contagem de linfonodos examinados é importante para estadiamento adequado, mas recuperar dezesseis nós de estações inadequadas não transforma uma dissecção em D2. Esplenectomia e pancreatectomia não são exigências rotineiras de D2, e amostragem dirigida não substitui a linfadenectomia indicada. O relatório deve documentar extensão, margens, qualidade técnica e achados histopatológicos.",
+    "revision": "cir-20261117-a2",
+    "refs": [
+      {
+        "title": "Japanese Gastric Cancer Association — diretrizes 2025 (7ª ed.)",
+        "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12956939/"
+      }
+    ]
   },
   {
     "id": "cirestom-26",
     "t": "cirestom",
-    "q": "Homem de 64 anos foi submetido a gastrectomia total e está em seguimento, com alimentação progressivamente adaptada. Não tem anemia importante no momento, mas perdeu peso e pergunta se pode interromper o acompanhamento nutricional por estar conseguindo comer. Qual necessidade decorre particularmente da perda do estômago e deve integrar um plano longitudinal de cuidados?",
+    "q": "Homem de 64 anos passou por gastrectomia total oncológica e está em acompanhamento pós-operatório, com dieta fracionada e melhora progressiva da ingestão. Atualmente não apresenta anemia, mas perdeu peso e pergunta se pode interromper o seguimento nutricional porque voltou a alimentar-se por via oral. A equipe deseja prevenir carências tardias ligadas à alteração anatômica. Qual cuidado deve integrar de forma sistemática o plano de longo prazo?",
     "o": [
-      "Reposição e monitorização de vitamina B12, além de avaliar outras carências.",
-      "Aguardar anemia macrocítica para considerar qualquer reposição vitamínica.",
-      "Suspender avaliação de ferro porque a absorção ocorre apenas no cólon.",
-      "Usar apenas o peso atual para excluir deficiências de micronutrientes."
+      "Repor vitamina B12 e acompanhar ferro e outros micronutrientes periodicamente.",
+      "Introduzir vitamina B12 ao surgir anemia macrocítica ou manifestações neurológicas.",
+      "Concentrar rastreio em ferro e folato, conforme hemograma e sintomas atuais.",
+      "Avaliar calorias e peso seriados, definindo suplementação após perda adicional."
     ],
     "a": 0,
-    "why": "A perda de células produtoras de fator intrínseco compromete a absorção fisiológica de B12; reposição e seguimento são necessários mesmo antes de anemia manifesta. Ferro e outros nutrientes também merecem avaliação conforme ingestão e reconstrução. Peso isolado não exclui carências. Esperar sinais tardios pode permitir manifestações hematológicas ou neurológicas evitáveis.",
-    "revision": "cir-20261116"
+    "why": "Após gastrectomia total, a perda de células parietais e de fator intrínseco compromete a absorção fisiológica de vitamina B12; sua suplementação rotineira e acompanhamento a longo prazo são recomendados, mesmo antes da anemia. Também podem surgir deficiência de ferro, folato, vitamina D e outros micronutrientes, exigindo orientação alimentar e vigilância individualizada. Ganho de peso ou ausência de anemia não comprovam adequação nutricional; sintomas neurológicos de deficiência de B12 podem ocorrer antes de alterações hematológicas.",
+    "revision": "cir-20261117-a2",
+    "refs": [
+      {
+        "title": "Consenso internacional LAP-TG — acompanhamento após gastrectomia total (2022)",
+        "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC9588655/"
+      },
+      {
+        "title": "KGCA — diretrizes de câncer gástrico e seguimento nutricional (2022)",
+        "url": "https://jgc-online.org/Synapse/Data/PDFData/1100JGC/jgc-23-3.pdf"
+      }
+    ]
   },
   {
     "id": "cirestom-27",
@@ -5721,16 +5747,26 @@ window.MASTER_CIR_QUESTIONS=[
   {
     "id": "cirfig-20",
     "t": "cirfig",
-    "q": "Homem de 63 anos tem HCC com invasão vascular, sem indicação de tratamento local curativo na discussão atual. A equipe considera esquema sistêmico que inclui agente antiangiogênico. Ele tem cirrose e antecedente de varizes esofágicas sem avaliação recente. Qual conjunto merece atenção antes da seleção e do início do tratamento proposto?",
+    "q": "Homem de 63 anos tem carcinoma hepatocelular avançado com invasão vascular e sem possibilidade atual de tratamento locorregional curativo. Cirrose conhecida e história de varizes esofágicas sem endoscopia recente são relatadas. A equipe avalia um regime sistêmico contendo bevacizumabe, um anti-VEGF, e deseja reduzir complicações antes da primeira infusão. Qual avaliação merece prioridade além do estadiamento tumoral?",
     "o": [
-      "Nível de transaminases isolado, considerando o antecedente varicoso sem relevância atual.",
-      "Contagem de nódulos isolada, reservando função e varizes para depois da primeira dose.",
-      "Função hepática, condição global e risco de hemorragia por hipertensão portal.",
-      "Ausência de metástase pulmonar, que por si só permite qualquer esquema sistêmico."
+      "Estimar carga tumoral e AFP, deixando o rastreio varicoso para o seguimento.",
+      "Verificar transaminases e creatinina, tratando varizes após início da terapia.",
+      "Avaliar reserva hepática, performance e varizes com manejo do risco hemorrágico.",
+      "Definir resposta radiológica basal, avaliando hipertensão portal após o primeiro ciclo."
     ],
     "a": 2,
-    "why": "Seleção sistêmica depende de reserva hepática, performance, comorbidades e riscos específicos. Em esquemas com efeito antiangiogênico, avaliação e manejo de varizes e risco de sangramento são particularmente importantes. Invasão vascular não torna todos os tratamentos intercambiáveis. A decisão deve seguir recomendações atuais e condições do paciente, sem inferir segurança apenas da ausência de metástase em um órgão.",
-    "revision": "cir-20261116"
+    "why": "Terapia sistêmica para HCC exige avaliar reserva hepática, performance e riscos específicos de cada esquema. Em combinações com bevacizumabe, o anti-VEGF aumenta a preocupação com hemorragia, particularmente em cirróticos com varizes esofagogástricas. AASLD recomenda avaliação endoscópica e tratamento dos achados varicosos de alto risco antes do início, com possibilidade de optar por esquema alternativo quando risco não estiver controlado. AFP, tamanho tumoral e transaminases isolados não resolvem elegibilidade ou segurança.",
+    "revision": "cir-20261117-a2",
+    "refs": [
+      {
+        "title": "AASLD — prática de manejo do carcinoma hepatocelular (2023)",
+        "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10663390/"
+      },
+      {
+        "title": "British Society of Gastroenterology — posicionamento sobre hipertensão portal (2026)",
+        "url": "https://fg.bmj.com/content/early/2026/06/04/flgastro-2026-103698"
+      }
+    ]
   },
   {
     "id": "cirfig-21",
@@ -6067,16 +6103,26 @@ window.MASTER_CIR_QUESTIONS=[
   {
     "id": "ciruro-28",
     "t": "ciruro",
-    "q": "Homem de 70 anos com doença de Parkinson relata jato fraco, esforço e esvaziamento incompleto. O resíduo pós-miccional é persistentemente elevado, mas a próstata tem volume moderado e a gravidade dos sintomas parece desproporcional ao achado anatômico. Não há infecção ou obstrução uretral conhecida. Antes de indicar operação prostática, qual avaliação pode ajudar se o resultado mudar a decisão?",
+    "q": "Homem de 70 anos com doença de Parkinson tem dificuldade miccional progressiva, jato fraco e esvaziamento incompleto. A avaliação registra resíduo pós-miccional persistentemente elevado, mas próstata apenas moderadamente aumentada e sintomas desproporcionais ao achado anatômico. Tratamento clínico foi revisto, não há infecção e a equipe considera cirurgia desobstrutiva, embora reste dúvida entre obstrução infravesical e hipocontratilidade do detrusor. Qual exame pode esclarecer essa distinção quando mudar a conduta?",
     "o": [
-      "Estudo pressão-fluxo selecionado para avaliar obstrução e contratilidade.",
-      "Ressonância para usar o volume prostático como explicação suficiente do mecanismo.",
-      "Cistoscopia para inferir contratilidade apenas pela impressão visual da próstata.",
-      "Urofluxometria isolada, tomando baixo fluxo como confirmação de obstrução."
+      "Estudo pressão-fluxo em contexto selecionado para definir obstrução e contratilidade.",
+      "Ultrassonografia seriada para correlacionar o volume prostático com a força de micção.",
+      "Urofluxometria repetida, interpretando fluxo baixo como diagnóstico de obstrução.",
+      "Cistoscopia para inferir força contrátil do detrusor pelo aspecto do colo vesical."
     ],
     "a": 0,
-    "why": "Resíduo elevado e baixo fluxo podem decorrer de obstrução, hipocontratilidade ou combinação. Em contexto neurológico e dúvida relevante, estudo pressão-fluxo selecionado pode esclarecer o mecanismo e a expectativa de benefício de desobstrução. Não é obrigatório para todo paciente. Cistoscopia e imagem ajudam em questões anatômicas, mas não quantificam a função contrátil; urofluxometria isolada não distingue adequadamente as causas de baixo fluxo.",
-    "revision": "cir-20261116"
+    "why": "Urofluxometria e resíduo elevado não discriminam com segurança obstrução infravesical de contratilidade detrusora insuficiente. Em paciente com doença neurológica e indicação cirúrgica incerta, estudo urodinâmico pressão-fluxo, após avaliação não invasiva, pode identificar obstrução e hipocontratilidade e apoiar aconselhamento sobre benefício esperado da cirurgia. Não é exame obrigatório para todos os homens com sintomas urinários; a indicação depende de como o resultado modifica a decisão. Cistoscopia e ultrassom complementam avaliação anatômica, não medem força de contração.",
+    "revision": "cir-20261117-a2",
+    "refs": [
+      {
+        "title": "EAU — diretrizes de neuro-urologia, avaliação urodinâmica",
+        "url": "https://uroweb.org/guidelines/neuro-urology/chapter/the-guideline"
+      },
+      {
+        "title": "EAU — avaliação diagnóstica de LUTS masculinos",
+        "url": "https://d5edc83c-03f2-494e-ba36-4feaf988a1fb.patients.uroweb.org/guidelines/management-of-non-neurogenic-male-luts/chapter/diagnostic-evaluation"
+      }
+    ]
   },
   {
     "id": "ciruro-29",
