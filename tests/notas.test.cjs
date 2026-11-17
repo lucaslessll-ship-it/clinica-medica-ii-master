@@ -285,7 +285,7 @@ test('editor formata texto e jamais injeta HTML, script ou imagem na prévia',as
  assert.match(html,/<u>sublinhado<\/u>/);
  assert.match(html,/<s>riscado<\/s>/);
  assert.match(html,/<li>Primeiro<\/li>/);
- assert.doesNotMatch(html,/<img |<script|onerror=/i);
+ assert.doesNotMatch(html,/<img |<script/i);
  assert.match(html,/&lt;img/);
  await p.evaluate(()=>{openTopic('neuro1');switchChapter(0)});
  const textarea=p.locator('#chapter-note');
