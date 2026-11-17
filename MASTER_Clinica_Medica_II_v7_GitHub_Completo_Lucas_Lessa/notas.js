@@ -135,7 +135,7 @@
       + '<button type="button" data-cor="sublinhado" title="Sublinhar" aria-label="Sublinhar">S̲</button>'
       + '<span class="nota-sep"></span>'
       + '<button type="button" data-acao="comentar" title="Comentar" aria-label="Comentar">✎</button>'
-      + '<button type="button" data-acao="remover" title="Remover marca" aria-label="Remover marca" hidden>✕</button>';
+      + '<button type="button" data-acao="remover" class="nota-excluir" title="Excluir marcação" aria-label="Excluir marcação" hidden>Excluir</button>';
     document.body.append(barra);
     barra.addEventListener('mousedown', e => e.preventDefault());
     barra.addEventListener('click', aoClicarBarra);
@@ -179,7 +179,7 @@
       emEdicao = { tipo: 'novo', ...selecionado };
       barra.querySelector('[data-acao="remover"]').hidden = true;
       posicionar(barra, selecionado.faixa.getBoundingClientRect());
-    } else if (!existente) {
+    } else if (!existente && !(emEdicao?.tipo === 'marca' && !barra.hidden)) {
       esconderBarra();
     }
   }

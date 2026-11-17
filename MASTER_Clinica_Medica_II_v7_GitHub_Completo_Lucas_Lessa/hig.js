@@ -6,10 +6,12 @@
 'use strict';
 const HIG = (() => {
   const UX_KEY='master_p2_hig_v2';
-  const defaults={theme:'light',font:'normal',contrast:false,motion:false,collapsed:false,focus:false,notes:{},bookmarks:{},marcas:{},lastTopic:'neuro1',lastChapter:0,sessionMinutes:25,sessionSpent:0};
+  const defaults={theme:'light',font:'normal',contrast:false,motion:false,collapsed:false,focus:false,notes:{},bookmarks:{},marcas:{},qlog:{},lastTopic:'neuro1',lastChapter:0,sessionMinutes:25,sessionSpent:0};
   let preferences=load(),modalType='',modalFocus=null,modalBackground=null,searchItems=[],activeResult=0;
-  function load(){try{let v=JSON.parse(localStorage.getItem(UX_KEY));return {...defaults,...(v&&typeof v==='object'?v:{}),notes:{...defaults.notes,...(v?.notes||{})},bookmarks:{...defaults.bookmarks,...(v?.bookmarks||{})},marcas:{...defaults.marcas,...(v?.marcas||{})}}}catch{return {...defaults}}}
+  function load(){try{let v=JSON.parse(localStorage.getItem(UX_KEY));return {...defaults,...(v&&typeof v==='object'?v:{}),notes:{...defaults.notes,...(v?.notes||{})},bookmarks:{...defaults.bookmarks,...(v?.bookmarks||{})},marcas:{...defaults.marcas,...(v?.marcas||{})},qlog:{...(v?.qlog&&typeof v.qlog==='object'?v.qlog:{})}}}catch{return {...defaults}}}
   function save(){try{localStorage.setItem(UX_KEY,JSON.stringify(preferences))}catch{toast('O navegador não permitiu salvar esta preferência.') }}
+  function qlog(){return preferences.qlog||(preferences.qlog={});}
+  function qlogSave(){save();}
   function focusData(){return preferences.pomodoro||{minutes:preferences.sessionMinutes,legacyMinutes:preferences.sessionSpent};}
   function saveFocus(data){preferences.pomodoro=JSON.parse(JSON.stringify(data));preferences.sessionMinutes=data.minutes;save();}
   function refreshFocus(){const fresh=load();preferences.pomodoro=fresh.pomodoro;preferences.sessionSpent=fresh.sessionSpent;preferences.sessionMinutes=fresh.sessionMinutes;}
@@ -220,7 +222,7 @@ const HIG = (() => {
     });
   }
   function reload(){preferences=load();applyPrefs();}
-  return {reload,init,afterRender,abrirAula,marcas,marcasTodas,marcaAdd,marcaEdita,marcaRemove,setFocus,fullscreenAvailable,openSearch,searchInput,searchKeys,chooseResult,openSettings,openHelp,closeOverlay,setTheme,setFont,togglePref,toggleSidebar,toggleFocus,lessonToolbar,lessonNotes,saveNote,bookmark,viewToday,viewNotes,configureTimer,toggleTimer,resetTimer,exportNotes,exportBackup,importProgress,openLast,resumeInfo,focusTopic,dueCards,focusData,saveFocus,refreshFocus,openTimer};
+  return {qlog,qlogSave,reload,init,afterRender,abrirAula,marcas,marcasTodas,marcaAdd,marcaEdita,marcaRemove,setFocus,fullscreenAvailable,openSearch,searchInput,searchKeys,chooseResult,openSettings,openHelp,closeOverlay,setTheme,setFont,togglePref,toggleSidebar,toggleFocus,lessonToolbar,lessonNotes,saveNote,bookmark,viewToday,viewNotes,configureTimer,toggleTimer,resetTimer,exportNotes,exportBackup,importProgress,openLast,resumeInfo,focusTopic,dueCards,focusData,saveFocus,refreshFocus,openTimer};
 })();
 window.HIG=HIG;
 window.addEventListener('DOMContentLoaded',HIG.init);
