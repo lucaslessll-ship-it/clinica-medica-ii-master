@@ -72,7 +72,7 @@ test('forgot password validates email and retains a neutral success message',asy
 test('login loads progress, menu belongs to user, Escape and outside click close it',async()=>{
  const t=await open({remote:[{storage_key:keys[0],payload:{...empty,completed:{neuro2_1:true}}}]}),p=t.page;
  await login(p);assert.equal(await p.locator('#master-avatar svg').count(),1);assert.equal(await p.locator('#master-avatar').getAttribute('aria-label'),'Abrir menu da conta de Ana Lima');assert.equal(await p.evaluate(()=>store.completed.neuro2_1),true);
- await p.locator('#master-avatar').click();await text(p,'#master-profile-email',/ana@example.test/);await p.keyboard.press('Escape');assert.equal(await p.locator('#master-profile').isHidden(),true);
+ await p.locator('#master-avatar').click();await text(p,'#master-profile-email',/ana@example.test/);await p.keyboard.press('Escape');await p.locator('#master-profile').waitFor({state:'hidden'});
  await p.locator('#master-avatar').click();await p.locator('#main-content h1').click();assert.equal(await p.locator('#master-avatar').getAttribute('aria-expanded'),'false');await t.close();
 });
 test('consent uses an inline form and can be declined without exposing study data',async()=>{
@@ -208,7 +208,7 @@ test('image viewer zoom, normalized annotations, undo, export, Escape and broken
  await p.evaluate(()=>MediaViewer.open('data:image/svg+xml,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="600" height="400"><rect width="600" height="400" fill="white"/></svg>'),'Teste geométrico, não clínico'));
  await p.locator('[data-action=in]').click();await text(p,'.image-status',/125%/);await p.locator('[data-mode=arrow]').click();const box=await p.locator('.image-layer img').boundingBox();await p.mouse.move(box.x+100,box.y+100);await p.mouse.down();await p.mouse.move(box.x+200,box.y+160);await p.mouse.up();assert.equal(await p.locator('.image-layer svg path').count(),1);
  const before=await p.locator('.image-layer svg path').getAttribute('d');await p.locator('[data-action=in]').click();assert.equal(await p.locator('.image-layer svg path').getAttribute('d'),before);
- const download=p.waitForEvent('download');await p.locator('[data-action=export]').click();assert.equal((await download).suggestedFilename(),'MASTER-imagem-anotada.png');await p.locator('[data-action=undo]').click();assert.equal(await p.locator('.image-layer svg path').count(),0);await p.keyboard.press('Escape');assert.equal(await p.locator('.image-dialog').count(),0);
+ const download=p.waitForEvent('download');await p.locator('[data-action=export]').click();assert.equal((await download).suggestedFilename(),'MASTER-imagem-anotada.png');await p.locator('[data-action=undo]').click();assert.equal(await p.locator('.image-layer svg path').count(),0);await p.keyboard.press('Escape');await p.locator('.image-dialog').waitFor({state:'detached'});
  await p.evaluate(()=>MediaViewer.open('/missing-image.png'));await text(p,'.image-status',/Não foi possível abrir/);await p.keyboard.press('Escape');await t.close();
 });
 test('a second-device version is backed up before overwriting and can be exported',async()=>{
@@ -294,7 +294,7 @@ test('pomodoro completion is capped, counted once and restored paused after relo
  const t=await open({session:true}),p=t.page;await p.waitForFunction(()=>document.getElementById('master-auth').hidden);await freezeTime(p,'2026-11-11T12:00:00Z');
  await p.locator('#focus-top').click();await p.locator('[data-focus-toggle]').click();await p.waitForFunction(()=>FocusTimer.status().running);await p.clock.fastForward(1800000);
  let data=await p.evaluate(()=>FocusTimer.status());assert.equal(data.running,false);assert.equal(data.mode,'curto');assert.equal(data.remainingMs,300000);assert.equal(data.days['2026-11-11'].ms,1500000);assert.equal(data.days['2026-11-11'].completed,1);
- assert.equal(await p.locator('#focus-end').isVisible(),true);assert.match(await p.locator('#focus-end').innerText(),/Hora do descanso ou vai continuar estudando\?/);await p.locator('[data-focus-end-close]').click();assert.equal(await p.locator('#focus-end').isVisible(),false);
+ assert.equal(await p.locator('#focus-end').isVisible(),true);assert.match(await p.locator('#focus-end').innerText(),/Hora do descanso ou vai continuar estudando\?/);await p.locator('[data-focus-end-close]').click();await p.locator('#focus-end').waitFor({state:'hidden'});
  await p.clock.fastForward(60000);await p.reload();await p.waitForFunction(()=>document.getElementById('master-auth').hidden);data=await p.evaluate(()=>FocusTimer.status());assert.equal(data.running,false);assert.equal(data.days['2026-11-11'].completed,1);assert.equal(data.remainingMs,300000);await t.close();
 });
 test('pomodoro splits midnight and keeps accounts isolated during a running session',async()=>{
