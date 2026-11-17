@@ -35,6 +35,14 @@
 - Comentários explicando **por que** a resposta é correta e quais nuances podem modificar a conduta.
 - Controle de acesso à bibliografia: nenhum link clínico nas alternativas ou antes da correção.
 
+## Pista adicional encontrada na experiência de prova
+
+Uma inspeção do motor revelou que os **432 itens autorais não tinham `shuffle` definido** e a função `orderOf` os exibia na ordem gravada no arquivo. Apesar de o banco ter 108 gabaritos por letra, a ordem das respostas visíveis não era renovada a cada sessão de estudo.
+
+**Correção:** o motor agora embaralha as alternativas dos itens autorais em treino e simulado. A ordem gerada é mantida durante a mesma tentativa e registrada por questão para permitir navegação; a correção usa sempre o índice original (não a posição visual), evitando mudar o gabarito. A ordem original de questões privadas é preservada salvo quando sua origem já indicar embaralhamento.
+
+**Dados históricos:** respostas de enunciados antigos ficam no armazenamento, mas são ignoradas em filtros de desempenho atual, questões devidas e plano de revisão até nova tentativa da versão editada. O histórico não é apagado.
+
 ## Verificação automatizada
 ```sh
 node scripts/auditar-questoes-cirurgia.cjs
