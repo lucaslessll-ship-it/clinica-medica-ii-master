@@ -336,8 +336,8 @@
   let rascunhoTimer = null, modoPainel = 'uma';
 
   function itensAula() {
-    return (api()?.marcas(caixa?.dataset.aula || '') || [])
-      .filter(m => m.comentario || m.comentarioAtivo);
+    // Todos os destaques são editáveis; comentários são opcionais.
+    return (api()?.marcas(caixa?.dataset.aula || '') || []);
   }
 
   function salvarEntrada(entrada) {
@@ -580,7 +580,7 @@
   function abrirTodas() {
     const pagina=contextoPagina();
     if(!pagina)return;
-    const primeira=api()?.marcas(aulaAtual()).find(m=>m.comentario||m.comentarioAtivo);
+    const primeira=api()?.marcas(aulaAtual())[0];
     if(primeira){abrirCaixa(primeira.id,'todas');return;}
     if(!caixa)montarCaixa();
     if(pagina.origem==='estudo')api()?.registrarPaginaEstudo?.(pagina.chave,{
