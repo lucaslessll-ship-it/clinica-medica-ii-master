@@ -225,3 +225,13 @@ body[data-theme="dark"] .caderno-icone-3d{color:#c6ede1;background:linear-gradie
   .nota-painel-conteudo{overflow-y:auto}
   .nota-painel-simbolo{width:29px;height:29px}
 }
+
+
+/* Em 320–380 px, preserve primeiro o menu e os controles já existentes.
+   O caderno permanece disponível na navegação lateral/Biblioteca. */
+@media(max-width:380px){#caderno-atalho-topo{display:none!important}}
+@media(min-width:381px) and (max-width:600px){
+  #caderno-atalho-topo{width:32px;min-width:32px}
+  #caderno-atalho-topo .caderno-icone-3d{width:22px;height:22px}
+  #caderno-atalho-topo .caderno-icone-3d svg{width:19px;height:19px}
+}
