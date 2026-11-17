@@ -52,7 +52,7 @@
   }
   const field=(id,label,type,autocomplete,extra='')=>`<label for="${id}">${label}</label><input id="${id}" name="${id}" type="${type}" autocomplete="${autocomplete}" aria-describedby="master-auth-message" required ${extra}>`;
   function show(mode, message='', error=false){
-    status.mode=mode;closeProfile();lock(true);$('master-auth').hidden=false;
+    status.mode=mode;closeProfile(true);lock(true);$('master-auth').hidden=false;
     let title,description,fields,submit;
     const email=esc($('master-email')?.value||status.user?.email||'');
     const emailField=()=>field('master-email','E-mail','email','email',`value="${email}" autocapitalize="none" spellcheck="false"`);
@@ -132,10 +132,13 @@
       }
     });
   }
-  function closeProfile(){
+  function closeProfile(instant=false){
     const profile=$('master-profile');
     if(profile && !profile.hidden){
-      if(window.MasterWindowMotion){
+      if(instant || document.documentElement.classList.contains('master-auth-locked') || !status.user){
+        window.MasterWindowMotion?.cancel(profile);
+        profile.hidden=true;
+      }else if(window.MasterWindowMotion){
         if(!window.MasterWindowMotion.isClosing(profile))window.MasterWindowMotion.hide(profile,{kind:'modal'});
       }else profile.hidden=true;
     }
