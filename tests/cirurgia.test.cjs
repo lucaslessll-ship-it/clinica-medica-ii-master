@@ -66,7 +66,7 @@ test('plano do dia abre a próxima aula, credita conclusões e limita o treino �
 });
 test('Hoje soma evocação e revisões de Cirurgia e o botão usa o filtro devidas',async()=>{
  const t=await open({width:1280,height:900},'2026-11-13T09:00:00-03:00'),p=t.page;
- await p.evaluate(()=>{const id=CIR.own[0].id;localStorage.setItem(CIR.KEY,JSON.stringify({results:{[id]:{correct:false,next:'2026-11-12T12:00:00Z'}}}));CIR.reload();store.study={deep:{recall:{'neuro1_0#0':{d:'2026-11-12',n:0}},days:{}}};render();});
+ await p.evaluate(()=>{const q=CIR.own[0],id=q.id;localStorage.setItem(CIR.KEY,JSON.stringify({results:{[id]:{revision:q.revision,correct:false,next:'2026-11-12T12:00:00Z'}}}));CIR.reload();store.study={deep:{recall:{'neuro1_0#0':{d:'2026-11-12',n:0}},days:{}}};render();});
  assert.equal(await p.locator('.dash-today-nums strong').nth(1).textContent(),'2');await p.getByRole('button',{name:'Revisar Cirurgia: 1',exact:true}).click();assert.equal(await p.evaluate(()=>ui.route),'cirpractice');assert.match(await p.locator('.cir-q .status-row').innerText(),/Questão 1 de 1/);await t.close();
 });
 test('o plano preserva conclusões com doneAt da versão publicada',async()=>{
@@ -84,7 +84,7 @@ test('Hoje atualiza revisões do banco privado quando o carregamento termina',as
 });
 test('desempenho ordena percentuais conhecidos e não mostra percentual com poucos dados',async()=>{
  const t=await open(),p=t.page;
- const ids=await p.evaluate(()=>{const ids=CIR.topics.slice(0,3).map(topic=>topic.id),results={};ids.forEach((id,k)=>CIR.own.filter(q=>q.t===id).slice(0,k===2?4:5).forEach((q,i)=>results[q.id]={correct:k===0?i===0:true}));localStorage.setItem(CIR.KEY,JSON.stringify({results}));CIR.reload();CIR.go('cir');return ids;});
+ const ids=await p.evaluate(()=>{const ids=CIR.topics.slice(0,3).map(topic=>topic.id),results={};ids.forEach((id,k)=>CIR.own.filter(q=>q.t===id).slice(0,k===2?4:5).forEach((q,i)=>results[q.id]={revision:q.revision,correct:k===0?i===0:true}));localStorage.setItem(CIR.KEY,JSON.stringify({results}));CIR.reload();CIR.go('cir');return ids;});
  const rows=p.locator('.cir-perf-row');assert.equal(await rows.count(),14);assert.match(await rows.nth(0).innerText(),/Abdome agudo/);assert.match(await rows.nth(0).innerText(),/20%/);assert.match(await rows.nth(1).innerText(),/Pâncreas/);assert.match(await rows.nth(1).innerText(),/100%/);
  const scarce=rows.filter({hasText:'Hérnias da parede abdominal'});assert.match(await scarce.innerText(),/4 respondidas/);assert.match(await scarce.innerText(),/poucos dados/);assert.ok(!(await scarce.innerText()).includes('%'));await scarce.getByRole('button',{name:/Treinar este tema/}).click();assert.equal(await p.evaluate(()=>ui.route),'cirpractice');await t.close();
 });
