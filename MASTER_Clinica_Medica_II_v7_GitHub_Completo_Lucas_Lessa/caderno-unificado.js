@@ -353,16 +353,18 @@
   function fecharPainel() {
     if(!painel || painel.hidden)return;
     salvarEdicoesPainel();
-    painel.hidden=true;
+    if(window.MasterWindowMotion)window.MasterWindowMotion.hide(painel,{kind:'sheet'});
+    else painel.hidden=true;
     document.getElementById('caderno-atalho-topo')?.setAttribute('aria-expanded','false');
   }
 
   function abrirPainel() {
     if(!painel)criarPainel();
     window.Notas?.fecharCaixa?.();
-    if(!painel.hidden){fecharPainel();return}
+    if(!painel.hidden&&!window.MasterWindowMotion?.isClosing(painel)){fecharPainel();return}
     painel.querySelector('.caderno-painel-scroll').innerHTML=conteudoPainel();
-    painel.hidden=false;
+    if(window.MasterWindowMotion)window.MasterWindowMotion.show(painel,{kind:'sheet'});
+    else painel.hidden=false;
     painel.querySelector('#caderno-painel-busca').value='';
     painelFiltro='todas';
     painel.querySelectorAll('[data-painel-filtro]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.painelFiltro==='todas')));
