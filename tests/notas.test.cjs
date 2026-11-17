@@ -356,7 +356,7 @@ test('atalho do caderno e menu principal permanecem acessíveis no celular',asyn
  assert.equal(layout.painelNaTela,true);
  assert.equal(layout.menuLivre,true);
  await p.locator('[data-painel-acao="minimizar"]').click();
- assert.equal(await p.locator('#caderno-painel').isVisible(),false);
+ await p.locator('#caderno-painel').waitFor({state:'hidden'});
  assert.equal(await p.locator('#caderno-atalho-topo').isVisible(),true);
  await t.close();
 });
