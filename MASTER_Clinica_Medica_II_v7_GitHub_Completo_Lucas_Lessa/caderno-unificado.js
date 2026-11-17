@@ -84,6 +84,12 @@
         '</section>').join('') + '</section>';
   }
 
+  function voltarAoTrecho(rota,tema,indice,chave,id) {
+    fecharPainel();
+    window.HIG?.abrirAula(rota,tema,Number(indice));
+    if(id)window.Notas?.voltarAoTrecho?.(id,chave);
+  }
+
   function salvarNota(botao) {
     const corpo = botao.closest('.caderno-aula-corpo');
     if (!corpo) return;
@@ -92,12 +98,15 @@
     if (materia === 'p2') {
       window.HIG?.saveNote(chave,valor);
     } else {
-      const storageKey = chaveDados(materia), dados = ler(storageKey);
-      dados.notes = {...(dados.notes || {}),[chave]:valor};
-      try { localStorage.setItem(storageKey,JSON.stringify(dados)); }
-      catch { corpo.querySelector('.caderno-status').textContent = 'Falha ao salvar neste dispositivo.'; return; }
-      if (materia === 'p1') window.P1?.reload?.();
-      if (materia === 'cir') window.CIR?.reload?.();
+      const modulo = materia === 'p1' ? window.P1 : window.CIR;
+      if (typeof modulo?.saveExternalNote === 'function') {
+        modulo.saveExternalNote(chave,valor);
+      } else {
+        const storageKey = chaveDados(materia), dados = ler(storageKey);
+        dados.notes = {...(dados.notes || {}),[chave]:valor};
+        try { localStorage.setItem(storageKey,JSON.stringify(dados)); }
+        catch { corpo.querySelector('.caderno-status').textContent = 'Falha ao salvar neste dispositivo.'; return; }
+      }
     }
     corpo.querySelector('.caderno-status').textContent = 'Salvo no registro original.';
   }
