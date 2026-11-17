@@ -34,6 +34,37 @@
       }
       grupos.push({...materia,topicos,quantidade:topicos.reduce((n,t)=>n+t.aulas.length,0)});
     }
+    // Rotas adicionais utilizam as mesmas preferências sincronizadas da P2,
+    // mas o caderno exibe cada página com nome, rota e trechos próprios.
+    const paginas={...(ux.paginasEstudo||{}),...(window.HIG?.paginasEstudo?.()||{})};
+    for(const [chave,marcas] of Object.entries(ux.marcas||{})){
+      if(!chave.startsWith('estudo_')||paginas[chave])continue;
+      const primeira=Array.isArray(marcas)?marcas[0]:null;
+      paginas[chave]={
+        titulo:primeira?.pagina||'Conteúdo de estudo',rota:primeira?.rota||'',
+        materia:primeira?.materia||'Outras matérias',
+        localizacao:primeira?.localizacao||('#'+(primeira?.rota||'')),
+        tipo:primeira?.tipoPagina||'pagina',indice:primeira?.indice??null
+      };
+    }
+    const outras=new Map();
+    for(const [chave,meta] of Object.entries(paginas)){
+      const marcas=Array.isArray(ux.marcas?.[chave])?ux.marcas[chave]:[];
+      const nota=String(ux.notes?.[chave]||'');
+      if(!marcas.length&&!nota.trim())continue;
+      const nome=String(meta?.materia||'Outras matérias');
+      if(!outras.has(nome))outras.set(nome,{
+        id:'estudo-'+outras.size,nome,rota:'estudo',topicos:[],quantidade:0
+      });
+      const grupo=outras.get(nome);
+      const titulo=String(meta?.titulo||'Página de estudo');
+      grupo.topicos.push({id:chave,titulo,aulas:[{
+        chave,indice:Number.isInteger(meta?.indice)?meta.indice:0,
+        titulo,nota,marcas,salvo:false
+      }]});
+      grupo.quantidade++;
+    }
+    grupos.push(...outras.values());
     return grupos;
   }
 
@@ -105,7 +136,41 @@
 
   function voltarAoTrecho(rota,tema,indice,chave,id) {
     fecharPainel();
+    if(rota==='estudo'){
+      abrirPaginaEstudo(chave||tema,id);
+      return;
+    }
     window.HIG?.abrirAula(rota,tema,Number(indice));
+    if(id)window.Notas?.voltarAoTrecho?.(id,chave);
+  }
+
+  async function abrirPaginaEstudo(chave,id) {
+    const ux=ler(UX_KEY);
+    const meta=window.HIG?.paginasEstudo?.()[chave]||ux.paginasEstudo?.[chave]||
+      ux.marcas?.[chave]?.[0]||null;
+    if(!meta?.rota)return;
+    const rota=meta.rota;
+    try {await window.RouteAssets?.ensure?.(rota)}catch{}
+    if(typeof navigate!=='function')return;
+    navigate(rota);
+    const hash=meta.localizacao||('#'+rota);
+    // Módulos do CourseKit/ECG/POCUS não codificam a aula no hash.
+    // Reabrimos o mesmo módulo pelo índice indicado no momento da citação.
+    const indice=Number.isInteger(meta.indice)?meta.indice:0;
+    const tipo=meta.tipo||meta.tipoPagina||'pagina';
+    const modulos={
+      pocus:window.PocusCourse,ecg:window.ECGCourse,
+      rad:window.RadCourse,hemo:window.HemoCourse,atb:window.AtbCourse
+    };
+    const modulo=modulos[rota];
+    if(modulo&&Number.isInteger(meta.indice)){
+      if(rota==='ecg'&&tipo==='tracado')modulo.tracing?.(indice);
+      else if(tipo==='caso')modulo.caseOpen?.(indice);
+      else modulo.open?.(indice);
+    }else if(hash!=='#'+rota&&hash.startsWith('#'+rota+'/')){
+      location.hash=hash;
+      if(typeof parseHash==='function')parseHash();
+    }
     if(id)window.Notas?.voltarAoTrecho?.(id,chave);
   }
 
@@ -139,7 +204,7 @@
     if (!corpo) return;
     const {materia,chave} = corpo.dataset;
     const valor = corpo.querySelector('.caderno-editor').value;
-    if (materia === 'p2') {
+    if (materia === 'p2' || materia === 'estudo') {
       window.HIG?.saveNote(chave,valor);
     } else {
       const modulo = materia === 'p1' ? window.P1 : window.CIR;
@@ -273,7 +338,7 @@
     } else {
       const valor=cartao.querySelector('.caderno-painel-editor-nota').value;
       const materia=cartao.dataset.materia;
-      if(materia==='p2') window.HIG?.saveNote(key,valor);
+      if(materia==='p2'||materia==='estudo') window.HIG?.saveNote(key,valor);
       else (materia==='p1'?window.P1:window.CIR)?.saveExternalNote?.(key,valor);
     }
     cartao.dataset.sujo='nao';
