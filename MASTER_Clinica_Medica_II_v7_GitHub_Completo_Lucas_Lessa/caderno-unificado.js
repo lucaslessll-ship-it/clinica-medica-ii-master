@@ -60,7 +60,7 @@
       '<button type="button" class="btn caderno-abrir notas-ir" data-rota="' + materia.rota +
       '" data-tema="' + escapar(tema.id) + '" data-indice="' + aula.indice + '">Abrir aula no texto</button>' +
       '<span class="caderno-status" aria-live="polite"></span></div>' +
-      (aula.marcas.length ? '<details class="caderno-trechos"><summary>' + aula.marcas.length +
+      (aula.marcas.length ? '<details class="caderno-trechos" open><summary>' + aula.marcas.length +
       ' trechos destacados e citações</summary>' + aula.marcas.map(m => trechoHTML(m,aula.chave)).join('') +
       '</details>' : '') + '</div></details>';
   }
@@ -110,6 +110,8 @@
       {comentario:texto,comentarioAtivo:true});
     if (salvo) {
       botao.textContent = 'Salvo';
+      const exibido = item.querySelector('.notas-comentario');
+      if (exibido) exibido.textContent = texto;
       window.Notas?.aplicar?.();
     }
   }
