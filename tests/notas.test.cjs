@@ -365,7 +365,7 @@ test('atalho do caderno e menu principal permanecem acessíveis no celular',asyn
 test('anotações em cursos POCUS são isoladas por módulo e reunidas no caderno',async()=>{
  const t=await abrirAula(),p=t.page;
  await p.evaluate(async()=>{
-   await RouteAssets.ensure('pocus');
+   if(window.RouteAssets)await window.RouteAssets.ensure('pocus');
    navigate('pocus');
    PocusCourse.open(0);
  });
@@ -407,7 +407,7 @@ test('anotações em cursos POCUS são isoladas por módulo e reunidas no cadern
 test('páginas sem marcações permitem escrever nota geral pelo atalho próprio',async()=>{
  const t=await abrirAula(),p=t.page;
  await p.evaluate(async()=>{
-   await RouteAssets.ensure('ecg');
+   if(window.RouteAssets)await window.RouteAssets.ensure('ecg');
    navigate('ecg');
    ECGCourse.open(0);
  });
@@ -432,7 +432,7 @@ test('páginas sem marcações permitem escrever nota geral pelo atalho próprio
 
 test('seleção de botões e alternativas interativas não recebe marca-texto',async()=>{
  const t=await abrirAula(),p=t.page;
- await p.evaluate(async()=>{await RouteAssets.ensure('pocus');navigate('pocus');PocusCourse.open(0)});
+ await p.evaluate(async()=>{if(window.RouteAssets)await window.RouteAssets.ensure('pocus');navigate('pocus');PocusCourse.open(0)});
  await p.waitForSelector('.pocus-module');
  await p.evaluate(()=>{
    const b=document.querySelector('.pocus-pager button');
