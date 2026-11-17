@@ -5,7 +5,7 @@
 (() => {
   'use strict';
   const LEITURA = '.deep-block,.deep-lesson,.pocus-card-body,.pocus-sec,.course-body,.case-step,.insight';
-  const BLOQUEADOS = 'button,a,nav,summary,label,input,textarea,select,option,form,[contenteditable],[role="button"],[role="tab"],.nota-barra,.nota-caixa,.nota-bolha,.caderno-unificado,.caderno-painel-lateral,.nota-formatbar,.nota-preview,.ai-tutor-dialog,.media-viewer,.pocus-q-options,.lab-choices,.qnav-dots,.pocus-pager';
+  const BLOQUEADOS = 'button,a,nav,summary,label,input,textarea,select,option,form,svg,canvas,iframe,video,audio,math,pre,code,[contenteditable],[role="button"],[role="tab"],.nota-barra,.nota-caixa,.nota-bolha,.caderno-unificado,.caderno-painel-lateral,.nota-formatbar,.nota-preview,.ai-tutor-dialog,.media-viewer,.pocus-q-options,.lab-choices,.qnav-dots,.pocus-pager';
   const ROTAS_ESTUDO = new Set([
     'topic','p1topic','cirtopic','p1','cir','cirp1','cirp2','topics',
     'reverse','practice','exam','cases','discursive','oral','flashcards','sources',
