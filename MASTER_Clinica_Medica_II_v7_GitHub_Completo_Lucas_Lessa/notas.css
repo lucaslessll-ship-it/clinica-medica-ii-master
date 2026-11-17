@@ -348,3 +348,27 @@ body[data-theme="dark"] .caderno-icone-3d{color:#c6ede1;background:linear-gradie
  .topbar-right .search-trigger{flex:0 0 40px;min-width:40px;width:40px}
  .topbar-right .account-control{flex:0 0 34px}
 }
+
+
+/* Acesso discreto a marca-texto e caderno em toda página educacional. */
+.nota-atalho-pagina{
+  display:inline-flex;align-items:center;gap:8px;min-height:37px;
+  margin:8px 0 16px;padding:7px 12px;border:1px solid var(--line);
+  border-radius:10px;background:var(--white);color:var(--ink);font:inherit;
+  font-size:12px;font-weight:700;cursor:pointer;
+  box-shadow:0 2px 5px rgba(18,63,57,.045);
+}
+.nota-atalho-pagina span{font-size:17px;color:#11776c}
+.nota-atalho-pagina:hover{border-color:#0b766b;background:var(--bg)}
+.nota-atalho-pagina:focus-visible{outline:2px solid var(--focus,#0b5f57);outline-offset:3px}
+@media(max-width:650px){.nota-atalho-pagina{margin:5px 0 12px;font-size:11px;padding:6px 9px;min-height:35px}}
+@media print{.nota-atalho-pagina{display:none!important}}
+
+/* Ajuste de ergonomia: preservar foco e alvos de toque acessíveis. */
+@media(max-width:500px){
+ .topbar-right .focus-trigger{
+   display:inline-grid!important;place-items:center;flex:0 0 44px;
+   min-width:44px;width:44px;min-height:44px;height:44px;padding:0;
+ }
+}
+.cir-perf .btn{min-height:44px}

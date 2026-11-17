@@ -140,6 +140,23 @@ const HIG = (() => {
   // que já sobem para a conta pelo salvamento automático.
   function marcas(key){return (preferences.marcas||{})[key]||[]}
   function marcasTodas(){return preferences.marcas||{}}
+  function registrarPaginaEstudo(key,meta){
+    if(typeof key!=='string'||!key.startsWith('estudo_'))return;
+    if(!preferences.paginasEstudo)preferences.paginasEstudo={};
+    const anterior=preferences.paginasEstudo[key];
+    const proximo={
+      rota:String(meta?.rota||''),titulo:String(meta?.titulo||'Estudo').slice(0,180),
+      materia:String(meta?.materia||'Estudos').slice(0,80),
+      localizacao:String(meta?.localizacao||'').slice(0,300),
+      tipo:String(meta?.tipo||'pagina').slice(0,30),
+      indice:Number.isInteger(meta?.indice)?meta.indice:null
+    };
+    if(JSON.stringify(anterior)!==JSON.stringify(proximo)){
+      preferences.paginasEstudo[key]=proximo;save();
+    }
+  }
+  function paginasEstudo(){return preferences.paginasEstudo||{}}
+
   function marcaAdd(key,marca){if(!preferences.marcas)preferences.marcas={};(preferences.marcas[key]||(preferences.marcas[key]=[])).push(marca);save();return marca}
   function marcaEdita(key,id,campos){const lista=(preferences.marcas||{})[key]||[];const i=lista.findIndex(m=>m.id===id);if(i<0)return null;lista[i]={...lista[i],...campos};save();return lista[i]}
   function marcaRemove(key,id){const lista=(preferences.marcas||{})[key]||[];const i=lista.findIndex(m=>m.id===id);if(i<0)return false;lista.splice(i,1);if(!lista.length)delete preferences.marcas[key];save();return true}
@@ -222,7 +239,7 @@ const HIG = (() => {
     });
   }
   function reload(){preferences=load();applyPrefs();}
-  return {qlog,qlogSave,reload,init,afterRender,abrirAula,marcas,marcasTodas,marcaAdd,marcaEdita,marcaRemove,setFocus,fullscreenAvailable,openSearch,searchInput,searchKeys,chooseResult,openSettings,openHelp,closeOverlay,setTheme,setFont,togglePref,toggleSidebar,toggleFocus,lessonToolbar,lessonNotes,saveNote,bookmark,viewToday,viewNotes,configureTimer,toggleTimer,resetTimer,exportNotes,exportBackup,importProgress,openLast,resumeInfo,focusTopic,dueCards,focusData,saveFocus,refreshFocus,openTimer};
+  return {qlog,qlogSave,reload,init,afterRender,abrirAula,marcas,marcasTodas,paginasEstudo,registrarPaginaEstudo,marcaAdd,marcaEdita,marcaRemove,setFocus,fullscreenAvailable,openSearch,searchInput,searchKeys,chooseResult,openSettings,openHelp,closeOverlay,setTheme,setFont,togglePref,toggleSidebar,toggleFocus,lessonToolbar,lessonNotes,saveNote,bookmark,viewToday,viewNotes,configureTimer,toggleTimer,resetTimer,exportNotes,exportBackup,importProgress,openLast,resumeInfo,focusTopic,dueCards,focusData,saveFocus,refreshFocus,openTimer};
 })();
 window.HIG=HIG;
 window.addEventListener('DOMContentLoaded',HIG.init);

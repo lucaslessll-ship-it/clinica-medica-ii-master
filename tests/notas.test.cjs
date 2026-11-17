@@ -360,3 +360,88 @@ test('atalho do caderno e menu principal permanecem acessíveis no celular',asyn
  assert.equal(await p.locator('#caderno-atalho-topo').isVisible(),true);
  await t.close();
 });
+
+
+test('anotações em cursos POCUS são isoladas por módulo e reunidas no caderno',async()=>{
+ const t=await abrirAula(),p=t.page;
+ await p.evaluate(async()=>{
+   if(window.RouteAssets)await window.RouteAssets.ensure('pocus');
+   navigate('pocus');
+   PocusCourse.open(0);
+ });
+ await p.waitForSelector('.pocus-module .pocus-lead');
+ await p.waitForSelector('#nota-atalho-pagina');
+ await p.evaluate(()=>{
+   const el=document.querySelector('.pocus-module .pocus-lead');
+   const no=[...el.childNodes].find(n=>n.nodeType===3&&n.nodeValue.length>15);
+   const faixa=document.createRange();
+   faixa.setStart(no,2);faixa.setEnd(no,Math.min(34,no.nodeValue.length));
+   const sel=getSelection();sel.removeAllRanges();sel.addRange(faixa);
+   document.dispatchEvent(new MouseEvent('mouseup',{bubbles:true}));
+ });
+ await p.waitForSelector('.nota-barra:not([hidden])');
+ await p.locator('.nota-barra [data-acao="comentar"]').click();
+ await p.waitForSelector('.nota-painel-entrada textarea');
+ await p.locator('.nota-painel-entrada textarea').fill('POCUS teste observação específica');
+ await p.locator('.nota-painel-entrada .nota-salvar').click();
+ const inicial=await p.evaluate(()=>Object.entries(HIG.marcasTodas())
+   .filter(([k,v])=>k.startsWith('estudo_pocus_')&&v.length));
+ assert.equal(inicial.length,1);
+ assert.equal(inicial[0][1][0].materia,'POCUS');
+ await p.evaluate(()=>PocusCourse.open(1));
+ await p.waitForSelector('.pocus-module .pocus-title');
+ await p.waitForTimeout(300);
+ assert.equal(await p.locator('.nota-marca').count(),0);
+ await p.evaluate(()=>PocusCourse.open(0));
+ await p.waitForSelector('.nota-marca');
+ await p.evaluate(()=>navigate('notes'));
+ await p.waitForSelector('.caderno-unificado');
+ const rotulos=await p.locator('.caderno-materia h2').allTextContents();
+ assert.ok(rotulos.includes('POCUS'));
+ assert.match(await p.locator('.caderno-unificado').innerText(),/POCUS teste observação específica/);
+ await p.locator('#caderno-estudo-0 .caderno-voltar-trecho').first().click();
+ await p.waitForSelector('.nota-marca.nota-trecho-destino',{timeout:10000});
+ await t.close();
+});
+
+test('páginas sem marcações permitem escrever nota geral pelo atalho próprio',async()=>{
+ const t=await abrirAula(),p=t.page;
+ await p.evaluate(async()=>{
+   if(window.RouteAssets)await window.RouteAssets.ensure('ecg');
+   navigate('ecg');
+   ECGCourse.open(0);
+ });
+ await p.waitForSelector('.pocus-module .pocus-lead');
+ await p.locator('#nota-atalho-pagina').click();
+ await p.waitForSelector('.nota-caixa:not([hidden]) .nota-painel-geral-editor');
+ await p.locator('.nota-painel-geral-editor').fill('Resumo ECG geral exclusivo da página');
+ await p.locator('.nota-painel-salvar-geral').click();
+ const dados=await p.evaluate(()=>{
+   const d=JSON.parse(localStorage.getItem('master_p2_hig_v2')||'{}');
+   const chaves=Object.keys(d.pages||{}).filter(k=>k.startsWith('estudo_ecg_'));
+   const keys=Object.keys(d.paginasEstudo||{}).filter(k=>k.startsWith('estudo_ecg_'));
+   return {keys,valor:keys.length?d.notes?.[keys[0]]:null};
+ });
+ assert.equal(dados.keys.length,1);
+ assert.equal(dados.valor,'Resumo ECG geral exclusivo da página');
+ await p.evaluate(()=>navigate('notes'));
+ await p.waitForSelector('.caderno-unificado');
+ assert.ok((await p.locator('.caderno-materia h2').allTextContents()).includes('ECG'));
+ await t.close();
+});
+
+test('seleção de botões e alternativas interativas não recebe marca-texto',async()=>{
+ const t=await abrirAula(),p=t.page;
+ await p.evaluate(async()=>{if(window.RouteAssets)await window.RouteAssets.ensure('pocus');navigate('pocus');PocusCourse.open(0)});
+ await p.waitForSelector('.pocus-module');
+ await p.evaluate(()=>{
+   const b=document.querySelector('.pocus-pager button');
+   const no=[...b.childNodes].find(n=>n.nodeType===3&&n.nodeValue.length>5);
+   const faixa=document.createRange();faixa.setStart(no,0);faixa.setEnd(no,Math.min(10,no.nodeValue.length));
+   const sel=getSelection();sel.removeAllRanges();sel.addRange(faixa);
+   document.dispatchEvent(new MouseEvent('mouseup',{bubbles:true}));
+ });
+ await p.waitForTimeout(200);
+ assert.equal(await p.locator('.nota-barra:not([hidden])').count(),0);
+ await t.close();
+});
