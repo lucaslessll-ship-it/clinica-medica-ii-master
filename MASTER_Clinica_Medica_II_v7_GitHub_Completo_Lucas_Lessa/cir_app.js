@@ -115,9 +115,9 @@ function topicView(){
 
 /* Questões */
 const shuffle=a=>{const o=[...a];for(let i=o.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[o[i],o[j]]=[o[j],o[i]]}return o;};
-const orderOf=q=>q.shuffle?shuffle(q.o.map((_,i)=>i)):q.o.map((_,i)=>i);
+const orderOf=q=>(!q.bank||q.shuffle)?shuffle(q.o.map((_,i)=>i)):q.o.map((_,i)=>i);
 function select(f){return pool().filter(q=>(f.t==='all'||q.t===f.t)&&(f.src==='all'||(f.src==='bank'?q.bank:!q.bank))&&(f.mode==='all'||(f.mode==='new'&&!isCurrent(q))||(f.mode==='wrong'&&isCurrent(q)&&!state.results[q.id].correct)||(f.mode==='due'&&isDue(q.id))));}
-function startPractice(f){const {ids:plannedIds,...filters}=f||{},allowed=Array.isArray(plannedIds)?new Set(plannedIds):null;filt={...filt,...filters};const ids=shuffle(select(filt).filter(q=>!allowed||allowed.has(q.id)).map(q=>q.id));practice={ids,step:0,chosen:null,revealed:false,order:ids.length?orderOf(byId(ids[0])):[],hits:0,done:{}};go('cirpractice');}
+function startPractice(f){const {ids:plannedIds,...filters}=f||{},allowed=Array.isArray(plannedIds)?new Set(plannedIds):null;filt={...filt,...filters};const ids=shuffle(select(filt).filter(q=>!allowed||allowed.has(q.id)).map(q=>q.id));const orders=Object.fromEntries(ids.map(id=>[id,orderOf(byId(id))]));practice={ids,step:0,chosen:null,revealed:false,order:ids.length?orders[ids[0]]:[],orders,hits:0,done:{}};go('cirpractice');}
 function record(q,a){
  const prev=state.results[q.id],ok=a===q.a,current=isCurrent(q,prev);let box=ok?Math.min(((current?prev?.box:undefined)??-1)+1,LADDER.length-1):0;
  if(!prev&&own.some(item=>item.id===q.id)){const day=planActivity();day.questions=day.questions||[];if(!day.questions.includes(q.id))day.questions.push(q.id);}
@@ -125,7 +125,7 @@ function record(q,a){
  state.results[q.id]={revision:q.revision,correct:ok,answer:a,attempts:(prev?.attempts||0)+1,date:new Date().toISOString(),box,next:ok&&box>=LADDER.length-1?null:next.toISOString()};
 }
 function answer(a){if(!practice||practice.revealed)return;const q=byId(practice.ids[practice.step]);practice.chosen=a;practice.revealed=true;if(a===q.a)practice.hits++;(practice.done=practice.done||{})[q.id]={chosen:a,ok:a===q.a,order:practice.order};record(q,a);window.QNav?.registrar('cir',q.id,a===q.a,{tid:q.t,tema:topic(q.t).short,q:q.q});save();render();}
-function jump(k){if(!practice)return;practice.step=Math.max(0,Math.min(practice.ids.length,k));const id=practice.ids[practice.step],q=id!==undefined?byId(id):null,d=q&&practice.done?.[id];practice.chosen=d?d.chosen:null;practice.revealed=!!d;if(q)practice.order=d?d.order:orderOf(q);render();requestAnimationFrame(()=>document.querySelector('.cir-q,.qnav-resumo')?.scrollIntoView({block:'start'}));}
+function jump(k){if(!practice)return;practice.step=Math.max(0,Math.min(practice.ids.length,k));const id=practice.ids[practice.step],q=id!==undefined?byId(id):null,d=q&&practice.done?.[id];practice.chosen=d?d.chosen:null;practice.revealed=!!d;if(q)practice.order=d?d.order:(practice.orders[id]||(practice.orders[id]=orderOf(q)));render();requestAnimationFrame(()=>document.querySelector('.cir-q,.qnav-resumo')?.scrollIntoView({block:'start'}));}
 function nextQ(){if(practice)jump(practice.step+1);}
 function opts(q,order,chosen,reveal,fn){return `<div class="p1-options">${order.map((orig,i)=>`<button type="button" class="p1-option ${reveal&&orig===q.a?'correct':''} ${reveal&&orig===chosen&&orig!==q.a?'wrong':''} ${chosen===orig?'chosen':''}" ${reveal?'disabled':''} onclick="${fn}(${orig})"><span>${'ABCDE'[i]}</span><strong>${esc(q.o[orig])}</strong></button>`).join('')}</div>`;}
 function filterBar(){
