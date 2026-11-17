@@ -253,112 +253,168 @@
     }
   }
 
-  /* ---------- painel lateral de comentário ---------- */
-  let rascunhoTimer = null;
+  /* ---------- painel de citações: uma ou todas, com edição local ---------- */
+  let rascunhoTimer = null, modoPainel = 'uma';
 
-  function salvarAtual() {
-    clearTimeout(rascunhoTimer);
-    if (!caixa || !caixa.dataset.nota) return;
-    const atual = api(), aula = caixa.dataset.aula;
-    if (!atual || !aula) return;
-    atual.marcaEdita(aula, caixa.dataset.nota, {
-      comentario: caixa.querySelector('textarea').value.trim(),
-      comentarioAtivo: true
-    });
-    agendar();
+  function itensAula() {
+    return (api()?.marcas(caixa?.dataset.aula || '') || [])
+      .filter(m => m.comentario || m.comentarioAtivo);
   }
 
-  function atualizarLista() {
-    if (!caixa) return;
-    const lista = caixa.querySelector('.nota-painel-lista');
-    lista.replaceChildren();
-    const atual = api(), aula = caixa.dataset.aula;
-    if (!atual || !aula) return;
-    const itens = atual.marcas(aula).filter(m => m.comentario || m.comentarioAtivo);
-    caixa.querySelector('.nota-painel-quantidade').textContent =
-      itens.length === 1 ? '1 anotação nesta aula' : itens.length + ' anotações nesta aula';
-    for (const item of itens) {
-      const botao = document.createElement('button');
-      botao.type = 'button';
-      botao.className = 'nota-painel-item';
-      botao.dataset.abrirNota = item.id;
-      botao.setAttribute('aria-current', item.id === caixa.dataset.nota ? 'true' : 'false');
-      const trecho = document.createElement('strong');
-      trecho.textContent = item.texto.length > 80 ? item.texto.slice(0, 80) + '…' : item.texto;
-      const resumo = document.createElement('small');
-      resumo.textContent = item.comentario || 'Sem comentário escrito';
-      botao.append(trecho, resumo);
-      lista.append(botao);
+  function salvarEntrada(entrada) {
+    const id = entrada?.dataset?.nota, aula = caixa?.dataset?.aula;
+    if (!id || !aula) return;
+    const campo = entrada.querySelector('textarea');
+    const atual = api()?.marcas(aula).find(m => m.id === id);
+    if (!atual || !campo) return;
+    const texto = campo.value.trim();
+    if (texto !== (atual.comentario || '') || !atual.comentarioAtivo) {
+      api().marcaEdita(aula,id,{comentario:texto,comentarioAtivo:true});
+      agendar();
     }
+    const status = entrada.querySelector('.nota-painel-salvo');
+    if (status) status.textContent = 'Salvo';
+  }
+
+  function salvarTodos() {
+    clearTimeout(rascunhoTimer);
+    if (!caixa || caixa.hidden) return;
+    caixa.querySelectorAll('.nota-painel-entrada').forEach(salvarEntrada);
+  }
+
+  function montarEntrada(marca, indice, total) {
+    const item = document.createElement('section');
+    item.className = 'nota-painel-entrada';
+    item.dataset.nota = marca.id;
+    const topo = document.createElement('div');
+    topo.className = 'nota-painel-linha';
+    const rotulo = document.createElement('span');
+    rotulo.className = 'nota-painel-rotulo';
+    rotulo.textContent = modoPainel === 'todas' ? 'TRECHO ' + (indice + 1) + ' DE ' + total : 'TRECHO CITADO';
+    const status = document.createElement('small');
+    status.className = 'nota-painel-salvo';
+    status.setAttribute('aria-live','polite');
+    topo.append(rotulo,status);
+    const citacao = document.createElement('blockquote');
+    citacao.textContent = marca.texto;
+    const label = document.createElement('label');
+    label.className = 'nota-painel-rotulo';
+    label.textContent = 'MINHA OBSERVAÇÃO';
+    const editor = document.createElement('textarea');
+    editor.setAttribute('aria-label','Editar anotação sobre ' + marca.texto.slice(0,60));
+    editor.placeholder = 'Escreva uma dúvida, interpretação ou observação…';
+    editor.value = marca.comentario || '';
+    label.append(editor);
+    const acoes = document.createElement('div');
+    acoes.className = 'nota-caixa-acoes';
+    const salvar = document.createElement('button');
+    salvar.type = 'button'; salvar.className = 'nota-salvar'; salvar.textContent = 'Salvar';
+    const apagar = document.createElement('button');
+    apagar.type = 'button'; apagar.className = 'nota-apagar'; apagar.textContent = 'Excluir marcação';
+    acoes.append(salvar,apagar);
+    item.append(topo,citacao,label,acoes);
+    return item;
+  }
+
+  function renderizarPainel(foco = false) {
+    if (!caixa || caixa.hidden) return;
+    const todas = itensAula();
+    const alvo = todas.find(m=>m.id===caixa.dataset.nota);
+    if (!alvo && todas.length) caixa.dataset.nota = todas[0].id;
+    const itens = modoPainel === 'todas' ? todas :
+      todas.filter(m=>m.id===caixa.dataset.nota);
+    const lugar = caixa.querySelector('.nota-painel-conteudo');
+    lugar.replaceChildren();
+    itens.forEach((item,i)=>lugar.append(montarEntrada(item,i,itens.length)));
+    const info = caixa.querySelector('.nota-painel-quantidade');
+    info.textContent = todas.length === 1 ? '1 anotação nesta aula' :
+      todas.length + ' anotações nesta aula';
+    for (const botao of caixa.querySelectorAll('[data-modo]')) {
+      const ativo = botao.dataset.modo === modoPainel;
+      botao.setAttribute('aria-pressed',String(ativo));
+    }
+    caixa.querySelector('.nota-painel-titulo').textContent =
+      modoPainel === 'todas' ? 'Anotações desta aula' : 'Comentário do trecho';
+    if (foco) caixa.querySelector('textarea')?.focus({preventScroll:true});
   }
 
   function montarCaixa() {
     caixa = document.createElement('aside');
     caixa.className = 'nota-caixa nota-painel-lateral';
     caixa.hidden = true;
-    caixa.setAttribute('role', 'complementary');
-    caixa.setAttribute('aria-label', 'Painel de anotações vinculadas ao texto');
+    caixa.setAttribute('role','complementary');
+    caixa.setAttribute('aria-label','Anotações vinculadas aos trechos da aula');
     caixa.innerHTML =
-      '<div class="nota-painel-cabecalho"><div><strong>Anotação do trecho</strong><small>Vinculada à aula original</small></div>' +
-      '<div class="nota-painel-controles"><button type="button" class="nota-minimizar" title="Minimizar para o ícone no texto" aria-label="Minimizar anotação">−</button>' +
-      '<button type="button" class="nota-fechar" title="Fechar painel" aria-label="Fechar painel">×</button></div></div>' +
-      '<p class="nota-painel-rotulo">TRECHO CITADO</p><blockquote></blockquote>' +
-      '<label class="nota-painel-rotulo" for="nota-painel-editor">MINHA OBSERVAÇÃO</label>' +
-      '<textarea id="nota-painel-editor" placeholder="Escreva sua interpretação, dúvida ou observação sobre este trecho"></textarea>' +
-      '<div class="nota-caixa-acoes"><button type="button" class="nota-salvar">Salvar anotação</button>' +
-      '<button type="button" class="nota-apagar">Apagar marca</button></div>' +
-      '<div class="nota-painel-rodape"><div class="nota-painel-quantidade"></div><div class="nota-painel-lista"></div></div>';
+      '<header class="nota-painel-cabecalho">' +
+        '<span class="nota-painel-identidade"><span class="nota-painel-simbolo" aria-hidden="true">✎</span><span><strong class="nota-painel-titulo">Comentário do trecho</strong><small>Vinculado ao texto original</small></span></span>' +
+        '<span class="nota-painel-controles"><button type="button" class="nota-minimizar" title="Minimizar para o ícone no texto" aria-label="Minimizar painel">−</button>' +
+        '<button type="button" class="nota-fechar" title="Fechar painel" aria-label="Fechar painel">×</button></span>' +
+      '</header>' +
+      '<div class="nota-painel-seletor" role="group" aria-label="Anotações exibidas">' +
+        '<button type="button" data-modo="uma" aria-pressed="true">Esta anotação</button>' +
+        '<button type="button" data-modo="todas" aria-pressed="false">Todas da aula</button>' +
+      '</div><div class="nota-painel-quantidade" aria-live="polite"></div>' +
+      '<div class="nota-painel-conteudo"></div>' +
+      '<footer class="nota-painel-fim">Suas alterações ficam vinculadas ao trecho destacado.</footer>';
     document.body.append(caixa);
     caixa.addEventListener('click', evento => {
       const botao = evento.target.closest('button');
-      if (!botao) return;
-      if (botao.dataset.abrirNota) {
-        salvarAtual();
-        abrirCaixa(botao.dataset.abrirNota);
+      if (!botao || !caixa.dataset.aula) return;
+      if (botao.dataset.modo) {
+        salvarTodos();
+        modoPainel = botao.dataset.modo;
+        renderizarPainel();
       } else if (botao.classList.contains('nota-salvar')) {
-        salvarAtual();
-        atualizarLista();
-        caixa.querySelector('textarea').focus({preventScroll:true});
-      } else if (botao.classList.contains('nota-apagar')) {
-        const atual = api(), aula = caixa.dataset.aula, id = caixa.dataset.nota;
         clearTimeout(rascunhoTimer);
-        if (atual && aula && id) atual.marcaRemove(aula, id);
-        caixa.hidden = true;
-        delete caixa.dataset.nota;
+        salvarEntrada(botao.closest('.nota-painel-entrada'));
+      } else if (botao.classList.contains('nota-apagar')) {
+        const entrada = botao.closest('.nota-painel-entrada');
+        const id = entrada?.dataset.nota;
+        if (!id) return;
+        clearTimeout(rascunhoTimer);
+        api()?.marcaRemove(caixa.dataset.aula,id);
+        if (caixa.dataset.nota===id) {
+          caixa.dataset.nota = itensAula()[0]?.id || '';
+        }
+        if (!itensAula().length) fecharCaixa(false);
+        else renderizarPainel();
         agendar();
-      } else if (botao.classList.contains('nota-minimizar') || botao.classList.contains('nota-fechar')) {
-        fecharCaixa();
+      } else if (botao.classList.contains('nota-minimizar')) {
+        fecharCaixa(true);
+      } else if (botao.classList.contains('nota-fechar')) {
+        fecharCaixa(false);
       }
     });
-    caixa.querySelector('textarea').addEventListener('input', () => {
+    caixa.addEventListener('input', evento => {
+      if (!evento.target.matches('.nota-painel-entrada textarea')) return;
+      const entrada = evento.target.closest('.nota-painel-entrada');
+      entrada.querySelector('.nota-painel-salvo').textContent = 'Editando…';
       clearTimeout(rascunhoTimer);
-      rascunhoTimer = setTimeout(() => { salvarAtual(); atualizarLista(); }, 700);
+      rascunhoTimer = setTimeout(()=>salvarEntrada(entrada),900);
     });
     caixa.addEventListener('keydown', evento => {
-      if (evento.key === 'Escape') { evento.stopPropagation(); fecharCaixa(); }
+      if (evento.key === 'Escape') { evento.stopPropagation(); fecharCaixa(false); }
     });
   }
 
-  function abrirCaixa(id) {
+  function abrirCaixa(id, modo = 'uma') {
     if (!caixa) montarCaixa();
-    const atual = api(), aula = aulaAtual();
-    const marca = atual?.marcas(aula).find(m => m.id === id);
+    const aula = aulaAtual();
+    const marca = api()?.marcas(aula).find(m=>m.id===id);
     if (!marca) return;
-    if (caixa.dataset.nota && caixa.dataset.nota !== id) salvarAtual();
+    salvarTodos();
     caixa.dataset.aula = aula;
     caixa.dataset.nota = id;
-    caixa.querySelector('blockquote').textContent = marca.texto;
-    caixa.querySelector('textarea').value = marca.comentario || '';
+    modoPainel = modo;
     caixa.hidden = false;
-    atualizarLista();
-    caixa.querySelector('textarea').focus({preventScroll:true});
+    renderizarPainel(true);
   }
 
-  function fecharCaixa() {
+  function fecharCaixa(minimizar = false) {
     if (!caixa || caixa.hidden) return;
-    salvarAtual();
+    salvarTodos();
     caixa.hidden = true;
-    delete caixa.dataset.nota;
+    if (!minimizar) delete caixa.dataset.nota;
   }
 
   /* ---------- eventos ---------- */
