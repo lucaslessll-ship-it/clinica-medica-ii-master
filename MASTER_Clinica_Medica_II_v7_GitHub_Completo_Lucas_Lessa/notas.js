@@ -92,7 +92,7 @@
       bolha.className = 'nota-bolha';
       bolha.dataset.nota = marca.id;
       bolha.setAttribute('aria-label', `Comentário em "${marca.texto.slice(0, 40)}"`);
-      bolha.textContent = '✎';
+      bolha.innerHTML = '<svg viewBox="0 0 20 20" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true"><path d="M4 2.5h8l4 4v11H4z"/><path d="M12 2.5v4h4M7 10h6M7 13h6"/></svg>';
       ultimo.after(bolha);
     }
     return !!ultimo;
@@ -371,7 +371,7 @@
         const entrada = botao.closest('.nota-painel-entrada');
         const id = entrada?.dataset.nota;
         if (!id) return;
-        clearTimeout(rascunhoTimer);
+        salvarTodos();
         api()?.marcaRemove(caixa.dataset.aula,id);
         if (caixa.dataset.nota===id) {
           caixa.dataset.nota = itensAula()[0]?.id || '';
@@ -403,6 +403,7 @@
     const marca = api()?.marcas(aula).find(m=>m.id===id);
     if (!marca) return;
     salvarTodos();
+    if (!marca.comentario && !marca.comentarioAtivo) api()?.marcaEdita(aula,id,{comentarioAtivo:true});
     caixa.dataset.aula = aula;
     caixa.dataset.nota = id;
     modoPainel = modo;
