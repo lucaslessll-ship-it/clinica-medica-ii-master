@@ -207,3 +207,67 @@ test('barra de seleção fora da área visível cabe na viewport e aceita coment
   await t.close();
  }
 });
+
+
+test('painel de citações alterna entre uma e todas da aula e minimiza para o ícone',async()=>{
+ const t=await abrirAula(),p=t.page;
+ await selecionar(p,0,10,55);
+ await p.waitForSelector('.nota-barra:not([hidden])');
+ await p.click('.nota-barra [data-acao="comentar"]');
+ await p.waitForSelector('.nota-caixa:not([hidden]) .nota-painel-entrada');
+ assert.equal(await p.locator('.nota-painel-entrada').count(),1);
+ await p.fill('.nota-painel-entrada textarea','Primeira citação');
+ await p.click('.nota-painel-entrada .nota-salvar');
+ await selecionar(p,1,5,50);
+ await p.waitForSelector('.nota-barra:not([hidden])');
+ await p.click('.nota-barra [data-acao="comentar"]');
+ await p.waitForSelector('.nota-caixa:not([hidden]) .nota-painel-entrada');
+ await p.fill('.nota-painel-entrada textarea','Segunda citação');
+ await p.click('.nota-painel-entrada .nota-salvar');
+ await p.click('.nota-painel-seletor [data-modo="todas"]');
+ assert.equal(await p.locator('.nota-painel-entrada').count(),2);
+ assert.deepEqual(await p.locator('.nota-painel-entrada textarea').evaluateAll(v=>v.map(e=>e.value)),['Primeira citação','Segunda citação']);
+ await p.click('.nota-minimizar');
+ assert.equal(await p.locator('.nota-caixa').isVisible(),false);
+ assert.equal(await p.locator('.nota-bolha').count(),2);
+ // A bolha reabre apenas a anotação do trecho selecionado.
+ await p.locator('.nota-bolha').first().evaluate(el=>el.click());
+ await p.waitForSelector('.nota-caixa:not([hidden])');
+ assert.equal(await p.locator('.nota-painel-entrada').count(),1);
+ assert.equal(await p.locator('[data-modo="uma"]').getAttribute('aria-pressed'),'true');
+ await p.click('.nota-fechar');
+ await t.close();
+});
+
+test('caderno no topo reúne os registros de P1, P2 e Cirurgia sem mudar suas chaves',async()=>{
+ const t=await abrirAula(),p=t.page;
+ const antes=await p.evaluate(()=>{
+   const p1=JSON.parse(localStorage.getItem('master_p1_lucas_v4')||'{}');
+   const cir=JSON.parse(localStorage.getItem('master_cir_lucas_v1')||'{}');
+   p1.notes={...(p1.notes||{}),p1dm_0:'Nota P1 preservada'};
+   cir.notes={...(cir.notes||{}),ciraa_0:'Nota da Cirurgia preservada'};
+   localStorage.setItem('master_p1_lucas_v4',JSON.stringify(p1));
+   localStorage.setItem('master_cir_lucas_v1',JSON.stringify(cir));
+   P1.reload();CIR.reload();
+   return [localStorage.getItem('master_p1_lucas_v4'),localStorage.getItem('master_cir_lucas_v1')];
+ });
+ await p.click('#caderno-atalho-topo');
+ await p.waitForSelector('.caderno-unificado');
+ assert.equal(await p.locator('.caderno-materia').count(),3);
+ const p1aula=p.locator('#caderno-p1 .caderno-aula').first();
+ const ciraula=p.locator('#caderno-cir .caderno-aula').first();
+ await p1aula.locator('summary').click();
+ await ciraula.locator('summary').click();
+ assert.match(await p1aula.locator('.caderno-editor').inputValue(),/Nota P1 preservada/);
+ assert.match(await ciraula.locator('.caderno-editor').inputValue(),/Nota da Cirurgia preservada/);
+ const notas=await p.evaluate(()=>[
+   JSON.parse(localStorage.getItem('master_p1_lucas_v4')).notes.p1dm_0,
+   JSON.parse(localStorage.getItem('master_cir_lucas_v1')).notes.ciraa_0
+ ]);
+ assert.deepEqual(notas,['Nota P1 preservada','Nota da Cirurgia preservada']);
+ // O caderno pode editar diretamente o registro original da P1.
+ await p1aula.locator('.caderno-editor').fill('Nota P1 editada no caderno');
+ await p1aula.locator('.caderno-salvar-nota').click();
+ assert.equal(await p.evaluate(()=>JSON.parse(localStorage.getItem('master_p1_lucas_v4')).notes.p1dm_0),'Nota P1 editada no caderno');
+ await t.close();
+});

@@ -68,3 +68,178 @@ body[data-theme="dark"] .notas-ir{color:#7fd3c2}
 /* Ferramentas da seleção permanecem acessíveis junto às bordas da viewport. */
 .nota-barra{box-sizing:border-box;flex-wrap:wrap}
 .nota-caixa{box-sizing:border-box;overflow-y:auto}
+
+
+/* Painel de anotações lateral: fixo, sem deslocar a aula nem a rolagem. */
+.nota-caixa.nota-painel-lateral {
+  position:fixed;
+  top:clamp(70px,10vh,120px);
+  right:max(12px,env(safe-area-inset-right));
+  left:auto;
+  bottom:16px;
+  z-index:110;
+  width:min(390px,calc(100vw - 24px));
+  height:auto;
+  max-height:min(780px,calc(100dvh - 90px));
+  display:flex;
+  flex-direction:column;
+  overflow-y:auto;
+  overscroll-behavior:contain;
+  background:var(--white);
+  border:1px solid var(--line);
+  box-shadow:0 16px 44px rgba(9,41,38,.22);
+}
+.nota-caixa.nota-painel-lateral[hidden]{display:none}
+.nota-painel-cabecalho{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding-bottom:12px;border-bottom:1px solid var(--line);margin-bottom:15px}
+.nota-painel-cabecalho strong{display:block;color:var(--ink);font-size:16px}
+.nota-painel-cabecalho small{display:block;margin-top:3px;color:var(--muted);font-size:12px}
+.nota-painel-controles{display:flex;gap:5px;flex-shrink:0}
+.nota-painel-controles button{display:grid;place-items:center;width:34px;height:34px;padding:0;border:1px solid var(--line);border-radius:9px;background:var(--white);color:var(--ink);font-size:22px;cursor:pointer}
+.nota-painel-controles button:focus-visible{outline:2px solid var(--focus,#0b5f57);outline-offset:2px}
+.nota-painel-rotulo{display:block;margin:0 0 7px;color:var(--secondary-text,var(--muted));font-size:11px;font-weight:750;letter-spacing:.07em}
+.nota-painel-lateral blockquote{max-height:150px;overflow:auto;overflow-wrap:anywhere}
+.nota-painel-lateral textarea{min-height:120px;resize:vertical;flex-shrink:0}
+.nota-painel-rodape{margin-top:17px;padding-top:14px;border-top:1px solid var(--line)}
+.nota-painel-quantidade{font-weight:700;font-size:13px;color:var(--ink);margin-bottom:8px}
+.nota-painel-lista{display:grid;gap:6px}
+.nota-painel-item{display:block;text-align:left;width:100%;padding:9px 10px;border:1px solid var(--line);border-radius:9px;background:var(--bg);color:var(--ink);cursor:pointer;overflow-wrap:anywhere}
+.nota-painel-item[aria-current="true"]{border-color:#0b5f57;box-shadow:0 0 0 1px #0b5f57 inset}
+.nota-painel-item strong,.nota-painel-item small{display:block;font-size:12px;line-height:1.4}
+.nota-painel-item small{margin-top:3px;color:var(--secondary-text,var(--muted));font-weight:400}
+.nota-bolha{min-width:26px;width:26px;height:26px}
+@media(max-width:800px){
+  .nota-caixa.nota-painel-lateral{
+    top:auto;
+    bottom:calc(78px + env(safe-area-inset-bottom));
+    left:10px;
+    right:10px;
+    width:auto;
+    max-height:min(65dvh,660px);
+    padding:12px;
+    border-radius:17px;
+  }
+  .nota-painel-lateral textarea{min-height:94px}
+}
+
+/* Caderno unificado: P1, P2 e Cirurgia usam os dados originais. */
+.caderno-unificado{max-width:1100px;margin:0 auto;padding-bottom:44px}
+.caderno-cabecalho{padding:10px 0 20px}
+.caderno-sobretitulo{color:var(--secondary-text,var(--muted));font-size:11px;font-weight:800;letter-spacing:.12em}
+.caderno-cabecalho h1{font-size:clamp(26px,3.1vw,38px);line-height:1.17;margin:7px 0 10px;color:var(--ink)}
+.caderno-cabecalho p:not(.caderno-sobretitulo){color:var(--secondary-text,var(--muted));max-width:650px;line-height:1.6}
+.caderno-resumo{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;margin:18px 0 0}
+.caderno-resumo span{font-size:14px;font-weight:700;color:var(--ink)}
+.caderno-atalhos{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px}
+.caderno-atalhos button{background:var(--white);border:1px solid var(--line);border-radius:999px;padding:9px 13px;color:var(--ink);font:inherit;font-size:13px;font-weight:650;cursor:pointer}
+.caderno-atalhos button:hover{border-color:#0b5f57}
+.caderno-materia{border:1px solid var(--line);border-radius:17px;padding:18px;background:var(--white);margin-bottom:20px;scroll-margin-top:110px}
+.caderno-materia>header{display:flex;justify-content:space-between;align-items:center;gap:12px;border-bottom:1px solid var(--line);padding-bottom:12px;margin-bottom:14px}
+.caderno-materia>header h2{margin:0;color:var(--ink);font-size:20px}
+.caderno-materia>header span{font-size:12px;color:var(--secondary-text,var(--muted))}
+.caderno-tema{margin:0 0 17px}
+.caderno-tema>h3{font-size:15px;color:var(--ink);margin:0 0 9px}
+.caderno-aula{border:1px solid var(--line);border-radius:12px;margin-bottom:8px;background:var(--bg)}
+.caderno-aula>summary{display:flex;justify-content:space-between;gap:12px;padding:13px;cursor:pointer;list-style:none;font-size:14px;font-weight:700;color:var(--ink)}
+.caderno-aula>summary::-webkit-details-marker{display:none}
+.caderno-aula>summary:before{content:'▸';flex:none;color:var(--secondary-text,var(--muted))}
+.caderno-aula[open]>summary:before{content:'▾'}
+.caderno-aula>summary span{flex:1}
+.caderno-aula>summary small{color:var(--secondary-text,var(--muted));font-size:12px;font-weight:500;text-align:right}
+.caderno-aula-corpo{padding:0 13px 14px}
+.caderno-rotulo,.caderno-trecho label{display:block;font-size:13px;font-weight:700;color:var(--ink)}
+.caderno-editor,.caderno-comentario{display:block;box-sizing:border-box;width:100%;margin-top:7px;padding:11px;border:1px solid var(--line);border-radius:9px;background:var(--white);color:var(--ink);font:inherit;font-size:14px;line-height:1.5;resize:vertical}
+.caderno-editor:focus-visible,.caderno-comentario:focus-visible{outline:2px solid var(--focus,#0b5f57);outline-offset:2px}
+.caderno-acoes{display:flex;align-items:center;flex-wrap:wrap;gap:9px;margin-top:10px}
+.caderno-status{font-size:12px;color:var(--secondary-text,var(--muted))}
+.caderno-trechos{margin-top:14px;padding-top:12px;border-top:1px solid var(--line)}
+.caderno-trechos>summary{font-weight:700;color:var(--ink);cursor:pointer;font-size:13px}
+.caderno-trecho{padding:12px 0;border-top:1px solid var(--line);margin-top:12px}
+.caderno-trecho-citado{padding:9px 12px;margin:0 0 11px;border-left:4px solid #d1b64f;background:var(--white);color:var(--ink);font-size:13px;line-height:1.6;overflow-wrap:anywhere}
+.caderno-trecho-citado[data-cor="verde"]{border-color:#79c7a5}
+.caderno-trecho-citado[data-cor="azul"]{border-color:#79a8d8}
+.caderno-trecho-citado[data-cor="rosa"]{border-color:#d98aad}
+.caderno-trecho-citado[data-cor="sublinhado"]{border-color:#15867a}
+.caderno-salvar-comentario{margin-top:9px}
+.caderno-vazio{color:var(--secondary-text,var(--muted));font-size:14px}
+@media(max-width:650px){
+  .caderno-materia{padding:12px}
+  .caderno-aula>summary{display:grid;grid-template-columns:auto 1fr;column-gap:8px}
+  .caderno-aula>summary small{grid-column:2;text-align:left}
+}
+
+
+/* Caderno no cabeçalho: relevo leve, legível em telas pequenas e temas escuros. */
+.caderno-atalho-topo{
+  display:inline-flex;align-items:center;justify-content:center;gap:9px;
+  flex-shrink:0;min-height:38px;padding:5px 10px;
+  color:var(--ink);background:var(--white);font:inherit;
+  font-size:12.5px;font-weight:700;cursor:pointer;
+  border:1px solid var(--line);border-radius:12px;
+  box-shadow:0 3px 0 rgba(14,62,57,.14),0 5px 11px rgba(8,44,42,.10);
+  transition:transform .18s ease,box-shadow .18s ease;
+}
+.caderno-atalho-topo:hover{transform:translateY(-1px);box-shadow:0 4px 0 rgba(14,62,57,.14),0 8px 14px rgba(8,44,42,.12)}
+.caderno-atalho-topo:active{transform:translateY(2px);box-shadow:0 1px 0 rgba(14,62,57,.14)}
+.caderno-atalho-topo:focus-visible{outline:2px solid var(--focus,#0b5f57);outline-offset:3px}
+.caderno-icone-3d{
+  position:relative;display:grid;place-items:center;isolation:isolate;
+  width:29px;height:29px;flex-shrink:0;color:#126b60;
+  border-radius:8px;background:linear-gradient(145deg,#f1fcf8,#d1e5db);
+  box-shadow:inset 1px 1px 1px #fff,2px 3px 0 #83ada1,3px 4px 5px rgba(8,57,49,.24);
+  transform:perspective(160px) rotateY(-9deg) rotateX(6deg);
+}
+.caderno-icone-3d svg{filter:drop-shadow(0 1px 0 rgba(255,255,255,.85))}
+body[data-theme="dark"] .caderno-icone-3d{color:#c6ede1;background:linear-gradient(145deg,#295950,#173b35);box-shadow:inset 1px 1px 0 #4b8377,2px 3px 0 #0b2420,3px 4px 5px rgba(0,0,0,.24)}
+@media(max-width:1140px){.caderno-atalho-topo{padding:5px 7px}.caderno-atalho-texto{display:none}}
+@media(max-width:800px){.caderno-atalho-topo{width:38px;min-width:38px;padding:5px;border-radius:11px}.caderno-icone-3d{width:25px;height:25px}.caderno-icone-3d svg{width:21px;height:21px}}
+@media(prefers-reduced-motion:reduce){.caderno-atalho-topo{transition:none}}
+
+/* Modos do painel: edição individual ou todas da aula no mesmo espaço. */
+.nota-painel-identidade{display:flex;align-items:center;gap:10px;min-width:0}
+.nota-painel-identidade>span:last-child{min-width:0}
+.nota-painel-simbolo{display:grid;place-items:center;width:33px;height:33px;border-radius:10px;background:var(--bg);color:#0b5f57;font-size:18px}
+.nota-painel-identidade strong{line-height:1.25}
+.nota-painel-seletor{display:grid;grid-template-columns:1fr 1fr;gap:4px;padding:4px;margin-bottom:10px;background:var(--bg);border:1px solid var(--line);border-radius:11px}
+.nota-painel-seletor button{padding:9px 6px;border:0;border-radius:8px;background:transparent;color:var(--secondary-text,var(--muted));font:inherit;font-size:12px;font-weight:650;cursor:pointer}
+.nota-painel-seletor button[aria-pressed="true"]{background:var(--white);color:var(--ink);box-shadow:0 1px 6px rgba(18,63,57,.12)}
+.nota-painel-seletor button:focus-visible{outline:2px solid var(--focus,#0b5f57);outline-offset:1px}
+.nota-painel-conteudo{min-height:0;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;padding-right:4px}
+.nota-painel-entrada{padding:10px 0 15px}
+.nota-painel-entrada+.nota-painel-entrada{border-top:1px solid var(--line);margin-top:5px;padding-top:20px}
+.nota-painel-linha{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.nota-painel-salvo{font-size:11px;color:var(--secondary-text,var(--muted))}
+.nota-painel-lateral .nota-painel-entrada blockquote{max-height:none;max-width:100%;overflow-wrap:anywhere;white-space:pre-wrap;line-height:1.55}
+.nota-painel-lateral .nota-painel-entrada textarea{box-sizing:border-box;display:block;width:100%;min-height:96px;max-height:230px;resize:vertical;margin:7px 0 0}
+.nota-painel-lateral .nota-caixa-acoes{margin-top:10px;display:flex;align-items:center;justify-content:space-between}
+.nota-painel-lateral .nota-caixa-acoes button{min-height:38px}
+.nota-painel-fim{padding-top:12px;border-top:1px solid var(--line);font-size:11.5px;line-height:1.45;color:var(--secondary-text,var(--muted));flex-shrink:0}
+.nota-caixa.nota-painel-lateral{padding:16px 15px;overflow:hidden;box-sizing:border-box}
+.nota-painel-lateral .nota-painel-cabecalho{margin-bottom:12px;flex-shrink:0}
+.nota-painel-lateral .nota-painel-quantidade{margin-bottom:5px;flex-shrink:0;font-size:12px;font-weight:500;color:var(--secondary-text,var(--muted))}
+.caderno-trecho.notas-item{display:block}
+.caderno-aula .caderno-aula-corpo>h3{font-size:14px;margin:4px 0 12px;color:var(--ink)}
+.caderno-trecho .notas-comentario{display:none}
+.caderno-trecho .notas-comentario:not(:empty){display:block}
+@media(max-width:800px){
+  .nota-caixa.nota-painel-lateral{width:auto;padding:12px 12px 10px;max-height:min(66dvh,650px);overscroll-behavior:contain}
+  .nota-painel-conteudo{overflow-y:auto}
+  .nota-painel-simbolo{width:29px;height:29px}
+}
+
+
+/* Em 320–380 px, preserve primeiro o menu e os controles já existentes.
+   O caderno permanece disponível na navegação lateral/Biblioteca. */
+@media(max-width:380px){#caderno-atalho-topo{display:none!important}}
+@media(min-width:381px) and (max-width:600px){
+  #caderno-atalho-topo{width:32px;min-width:32px}
+  #caderno-atalho-topo .caderno-icone-3d{width:22px;height:22px}
+  #caderno-atalho-topo .caderno-icone-3d svg{width:19px;height:19px}
+}
+
+
+/* Em celulares de 381–500 px, o relógio continua visível, mas sem
+   a palavra "Pomodoro": libera espaço para menu, caderno e busca. */
+@media(min-width:381px) and (max-width:500px){
+  #focus-top{min-width:78px;width:78px;padding:4px 5px;gap:4px}
+  #focus-top .focus-top-label{display:none!important}
+}
