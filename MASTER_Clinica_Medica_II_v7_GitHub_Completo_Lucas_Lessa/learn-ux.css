@@ -175,3 +175,14 @@ body[data-theme="dark"] .cir-plan-list button span{color:#8fe0cf}
 #main-content :is(th,td):first-child{min-width:6.5em}
 #main-content :is(.deep-table-wrap,.pocus-table-wrap,.clinical-table-wrap,.table-wrap){overflow-x:auto;-webkit-overflow-scrolling:touch;max-width:100%}
 #main-content table:not(:is(.deep-table-wrap,.pocus-table-wrap,.clinical-table-wrap,.table-wrap) table){display:block;overflow-x:auto;-webkit-overflow-scrolling:touch}
+
+/* A posição da leitura não deve mudar a altura do índice durante a rolagem. */
+.reading-lesson{--reading-sticky-top:82px}
+.reading-lesson .reading-outline{top:var(--reading-sticky-top);overflow-anchor:none}
+#main-content .reading-outline summary{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 12px;align-items:center;min-height:44px;line-height:1.6}
+.reading-outline-title{min-width:0}
+.reading-outline .reading-outline-count{margin:0;white-space:nowrap}
+#main-content .reading-current{grid-column:1/-1;display:block;width:100%;max-width:none;min-width:0;height:1.6em;line-height:1.6;margin:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.reading-progress-fill{width:100%;transform:scaleX(0);transform-origin:left center}
+@media(max-width:800px){.reading-lesson{--reading-sticky-top:70px}}
+body.focus-mode .reading-lesson{--reading-sticky-top:12px}

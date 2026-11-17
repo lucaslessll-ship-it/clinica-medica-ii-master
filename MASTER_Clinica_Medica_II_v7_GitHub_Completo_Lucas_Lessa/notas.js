@@ -142,14 +142,25 @@
   }
 
   function posicionar(elemento, retangulo) {
+    const viewport = window.visualViewport;
+    const esquerda = viewport?.pageLeft ?? window.scrollX;
+    const topo = viewport?.pageTop ?? window.scrollY;
+    const larguraVisivel = viewport?.width ?? document.documentElement.clientWidth;
+    const alturaVisivel = viewport?.height ?? window.innerHeight;
+    elemento.style.maxWidth = `${Math.max(0, larguraVisivel - 20)}px`;
+    elemento.style.maxHeight = `${Math.max(0, alturaVisivel - 16)}px`;
     elemento.hidden = false;
     const largura = elemento.offsetWidth, altura = elemento.offsetHeight;
     let x = retangulo.left + window.scrollX + retangulo.width / 2 - largura / 2;
     let y = retangulo.top + window.scrollY - altura - 10;
-    x = Math.max(10 + window.scrollX, Math.min(x, window.scrollX + document.documentElement.clientWidth - largura - 10));
-    if (y < window.scrollY + 8) y = retangulo.bottom + window.scrollY + 10;
-    elemento.style.left = `${Math.round(x)}px`;
-    elemento.style.top = `${Math.round(y)}px`;
+    const minimoX = esquerda + 10, minimoY = topo + 8;
+    const maximoX = Math.max(minimoX, esquerda + larguraVisivel - largura - 10);
+    const maximoY = Math.max(minimoY, topo + alturaVisivel - altura - 8);
+    if (y < minimoY) y = retangulo.bottom + window.scrollY + 10;
+    // Uma seleção por teclado pode terminar fora da tela. A barra não deve
+    // exigir rolar a página para acessá-la, pois a rolagem encerra a seleção.
+    elemento.style.left = `${Math.round(Math.max(minimoX, Math.min(x, maximoX)))}px`;
+    elemento.style.top = `${Math.round(Math.max(minimoY, Math.min(y, maximoY)))}px`;
   }
 
   function esconderBarra() { if (barra) { barra.hidden = true; emEdicao = null; } }

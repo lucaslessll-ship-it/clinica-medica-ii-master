@@ -188,3 +188,22 @@ for(const [nome,abrir,chave] of ROTAS){
   await t.close();
  });
 }
+
+
+test('barra de seleção fora da área visível cabe na viewport e aceita comentário sem rolar',async()=>{
+ for(const width of [390,1280]){
+  const t=await abrirAula(width),p=t.page;
+  await selecionar(p);
+  await p.waitForSelector('.nota-barra:not([hidden])');
+  const before=await p.evaluate(()=>{const bar=document.querySelector('.nota-barra').getBoundingClientRect(),button=document.querySelector('.nota-barra [data-acao="comentar"]'),r=button.getBoundingClientRect();return {y:scrollY,top:bar.top,bottom:bar.bottom,left:bar.left,right:bar.right,height:visualViewport?.height||innerHeight,width:visualViewport?.width||innerWidth,clickable:button.contains(document.elementFromPoint(r.left+r.width/2,r.top+r.height/2))};});
+  assert.ok(before.top>=0&&before.bottom<=before.height+1,`barra fora da altura visível em ${width}px: ${JSON.stringify(before)}`);
+  assert.ok(before.left>=0&&before.right<=before.width+1,`barra fora da largura visível em ${width}px`);
+  assert.equal(before.clickable,true,'o botão de comentar está encoberto');
+  await p.click('.nota-barra [data-acao="comentar"]');
+  await p.waitForSelector('.nota-caixa:not([hidden]) textarea');
+  assert.ok(Math.abs(await p.evaluate(()=>scrollY)-before.y)<=1,'abrir comentário deslocou a página');
+  const inside=await p.locator('.nota-caixa').evaluate(el=>{const r=el.getBoundingClientRect();return r.top>=0&&r.bottom<=(visualViewport?.height||innerHeight)+1;});
+  assert.equal(inside,true,'caixa de comentário fora da área visível');
+  await t.close();
+ }
+});
