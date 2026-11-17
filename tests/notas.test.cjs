@@ -446,3 +446,76 @@ test('seleção de botões e alternativas interativas não recebe marca-texto',a
  assert.equal(await p.locator('.nota-barra:not([hidden])').count(),0);
  await t.close();
 });
+
+
+test('excluir nota de P1 no caderno central preserva P2 e Cirurgia',async()=>{
+ const t=await abrirAula(),p=t.page;
+ await p.evaluate(()=>{
+   P1.saveExternalNote('p1dm_0','Nota isolada da P1 para excluir');
+   CIR.saveExternalNote('ciraa_0','Nota cirúrgica preservada');
+   HIG.saveNote('neuro1_0','Nota clínica preservada');
+   navigate('notes');
+ });
+ await p.waitForSelector('.caderno-unificado .caderno-aula-corpo[data-materia="p1"][data-chave="p1dm_0"]');
+ p.once('dialog',d=>d.accept());
+ await p.locator('.caderno-aula-corpo[data-materia="p1"][data-chave="p1dm_0"] .caderno-excluir-nota').click();
+ const atual=await p.evaluate(()=>{
+   const p1=JSON.parse(localStorage.getItem('master_p1_lucas_v4')||'{}');
+   const cir=JSON.parse(localStorage.getItem('master_cir_lucas_v1')||'{}');
+   const ux=JSON.parse(localStorage.getItem('master_p2_hig_v2')||'{}');
+   return {p1:p1.notes?.p1dm_0,cir:cir.notes?.ciraa_0,p2:ux.notes?.neuro1_0};
+ });
+ assert.equal(atual.p1,'');
+ assert.equal(atual.cir,'Nota cirúrgica preservada');
+ assert.equal(atual.p2,'Nota clínica preservada');
+ assert.equal(await p.locator('.caderno-aula-corpo[data-materia="p1"][data-chave="p1dm_0"]').count(),0);
+ await t.close();
+});
+
+test('excluir destaque no caderno lateral pede confirmação e remove somente a marca escolhida',async()=>{
+ const t=await abrirAula(),p=t.page;
+ await p.evaluate(()=>{
+   HIG.marcaAdd('neuro1_0',{id:'remover-unico',texto:'Primeira citação',cor:'amarelo',comentario:'Teste a apagar'});
+   HIG.marcaAdd('neuro1_0',{id:'preservar-unico',texto:'Segunda citação',cor:'verde',comentario:'Manter'});
+   HIG.saveNote('neuro1_0','Aula preservada');
+   CadernoUnificado.abrirPainel();
+ });
+ await p.locator('#caderno-painel .caderno-painel-cartao[data-marca-id="remover-unico"]').waitFor();
+ p.once('dialog',d=>d.dismiss());
+ await p.locator('#caderno-painel .caderno-painel-cartao[data-marca-id="remover-unico"] .caderno-painel-excluir').click();
+ assert.equal(await p.locator('#caderno-painel .caderno-painel-cartao[data-marca-id="remover-unico"]').count(),1);
+ p.once('dialog',d=>d.accept());
+ await p.locator('#caderno-painel .caderno-painel-cartao[data-marca-id="remover-unico"] .caderno-painel-excluir').click();
+ assert.equal(await p.locator('#caderno-painel .caderno-painel-cartao[data-marca-id="remover-unico"]').count(),0);
+ const rest=await p.evaluate(()=>{
+   const d=JSON.parse(localStorage.getItem('master_p2_hig_v2')||'{}');
+   return {ids:(d.marcas?.neuro1_0||[]).map(m=>m.id),nota:d.notes?.neuro1_0};
+ });
+ assert.deepEqual(rest.ids,['preservar-unico']);
+ assert.equal(rest.nota,'Aula preservada');
+ await t.close();
+});
+
+test('a nota geral também pode ser excluída do painel de comentários da aula',async()=>{
+ const t=await abrirAula(),p=t.page;
+ await p.evaluate(async()=>{
+   if(window.RouteAssets)await RouteAssets.ensure('ecg');
+   navigate('ecg');
+   ECGCourse.open(0);
+ });
+ await p.waitForSelector('#nota-atalho-pagina');
+ await p.locator('#nota-atalho-pagina').click();
+ await p.locator('.nota-painel-geral-editor').fill('Nota temporária de ECG');
+ await p.locator('.nota-painel-salvar-geral').click();
+ p.once('dialog',d=>d.accept());
+ await p.locator('.nota-painel-apagar-geral').click();
+ const info=await p.evaluate(()=>{
+   const key=document.querySelector('.nota-caixa')?.dataset.aula;
+   const d=JSON.parse(localStorage.getItem('master_p2_hig_v2')||'{}');
+   return {key,valor:d.notes?.[key]};
+ });
+ assert.ok(info.key?.startsWith('estudo_ecg_'));
+ assert.equal(info.valor,'');
+ assert.equal(await p.locator('.nota-painel-geral-editor').inputValue(),'');
+ await t.close();
+});
