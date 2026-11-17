@@ -311,7 +311,9 @@
     salvar.type = 'button'; salvar.className = 'nota-salvar'; salvar.textContent = 'Salvar';
     const apagar = document.createElement('button');
     apagar.type = 'button'; apagar.className = 'nota-apagar'; apagar.textContent = 'Excluir marcação';
-    acoes.append(salvar,apagar);
+    const voltar=document.createElement('button');
+    voltar.type='button'; voltar.className='nota-voltar-trecho';voltar.textContent='Voltar ao trecho';
+    acoes.append(salvar,voltar,apagar);
     item.append(topo,citacao,label,acoes);
     return item;
   }
@@ -367,6 +369,9 @@
       } else if (botao.classList.contains('nota-salvar')) {
         clearTimeout(rascunhoTimer);
         salvarEntrada(botao.closest('.nota-painel-entrada'));
+      } else if (botao.classList.contains('nota-voltar-trecho')) {
+        salvarTodos();
+        voltarAoTrecho(botao.closest('.nota-painel-entrada')?.dataset.nota,caixa.dataset.aula);
       } else if (botao.classList.contains('nota-apagar')) {
         const entrada = botao.closest('.nota-painel-entrada');
         const id = entrada?.dataset.nota;
@@ -407,6 +412,7 @@
     caixa.dataset.aula = aula;
     caixa.dataset.nota = id;
     modoPainel = modo;
+    window.CadernoUnificado?.fecharPainel?.();
     caixa.hidden = false;
     renderizarPainel(true);
   }
@@ -416,6 +422,37 @@
     salvarTodos();
     caixa.hidden = true;
     if (!minimizar) delete caixa.dataset.nota;
+  }
+
+
+  /* O caderno leva de volta exatamente à marca citada, nunca só ao início. */
+  function voltarAoTrecho(id, aulaEsperada = '') {
+    if (!id) return;
+    let tentativas=0;
+    const procurar=()=>{
+      const aula=aulaAtual();
+      const marcas=[...document.querySelectorAll('#main-content .nota-marca[data-nota]')];
+      const alvo=marcas.find(el=>el.dataset.nota===id);
+      if (alvo && (!aulaEsperada || aula===aulaEsperada)) {
+        fecharCaixa(false);
+        alvo.tabIndex=-1;
+        alvo.scrollIntoView({block:'center',inline:'nearest',behavior:'auto'});
+        alvo.focus({preventScroll:true});
+        alvo.classList.add('nota-trecho-destino');
+        setTimeout(()=>alvo.classList.remove('nota-trecho-destino'),2400);
+        return;
+      }
+      if (++tentativas < 30) {
+        if(tentativas===4)agendar();
+        setTimeout(procurar,120);
+      }
+    };
+    procurar();
+  }
+
+  function abrirTodas() {
+    const primeira=api()?.marcas(aulaAtual()).find(m=>m.comentario||m.comentarioAtivo);
+    if(primeira)abrirCaixa(primeira.id,'todas');
   }
 
   /* ---------- eventos ---------- */
@@ -456,5 +493,5 @@
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', iniciar, { once: true });
   else iniciar();
-  window.Notas = { aplicar: agendar, abrirCaixa };
+  window.Notas = { aplicar: agendar, abrirCaixa, fecharCaixa, abrirTodas, voltarAoTrecho };
 })();
