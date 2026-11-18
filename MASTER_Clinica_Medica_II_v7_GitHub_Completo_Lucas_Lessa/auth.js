@@ -437,7 +437,8 @@
         if(previousOwner===user.id&&window.QuestionHistory){
           for(const key of QuestionHistory.BANK_KEYS){
             const local=previousQuestionStates.get(key),remoteState=read(key);
-            if(!local||!remoteState)continue;
+            if(!local)continue;
+            if(!remoteState){originalSet.call(localStorage,key,JSON.stringify(local));mergedQuestionProgress=true;continue;}
             const merged=QuestionHistory.mergeProgressState(null,local,remoteState);
             if(canon(merged)!==canon(remoteState)){
               originalSet.call(localStorage,key,JSON.stringify(merged));
