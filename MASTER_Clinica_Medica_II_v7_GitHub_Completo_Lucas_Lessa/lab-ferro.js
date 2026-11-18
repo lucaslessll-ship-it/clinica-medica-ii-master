@@ -84,7 +84,7 @@ function interval(value){const n=Number(value);if(![1,3,7].includes(n))return;if
 function searchItems(){return PILOT.MODULES.map((m,i)=>({type:'Laboratório de Hemograma',label:m.title,sub:'Anemia microcítica · '+m.layer,icon:'▤',action:()=>go('aula/'+i),text:[m.title,m.summary,...m.goals]})).concat(PILOT.CASES.map((c,i)=>({type:'Caso de laboratório',label:c.focus,sub:'Anemia microcítica · caso progressivo',icon:'▤',action:()=>caseOpen(i),text:[c.focus,c.stem]})));}
 course.open=i=>go(i===null?'':'aula/'+Math.max(0,Math.min(PILOT.MODULES.length-1,Number(i)||0)));
 course.bank=cases;course.caseOpen=solution;
-const baseAnswer=course.answer;course.answer=(mi,qi,oi)=>{const q=PILOT.MODULES[mi]?.quiz[qi];if(!q||!Number.isInteger(oi)||oi<0||oi>=q.o.length||!guard())return;baseAnswer(mi,qi,oi);const feedback=document.querySelector('#labFerroq-'+mi+'-'+qi+' .pocus-q-why');if(feedback){feedback.tabIndex=-1;feedback.focus({preventScroll:true});}};
+const baseAnswer=course.answer;course.answer=(mi,qi,oi)=>{const q=PILOT.MODULES[mi]?.quiz[qi];if(!q||!Number.isInteger(oi)||oi<0||oi>=q.o.length||!guard())return false;baseAnswer(mi,qi,oi);const feedback=document.querySelector('#labFerroq-'+mi+'-'+qi+' .pocus-q-why');if(feedback){feedback.tabIndex=-1;feedback.focus({preventScroll:true});}};
 const baseComplete=course.complete;course.complete=(id,value)=>{if(PILOT.MODULES.some(m=>m.id===id)&&typeof value==='boolean'&&guard())baseComplete(id,value);};
 const baseSeen=course.markSeen;course.markSeen=(id,value)=>{if(PILOT.CASES.some(c=>c.id===id)&&typeof value==='boolean'&&guard())baseSeen(id,value);};
 document.addEventListener('submit',event=>{

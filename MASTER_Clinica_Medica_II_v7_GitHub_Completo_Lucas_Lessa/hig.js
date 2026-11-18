@@ -12,6 +12,7 @@ const HIG = (() => {
   function save(){try{localStorage.setItem(UX_KEY,JSON.stringify(preferences))}catch{toast('O navegador não permitiu salvar esta preferência.') }}
   function qlog(){return preferences.qlog||(preferences.qlog={});}
   function qlogSave(){save();}
+  function questionReview(){const r=preferences.questionReview;if(!r||typeof r!=='object'||Array.isArray(r))preferences.questionReview={sessions:[]};if(!Array.isArray(preferences.questionReview.sessions))preferences.questionReview.sessions=[];preferences.questionReview.sessions=preferences.questionReview.sessions.filter(s=>s&&typeof s.id==='string'&&s.items&&typeof s.items==='object').sort((a,b)=>a.started-b.started).slice(-40);return preferences.questionReview;}
   function focusData(){return preferences.pomodoro||{minutes:preferences.sessionMinutes,legacyMinutes:preferences.sessionSpent};}
   function saveFocus(data){preferences.pomodoro=JSON.parse(JSON.stringify(data));preferences.sessionMinutes=data.minutes;save();}
   function refreshFocus(){const fresh=load();preferences.pomodoro=fresh.pomodoro;preferences.sessionSpent=fresh.sessionSpent;preferences.sessionMinutes=fresh.sessionMinutes;}
@@ -254,7 +255,7 @@ const HIG = (() => {
     });
   }
   function reload(){preferences=load();applyPrefs();}
-  return {novidadeVista,qlog,qlogSave,reload,init,afterRender,abrirAula,marcas,marcasTodas,paginasEstudo,registrarPaginaEstudo,marcaAdd,marcaEdita,marcaRemove,setFocus,fullscreenAvailable,openSearch,searchInput,searchKeys,chooseResult,openSettings,openHelp,closeOverlay,setTheme,setFont,togglePref,toggleSidebar,toggleFocus,lessonToolbar,lessonNotes,saveNote,bookmark,viewToday,viewNotes,configureTimer,toggleTimer,resetTimer,exportNotes,exportBackup,importProgress,openLast,resumeInfo,focusTopic,dueCards,focusData,saveFocus,refreshFocus,openTimer};
+  return {novidadeVista,questionReview,qlog,qlogSave,reload,init,afterRender,abrirAula,marcas,marcasTodas,paginasEstudo,registrarPaginaEstudo,marcaAdd,marcaEdita,marcaRemove,setFocus,fullscreenAvailable,openSearch,searchInput,searchKeys,chooseResult,openSettings,openHelp,closeOverlay,setTheme,setFont,togglePref,toggleSidebar,toggleFocus,lessonToolbar,lessonNotes,saveNote,bookmark,viewToday,viewNotes,configureTimer,toggleTimer,resetTimer,exportNotes,exportBackup,importProgress,openLast,resumeInfo,focusTopic,dueCards,focusData,saveFocus,refreshFocus,openTimer};
 })();
 window.HIG=HIG;
 window.addEventListener('DOMContentLoaded',HIG.init);

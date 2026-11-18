@@ -411,13 +411,14 @@ function focusTop(){window.scrollTo({top:0,behavior:'instant'});const h=document
 function open(i){tracing=null;view=i===null?null:Math.max(0,Math.min(MODULES.length-1,Number(i)||0));render();focusTop();}
 function bank(){tracing=null;view='bank';render();focusTop();}
 function openTracing(i){tracing=Math.max(0,Math.min(TRACINGS.length-1,Number(i)||0));render();focusTop();}
-function answer(mi,qi,oi){const m=MODULES[mi];if(!m||!m.quiz[qi])return;st().quiz[m.id+'_'+qi]=oi;window.MasterActivity?.track('question_answer','ecg'+':'+m.id+':'+qi,{correct:oi===m.quiz[qi].a});stateSave();const el=document.getElementById(`eq-${mi}-${qi}`);if(el)el.outerHTML=quizItem(mi,qi);}
+function answer(mi,qi,oi){const m=MODULES[mi];if(!m||!m.quiz[qi])return;st().quiz[m.id+'_'+qi]=oi;window.QNav?.registrar('ecg',m.id+'_'+qi,oi===m.quiz[qi].a,{tid:m.id,tema:m.title,q:m.quiz[qi].q,resource:'ecg'+':'+m.id+':'+qi});stateSave();const el=document.getElementById(`eq-${mi}-${qi}`);if(el)el.outerHTML=quizItem(mi,qi);}
 function complete(id,value){st().done[id]=!!value;if(value)window.MasterActivity?.track('lesson_complete','ecg'+':'+id);stateSave();}
 function markSeen(id,value){st().seen[id]=!!value;stateSave();}
 function searchItems(){
   return MODULES.map((m,i)=>({type:'Módulo de ECG',label:m.title,sub:'Curso de ECG · '+m.layer,icon:'♡',action:()=>{navigate('ecg');open(i);},text:[m.title,m.summary,m.layer]}))
     .concat(TRACINGS.map((t,i)=>({type:'Traçado de ECG',label:'Traçado '+t.code,sub:t.focus,icon:'♡',action:()=>{navigate('ecg');openTracing(i);},text:[t.stem,t.focus,t.code]})));
 }
+window.QuestionReview?.registerCourse({bank:'ecg',label:'ECG',modules:MODULES,state:st,answer,open:mi=>{navigate('ecg');open(mi);} });
 return {page,open,bank,tracing:openTracing,answer,complete,markSeen,searchItems,modules:()=>MODULES.length,tracings:()=>TRACINGS.length,findId:id=>MODULES.findIndex(m=>m.id===id),titleOf:id=>MODULES.find(m=>m.id===id)?.title||''};
 })();
 window.ECGCourse=ECGCourse;

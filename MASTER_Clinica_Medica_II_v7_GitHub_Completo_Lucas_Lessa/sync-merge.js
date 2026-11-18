@@ -42,6 +42,17 @@
     if (igual(base, local)) return remote;
     if (igual(base, remote)) return local;
     if (ehObj(local) && ehObj(remote)) {
+      // Resposta e agenda são um registro único: não misturar a data de uma
+      // tentativa com o resultado de outra em dispositivos concorrentes.
+      const resposta = (typeof local.correct === 'boolean' && typeof remote.correct === 'boolean') ||
+        (typeof local.res === 'boolean' && typeof remote.res === 'boolean' && 'erros' in local && 'erros' in remote);
+      const stamp = v => Number(v.last) || Number(v.at) || Date.parse(v.at || v.date || '') || 0;
+      if (resposta && stamp(local) && stamp(remote)) {
+        const novo = stamp(remote) > stamp(local) ? remote : local;
+        const saida = {...novo};
+        for (const k of ['attempts', 'erros']) if (typeof local[k] === 'number' && typeof remote[k] === 'number') saida[k] = Math.max(local[k], remote[k]);
+        return saida;
+      }
       const b = ehObj(base) ? base : {}, saida = {};
       for (const k of new Set([...Object.keys(local), ...Object.keys(remote)])) {
         const v = merge3(b[k], local[k], remote[k], k);

@@ -376,8 +376,9 @@ function home(){
 }
 function page(){return view===null||!MODULES[view]?home():moduleView(view);}
 function open(i){view=i===null?null:Math.max(0,Math.min(MODULES.length-1,Number(i)||0));render();window.scrollTo({top:0,behavior:'instant'});const h=document.querySelector('#main-content h1');if(h){h.tabIndex=-1;h.focus({preventScroll:true});}}
-function answer(mi,qi,oi){const m=MODULES[mi];if(!m||!m.quiz[qi])return;st().quiz[m.id+'_'+qi]=oi;window.MasterActivity?.track('question_answer','pocus'+':'+m.id+':'+qi,{correct:oi===m.quiz[qi].a});stateSave();const el=document.getElementById(`pq-${mi}-${qi}`);if(el)el.outerHTML=quizItem(mi,qi);}
+function answer(mi,qi,oi){const m=MODULES[mi];if(!m||!m.quiz[qi])return;st().quiz[m.id+'_'+qi]=oi;window.QNav?.registrar('pocus',m.id+'_'+qi,oi===m.quiz[qi].a,{tid:m.id,tema:m.title,q:m.quiz[qi].q,resource:'pocus'+':'+m.id+':'+qi});stateSave();const el=document.getElementById(`pq-${mi}-${qi}`);if(el)el.outerHTML=quizItem(mi,qi);}
 function complete(id,value){st().done[id]=!!value;if(value)window.MasterActivity?.track('lesson_complete','pocus'+':'+id);stateSave();}
+window.QuestionReview?.registerCourse({bank:'pocus',label:'POCUS',modules:MODULES,state:st,answer,open:mi=>{navigate('pocus');open(mi);} ,visual:x=>x.fig&&window.PocusFigures?PocusFigures.render(x.fig):''});
 return {page,open,answer,complete,modules:()=>MODULES.length,findId:id=>MODULES.findIndex(m=>m.id===id),titleOf:id=>MODULES.find(m=>m.id===id)?.title||''};
 })();
 window.PocusCourse=PocusCourse;
