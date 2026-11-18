@@ -1,0 +1,34 @@
+name: QA navegação por seções e Foco
+on:
+  pull_request:
+    paths:
+      - 'MASTER_Clinica_Medica_II_v7_GitHub_Completo_Lucas_Lessa/section-rail.*'
+      - 'MASTER_Clinica_Medica_II_v7_GitHub_Completo_Lucas_Lessa/hig.js'
+      - 'MASTER_Clinica_Medica_II_v7_GitHub_Completo_Lucas_Lessa/app.js'
+      - 'MASTER_Clinica_Medica_II_v7_GitHub_Completo_Lucas_Lessa/index.html'
+      - 'tests/section-rail-focus.test.cjs'
+      - 'tests/leitura-ipad.test.cjs'
+      - '.github/workflows/qa-reading-rail.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  leitura:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    env:
+      CHROMIUM_PATH: /usr/bin/google-chrome
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci
+      - run: node --test tests/section-rail-focus.test.cjs tests/leitura-ipad.test.cjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: leitura-foco-dispositivos
+          path: work/ux-multiplataforma/*secoes.png
+          if-no-files-found: ignore
