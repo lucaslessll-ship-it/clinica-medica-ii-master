@@ -3,12 +3,12 @@
   "short_name": "Estudo Master",
   "start_url": "./index.html",
   "display": "standalone",
-  "theme_color": "#f7fafb",
-  "background_color": "#f7fafb",
+  "theme_color": "#f7f4ee",
+  "background_color": "#f7f4ee",
   "lang": "pt-BR",
   "icons": [
     {
-      "src": "assets/app-icon.svg",
+      "src": "assets/app-icon.svg?v=20261118-editorial1",
       "sizes": "any",
       "type": "image/svg+xml",
       "purpose": "any maskable"

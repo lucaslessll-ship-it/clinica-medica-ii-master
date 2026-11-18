@@ -260,7 +260,7 @@ test('dashboard typography has no overlapping card text at phone, tablet and des
  }
 });
 test('sidebar supports direct navigation, disclosure toggles and compact icons without native markers',async()=>{
- const t=await open({session:true}),p=t.page;await p.waitForFunction(()=>document.getElementById('master-auth').hidden);assert.equal(await p.locator('#sidebar-nav summary').count(),0);
+ const t=await open({session:true}),p=t.page;await p.waitForFunction(()=>document.getElementById('master-auth').hidden);assert.equal(await p.locator('#sidebar-nav summary').count(),0);await p.evaluate(()=>{if(document.body.classList.contains('side-collapsed'))HIG.toggleSidebar();});
  await p.getByRole('button',{name:'Expandir Exercícios',exact:true}).click();assert.equal(await p.getByRole('button',{name:'Recolher Exercícios',exact:true}).getAttribute('aria-expanded'),'true');await p.locator('#sidebar-nav').getByRole('button',{name:'Simulado de 20 questões',exact:true}).click();assert.equal(await p.evaluate(()=>ui.route),'exam');
  await p.locator('#sidebar-nav .nav-destination').filter({hasText:'Clínica Médica'}).click();assert.equal(await p.evaluate(()=>ui.route),'topics');await p.evaluate(()=>HIG.toggleSidebar());assert.equal(await p.locator('#sidebar-nav .nav-destination>span').first().isVisible(),false);await p.evaluate(()=>HIG.toggleSidebar());await t.close();
 });
@@ -282,7 +282,7 @@ test('all existing reference cards expose worked unit calculations in the manual
 });
 test('pomodoro is global, dismissible and synchronizes active dedication without counting paused time',async()=>{
  const t=await open({session:true}),p=t.page;await p.waitForFunction(()=>document.getElementById('master-auth').hidden);await freezeTime(p,'2026-11-11T12:00:00Z');
- assert.equal(await p.locator('#focus-float').isVisible(),true);await p.locator('#focus-top').click();await p.locator('[data-focus-toggle]').click();await p.waitForFunction(()=>FocusTimer.status().running);await p.keyboard.press('Escape');
+ assert.equal(await p.locator('#focus-float').isVisible(),false);await p.evaluate(()=>FocusTimer.floating(true));await p.locator('#focus-float .focus-float-clock').click();await p.locator('[data-focus-toggle]').click();await p.waitForFunction(()=>FocusTimer.status().running);await p.keyboard.press('Escape');
  await p.clock.fastForward(65000);await p.evaluate(()=>openTopic('neuro2'));assert.equal(await p.locator('#focus-top [data-focus-time]').textContent(),'23:55');
  await p.locator('#focus-float .focus-float-close').click();assert.equal(await p.locator('#focus-float').isVisible(),false);assert.equal(await p.evaluate(()=>FocusTimer.status().running),true);
  await p.locator('#focus-top').click();await p.locator('[data-focus-toggle]').click();await p.clock.fastForward(60000);assert.equal(await p.evaluate(()=>Object.values(FocusTimer.status().days).reduce((n,d)=>n+d.ms,0)),65000);
@@ -391,7 +391,7 @@ test('refreshed library and lesson remain usable with 200 percent reading size o
 
 test('release URL versions local assets and preserves recovery callbacks',async()=>{
  const t=await open({session:true,root:true,query:'?auth=recovery'}),p=t.page;await text(p,'#master-auth-title',/Definir nova senha/);
- assert.equal(new URL(p.url()).searchParams.get('v'),'20261117-uxnotas2');
+ assert.equal(new URL(p.url()).searchParams.get('v'),'20261118-editorial1');
  const unversioned=await p.evaluate(()=>[...document.querySelectorAll('script[src],link[rel=stylesheet]')].map(e=>e.src||e.href).filter(url=>new URL(url).origin===location.origin&&!new URL(url).searchParams.has('v')));assert.deepEqual(unversioned,[]);await t.close();
 });
 test('Decision Lab has 24 stable cases with 20 P2 items, valid answers and references',async()=>{
@@ -416,6 +416,7 @@ test('sidebar exposes requested panels and opens Decision Lab directly on deskto
   for(const [label,route] of panels){if(width<801)await p.getByRole('button',{name:'Abrir menu de navegação',exact:true}).click();await p.locator('#sidebar-nav').getByRole('button',{name:label,exact:true}).click();assert.equal(await p.evaluate(()=>ui.route),route);assert.equal(await p.locator('.nav-group.is-active').count(),1);}
   for(const [group,route] of [['Clínica Médica','p1'],['Cirurgia','cirp1'],['Cirurgia','cirp2']]){
    if(width<801)await p.getByRole('button',{name:'Abrir menu de navegação',exact:true}).click();
+   if(width>=801)await p.evaluate(()=>{if(document.body.classList.contains('side-collapsed'))HIG.toggleSidebar();});
    const box=p.locator('#sidebar-nav .nav-group').filter({has:p.locator('.nav-destination',{hasText:group})});
    if(await box.locator('.nav-children').isHidden())await box.locator('.nav-expand').click();
    await box.locator('.nav-child').filter({hasText:route==='cirp2'?'Matérias P2':'Matérias P1'}).click();
@@ -449,7 +450,7 @@ test('unchecked remember option stores auth only in the current tab and preserve
 });
 test('site identity includes clinical medicine and surgery without changing legacy study keys',async()=>{
  const t=await open({session:true}),p=t.page;await p.waitForFunction(()=>document.getElementById('master-auth').hidden);
- assert.equal(await p.title(),'Estudo Master');assert.match(await p.locator('.brand-text').innerText(),/Estudo Master\s+Aprendizado, prática e revisão/);assert.equal(await p.locator('.top-context-title').innerText(),'Estudo Master');
+ assert.equal(await p.title(),'Estudo Master');assert.match(await p.locator('.brand-text').textContent(),/Estudo Master\s*Aprendizado, prática e revisão/);assert.equal(await p.locator('.top-context-title').innerText(),'Estudo Master');
  const manifest=await (await p.request.get(base+'/MASTER_Clinica_Medica_II_v7_GitHub_Completo_Lucas_Lessa/manifest.webmanifest')).json();assert.equal(manifest.name,'Estudo Master');assert.ok(await p.evaluate(()=>MASTER_AUTH_CONFIG.progressKeys.includes('master_p2_lucas_v1')));await t.close();
 });
 test('remembered expired access token renews through Supabase without asking for the password again',async()=>{

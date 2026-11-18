@@ -6,7 +6,7 @@
 'use strict';
 const HIG = (() => {
   const UX_KEY='master_p2_hig_v2';
-  const defaults={theme:'light',font:'normal',contrast:false,motion:false,collapsed:false,focus:false,notes:{},bookmarks:{},marcas:{},qlog:{},lastTopic:'neuro1',lastChapter:0,sessionMinutes:25,sessionSpent:0};
+  const defaults={theme:'light',font:'normal',contrast:false,motion:false,collapsed:true,focus:false,notes:{},bookmarks:{},marcas:{},qlog:{},lastTopic:'neuro1',lastChapter:0,sessionMinutes:25,sessionSpent:0};
   let preferences=load(),modalType='',modalFocus=null,modalBackground=null,searchItems=[],activeResult=0;
   function load(){try{let v=JSON.parse(localStorage.getItem(UX_KEY));return {...defaults,...(v&&typeof v==='object'?v:{}),notes:{...defaults.notes,...(v?.notes||{})},bookmarks:{...defaults.bookmarks,...(v?.bookmarks||{})},marcas:{...defaults.marcas,...(v?.marcas||{})},qlog:{...(v?.qlog&&typeof v.qlog==='object'?v.qlog:{})}}}catch{return {...defaults}}}
   function save(){try{localStorage.setItem(UX_KEY,JSON.stringify(preferences))}catch{toast('O navegador não permitiu salvar esta preferência.') }}
@@ -30,7 +30,9 @@ const HIG = (() => {
     document.querySelector('meta[name="theme-color"]')?.setAttribute('content',body.dataset.theme==='dark'?'#111d23':'#f7fafb');
   }
   const tabletMedia=window.matchMedia('(min-width: 801px) and (max-width: 1100px)');
-  function sideCollapsed(){return tabletMedia.matches?preferences.tabletCollapsed!==false:!!preferences.collapsed;}
+  const phoneMedia=window.matchMedia('(max-width: 800px)');
+  phoneMedia.addEventListener('change',()=>applyPrefs());
+  function sideCollapsed(){return phoneMedia.matches?false:tabletMedia.matches?preferences.tabletCollapsed!==false:!!preferences.collapsed;}
   tabletMedia.addEventListener('change',()=>applyPrefs());
   function toggleSidebar(){if(tabletMedia.matches)preferences.tabletCollapsed=!sideCollapsed();else preferences.collapsed=!preferences.collapsed;save();applyPrefs()}
   // Modo foco: esconde a interface e, onde o navegador permite, entra em tela cheia.

@@ -344,8 +344,8 @@ test('modo todas reúne comentários e nota geral sem confundir o armazenamento'
 
 test('atalho do caderno e menu principal permanecem acessíveis no celular',async()=>{
  const t=await abrirAula(390),p=t.page;
- await p.waitForSelector('#caderno-atalho-topo');
- await p.locator('#caderno-atalho-topo').click();
+ await p.locator('#mobile-tabbar [data-tab=notes]').click();
+ await p.getByRole('button',{name:'Abrir painel do caderno',exact:true}).click();
  await p.waitForFunction(()=>!document.getElementById('caderno-painel')?.classList.contains('wm-enter'));
  const layout=await p.evaluate(()=>{
    const painel=document.getElementById('caderno-painel');
@@ -359,7 +359,7 @@ test('atalho do caderno e menu principal permanecem acessíveis no celular',asyn
  assert.equal(layout.menuLivre,true);
  await p.locator('[data-painel-acao="minimizar"]').click();
  await p.locator('#caderno-painel').waitFor({state:'hidden'});
- assert.equal(await p.locator('#caderno-atalho-topo').isVisible(),true);
+ assert.equal(await p.locator('#mobile-tabbar [data-tab=notes]').isVisible(),true);
  await t.close();
 });
 

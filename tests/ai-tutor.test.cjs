@@ -26,6 +26,12 @@ async function open(viewport={width:1280,height:800},date,showWelcome=false){
  return {page,close:async()=>{assert.deepEqual(errors,[]);await context.close();}};
 }
 
+async function conceal(page){
+ await page.waitForFunction(()=>!document.querySelector('.ai-tutor-dialog')?.classList.contains('wm-leave'));
+ if(!await page.locator('.ai-tutor-dialog').evaluate(d=>d.open))await page.locator('.ai-tutor-launch').click();
+ if(!await page.locator('.ai-tutor-help').evaluate(d=>d.open))await page.locator('[data-ai-help-toggle]').click();
+ await page.locator('.ai-tutor-hide').click();await page.keyboard.press('Escape');await page.waitForFunction(()=>!document.querySelector('.ai-tutor-dialog').open);
+}
 test('assistente carrega busca sob demanda, recupera aulas e abre fonte correta',async()=>{
  const t=await open({width:1440,height:900}),p=t.page;let indexCalls=0,received;
  p.on('request',r=>{if(r.url().includes('ai-index.json'))indexCalls++;});
@@ -61,7 +67,7 @@ test('rede indisponível e resposta atrasada não vazam conversa após expiraç�
 test('boneco pode ser ocultado, continua no menu e pode ser reexibido em celular e desktop',async()=>{
  for(const width of [320,1440]){
   const t=await open({width,height:900}),p=t.page;
-  await p.locator('.ai-tutor-launch img').evaluate(img=>img.decode());assert.equal(await p.locator('.ai-tutor-launch img').evaluate(img=>img.naturalWidth),256);await p.screenshot({path:'work/ai-dock-home-'+width+'.png'});await p.locator('.ai-tutor-hide').click();assert.equal(await p.locator('.ai-tutor-dock').isVisible(),false);
+  assert.equal(await p.locator('.ai-tutor-launch svg.editorial-icon').count(),1);await p.screenshot({path:'work/ai-dock-home-'+width+'.png'});await conceal(p);assert.equal(await p.locator('.ai-tutor-dock').isVisible(),false);
   await p.reload();await p.waitForFunction(()=>document.getElementById('master-auth')?.hidden);assert.equal(await p.locator('.ai-tutor-dock').isVisible(),false);
   if(width<801)await p.locator('.menu-button').click();
   await p.locator('#sidebar-nav [data-ai-open]').click();assert.equal(await p.locator('.ai-tutor-dialog').evaluate(d=>d.open),true);assert.equal(await p.locator('.ai-tutor-help').getAttribute('open'),null);await p.locator('[data-ai-help-toggle]').click();assert.match(await p.locator('.ai-tutor-help').innerText(),/menu lateral/);
@@ -81,7 +87,7 @@ test('resposta permanece visível no celular após envio pelo menu com boneco oc
  for(const height of [600,420]){
  const t=await open({width:390,height}),p=t.page;
  await p.route('**/functions/v1/ai-tutor',async r=>{const body=r.request().postDataJSON();await r.fulfill({contentType:'application/json',body:JSON.stringify({answer:'RESPOSTA VISÍVEL: a manobra vagal atua no nó atrioventricular, conforme a aula de arritmias.\n\nDica de estudo: revise a aula original antes de memorizar.',sources:body.blocks.map(b=>({id:b.id})),remaining:39})});});
- await p.locator('.ai-tutor-hide').click();await p.locator('.menu-button').click();await p.locator('#sidebar-nav [data-ai-open]').click();
+ await conceal(p);await p.locator('.menu-button').click();await p.locator('#sidebar-nav [data-ai-open]').click();
  await p.locator('#ai-tutor-question').fill('manobra vagal');await p.locator('.ai-tutor-send').click();await p.waitForFunction(()=>document.querySelector('.ai-tutor-status')?.textContent.includes('39 perguntas'));
  const visible=await p.evaluate(()=>{const log=document.querySelector('.ai-tutor-history'),messages=[...document.querySelectorAll('.ai-tutor-message')],reply=messages.at(-1),text=[...reply.childNodes].find(n=>n.nodeType===Node.TEXT_NODE),range=document.createRange();range.setStart(text,0);range.setEnd(text,30);const r=range.getBoundingClientRect(),h=log.getBoundingClientRect();return {historyHeight:h.height,answerTop:r.top,answerBottom:r.bottom,historyTop:h.top,historyBottom:h.bottom,visible:h.height>=120&&r.bottom>Math.max(0,h.top)&&r.top<Math.min(innerHeight,h.bottom)};});
  await p.screenshot({path:'work/robot-chat-response-390-'+height+'.png'});assert.equal(visible.visible,true,JSON.stringify(visible));await t.close();
@@ -101,16 +107,16 @@ test('requisição que não termina ganha mensagem visível e libera nova tentat
  await p.locator('#ai-tutor-question').fill('abdome agudo');const request=p.waitForRequest('**/functions/v1/ai-tutor');await p.locator('.ai-tutor-send').click();await request;await p.clock.fastForward(66000);
  await p.locator('.ai-tutor-retry').waitFor();assert.match(await p.locator('.ai-tutor-message').last().innerText(),/demorou mais/);assert.equal(await p.locator('.ai-tutor-send').isDisabled(),false);assert.equal(await p.locator('.ai-tutor-pending').count(),0);if(release)await release();await t.close();
 });
-test('ocultar recolhe o robô ao lado do Pomodoro e o botão compacto restaura sem abrir o chat',async()=>{
+test('atalho editorial fica ao lado do Pomodoro e abre o assistente sem chamada automática à IA',async()=>{
  for(const width of [320,390,820,1440]){
   const t=await open({width,height:844}),p=t.page;let calls=0;p.on('request',r=>{if(r.url().includes('/functions/v1/ai-tutor'))calls++;});
   assert.equal(await p.locator('#ai-tutor-restore').isVisible(),false);
-  await p.locator('.ai-tutor-hide').click();assert.equal(await p.locator('.ai-tutor-dock').isVisible(),false);assert.equal(await p.locator('#ai-tutor-restore').isVisible(),true);
-  const layout=await p.evaluate(()=>{const a=document.getElementById('focus-top').getBoundingClientRect(),b=document.getElementById('ai-tutor-restore').getBoundingClientRect();return {next:document.getElementById('focus-top').nextElementSibling.id,gap:b.left-a.right,sameRow:Math.abs(a.top-b.top)<2,fit:document.documentElement.scrollWidth<=innerWidth+1,height:b.height};});
+  await conceal(p);assert.equal(await p.locator('.ai-tutor-dock').isVisible(),false);assert.equal(await p.locator('#ai-tutor-restore').isVisible(),true);
+  const layout=await p.evaluate(()=>{const a=document.getElementById('focus-top').getBoundingClientRect(),b=document.getElementById('ai-tutor-restore').getBoundingClientRect();return {next:document.getElementById('focus-top').nextElementSibling.id,gap:a.left-b.right,sameRow:Math.abs(a.top-b.top)<2,fit:document.documentElement.scrollWidth<=innerWidth+1,height:b.height};});
   assert.equal(layout.next,'ai-tutor-restore');assert.ok(layout.gap>=0&&layout.gap<=12,JSON.stringify(layout));assert.equal(layout.sameRow,true);assert.equal(layout.fit,true);assert.ok(layout.height>=44);
-  await p.locator('#ai-tutor-restore img').evaluate(img=>img.decode());await p.screenshot({path:'work/ai-pomodoro-'+width+'.png'});
-  await p.locator('#ai-tutor-restore').click();assert.equal(await p.locator('.ai-tutor-dock').isVisible(),true);assert.equal(await p.locator('#ai-tutor-restore').isVisible(),false);assert.equal(await p.locator('.ai-tutor-dialog').evaluate(d=>d.open),false);
-  await p.locator('.ai-tutor-hide').click();await p.reload();await p.waitForFunction(()=>document.getElementById('master-auth')?.hidden);assert.equal(await p.locator('#ai-tutor-restore').isVisible(),true);assert.equal(await p.locator('.ai-tutor-dock').isVisible(),false);
+  assert.equal(await p.locator('#ai-tutor-restore svg.editorial-icon').count(),1);await p.screenshot({path:'work/ai-pomodoro-'+width+'.png'});
+  await p.locator('#ai-tutor-restore').click();assert.equal(await p.locator('.ai-tutor-dock').isVisible(),true);assert.equal(await p.locator('#ai-tutor-restore').isVisible(),false);assert.equal(await p.locator('.ai-tutor-dialog').evaluate(d=>d.open),true);await p.keyboard.press('Escape');
+  await conceal(p);await p.reload();await p.waitForFunction(()=>document.getElementById('master-auth')?.hidden);assert.equal(await p.locator('#ai-tutor-restore').isVisible(),true);assert.equal(await p.locator('.ai-tutor-dock').isVisible(),false);
   await p.locator('#ai-tutor-restore').click();assert.equal(await p.locator('.ai-tutor-dock').isVisible(),true);assert.equal(calls,0);
   await p.evaluate(()=>{document.documentElement.classList.add('master-auth-locked');window.dispatchEvent(new Event('master-auth-ended'));});assert.equal(await p.locator('#ai-tutor-restore').isVisible(),false);await t.close();
  }

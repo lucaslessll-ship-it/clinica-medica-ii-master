@@ -49,7 +49,7 @@ test('nova identidade e caderno preservado cabem em celular, tablet e desktop',a
   await p.evaluate(()=>{HIG.novidadeVista('caderno-2026-11',true);navigate('emergency')});
   await p.waitForTimeout(100);await p.evaluate(()=>document.activeElement?.blur());
   assert.ok(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),`overflow ${width}x${height}`);
-  const bounds=await p.locator('#caderno-atalho-topo').boundingBox();assert.ok(bounds.x>=0&&bounds.x+bounds.width<=width+1);
+  const bounds=await p.locator(width<=600?'#mobile-tabbar [data-tab=notes]':'#caderno-atalho-topo').boundingBox();assert.ok(bounds.x>=0&&bounds.x+bounds.width<=width+1);
   if([390,768,1440].includes(width))await p.screenshot({path:`work/estudo-master/emergency-${width}.png`,fullPage:true});
   await p.evaluate(()=>{HIG.saveNote('neuro1_0','**Revisar o mecanismo** e os diagnósticos diferenciais.');CadernoUnificado.abrirPainel()});
   await p.waitForFunction(()=>!document.getElementById('caderno-painel')?.classList.contains('wm-enter'));

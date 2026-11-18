@@ -38,7 +38,7 @@ for(const width of [320,390,820,1440])test('catálogo, diagramas, laudos e respo
 });
 test('todos os cursos reaproveitados abrem a aula original e a navegação mantém um grupo ativo',async()=>{
  const {page,context,errors}=await open(1280);
- for(const [track,route] of [['hemograma','hemo'],['anemias','hemo'],['renal','labrenal'],['urina','labrenal'],['eletrolitos','labrenal'],['gasometria','labrenal'],['microbiologia','micro']]){await page.evaluate(id=>LabAcademy.go('trilha/'+id),track);await page.locator('.la-module').first().click();assert.equal(await page.evaluate(()=>ui.route),route);assert.equal(await page.locator('.nav-group.is-active').count(),1);assert.match(await page.locator('.nav-group.is-active').innerText(),/Laboratório Master/);assert.ok((await page.locator('main').innerText()).length>500);}
+ for(const [track,route] of [['hemograma','hemo'],['anemias','hemo'],['renal','labrenal'],['urina','labrenal'],['eletrolitos','labrenal'],['gasometria','labrenal'],['microbiologia','micro']]){await page.evaluate(id=>LabAcademy.go('trilha/'+id),track);await page.locator('.la-module').first().click();assert.equal(await page.evaluate(()=>ui.route),route);assert.equal(await page.locator('.nav-group.is-active').count(),1);assert.match(await page.locator('.nav-group.is-active .nav-destination').getAttribute('aria-label'),/Laboratório Master/);assert.ok((await page.locator('main').innerText()).length>500);}
  await page.evaluate(()=>navigate('labarea-metabolismo'));assert.equal(await page.locator('.la-track').count(),3);
  await page.locator('.search-trigger').click();await page.locator('#global-search').fill('eletroforese');assert.ok(await page.locator('#search-results button').count()>0);
  assert.deepEqual(errors,[]);await context.close();

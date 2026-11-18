@@ -20,7 +20,7 @@ Engenharia reversa da banca da FMP: ordem dos temas, pesos e estilo de questão 
 
 ## Operating Context
 
-Site estático publicado no GitHub Pages via GitHub Actions; sem build step; vanilla HTML/CSS/JS com dados em arquivos .js. Autenticação e sincronização de progresso via Supabase; progresso também salvo no dispositivo. Testes Playwright em `tests/` e validadores Python em `scripts/`. Uso frequente em 320 a 390 px, iPad e desktop, modos claro, escuro e alto contraste.
+Site estático publicado no GitHub Pages via GitHub Actions; build Vite/esbuild preservando os scripts clássicos; HTML/CSS/JS com dados em arquivos .js. Autenticação e sincronização de progresso via Supabase; progresso também salvo no dispositivo. Testes Playwright em `tests/` e validadores Python em `scripts/`. Uso frequente em 320 a 390 px, iPad e desktop, modos claro, escuro e alto contraste.
 
 ## Capabilities and Constraints
 
@@ -35,7 +35,7 @@ Site estático publicado no GitHub Pages via GitHub Actions; sem build step; van
 
 ## Brand Commitments
 
-Nome: MASTER Clínica Médica II. Autor: Lucas Lessa. Idioma: PT-BR. Voz: direta, clínica, sem marketing. Tokens de design existentes em `tokens.css` e `hig.css` (inspiração Apple HIG, ver `CHECKLIST_APPLE_HIG.md`).
+Nome público: Estudo Master. Autor: Lucas Lessa. Idioma: PT-BR. Voz: direta, clínica, sem marketing. Direção visual aprovada: Editorial contemporâneo — marfim, verde profundo, cobre, Source Serif 4 nos títulos e Public Sans na interface. A camada compartilhada é `editorial.css`; a base de interação e acessibilidade de `tokens.css` e `hig.css` continua válida. Ver `docs/EDITORIAL_CONTEMPORANEO.md`.
 
 ## Evidence on Hand
 
