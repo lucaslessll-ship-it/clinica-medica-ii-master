@@ -192,13 +192,61 @@ const all={ecogenicidade,artefatos,transdutores,movimentos,pulmaoNormal,linhasB,
 const names=Object.keys(all),zoomLevels=[1,1.5,2,3];
 let zoom=null;
 function picture(name){return names.includes(name)?all[name]():'';}
+// IDs do catálogo privado conferidos por tema. Nunca inferir um achado por proximidade da galeria.
+const captions={
+ s_l_alines:'Linhas A: reverberações horizontais abaixo da pleura. Esta captura não demonstra deslizamento pleural.',
+ s_l_blines:'Linhas B: artefatos verticais que partem da linha pleural e atingem a região profunda. Interprete distribuição, técnica e contexto; movimento exige aquisição dinâmica.',
+ s_l_seashore:'Modo M com padrão de praia no exemplo da fonte: linhas na parede torácica e textura granular abaixo da pleura.',
+ s_l_barcode:'Modo M com linhas paralelas (código de barras). Ausência de deslizamento também ocorre em outras condições; este achado isolado não confirma pneumotórax.',
+ s_h_sub4c:'Janela subcostal quatro câmaras com fígado como janela acústica. Uma imagem estática não avalia função ou exclui derrame pequeno.',
+ s_h_plax:'Paraesternal em eixo longo: referências anatômicas do VE, VD anterior, valvas, átrio esquerdo e aorta descendente. Avaliação funcional exige aquisição dinâmica.',
+ s_h_psax:'Paraesternal em eixo curto no nível dos músculos papilares. Compare o contorno do VE e a cavidade do VD; integre outros planos e a dinâmica.',
+ s_pe_circ:'Derrame pericárdico na janela subcostal, no caso da fonte. Presença e quantidade de líquido isoladas não estabelecem tamponamento.',
+ s_pe_small:'Exemplo de pequeno derrame pericárdico em janela subcostal. O líquido se situa entre as lâminas do pericárdio.',
+ s_p_simple:'Derrame pleural com aspecto anecoico simples, entre parede, pulmão e diafragma. O aspecto simples pode ocorrer em transudatos e exsudatos.',
+ s_p_septated:'Derrame pleural com septações no exemplo da fonte. Compare as traves com o líquido ao redor e integre o contexto clínico.',
+ s_f_ruq_n:'Exemplo sem faixa de líquido livre visível na interface hepatorrenal. Uma janela negativa isolada não exclui lesão traumática.',
+ s_f_ruq_ff:'Líquido livre no espaço hepatorrenal no exemplo da fonte. Compare a faixa anecoica com a imagem sem líquido; a captura não determina sozinha a natureza do líquido.',
+ s_f_pel_n:'Janela pélvica sem líquido livre visível no exemplo. Identifique o contorno da bexiga e avalie os espaços externos a ela.',
+ s_v_long:'Veia cava inferior em eixo longo pela janela subcostal. Confira a continuidade com o átrio direito e a distinção da aorta.',
+ s_v_mmode:'Registro em modo M sobre a cava. Interprete variação respiratória em conjunto com esforço, ventilação e demais achados; não equivale a medida isolada de volemia.',
+ s_d_cfv:'Veia femoral comum sem e com compressão no exemplo da fonte. Os painéis ilustram o colabamento registrado; confirme técnica e exame dinâmico na prática.',
+ pocus_ij:'Jugular interna e artéria adjacente em eixo curto, em comparação de compressão da fonte. A captura não demonstra a trajetória de uma agulha.',
+ s_k_cyst:'Exemplo de cisto renal anecoico. Compare o conteúdo escuro e a região posterior com o parênquima vizinho.',
+ s_k_normal:'Rim em eixo longo: parênquima periférico e seio renal central mais ecogênico no exemplo da fonte.',
+ s_k_stone:'Foco ecogênico e sombra acústica posterior em cálculo renal no exemplo da fonte.'
+};
+const comparisons={
+ ecogenicidade:{title:'Ecogenicidade em exames reais',guide:'Compare o líquido anecoico do cisto, o parênquima e o seio renal ecogênico. A ecogenicidade é relativa ao tecido de referência.',groups:[['pocus_m11',['s_k_cyst','s_k_normal','s_k_stone']]]},
+ artefatos:{title:'Sombra, reforço e reverberação',guide:'Compare a região posterior ao cálculo com a região posterior ao cisto. Nas linhas A, procure a repetição horizontal da interface pleural.',groups:[['pocus_m11',['s_k_stone','s_k_cyst']],['pocus_m4',['s_l_alines']]]},
+ transdutores:{title:'Do transdutor ao campo de imagem',guide:'Compare o campo superficial vascular, a janela abdominal e a cardíaca. São exemplos de aplicações; a captura isolada não comprova qual modelo de sonda foi utilizado.',groups:[['pocus_m12',['s_d_cfv']],['pocus_m5',['s_f_ruq_n']],['pocus_m6',['s_h_plax']]]},
+ movimentos:{title:'Planos reais para orientar a aquisição',guide:'Compare eixo longo e eixo curto do coração. As imagens mostram planos distintos; não demonstram, sozinhas, a trajetória da sonda ou o efeito dinâmico da compressão.',groups:[['pocus_m6',['s_h_plax','s_h_psax']]]},
+ pulmaoNormal:{title:'Linha pleural e linhas A',guide:'Localize a linha pleural e as repetições horizontais profundas. Deslizamento exige vídeo ou aquisição dinâmica; não pode ser confirmado nesta captura.',groups:[['pocus_m4',['s_l_alines']]]},
+ linhasB:{title:'Comparar linhas A e linhas B',guide:'Compare os artefatos horizontais com os verticais que nascem na pleura. Distribuição, técnica e contexto importam; linhas B não definem uma etiologia isoladamente.',groups:[['pocus_m4',['s_l_alines','s_l_blines']]]},
+ modoM:{title:'Modo M: praia e código de barras',guide:'Compare a textura granular profunda com o traçado de linhas paralelas. Ausência de deslizamento tem causas além de pneumotórax; interprete o ponto examinado e o contexto.',groups:[['pocus_m4',['s_l_seashore','s_l_barcode']]]},
+ derramePleural:{title:'Derrame pleural simples e septado',guide:'Identifique diafragma, líquido e pulmão adjacente. Compare o líquido homogêneo com as septações; aparência isolada não estabelece a etiologia.',groups:[['pocus_m4',['s_p_simple','s_p_septated']]]},
+ morrison:{title:'FAST: sem líquido e com líquido livre',guide:'Compare a interface entre fígado e rim. No exemplo com líquido surge uma faixa anecoica no espaço hepatorrenal. As imagens são exemplos distintos; FAST negativo não exclui lesão traumática.',groups:[['pocus_m5',['s_f_ruq_n','s_f_ruq_ff']]]},
+ janelasFast:{title:'Janelas reais do FAST',guide:'Percorra o espaço hepatorrenal, a pelve e a janela cardíaca. O exemplo cardíaco contém derrame pericárdico; não é um painel inteiramente normal nem substitui todas as janelas do protocolo.',groups:[['pocus_m5',['s_f_ruq_n','s_f_pel_n','s_pe_small']]]},
+ subxifoide:{title:'Subcostal: anatomia e derrame pericárdico',guide:'Use o fígado como referência e compare com o exemplo de líquido em torno do coração. Uma captura estática não estabelece tamponamento nem avalia função ventricular.',groups:[['pocus_m6',['s_h_sub4c','s_pe_circ']]]},
+ paraesternal:{title:'Paraesternal: eixo longo e eixo curto',guide:'No eixo longo, siga VE, valvas e átrio esquerdo. No curto, reconheça a cavidade do VE e o VD adjacente. Função e movimento exigem avaliação dinâmica.',groups:[['pocus_m6',['s_h_plax','s_h_psax']]]},
+ veiaCava:{title:'Cava em eixo longo e modo M',guide:'Identifique a continuidade com o átrio direito e o segmento amostrado no modo M. Calibre e variação respiratória dependem de técnica, esforço e ventilação; não determinam volume ou resposta a fluidos isoladamente.',groups:[['pocus_m6',['s_v_long','s_v_mmode']]]},
+ vascularCurto:{title:'Jugular: comparação de compressibilidade',guide:'Compare os painéis antes e durante a compressão registrados na fonte. Identifique veia e artéria; o par de capturas não substitui o exame dinâmico ou o protocolo completo.',groups:[['pocus_m7',['pocus_ij']]]},
+ agulha:{title:'Acesso vascular: imagem de referência',guide:'Compare a ponta em eixo longo na figura pública com o trajeto em plano do mapa. A jugular abaixo é apenas referência anatômica: está em outro sítio e não contém agulha. O ponto fora de plano é uma representação didática; identificar a ponta na prática exige acompanhamento dinâmico.',groups:[['pocus_m7',['pocus_ij']]]}
+};
+const publicMedia={
+ transdutores:{src:'https://upload.wikimedia.org/wikipedia/commons/a/a1/UltrasoundProbe2006a.jpg',caption:'Fotografia de um transdutor linear. Compare o formato da superfície de contato com o mapa de apoio; os exames abaixo mostram aplicações distintas.',author:'Daniel W. Rickey',license:'CC BY-SA 2.5',licenseUrl:'https://creativecommons.org/licenses/by-sa/2.5/',source:'https://commons.wikimedia.org/wiki/File:UltrasoundProbe2006a.jpg'},
+ agulha:{src:'https://cdn.ncbi.nlm.nih.gov/pmc/blobs/7e72/3397656/4c17df7a5a6a/2036-7902-4-3-2.jpg',caption:'Ponta da agulha visualizada em eixo longo dentro de veia antecubital, figura 2 da publicação. É um acesso periférico, com anatomia diferente da jugular do exemplo abaixo. Compare a visualização em plano; esta figura não demonstra a técnica fora de plano.',author:'David C. Riley e Steven Garcia (2012), figura 2',license:'CC BY 2.0',licenseUrl:'https://creativecommons.org/licenses/by/2.0/',source:'https://pmc.ncbi.nlm.nih.gov/articles/PMC3397656/#Fig2'}
+};
+function publicFigure(name){const r=publicMedia[name];if(!r)return '';return `<figure class="clinical-public-media"><a href="${r.src}" target="_blank" rel="noopener noreferrer" aria-label="Ampliar imagem pública de referência"><img class="clinical-public-exam" src="${r.src}" alt="${r.caption}" loading="eager" decoding="async" referrerpolicy="no-referrer"></a><figcaption>${r.caption}<small>${r.author} · <a href="${r.source}" target="_blank" rel="noopener noreferrer">Fonte original</a> · <a href="${r.licenseUrl}" target="_blank" rel="noopener noreferrer">${r.license}</a> · Sem alterações na imagem.</small></figcaption></figure>`;}
 function render(name){
-  const html=picture(name);
-  return html?html.replace('</svg>','</svg><button type="button" class="pocus-zoom-open" data-pocus-zoom="'+name+'" aria-haspopup="dialog">Ampliar esquema</button>'):'';
+ const pair=comparisons[name],html=picture(name);if(!pair||!html)return '';
+ const slots=pair.groups.map(([key,include])=>window.LessonImages?LessonImages.slot(key,'clinical-exams',[],captions, {include,title:'Exames reais de referência'}):'').join('');
+ const drawing=html.replace('</svg>','</svg><button type="button" class="pocus-zoom-open" data-pocus-zoom="'+name+'" aria-haspopup="dialog">Ampliar mapa de apoio</button>');
+ return `<section class="clinical-comparison" data-clinical-comparison="${name}"><h4>${pair.title}</h4><p>${pair.guide}</p>${publicFigure(name)}${slots}<p class="subtle" data-clinical-status role="status">Os exames são carregados do acervo da sua conta. Se não aparecerem, confira a conexão e reabra o módulo. O mapa de apoio só fica disponível com a imagem real carregada.</p><details class="clinical-schematic" data-clinical-schematic hidden><summary>Comparar com o mapa de apoio desenhado</summary><p class="subtle">Desenho simplificado, sem correspondência pixel a pixel. Os números e setas pertencem somente ao desenho. Compare as estruturas com os exames acima.</p>${drawing}</details></section>`;
 }
 function closeZoom(restoreFocus=true){if(zoom){zoom.restoreFocus=restoreFocus;zoom.dialog.close();}}
 function openZoom(trigger){
-  if(zoom)return;
+  if(zoom||trigger.closest('[data-clinical-schematic]')?.hidden)return;
   const html=picture(trigger.dataset.pocusZoom);if(!html)return;
   const holder=document.createElement('div');holder.innerHTML=html;
   const figure=holder.firstElementChild,svg=figure.querySelector('svg'),width=svg.viewBox.baseVal.width;
@@ -237,6 +285,6 @@ if(typeof document!=='undefined'&&typeof document.addEventListener==='function')
   document.addEventListener('click',event=>{const trigger=event.target.closest?.('[data-pocus-zoom]');if(trigger)openZoom(trigger);});
   if(typeof window.addEventListener==='function')window.addEventListener('master-auth-ended',()=>closeZoom(false));
 }
-return {render,names};
+return {render,names,comparisons,captions,publicMedia};
 })();
 window.PocusFigures=PocusFigures;

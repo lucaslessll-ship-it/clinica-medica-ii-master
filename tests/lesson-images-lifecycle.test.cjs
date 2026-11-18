@@ -132,3 +132,45 @@ test('curadoria por bloco filtra desenhos e contextualiza a legenda sem mudar o 
  await page.evaluate(()=>{document.getElementById('content').innerHTML=LessonImages.slot('aula_0');LessonImages.scan();});
  await page.waitForFunction(()=>document.querySelectorAll('.lesson-images figure').length===2);assert.match(await page.locator('.lesson-images figure').last().innerText(),/Fonte/);assert.doesNotMatch(await page.locator('.lesson-images').innerText(),/contextualizada/);
 });
+
+test('comparação só libera o desenho após todos os exames selecionados decodificarem, na ordem clínica',async t=>{
+ const page=await open(t,{rows:{'conta-a':[row('alterado'),row('normal'),row('desenho-antigo')]}});
+ await page.evaluate(()=>{
+  document.getElementById('content').innerHTML='<section data-clinical-comparison="teste">'+LessonImages.slot('aula_0','',[],{}, {include:['normal','alterado'],title:'Comparação clínica'})+'<p data-clinical-status>Carregando</p><details data-clinical-schematic hidden><summary>Mapa</summary></details></section>';LessonImages.scan();
+ });
+ await page.waitForFunction(()=>!document.querySelector('[data-clinical-schematic]').hidden);
+ assert.deepEqual(await page.locator('.lesson-images figcaption').allTextContents(),['normal Crédito de teste.','alterado Crédito de teste.']);
+ assert.equal(await page.locator('[data-clinical-schematic]').getAttribute('open'),null);
+ assert.equal(await page.locator('[data-clinical-status]').isVisible(),false);
+ await page.locator('[data-clinical-schematic] summary').click();
+ await page.evaluate(()=>{imageTest.user=null;window.dispatchEvent(new Event('master-auth-ended'));});
+ assert.equal(await page.locator('[data-clinical-schematic]').isVisible(),false);assert.equal(await page.locator('[data-clinical-schematic]').getAttribute('open'),null);assert.equal(await page.locator('.lesson-images img').count(),0);
+});
+
+test('exame faltante ou com raster indecodificável não disponibiliza esquema isolado',async t=>{
+ for(const rows of [[row('normal')],[row('normal'),{...row('alterado'),mime:'image/png',data:'AAAA'}]]){
+  const page=await open(t,{rows:{'conta-a':rows}});
+  await page.evaluate(()=>{
+   document.getElementById('content').innerHTML='<section data-clinical-comparison="teste">'+LessonImages.slot('aula_0','',[],{}, {include:['normal','alterado']})+'<p data-clinical-status>Conferir conexão</p><details data-clinical-schematic hidden><summary>Mapa</summary></details></section>';LessonImages.scan();
+  });
+  await page.waitForSelector('.lesson-images:not([hidden]) img');await settle(page);
+  assert.equal(await page.locator('[data-clinical-schematic]').isVisible(),false);assert.equal(await page.locator('[data-clinical-status]').isVisible(),true);
+ }
+});
+
+test('comparações repetidas compartilham a consulta sem duplicar o download da base privada',async t=>{
+ const page=await open(t,{defer:'rows'});await page.waitForFunction(()=>imageTest.pending.length===1);
+ await page.evaluate(()=>{document.getElementById('content').innerHTML=Array.from({length:8},()=>LessonImages.slot('aula_0')).join('');LessonImages.scan();});await settle(page);
+ assert.equal(await page.evaluate(()=>imageTest.calls.filter(c=>c.part==='rows').length),1);
+ await release(page);await page.waitForFunction(()=>document.querySelectorAll('.lesson-images:not([hidden]) img').length===8);
+ assert.equal(await page.evaluate(()=>imageTest.calls.filter(c=>c.part==='rows').length),1);
+});
+
+test('falha da referência pública também mantém o mapa oculto mesmo com os exames privados disponíveis',async t=>{
+ const page=await open(t,{rows:{'conta-a':[row('normal'),row('alterado')]}});
+ await page.evaluate(()=>{
+  document.getElementById('content').innerHTML='<section data-clinical-comparison="teste"><img class="clinical-public-exam" src="data:image/png;base64,AAAA" alt="Referência pública indisponível">'+LessonImages.slot('aula_0','',[],{}, {include:['normal','alterado']})+'<p data-clinical-status>Conferir conexão</p><details data-clinical-schematic hidden><summary>Mapa</summary></details></section>';LessonImages.scan();
+ });
+ await page.waitForSelector('.lesson-images:not([hidden]) img');await settle(page);
+ assert.equal(await page.locator('[data-clinical-schematic]').isVisible(),false);assert.equal(await page.locator('[data-clinical-status]').isVisible(),true);
+});

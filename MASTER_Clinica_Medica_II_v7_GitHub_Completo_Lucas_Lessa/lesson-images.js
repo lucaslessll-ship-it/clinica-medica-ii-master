@@ -2,11 +2,12 @@
    e só são lidas por quem está logado. Sem login ou sem imagens, o bloco não aparece. */
 const LessonImages=(()=>{
 'use strict';
-const cache=new Map();let index=null,indexFor=null,dialog=null,account=null,clientFor=null,generation=0,ended=false;
+const cache=new Map(),pending=new Map();let indexPending=null,index=null,indexFor=null,dialog=null,account=null,clientFor=null,generation=0,ended=false;
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const auth=()=>window.MASTER_AUTH;
 function clear(){
-  generation++;cache.clear();index=null;indexFor=null;account=null;clientFor=null;
+  generation++;cache.clear();pending.clear();indexPending=null;index=null;indexFor=null;account=null;clientFor=null;
+  document.querySelectorAll('[data-clinical-schematic]').forEach(el=>{el.hidden=true;el.open=false;});
   if(dialog){if(dialog.open&&typeof dialog.close==='function')dialog.close();dialog.remove();dialog=null;}
   document.querySelectorAll('[data-img-key]').forEach(el=>{el.hidden=true;el.replaceChildren();el.onclick=null;delete el.dataset.imgDone;});
 }
@@ -17,13 +18,17 @@ function ready(){
   return {uid:user.id,client,generation};
 }
 function current(scope){const a=auth();return !ended&&scope.generation===generation&&a&&a.user()?.id===scope.uid&&a.client()===scope.client;}
-function slot(key,cls,exclude=[],captions={}){return `<section class="${cls||'deep-block'} lesson-images" data-img-key="${esc(key)}"${exclude.length?` data-img-exclude="${esc(JSON.stringify(exclude))}"`:''} data-img-captions="${esc(JSON.stringify(captions))}" hidden></section>`;}
+function slot(key,cls,exclude=[],captions={},options={}){return `<section class="${cls||'deep-block'} lesson-images" data-img-key="${esc(key)}"${exclude.length?` data-img-exclude="${esc(JSON.stringify(exclude))}"`:''} data-img-captions="${esc(JSON.stringify(captions))}" data-img-options="${esc(JSON.stringify(options))}" hidden></section>`;}
 async function keys(scope){
   const uid=scope.uid;
   if(index&&indexFor===uid)return index;
-  const {data,error}=await scope.client.from('lesson_images').select('keys');
-  if(error||!current(scope))return new Set();
-  index=new Set((data||[]).flatMap(r=>r.keys||[]));indexFor=uid;cache.clear();return index;
+  if(indexPending)return indexPending;
+  const task=(async()=>{
+    const {data,error}=await scope.client.from('lesson_images').select('keys');
+    if(error||!current(scope))return new Set();
+    index=new Set((data||[]).flatMap(r=>r.keys||[]));indexFor=uid;return index;
+  })();indexPending=task;
+  try{return await task;}finally{if(indexPending===task)indexPending=null;}
 }
 function image(row){
   if(!row||typeof row.data!=='string')return null;
@@ -35,10 +40,13 @@ function image(row){
 }
 async function load(scope,key){
   if(cache.has(key))return cache.get(key);
-  const {data,error}=await scope.client.from('lesson_images').select('id,ord,caption,credit,mime,data,marks').contains('keys',[key]).order('ord');
-  if(error||!current(scope))return [];
-  const rows=(Array.isArray(data)?data:[]).map(image).filter(Boolean);
-  cache.set(key,rows);return rows;
+  if(pending.has(key))return pending.get(key);
+  const task=(async()=>{
+    const {data,error}=await scope.client.from('lesson_images').select('id,ord,caption,credit,mime,data,marks').contains('keys',[key]).order('ord');
+    if(error||!current(scope))return [];
+    const rows=(Array.isArray(data)?data:[]).map(image).filter(Boolean);cache.set(key,rows);return rows;
+  })();pending.set(key,task);
+  try{return await task;}finally{if(pending.get(key)===task)pending.delete(key);}
 }
 const num=v=>Math.max(0,Math.min(100,Number(v)||0));
 function overlay(marks){
@@ -51,8 +59,8 @@ function overlay(marks){
     return h;}).join('');
   return `<span class="lesson-marks" hidden aria-hidden="true"><svg viewBox="0 0 100 100" preserveAspectRatio="none">${lines}</svg>${parts}</span>`;
 }
-function markup(rows){
-  return `<h4>Imagens e esquemas</h4><p class="subtle">Toque em uma imagem para ampliar. Antes de ler a legenda ou tocar em Mostrar achados, diga em voz alta o que você vê.</p><div class="lesson-images-grid">${rows.map((r,i)=>`<figure><button type="button" class="lesson-image-open" data-img-open="${i}" aria-label="Ampliar imagem ${i+1}"><img loading="lazy" decoding="async" alt="${esc(r.caption)}" src="data:${esc(r.mime)};base64,${esc(r.data)}">${overlay(r.marks)}</button>${Array.isArray(r.marks)&&r.marks.length?`<button type="button" class="btn lesson-marks-toggle" data-img-marks="${i}" aria-pressed="false">Mostrar achados</button>`:''}<figcaption>${esc(r.caption)}${r.credit?` <small>${esc(r.credit)}.</small>`:''}</figcaption></figure>`).join('')}</div>`;
+function markup(rows,options={}){
+  return `<h4>${esc(options.title||"Imagens da aula")}</h4><p class="subtle">Toque em uma imagem para ampliar. Antes de ler a legenda ou tocar em Mostrar achados, diga em voz alta o que você vê.</p><div class="lesson-images-grid">${rows.map((r,i)=>`<figure><button type="button" class="lesson-image-open" data-img-open="${i}" aria-label="Ampliar imagem ${i+1}"><img loading="${Array.isArray(options.include)?'eager':'lazy'}" decoding="async" alt="${esc(r.caption)}" src="data:${esc(r.mime)};base64,${esc(r.data)}">${overlay(r.marks)}</button>${Array.isArray(r.marks)&&r.marks.length?`<button type="button" class="btn lesson-marks-toggle" data-img-marks="${i}" aria-pressed="false">Mostrar achados</button>`:''}<figcaption>${esc(r.caption)}${r.credit?` <small>${esc(r.credit)}.</small>`:''}</figcaption></figure>`).join('')}</div>`;
 }
 function open(src,caption,marks,shown){
   if(!dialog){dialog=document.createElement('dialog');dialog.className='lesson-image-dialog';dialog.innerHTML='<form method="dialog"><button class="btn" aria-label="Fechar imagem">Fechar</button></form><div class="lesson-image-stage"><img alt=""></div><p></p>';document.body.appendChild(dialog);dialog.addEventListener('click',e=>{if(e.target===dialog)dialog.close();});}
@@ -65,8 +73,20 @@ async function fill(el,scope){
     const key=el.dataset.imgKey,set=await keys(scope);if(!current(scope)||!set.has(key))return;
     let exclude=[];try{const value=JSON.parse(el.dataset.imgExclude||'[]');if(Array.isArray(value))exclude=value;}catch{}
     let captions={};try{const value=JSON.parse(el.dataset.imgCaptions||'{}');if(value&&typeof value==='object'&&!Array.isArray(value))captions=value;}catch{}
-    const rows=(await load(scope,key)).filter(row=>!exclude.includes(row.id)).map(row=>Object.hasOwn(captions,row.id)&&typeof captions[row.id]==='string'?{...row,caption:captions[row.id]}:row);if(!current(scope)||!rows.length||!el.isConnected)return;
-    el.innerHTML=markup(rows);el.hidden=false;
+    let options={};try{options=JSON.parse(el.dataset.imgOptions||'{}')||{};}catch{}
+    const rows=(await load(scope,key)).filter(row=>!exclude.includes(row.id)&&(!Array.isArray(options.include)||options.include.includes(row.id))).map(row=>Object.hasOwn(captions,row.id)&&typeof captions[row.id]==='string'?{...row,caption:captions[row.id]}:row);if(!current(scope)||!rows.length||!el.isConnected)return;
+    if(Array.isArray(options.include))rows.sort((a,b)=>options.include.indexOf(a.id)-options.include.indexOf(b.id));
+    el.innerHTML=markup(rows,options);el.hidden=false;
+    const comparison=el.closest('[data-clinical-comparison]');
+    if(comparison){
+      // O mapa só fica disponível após TODOS os exemplos reais deste par decodificarem.
+      const slots=[...comparison.querySelectorAll('[data-img-key]')];
+      Promise.all(slots.map(async slot=>{
+        let expected=[];try{expected=JSON.parse(slot.dataset.imgOptions||'{}').include||[];}catch{}
+        if(slot.hidden||!slot.querySelector('img')||(expected.length&&slot.querySelectorAll('img').length!==expected.length))return false;
+        return (await Promise.all([...slot.querySelectorAll('img')].map(async img=>{try{await img.decode();return img.naturalWidth>0;}catch{return false;}}))).every(Boolean);
+      })).then(async ok=>{const publicOK=await Promise.all([...comparison.querySelectorAll('.clinical-public-exam')].map(async img=>{try{await img.decode();return img.naturalWidth>0;}catch{return false;}}));if(!publicOK.every(Boolean))return;if(!current(scope)||!comparison.isConnected||!ok.every(Boolean))return;const map=comparison.querySelector('[data-clinical-schematic]');if(map)map.hidden=false;comparison.querySelector('[data-clinical-status]')?.setAttribute('hidden','');});
+    }
     el.onclick=e=>{if(!current(scope))return;const t=e.target.closest('[data-img-marks]');if(t){const o=t.closest('figure').querySelector('.lesson-marks');if(!o)return;const on=o.hidden;o.hidden=!on;t.setAttribute('aria-pressed',String(on));t.textContent=on?'Ocultar achados':'Mostrar achados';return;}const b=e.target.closest('[data-img-open]');if(!b)return;const r=rows[Number(b.dataset.imgOpen)],o=b.querySelector('.lesson-marks');if(r)open(b.querySelector('img').src,r.caption,r.marks,!!o&&!o.hidden);};
   }catch{if(current(scope))delete el.dataset.imgDone;}
 }

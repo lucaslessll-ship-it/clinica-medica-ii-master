@@ -1,1 +1,38 @@
-{"version":1,"approved":[],"candidates":[{"id":"servier-oligodendrocyte","topic":"neuro3","source":"https://smart.servier.com/smart_image/purple-oligodendrocyte/","author":"Servier Medical Art","license":"CC BY 4.0 per item page","status":"not_included","reason":"Page and license inspected, but binary download blocked by environment HTTP 403; visual inspection and resolution could not be completed. No diagnostic interpretation claimed."}],"existing_inventory":"app-icon.svg and five interface screenshots; no clinical images. Local viewer available for session-only student images."}
+{
+  "version": 2,
+  "approved": [
+    {
+      "id": "linear-probe-rickey",
+      "source": "https://commons.wikimedia.org/wiki/File:UltrasoundProbe2006a.jpg",
+      "author": "Daniel W. Rickey",
+      "license": "CC BY-SA 2.5",
+      "license_url": "https://creativecommons.org/licenses/by-sa/2.5/",
+      "status": "externally_referenced",
+      "changes": "none",
+      "verification": "source description and license; raster visual inspection pending"
+    },
+    {
+      "id": "antecubital-needle-riley-garcia",
+      "source": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3397656/",
+      "figure": 2,
+      "author": "David C. Riley and Steven Garcia",
+      "license": "CC BY 2.0",
+      "license_url": "https://creativecommons.org/licenses/by/2.0/",
+      "status": "externally_referenced",
+      "changes": "none",
+      "verification": "source description and license; raster visual inspection pending"
+    }
+  ],
+  "candidates": [
+    {
+      "id": "servier-oligodendrocyte",
+      "topic": "neuro3",
+      "source": "https://smart.servier.com/smart_image/purple-oligodendrocyte/",
+      "author": "Servier Medical Art",
+      "license": "CC BY 4.0 per item page",
+      "status": "not_included",
+      "reason": "Page and license inspected, but binary download blocked by environment HTTP 403; visual inspection and resolution could not be completed. No diagnostic interpretation claimed."
+    }
+  ],
+  "existing_inventory": "Private authenticated lesson_images catalog retained. POCUS: selected real exams paired with 15 optional schematic types; legacy standalone drawings excluded. Radiology: real-image guided blocks; dose drawing excluded. No private raster copied to repository."
+}
