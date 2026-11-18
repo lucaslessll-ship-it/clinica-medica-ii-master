@@ -58,7 +58,7 @@ async function loadBank(){
  try{
   let rows=[],from=0;
   for(;;){const {data:part,error}=await client.from('cir_bank').select('id,topic,source,year,stem,options,answer,comment,image_url').order('id').range(from,from+999);if(error)throw error;rows=rows.concat(part||[]);if(!part||part.length<1000)break;from+=1000;}
-  bank=rows.filter(r=>!String(r.id).startsWith('l120-')||r.source==='Questão de prova').map(r=>({id:'b:'+r.id,t:r.topic,q:r.stem,o:Array.isArray(r.options)?r.options:[],a:r.answer,why:r.comment||'',src:String(r.id).startsWith('l120-')?'Questão de prova':([r.source,r.year].filter(Boolean).join(' · ')||'Banco de questões'),img:r.image_url||'',shuffle:String(r.id).startsWith('l120-')||String(r.source||'').startsWith('Revisão didática · '),revision:String(r.id).startsWith('l120-')?'cir-20261117':undefined,bank:true}));
+  bank=rows.filter(r=>!String(r.id).startsWith('l120-')||r.source==='Questão de prova').map(r=>({id:'b:'+r.id,t:r.topic,q:r.stem,o:Array.isArray(r.options)?r.options:[],a:r.answer,why:r.comment||'',src:String(r.id).startsWith('l120-')?'Questão de prova':([r.source,r.year].filter(Boolean).join(' · ')||'Banco de questões'),img:r.image_url||'',shuffle:String(r.id).startsWith('l120-')||String(r.source||'').startsWith('Revisão didática · '),revision:String(r.id).startsWith('l120-')?'cir-20261117':String(r.source||'').startsWith('Revisão didática · ')?'cir-20261116':undefined,bank:true}));
   bankStatus=rows.length?'ready':'empty';
  }catch(e){bank=[];bankStatus='error';}
  if(ui.route==='dashboard'||ui.route.startsWith('cir'))render();
