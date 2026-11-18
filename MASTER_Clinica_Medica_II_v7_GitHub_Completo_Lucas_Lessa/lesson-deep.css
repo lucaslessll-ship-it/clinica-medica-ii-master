@@ -108,3 +108,7 @@ body[data-theme="dark"] .deep-exam{background:#1d2740;border-color:#3b4a78}
 .lesson-mark-label.at-end{transform:translate(-100%,-50%)}
 .lesson-mark-label.at-start{transform:translate(0,-50%)}
 .lesson-marks-toggle{align-self:flex-start;font-size:.85rem;padding:6px 12px}
+/* Exames selecionados: leitura confortável sem recortar a imagem diagnóstica. */
+[data-img-key^="cirrad_media_"] .lesson-images-grid{grid-template-columns:repeat(auto-fit,minmax(min(100%,360px),1fr));align-items:start}
+[data-img-key^="cirrad_media_"] .lesson-images-grid>figure:only-child{grid-column:1/-1;width:100%;max-width:720px;justify-self:center}
+[data-img-key^="cirrad_media_"] .lesson-image-open img{max-height:480px;object-fit:contain}

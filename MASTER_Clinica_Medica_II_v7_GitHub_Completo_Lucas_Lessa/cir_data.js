@@ -69,9 +69,13 @@ window.MASTER_CIR_DATA={
    C('Radiografia no abdome agudo','Rotina de abdome agudo, pneumoperitônio, níveis hidroaéreos e grão de café'),
    C('Tomografia no abdome agudo','Apendicite, diverticulite, isquemia e obstrução na TC'),
    C('Trauma e FAST','Janelas do FAST, eFAST e TC no trauma'),
-   C('Hemorragia digestiva na imagem','AngioTC, cintilografia e arteriografia com embolização'),
+   C('Hemorragias na imagem','Sangramento digestivo, hemoperitônio, hematoma retroperitoneal e angioTC'),
    C('Esôfago, estômago e duodeno','Esofagograma, acalasia, divertículos e úlcera'),
-   C('Fígado e pâncreas','Lesões hepáticas focais, colangiorressonância e TC da pancreatite')
+   C('Fígado e pâncreas','Revisão integrada: lesões focais, vias biliares e pancreatite'),
+   C('Fígado: leitura e lesões focais','Cirrose, cistos, hemangioma, tumores e caracterização multifásica'),
+   C('Vesícula e vias biliares','Cálculos, colecistite, obstrução, colangite e colangiorressonância'),
+   C('Pâncreas: imagem e decisão','Pancreatite intersticial e necrosante, coleções, doença crônica e massas'),
+   C('Abdome agudo vascular','AngioTC, mecanismos de isquemia e sinais de sofrimento intestinal')
   ]),
   T('ciruro','URO','Urologia','Urologia',3,'Diagnóstico e conduta nos temas urológicos do semestre',[
    C('Introdução, fisiologia e semiologia urológica','Hematúria, sintomas do trato urinário inferior e exames'),

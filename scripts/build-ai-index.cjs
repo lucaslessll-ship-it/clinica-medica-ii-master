@@ -13,7 +13,7 @@ for(const file of scripts){
  vm.runInContext(source,context,{filename:file,timeout:3000});
 }
 const clean=s=>String(s).replace(/<[^>]*>/g,' ').replace(/&nbsp;/g,' ').replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/\b(?:Medcurso|Medcel|Sanar|Estratégia MED)\b/gi,'').replace(/\s+/g,' ').trim();
-const skip=new Set(['updated','refs','fig','figs','id','image','img','u','url','credit','source','src']);
+const skip=new Set(['updated','refs','fig','figs','id','image','imageKey','img','u','url','credit','source','src']);
 function strings(value){if(typeof value==='string')return [clean(value)];if(Array.isArray(value))return value.flatMap(strings);if(value&&typeof value==='object')return Object.entries(value).filter(([k])=>!skip.has(k)).flatMap(([,v])=>strings(v));return [];}
 const docs=[];
 function add(lesson,title,route,text,meta={}){
