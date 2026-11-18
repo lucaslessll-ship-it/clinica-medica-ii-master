@@ -34,7 +34,7 @@
 .qnav-filterbox{margin:12px 0 20px;max-width:100%}
 .qnav-filter-toggle{
   display:inline-flex;align-items:center;justify-content:center;gap:10px;
-  box-sizing:border-box;min-height:48px;max-width:100%;
+  box-sizing:border-box;min-height:56px;max-width:100%;
   padding:11px 17px;border:1px solid #0b6b60;border-radius:12px;
   background:#0d766a;color:#fff;font-size:14px;font-weight:800;
   line-height:1.35;letter-spacing:.005em;cursor:pointer;
@@ -67,7 +67,7 @@
 .qnav-filter-form>.btn,.qnav-filter-content .cir-filters>.btn{min-height:48px;white-space:normal}
 .qnav-fim{display:flex;align-items:center;margin:0 0 24px}
 .qnav-result-button{
-  min-height:46px!important;display:inline-flex;align-items:center;justify-content:center;gap:9px;
+  min-height:54px!important;display:inline-flex;align-items:center;justify-content:center;gap:9px;
   padding:10px 16px!important;border:1.5px solid #0b766a!important;
   border-radius:12px!important;background:var(--white,#fff)!important;
   color:#09685f!important;font-size:14px!important;font-weight:800!important;
@@ -81,7 +81,7 @@ body[data-theme="dark"] .qnav-filter-toggle:hover{background:#0f6f65}
 body[data-theme="dark"] .qnav-result-button{background:#203b39!important;color:#d6fff2!important;border-color:#69c9ae!important}
 body[data-theme="dark"] .qnav-result-button:hover{background:#295248!important}
 @media(max-width:520px){
-  .qnav-filter-toggle{width:100%;justify-content:center;min-height:48px}
+  .qnav-filter-toggle{width:100%;justify-content:center;min-height:56px}
   .qnav-filter-content{padding:14px}
   .qnav-filter-form>.btn,.qnav-filter-content .cir-filters>.btn{width:100%}
   .qnav-result-button{width:100%}
