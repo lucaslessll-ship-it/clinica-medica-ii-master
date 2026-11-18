@@ -2,7 +2,7 @@
    com o menu, o tema e a barra de progresso do MASTER, sem sair da plataforma. */
 window.LabMasterEmbed=(()=>{
  'use strict';
- const SRC='laboratorio-master/microcitose/index.html',VERSION='20261118-editorial1';
+ const SRC='laboratorio-master/microcitose/index.html',VERSION='20261118-activity1';
  let bound=false;
  const frame=()=>document.getElementById('lab-master-frame');
  const theme=()=>document.body.dataset.theme==='dark'?'dark':'light';
@@ -17,6 +17,7 @@ window.LabMasterEmbed=(()=>{
   if(bound)return;bound=true;
   window.addEventListener('message',event=>{
    const f=frame();if(!f||event.source!==f.contentWindow||event.origin!==location.origin||!event.data||event.data.labMaster!==true)return;
+   const a=event.data.activity;if(a&&['lesson_open','lesson_complete','question_answer'].includes(a.kind)&&typeof a.resource==='string'&&/^microcitose:[a-zA-Z0-9_.:-]{1,80}$/.test(a.resource)){window.MasterActivity?.interaction();if(a.kind==='lesson_open'){window.MasterActivity?.setContext(a.resource);window.MasterActivity?.afterRender();}else window.MasterActivity?.track(a.kind,a.resource,{correct:a.correct});}
    if(Number.isFinite(event.data.h))f.style.height=Math.max(480,Math.ceil(event.data.h))+'px';
    if(event.data.top){const reduce=document.body.classList.contains('reduce-motion')||window.matchMedia('(prefers-reduced-motion: reduce)').matches;window.scrollTo({top:Math.max(0,window.scrollY+f.closest('.lab-embed').getBoundingClientRect().top-72),behavior:reduce?'instant':'smooth'});}
    if(event.data.ready){post({theme:theme()});viewport();}

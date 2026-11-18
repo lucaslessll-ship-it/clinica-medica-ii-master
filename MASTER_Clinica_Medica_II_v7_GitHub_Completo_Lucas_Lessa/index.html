@@ -46,6 +46,7 @@
 <link rel="stylesheet" href="lab-academy.css?v=20261116-cirurgia28">
 <link rel="stylesheet" href="scrollbars.css?v=20261117-scroll1">
 <link rel="stylesheet" href="editorial.css?v=20261118-editorial1">
+<link rel="stylesheet" href="activity.css?v=20261118-activity1">
 </head>
 <body data-theme="light" data-text-size="normal">
   <a class="skip-link" href="#main-content">Pular para o conteúdo</a>
@@ -63,6 +64,7 @@
       <div class="side-bottom">
         <div class="side-goal"><div class="side-goal-head"><span>Minha evolução</span><strong id="side-pct">0%</strong></div><div class="progress-track" role="progressbar" aria-label="Domínio no banco de questões" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div id="side-fill" class="progress-fill"></div></div><small>Calculado pelas suas respostas, não por provas passadas</small></div>
         <button class="side-settings" type="button" onclick="HIG.openSettings()" aria-label="Abrir preferências e acessibilidade"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="m9 3-1 3-3 1-2 4 2 2 1 4 3 1 1 3h4l1-3 3-1 3-4-2-2-1-4-3-1-1-3H9Z"/><circle cx="12" cy="12" r="3"/></svg> Preferências</button>
+        <button id="master-activity-admin" class="side-settings" type="button" title="Administração" aria-label="Administração da plataforma" hidden><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M4 20V10m8 10V4m8 16v-7"/></svg><span>Administração</span></button>
         <p class="developer">Desenvolvido por <strong>Lucas Lessa</strong></p>
       </div>
     </aside>
@@ -89,6 +91,8 @@
               <button id="master-change-password" class="btn" type="button">Alterar senha</button>
               <button class="btn" type="button" onclick="HIG.openSettings()">Preferências</button>
               <button class="btn" type="button" onclick="MASTER_AUTH.exportConflict()">Exportar cópia de conflito</button>
+              <button id="master-profile-privacy" class="btn" type="button">Privacidade e atividade</button>
+              <button id="master-profile-admin" class="btn" type="button" hidden>Administração da plataforma</button>
               <button id="master-sync" class="btn" type="button">Sincronizar progresso</button>
               <button id="master-signout" class="btn danger" type="button">Sair da conta</button>
             </section>
@@ -96,7 +100,7 @@
         </div>
       </header>
       <main id="main-content" tabindex="-1" aria-live="off"></main>
-      <footer class="footer" data-interface-version="20261118-editorial1"><span>Material de estudo • Não substitui diretrizes e supervisão médica</span><span>Interface 2026.11.18 • <strong>Lucas Lessa</strong></span></footer>
+      <footer class="footer" data-interface-version="20261118-activity1"><span>Material de estudo • Não substitui diretrizes e supervisão médica</span><span>Interface 2026.11.18 • <strong>Lucas Lessa</strong></span></footer>
     </div>
   </div>
   <aside id="focus-float" class="focus-float" aria-label="Pomodoro flutuante" hidden>
@@ -139,15 +143,15 @@
   <script src="p1_questions.js?v=20261116-cirurgia28"></script>
   <script src="p1_cases.js?v=20261116-cirurgia28"></script>
   <script src="decision-cases.js?v=20261116-cirurgia28"></script>
-  <script src="evidence.js?v=20261116-cirurgia28"></script>
+  <script src="evidence.js?v=20261118-activity1"></script>
   <script src="decision-lab-cases.js?v=20261116-cirurgia28"></script>
-  <script src="banca.js?v=20261116-cirurgia28"></script>
+  <script src="banca.js?v=20261118-activity1"></script>
   <script src="dashboard-ux.js?v=20261116-cirurgia28"></script>
   <script src="reading-ux.js?v=20261116-cirurgia28"></script>
   <script src="scroll-top.js?v=20261116-cirurgia28"></script>
   <script src="reading-time.js?v=20261116-cirurgia28"></script>
-  <script src="ecg-course.js?v=20261116-cirurgia28"></script>
-  <script src="course-kit.js?v=20261118-imagens1"></script>
+  <script src="ecg-course.js?v=20261118-activity1"></script>
+  <script src="course-kit.js?v=20261118-activity1"></script>
   <script src="rad-course.js?v=20261118-imagens1"></script>
   <script src="hemo-course.js?v=20261116-cirurgia28"></script>
   <script src="atb-course.js?v=20261116-cirurgia28"></script>
@@ -175,24 +179,24 @@
   <script src="cir_data.js?v=20261116-cirurgia28"></script>
   <script src="cir_questions.js?v=20261116-cirurgia28"></script>
   <script src="cir-plan.js?v=20261116-cirurgia28"></script>
-  <script src="qnav.js?v=20261118-filtro1"></script>
-  <script src="cir_app.js?v=20261118-filtro1"></script>
+  <script src="qnav.js?v=20261118-activity1"></script>
+  <script src="cir_app.js?v=20261118-activity1"></script>
   <script src="study-icons.js?v=20261117-estudo"></script>
   <script src="emergency.js?v=20261117-estudo"></script>
   <script src="window-motion.js?v=20261117-ios1"></script>
-  <script src="app.js?v=20261118-filtro1"></script>
-  <script src="ai-tutor.js?v=20261117-ios1"></script>
+  <script src="app.js?v=20261118-activity1"></script>
+  <script src="ai-tutor.js?v=20261118-activity1"></script>
   <script src="dicas.js?v=20261116-cirurgia28"></script>
   <script src="route-motion.js?v=20261116-cirurgia28"></script>
   <script src="table-fit.js?v=20261116-cirurgia28"></script>
   <script src="destaque.js?v=20261116-cirurgia28"></script>
   <script src="formatacao-notas.js?v=20261117-uxnotas2"></script>
   <script src="notas.js?v=20261118-access1"></script>
-  <script src="p1_app.js?v=20261118-filtro1"></script>
+  <script src="p1_app.js?v=20261118-activity1"></script>
   <script src="hig.js?v=20261117-ios1"></script>
   <script src="caderno-unificado.js?v=20261117-uxnotas2"></script>
   <script src="novidades.js?v=20261117-estudo32"></script>
-  <script src="focus-timer.js?v=20261117-ios1"></script>
+  <script src="focus-timer.js?v=20261118-activity1"></script>
 <script src="clinical-data.js?v=20261116-cirurgia28"></script>
 <script src="prescription-data.js?v=20261116-cirurgia28"></script>
 <script src="posology-data.js?v=20261116-cirurgia28"></script>
@@ -203,26 +207,27 @@
 <script src="correlacoes.js?v=20261116-cirurgia28"></script>
 <script src="study.js?v=20261116-cirurgia28"></script>
 <script src="pocus-figures.js?v=20261118-imagens1"></script>
-<script src="pocus-course.js?v=20261118-imagens1"></script>
+<script src="pocus-course.js?v=20261118-activity1"></script>
 <script src="lab-ferropenia-data.js?v=20261116-cirurgia28"></script>
-<script src="lab-ferro.js?v=20261116-cirurgia28"></script>
+<script src="lab-ferro.js?v=20261118-activity1"></script>
 <script src="amr-uro-data.js?v=20261116-cirurgia28"></script>
 <script src="micro-interpret.js?v=20261116-cirurgia28"></script>
 <script src="lab-renal-data.js?v=20261116-cirurgia28"></script>
 <script src="lab-equilibrio-data.js?v=20261116-cirurgia28"></script>
 <script src="lab-cirurgia-data.js?v=20261116-cirurgia28"></script>
 <script src="lab-academy-data.js?v=20261116-cirurgia28"></script>
-<script src="lab-academy.js?v=20261116-cirurgia28"></script>
-<script src="lab-renal.js?v=20261116-cirurgia28"></script>
-<script src="lab-master-embed.js?v=20261116-cirurgia28"></script>
+<script src="lab-academy.js?v=20261118-activity1"></script>
+<script src="lab-renal.js?v=20261118-activity1"></script>
+<script src="lab-master-embed.js?v=20261118-activity1"></script>
 <script src="micro-course-data.js?v=20261116-cirurgia28"></script>
-<script src="micro-lab.js?v=20261116-cirurgia28"></script>
+<script src="micro-lab.js?v=20261118-activity1"></script>
 <script src="media-viewer.js?v=20261117-ios1"></script>
 <script src="editorial.js?v=20261118-editorial1"></script>
+<script src="activity.js?v=20261118-activity1"></script>
 <script src="auth-config.js?v=20261116-cirurgia28"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.0/dist/umd/supabase.min.js"></script>
 <script src="auth-storage.js?v=20261116-cirurgia28"></script>
 <script src="sync-merge.js?v=20261116-cirurgia28"></script>
-<script src="auth.js?v=20261117-uxnotas2"></script>
+<script src="auth.js?v=20261118-activity1"></script>
 </body>
 </html>

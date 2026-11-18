@@ -11,6 +11,7 @@ const QNav = (() => {
   const salvar = () => window.HIG?.qlogSave?.();
 
   function registrar(bank, id, ok, meta = {}) {
+    window.MasterActivity?.track('question_answer',bank+':'+id,{correct:!!ok});
     if (!window.HIG?.qlog) return;
     const L = log(), k = bank + ':' + id, e = L[k];
     if (!ok) {

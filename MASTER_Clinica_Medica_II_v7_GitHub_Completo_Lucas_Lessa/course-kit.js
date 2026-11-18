@@ -31,7 +31,7 @@ function create(cfg){
   }
   const refItem=r=>REFS[r].u?`<li><a href="${REFS[r].u}" target="_blank" rel="noopener">${REFS[r].t}</a></li>`:`<li>${REFS[r].t}</li>`;
   function moduleView(mi){
-    const m=MODULES[mi],done=!!st().done[m.id];
+    const m=MODULES[mi],done=!!st().done[m.id];window.MasterActivity?.setContext(key+':'+m.id);
     return `<nav class="pocus-crumb" aria-label="${cfg.title}"><button type="button" class="btn" onclick="${G}.open(null)">← Todos os módulos</button><span>Módulo ${mi+1} de ${MODULES.length}</span></nav>
     <article class="card pad pocus-module"><span class="kicker">${m.layer}</span><h1 class="pocus-title">${m.title}</h1><p class="pocus-lead">${m.summary}</p>
     ${mi?`<p class="info-notice">Este módulo usa o que foi visto em "${MODULES[mi-1].title}". Se algo parecer novo, volte um passo.</p>`:''}
@@ -45,7 +45,7 @@ function create(cfg){
     <div class="pocus-pager">${mi?`<button type="button" class="btn" onclick="${G}.open(${mi-1})">← ${MODULES[mi-1].title}</button>`:'<span></span>'}${mi<MODULES.length-1?`<button type="button" class="btn primary" onclick="${G}.open(${mi+1})">${MODULES[mi+1].title} →</button>`:`<button type="button" class="btn primary" onclick="${G}.open(null)">Concluir e voltar ao curso</button>`}</div></article>`;
   }
   function caseView(ci){
-    const c=CASES[ci],seen=!!st().seen[c.id];
+    const c=CASES[ci],seen=!!st().seen[c.id];window.MasterActivity?.setContext(key+':'+c.id,'case_open');
     return `<nav class="pocus-crumb" aria-label="${cfg.bankTitle}"><button type="button" class="btn" onclick="${G}.bank()">← Todos os casos</button><span>Caso ${ci+1} de ${CASES.length}</span></nav>
     <article class="card pad pocus-module"><span class="kicker">${c.focus}</span><h1 class="pocus-title">Caso ${ci+1}</h1><p class="pocus-lead">${c.stem}</p>
     ${c.table?`<section class="pocus-sec"><h3>${c.tableTitle||'Dados'}</h3>${tableMarkup(c.table)}</section>`:''}
@@ -80,9 +80,9 @@ function create(cfg){
   function open(i){current=null;view=i===null?null:Math.max(0,Math.min(MODULES.length-1,Number(i)||0));render();focusTop();}
   function bank(){current=null;view='bank';render();focusTop();}
   function caseOpen(i){current=Math.max(0,Math.min(CASES.length-1,Number(i)||0));render();focusTop();}
-  function answer(mi,qi,oi){const m=MODULES[mi];if(!m||!m.quiz[qi])return;st().quiz[m.id+'_'+qi]=oi;stateSave();const el=document.getElementById(`${key}q-${mi}-${qi}`);if(el)el.outerHTML=quizItem(mi,qi);}
-  function complete(id,value){st().done[id]=!!value;stateSave();}
-  function markSeen(id,value){st().seen[id]=!!value;stateSave();}
+  function answer(mi,qi,oi){const m=MODULES[mi];if(!m||!m.quiz[qi])return;st().quiz[m.id+'_'+qi]=oi;window.MasterActivity?.track('question_answer',key+':'+m.id+':'+qi,{correct:oi===m.quiz[qi].a});stateSave();const el=document.getElementById(`${key}q-${mi}-${qi}`);if(el)el.outerHTML=quizItem(mi,qi);}
+  function complete(id,value){st().done[id]=!!value;if(value)window.MasterActivity?.track('lesson_complete',key+':'+id);stateSave();}
+  function markSeen(id,value){st().seen[id]=!!value;if(value)window.MasterActivity?.track('case_complete',key+':'+id);stateSave();}
   function searchItems(){
     return MODULES.map((m,i)=>({type:'Módulo de '+label,label:m.title,sub:cfg.title+' · '+m.layer,icon:'◎',action:()=>{navigate(route);open(i);},text:[m.title,m.summary,m.layer]}))
       .concat(CASES.map((c,i)=>({type:'Caso de '+label,label:'Caso '+(i+1)+': '+c.focus,sub:cfg.title,icon:'◎',action:()=>{navigate(route);caseOpen(i);},text:[c.stem,c.focus]})));

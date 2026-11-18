@@ -362,7 +362,7 @@ function sectionMarkup(s){
   return `<section class="pocus-sec"><h3>${s.h}</h3>${(s.p||[]).map(t=>`<p>${t}</p>`).join('')}${s.list?`<ul>${s.list.map(t=>`<li>${t}</li>`).join('')}</ul>`:''}${s.table?`<div class="pocus-table-wrap"><table class="pocus-table"><thead><tr>${s.table.head.map(h=>`<th scope="col">${h}</th>`).join('')}</tr></thead><tbody>${s.table.rows.map(r=>`<tr>${r.map((c,i)=>i?`<td>${c}</td>`:`<th scope="row">${c}</th>`).join('')}</tr>`).join('')}</tbody></table></div>`:''}${s.after?`<p>${s.after}</p>`:''}</section>`;
 }
 function moduleView(mi){
-  const m=MODULES[mi],done=!!st().done[m.id];
+  const m=MODULES[mi],done=!!st().done[m.id];window.MasterActivity?.setContext('ecg'+':'+m.id);
   return `<nav class="pocus-crumb" aria-label="Curso de ECG"><button type="button" class="btn" onclick="ECGCourse.open(null)">← Todos os módulos</button><span>Módulo ${mi+1} de ${MODULES.length}</span></nav>
   <article class="card pad pocus-module ecg-course"><span class="kicker">${m.layer}</span><h1 class="pocus-title">${m.title}</h1><p class="pocus-lead">${m.summary}</p>
   ${mi?`<p class="info-notice">Este módulo usa o que foi visto em "${MODULES[mi-1].title}". Se algo parecer novo, volte um passo.</p>`:''}
@@ -411,8 +411,8 @@ function focusTop(){window.scrollTo({top:0,behavior:'instant'});const h=document
 function open(i){tracing=null;view=i===null?null:Math.max(0,Math.min(MODULES.length-1,Number(i)||0));render();focusTop();}
 function bank(){tracing=null;view='bank';render();focusTop();}
 function openTracing(i){tracing=Math.max(0,Math.min(TRACINGS.length-1,Number(i)||0));render();focusTop();}
-function answer(mi,qi,oi){const m=MODULES[mi];if(!m||!m.quiz[qi])return;st().quiz[m.id+'_'+qi]=oi;stateSave();const el=document.getElementById(`eq-${mi}-${qi}`);if(el)el.outerHTML=quizItem(mi,qi);}
-function complete(id,value){st().done[id]=!!value;stateSave();}
+function answer(mi,qi,oi){const m=MODULES[mi];if(!m||!m.quiz[qi])return;st().quiz[m.id+'_'+qi]=oi;window.MasterActivity?.track('question_answer','ecg'+':'+m.id+':'+qi,{correct:oi===m.quiz[qi].a});stateSave();const el=document.getElementById(`eq-${mi}-${qi}`);if(el)el.outerHTML=quizItem(mi,qi);}
+function complete(id,value){st().done[id]=!!value;if(value)window.MasterActivity?.track('lesson_complete','ecg'+':'+id);stateSave();}
 function markSeen(id,value){st().seen[id]=!!value;stateSave();}
 function searchItems(){
   return MODULES.map((m,i)=>({type:'Módulo de ECG',label:m.title,sub:'Curso de ECG · '+m.layer,icon:'♡',action:()=>{navigate('ecg');open(i);},text:[m.title,m.summary,m.layer]}))
