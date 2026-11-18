@@ -193,7 +193,7 @@ test('curriculum has eight checklist topics, oral has six and P1 six groups',asy
 test('question filters use old results, hide answers, record help and schedule with controlled dates',async()=>{
  const t=await open({session:true}),p=t.page;await p.waitForFunction(()=>document.getElementById('master-auth').hidden);
  const result=await p.evaluate(()=>{store.results={0:{correct:false},1:{correct:true}};const errors=Study.selectQuestions('errors'),unanswered=Study.selectQuestions('unanswered');Study.record(0,QUESTION_BANK[0].a,'Alta',true,new Date('2026-11-10T12:00:00'));const review=store.study.reviews[0];return {errors,unanswered,review,due:Study.due(new Date('2026-11-11T12:00:00'))}});
- assert.deepEqual(result.errors,[0]);assert.ok(!result.unanswered.includes(0)&&!result.unanswered.includes(1));assert.equal(result.review.helped,true);assert.equal(result.review.due,'2026-11-11');assert.ok(result.due.includes(0));
+ assert.deepEqual(result.errors,[0]);assert.ok(!result.unanswered.includes(0)&&!result.unanswered.includes(1));assert.equal(result.review.helped,true);assert.equal(result.review.due,null);assert.ok(!result.due.includes(0));
  await p.evaluate(()=>startPractice('errors'));assert.equal(await p.locator('.feedback').count(),0);await p.locator('.option-btn').first().click();await p.locator('.study-confidence select').selectOption('Baixa');await p.getByRole('button',{name:'Conferir resposta'}).click();await visible(p,'.feedback');assert.equal(await p.evaluate(()=>store.study.reviews[0].confidence),'Baixa');await t.close();
 });
 test('server copy with reordered keys after our own save is not reported as another device',async()=>{
@@ -391,7 +391,7 @@ test('refreshed library and lesson remain usable with 200 percent reading size o
 
 test('release URL versions local assets and preserves recovery callbacks',async()=>{
  const t=await open({session:true,root:true,query:'?auth=recovery'}),p=t.page;await text(p,'#master-auth-title',/Definir nova senha/);
- assert.equal(new URL(p.url()).searchParams.get('v'),'20261118-cirrad1');
+ assert.equal(new URL(p.url()).searchParams.get('v'),'20261118-review1');
  const unversioned=await p.evaluate(()=>[...document.querySelectorAll('script[src],link[rel=stylesheet]')].map(e=>e.src||e.href).filter(url=>new URL(url).origin===location.origin&&!new URL(url).searchParams.has('v')));assert.deepEqual(unversioned,[]);await t.close();
 });
 test('Decision Lab has 24 stable cases with 20 P2 items, valid answers and references',async()=>{

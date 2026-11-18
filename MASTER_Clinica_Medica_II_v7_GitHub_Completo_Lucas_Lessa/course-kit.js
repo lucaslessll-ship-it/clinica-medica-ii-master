@@ -80,13 +80,14 @@ function create(cfg){
   function open(i){current=null;view=i===null?null:Math.max(0,Math.min(MODULES.length-1,Number(i)||0));render();focusTop();}
   function bank(){current=null;view='bank';render();focusTop();}
   function caseOpen(i){current=Math.max(0,Math.min(CASES.length-1,Number(i)||0));render();focusTop();}
-  function answer(mi,qi,oi){const m=MODULES[mi];if(!m||!m.quiz[qi])return;st().quiz[m.id+'_'+qi]=oi;window.MasterActivity?.track('question_answer',key+':'+m.id+':'+qi,{correct:oi===m.quiz[qi].a});stateSave();const el=document.getElementById(`${key}q-${mi}-${qi}`);if(el)el.outerHTML=quizItem(mi,qi);}
+  function answer(mi,qi,oi){const m=MODULES[mi];if(!m||!m.quiz[qi])return;st().quiz[m.id+'_'+qi]=oi;window.QNav?.registrar(key,m.id+'_'+qi,oi===m.quiz[qi].a,{tid:m.id,tema:m.title,q:m.quiz[qi].q,resource:key+':'+m.id+':'+qi});stateSave();const el=document.getElementById(`${key}q-${mi}-${qi}`);if(el)el.outerHTML=quizItem(mi,qi);}
   function complete(id,value){st().done[id]=!!value;if(value)window.MasterActivity?.track('lesson_complete',key+':'+id);stateSave();}
   function markSeen(id,value){st().seen[id]=!!value;if(value)window.MasterActivity?.track('case_complete',key+':'+id);stateSave();}
   function searchItems(){
     return MODULES.map((m,i)=>({type:'Módulo de '+label,label:m.title,sub:cfg.title+' · '+m.layer,icon:'◎',action:()=>{navigate(route);open(i);},text:[m.title,m.summary,m.layer]}))
       .concat(CASES.map((c,i)=>({type:'Caso de '+label,label:'Caso '+(i+1)+': '+c.focus,sub:cfg.title,icon:'◎',action:()=>{navigate(route);caseOpen(i);},text:[c.stem,c.focus]})));
   }
+  window.QuestionReview?.registerCourse({bank:key,label:label==='Laboratório'?cfg.title:label,modules:MODULES,state:st,answer:(mi,qi,oi)=>{let target=window;for(const part of G.split('.'))target=target?.[part];return (target?.answer||answer)(mi,qi,oi);},open:mi=>{navigate(route);open(mi);}});
   return {page,open,bank,caseOpen,answer,complete,markSeen,searchItems,modulePage:i=>MODULES[i]?moduleView(i):home(),casePage:i=>CASES[i]?caseView(i):home(),modules:()=>MODULES.length,cases:()=>CASES.length,findId:id=>MODULES.findIndex(m=>m.id===id),titleOf:id=>MODULES.find(m=>m.id===id)?.title||''};
 }
 return {create};

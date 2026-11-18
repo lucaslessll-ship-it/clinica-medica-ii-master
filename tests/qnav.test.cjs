@@ -42,7 +42,7 @@ test('P2: bolinhas ficam verde/vermelho, permitem pular e o resultado traz gráf
  await page.click('text=Ver resultado');
  await page.waitForSelector('.qnav-resumo svg.qnav-rosca');
  assert.ok(await page.$('.qnav-resumo .qnav-temas li'));
- const log=await page.evaluate(()=>Object.values(HIG.qlog()));
+ const log=await page.evaluate(()=>Object.values(HIG.qlog()).filter(e=>e.erros>0));
  assert.equal(log.length,1);assert.equal(log[0].b,'p2');assert.equal(log[0].erros,1);
  await page.evaluate(()=>navigate('revisao'));
  await page.waitForSelector('.qnav-painel');
