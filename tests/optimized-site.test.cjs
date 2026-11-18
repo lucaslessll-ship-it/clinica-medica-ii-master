@@ -69,3 +69,32 @@ test('built site preserves exam priority, laboratory lessons and related Surgery
  assert.match(await p.locator('#main-content').innerText(),/Três ou mais pontos indicam maior risco/);assert.doesNotMatch(await p.locator('#main-content').innerText(),/Três ou mais pontos indicam pancreatite grave\./);
  await p.goBack();await p.waitForURL('**#labrenal/aula/7');assert.match(await p.locator('.lab-renal h1').innerText(),/Pancreatite/);await context.close();
 });
+
+test('compact sidebar centers every icon and hides brand text at iPad and desktop widths',async()=>{
+ const {page:p,context}=await open();
+ for(const [width,height] of [[820,1180],[1024,768],[1180,820],[1280,720],[1366,1024],[1440,900]]){
+  await p.setViewportSize({width,height});await p.evaluate(()=>new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r))));
+  await p.evaluate(()=>{if(!document.body.classList.contains('side-collapsed'))HIG.toggleSidebar();});
+  for(const theme of ['light','dark']){
+   await p.evaluate(t=>HIG.setTheme(t),theme);
+   const metrics=await p.evaluate(()=>{const side=document.querySelector('.sidebar').getBoundingClientRect();return {overflow:document.documentElement.scrollWidth-innerWidth,brandText:getComputedStyle(document.querySelector('.brand-text')).display,icons:[...document.querySelectorAll('#sidebar-nav .nav-destination')].map(b=>{const icon=b.querySelector('svg').getBoundingClientRect(),button=b.getBoundingClientRect();return {name:b.getAttribute('aria-label'),offset:Math.abs(icon.x+icon.width/2-(side.x+side.width/2)),inside:icon.left>=button.left&&icon.right<=button.right,width:button.width,height:button.height};})};});
+   assert.equal(metrics.brandText,'none',width+' '+theme);assert.ok(metrics.overflow<=1,width+' '+theme+' overflow');
+   for(const m of metrics.icons){assert.ok(m.name);assert.ok(m.offset<1,width+' '+theme+' '+JSON.stringify(m));assert.ok(m.inside&&m.width>=44&&m.height>=44,JSON.stringify(m));}
+  }
+  await p.evaluate(()=>HIG.toggleSidebar());
+  const fits=await p.locator('.brand-text').evaluate(el=>{const b=el.getBoundingClientRect(),s=el.querySelector('strong').getBoundingClientRect();return s.right<=b.right+1&&el.querySelector('strong').scrollWidth<=el.querySelector('strong').clientWidth+1;});assert.ok(fits,'brand must fit expanded sidebar at '+width);
+ }
+ await context.close();
+});
+test('assistant uses matching robot icon and mobile drawer keeps labels and working destinations',async()=>{
+ const {page:p,context}=await open();
+ for(const [width,height] of [[320,568],[390,844],[768,1024]]){
+  await p.setViewportSize({width,height});await p.evaluate(()=>new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r))));
+  await p.getByRole('button',{name:'Abrir menu de navegação',exact:true}).click();
+  const assistant=p.locator('#sidebar-nav .ai-tutor-menu');assert.equal(await assistant.locator('svg.study-icon-3d').count(),1);assert.equal(await assistant.locator('span').isVisible(),true);
+  await assistant.click();await p.locator('.ai-tutor-dialog').waitFor({state:'visible'});await p.keyboard.press('Escape');
+  await p.evaluate(()=>closeMobileNav(false));await p.getByRole('button',{name:'Abrir menu de navegação',exact:true}).click();
+  await p.locator('#sidebar-nav').getByRole('button',{name:'Urgência e Emergência',exact:true}).click();assert.equal(await p.evaluate(()=>ui.route),'emergency');assert.equal(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),true);
+ }
+ await context.close();
+});
