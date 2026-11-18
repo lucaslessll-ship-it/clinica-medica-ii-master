@@ -84,6 +84,14 @@ test('rotas principais permanecem utilizáveis em seis formatos e nos temas clar
     assert.ok(state.over<=1,screen.name+' '+theme+' '+route+' extrapola viewport por '+state.over+'px');
     assert.ok(state.length>10,screen.name+' '+theme+' '+route+' sem conteúdo');
     assert.ok(state.header&&state.nav,screen.name+' '+theme+' '+route+' perdeu navegação');
+    if(route==='notes'){
+     const outline=await page.locator('.caderno-unificado h1').evaluate(el=>getComputedStyle(el).outlineStyle);
+     assert.equal(outline,'none',screen.name+' '+theme+' caderno exibiu foco como botão');
+    }
+    if(route==='dashboard'&&screen.width<=390){
+     const largura=await page.locator('.ai-tutor-dock').evaluate(el=>el.getBoundingClientRect().width);
+     assert.ok(largura<=110,screen.name+' robô ocupa '+largura+'px');
+    }
     if(theme==='light'&&['dashboard','cirp2','notes','pocus'].includes(route)&&[390,820,1440].includes(screen.width)){
      await page.screenshot({path:'work/ux-multiplataforma/'+screen.name+'-'+route+'.png',animations:'disabled'});
     }
