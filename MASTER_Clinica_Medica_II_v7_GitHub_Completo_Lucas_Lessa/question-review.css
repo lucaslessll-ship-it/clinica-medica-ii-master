@@ -7,3 +7,9 @@
 .qr-question{max-width:960px;margin:24px auto}.qr-question h2{font-size:clamp(21px,2.6vw,29px);line-height:1.5;scroll-margin-top:160px;overflow-wrap:anywhere}.qr-options{border:0;padding:0;display:grid;gap:12px;margin:24px 0}.qr-option{display:flex;align-items:flex-start;justify-content:flex-start;gap:14px;text-align:left;white-space:normal;width:100%;min-height:52px;padding:16px;line-height:1.6}.qr-option>b{flex:0 0 26px}.qr-option span{min-width:0;overflow-wrap:anywhere}.qr-option:disabled{opacity:1}.qr-option.is-correct{border:2px solid var(--green,#14594f);background:var(--green-soft,#e1eee8)}.qr-option.is-wrong{border:2px solid #b84b39}.qr-feedback{padding:18px;border-inline-start:3px solid var(--green,#14594f);margin:20px 0;background:var(--green-soft,#e1eee8);overflow-wrap:anywhere}.qr-feedback h3{margin:0 0 12px}.qr-result h2{scroll-margin-top:160px}
 body[data-theme="dark"] .qr-option.is-correct,body[data-theme="dark"] .qr-feedback{background:#193e36;color:#e4f2e9}body[data-contrast="true"] .qr-option:focus-visible{outline:3px solid currentColor;outline-offset:3px}
 @media(max-width:600px){.qr-suggestion{display:block}.qr-suggestion>.btn{margin-top:12px}.qr-filter-grid{grid-template-columns:1fr}.qr-session>.btn{width:100%}.qr-question .status-row{flex-wrap:wrap}.qr-question{padding:18px}}
+
+/* WCAG AA: o texto secundário de cada sessão deve manter contraste em ambos os temas. */
+.qr-session .subtle,.qr-session-items small{color:#3b5a60}
+.qr-session .badge.gray,.qr-session-items .badge.gray{color:#30535a}
+body[data-theme="dark"] .qr-session .subtle,body[data-theme="dark"] .qr-session-items small{color:#d0e0e1}
+body[data-theme="dark"] .qr-session .badge.gray,body[data-theme="dark"] .qr-session-items .badge.gray{background:#263c40;color:#f0f7f7}
