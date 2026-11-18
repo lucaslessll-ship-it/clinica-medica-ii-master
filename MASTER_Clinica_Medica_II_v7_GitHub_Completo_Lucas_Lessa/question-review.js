@@ -21,7 +21,7 @@ function attempt(bank,id,ok,meta){
  if(!active||(active.bank!=='all'&&active.bank!==bank)||Date.now()-active.updated>30*60000||(active.auto&&active.context!==meta.tid)){begin(bank,meta.tema?'Questões · '+text(meta.tema):'Treino · '+(banks()[bank]?.rotulo||bank));active.auto=true;active.context=meta.tid;}
  active.updated=Date.now();const previous=active.items[bank+':'+id];active.items[bank+':'+id]={hadError:previous?.hadError||!ok,attempts:(previous?.attempts||0)+1,b:bank,id,tid:meta.tid||'',tema:text(meta.tema),q:text(meta.q).slice(0,140),ok:!!ok,at:Date.now()};
  const old=d.sessions.findIndex(s=>s.id===active.id);if(old>=0)d.sessions[old]=active;else d.sessions.push(active);
- if(d.sessions.length>40)d.sessions.splice(0,d.sessions.length-40);
+ // Nunca descartar sessões silenciosamente: o aluno controla a limpeza.
  save();
 }
 const originalRecord=QNav.registrar;
@@ -129,7 +129,7 @@ function panel(){
  const chosen=available(),entries=Object.entries(banks()).filter(([,d])=>d.items),sessions=data().sessions.slice().reverse(),topics=[...new Map(items.filter(q=>filter.bank==='all'||q.b===filter.bank).map(q=>[q.b+':'+(q.t||q.tid||''),q.tema])).entries()];
  const options=(list,current)=>list.map(([value,label])=>`<option value="${esc(value)}" ${value===current?'selected':''}>${esc(label)}</option>`).join('');
  return `<header class="page-header"><p class="eyebrow">QUESTÕES E RECAPITULAÇÃO</p><h1>Sua central de <em>revisão.</em></h1><p>Errou? A questão volta amanhã. Acertou? Sai da fila automática. Você pode revisar antes da data e treinar inéditas ou todas quando quiser.</p></header>
- <section class="card pad qnav-painel"><div class="qnav-nums"><p><b>${due.length}</b><span>para revisar hoje</span></p><p><b>${wrong.length}</b><span>erros em aberto</span></p><p><b>${resolved}</b><span>erros corrigidos</span></p></div><details><summary>Como funciona a revisão</summary><p>Cada novo erro agenda uma tentativa para o próximo dia, no horário local. Um acerto encerra essa pendência. Errar de novo reabre a fila. O histórico permanece salvo na sua conta; os acertos não são reagendados automaticamente. Esta central reúne os bancos de questões e a fixação dos cursos. Casos progressivos, flashcards e evocação das aulas mantêm seus próprios fluxos.</p><p>As sessões abaixo mostram as últimas 40 rodadas registradas a partir desta atualização. Respostas anteriores continuam nos filtros, mesmo sem um histórico de sessão disponível.</p></details></section>
+ <section class="card pad qnav-painel"><div class="qnav-nums"><p><b>${due.length}</b><span>para revisar hoje</span></p><p><b>${wrong.length}</b><span>erros em aberto</span></p><p><b>${resolved}</b><span>erros corrigidos</span></p></div><details><summary>Como funciona a revisão</summary><p>Cada novo erro agenda uma tentativa para o próximo dia, no horário local. Um acerto encerra essa pendência. Errar de novo reabre a fila. O histórico permanece salvo na sua conta; os acertos não são reagendados automaticamente. Esta central reúne os bancos de questões e a fixação dos cursos. Casos progressivos, flashcards e evocação das aulas mantêm seus próprios fluxos.</p><p>As sessões abaixo preservam todas as rodadas registradas a partir desta atualização. Respostas anteriores continuam nos filtros, mesmo sem um histórico de sessão disponível.</p></details></section>
  ${loading?'<p class="info-notice" role="status">Carregando os bancos dos cursos…</p>':''}${failures.length?`<p class="info-notice" role="status">Alguns bancos não carregaram: ${esc(failures.join(', '))}. Os demais continuam disponíveis. <button type="button" class="btn" onclick="QuestionReview.retry()">Tentar novamente</button></p>`:''}
  <form class="card pad qr-filters" onsubmit="event.preventDefault();QuestionReview.start()"><h2>Monte sua rodada</h2><div class="qr-filter-grid"><label>Bloco<select onchange="QuestionReview.change('bank',this.value)">${options([['all','Todos os blocos'],...entries.map(([b,d])=>[b,d.rotulo||b])],filter.bank)}</select></label><label>Questões<select onchange="QuestionReview.change('mode',this.value)">${options([['wrong','Somente erradas'],['due','Revisões de hoje'],['new','Inéditas'],['all','Todas']],filter.mode)}</select></label><label>Matéria ou módulo<select onchange="QuestionReview.change('topic',this.value)">${options([['all','Todas as matérias'],...topics],filter.topic)}</select></label><label>Quantidade por rodada<input type="number" min="1" max="50" value="${filter.limit}" onchange="QuestionReview.change('limit',this.value)"></label></div>${filter.session?`<p>Filtro adicional: erros de uma sessão. <button type="button" class="btn ghost" onclick="QuestionReview.change('session','')">Remover filtro de sessão</button></p>`:''}<div class="btn-row"><button type="submit" class="btn primary" ${chosen.length?'':'disabled'}>Começar rodada · ${Math.min(chosen.length,filter.limit)}</button><span role="status">${chosen.length} ${chosen.length===1?'questão disponível':'questões disponíveis'}</span></div>${!chosen.length?'<p class="subtle">Nenhuma questão neste filtro. Você pode mudar o bloco, escolher inéditas ou treinar todas.</p>':''}</form>
  <section class="card pad"><h2>Próximos sete dias</h2>${agenda()}</section>
@@ -141,16 +141,26 @@ function afterRender(route){
  if(route==='revisao')ensureCatalog();
  if(route==='dashboard'&&typeof store!=='undefined'){const keys=['ecg','hemo','atb','rad'];if(keys.some(k=>!banks()[k]&&(Object.keys(store.study?.[k]?.quiz||{}).length||Object.values(log()).some(e=>e.b===k&&!e.res))))ensureCatalog();}
 }
+function clearBank(bank){
+ const dataSet=data();
+ dataSet.sessions=dataSet.sessions.map(session=>{
+   const items=Object.fromEntries(Object.entries(session.items||{}).filter(([,v])=>v?.b!==bank));
+   return {...session,items};
+ }).filter(session=>Object.keys(session.items).length);
+ if(active?.bank===bank||active?.bank==='all'&&Object.values(active.items||{}).every(v=>v?.b===bank))active=null;
+ if(run?.items?.every(item=>item.b===bank))run=null;
+ save();
+}
 function clearClinical(){
  for(const [k,e] of Object.entries(log()))if(!['p1','cir'].includes(e.b))delete log()[k];
  data().sessions=data().sessions.map(s=>({...s,items:Object.fromEntries(Object.entries(s.items||{}).filter(([,v])=>['p1','cir'].includes(v.b)))})).filter(s=>Object.keys(s.items).length);
  active=null;run=null;save();
 }
-function moreSessions(){sessionLimit=Math.min(40,sessionLimit+12);render();}
+function moreSessions(){sessionLimit+=12;render();}
 function reset(){sessionLimit=12;epoch++;active=null;run=null;loaded=false;loading=false;failures=[];filter={bank:'all',mode:'wrong',topic:'all',session:'',limit:20};lastRoute='';}
 window.addEventListener('master-auth-ended',reset);
 window.addEventListener('master-auth-ready',reset);
 QNav.painel=panel;
-return {begin,registerCourse,catalog,available,migrate,open,start,answer,next,original,leave,panel,suggestion,dismiss,change,moreSessions,afterRender,retry,reset,clearClinical,sessions:()=>data().sessions};
+return {begin,registerCourse,catalog,available,migrate,open,start,answer,next,original,leave,panel,suggestion,dismiss,change,moreSessions,afterRender,retry,reset,clearClinical,clearBank,sessions:()=>data().sessions};
 })();
 window.QuestionReview=QuestionReview;
