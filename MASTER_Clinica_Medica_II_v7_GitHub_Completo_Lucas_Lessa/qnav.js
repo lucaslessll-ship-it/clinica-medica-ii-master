@@ -33,6 +33,16 @@ const QNav = (() => {
     return h + '</nav>';
   }
 
+  /* Ações visíveis e compartilhadas por P1, P2 e Cirurgia. O summary nativo
+     funciona por clique, toque, Enter e Espaço sem JavaScript adicional. */
+  function filtros(formulario) {
+    return `<details class="qnav-filterbox"><summary class="qnav-filter-toggle"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M7 12h10m-7 6h4"/><circle cx="8" cy="6" r="2" fill="currentColor"/><circle cx="15" cy="12" r="2" fill="currentColor"/></svg><span>Filtrar questões</span><svg class="qnav-filter-chevron" viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary><div class="qnav-filter-content"><p class="qnav-filter-hint">Escolha o tema ou a modalidade. Aplicar o filtro inicia outra rodada; suas respostas já registradas permanecem salvas.</p>${formulario}</div></details>`;
+  }
+
+  function resultado(ir, total) {
+    return `<div class="qnav-fim"><button type="button" class="btn qnav-result-button" onclick="${ir}(${total})"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19V11m6 8V5m6 14v-7m4 7H2"/></svg><span>Ver resultado</span></button></div>`;
+  }
+
   /* ---------- gráfico de resultado ---------- */
   function rosca(c, e, b) {
     const t = c + e + b || 1, R = 52, C = 2 * Math.PI * R;
@@ -85,6 +95,6 @@ const QNav = (() => {
   function tema(bank, tid) { bancos[bank]?.tema?.(tid); }
   function registrarBanco(bank, def) { bancos[bank] = def; }
 
-  return { registrar, dots, resumo, painel, revisar, tema, registrarBanco, total, vencidas };
+  return { registrar, dots, filtros, resultado, resumo, painel, revisar, tema, registrarBanco, total, vencidas };
 })();
 window.QNav = QNav;
