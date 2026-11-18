@@ -1,0 +1,282 @@
+[
+  {
+    "id": "cirrad-aulas-20261118-c94d177f4b779615",
+    "topic": "obstrutivo",
+    "slide": 10,
+    "sha256": "c94d177f4b779615e2cca66a80526614b45f77cf0e81f054b99cf77de23fc183",
+    "keys": [
+      "cirrad_media_obstrucao"
+    ],
+    "caption": "Radiografia: alças centrais dilatadas com pregas que atravessam todo o lúmen. Esse padrão favorece delgado; não define sozinho a causa nem a viabilidade da alça."
+  },
+  {
+    "id": "cirrad-aulas-20261118-c7932ff3d875f551",
+    "topic": "obstrutivo",
+    "slide": 14,
+    "sha256": "c7932ff3d875f551941082032f85222e6c0f8b5c493b62b555442a9c2641acdc",
+    "keys": [
+      "cirrad_media_obstrucao"
+    ],
+    "caption": "TC coronal do exemplo de obstrução após cirurgia prévia: siga as alças dilatadas e procure a zona de transição. Aderência é hipótese apoiada no contexto e na exclusão de uma causa visível, não uma brida diretamente demonstrada neste corte."
+  },
+  {
+    "id": "cirrad-aulas-20261118-2a2eda9eff0730be",
+    "topic": "obstrutivo",
+    "slide": 16,
+    "sha256": "2a2eda9eff0730be49ba45d3a0a15bf03e5c04e5f9c0ff14a8a028d8929e25fb",
+    "keys": [
+      "cirrad_media_obstrucao"
+    ],
+    "caption": "TC axial da pelve do exemplo de obstrução por hérnia: observe a alça que protrui para a região inguinal esquerda. Siga o trajeto nos demais cortes para relacioná-la à transição e à dilatação a montante. Este corte isolado não determina a viabilidade intestinal."
+  },
+  {
+    "id": "cirrad-aulas-20261118-7d9cb8af232aa6c1",
+    "topic": "obstrutivo",
+    "slide": 22,
+    "sha256": "7d9cb8af232aa6c16b356ef4d3728352899e407e6bdfde6e7c6979e864f8966a",
+    "keys": [
+      "cirrad_media_volvo"
+    ],
+    "caption": "Radiografia do exemplo de volvo de sigmoide: grande alça em configuração de grão de café, com paredes mediais justapostas. A imagem isolada não avalia a perfusão da parede."
+  },
+  {
+    "id": "cirrad-aulas-20261118-e6f4c728fc5427b6",
+    "topic": "inflamatorio",
+    "slide": 46,
+    "sha256": "e6f4c728fc5427b630a35879c22e5a359b981f2a7121266f172e1ea7f461bed4",
+    "keys": [
+      "cirrad_media_apendice"
+    ],
+    "caption": "Ultrassonografia do apêndice em cortes transversal e longitudinal: compare o aspecto em alvo com a estrutura tubular em fundo cego. Compressibilidade, diâmetro e inflamação adjacente devem ser avaliados em conjunto."
+  },
+  {
+    "id": "cirrad-aulas-20261118-a88950a7159edd8b",
+    "topic": "inflamatorio",
+    "slide": 49,
+    "sha256": "a88950a7159edd8bf1948ef7f85a8826bbb0a96124eb5e42d24478aeb2d55cb0",
+    "keys": [
+      "cirrad_media_apendice"
+    ],
+    "caption": "TC em dois planos do exemplo de apendicite: localize a estrutura tubular junto ao ceco e o processo inflamatório ao redor. A leitura multiplanar ajuda a não confundir apêndice com alça intestinal."
+  },
+  {
+    "id": "cirrad-aulas-20261118-1ce51c76180d3566",
+    "topic": "inflamatorio",
+    "slide": 63,
+    "sha256": "1ce51c76180d3566e7c15f6720c7043e7f551b249a21defff69b989bc9b06d17",
+    "keys": [
+      "cirrad_media_diverticulite"
+    ],
+    "caption": "TC do exemplo de diverticulite: observe o segmento colônico espessado, divertículos e alteração da gordura pericólica. Procure coleção e gás extraluminal para discutir complicações; a gravidade não vem apenas da intensidade da dor."
+  },
+  {
+    "id": "cirrad-aulas-20261118-a99b207ac7aa47e4",
+    "topic": "fast",
+    "slide": 15,
+    "sha256": "a99b207ac7aa47e4bd62c355dd88a31efe2b23c574460d16638e0de44e532d47",
+    "keys": [
+      "cirrad_media_fast_normal"
+    ],
+    "caption": "FAST, janela hepatorrenal do painel normal: reconheça fígado, rim e interface hepatorrenal. Primeiro identifique a anatomia; depois procure uma faixa líquida entre as superfícies."
+  },
+  {
+    "id": "cirrad-aulas-20261118-0b648dffe6730a4a",
+    "topic": "fast",
+    "slide": 15,
+    "sha256": "0b648dffe6730a4a77b847bff8006c86c826251a86893c788a5b32c9f5294b55",
+    "keys": [
+      "cirrad_media_fast_normal"
+    ],
+    "caption": "FAST, janela esplenorrenal do painel normal: reconheça baço, rim e região subdiafragmática. Um único corte normal não representa um exame FAST completo."
+  },
+  {
+    "id": "cirrad-aulas-20261118-c80f0431490bea3a",
+    "topic": "fast",
+    "slide": 17,
+    "sha256": "c80f0431490bea3a8d0d8ff3591fb77e96b7ca8d36b3e30c6c9f2a8806eadc5b",
+    "keys": [
+      "cirrad_media_fast_positivo"
+    ],
+    "caption": "FAST, exemplo positivo no quadrante superior direito: a faixa anecoica entre superfícies deve ser diferenciada de vasos, vesícula e artefatos. No trauma, correlacione com perfusão e possíveis fontes de sangramento."
+  },
+  {
+    "id": "cirrad-aulas-20261118-e576a82f0f30d964",
+    "topic": "fast",
+    "slide": 17,
+    "sha256": "e576a82f0f30d964ca2b956bd0c67f64c1a8e4cdebc17230ca0da28610a255b3",
+    "keys": [
+      "cirrad_media_fast_positivo"
+    ],
+    "caption": "FAST pélvico: procure líquido livre ao redor da bexiga e nas regiões dependentes. O exame detecta líquido, mas não confirma sua composição nem localiza necessariamente a lesão."
+  },
+  {
+    "id": "cirrad-aulas-20261118-d72492a5f654cec9",
+    "topic": "hemorragico",
+    "slide": 7,
+    "sha256": "d72492a5f654cec962841531faed88382a1c30355097e766c32bd499c9e78a6f",
+    "keys": [
+      "cirrad_media_hemoperitonio"
+    ],
+    "caption": "Ultrassonografia pélvica: líquido livre com ecos internos. Sangue pode apresentar esse aspecto, mas a ecogenicidade isolada não confirma hemorragia nem identifica a origem."
+  },
+  {
+    "id": "cirrad-aulas-20261118-af9a2d545e846b9c",
+    "topic": "hemorragico",
+    "slide": 11,
+    "sha256": "af9a2d545e846b9c9be84d4cf8f3b76e5240fe485e299e9887ad53954eb3397b",
+    "keys": [
+      "cirrad_media_hemoperitonio"
+    ],
+    "caption": "TC coronal do exemplo de hemorragia pélvica: observe o líquido e avalie sua distribuição junto aos órgãos pélvicos. Em pessoa com possibilidade de gestação, correlacione com β-hCG e ultrassonografia transvaginal."
+  },
+  {
+    "id": "cirrad-aulas-20261118-33a2e52f3a2a0dbb",
+    "topic": "hemorragico",
+    "slide": 12,
+    "sha256": "33a2e52f3a2a0dbbd9147fc9e8265571394ffdc7c6dbd14ddb6bcc4e99b14602",
+    "keys": [
+      "cirrad_media_aorta_rota"
+    ],
+    "caption": "AngioTC do exemplo de aneurisma de aorta abdominal roto: grande dilatação aneurismática e hematoma retroperitoneal adjacente. Distinguir hemorragia retroperitoneal de líquido intraperitoneal explica por que o FAST pode ser negativo."
+  },
+  {
+    "id": "cirrad-aulas-20261118-7eb7a9f3dc8597ff",
+    "topic": "figado",
+    "slide": 14,
+    "sha256": "7eb7a9f3dc8597ff8ee19c4985d467bc73d01069925f56fe8b85ce0212e77752",
+    "keys": [
+      "cirrad_media_figado_cirrose"
+    ],
+    "caption": "Ultrassonografia do fígado cirrótico: superfície irregular e parênquima heterogêneo. A imagem sugere hepatopatia crônica; correlacione com sinais de hipertensão portal, laboratório e contexto clínico."
+  },
+  {
+    "id": "cirrad-aulas-20261118-a49c7c97db8c9805",
+    "topic": "figado",
+    "slide": 16,
+    "sha256": "a49c7c97db8c9805ff62c35507436a7fc9e44302cd22ade60282b1c0294f790b",
+    "keys": [
+      "cirrad_media_figado_cirrose"
+    ],
+    "caption": "Exemplo multimodal de cirrose: compare a irregularidade do contorno e a redistribuição do volume hepático entre os planos apresentados. A avaliação de nódulos depende de protocolo e fases adequados, não apenas da morfologia global."
+  },
+  {
+    "id": "cirrad-aulas-20261118-650288d89a758a0f",
+    "topic": "biliar",
+    "slide": 5,
+    "sha256": "650288d89a758a0fe1e0ac78020be68380c66c2472f3e981706f06b9e9e45da8",
+    "keys": [
+      "cirrad_media_biliar_calculos"
+    ],
+    "caption": "Ultrassonografia: focos ecogênicos intravesiculares com sombra acústica posterior, padrão de cálculos. Mobilidade é avaliada durante o exame e não pode ser demonstrada nesta imagem estática."
+  },
+  {
+    "id": "cirrad-aulas-20261118-8dc625c383cc5f30",
+    "topic": "biliar",
+    "slide": 11,
+    "sha256": "8dc625c383cc5f304ff0a7f9d2730813b72ab32924e172e4a55bc6f3288def6a",
+    "keys": [
+      "cirrad_media_biliar_inflamacao"
+    ],
+    "caption": "Comparação ultrassonográfica da aula: vesícula de parede fina versus parede espessada com conteúdo ecogênico. Espessamento e lama biliar não bastam, isoladamente, para diagnosticar colecistite; correlacione com dor, Murphy e demais sinais."
+  },
+  {
+    "id": "cirrad-aulas-20261118-7a4748447355be28",
+    "topic": "biliar",
+    "slide": 18,
+    "sha256": "7a4748447355be2841ac8db7b8b02ec168c6986ec20e821d843a8ea3b9ecfd66",
+    "keys": [
+      "cirrad_media_biliar_inflamacao"
+    ],
+    "caption": "TC do exemplo de colecistite enfisematosa: gás relacionado à vesícula em cortes axial e coronal. Diferencie gás intramural de gás apenas intraluminal e considere instrumentação ou fístula no contexto."
+  },
+  {
+    "id": "cirrad-aulas-20261118-701c0679dbe6d5d0",
+    "topic": "biliar",
+    "slide": 34,
+    "sha256": "701c0679dbe6d5d0fd73132cc772564a04b2848ac785b48113e0e35aa4285593",
+    "keys": [
+      "cirrad_media_biliar_obstrucao"
+    ],
+    "caption": "RM do exemplo de lesão hilar: a seta aponta a região de obstrução junto à confluência biliar, com dilatação a montante. Localizar a obstrução orienta o próximo exame e o planejamento; não substitui estadiamento."
+  },
+  {
+    "id": "cirrad-aulas-20261118-0889c093e0de0637",
+    "topic": "biliar",
+    "slide": 35,
+    "sha256": "0889c093e0de0637508769f405e33e6a607a1e72dbd22eafaabc98edc37c973e",
+    "keys": [
+      "cirrad_media_biliar_obstrucao"
+    ],
+    "caption": "Colangiorressonância do exemplo de obstrução hilar: acompanhe os ductos dilatados até a interrupção na confluência. A CPRM mapeia a árvore biliar de forma não invasiva; não realiza drenagem."
+  },
+  {
+    "id": "cirrad-aulas-20261118-365e41d8c5e72d10",
+    "topic": "pancreas",
+    "slide": 4,
+    "sha256": "365e41d8c5e72d109df3eed6beb3d727ad2e27089909e14362aba67af4147e72",
+    "keys": [
+      "cirrad_media_pancreas_agudo"
+    ],
+    "caption": "TC do exemplo de pancreatite intersticial edematosa: realce pancreático preservado e alteração inflamatória da gordura adjacente. O diagnóstico exige correlação com dor e enzimas; realce preservado neste momento não prevê sozinho a evolução."
+  },
+  {
+    "id": "cirrad-aulas-20261118-8986058bde4b46c0",
+    "topic": "pancreas",
+    "slide": 7,
+    "sha256": "8986058bde4b46c08af033829b05d2c8ed1b1a5fb3293cc1166f88f1a113c6d2",
+    "keys": [
+      "cirrad_media_pancreas_agudo"
+    ],
+    "caption": "TC contrastada do exemplo de pancreatite necrosante: compare áreas de realce preservado com áreas sem realce e coleções adjacentes. Momento do exame e protocolo importam: TC muito precoce pode subestimar necrose."
+  },
+  {
+    "id": "cirrad-aulas-20261118-722999fe130e8b07",
+    "topic": "pancreas",
+    "slide": 10,
+    "sha256": "722999fe130e8b073d0e293701adb7dfda97415462c9de323bd5ad9b6e65e096",
+    "keys": [
+      "cirrad_media_pancreas_cronico"
+    ],
+    "caption": "TC do exemplo de pancreatite crônica: calcificações pancreáticas como pista de dano estrutural crônico. Relacione com irregularidade ductal, atrofia, esteatorreia e diabetes; dor isolada não define o diagnóstico."
+  },
+  {
+    "id": "cirrad-aulas-20261118-b6326b96f7ce43e8",
+    "topic": "pancreas",
+    "slide": 13,
+    "sha256": "b6326b96f7ce43e8f474f332e4bb7f9781836ced3d32a61b87db75de00e4c60a",
+    "keys": [
+      "cirrad_media_pancreas_massa"
+    ],
+    "caption": "Comparação TC e colangiorressonância: dilatação simultânea dos ductos biliar e pancreático, o sinal do duplo ducto. É um alerta para obstrução periampular ou pancreática; não confirma adenocarcinoma isoladamente."
+  },
+  {
+    "id": "cirrad-aulas-20261118-6fa7cae5e3c1744a",
+    "topic": "vascular",
+    "slide": 13,
+    "sha256": "6fa7cae5e3c1744ab28244d5fcf2ec1d00ca4a4335d842f49c76fa0d3eddf5a7",
+    "keys": [
+      "cirrad_media_vascular_isquemia"
+    ],
+    "caption": "AngioTC axial do exemplo de isquemia mesentérica: as marcações orientam a busca de defeito vascular e de alças com menor realce. Avalie artérias, veias e parede intestinal em conjunto, com reconstruções e fases adequadas."
+  },
+  {
+    "id": "cirrad-aulas-20261118-fe406a5ee2fe80b0",
+    "topic": "vascular",
+    "slide": 13,
+    "sha256": "fe406a5ee2fe80b013dbfa33503c2c9bf67d841d0f33fecf2b1a9876fe290a2a",
+    "keys": [
+      "cirrad_media_vascular_isquemia"
+    ],
+    "caption": "TC coronal do mesmo exemplo: compare o realce de diferentes segmentos intestinais. Hiporrealce é sinal de alerta para comprometimento perfusional e deve ser interpretado com os achados vasculares e a clínica."
+  },
+  {
+    "id": "cirrad-aulas-20261118-27e3896ce734540f",
+    "topic": "vascular",
+    "slide": 19,
+    "sha256": "27e3896ce734540f4d994d5b99c20314243fb2c9e57f717c3063d085d3a89a94",
+    "keys": [
+      "cirrad_media_vascular_pneumatose"
+    ],
+    "caption": "TC do exemplo de pneumatose: pequenas imagens gasosas na parede intestinal. O sinal isolado não equivale a necrose; associação com hiporrealce, gás portal, acidose ou peritonite aumenta a preocupação."
+  }
+]

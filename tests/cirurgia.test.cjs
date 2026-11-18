@@ -55,12 +55,12 @@ test('surgery questions are well formed, practice records errors for review and 
 
 test('plano do dia abre a próxima aula, credita conclusões e limita o treino às questões planejadas',async()=>{
  const t=await open({width:1280,height:900},'2026-11-13T09:00:00-03:00'),p=t.page;
- const initial=await p.evaluate(()=>CIR.studyPlan());assert.equal(initial.totalLessons,60);assert.equal(initial.totalQuestions,await p.evaluate(()=>CIR.own.length));assert.equal(initial.days[0].lessons.length,10);
+ const initial=await p.evaluate(()=>CIR.studyPlan());assert.equal(initial.totalLessons,await p.evaluate(()=>CIR.topics.reduce((sum,t)=>sum+t.chapters.length,0)));assert.equal(initial.totalQuestions,await p.evaluate(()=>CIR.own.length));assert.equal(initial.days[0].lessons.length,Math.ceil(initial.totalLessons/6));
  await p.locator('.cir-next-lesson').click();assert.equal(await p.evaluate(()=>ui.route),'cirtopic');await p.locator('.cir-lesson .module-actions button').first().click();
- const next=await p.evaluate(()=>CIR.studyPlan());assert.notEqual(next.next.key,initial.next.key);assert.equal(next.days[0].lessons.length,9);assert.equal(next.completedToday,1);
+ const next=await p.evaluate(()=>CIR.studyPlan());assert.notEqual(next.next.key,initial.next.key);assert.equal(next.days[0].lessons.length,initial.days[0].lessons.length-1);assert.equal(next.completedToday,1);
  const saved=await p.evaluate(()=>JSON.parse(localStorage.getItem(CIR.KEY)));assert.ok(saved.plan.days['2026-11-13'].lessons.includes(initial.next.key));
  await p.evaluate(()=>{for(let next=CIR.studyPlan().next;next;next=CIR.studyPlan().next){CIR.openTopic(next.topic,next.index);CIR.toggleDone();}});
- assert.equal(await p.evaluate(()=>CIR.studyPlan().days[0].lessons.length),0);assert.equal(await p.evaluate(()=>CIR.studyPlan().completedToday),10);
+ assert.equal(await p.evaluate(()=>CIR.studyPlan().days[0].lessons.length),0);assert.equal(await p.evaluate(()=>CIR.studyPlan().completedToday),initial.days[0].lessons.length);
  await p.evaluate(()=>navigate('dashboard'));await p.getByRole('button',{name:'Treinar questões de hoje',exact:true}).click();
  assert.equal(await p.evaluate(()=>ui.route),'cirpractice');assert.match(await p.locator('.cir-q .status-row').innerText(),new RegExp('Questão 1 de '+initial.days[0].questions.length));await p.locator('.cir-q .p1-option').first().click();assert.equal(await p.evaluate(()=>CIR.studyPlan().questionCreditToday),1);await t.close();
 });
@@ -72,7 +72,7 @@ test('Hoje soma evocação e revisões de Cirurgia e o botão usa o filtro devid
 test('o plano preserva conclusões com doneAt da versão publicada',async()=>{
  const t=await open({width:390,height:844},'2026-11-14T09:00:00-03:00'),p=t.page;
  await p.evaluate(()=>{localStorage.setItem(CIR.KEY,JSON.stringify({completed:{ciraa_0:true},doneAt:{ciraa_0:'2026-11-14'},notes:{ciraa_0:'Anotação preservada'},exams:[{score:1,total:2}]}));CIR.reload();render();});
- const plan=await p.evaluate(()=>CIR.studyPlan());assert.equal(plan.completedToday,1);assert.equal(plan.days[0].lessons.length,11);assert.equal(plan.pendingLessons,59);
+ const plan=await p.evaluate(()=>CIR.studyPlan());assert.equal(plan.completedToday,1);const total=await p.evaluate(()=>CIR.topics.reduce((sum,t)=>sum+t.chapters.length,0));assert.equal(plan.days[0].lessons.length,Math.ceil(total/5)-1);assert.equal(plan.pendingLessons,total-1);
  await p.locator('.cir-next-lesson').click();await p.getByRole('button',{name:/Marcar aula concluída/}).click();
  const state=await p.evaluate(()=>JSON.parse(localStorage.getItem(CIR.KEY)));assert.equal(state.doneAt.ciraa_0,'2026-11-14');assert.equal(state.notes.ciraa_0,'Anotação preservada');assert.equal(state.exams.length,1);assert.equal(await p.evaluate(()=>CIR.studyPlan().completedToday),2);await t.close();
 });

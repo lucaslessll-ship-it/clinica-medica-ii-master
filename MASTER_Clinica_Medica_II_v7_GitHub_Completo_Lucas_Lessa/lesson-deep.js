@@ -185,7 +185,7 @@ function render(id,index){
   <section class="deep-block deep-pretest"><h4>Pré-teste: responda de cabeça</h4><ol>${d.pretest.map((q,i)=>L?L.preMarkup(q,i):`<li>${q}</li>`).join('')}</ol><p class="deep-pre-out subtle" role="status" aria-live="polite"></p></section>
   ${examBlock(d.exam)}
   ${window.LessonImages?LessonImages.slot(key):''}
-  ${d.sections.map(s=>`<section class="deep-block"><h4>${s.h}</h4>${(s.p||[]).map(p=>`<p>${p}</p>`).join('')}${s.table?table(s.table):''}${s.list?`<ul>${s.list.map(x=>`<li>${x}</li>`).join('')}</ul>`:''}${s.after?`<p>${s.after}</p>`:''}</section>`).join('')}
+  ${[...d.sections,...(d.supplement||[])].map(s=>`<section class="deep-block${s.imageKey?' hy-keep':''}"><h4>${s.h}</h4>${(s.p||[]).map(p=>`<p>${p}</p>`).join('')}${s.table?table(s.table):''}${s.list?`<ul>${s.list.map(x=>`<li>${x}</li>`).join('')}</ul>`:''}${s.after?`<p>${s.after}</p>`:''}${s.imageKey&&window.LessonImages?LessonImages.slot(s.imageKey,'deep-block hy-keep',[],{},{title:'Leitura guiada das imagens'}):''}</section>`).join('')}
   ${imageHTML?`<section class="deep-block deep-images"><h4>Imagens comentadas</h4>${imageHTML}</section>`:''}
   ${d.flow?flow(d.flow):''}
   <section class="deep-block"><h4>Dicas de raciocínio</h4><ul>${d.reasoning.map(x=>`<li>${x}</li>`).join('')}</ul></section>
