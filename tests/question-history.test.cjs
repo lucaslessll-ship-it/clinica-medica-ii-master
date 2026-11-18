@@ -5,6 +5,7 @@ const path=require('node:path');
 const vm=require('node:vm');
 const file=path.resolve(__dirname,'../MASTER_Clinica_Medica_II_v7_GitHub_Completo_Lucas_Lessa/question-history.js');
 const sandbox={window:{HIG:{qlog:()=>({}),qlogSave(){}}},Date,Math,JSON};
+sandbox.HIG=sandbox.window.HIG;
 vm.runInNewContext(fs.readFileSync(file,'utf8'),sandbox);
 const H=sandbox.window.QuestionHistory;
 const plain=v=>JSON.parse(JSON.stringify(v));
