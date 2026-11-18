@@ -221,7 +221,8 @@ test('questões respondidas em outra sessão mantêm cores e mostram a resposta 
  const pidx=await page.evaluate(id=>P1.getBackup().questionSessions.at(-1).run.ids.indexOf(id),pid);
  assert.ok(pidx>=0);
  await page.locator('.qnav-dot').nth(pidx).click();
- assert.equal(await page.getByRole('button',{name:'Responder novamente'}).count(),1);
+ const debugP1=await page.evaluate(id=>{const st=P1.getBackup(),run=st.questionSessions.at(-1).run;return {answer:st.results[id],step:run.step,selectedId:run.ids[run.step],historical:run.historical,revealed:run.revealed,route:ui.route};},pid);
+ assert.equal(await page.getByRole('button',{name:'Responder novamente'}).count(),1,JSON.stringify(debugP1));
  await page.evaluate(()=>CIR.startPractice({t:CIR.own[0].t,src:'own',mode:'all'}));
  const cid=await page.evaluate(()=>JSON.parse(localStorage.getItem('master_cir_lucas_v1')).questionSessions.at(-1).run.ids[0]);
  await page.evaluate(cid=>{const q=CIR.own.find(q=>q.id===cid);CIR.answer(q.a);},cid);
