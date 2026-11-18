@@ -16,7 +16,7 @@ function ensure(state,bank){
   if(answers.length){
    const done=Object.fromEntries(answers.map(([id,r])=>[id,{chosen:r.answer,ok:!!r.correct,answeredAt:r.at||r.date||now()}]));
    const dates=answers.map(([,r])=>r.at||r.date).filter(Boolean).sort();
-   state.questionSessions.unshift({id:'legacy-'+bank,bank,kind:'legacy',label:'Respostas anteriores',startedAt:dates[0]||now(),updatedAt:dates.at(-1)||now(),status:'completed',run:{ids:answers.map(([id])=>id),done,step:answers.length}});
+   state.questionSessions.unshift({id:'legacy-'+bank,bank,kind:'legacy',label:'Respostas anteriores',startedAt:dates[0]||'',updatedAt:dates.at(-1)||'',status:'completed',run:{ids:answers.map(([id])=>id),done,step:answers.length}});
   }
  }
  return state.questionSessions;
@@ -33,7 +33,7 @@ function begin(state,bank,kind,run,label){
 function touch(state,kind,run,finished=false){
  if(!run)return;
  let found=state.questionSessions?.find(s=>s.id===run.sessionId);
- if(!found)return;
+ if(!found||found.kind!==kind)return;
  found.run=clone(run);
  found.updatedAt=now();
  found.status=finished?'completed':run.step>=run.ids.length&&kind==='practice'?'viewed':'active';
@@ -61,10 +61,10 @@ function labelKind(session){
 function row(session,handler,latest){
  const {total,answered,correct}=summary(session);
  const date=new Date(session.startedAt);
- const local=Number.isFinite(date.getTime())?date.toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'}):'Data não registrada';
+ const local=session.startedAt&&Number.isFinite(date.getTime())?date.toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'}):'Data não registrada';
  const shown=correct===null?'acertos ao entregar':correct+' acertos';
  const status=correct===null?'Aguardando entrega':session.status==='completed'?'Concluída':session.status==='viewed'?'Resultado consultado':'Em andamento';
- const action=session.kind==='legacy'?'':`<button type="button" class="btn qhistory-open" onclick="${handler}.openQuestionSession('${esc(session.id)}')">${session.kind==='exam'&&!session.run?.done?'Retomar simulado':session.status==='completed'||session.status==='viewed'?'Ver resultado':'Retomar sessão'}</button>`;
+ const action=`<button type="button" class="btn qhistory-open" onclick="${handler}.openQuestionSession('${esc(session.id)}')">${session.kind==='legacy'?'Rever respostas salvas':session.kind==='exam'&&!session.run?.done?'Retomar simulado':session.status==='completed'||session.status==='viewed'?'Ver resultado':'Retomar sessão'}</button>`;
  return `<div class="qhistory-entry ${latest?'qhistory-latest':''}"><div class="qhistory-entry-main"><strong>${latest?'Última sessão · ':''}${labelKind(session)}${session.label?' · '+esc(session.label):''}</strong><small>${local} · ${esc(status)}</small><span><b>${answered}/${total}</b> questões respondidas · <b>${shown}</b></span></div>${action}</div>`;
 }
 function panel(state,bank,handler){
