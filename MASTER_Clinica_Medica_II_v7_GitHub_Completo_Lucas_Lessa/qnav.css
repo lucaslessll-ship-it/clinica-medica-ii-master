@@ -117,3 +117,10 @@ body[data-theme="dark"] .qnav-result-button:hover{background:#295248!important}
 .qhistory-list{max-height:520px;overflow-y:auto;padding:3px}
 @media(max-width:560px){.qhistory-entry{align-items:stretch;flex-direction:column}.qhistory-open{width:100%}.qhistory-clear{width:100%}}
 body[data-theme="dark"] .qhistory-latest{background:#193c36;border-color:#3c8a79}
+
+/* O histórico fica recolhido durante a resolução, sem deslocar o enunciado. */
+.qhistory-compact{margin:8px 0 14px;max-width:100%}
+.qhistory-compact>summary{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:46px;padding:9px 13px;border:1px solid var(--line,#d6e2e0);border-radius:10px;background:var(--soft,#f0f7f5);color:var(--ink,#173238);font-size:13px;font-weight:750;cursor:pointer;flex-wrap:wrap}
+.qhistory-compact>summary small{font-weight:600;color:var(--muted,#526d72)}
+.qhistory-compact .qhistory{margin:8px 0}
+.qhistory-compact>summary:focus-visible{outline:3px solid var(--focus,#0d9c80);outline-offset:2px}

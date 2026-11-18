@@ -67,12 +67,16 @@ function row(session,handler,latest){
  const action=`<button type="button" class="btn qhistory-open" onclick="${handler}.openQuestionSession('${esc(session.id)}')">${session.kind==='legacy'?'Rever respostas salvas':session.kind==='exam'&&!session.run?.done?'Retomar simulado':session.status==='completed'||session.status==='viewed'?'Ver resultado':'Retomar sessão'}</button>`;
  return `<div class="qhistory-entry ${latest?'qhistory-latest':''}"><div class="qhistory-entry-main"><strong>${latest?'Última sessão · ':''}${labelKind(session)}${session.label?' · '+esc(session.label):''}</strong><small>${local} · ${esc(status)}</small><span><b>${answered}/${total}</b> questões respondidas · <b>${shown}</b></span></div>${action}</div>`;
 }
-function panel(state,bank,handler){
+function panel(state,bank,handler,compact=false){
  ensure(state,bank);
  const arr=[...state.questionSessions].sort(byDate),last=arr[0],older=arr.slice(1);
  const totalAnswered=Object.keys(state.results||{}).length;
  const all=arr.length?`<div class="qhistory-overview"><span><b>${totalAnswered}</b> questões com resposta registrada</span><span><b>${arr.length}</b> sessões armazenadas</span></div>${row(last,handler,true)}${older.length?`<details class="qhistory-all"><summary>Ver todas as ${arr.length} sessões anteriores</summary><div class="qhistory-list">${older.map(s=>row(s,handler,false)).join('')}</div></details>`:''}`:'<p class="subtle">Nenhuma sessão registrada ainda. Suas próximas respostas serão salvas automaticamente.</p>';
- return `<section class="card pad qhistory" aria-label="Histórico das questões"><div class="qhistory-header"><div><h2>Histórico de questões</h2><p class="subtle">Respostas salvas automaticamente e sincronizadas com sua conta quando houver conexão.</p></div><button type="button" class="btn qhistory-clear" onclick="${handler}.clearQuestionHistory()">Limpar histórico de questões</button></div>${all}</section>`;
+ const html = `<section class="card pad qhistory" aria-label="Histórico das questões"><div class="qhistory-header"><div><h2>Histórico de questões</h2><p class="subtle">Respostas salvas automaticamente e sincronizadas com sua conta quando houver conexão.</p></div><button type="button" class="btn qhistory-clear" onclick="${handler}.clearQuestionHistory()">Limpar histórico de questões</button></div>${all}</section>`;
+ if(!compact)return html;
+ const recent=last?summary(last):null;
+ const status=recent?`${recent.answered}/${recent.total} respondidas · ${arr.length} sessões`:'Nenhuma sessão ainda';
+ return `<details class="qhistory-compact"><summary><span>Histórico de questões</span><small>${esc(status)}</small></summary>${html}</details>`;
 }
 function clear(state,bank){
  state.questionResetAt=now();

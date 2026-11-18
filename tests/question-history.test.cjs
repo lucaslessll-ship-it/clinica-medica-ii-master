@@ -30,6 +30,7 @@ test('practice answers and navigation survive JSON save/reload, keeping each att
  assert.equal(H.summary(parsed.questionSessions[0]).answered,1);
  assert.match(H.panel(parsed,'p2','QuestionSessionsP2'),/1\/3/);
  assert.match(H.panel(parsed,'p2','QuestionSessionsP2'),/Limpar histórico/);
+ assert.match(H.panel(parsed,'p2','QuestionSessionsP2',true),/qhistory-compact/);
 });
 test('same session edited on two devices merges separate answers',()=>{
  const base={results:{},questionSessions:[]},local=plain(base),remote=plain(base);
