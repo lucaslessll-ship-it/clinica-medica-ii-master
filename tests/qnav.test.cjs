@@ -91,3 +91,44 @@ test('clicar numa marca oferece Excluir e remove a marcação',async()=>{
  await page.waitForFunction(()=>!document.querySelector('.nota-marca'));
  await close();
 });
+
+
+test('botões de filtrar questões e ver resultado são claros e funcionais em P1, P2 e Cirurgia',async()=>{
+ await fs.mkdir('work/ux-multiplataforma',{recursive:true});
+ for(const width of [390,820,1280]){
+  const {page,close}=await abrir(width);
+  const verificar=async(area)=>{
+   const resumo=page.locator('.qnav-filterbox > summary');
+   assert.equal(await resumo.innerText(),'Filtrar questões',area+' · '+width);
+   assert.equal(await page.locator('.qnav-result-button').innerText(),'Ver resultado',area+' · '+width);
+   const tamanho=await resumo.evaluate(e=>({height:e.getBoundingClientRect().height,width:e.getBoundingClientRect().width,cor:getComputedStyle(e).color,fundo:getComputedStyle(e).backgroundColor}));
+   assert.ok(tamanho.height>=47,JSON.stringify({area,width,tamanho}));
+   assert.notEqual(tamanho.fundo,'rgba(0, 0, 0, 0)');
+   assert.ok(await page.locator('.qnav-result-button').evaluate(e=>e.getBoundingClientRect().height>=44));
+   await resumo.click();
+   assert.equal(await page.locator('.qnav-filterbox').evaluate(e=>e.open),true);
+   if(width===390)await page.screenshot({path:'work/ux-multiplataforma/'+area+'-filtro-390.png',animations:'disabled'});
+  };
+  await page.evaluate(()=>startPractice('neuro1'));
+  await page.waitForSelector('.qnav-dot');
+  await verificar('p2');
+  await page.locator('#p2-question-filter').selectOption('neuro2');
+  await page.locator('.qnav-filter-form button[type=submit]').click();
+  assert.equal(await page.evaluate(()=>ui.practice.tid),'neuro2');
+  await page.evaluate(()=>P1.startPractice('p1dm'));
+  await page.waitForSelector('.qnav-dot');
+  await verificar('p1');
+  await page.locator('#p1-question-filter').selectOption('p1arr');
+  await page.locator('.qnav-filter-form button[type=submit]').click();
+  await page.locator('.qnav-filterbox > summary').click();
+  assert.equal(await page.locator('#p1-question-filter').inputValue(),'p1arr');
+  await page.evaluate(()=>CIR.startPractice({t:'cirproc',src:'all',mode:'all'}));
+  await page.waitForSelector('.qnav-dot');
+  await verificar('cir');
+  await page.locator('.cir-filters select[name=t]').selectOption('cirher');
+  await page.locator('.cir-filters button[type=submit]').click();
+  await page.locator('.qnav-filterbox > summary').click();
+  assert.equal(await page.locator('.cir-filters select[name=t]').inputValue(),'cirher');
+  await close();
+ }
+});
