@@ -132,3 +132,67 @@ test('botões de filtrar questões e ver resultado são claros e funcionais em P
   await close();
  }
 });
+
+
+test('P2, P1 e Cirurgia conservam cores, resposta e sessão após recarregar',async()=>{
+ const {page,close}=await abrir(390);
+ const reload=async(route)=>{
+  await page.reload();
+  await page.waitForFunction(()=>document.getElementById('master-auth')?.hidden,null,{timeout:20000});
+  await page.evaluate(route=>navigate(route),route);
+  await page.waitForSelector('.qnav-dot.certa,.qnav-dot.errada',{timeout:10000});
+ };
+ await page.evaluate(()=>startPractice('neuro1'));
+ await page.locator('.option-btn').first().click();
+ await page.getByRole('button',{name:'Conferir resposta'}).click();
+ assert.equal(await page.locator('.qnav-dot.certa,.qnav-dot.errada').count(),1);
+ const p2saved=await page.evaluate(()=>JSON.parse(localStorage.getItem('master_p2_lucas_v1')).questionSessions.length);
+ await reload('practice');
+ assert.equal(await page.locator('.qnav-dot.certa,.qnav-dot.errada').count(),1);
+ assert.ok(await page.locator('.feedback').isVisible());
+ assert.equal(await page.evaluate(()=>JSON.parse(localStorage.getItem('master_p2_lucas_v1')).questionSessions.length),p2saved);
+ await page.evaluate(()=>P1.startPractice('p1dm'));
+ await page.locator('.p1-option').first().click();
+ await reload('p1practice');
+ assert.equal(await page.locator('.qnav-dot.certa,.qnav-dot.errada').count(),1);
+ assert.ok(await page.locator('.info-notice').count()>0);
+ await page.evaluate(()=>CIR.startPractice({t:CIR.own[0].t,src:'own',mode:'all'}));
+ await page.locator('.cir-q .p1-option').first().click();
+ await reload('cirpractice');
+ assert.equal(await page.locator('.qnav-dot.certa,.qnav-dot.errada').count(),1);
+ assert.ok(await page.locator('.cir-q .info-notice').count()>0);
+ const statuses=await page.evaluate(()=>Object.fromEntries(['master_p2_lucas_v1','master_p1_lucas_v4','master_cir_lucas_v1'].map(key=>{
+  const s=JSON.parse(localStorage.getItem(key));return [key,{sessions:s.questionSessions?.length,active:s.activeQuestionPracticeId}];
+ })));
+ assert.ok(Object.values(statuses).every(x=>x.sessions>=1&&x.active));
+ await close();
+});
+test('histórico mostra sessões distintas e limpeza confirmada mantém aulas e anotações',async()=>{
+ const {page,close}=await abrir(390);
+ await page.evaluate(()=>{P1.startPractice('p1dm');P1.answerPractice(0);P1.startPractice('p1arr');P1.answerPractice(1);});
+ const state=await page.evaluate(()=>JSON.parse(localStorage.getItem('master_p1_lucas_v4')));
+ assert.equal(state.questionSessions.filter(s=>s.kind==='practice').length,2);
+ await page.evaluate(()=>P1.go('p1practice'));
+ await page.waitForSelector('.qhistory-all');
+ assert.match(await page.locator('.qhistory').innerText(),/2 sessões/);
+ await page.evaluate(()=>{const s=JSON.parse(localStorage.getItem('master_p1_lucas_v4'));s.completed.p1dm_0=true;s.notes.p1dm_0='Preservar nota';localStorage.setItem('master_p1_lucas_v4',JSON.stringify(s));P1.reload();window.confirm=()=>true;P1.clearQuestionHistory();});
+ const clean=await page.evaluate(()=>JSON.parse(localStorage.getItem('master_p1_lucas_v4')));
+ assert.deepEqual(clean.results,{});
+ assert.equal(clean.questionSessions.length,0);
+ assert.equal(clean.completed.p1dm_0,true);
+ assert.equal(clean.notes.p1dm_0,'Preservar nota');
+ await close();
+});
+test('simulado P2 mantém alternativa sem mostrar gabarito ao recarregar',async()=>{
+ const {page,close}=await abrir();
+ await page.evaluate(()=>startExam());
+ await page.waitForSelector('.exam-step');
+ await page.evaluate(()=>answerExam(1));
+ await page.reload();
+ await page.waitForFunction(()=>document.getElementById('master-auth')?.hidden,null,{timeout:20000});
+ await page.evaluate(()=>navigate('exam'));
+ assert.equal(await page.locator('.exam-step.done').count(),1);
+ assert.equal(await page.evaluate(()=>Object.keys(ui.exam?.answers||{}).length),1);
+ assert.equal(await page.locator('.exam-result-circle').count(),0);
+ await close();
+});
