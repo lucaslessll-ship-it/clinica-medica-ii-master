@@ -45,7 +45,7 @@ body.high-contrast .section-rail-mark{color:var(--ink,#173238)}
 body.high-contrast .section-rail-mark.active::after{height:4px}
 html.master-auth-locked .section-rail{display:none!important}
 @media(max-width:700px){
- .section-rail{inset:auto max(7px,env(safe-area-inset-right)) calc(185px + env(safe-area-inset-bottom)) auto;width:44px;height:44px}
+ .section-rail{inset:auto max(7px,env(safe-area-inset-right)) calc(225px + env(safe-area-inset-bottom)) auto;width:44px;height:44px}
  .section-rail-marks{display:none}
  .section-rail-toggle{display:flex;align-items:center;justify-content:center;width:44px;height:44px;border:1px solid var(--line,#dae4e3);border-radius:50%;background:var(--white,#fff);color:var(--ink,#173238);font-size:25px;box-shadow:var(--shadow,0 4px 16px #102b2920);pointer-events:auto;cursor:pointer}
  .section-rail-toggle:focus-visible{outline:3px solid var(--green2,#0b6c66);outline-offset:3px}
