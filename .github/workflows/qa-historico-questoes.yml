@@ -1,0 +1,27 @@
+name: Validar histórico de questões
+on:
+  push:
+    branches: [question-history-integrated-20261118]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  historico:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      CHROMIUM_PATH: /usr/bin/google-chrome
+      CHROME_PATH: /usr/bin/google-chrome
+      PROMPTFOO_DISABLE_TELEMETRY: '1'
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci
+      - run: node --check MASTER_Clinica_Medica_II_v7_GitHub_Completo_Lucas_Lessa/question-history.js
+      - run: node --test tests/question-history.test.cjs tests/qnav.test.cjs tests/account-ui.test.cjs
+      - run: mkdir -p work && npm test
