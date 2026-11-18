@@ -58,7 +58,7 @@ async function loadBank(){
  try{
   let rows=[],from=0;
   for(;;){const {data:part,error}=await client.from('cir_bank').select('id,topic,source,year,stem,options,answer,comment,image_url').order('id').range(from,from+999);if(error)throw error;rows=rows.concat(part||[]);if(!part||part.length<1000)break;from+=1000;}
-  bank=rows.map(r=>({id:'b:'+r.id,t:r.topic,q:r.stem,o:Array.isArray(r.options)?r.options:[],a:r.answer,why:r.comment||'',src:[r.source,r.year].filter(Boolean).join(' · ')||'Banco de questões',img:r.image_url||'',shuffle:String(r.source||'').startsWith('Revisão didática · '),revision:String(r.source||'').startsWith('Revisão didática · ')?'cir-20261116':undefined,bank:true}));
+  bank=rows.filter(r=>!String(r.id).startsWith('l120-')||r.source==='Questão de prova').map(r=>({id:'b:'+r.id,t:r.topic,q:r.stem,o:Array.isArray(r.options)?r.options:[],a:r.answer,why:r.comment||'',src:String(r.id).startsWith('l120-')?'Questão de prova':([r.source,r.year].filter(Boolean).join(' · ')||'Banco de questões'),img:r.image_url||'',shuffle:String(r.id).startsWith('l120-')||String(r.source||'').startsWith('Revisão didática · '),revision:String(r.id).startsWith('l120-')?'cir-20261117':undefined,bank:true}));
   bankStatus=rows.length?'ready':'empty';
  }catch(e){bank=[];bankStatus='error';}
  if(ui.route==='dashboard'||ui.route.startsWith('cir'))render();
@@ -67,7 +67,7 @@ window.addEventListener('master-auth-ready',()=>loadBank());
 window.addEventListener('master-auth-ended',()=>{bank=[];bankStatus='signed-out';});
 function bankLine(){
  const n=bank.length;
- const msg={idle:'Banco de questões: aguardando login.','signed-out':'Entre na sua conta para carregar o banco de questões privado.',loading:'Carregando o banco de questões…',ready:`Banco de questões carregado: ${n} ${n===1?'questão':'questões'} de provas anteriores, só para a sua conta.`,empty:'Banco de questões privado ainda vazio. As questões autorais já estão disponíveis.',error:'Não foi possível carregar o banco privado agora. As questões autorais seguem disponíveis.'}[bankStatus];
+ const msg={idle:'Banco de questões: aguardando login.','signed-out':'Entre na sua conta para carregar o banco de questões privado.',loading:'Carregando o banco de questões…',ready:`Banco de questões carregado: ${n} ${n===1?'questão':'questões'} disponíveis para treino e simulado, só para a sua conta.`,empty:'Banco de questões privado ainda vazio. As questões autorais já estão disponíveis.',error:'Não foi possível carregar o banco privado agora. As questões autorais seguem disponíveis.'}[bankStatus];
  return `<p class="cir-bank-line" role="status">${esc(msg)}</p>`;
 }
 
@@ -120,7 +120,7 @@ function nextQ(){if(practice)jump(practice.step+1);}
 function opts(q,order,chosen,reveal,fn){return `<div class="p1-options">${order.map((orig,i)=>`<button type="button" class="p1-option ${reveal&&orig===q.a?'correct':''} ${reveal&&orig===chosen&&orig!==q.a?'wrong':''} ${chosen===orig?'chosen':''}" ${reveal?'disabled':''} onclick="${fn}(${orig})"><span>${'ABCDE'[i]}</span><strong>${esc(q.o[orig])}</strong></button>`).join('')}</div>`;}
 function filterBar(){
  const o=(v,l,cur)=>`<option value="${v}" ${cur===v?'selected':''}>${esc(l)}</option>`;
- return `<form class="cir-filters" onsubmit="event.preventDefault();CIR.applyFilters(this)"><label>Tema<select name="t">${o('all','Todos os temas',filt.t)}${data.blocks.map(([b,title])=>`<optgroup label="${esc(title)}">${topics.filter(t=>t.block===b).map(t=>o(t.id,t.title,filt.t)).join('')}</optgroup>`).join('')}</select></label><label>Fonte<select name="src">${o('all','Todas',filt.src)}${o('own','Autorais',filt.src)}${o('bank','Provas anteriores',filt.src)}</select></label><label>Quais<select name="mode">${o('all','Todas',filt.mode)}${o('new','Não respondidas',filt.mode)}${o('wrong','Que errei',filt.mode)}${o('due','Revisão do dia',filt.mode)}</select></label><button class="btn primary" type="submit">Começar</button></form>`;
+ return `<form class="cir-filters" onsubmit="event.preventDefault();CIR.applyFilters(this)"><label>Tema<select name="t">${o('all','Todos os temas',filt.t)}${data.blocks.map(([b,title])=>`<optgroup label="${esc(title)}">${topics.filter(t=>t.block===b).map(t=>o(t.id,t.title,filt.t)).join('')}</optgroup>`).join('')}</select></label><label>Fonte<select name="src">${o('all','Todas',filt.src)}${o('own','Autorais',filt.src)}${o('bank','Questões de prova',filt.src)}</select></label><label>Quais<select name="mode">${o('all','Todas',filt.mode)}${o('new','Não respondidas',filt.mode)}${o('wrong','Que errei',filt.mode)}${o('due','Revisão do dia',filt.mode)}</select></label><button class="btn primary" type="submit">Começar</button></form>`;
 }
 function applyFilters(form){const f=new FormData(form);startPractice({t:f.get('t'),src:f.get('src'),mode:f.get('mode')});}
 function qdots(){if(!window.QNav||!practice)return '';return QNav.dots({total:practice.ids.length,step:practice.step,estado:k=>{const d=practice.done?.[practice.ids[k]];return d?(d.ok?'certa':'errada'):'';},ir:'CIR.jump'})+`<p class="qnav-fim"><button type="button" class="btn small ghost" onclick="CIR.jump(${practice.ids.length})">Ver resultado</button></p>`;}
