@@ -173,7 +173,7 @@ function jumpPractice(k){const p=ui.practice;if(!p)return;p.step=Math.max(0,Math
 function questionHistoryPanel(){return QuestionHistory.panel(store,'p2','QuestionSessionsP2');}
 function openQuestionSession(id){const entry=(store.questionSessions||[]).find(s=>s.id===id);if(!entry||entry.kind==='legacy')return;const run=QuestionHistory.restore(store,entry.kind,id);if(!run)return;if(entry.kind==='exam'){ui.exam=run;navigate('exam');beginExamTimer();}else{ui.practice=run;navigate('practice');}}
 function clearQuestionHistory(){if(!confirm('Limpar TODAS as respostas, sessões e resultados de Clínica P2? Aulas e anotações serão preservadas. A limpeza será sincronizada e não poderá ser desfeita.'))return;QuestionHistory.clear(store,'p2');ui.practice=null;ui.exam=null;clearInterval(examTimer);stateSave();navigate('practice');}
-const QuestionSessionsP2={openQuestionSession,clearQuestionHistory};
+window.QuestionSessionsP2={openQuestionSession,clearQuestionHistory};
 function practiceFilters(){
  const atual=ui.practice?.tid||'all';
  const op=(v,label)=>`<option value="${escapeHtml(v)}" ${atual===v?'selected':''}>${escapeHtml(label)}</option>`;
@@ -264,3 +264,18 @@ window.addEventListener('master-auth-ended',()=>closeMobileNav(false));
 function clearStudySession(){clearInterval(examTimer);ui.exam=null;ui.practice=null;ui.flashDeck=[];ui.flashIndex=0;ui.flashFlip=false;ui.caseAnswers={};ui.caseReveal=false;ui.caseStage=0;ui.discText='';ui.discReveal=false;ui.oralReveal=false;ui.oralStage=0;window.P1?.reload();window.HIG?.reload();}
 window.addEventListener('master-auth-ended',clearStudySession);
 window.addEventListener('master-auth-ready',()=>{clearStudySession();store=stateLoad();ui.practice=QuestionHistory.restore(store,'practice');ui.exam=QuestionHistory.restore(store,'exam');window.P1?.reload();window.CIR?.reload();window.BANCA?.reload();window.EVIDENCE?.reload();render();});
+function reloadQuestionBank(key){
+  if(key==='master_p2_lucas_v1'){
+    store=stateLoad();
+    ui.practice=QuestionHistory.restore(store,'practice');
+    ui.exam=QuestionHistory.restore(store,'exam');
+  }else if(key==='master_p1_lucas_v4')window.P1?.reload();
+  else if(key==='master_cir_lucas_v1')window.CIR?.reload();
+  else return;
+  if(!document.documentElement.classList.contains('master-auth-locked'))render();
+}
+window.addEventListener('master-remote-merge',event=>reloadQuestionBank(event.detail?.key));
+window.addEventListener('storage',event=>{
+  if(window.QuestionHistory?.BANK_KEYS.includes(event.key))reloadQuestionBank(event.key);
+});
+
