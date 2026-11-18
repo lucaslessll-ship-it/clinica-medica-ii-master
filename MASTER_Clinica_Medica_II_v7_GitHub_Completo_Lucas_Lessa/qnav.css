@@ -95,3 +95,25 @@ body[data-theme="dark"] .qnav-result-button:hover{background:#295248!important}
 @media(max-width:520px){
  #main-content .qnav-filterbox>summary.qnav-filter-toggle{display:flex;width:100%;min-height:56px}
 }
+
+/* Histórico persistente e retomada de treinos/simulados */
+.qhistory{margin:14px 0 22px;max-width:100%;min-width:0}
+.qhistory-header{display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.qhistory-header h2{margin:0 0 4px;font-size:clamp(17px,2vw,21px)}
+.qhistory-header p{margin:0 0 10px;line-height:1.55}
+.qhistory-clear{border:1px solid var(--line,#d3dfe0)!important;min-height:44px;color:var(--ink)!important;background:transparent!important;font-weight:650!important}
+.qhistory-clear:hover{border-color:#b94d4d!important;color:#a43131!important}
+.qhistory-overview{display:flex;flex-wrap:wrap;gap:9px;margin:6px 0 12px}
+.qhistory-overview>span{padding:8px 12px;border-radius:10px;background:var(--soft,#eff6f4);font-size:13px}
+.qhistory-entry{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:13px 15px;border:1px solid var(--line,#d9e5e4);border-radius:12px;background:var(--white,#fff);margin:8px 0}
+.qhistory-entry-main{display:grid;gap:5px;min-width:0;overflow-wrap:anywhere}
+.qhistory-entry-main strong{font-size:14px}
+.qhistory-entry-main small{color:var(--muted,#61747a);font-size:12px}
+.qhistory-entry-main>span{font-size:13px}
+.qhistory-latest{border-color:#83c9b9;background:var(--soft,#edf8f5)}
+.qhistory-open{min-height:44px;flex:none;font-weight:750!important}
+.qhistory-all{margin:12px 0}
+.qhistory-all>summary{cursor:pointer;min-height:44px;display:flex;align-items:center;font-weight:700;color:var(--accent,#087568)}
+.qhistory-list{max-height:520px;overflow-y:auto;padding:3px}
+@media(max-width:560px){.qhistory-entry{align-items:stretch;flex-direction:column}.qhistory-open{width:100%}.qhistory-clear{width:100%}}
+body[data-theme="dark"] .qhistory-latest{background:#193c36;border-color:#3c8a79}
