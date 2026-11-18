@@ -5,6 +5,7 @@ const http=require('node:http');
 const fs=require('node:fs/promises');
 const path=require('node:path');
 const vm=require('node:vm');
+const {clinicalFixtures}=require('./helpers/clinical-fixtures.cjs');
 const app='MASTER_Clinica_Medica_II_v7_GitHub_Completo_Lucas_Lessa';
 const previousById={m1:3,m2:3,m3:3,m4:4,m5:3,m6:4,m7:3,m8:3};
 let previous=[];
@@ -22,12 +23,14 @@ after(async()=>{await browser?.close();await new Promise(resolve=>server.close(r
 function mock(){
  const user={id:'pocus-pratica-test',email:'pocus-pratica@example.test',user_metadata:{full_name:'Prática'}};
  localStorage.setItem('master_auth_local_owner',user.id);
- window.supabase={createClient:()=>({auth:{getSession:async()=>({data:{session:{user}}}),getUser:async()=>({data:{user}}),onAuthStateChange(){return {data:{subscription:{unsubscribe(){}}}}},signOut:async()=>({error:null})},from(table){const query={select(){return query},order(){return query},range:async()=>({data:[],error:null}),eq(){return table==='master_progress'?Promise.resolve({data:[],error:null}):query},maybeSingle:async()=>({data:{policy_version:'2026-11-08'},error:null}),upsert:async()=>({error:null})};return query;}})};
+ window.supabase={createClient:()=>({auth:{getSession:async()=>({data:{session:{user}}}),getUser:async()=>({data:{user}}),onAuthStateChange(){return {data:{subscription:{unsubscribe(){}}}}},signOut:async()=>({error:null})},from(table){let key='',columns='';const query={select(c){columns=c;return query},contains(_,keys){key=keys[0];return query},then(resolve){resolve({data:table==='lesson_images'?(columns==='keys'?clinicalTestRows.map(r=>({keys:r.keys})):clinicalTestRows.filter(r=>r.keys.includes(key))):[],error:null});},order(){return query},range:async()=>({data:[],error:null}),eq(){return table==='master_progress'?Promise.resolve({data:[],error:null}):query},maybeSingle:async()=>({data:{policy_version:'2026-11-08'},error:null}),upsert:async()=>({error:null})};return query;}})};
 }
 async function open(width=1280,settings={}){
  const context=await browser.newContext({viewport:{width,height:1000},...settings}),page=await context.newPage(),errors=[];
  page.on('pageerror',error=>errors.push(error.message));
  await page.route('https://cdn.jsdelivr.net/**/supabase.min.js',route=>route.fulfill({contentType:'text/javascript',body:`(${mock.toString()})()`}));
+ await page.route(/^https:\/\/(upload\.wikimedia\.org|cdn\.ncbi\.nlm\.nih\.gov)\//,r=>r.fulfill({contentType:'image/gif',body:Buffer.from('R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==','base64')}));
+ await page.addInitScript(clinicalFixtures);
  await page.goto(base+'/'+app+'/index.html');await page.waitForFunction(()=>document.getElementById('master-auth')?.hidden);
  return {page,close:async()=>{assert.deepEqual(errors,[]);await context.close();}};
 }
@@ -51,7 +54,7 @@ test('estações e questões com SVG funcionam nos dois temas e de 320 px a desk
   assert.ok(await p.locator('.nav-badge').first().evaluate(el=>parseFloat(getComputedStyle(el).fontSize))>=12);
   for(let index=0;index<modules.length;index++){
    await p.evaluate(index=>PocusCourse.open(index),index);
-   const count=previous[index]===undefined?0:6;assert.equal(await p.locator('.pocus-module > .pocus-sec > .pocus-fig').count(),0);if(count)await p.locator('.pocus-schematic-practice summary').click();assert.equal(await p.locator('.pocus-q-image').count(),count);assert.equal(await p.locator('.pocus-q-image svg[role=img]').count(),count);
+   const count=previous[index]===undefined?0:6;assert.equal(await p.locator('.pocus-module > .pocus-sec > .pocus-fig').count(),0);if(count)await p.locator('.pocus-schematic-practice > summary').click();assert.equal(await p.locator('.pocus-q-image').count(),count);assert.equal(await p.locator('.pocus-q-image svg[role=img]').count(),count);if(count){await p.waitForFunction(()=>[...document.querySelectorAll('.pocus-q-image [data-clinical-schematic]')].every(el=>!el.hidden));assert.equal(await p.locator('.pocus-q-image .pocus-fig:visible').count(),0);}
    assert.equal(await p.locator('.pocus-practical li').count(),count?4:0);assert.equal(await p.locator('.pocus-technique-errors li').count(),count?4:0);assert.equal(await p.locator('.pocus-script li').count(),count?6:0);
    assert.ok(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),`rolagem em ${width}, ${theme}, módulo ${index}`);
    assert.equal(await p.evaluate(()=>{const ids=[...document.querySelectorAll('.pocus-module svg [id]')].map(el=>el.id);return ids.length===new Set(ids).size;}),true);
@@ -64,7 +67,7 @@ test('estações e questões com SVG funcionam nos dois temas e de 320 px a desk
 test('respostas das 48 questões novas e progresso antigo permanecem ao recarregar',async()=>{
  const t=await open(),p=t.page;await p.evaluate(()=>{navigate('pocus');PocusCourse.open(0);PocusCourse.answer(0,0,1);PocusCourse.complete('m1',true);});
  for(let mi=0;mi<modules.length;mi++){
-  await p.evaluate(mi=>PocusCourse.open(mi),mi);if(previous[mi]!==undefined)await p.locator('.pocus-schematic-practice summary').click();
+  await p.evaluate(mi=>PocusCourse.open(mi),mi);if(previous[mi]!==undefined)await p.locator('.pocus-schematic-practice > summary').click();
   for(let qi=previous[mi];qi<modules[mi].quiz.length;qi++){
    const question=p.locator('#pq-'+mi+'-'+qi);await question.locator('.pocus-q-opt').nth(modules[mi].quiz[qi].a).click();assert.match(await question.locator('.pocus-q-why').innerText(),/^Correto\./);
   }
@@ -75,8 +78,8 @@ test('respostas das 48 questões novas e progresso antigo permanecem ao recarreg
 });
 test('esquema ampliado permite zoom e movimento em 320 px, com foco e rótulos legíveis',async()=>{
  const t=await open(320,{hasTouch:true}),p=t.page;await p.evaluate(()=>{HIG.setTheme('dark');navigate('pocus');PocusCourse.open(0);});
- await p.locator('.pocus-schematic-practice summary').click();
- const trigger=p.locator('.pocus-fig').filter({has:p.locator('defs')}).first().locator('.pocus-zoom-open');assert.ok(await trigger.evaluate(el=>el.getBoundingClientRect().height)>=44);await trigger.focus();await p.keyboard.press('Enter');
+ await p.locator('.pocus-schematic-practice > summary').click();
+ const paired=p.locator('.pocus-q-image .clinical-schematic:not([hidden])').filter({has:p.locator('defs')}).first();await paired.waitFor({state:'visible'});await paired.locator('summary').click();const trigger=paired.locator('.pocus-zoom-open');assert.ok(await trigger.evaluate(el=>el.getBoundingClientRect().height)>=44);await trigger.focus();await p.keyboard.press('Enter');
  const dialog=p.locator('.pocus-zoom-dialog'),viewport=dialog.locator('.pocus-zoom-viewport'),svg=dialog.locator('svg');await dialog.waitFor({state:'visible'});
  assert.equal(await dialog.locator('output').innerText(),'100%');assert.equal(await dialog.getByRole('button',{name:'Diminuir',exact:true}).isDisabled(),true);
  const size=await svg.evaluate(el=>({width:el.getBoundingClientRect().width,logical:el.viewBox.baseVal.width,fonts:[...el.querySelectorAll('text,foreignObject div')].map(node=>parseFloat(getComputedStyle(node).fontSize)*el.getBoundingClientRect().width/el.viewBox.baseVal.width)}));

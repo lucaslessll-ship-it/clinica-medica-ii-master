@@ -23,6 +23,12 @@ function create(cfg){
   function sectionMarkup(s){
     return `<section class="pocus-sec"><h3>${s.h}</h3>${(s.p||[]).map(t=>`<p>${t}</p>`).join('')}${s.list?`<ul>${s.list.map(t=>`<li>${t}</li>`).join('')}</ul>`:''}${s.table?tableMarkup(s.table):''}${s.after?`<p>${s.after}</p>`:''}</section>`;
   }
+  function courseImages(m){
+    if(!window.LessonImages)return '';
+    const study=cfg.imageStudies?.[m.id];
+    if(study)return `<section class="pocus-sec clinical-course-study"><h3>${study.title}</h3><p>${study.guide}</p>${study.groups.map(([imageKey,include])=>LessonImages.slot(imageKey,'pocus-sec',cfg.imageExclude||[],cfg.imageCaptions||{},{include,title:'Exames reais para leitura guiada'})).join('')}</section>`;
+    return (m.imageKeys||(cfg.images!==false?[key+'_'+m.id]:[])).map(imageKey=>LessonImages.slot(imageKey,'pocus-sec',cfg.imageExclude||[],cfg.imageCaptions||{})).join('');
+  }
   const refItem=r=>REFS[r].u?`<li><a href="${REFS[r].u}" target="_blank" rel="noopener">${REFS[r].t}</a></li>`:`<li>${REFS[r].t}</li>`;
   function moduleView(mi){
     const m=MODULES[mi],done=!!st().done[m.id];
@@ -31,7 +37,7 @@ function create(cfg){
     ${mi?`<p class="info-notice">Este módulo usa o que foi visto em "${MODULES[mi-1].title}". Se algo parecer novo, volte um passo.</p>`:''}
     <section class="pocus-goals"><h3>Ao final, você deve conseguir</h3><ul>${m.goals.map(g=>`<li>${g}</li>`).join('')}</ul></section>
     ${m.sections.map(sectionMarkup).join('')}
-    ${window.LessonImages?(m.imageKeys||(cfg.images!==false?[key+'_'+m.id]:[])).map(imageKey=>LessonImages.slot(imageKey,'pocus-sec')).join(''):''}
+    ${courseImages(m)}
     <section class="pocus-sec pocus-pitfalls"><h3>Erros comuns</h3><ul>${m.pitfalls.map(t=>`<li>${t}</li>`).join('')}</ul></section>
     <section class="pocus-sec"><h3>Fixação</h3><p class="subtle">Responda antes de ver o comentário. As respostas ficam salvas no seu progresso.</p>${m.quiz.map((_,qi)=>quizItem(mi,qi)).join('')}</section>
     <section class="pocus-sec pocus-refs"><h3>Fontes deste módulo</h3><ul>${m.refs.map(refItem).join('')}</ul><p>${cfg.refNote}</p></section>

@@ -1050,6 +1050,138 @@ const RadCourse=CourseKit.create({
       ]
     }
   ],
+  "imageStudies": {
+  "m1": {
+    "title": "RX e TC em exames reais",
+    "guide": "Compare uma projeção radiográfica com um corte tomográfico. São pacientes e problemas distintos: use os exemplos para reconhecer a modalidade e a orientação, sem transferir o diagnóstico de uma imagem para a outra.",
+    "groups": [
+      [
+        "rad_m2",
+        [
+          "rad_pa"
+        ]
+      ],
+      [
+        "rad_m6",
+        [
+          "rad_apend_ax"
+        ]
+      ]
+    ]
+  },
+  "m2": {
+    "title": "Tórax: PA e perfil",
+    "guide": "Na projeção frontal, percorra vias aéreas, hilos, bordas cardíacas e seios costofrênicos. No perfil, confira regiões retroesternal e retrocardíaca. Não deduza lateralidade pelo lado da tela: use os marcadores.",
+    "groups": [
+      [
+        "rad_m2",
+        [
+          "rad_pa",
+          "rad_lat"
+        ]
+      ]
+    ]
+  },
+  "m3": {
+    "title": "Comparar padrões torácicos",
+    "guide": "Compare consolidação, líquido pleural, ar pleural e ar mediastinal em exemplos distintos. Descreva distribuição, volume e estruturas deslocadas antes de formular a hipótese; nenhuma imagem isolada estabelece a causa.",
+    "groups": [
+      [
+        "rad_m3",
+        [
+          "rad_consol",
+          "rad_derrame",
+          "rad_pneumo",
+          "rad_hamman"
+        ]
+      ]
+    ]
+  },
+  "m4": {
+    "title": "Da radiografia à TC",
+    "guide": "Compare as projeções radiográficas e o corte tomográfico do caso da fonte. Localize a alteração e suas relações anatômicas. O diagnóstico registrado pertence ao caso original; imagem semelhante em outro paciente requer investigação própria.",
+    "groups": [
+      [
+        "rad_m4",
+        [
+          "rad_ca_pa",
+          "rad_ca_perfil",
+          "rad_ca_tc"
+        ]
+      ]
+    ]
+  },
+  "m5": {
+    "title": "Abdome: trajeto do cólon na radiografia",
+    "guide": "A marcação vermelha da fonte acompanha a anatomia sobre uma radiografia real. Compare a marcação com as alças e identifique o marcador de lateralidade; o contorno marcado é apoio anatômico, não um achado patológico.",
+    "groups": [
+      [
+        "rad_m5",
+        [
+          "rad_abd_colon"
+        ]
+      ]
+    ]
+  },
+  "m6": {
+    "title": "Apendicite: planos axial e coronal",
+    "guide": "Localize ceco, apêndice, apendicolito e a coleção descrita na fonte. Correlacione os planos; uma seta localiza o achado, mas não substitui a revisão de toda a aquisição ou a avaliação clínica.",
+    "groups": [
+      [
+        "rad_m6",
+        [
+          "rad_apend_ax",
+          "rad_apend_cor"
+        ]
+      ]
+    ]
+  },
+  "m7": {
+    "title": "Anatomia óssea em radiografias reais",
+    "guide": "Use as imagens para percorrer pelve, carpo, joelhos e tornozelo. Compare contornos corticais e interlinhas; incidências distintas e sobreposição podem esconder estruturas. As linhas da fonte são marcações sobre exames reais.",
+    "groups": [
+      [
+        "rad_m7",
+        [
+          "rad_pelve",
+          "rad_iliofemoral",
+          "rad_punho",
+          "rad_joelhos",
+          "rad_torn_ap",
+          "rad_torn_perfil"
+        ]
+      ]
+    ]
+  },
+  "m8": {
+    "title": "Alinhamento cervical e descrição de fratura",
+    "guide": "As imagens são exemplos distintos. Na coluna, siga os alinhamentos e as partes moles. No fêmur, descreva local, traço e desvio. A radiografia anotada preserva o exame real abaixo das linhas de apoio.",
+    "groups": [
+      [
+        "rad_m8",
+        [
+          "rad_cervical",
+          "rad_cerv_linhas",
+          "rad_femur_fx"
+        ]
+      ]
+    ]
+  },
+  "m9": {
+    "title": "Lesões ósseas: descrever antes de nomear",
+    "guide": "Localize as alterações no crânio e na pelve dos exemplos da fonte. Descreva densidade, limites e distribuição; nem toda lesão de um mesmo caso tem aparência idêntica. Imagem não define histologia isoladamente.",
+    "groups": [
+      [
+        "rad_m9",
+        [
+          "rad_mm_cranio",
+          "rad_mm_pelve"
+        ]
+      ]
+    ]
+  }
+},
+  "imageExclude": ["radsch_dose"],
   "global": "RadCourse"
 });
 window.RadCourse=RadCourse;

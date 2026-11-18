@@ -96,3 +96,16 @@ body[data-theme="dark"] .pocus-fig.light{background:#f4f9f8}
 .pocus-zoom-canvas svg{display:block;width:100%;max-width:none;height:auto}
 body[data-theme="dark"] .pocus-zoom-open{color:#7fd6c3}
 @media(max-width:600px){.pocus-zoom-dialog{padding:12px}.pocus-zoom-controls .btn{flex:1}.pocus-zoom-close{flex-basis:100%!important}}
+
+/* Exames reais primeiro; mapas só são habilitados após decodificação dos pares. */
+.clinical-comparison{border:1px solid var(--line);border-radius:14px;padding:20px;margin:22px 0;background:var(--white);min-width:0}
+.clinical-comparison>h4{margin:0 0 10px;font-size:1.1rem}.clinical-comparison>p{line-height:1.65}
+.clinical-comparison .lesson-images{margin:18px 0;padding:0;border:0;box-shadow:none}
+.clinical-comparison .lesson-images-grid{grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr))}
+.clinical-comparison .lesson-image-open img{max-height:440px;object-fit:contain;background:#080b0b}
+.clinical-schematic{border-top:1px solid var(--line);margin-top:20px;padding-top:12px}
+.clinical-schematic>summary{min-height:44px;display:list-item;cursor:pointer;padding:10px 4px;font-weight:600}
+.clinical-comparison [hidden]{display:none!important}
+@media(max-width:600px){.clinical-comparison{padding:14px}.clinical-comparison .lesson-images-grid{grid-template-columns:1fr}}
+
+.clinical-public-media{margin:20px 0;border:1px solid var(--line);border-radius:12px;overflow:hidden}.clinical-public-media>a{display:flex;min-height:44px;background:#080b0b;justify-content:center}.clinical-public-media img{display:block;width:100%;max-width:720px;max-height:440px;object-fit:contain}.clinical-public-media figcaption{padding:16px;line-height:1.6}.clinical-public-media small{display:block;margin-top:10px;color:var(--muted)}
