@@ -79,3 +79,6 @@ body.side-collapsed .nav-destination>svg{opacity:1}
 
 /* Garantir legibilidade mínima dos indicadores mesmo com fontes menores na navegação. */
 #sidebar-nav .nav-badge{font-size:max(12px,.75rem)!important;line-height:1.3}
+
+/* Os títulos recebem foco programático ao mudar de rota, sem um anel preto de botão. */
+#main-content :is(h1,h2,h3)[tabindex="-1"]:focus{outline:none}

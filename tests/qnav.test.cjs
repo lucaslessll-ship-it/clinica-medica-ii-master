@@ -81,6 +81,11 @@ test('clicar numa marca oferece Excluir e remove a marcação',async()=>{
  await page.waitForTimeout(900);
  await page.click('.nota-marca');
  await page.waitForSelector('.nota-excluir:not([hidden])');
+ await page.keyboard.press('Escape');
+ await page.locator('.nota-marca').focus();
+ await page.keyboard.press('Enter');
+ await page.waitForSelector('.nota-excluir:not([hidden])');
+ assert.equal(await page.locator('.nota-marca').getAttribute('role'),'button');
  page.once('dialog',dialog=>dialog.accept());
  await page.click('.nota-excluir');
  await page.waitForFunction(()=>!document.querySelector('.nota-marca'));

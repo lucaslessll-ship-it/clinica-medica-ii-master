@@ -188,4 +188,4 @@ body[data-theme="dark"] .cir-plan-list button span{color:#8fe0cf}
 body.focus-mode .reading-lesson{--reading-sticky-top:12px}
 
 /* Controles de treino: área de toque consistente nos seis tamanhos de tela auditados. */
-.cir-perf-row > .btn{box-sizing:border-box;min-height:44px!important;height:auto!important;padding-block:10px!important;line-height:1.35!important}
+.cir-perf-row > .btn{box-sizing:border-box;min-height:48px!important;height:auto!important;padding-block:10px!important;line-height:1.35!important}

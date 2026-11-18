@@ -97,7 +97,7 @@ test('grade com 30 matérias e plano respeita telas pequenas e os dois temas de 
  for(const width of [320,390,820])for(const theme of ['light','dark']){
   const t=await open({width,height:1000},'2026-11-13T09:00:00-03:00'),p=t.page;await p.evaluate(theme=>HIG.setTheme(theme),theme);assert.equal(await p.locator('[data-subject]').count(),30);assert.ok(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));
   await p.locator('[data-subject-filter=CIR]').click();assert.equal(await p.locator('[data-subject]:visible').count(),14);await p.locator('[data-subject=ciraa]').click();assert.equal(await p.evaluate(()=>ui.route),'cirtopic');await p.evaluate(()=>CIR.go('cir'));assert.ok(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));
-  const small=await p.locator('.cir-perf .btn').evaluateAll(items=>items.filter(item=>item.getBoundingClientRect().height<44).length);assert.equal(small,0);if(width===390)await p.screenshot({path:`work/lote1-cirurgia-${theme}.png`,animations:'disabled'});await t.close();
+  const small=await p.locator('.cir-perf .btn').evaluateAll(items=>items.map(item=>({height:item.getBoundingClientRect().height,cssHeight:getComputedStyle(item).height,minHeight:getComputedStyle(item).minHeight,display:getComputedStyle(item).display,text:item.textContent.trim(),html:item.outerHTML.slice(0,200)})).filter(item=>item.height<44));assert.deepEqual(small,[],JSON.stringify({width,theme,small}));if(width===390)await p.screenshot({path:`work/lote1-cirurgia-${theme}.png`,animations:'disabled'});await t.close();
  }
 });
 
