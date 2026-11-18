@@ -17,6 +17,7 @@ function mock(){
   if(name==='master_activity_record'){
    if(f.defer)return new Promise(resolve=>f.pending.push(resolve));
    if(f.failures){f.failures--;return {error:{message:'offline'}};}
+   if(!f.known){f.known=true;f.enabled=true;}
    if(f.enabled)for(const e of args.p_events)f.events[e.id]=e;
    return {data:f.enabled?args.p_events.length:0,error:null};
   }
@@ -39,14 +40,13 @@ async function open(t,options={},viewport={width:1280,height:900}){
 }
 const recorded=p=>p.evaluate(()=>Object.values(activityFixture.events));
 
-test('registro opcional não começa antes da escolha; recusar preserva estudo e preferência',async t=>{
- const p=await open(t,{known:false});await p.locator('#activity-notice').waitFor();await p.evaluate(()=>{navigate('sources');MasterActivity.track('assistant_request');});await p.evaluate(()=>MasterActivity.flush());assert.equal((await recorded(p)).length,0);
- await p.locator('[data-activity-choice=no]').click();await p.waitForFunction(()=>activityFixture.preference?.enabled===false);assert.equal(await p.locator('#activity-notice').count(),0);
- await p.evaluate(()=>{openTopic('neuro1');MasterActivity.track('question_answer','p2:0',{correct:true});});await p.evaluate(()=>MasterActivity.flush());assert.equal((await recorded(p)).length,0);assert.equal(await p.evaluate(()=>ui.route),'topic');
+test('contas sem preferência registram automaticamente sem mensagem inicial; desativação salva é respeitada',async t=>{
+ const p=await open(t,{known:false});await p.evaluate(()=>{navigate('sources');MasterActivity.track('assistant_request');});await p.evaluate(()=>MasterActivity.flush());assert.ok((await recorded(p)).length>0);assert.equal(await p.locator('#activity-notice').count(),0);
+ const q=await open(t,{known:true,enabled:false});await q.evaluate(()=>{navigate('sources');MasterActivity.track('assistant_request');});await q.evaluate(()=>MasterActivity.flush());assert.equal((await recorded(q)).length,0);assert.equal(await q.locator('#activity-notice').count(),0);
 });
 
-test('consentimento registra navegação e questões sem textos, buscas, URLs completas ou chaves livres',async t=>{
- const p=await open(t,{known:false});await p.locator('[data-activity-choice=yes]').click();await p.waitForFunction(()=>activityFixture.preference?.enabled===true);
+test('controle no perfil e registro de navegação e questões sem textos, buscas, URLs completas ou chaves livres',async t=>{
+ const p=await open(t,{known:true,enabled:false});await p.evaluate(()=>MasterActivity.privacy());await p.locator('.activity-privacy [data-activity-choice=yes]').click();await p.waitForFunction(()=>activityFixture.preference?.enabled===true);
  await p.evaluate(()=>{openTopic('neuro1');toggleChapter('neuro1_0');QNav.registrar('p2',0,true,{q:'TEXTO_PRIVADO_QUE_NAO_PODE_SER_REGISTRADO'});MasterActivity.track('assistant_request','',{question:'SEGREDO',message:'SEGREDO',token:'SEGREDO'});});
  await p.evaluate(()=>{navigate('pocus');PocusCourse.open(3);PocusCourse.answer(3,0,0);PocusCourse.complete('m4',true);});await p.evaluate(()=>MasterActivity.flush());
  const events=await recorded(p);assert.ok(events.some(e=>e.kind==='lesson_open'&&e.resource==='pocus:m4'));assert.ok(events.some(e=>e.kind==='lesson_complete'&&e.resource==='pocus:m4'));assert.ok(events.some(e=>e.kind==='question_answer'&&e.resource==='p2:0'&&e.correct));
