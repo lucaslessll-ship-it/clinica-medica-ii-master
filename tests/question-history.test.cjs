@@ -45,7 +45,7 @@ test('same session edited on two devices merges separate answers',()=>{
 });
 test('confirmed clear only deletes question history and prevents stale device resurrection',()=>{
  const old='2026-11-16T00:00:00Z',date='2026-11-18T15:00:00Z';
- const remote={completed:{lesson:true},notes:{important:'preserve'},results:{1:{correct:true,date:old}},questionSessions:[{id:'p2-old',kind:'practice',startedAt:old,updatedAt:old,run:{ids:[1],done:{}}}]};
+ const remote={completed:{lesson:true},notes:{important:'preserve'},review:{flash1:{next:'2026-11-23'}},results:{1:{correct:true,date:old}},questionSessions:[{id:'p2-old',kind:'practice',startedAt:old,updatedAt:old,run:{ids:[1],done:{}}}]};
  const local=plain(remote);H.clear(local,'p2');
  local.questionResetAt=date;
  const merged=H.mergeProgressState(remote,local,remote);
@@ -53,6 +53,7 @@ test('confirmed clear only deletes question history and prevents stale device re
  assert.equal(merged.questionSessions.length,0);
  assert.equal(merged.completed.lesson,true);
  assert.equal(merged.notes.important,'preserve');
+ assert.equal(merged.review.flash1.next,'2026-11-23');
 });
 test('session list does not discard older sessions during a new start',()=>{
  const state={results:{}};
