@@ -87,3 +87,11 @@ body[data-theme="dark"] .qnav-result-button:hover{background:#295248!important}
   .qnav-result-button{width:100%}
 }
 @media(prefers-reduced-motion:reduce){.qnav-filter-toggle .qnav-filter-chevron{transition:none}}
+
+/* A regra geral #main-content details>summary não deve reduzir o alvo de toque. */
+#main-content .qnav-filterbox>summary.qnav-filter-toggle{
+ display:inline-flex;min-height:56px;align-items:center
+}
+@media(max-width:520px){
+ #main-content .qnav-filterbox>summary.qnav-filter-toggle{display:flex;width:100%;min-height:56px}
+}
