@@ -348,7 +348,7 @@
     if(alheio&&key===HIGKEY&&window.MASTER_SYNC_MERGE){
       // Outro aparelho mexeu: mescla em silêncio (marcas, notas, pomodoro) em vez de sobrescrever.
       outgoing=window.MASTER_SYNC_MERGE.mesclarPrefs(status.baseObj.get(key),value,remote.payload);outCanon=canon(outgoing);merged=outCanon!==localCanon;
-    }else if(alheio&&window.QuestionHistory?.BANK_KEYS.includes(key)){outgoing=QuestionHistory.mergeProgressState(status.baseObj.get(key),value,remote.payload);outCanon=canon(outgoing);merged=outCanon!==localCanon;}else if(alheio)keepConflictCopy(userId,latest);
+    }else if(alheio&&window.QuestionHistory?.BANK_KEYS.includes(key)){keepConflictCopy(userId,latest);outgoing=QuestionHistory.mergeProgressState(status.baseObj.get(key),value,remote.payload);outCanon=canon(outgoing);merged=outCanon!==localCanon;}else if(alheio)keepConflictCopy(userId,latest);
     rememberSent(key,outCanon);
     const {error}=await status.client.from('master_progress').upsert({user_id:userId,storage_key:key,payload:outgoing,updated_at:new Date().toISOString()},{onConflict:'user_id,storage_key'});
     if(error){if(epoch===status.epoch)syncNotice('Sincronização pendente. Seu progresso continua salvo neste dispositivo.');throw error;}
