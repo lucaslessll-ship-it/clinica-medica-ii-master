@@ -133,6 +133,10 @@
       marcaEl.className = 'nota-marca';
       marcaEl.dataset.cor = marca.cor;
       marcaEl.dataset.nota = marca.id;
+      // Um destaque existente também pode ser editado com teclado e leitor de tela.
+      marcaEl.tabIndex = 0;
+      marcaEl.setAttribute('role', 'button');
+      marcaEl.setAttribute('aria-label', 'Editar destaque: ' + marca.texto.slice(0, 100));
       meio.replaceWith(marcaEl);
       marcaEl.append(meio);
       ultimo = marcaEl;
@@ -649,7 +653,17 @@
       // O painel permanece aberto durante a leitura, sem alterar a rolagem.
     });
 
-    document.addEventListener('keydown', evento => { if (evento.key === 'Escape') { esconderBarra(); fecharCaixa(); } });
+    document.addEventListener('keydown', evento => {
+      if (evento.key === 'Escape') { esconderBarra(); fecharCaixa(); return; }
+      const marca = evento.target.closest?.('.nota-marca[data-nota]');
+      if (!marca || (evento.key !== 'Enter' && evento.key !== ' ')) return;
+      evento.preventDefault();
+      if (!barra) montarBarra();
+      emEdicao = { tipo: 'marca', id: marca.dataset.nota };
+      barra.querySelector('[data-acao="remover"]').hidden = false;
+      posicionar(barra, marca.getBoundingClientRect());
+      barra.querySelector('[data-cor]')?.focus({ preventScroll: true });
+    });
     addEventListener('scroll', () => { if (barra && !barra.hidden) esconderBarra(); }, { passive: true });
 
     const raiz = document.getElementById('main-content');
