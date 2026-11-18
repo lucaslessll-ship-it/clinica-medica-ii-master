@@ -57,6 +57,7 @@ window.SectionRail=(function sectionRailModule(){
    const buttons=tracks?.children||[];
    for(let i=0;i<buttons.length;i++){
      buttons[i].classList.toggle('active',i===current);
+     buttons[i].tabIndex=i===current?0:-1;
      if(i===current)buttons[i].setAttribute('aria-current','location');
      else buttons[i].removeAttribute('aria-current');
    }
@@ -125,6 +126,14 @@ window.SectionRail=(function sectionRailModule(){
      mark.addEventListener('focus',()=>preview(i,mark));
      mark.addEventListener('blur',resetPreview);
      mark.addEventListener('click',()=>jump(i));
+     mark.addEventListener('keydown',event=>{
+       const delta=event.key==='ArrowDown'||event.key==='ArrowRight'?1:event.key==='ArrowUp'||event.key==='ArrowLeft'?-1:0;
+       const next=event.key==='Home'?0:event.key==='End'?targets.length-1:delta?Math.max(0,Math.min(targets.length-1,i+delta)):-1;
+       if(next<0)return;
+       event.preventDefault();
+       jump(next);
+       tracks.children[next]?.focus({preventScroll:true});
+     });
      tracks.append(mark);
      const button=document.createElement('button');button.type='button';button.className='section-rail-menu-item';button.dataset.railIndex=String(i);
      button.textContent=label;button.addEventListener('click',()=>jump(i));
