@@ -26,6 +26,7 @@
   <link rel="stylesheet" href="interface.css?v=20261118-focus1">
   <link rel="stylesheet" href="experience.css?v=20261116-cirurgia28">
   <link rel="stylesheet" href="reading-ux.css?v=20261116-cirurgia28">
+  <link rel="stylesheet" href="section-rail.css?v=20261118-uxrail1">
   <link rel="stylesheet" href="pocus.css?v=20261118-imagens1">
   <link rel="stylesheet" href="lab-ferro.css?v=20261116-cirurgia28">
   <link rel="stylesheet" href="micro-lab.css?v=20261116-cirurgia28">
@@ -121,7 +122,7 @@
     <button type="button" onclick="navigate('notes')" data-tab="notes"><span aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 3h15v18H5V3Zm-3 4h5m-5 5h5m-5 5h5m3-10h7m-7 5h7"/></svg></span>Caderno</button>
     <button type="button" onclick="event.stopPropagation();document.getElementById('master-avatar').click()" data-tab="profile" aria-haspopup="true" aria-controls="master-profile"><span aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="7" r="4"/><path d="M4 22v-3a8 8 0 0 1 16 0v3"/></svg></span>Perfil</button>
   </nav>
-  <div id="focus-exit" class="focus-exit"><span>Leitura sem distrações</span><button type="button" onclick="HIG.toggleFocus()">Sair do foco <kbd>F</kbd></button></div>
+  <div id="focus-exit" class="focus-exit"><span>Leitura sem distrações</span><button type="button" onclick="HIG.exitFocus()">Sair do foco <kbd>F</kbd></button></div>
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
   <div id="hig-overlay" class="hig-overlay" hidden>
@@ -149,6 +150,7 @@
   <script src="banca.js?v=20261118-activity1"></script>
   <script src="dashboard-ux.js?v=20261116-cirurgia28"></script>
   <script src="reading-ux.js?v=20261116-cirurgia28"></script>
+  <script src="section-rail.js?v=20261118-uxrail1"></script>
   <script src="scroll-top.js?v=20261116-cirurgia28"></script>
   <script src="reading-time.js?v=20261116-cirurgia28"></script>
   <script src="course-kit.js?v=20261118-review1"></script>
@@ -184,7 +186,7 @@
   <script src="rad-course.js?v=20261118-achados1"></script>
   <script src="hemo-course.js?v=20261116-cirurgia28"></script>
   <script src="atb-course.js?v=20261116-cirurgia28"></script>
-  <script src="cir_app.js?v=20261118-sessions2"></script>
+  <script src="cir_app.js?v=20261118-uxrail1"></script>
   <script src="study-icons.js?v=20261117-estudo"></script>
   <script src="emergency.js?v=20261117-estudo"></script>
   <script src="window-motion.js?v=20261117-ios1"></script>
@@ -197,7 +199,7 @@
   <script src="formatacao-notas.js?v=20261117-uxnotas2"></script>
   <script src="notas.js?v=20261118-access1"></script>
   <script src="p1_app.js?v=20261118-sessions2"></script>
-  <script src="hig.js?v=20261118-review1"></script>
+  <script src="hig.js?v=20261118-uxrail1"></script>
   <script src="caderno-unificado.js?v=20261117-uxnotas2"></script>
   <script src="novidades.js?v=20261117-estudo32"></script>
   <script src="focus-timer.js?v=20261118-activity1"></script>
