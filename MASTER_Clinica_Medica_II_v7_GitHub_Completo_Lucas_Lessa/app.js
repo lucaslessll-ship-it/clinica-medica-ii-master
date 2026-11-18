@@ -263,7 +263,7 @@ window.addEventListener('master-auth-ended',()=>closeMobileNav(false));
 // Each module owns state in memory. Rehydrate all of them on every account entry.
 function clearStudySession(){clearInterval(examTimer);ui.exam=null;ui.practice=null;ui.flashDeck=[];ui.flashIndex=0;ui.flashFlip=false;ui.caseAnswers={};ui.caseReveal=false;ui.caseStage=0;ui.discText='';ui.discReveal=false;ui.oralReveal=false;ui.oralStage=0;window.P1?.reload();window.HIG?.reload();}
 window.addEventListener('master-auth-ended',clearStudySession);
-window.addEventListener('master-auth-ready',()=>{clearStudySession();store=stateLoad();ui.practice=QuestionHistory.restore(store,'practice');ui.exam=QuestionHistory.restore(store,'exam');window.P1?.reload();window.CIR?.reload();window.BANCA?.reload();window.EVIDENCE?.reload();render();});
+window.addEventListener('master-auth-ready',()=>{clearStudySession();store=stateLoad();QuestionHistory.ensure(store,'p2');ui.practice=QuestionHistory.restore(store,'practice');ui.exam=QuestionHistory.restore(store,'exam');stateSave();window.P1?.reload();window.CIR?.reload();window.BANCA?.reload();window.EVIDENCE?.reload();render();});
 function reloadQuestionBank(key){
   if(key==='master_p2_lucas_v1'){
     store=stateLoad();
