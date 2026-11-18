@@ -49,23 +49,55 @@ async function load(scope,key){
   try{return await task;}finally{if(pending.get(key)===task)pending.delete(key);}
 }
 const num=v=>Math.max(0,Math.min(100,Number(v)||0));
+let findingsId=0;
+function findings(marks){
+  if(!Array.isArray(marks))return [];
+  return marks.filter(m=>m&&typeof m==='object'&&typeof m.t==='string'&&m.t.trim()&&
+    ((m.x!=null&&m.y!=null&&Number.isFinite(Number(m.x))&&Number.isFinite(Number(m.y)))||
+    (Array.isArray(m.e)&&m.e.length===4&&m.e.every(v=>Number.isFinite(Number(v))))));
+}
 function overlay(marks){
-  if(!Array.isArray(marks)||!marks.length)return '';
-  const lines=marks.filter(m=>m&&m.x!=null).map(m=>`<line x1="${num(m.lx)}" y1="${num(m.ly)}" x2="${num(m.x)}" y2="${num(m.y)}"/>`).join('');
-  const parts=marks.map(m=>{if(!m)return '';let h='';
-    if(m.x!=null)h+=`<i class="lesson-mark-tip" style="left:${num(m.x)}%;top:${num(m.y)}%"></i>`;
-    if(Array.isArray(m.e))h+=`<i class="lesson-mark-ring" style="left:${num(m.e[0]-m.e[2])}%;top:${num(m.e[1]-m.e[3])}%;width:${num(m.e[2]*2)}%;height:${num(m.e[3]*2)}%"></i>`;
-    if(m.t)h+=`<b class="lesson-mark-label${num(m.lx)>66?' at-end':num(m.lx)<34?' at-start':''}" style="left:${num(m.lx)}%;top:${num(m.ly)}%">${esc(m.t)}</b>`;
-    return h;}).join('');
+  const list=findings(marks);if(!list.length)return '';
+  const lines=list.map((m,i)=>m.x!=null?`<line data-finding-marker="${i}" x1="${num(m.lx??8)}" y1="${num(m.ly??9)}" x2="${num(m.x)}" y2="${num(m.y)}"/>`:'').join('');
+  const parts=list.map((m,i)=>{let h='';
+    if(m.x!=null)h+=`<i data-finding-marker="${i}" class="lesson-mark-tip" style="left:${num(m.x)}%;top:${num(m.y)}%"></i>`;
+    if(Array.isArray(m.e))h+=`<i data-finding-marker="${i}" class="lesson-mark-ring" style="left:${num(m.e[0]-m.e[2])}%;top:${num(m.e[1]-m.e[3])}%;width:${num(m.e[2]*2)}%;height:${num(m.e[3]*2)}%"></i>`;
+    const lx=num(m.lx??m.e?.[0]??8),ly=num(m.ly??m.e?.[1]??9);
+    return h+`<b data-finding-marker="${i}" class="lesson-mark-label${lx>66?' at-end':lx<34?' at-start':''}" style="left:${lx}%;top:${ly}%">${i+1}</b>`;
+  }).join('');
   return `<span class="lesson-marks" hidden aria-hidden="true"><svg viewBox="0 0 100 100" preserveAspectRatio="none">${lines}</svg>${parts}</span>`;
 }
-function markup(rows,options={}){
-  return `<h4>${esc(options.title||"Imagens da aula")}</h4><p class="subtle">Toque em uma imagem para ampliar. Antes de ler a legenda ou tocar em Mostrar achados, diga em voz alta o que você vê.</p><div class="lesson-images-grid">${rows.map((r,i)=>`<figure><button type="button" class="lesson-image-open" data-img-open="${i}" aria-label="Ampliar imagem ${i+1}"><img loading="${Array.isArray(options.include)?'eager':'lazy'}" decoding="async" alt="${esc(r.caption)}" src="data:${esc(r.mime)};base64,${esc(r.data)}">${overlay(r.marks)}</button>${Array.isArray(r.marks)&&r.marks.length?`<button type="button" class="btn lesson-marks-toggle" data-img-marks="${i}" aria-pressed="false">Mostrar achados</button>`:''}<figcaption>${esc(r.caption)}${r.credit?` <small>${esc(r.credit)}.</small>`:''}</figcaption></figure>`).join('')}</div>`;
+function legend(marks,id){
+  const list=findings(marks);if(!list.length)return '';
+  return `<div class="lesson-findings" id="${id}" hidden><p class="subtle">Os números correspondem à imagem. Toque em uma descrição para destacar apenas aquela marcação.</p><ol>${list.map((m,i)=>`<li><button type="button" class="lesson-finding-focus" data-finding="${i}" aria-pressed="false">${esc(m.t.replace(/^\d+\s*[·.-]\s*/,''))}</button>${m.d?`<p>${esc(m.d)}</p>`:''}</li>`).join('')}</ol><p class="subtle lesson-findings-note">Marcações didáticas de localização. Compare com os demais cortes e com o contexto; não substituem o exame completo e o laudo.</p></div>`;
 }
+function focusFinding(root,button){
+  const index=Number(button.dataset.finding),on=button.getAttribute('aria-pressed')!=='true';
+  root.querySelectorAll('[data-finding]').forEach(b=>b.setAttribute('aria-pressed',String(on&&Number(b.dataset.finding)===index)));
+  root.querySelectorAll('[data-finding-marker]').forEach(mark=>mark.classList.toggle('is-muted',on&&Number(mark.dataset.findingMarker)!==index));
+}
+function toggleFindings(root,button){
+  const marks=root.querySelector('.lesson-marks'),list=root.querySelector('.lesson-findings');if(!marks)return;
+  const on=marks.hidden;marks.hidden=!on;if(list)list.hidden=!on;
+  button.setAttribute('aria-pressed',String(on));button.setAttribute('aria-expanded',String(on));button.textContent=on?'Ocultar achados':'Mostrar achados';
+  root.querySelectorAll('[data-finding]').forEach(b=>b.setAttribute('aria-pressed','false'));
+  root.querySelectorAll('.is-muted').forEach(mark=>mark.classList.remove('is-muted'));
+}
+function markup(rows,options={}){
+  return `<h4>${esc(options.title||"Imagens da aula")}</h4><p class="subtle">Toque na imagem para ampliar. Tente descrever o que vê antes de revelar os achados.${rows.some(r=>findings(r.marks).length)?' Use Mostrar achados para ver as marcações numeradas e suas explicações.':''}</p><div class="lesson-images-grid">${rows.map((r,i)=>{const id='lesson-findings-'+(++findingsId),has=findings(r.marks).length;return `<figure><button type="button" class="lesson-image-open" data-img-open="${i}" aria-label="Ampliar imagem ${i+1}"><span class="lesson-image-surface"><img loading="${Array.isArray(options.include)?'eager':'lazy'}" decoding="async" alt="${esc(r.caption)}" src="data:${esc(r.mime)};base64,${esc(r.data)}">${overlay(r.marks)}</span></button>${has?`<button type="button" class="btn lesson-marks-toggle" data-img-marks="${i}" aria-pressed="false" aria-expanded="false" aria-controls="${id}">Mostrar achados</button>`:''}<figcaption>${esc(r.caption)}${r.credit?` <small>${esc(r.credit)}.</small>`:''}</figcaption>${legend(r.marks,id)}</figure>`;}).join('')}</div>`;
+}
+function fitDialog(){
+  const img=dialog?.querySelector('img'),stage=dialog?.querySelector('.lesson-image-stage');if(!img?.naturalWidth||!img.naturalHeight||!stage)return;
+  const width=Math.min(900,Math.max(120,innerWidth-56),Math.max(180,innerHeight*.65)*img.naturalWidth/img.naturalHeight);stage.style.width=width+'px';
+}
+window.addEventListener('resize',()=>{if(dialog?.open)fitDialog();});
 function open(src,caption,marks,shown){
-  if(!dialog){dialog=document.createElement('dialog');dialog.className='lesson-image-dialog';dialog.innerHTML='<form method="dialog"><button class="btn" aria-label="Fechar imagem">Fechar</button></form><div class="lesson-image-stage"><img alt=""></div><p></p>';document.body.appendChild(dialog);dialog.addEventListener('click',e=>{if(e.target===dialog)dialog.close();});}
-  dialog.querySelector('img').src=src;dialog.querySelector('img').alt=caption;dialog.querySelector('p').textContent=caption;dialog.querySelectorAll('.lesson-marks').forEach(n=>n.remove());if(marks){dialog.querySelector('.lesson-image-stage').insertAdjacentHTML('beforeend',overlay(marks));const o=dialog.querySelector('.lesson-marks');if(o)o.hidden=!shown;}
-  if(dialog.showModal)dialog.showModal();else dialog.setAttribute('open','');
+  if(!dialog){dialog=document.createElement('dialog');dialog.className='lesson-image-dialog';dialog.innerHTML='<div class="lesson-image-toolbar"><form method="dialog"><button class="btn" aria-label="Fechar imagem">Fechar</button></form><button type="button" class="btn lesson-dialog-marks" aria-pressed="false" aria-expanded="false" aria-controls="lesson-dialog-findings">Mostrar achados</button></div><div class="lesson-image-stage"><img alt=""></div><p class="lesson-dialog-caption"></p><div class="lesson-dialog-legend"></div>';document.body.appendChild(dialog);dialog.addEventListener('click',e=>{if(e.target===dialog)dialog.close();const t=e.target.closest('.lesson-dialog-marks');if(t)toggleFindings(dialog,t);const b=e.target.closest('[data-finding]');if(b)focusFinding(dialog,b);});}
+  dialog.querySelector('img').onload=fitDialog;dialog.querySelector('img').src=src;dialog.querySelector('img').alt=caption;dialog.querySelector('.lesson-dialog-caption').textContent=caption;
+  dialog.querySelectorAll('.lesson-marks').forEach(n=>n.remove());const list=findings(marks),button=dialog.querySelector('.lesson-dialog-marks');button.hidden=!list.length;button.setAttribute('aria-pressed','false');button.setAttribute('aria-expanded','false');button.textContent='Mostrar achados';
+  dialog.querySelector('.lesson-dialog-legend').innerHTML=legend(list,'lesson-dialog-findings');
+  if(list.length){dialog.querySelector('.lesson-image-stage').insertAdjacentHTML('beforeend',overlay(list));if(shown)toggleFindings(dialog,button);}
+  if(dialog.showModal)dialog.showModal();else dialog.setAttribute('open','');fitDialog();
 }
 async function fill(el,scope){
   el.dataset.imgDone='1';
@@ -87,7 +119,7 @@ async function fill(el,scope){
         return (await Promise.all([...slot.querySelectorAll('img')].map(async img=>{try{await img.decode();return img.naturalWidth>0;}catch{return false;}}))).every(Boolean);
       })).then(async ok=>{const publicOK=await Promise.all([...comparison.querySelectorAll('.clinical-public-exam')].map(async img=>{try{await img.decode();return img.naturalWidth>0;}catch{return false;}}));if(!publicOK.every(Boolean))return;if(!current(scope)||!comparison.isConnected||!ok.every(Boolean))return;const map=comparison.querySelector('[data-clinical-schematic]');if(map)map.hidden=false;comparison.querySelector('[data-clinical-status]')?.setAttribute('hidden','');});
     }
-    el.onclick=e=>{if(!current(scope))return;const t=e.target.closest('[data-img-marks]');if(t){const o=t.closest('figure').querySelector('.lesson-marks');if(!o)return;const on=o.hidden;o.hidden=!on;t.setAttribute('aria-pressed',String(on));t.textContent=on?'Ocultar achados':'Mostrar achados';return;}const b=e.target.closest('[data-img-open]');if(!b)return;const r=rows[Number(b.dataset.imgOpen)],o=b.querySelector('.lesson-marks');if(r)open(b.querySelector('img').src,r.caption,r.marks,!!o&&!o.hidden);};
+    el.onclick=e=>{if(!current(scope))return;const t=e.target.closest('[data-img-marks]');if(t){toggleFindings(t.closest('figure'),t);return;}const f=e.target.closest('[data-finding]');if(f){focusFinding(f.closest('figure'),f);return;}const b=e.target.closest('[data-img-open]');if(!b)return;const r=rows[Number(b.dataset.imgOpen)],o=b.querySelector('.lesson-marks');if(r)open(b.querySelector('img').src,r.caption,r.marks,!!o&&!o.hidden);};
   }catch{if(current(scope))delete el.dataset.imgDone;}
 }
 function scan(){const scope=ready();if(scope)document.querySelectorAll('[data-img-key]:not([data-img-done])').forEach(el=>fill(el,scope));}

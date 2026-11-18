@@ -698,8 +698,8 @@ const RadCourse=CourseKit.create({
         {
           "h": "Duas imagens, dois limites",
           "p": [
-            "O catálogo inclui crânio com lesões líticas e uma segunda imagem cuja legenda associa mieloma a lesões predominantemente escleróticas. Esclerose não é o padrão típico do mieloma. Essa discordância deve motivar revisão do estudo e da fonte, e não memorização de uma regra errada.",
-            "Use a segunda imagem para perguntar: o padrão é realmente lítico, esclerótico ou misto? Há dados suficientes? Sem revisão especializada e contexto, não atribua etiologia pela legenda. Mantenha descrição e hipótese separadas."
+            "O catálogo contrasta crânio com lesões líticas e uma imagem da pelve de padrão misto, com importante componente esclerótico. Esclerose não é o padrão ósseo típico do mieloma. Compare a densidade e a distribuição das alterações sem atribuir automaticamente a mesma etiologia aos dois exemplos.",
+            "Na imagem da pelve, diferencie áreas de maior e menor densidade e descreva sua distribuição. Sem contexto clínico e avaliação apropriada, não atribua etiologia apenas pela aparência ou pela legenda. Mantenha descrição e hipótese separadas."
           ]
         },
         {

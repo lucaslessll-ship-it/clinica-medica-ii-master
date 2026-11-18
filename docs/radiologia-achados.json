@@ -1,0 +1,2516 @@
+[
+  {
+    "id": "cirrad-aulas-20261118-c94d177f4b779615",
+    "marks": [
+      {
+        "t": "Delgado dilatado",
+        "x": 43,
+        "y": 42,
+        "lx": 8,
+        "ly": 9,
+        "d": "Alças com grande quantidade de gás ocupam a região central. A distribuição ajuda a reconhecer o delgado, mas deve ser associada ao padrão das pregas."
+      },
+      {
+        "t": "Pregas coniventes",
+        "x": 69,
+        "y": 43,
+        "lx": 92,
+        "ly": 9,
+        "d": "As linhas finas atravessam a largura da alça. Esse aspecto difere das haustrações incompletas do cólon."
+      },
+      {
+        "t": "Referência óssea",
+        "x": 46,
+        "y": 65,
+        "lx": 8,
+        "ly": 91,
+        "d": "A coluna lombar ajuda a orientar a posição central das alças. A radiografia não determina sozinha a causa ou a viabilidade da obstrução."
+      }
+    ],
+    "keys": [
+      "cirrad_media_obstrucao"
+    ]
+  },
+  {
+    "id": "cirrad-aulas-20261118-c7932ff3d875f551",
+    "marks": [
+      {
+        "t": "Alças distendidas",
+        "x": 65,
+        "y": 45,
+        "lx": 8,
+        "ly": 9,
+        "d": "Siga as alças com gás e líquido na reconstrução coronal. Distensão a montante é parte do raciocínio de obstrução."
+      },
+      {
+        "t": "Mesentério",
+        "x": 57,
+        "y": 62,
+        "lx": 92,
+        "ly": 9,
+        "d": "O mesentério fica entre as alças e contém vasos. Sua congestão e o líquido associado devem ser avaliados no estudo completo."
+      },
+      {
+        "t": "Alças com menor calibre",
+        "x": 39,
+        "y": 51,
+        "lx": 8,
+        "ly": 91,
+        "d": "Compare com as alças mais distendidas. A zona exata de transição precisa ser seguida em cortes consecutivos; uma brida não é diretamente demonstrada por esta marca."
+      }
+    ],
+    "keys": [
+      "cirrad_media_obstrucao"
+    ]
+  },
+  {
+    "id": "cirrad-aulas-20261118-2a2eda9eff0730be",
+    "marks": [
+      {
+        "t": "Alça na região inguinal esquerda",
+        "x": 65,
+        "y": 43,
+        "lx": 8,
+        "ly": 9,
+        "d": "A estrutura intestinal protrui para a região inguinal esquerda do paciente, à direita da tela. Relacione-a com o trajeto das alças nos demais cortes."
+      },
+      {
+        "t": "Bexiga",
+        "x": 48,
+        "y": 58,
+        "lx": 92,
+        "ly": 9,
+        "d": "A bexiga central é uma referência para localizar a hérnia. Não a confunda com a alça herniada."
+      },
+      {
+        "t": "Vasos ilíacos/femorais",
+        "x": 69,
+        "y": 49,
+        "lx": 8,
+        "ly": 91,
+        "d": "Os vasos contrastados são referências regionais. A classificação precisa da hérnia depende de sua relação anatômica no estudo completo."
+      }
+    ],
+    "keys": [
+      "cirrad_media_obstrucao"
+    ]
+  },
+  {
+    "id": "cirrad-aulas-20261118-7d9cb8af232aa6c1",
+    "marks": [
+      {
+        "t": "Alça sigmoide muito distendida",
+        "x": 59,
+        "y": 35,
+        "lx": 8,
+        "ly": 9,
+        "d": "A alça alongada e dilatada participa da configuração de grão de café. É um padrão sugestivo, a integrar com a clínica e a TC quando indicada."
+      },
+      {
+        "t": "Paredes mediais justapostas",
+        "x": 54,
+        "y": 51,
+        "lx": 92,
+        "ly": 9,
+        "d": "As paredes próximas formam uma linha central. A configuração das paredes ajuda a reconhecer o padrão do volvo."
+      },
+      {
+        "t": "Convergência pélvica",
+        "x": 47,
+        "y": 78,
+        "lx": 8,
+        "ly": 91,
+        "d": "As setas originais convergem para a região inferior da alça. O desenho sugere torção, mas não informa sozinho a perfusão intestinal."
+      }
+    ],
+    "keys": [
+      "cirrad_media_volvo"
+    ]
+  },
+  {
+    "id": "cirrad-aulas-20261118-e6f4c728fc5427b6",
+    "marks": [
+      {
+        "t": "Apêndice em corte transversal",
+        "x": 18,
+        "y": 35,
+        "lx": 8,
+        "ly": 9,
+        "d": "O aspecto em alvo corresponde à parede ao redor do lúmen. Diâmetro, compressibilidade e gordura adjacente precisam ser avaliados em conjunto."
+      },
+      {
+        "t": "Apêndice em corte longitudinal",
+        "x": 74,
+        "y": 36,
+        "lx": 92,
+        "ly": 9,
+        "d": "O plano longitudinal permite seguir a estrutura tubular. Uma imagem estática não demonstra sozinha compressibilidade ou hiperemia."
+      }
+    ],
+    "keys": [
+      "cirrad_media_apendice"
+    ]
+  },
+  {
+    "id": "cirrad-aulas-20261118-a88950a7159edd8b",
+    "marks": [
+      {
+        "t": "Região apendicular no plano coronal",
+        "x": 21,
+        "y": 64,
+        "lx": 8,
+        "ly": 9,
+        "d": "Localize a estrutura tubular junto ao ceco e a alteração inflamatória regional. A continuidade é confirmada seguindo o estudo multiplanar."
+      },
+      {
+        "t": "Região pericecal no plano axial",
+        "x": 62,
+        "y": 48,
+        "lx": 92,
+        "ly": 9,
+        "d": "Compare a gordura ao redor do ceco com a gordura distante do foco. Densificação regional é um sinal associado, não um diagnóstico isolado."
+      },
+      {
+        "t": "Ceco",
+        "x": 16,
+        "y": 48,
+        "lx": 8,
+        "ly": 91,
+        "d": "O ceco é a referência anatômica para procurar a origem do apêndice. Confundir alça ileal com apêndice é uma armadilha frequente."
+      }
+    ],
+    "keys": [
+      "cirrad_media_apendice"
+    ]
+  },
+  {
+    "id": "cirrad-aulas-20261118-1ce51c76180d3566",
+    "marks": [
+      {
+        "t": "Segmento colônico acometido",
+        "x": 29,
+        "y": 46,
+        "lx": 8,
+        "ly": 9,
+        "d": "O foco está relacionado ao cólon no painel coronal. Procure espessamento segmentar, divertículos e alteração da gordura ao redor."
+      },
+      {
+        "t": "Gordura pericólica",
+        "x": 82,
+        "y": 70,
+        "lx": 92,
+        "ly": 9,
+        "d": "A gordura adjacente ao segmento mostra alteração inflamatória. O contexto e a distribuição ajudam a diferenciar diverticulite de outros processos."
+      },
+      {
+        "t": "Parede colônica",
+        "x": 24,
+        "y": 68,
+        "lx": 8,
+        "ly": 91,
+        "d": "Compare parede e lúmen nos cortes axiais. Coleções e gás extraluminal devem ser procurados nos demais cortes antes de classificar complicações."
+      }
+    ],
+    "keys": [
+      "cirrad_media_diverticulite"
+    ]
+  },
+  {
+    "id": "cirrad-aulas-20261118-a99b207ac7aa47e4",
+    "marks": [
+      {
+        "t": "Fígado",
+        "x": 39,
+        "y": 38,
+        "lx": 8,
+        "ly": 9,
+        "d": "O parênquima hepático funciona como janela acústica. Reconhecê-lo é o primeiro passo para orientar a janela hepatorrenal."
+      },
+      {
+        "t": "Rim direito",
+        "x": 51,
+        "y": 68,
+        "lx": 92,
+        "ly": 9,
+        "d": "O rim tem córtex mais escuro e região central mais ecogênica. Não confunda a região central do rim com líquido livre."
+      },
+      {
+        "t": "Interface hepatorrenal",
+        "x": 55,
+        "y": 51,
+        "lx": 8,
+        "ly": 91,
+        "d": "É a interface a inspecionar à procura de uma faixa líquida. O corte normal apresentado não exclui lesão em outras janelas ou pequenos volumes."
+      }
+    ],
+    "keys": [
+      "cirrad_media_fast_normal"
+    ]
+  },
+  {
+    "id": "cirrad-aulas-20261118-0b648dffe6730a4a",
+    "marks": [
+      {
+        "t": "Baço",
+        "x": 63,
+        "y": 25,
+        "lx": 8,
+        "ly": 9,
+        "d": "O baço é a referência do quadrante superior esquerdo nesta janela. Observe sua relação com o polo superior do rim."
+      },
+      {
+        "t": "Rim esquerdo",
+        "x": 66,
+        "y": 60,
+        "lx": 92,
+        "ly": 9,
+        "d": "O rim ocupa o plano mais profundo. A diferenciação entre córtex e seio renal ajuda a não chamar a anatomia normal de líquido."
+      },
+      {
+        "t": "Interface esplenorrenal",
+        "x": 66,
+        "y": 40,
+        "lx": 8,
+        "ly": 91,
+        "d": "Inspecione a interface e a região subdiafragmática em vários planos. Esta imagem isolada é uma referência anatômica, não um FAST completo."
+      }
+    ],
+    "keys": [
+      "cirrad_media_fast_normal"
+    ]
+  },
+  {
+    "id": "cirrad-aulas-20261118-c80f0431490bea3a",
+    "marks": [
+      {
+        "t": "Líquido na interface hepatorrenal",
+        "x": 68,
+        "y": 35,
+        "lx": 8,
+        "ly": 9,
+        "d": "A faixa escura entre as superfícies é o achado ilustrado. No trauma, líquido livre deve ser interpretado com o estado hemodinâmico."
+      },
+      {
+        "t": "Fígado",
+        "x": 48,
+        "y": 30,
+        "lx": 92,
+        "ly": 9,
+        "d": "O tecido hepático fica superficial à interface marcada. Vasos e vesícula precisam ser diferenciados de líquido fora do órgão."
+      },
+      {
+        "t": "Rim direito",
+        "x": 56,
+        "y": 60,
+        "lx": 8,
+        "ly": 91,
+        "d": "O rim delimita a face profunda da janela. O FAST não identifica necessariamente qual órgão originou o sangramento."
+      }
+    ],
+    "keys": [
+      "cirrad_media_fast_positivo"
+    ]
+  },
+  {
+    "id": "cirrad-aulas-20261118-e576a82f0f30d964",
+    "marks": [
+      {
+        "t": "Bexiga",
+        "x": 53,
+        "y": 34,
+        "lx": 8,
+        "ly": 9,
+        "d": "A cavidade anecoica com parede definida corresponde à bexiga. Ela fornece a janela para procurar líquido nos recessos pélvicos."
+      },
+      {
+        "t": "Líquido livre pélvico",
+        "x": 54,
+        "y": 68,
+        "lx": 92,
+        "ly": 9,
+        "d": "A coleção escura está fora da luz vesical, em região dependente. O aspecto identifica líquido, mas não comprova sua composição."
+      },
+      {
+        "t": "Parede posterior da bexiga",
+        "x": 51,
+        "y": 52,
+        "lx": 8,
+        "ly": 91,
+        "d": "Siga o contorno vesical para separar conteúdo intravesical de líquido extravesical. Mais de um plano é necessário para a confirmação."
+      }
+    ],
+    "keys": [
+      "cirrad_media_fast_positivo"
+    ]
+  },
+  {
+    "id": "cirrad-aulas-20261118-d72492a5f654cec9",
+    "marks": [
+      {
+        "t": "Coleção líquida pélvica",
+        "x": 48,
+        "y": 58,
+        "lx": 8,
+        "ly": 9,
+        "d": "A área predominantemente escura representa o líquido mostrado no exemplo. A localização precisa deve ser correlacionada com o exame pélvico completo."
+      },
+      {
+        "t": "Ecos internos",
+        "x": 52,
+        "y": 66,
+        "lx": 92,
+        "ly": 9,
+        "d": "O conteúdo não é completamente anecoico: há ecos em seu interior. Sangue pode apresentar esse aspecto, mas o achado é inespecífico."
+      }
+    ],
+    "keys": [
+      "cirrad_media_hemoperitonio"
+    ]
+  },
+  {
+    "id": "cirrad-aulas-20261118-af9a2d545e846b9c",
+    "marks": [
+      {
+        "t": "Líquido perihepático",
+        "x": 23,
+        "y": 22,
+        "lx": 8,
+        "ly": 9,
+        "d": "O líquido acompanha a superfície do fígado. A distribuição peritoneal é mais informativa que chamar toda área escura de sangue."
+      },
+      {
+        "t": "Líquido na pelve",
+        "x": 36,
+        "y": 80,
+        "lx": 92,
+        "ly": 9,
+        "d": "Há conteúdo líquido envolvendo as estruturas pélvicas. Densidade, contexto e demais cortes são necessários para interpretar sua origem."
+      },
+      {
+        "t": "Parênquima hepático",
+        "x": 46,
+        "y": 20,
+        "lx": 8,
+        "ly": 91,
+        "d": "O fígado é a referência que delimita o líquido perihepático. A imagem ilustra distribuição; não define sozinha a causa da hemorragia."
+      }
+    ],
+    "keys": [
+      "cirrad_media_hemoperitonio"
+    ]
+  },
+  {
+    "id": "cirrad-aulas-20261118-33a2e52f3a2a0dbb",
+    "marks": [
+      {
+        "t": "Luz aórtica contrastada",
+        "x": 57,
+        "y": 46,
+        "lx": 8,
+        "ly": 9,
+        "d": "O contraste opacifica a luz central da aorta. O contorno do aneurisma é mais amplo que a luz opacificada."
+      },
+      {
+        "t": "Saco aneurismático",
+        "x": 48,
+        "y": 43,
+        "lx": 92,
+        "ly": 9,
+        "d": "Avalie o diâmetro externo do saco, incluindo a porção não opacificada. A imagem não deve ser usada para medir sem escala e técnica adequadas."
+      },
+      {
+        "t": "Hematoma retroperitoneal",
+        "x": 74,
+        "y": 57,
+        "lx": 8,
+        "ly": 91,
+        "d": "O tecido heterogêneo adjacente ao aneurisma corresponde ao hematoma do exemplo. Sangramento retroperitoneal pode não produzir FAST positivo."
+      }
+    ],
+    "keys": [
+      "cirrad_media_aorta_rota"
+    ]
+  },
+  {
+    "id": "cirrad-aulas-20261118-7eb7a9f3dc8597ff",
+    "marks": [
+      {
+        "t": "Superfície hepática irregular",
+        "x": 55,
+        "y": 15,
+        "lx": 8,
+        "ly": 9,
+        "d": "O contorno não é liso. Irregularidade de superfície é uma pista de hepatopatia crônica, a integrar com o restante do exame."
+      },
+      {
+        "t": "Parênquima heterogêneo",
+        "x": 38,
+        "y": 51,
+        "lx": 92,
+        "ly": 9,
+        "d": "A textura não é homogênea. Esse achado é inespecífico isoladamente e não mede o grau de fibrose."
+      },
+      {
+        "t": "Luz vascular intra-hepática",
+        "x": 66,
+        "y": 57,
+        "lx": 8,
+        "ly": 91,
+        "d": "A estrutura anecoica ramificada é uma referência vascular. Não deve ser confundida automaticamente com um cisto ou uma coleção livre."
+      }
+    ],
+    "keys": [
+      "cirrad_media_figado_cirrose"
+    ]
+  },
+  {
+    "id": "cirrad-aulas-20261118-a49c7c97db8c9805",
+    "marks": [
+      {
+        "t": "Fígado no painel inferior esquerdo",
+        "x": 26,
+        "y": 74,
+        "lx": 8,
+        "ly": 9,
+        "d": "O parênquima hepático é a referência para comparar volume e contorno. A avaliação de nódulos exige protocolo e fases adequados."
+      },
+      {
+        "t": "Contorno hepático na TC",
+        "x": 17,
+        "y": 81,
+        "lx": 92,
+        "ly": 9,
+        "d": "Siga o limite entre parênquima e estruturas adjacentes. A superfície e a redistribuição de volume devem ser avaliadas em conjunto, sem classificar a doença por um ponto isolado."
+      },
+      {
+        "t": "Baço no painel inferior direito",
+        "x": 87,
+        "y": 80,
+        "lx": 8,
+        "ly": 91,
+        "d": "O baço é uma referência ao avaliar possíveis sinais de hipertensão portal. Tamanho e repercussões devem ser confirmados com medidas e outros achados."
+      }
+    ],
+    "keys": [
+      "cirrad_media_figado_cirrose"
+    ]
+  },
+  {
+    "id": "cirrad-aulas-20261118-650288d89a758a0f",
+    "marks": [
+      {
+        "t": "Cálculos intravesiculares",
+        "x": 48,
+        "y": 61,
+        "lx": 8,
+        "ly": 9,
+        "d": "Os focos muito ecogênicos ficam no interior da vesícula. O aspecto deve ser relacionado à sombra posterior e, durante o exame, à mobilidade."
+      },
+      {
+        "t": "Sombra acústica posterior",
+        "x": 48,
+        "y": 73,
+        "lx": 92,
+        "ly": 9,
+        "d": "A atenuação do feixe produz uma faixa escura atrás dos cálculos. É diferente do reforço posterior observado atrás de líquido simples."
+      },
+      {
+        "t": "Luz da vesícula",
+        "x": 49,
+        "y": 45,
+        "lx": 8,
+        "ly": 91,
+        "d": "O conteúdo biliar é predominantemente anecoico. Cálculos isolados não significam, por si, inflamação da parede."
+      }
+    ],
+    "keys": [
+      "cirrad_media_biliar_calculos"
+    ]
+  },
+  {
+    "id": "cirrad-aulas-20261118-8dc625c383cc5f30",
+    "marks": [
+      {
+        "t": "Parede fina no painel normal",
+        "x": 27,
+        "y": 35,
+        "lx": 8,
+        "ly": 9,
+        "d": "A comparação mostra a parede fina da vesícula à esquerda. A aparência deve ser interpretada com técnica, jejum e contexto."
+      },
+      {
+        "t": "Parede espessada no painel direito",
+        "x": 78,
+        "y": 28,
+        "lx": 92,
+        "ly": 9,
+        "d": "A parede está mais espessa no exemplo inflamatório. Espessamento isolado também ocorre em doenças sistêmicas e não confirma colecistite."
+      },
+      {
+        "t": "Conteúdo ecogênico dependente",
+        "x": 73,
+        "y": 65,
+        "lx": 8,
+        "ly": 91,
+        "d": "O material ecogênico no interior corresponde à lama ilustrada. Lama não é sinônimo de cálculo nem demonstra isoladamente infecção."
+      }
+    ],
+    "keys": [
+      "cirrad_media_biliar_inflamacao"
+    ]
+  },
+  {
+    "id": "cirrad-aulas-20261118-7a4748447355be28",
+    "marks": [
+      {
+        "t": "Gás relacionado à parede vesicular",
+        "x": 14,
+        "y": 36,
+        "lx": 8,
+        "ly": 9,
+        "d": "O componente gasoso acompanha a região da vesícula no painel axial. Diferencie gás na parede, no lúmen e em alças vizinhas."
+      },
+      {
+        "t": "Gás no segundo plano apresentado",
+        "x": 70,
+        "y": 44,
+        "lx": 92,
+        "ly": 9,
+        "d": "O segundo plano ajuda a relacionar o gás ao contorno vesicular. Instrumentação e fístula são contextos alternativos a considerar."
+      },
+      {
+        "t": "Fígado adjacente",
+        "x": 72,
+        "y": 25,
+        "lx": 8,
+        "ly": 91,
+        "d": "O fígado é a referência anatômica para localizar a vesícula. O exemplo deve ser correlacionado com inflamação, perfusão e contexto clínico."
+      }
+    ],
+    "keys": [
+      "cirrad_media_biliar_inflamacao"
+    ]
+  },
+  {
+    "id": "cirrad-aulas-20261118-701c0679dbe6d5d0",
+    "marks": [
+      {
+        "t": "Região hilar indicada pela seta original",
+        "x": 55,
+        "y": 34,
+        "lx": 8,
+        "ly": 9,
+        "d": "A seta orienta a localização da alteração junto à confluência biliar. A projeção isolada não estabelece histologia ou extensão tumoral."
+      },
+      {
+        "t": "Ductos intra-hepáticos a montante",
+        "x": 47,
+        "y": 27,
+        "lx": 92,
+        "ly": 9,
+        "d": "Siga os trajetos tubulares em direção à região hilar. A distribuição da dilatação ajuda a localizar o nível da obstrução."
+      },
+      {
+        "t": "Fígado",
+        "x": 29,
+        "y": 49,
+        "lx": 8,
+        "ly": 91,
+        "d": "O parênquima é a referência do trajeto ductal. A caracterização de uma lesão depende das sequências e fases disponíveis."
+      }
+    ],
+    "keys": [
+      "cirrad_media_biliar_obstrucao"
+    ]
+  },
+  {
+    "id": "cirrad-aulas-20261118-0889c093e0de0637",
+    "marks": [
+      {
+        "t": "Árvore biliar intra-hepática",
+        "x": 30,
+        "y": 37,
+        "lx": 8,
+        "ly": 9,
+        "d": "As estruturas brilhantes ramificadas contêm líquido. A CPRM oferece um mapa dos ductos, a conferir nas imagens-fonte."
+      },
+      {
+        "t": "Região da confluência biliar",
+        "x": 54,
+        "y": 43,
+        "lx": 92,
+        "ly": 9,
+        "d": "A região hilar é o local de comparação entre ductos dilatados e segmentos estreitos. Uma projeção não define sozinha a natureza de uma estenose."
+      },
+      {
+        "t": "Vesícula biliar",
+        "x": 43,
+        "y": 66,
+        "lx": 8,
+        "ly": 91,
+        "d": "A vesícula aparece como reservatório líquido de alto sinal. Não confunda sua luz com um ducto dilatado ou uma coleção."
+      }
+    ],
+    "keys": [
+      "cirrad_media_biliar_obstrucao"
+    ]
+  },
+  {
+    "id": "cirrad-aulas-20261118-365e41d8c5e72d10",
+    "marks": [
+      {
+        "t": "Região da cabeça pancreática",
+        "x": 22,
+        "y": 45,
+        "lx": 8,
+        "ly": 9,
+        "d": "Localize o pâncreas em relação aos vasos e ao duodeno. Compare seu volume e realce com o restante da glândula."
+      },
+      {
+        "t": "Corpo e cauda no painel B",
+        "x": 76,
+        "y": 37,
+        "lx": 92,
+        "ly": 9,
+        "d": "As setas originais orientam o trajeto pancreático. A comparação de realce exige fase e protocolo adequados."
+      }
+    ],
+    "keys": [
+      "cirrad_media_pancreas_agudo"
+    ]
+  },
+  {
+    "id": "cirrad-aulas-20261118-8986058bde4b46c0",
+    "marks": [
+      {
+        "t": "Área sem realce no painel A",
+        "x": 25,
+        "y": 22,
+        "lx": 8,
+        "ly": 9,
+        "d": "A região apontada pelas setas originais apresenta realce reduzido/ausente no exemplo necrosante. O tempo da evolução e a fase do contraste são essenciais."
+      },
+      {
+        "t": "Parênquima preservado no painel B",
+        "x": 74,
+        "y": 26,
+        "lx": 92,
+        "ly": 9,
+        "d": "Compare a região que ainda realça com a área alterada do outro painel. Não confunda toda hipodensidade com necrose sem avaliar o protocolo."
+      },
+      {
+        "t": "Coleção no painel C",
+        "x": 26,
+        "y": 68,
+        "lx": 8,
+        "ly": 91,
+        "d": "O conteúdo peripancreático deve ser descrito por composição e organização. A imagem isolada não confirma infecção."
+      }
+    ],
+    "keys": [
+      "cirrad_media_pancreas_agudo"
+    ]
+  },
+  {
+    "id": "cirrad-aulas-20261118-722999fe130e8b07",
+    "marks": [
+      {
+        "t": "Calcificações pancreáticas",
+        "x": 52,
+        "y": 50,
+        "lx": 8,
+        "ly": 9,
+        "d": "Os focos de alta densidade acompanham a região pancreática. Nesse contexto, são pistas de dano estrutural crônico."
+      },
+      {
+        "t": "Trajeto do corpo e cauda",
+        "x": 63,
+        "y": 52,
+        "lx": 92,
+        "ly": 9,
+        "d": "Siga a glândula transversalmente, à frente dos grandes vasos. Ductos e atrofia precisam ser avaliados nos demais cortes."
+      },
+      {
+        "t": "Aorta como referência",
+        "x": 51,
+        "y": 55,
+        "lx": 8,
+        "ly": 91,
+        "d": "O grande vaso posterior ajuda a orientar o pâncreas. Não confunda calcificação vascular com calcificação da glândula."
+      }
+    ],
+    "keys": [
+      "cirrad_media_pancreas_cronico"
+    ]
+  },
+  {
+    "id": "cirrad-aulas-20261118-b6326b96f7ce43e8",
+    "marks": [
+      {
+        "t": "Via biliar dilatada na TC",
+        "x": 20,
+        "y": 30,
+        "lx": 8,
+        "ly": 9,
+        "d": "O ducto biliar dilatado participa do sinal do duplo ducto. Siga-o em cortes consecutivos para localizar a interrupção."
+      },
+      {
+        "t": "Ducto pancreático na TC",
+        "x": 30,
+        "y": 36,
+        "lx": 92,
+        "ly": 9,
+        "d": "A dilatação pancreática associada exige investigação da causa. O sinal não é exclusivo de câncer."
+      },
+      {
+        "t": "Via biliar na CPRM",
+        "x": 77,
+        "y": 52,
+        "lx": 8,
+        "ly": 91,
+        "d": "Siga a coluna de líquido da árvore biliar até o segmento distal. Compare com a dilatação pancreática indicada ao lado."
+      },
+      {
+        "t": "Ducto pancreático na CPRM",
+        "x": 86,
+        "y": 54,
+        "lx": 92,
+        "ly": 91,
+        "d": "O ducto pancreático é visível junto à via biliar dilatada. A combinação constitui o sinal do duplo ducto, que exige investigar a causa e não confirma câncer isoladamente."
+      }
+    ],
+    "keys": [
+      "cirrad_media_pancreas_massa"
+    ]
+  },
+  {
+    "id": "cirrad-aulas-20261118-6fa7cae5e3c1744a",
+    "marks": [
+      {
+        "t": "Defeito arterial indicado",
+        "x": 60,
+        "y": 31,
+        "lx": 8,
+        "ly": 9,
+        "d": "A seta original identifica a região do êmbolo na artéria mesentérica superior. Confirme a extensão em fase arterial e reconstruções apropriadas."
+      },
+      {
+        "t": "Alça com hiporrealce",
+        "x": 88,
+        "y": 44,
+        "lx": 92,
+        "ly": 9,
+        "d": "Compare sua parede com os segmentos mais realçados. Menor realce é um sinal de alerta no contexto vascular."
+      },
+      {
+        "t": "Alça contralateral para comparação",
+        "x": 32,
+        "y": 26,
+        "lx": 8,
+        "ly": 91,
+        "d": "Compare a parede de segmentos diferentes dentro do mesmo estudo. A comparação ajuda a perceber o menor realce do segmento indicado, mas não define sozinha a viabilidade."
+      }
+    ],
+    "keys": [
+      "cirrad_media_vascular_isquemia"
+    ]
+  },
+  {
+    "id": "cirrad-aulas-20261118-fe406a5ee2fe80b0",
+    "marks": [
+      {
+        "t": "Segmento com maior realce",
+        "x": 53,
+        "y": 52,
+        "lx": 8,
+        "ly": 9,
+        "d": "O segmento mais contrastado fornece uma referência interna. A comparação deve usar cortes e fase equivalentes."
+      },
+      {
+        "t": "Segmento com hiporrealce",
+        "x": 72,
+        "y": 40,
+        "lx": 92,
+        "ly": 9,
+        "d": "A seta original orienta a área menos realçada. Esse sinal não deve ser interpretado sem o protocolo e os achados vasculares."
+      }
+    ],
+    "keys": [
+      "cirrad_media_vascular_isquemia"
+    ]
+  },
+  {
+    "id": "cirrad-aulas-20261118-27e3896ce734540f",
+    "marks": [
+      {
+        "t": "Gás na parede intestinal",
+        "x": 80,
+        "y": 78,
+        "lx": 8,
+        "ly": 9,
+        "d": "As pequenas imagens gasosas acompanham a periferia da alça. A posição intramural é a diferença em relação ao gás apenas no lúmen."
+      },
+      {
+        "t": "Gás intraluminal",
+        "x": 60,
+        "y": 20,
+        "lx": 92,
+        "ly": 9,
+        "d": "O gás central ocupa a luz intestinal. Compare sua posição com o contorno parietal marcado."
+      },
+      {
+        "t": "Conteúdo líquido e nível",
+        "x": 68,
+        "y": 57,
+        "lx": 8,
+        "ly": 91,
+        "d": "A interface gás/líquido caracteriza conteúdo e distensão. Pneumatose isolada não comprova necrose; integre perfusão, vasos e quadro clínico."
+      }
+    ],
+    "keys": [
+      "cirrad_media_vascular_pneumatose"
+    ]
+  },
+  {
+    "id": "rad_apend_ax",
+    "marks": [
+      {
+        "t": "Apendicolito indicado na figura",
+        "x": 34,
+        "y": 32,
+        "lx": 8,
+        "ly": 9,
+        "d": "O foco denso fica na região apendicular apontada pela seta azul original. Apendicolito isolado não basta para diagnosticar apendicite."
+      },
+      {
+        "t": "Ceco",
+        "x": 26,
+        "y": 42,
+        "lx": 92,
+        "ly": 9,
+        "d": "O ceco é a referência para seguir a origem do apêndice. Compare a gordura regional com áreas distantes da inflamação."
+      },
+      {
+        "t": "Corpo vertebral",
+        "x": 54,
+        "y": 58,
+        "lx": 8,
+        "ly": 91,
+        "d": "A vértebra lombar orienta a anatomia posterior no corte axial. O lado direito do paciente fica à esquerda da tela."
+      }
+    ],
+    "keys": [
+      "rad_m6"
+    ]
+  },
+  {
+    "id": "rad_mm_pelve",
+    "marks": [
+      {
+        "t": "Áreas escleróticas no osso ilíaco",
+        "x": 12,
+        "y": 50,
+        "lx": 8,
+        "ly": 9,
+        "d": "As áreas mais brancas são de maior densidade óssea. Esse padrão não deve ser chamado automaticamente de lesão lítica."
+      },
+      {
+        "t": "Alterações do sacro na TC",
+        "x": 74,
+        "y": 75,
+        "lx": 92,
+        "ly": 9,
+        "d": "O sacro apresenta densidade heterogênea. Correlacione com a distribuição no esqueleto e com o contexto clínico."
+      },
+      {
+        "t": "Asa ilíaca na TC",
+        "x": 92,
+        "y": 43,
+        "lx": 8,
+        "ly": 91,
+        "d": "Compare as áreas densas com a medula e a cortical adjacentes. A imagem isolada não define a etiologia das alterações."
+      }
+    ],
+    "caption": "Radiografia da bacia (A) e TC axial (B): alterações ósseas mistas, com importante componente esclerótico. O padrão isolado não define a etiologia e não representa o aspecto lítico clássico usado no diagnóstico de doença óssea do mieloma.",
+    "keys": [
+      "rad_m9"
+    ]
+  },
+  {
+    "id": "infl08",
+    "marks": [
+      {
+        "t": "Gás subdiafragmático",
+        "x": 29,
+        "y": 74,
+        "lx": 8,
+        "ly": 9,
+        "d": "A seta no painel de tórax aponta a faixa de gás sob a cúpula direita. Diferencie gás livre de uma alça interposta."
+      },
+      {
+        "t": "Alças e níveis no painel direito",
+        "x": 84,
+        "y": 64,
+        "lx": 92,
+        "ly": 9,
+        "d": "A posição em ortostase permite observar interfaces gás/líquido. Técnica e incidência são parte da interpretação."
+      },
+      {
+        "t": "Abdome em decúbito no painel de fundo",
+        "x": 35,
+        "y": 19,
+        "lx": 8,
+        "ly": 91,
+        "d": "A incidência supina mostra a distribuição global de gás. A ausência de ar livre visível não exclui perfuração."
+      }
+    ],
+    "caption": "Exemplo da rotina radiográfica de abdome agudo, com imagens em decúbito e ortostase. A seta na radiografia de tórax indica gás subdiafragmático. A escolha do método depende da pergunta clínica; a TC detecta volumes menores de gás livre.",
+    "keys": [
+      "cirrad_0",
+      "ciraa_0"
+    ]
+  },
+  {
+    "id": "perf04",
+    "marks": [
+      {
+        "t": "Parede intestinal delineada pelo gás",
+        "x": 27,
+        "y": 53,
+        "lx": 8,
+        "ly": 9,
+        "d": "Procure o contorno dos dois lados da parede no contexto do exemplo de pneumoperitônio. A avaliação exige a imagem completa e a incidência correta."
+      },
+      {
+        "t": "Gás em localização anterior/superior",
+        "x": 25,
+        "y": 24,
+        "lx": 92,
+        "ly": 9,
+        "d": "A distribuição anormal do gás é a pista do exemplo. Distensão de alças e gás livre não devem ser confundidos."
+      },
+      {
+        "t": "Comparação com o segundo painel",
+        "x": 73,
+        "y": 51,
+        "lx": 8,
+        "ly": 91,
+        "d": "Compare o desenho das alças entre os painéis. Uma imagem negativa isolada não exclui perfuração."
+      }
+    ],
+    "keys": [
+      "cirrad_0",
+      "ciraa_5"
+    ]
+  },
+  {
+    "id": "obst07",
+    "marks": [
+      {
+        "t": "Delgado distendido no painel esquerdo",
+        "x": 58,
+        "y": 61,
+        "lx": 8,
+        "ly": 9,
+        "d": "As alças centrais estão dilatadas. Reconheça o trajeto e compare com o calibre dos segmentos distais."
+      },
+      {
+        "t": "Pregas no painel direito",
+        "x": 90,
+        "y": 54,
+        "lx": 92,
+        "ly": 9,
+        "d": "As pregas finas do delgado atravessam o lúmen. A localização isolada não é suficiente para classificar uma alça."
+      }
+    ],
+    "keys": [
+      "cirrad_0",
+      "ciraa_4"
+    ]
+  },
+  {
+    "id": "obst10",
+    "marks": [
+      {
+        "t": "Alças centrais distendidas",
+        "x": 49,
+        "y": 49,
+        "lx": 8,
+        "ly": 9,
+        "d": "A área colorida no material original orienta a distribuição central das alças. Use-a como apoio e confira a imagem sem a coloração."
+      },
+      {
+        "t": "Pregas coniventes",
+        "x": 53,
+        "y": 64,
+        "lx": 92,
+        "ly": 9,
+        "d": "As pregas atravessam a largura da alça, produzindo o padrão de empilhamento de moedas. O sinal identifica delgado, não a causa da obstrução."
+      }
+    ],
+    "keys": [
+      "cirrad_0",
+      "ciraa_4"
+    ]
+  },
+  {
+    "id": "obst21",
+    "marks": [
+      {
+        "t": "Alça colônica periférica",
+        "x": 21,
+        "y": 48,
+        "lx": 8,
+        "ly": 9,
+        "d": "O cólon distendido ocupa a periferia do abdome no exemplo. A comparação com o outro painel ajuda a seguir o trajeto."
+      },
+      {
+        "t": "Haustrações incompletas",
+        "x": 69,
+        "y": 54,
+        "lx": 92,
+        "ly": 9,
+        "d": "As pregas do cólon não atravessam toda a luz. Compare com as pregas completas do delgado."
+      }
+    ],
+    "keys": [
+      "cirrad_0",
+      "ciraa_4"
+    ]
+  },
+  {
+    "id": "obst22",
+    "marks": [
+      {
+        "t": "Alça em grão de café",
+        "x": 76,
+        "y": 60,
+        "lx": 8,
+        "ly": 9,
+        "d": "O sigmoide muito distendido assume uma configuração alongada. A aparência sugere volvo no contexto apropriado."
+      },
+      {
+        "t": "Convergência das paredes",
+        "x": 76,
+        "y": 80,
+        "lx": 92,
+        "ly": 9,
+        "d": "As setas originais convergem para a região inferior do segmento. A TC pode esclarecer pontos de transição e complicações."
+      }
+    ],
+    "keys": [
+      "cirrad_0",
+      "ciraa_4"
+    ]
+  },
+  {
+    "id": "vasc18",
+    "marks": [
+      {
+        "t": "Gás relacionado à parede",
+        "x": 77,
+        "y": 33,
+        "lx": 8,
+        "ly": 9,
+        "d": "As setas do painel direito orientam a busca de gás parietal. Diferencie gás na parede de gás contido apenas na luz."
+      },
+      {
+        "t": "Alças no painel pediátrico",
+        "x": 39,
+        "y": 50,
+        "lx": 92,
+        "ly": 9,
+        "d": "O painel ilustra a distribuição das alças em um paciente pediátrico. Não transporte a etiologia pediátrica diretamente para a isquemia do adulto."
+      }
+    ],
+    "caption": "Radiografias de paciente pediátrico usadas como exemplo morfológico de pneumatose intestinal. Não demonstram, por si, isquemia mesentérica do adulto; o gás parietal isolado também não comprova necrose.",
+    "keys": [
+      "cirrad_0",
+      "ciraa_6"
+    ]
+  },
+  {
+    "id": "perf05",
+    "marks": [
+      {
+        "t": "Gás livre anterior no axial",
+        "x": 25,
+        "y": 28,
+        "lx": 8,
+        "ly": 9,
+        "d": "O gás escuro está fora da luz intestinal, junto à parede anterior. As setas vermelhas originais ajudam a localizá-lo."
+      },
+      {
+        "t": "Segundo foco de gás anterior",
+        "x": 35,
+        "y": 31,
+        "lx": 92,
+        "ly": 9,
+        "d": "A distribuição anterior em decúbito é uma pista. Não confunda gás intraluminal com gás livre."
+      },
+      {
+        "t": "Alças distendidas",
+        "x": 41,
+        "y": 54,
+        "lx": 8,
+        "ly": 91,
+        "d": "A distensão associada precisa ser descrita separadamente. Ela não localiza sozinha o ponto de perfuração."
+      }
+    ],
+    "keys": [
+      "cirrad_1",
+      "ciraa_5"
+    ]
+  },
+  {
+    "id": "perf09",
+    "marks": [
+      {
+        "t": "Área indicada de extravasamento",
+        "x": 21,
+        "y": 51,
+        "lx": 8,
+        "ly": 9,
+        "d": "As setas originais indicam o trajeto do contraste na região gastroduodenal do exemplo. A interpretação requer correlação entre planos e fases."
+      },
+      {
+        "t": "Estômago com contraste oral",
+        "x": 31,
+        "y": 35,
+        "lx": 92,
+        "ly": 9,
+        "d": "O conteúdo de alta densidade no estômago é a referência para seguir uma eventual saída do contraste."
+      },
+      {
+        "t": "Região gastroduodenal no axial",
+        "x": 67,
+        "y": 26,
+        "lx": 8,
+        "ly": 91,
+        "d": "O segundo plano ajuda a localizar a alteração. A seta orienta o achado, mas não dispensa analisar os demais cortes."
+      }
+    ],
+    "keys": [
+      "cirrad_1",
+      "ciraa_5"
+    ]
+  },
+  {
+    "id": "obst12",
+    "marks": [
+      {
+        "t": "Conteúdo com aspecto fecal no delgado",
+        "x": 49,
+        "y": 49,
+        "lx": 8,
+        "ly": 9,
+        "d": "O conteúdo granular, com pequenas bolhas de gás, ilustra o small bowel feces sign. É um sinal de estase, a integrar com a transição."
+      },
+      {
+        "t": "Alças dilatadas",
+        "x": 35,
+        "y": 45,
+        "lx": 92,
+        "ly": 9,
+        "d": "Compare calibre e conteúdo das alças a montante. O sinal das fezes não comprova sozinho isquemia."
+      },
+      {
+        "t": "Grandes vasos como referência",
+        "x": 40,
+        "y": 60,
+        "lx": 8,
+        "ly": 91,
+        "d": "A aorta e os vasos mesentéricos orientam a anatomia central. A localização exata da transição exige seguir cortes consecutivos."
+      }
+    ],
+    "keys": [
+      "cirrad_1",
+      "ciraa_4"
+    ]
+  },
+  {
+    "id": "obst13",
+    "marks": [
+      {
+        "t": "Alças delgadas dilatadas",
+        "x": 43,
+        "y": 37,
+        "lx": 8,
+        "ly": 9,
+        "d": "As alças com líquido/gás sustentam o padrão de obstrução no exemplo. Compare com segmentos de menor calibre."
+      },
+      {
+        "t": "Mesentério central",
+        "x": 50,
+        "y": 51,
+        "lx": 92,
+        "ly": 9,
+        "d": "Procure vasos e sinais de congestão ou líquido. Uma aderência geralmente é inferida pelo contexto e pela ausência de outra causa visível."
+      },
+      {
+        "t": "Segmento de menor calibre",
+        "x": 33,
+        "y": 58,
+        "lx": 8,
+        "ly": 91,
+        "d": "A comparação de calibres orienta a busca da transição. Não se identifica uma brida diretamente apenas por esta seta."
+      }
+    ],
+    "keys": [
+      "cirrad_1",
+      "ciraa_4"
+    ]
+  },
+  {
+    "id": "obst26",
+    "marks": [
+      {
+        "t": "Sigmoide distendido",
+        "x": 73,
+        "y": 45,
+        "lx": 8,
+        "ly": 9,
+        "d": "O segmento muito amplo aparece nos dois planos. A distensão precisa ser relacionada à configuração dos pontos de transição."
+      },
+      {
+        "t": "Turbilhão mesentérico",
+        "x": 33,
+        "y": 61,
+        "lx": 92,
+        "ly": 9,
+        "d": "A disposição em espiral dos vasos e do mesentério é a pista no painel esquerdo. O contexto ajuda a diferenciar torção de outras configurações."
+      },
+      {
+        "t": "Região de afilamento",
+        "x": 34,
+        "y": 68,
+        "lx": 8,
+        "ly": 91,
+        "d": "Siga o segmento até a redução de calibre nos cortes adjacentes. A perfusão intestinal deve ser avaliada separadamente."
+      }
+    ],
+    "keys": [
+      "cirrad_1",
+      "ciraa_4"
+    ]
+  },
+  {
+    "id": "obst28",
+    "marks": [
+      {
+        "t": "Cólon dilatado a montante",
+        "x": 16,
+        "y": 51,
+        "lx": 8,
+        "ly": 9,
+        "d": "O painel coronal mostra a dilatação proximal. A causa deve ser procurada no ponto de mudança de calibre."
+      },
+      {
+        "t": "Segmento de parede espessada",
+        "x": 68,
+        "y": 54,
+        "lx": 92,
+        "ly": 9,
+        "d": "O painel axial ilustra a região de espessamento que estreita o lúmen. A imagem sugere uma causa estrutural e requer investigação etiológica."
+      },
+      {
+        "t": "Conteúdo e calibre colônicos",
+        "x": 74,
+        "y": 40,
+        "lx": 8,
+        "ly": 91,
+        "d": "Compare a luz mais ampla com o segmento estreito. A confirmação de neoplasia depende da avaliação clínica e dos exames indicados."
+      }
+    ],
+    "keys": [
+      "cirrad_1",
+      "ciraa_4",
+      "cirproc_2"
+    ]
+  },
+  {
+    "id": "vasc10",
+    "marks": [
+      {
+        "t": "Vasos mesentéricos",
+        "x": 76,
+        "y": 43,
+        "lx": 8,
+        "ly": 9,
+        "d": "Os vasos contrastados devem ser seguidos em reconstruções e fases apropriadas. Um corte coronal isolado não demonstra todas as possíveis oclusões."
+      },
+      {
+        "t": "Alças com pouco realce",
+        "x": 73,
+        "y": 58,
+        "lx": 92,
+        "ly": 9,
+        "d": "Compare a parede desses segmentos com a de alças mais realçadas. Hiporrealce é um sinal de alerta no contexto de hipoperfusão."
+      },
+      {
+        "t": "Alças com maior realce",
+        "x": 83,
+        "y": 46,
+        "lx": 8,
+        "ly": 91,
+        "d": "O contraste entre segmentos auxilia a interpretação. Vaso, parede e clínica precisam ser considerados juntos."
+      }
+    ],
+    "keys": [
+      "cirrad_1",
+      "ciraa_6"
+    ]
+  },
+  {
+    "id": "vasc13",
+    "marks": [
+      {
+        "t": "Defeito arterial indicado",
+        "x": 33,
+        "y": 42,
+        "lx": 8,
+        "ly": 9,
+        "d": "A seta original do painel esquerdo orienta o êmbolo mesentérico. Confirme o defeito no estudo vascular completo."
+      },
+      {
+        "t": "Alça com hiporrealce",
+        "x": 41,
+        "y": 62,
+        "lx": 92,
+        "ly": 9,
+        "d": "A parede pouco realçada contrasta com segmentos preservados. Não espere sinais tardios para comunicar suspeita no contexto apropriado."
+      },
+      {
+        "t": "Comparação de realce no coronal",
+        "x": 81,
+        "y": 60,
+        "lx": 8,
+        "ly": 91,
+        "d": "As setas do painel direito mostram segmentos com comportamento diferente após contraste. A diferença deve ser correlacionada com o mecanismo vascular."
+      }
+    ],
+    "keys": [
+      "cirrad_1",
+      "ciraa_6"
+    ]
+  },
+  {
+    "id": "infl48",
+    "marks": [
+      {
+        "t": "Região apendicular no coronal",
+        "x": 27,
+        "y": 57,
+        "lx": 8,
+        "ly": 9,
+        "d": "Siga a estrutura tubular a partir do ceco e observe a gordura ao redor. Um diâmetro isolado não define apendicite."
+      },
+      {
+        "t": "Região pericecal no axial",
+        "x": 62,
+        "y": 45,
+        "lx": 92,
+        "ly": 9,
+        "d": "O painel axial ajuda a confirmar a topografia do foco. A comparação entre planos reduz confusão com alças ileais."
+      },
+      {
+        "t": "Ceco",
+        "x": 26,
+        "y": 45,
+        "lx": 8,
+        "ly": 91,
+        "d": "O ceco orienta a origem do apêndice. Procure complicações nos demais cortes antes de classificar o caso."
+      }
+    ],
+    "caption": "Apendicite na TC em dois planos: avalie o apêndice, sua parede e a gordura adjacente. Calibre aumentado é um achado de apoio, não um critério diagnóstico isolado.",
+    "keys": [
+      "cirrad_1",
+      "ciraa_1"
+    ]
+  },
+  {
+    "id": "infl61",
+    "marks": [
+      {
+        "t": "Segmento sigmoide alterado",
+        "x": 28,
+        "y": 21,
+        "lx": 8,
+        "ly": 9,
+        "d": "O segmento colônico mostra parede alterada e processo inflamatório adjacente no exemplo. Procure divertículos no estudo completo."
+      },
+      {
+        "t": "Gordura pericólica",
+        "x": 33,
+        "y": 25,
+        "lx": 92,
+        "ly": 9,
+        "d": "A densificação ao redor do cólon apoia o foco inflamatório. Neoplasia e colites podem exigir diferenciação conforme o contexto."
+      },
+      {
+        "t": "Comparação no segundo corte",
+        "x": 80,
+        "y": 52,
+        "lx": 8,
+        "ly": 91,
+        "d": "Siga a extensão do acometimento e procure coleção ou gás fora da luz. A gravidade não depende só da intensidade do espessamento."
+      }
+    ],
+    "keys": [
+      "cirrad_1",
+      "ciraa_3"
+    ]
+  },
+  {
+    "id": "infl30",
+    "marks": [
+      {
+        "t": "Região da cabeça pancreática",
+        "x": 26,
+        "y": 44,
+        "lx": 8,
+        "ly": 9,
+        "d": "Compare o volume e os limites da glândula. A seta original orienta a região pancreática no painel esquerdo."
+      },
+      {
+        "t": "Corpo e cauda pancreáticos",
+        "x": 76,
+        "y": 47,
+        "lx": 92,
+        "ly": 9,
+        "d": "As setas no painel direito seguem a glândula. A interpretação do realce exige conhecer a fase do exame."
+      }
+    ],
+    "keys": [
+      "cirpanc_0",
+      "cirrad_5"
+    ]
+  },
+  {
+    "id": "infl31",
+    "marks": [
+      {
+        "t": "Área sem realce no painel A",
+        "x": 28,
+        "y": 32,
+        "lx": 8,
+        "ly": 9,
+        "d": "A seta original orienta a hipocontrastação pancreática do exemplo necrosante. O tempo da doença influencia a avaliação."
+      },
+      {
+        "t": "Parênquima preservado no painel B",
+        "x": 73,
+        "y": 37,
+        "lx": 92,
+        "ly": 9,
+        "d": "Compare a área que ainda realça com a alteração do painel A. Realce e conteúdo devem ser avaliados em protocolo contrastado adequado."
+      }
+    ],
+    "keys": [
+      "cirpanc_1",
+      "cirrad_5"
+    ]
+  },
+  {
+    "id": "hd16",
+    "marks": [
+      {
+        "t": "Quadros iniciais da sequência",
+        "x": 54,
+        "y": 25,
+        "lx": 8,
+        "ly": 9,
+        "d": "A avaliação começa pela distribuição inicial do traçador. A comparação temporal é essencial, porque captação fisiológica não equivale a sangramento."
+      },
+      {
+        "t": "Quadros tardios da sequência",
+        "x": 65,
+        "y": 78,
+        "lx": 92,
+        "ly": 9,
+        "d": "Procure surgimento e progressão de um foco nas aquisições completas. Nesta reprodução reduzida não é seguro demarcar um ponto preciso de extravasamento."
+      }
+    ],
+    "caption": "Cintilografia com hemácias marcadas: exemplo de aquisições seriadas. O raciocínio depende do aparecimento e da progressão temporal do traçador; esta reprodução reduzida não permite localizar com segurança um foco preciso de sangramento.",
+    "keys": [
+      "cirrad_3"
+    ]
+  },
+  {
+    "id": "hd29",
+    "marks": [
+      {
+        "t": "Foco indicado na TC axial",
+        "x": 32,
+        "y": 39,
+        "lx": 8,
+        "ly": 9,
+        "d": "As setas originais apontam o foco de alta densidade do exemplo. Um extravasamento deve ser relacionado ao comportamento entre fases, não apenas ao brilho de um ponto."
+      },
+      {
+        "t": "Correspondência no plano coronal",
+        "x": 56,
+        "y": 36,
+        "lx": 92,
+        "ly": 9,
+        "d": "O mesmo território é localizado em outro plano. Essa correlação ajuda no planejamento da investigação vascular."
+      },
+      {
+        "t": "Localização angiográfica",
+        "x": 54,
+        "y": 78,
+        "lx": 8,
+        "ly": 91,
+        "d": "O painel inferior direito mostra o território avaliado por cateter. Compare a localização com os painéis tomográficos."
+      }
+    ],
+    "caption": "AngioTC e investigação vascular no sangramento digestivo: compare o foco indicado nas imagens axiais/coronais com o território angiográfico. A detecção de sangramento depende de sua atividade, do protocolo e das fases adquiridas.",
+    "keys": [
+      "cirrad_3"
+    ]
+  },
+  {
+    "id": "hd30",
+    "marks": [
+      {
+        "t": "Foco indicado na TC",
+        "x": 16,
+        "y": 46,
+        "lx": 8,
+        "ly": 9,
+        "d": "O primeiro painel localiza o achado suspeito no exemplo de sangramento. A demonstração deve ser integrada ao protocolo multifásico."
+      },
+      {
+        "t": "Correspondência angiográfica em B",
+        "x": 54,
+        "y": 54,
+        "lx": 92,
+        "ly": 9,
+        "d": "O painel intermediário permite comparar o território vascular com a TC. A angiografia acrescenta a possibilidade de tratamento por cateter."
+      },
+      {
+        "t": "Ramo indicado no painel direito",
+        "x": 76,
+        "y": 46,
+        "lx": 8,
+        "ly": 91,
+        "d": "A seta original orienta o ponto avaliado na angiografia. A indicação e a técnica de embolização dependem da equipe e da anatomia completa."
+      }
+    ],
+    "keys": [
+      "cirrad_3"
+    ]
+  },
+  {
+    "id": "hd20",
+    "marks": [
+      {
+        "t": "Tronco e origem dos ramos opacificados",
+        "x": 23,
+        "y": 47,
+        "lx": 8,
+        "ly": 9,
+        "d": "Localize a bifurcação dos ramos opacificados no território celíaco. A projeção angiográfica deve ser correlacionada com a anatomia tridimensional."
+      },
+      {
+        "t": "Trajeto gastroduodenal",
+        "x": 26,
+        "y": 57,
+        "lx": 92,
+        "ly": 9,
+        "d": "Siga o ramo descendente do território mostrado na aula. Conhecer anastomoses é importante antes de discutir embolização."
+      },
+      {
+        "t": "Trajeto gastromental",
+        "x": 41,
+        "y": 60,
+        "lx": 8,
+        "ly": 91,
+        "d": "O arco distal acompanha a região da grande curvatura. A identificação definitiva dos ramos depende da projeção e da cateterização seletiva."
+      }
+    ],
+    "keys": [
+      "cirrad_3"
+    ]
+  },
+  {
+    "id": "hd21",
+    "marks": [
+      {
+        "t": "Extravasamento no painel A",
+        "x": 15,
+        "y": 49,
+        "lx": 8,
+        "ly": 9,
+        "d": "O foco irregular fora do desenho vascular é o sangramento ilustrado na aula. Diferencie-o do trajeto normal dos ramos opacificados."
+      },
+      {
+        "t": "Extravasamento no painel B",
+        "x": 47,
+        "y": 54,
+        "lx": 92,
+        "ly": 9,
+        "d": "O segundo painel mostra a localização durante a investigação seletiva. Compare com o controle posterior."
+      },
+      {
+        "t": "Controle após embolização, painel C",
+        "x": 78,
+        "y": 59,
+        "lx": 8,
+        "ly": 91,
+        "d": "O painel C documenta o território após o tratamento descrito na aula. O sucesso técnico deve ser avaliado na sequência completa, não só por uma fotografia."
+      }
+    ],
+    "keys": [
+      "cirrad_3"
+    ]
+  },
+  {
+    "id": "rad_abd_colon",
+    "marks": [
+      {
+        "t": "Cólon ascendente",
+        "x": 14,
+        "y": 55,
+        "lx": 4,
+        "ly": 76
+      },
+      {
+        "t": "Flexura hepática",
+        "x": 22,
+        "y": 12,
+        "lx": 4,
+        "ly": 6
+      },
+      {
+        "t": "Cólon transverso",
+        "x": 55,
+        "y": 19,
+        "lx": 70,
+        "ly": 6
+      },
+      {
+        "t": "Cólon descendente",
+        "x": 87,
+        "y": 40,
+        "lx": 96,
+        "ly": 56
+      },
+      {
+        "t": "Sigmoide e reto",
+        "x": 52,
+        "y": 78,
+        "lx": 96,
+        "ly": 90
+      }
+    ],
+    "keys": [
+      "rad_m5"
+    ]
+  },
+  {
+    "id": "rad_apend_cor",
+    "marks": [
+      {
+        "e": [
+          25,
+          62,
+          13,
+          12
+        ],
+        "t": "Abscesso periapendicular",
+        "x": 25,
+        "y": 62,
+        "lx": 6,
+        "ly": 92
+      },
+      {
+        "t": "Fígado",
+        "x": 35,
+        "y": 20,
+        "lx": 92,
+        "ly": 10
+      },
+      {
+        "t": "Rim direito",
+        "x": 30,
+        "y": 38,
+        "lx": 6,
+        "ly": 28
+      },
+      {
+        "t": "Coluna lombar",
+        "x": 49,
+        "y": 58,
+        "lx": 92,
+        "ly": 50
+      },
+      {
+        "t": "Asa do ílio",
+        "x": 22,
+        "y": 80,
+        "lx": 92,
+        "ly": 80
+      }
+    ],
+    "keys": [
+      "rad_m6"
+    ]
+  },
+  {
+    "id": "rad_ca_pa",
+    "marks": [
+      {
+        "t": "Consolidação/atelectasia do LSD",
+        "x": 28,
+        "y": 28,
+        "lx": 6,
+        "ly": 50
+      },
+      {
+        "t": "Fratura do 3º arco costal E",
+        "x": 59,
+        "y": 7,
+        "lx": 94,
+        "ly": 22
+      }
+    ],
+    "keys": [
+      "rad_m4"
+    ]
+  },
+  {
+    "id": "rad_cervical",
+    "marks": [
+      {
+        "t": "Corpos vertebrais",
+        "x": 34,
+        "y": 50,
+        "lx": 96,
+        "ly": 40
+      },
+      {
+        "t": "Processos espinhosos",
+        "x": 56,
+        "y": 50,
+        "lx": 96,
+        "ly": 62
+      },
+      {
+        "t": "Via aérea",
+        "x": 17,
+        "y": 68,
+        "lx": 96,
+        "ly": 78
+      },
+      {
+        "t": "Partes moles pré-vertebrais",
+        "x": 24,
+        "y": 45,
+        "lx": 96,
+        "ly": 24
+      }
+    ],
+    "keys": [
+      "rad_m8"
+    ]
+  },
+  {
+    "id": "rad_consol",
+    "marks": [
+      {
+        "e": [
+          67,
+          62,
+          13,
+          11
+        ],
+        "t": "Consolidação (lobo inferior E)",
+        "x": 67,
+        "y": 62,
+        "lx": 94,
+        "ly": 36
+      },
+      {
+        "t": "Traqueia",
+        "x": 47,
+        "y": 20,
+        "lx": 6,
+        "ly": 8
+      },
+      {
+        "t": "Cúpula diafragmática E",
+        "x": 62,
+        "y": 77,
+        "lx": 94,
+        "ly": 90
+      }
+    ],
+    "keys": [
+      "rad_m3"
+    ]
+  },
+  {
+    "id": "rad_mm_cranio",
+    "marks": [
+      {
+        "e": [
+          28,
+          40,
+          22,
+          25
+        ],
+        "t": "Lesões líticas múltiplas",
+        "x": 28,
+        "y": 40,
+        "lx": 70,
+        "ly": 92
+      }
+    ],
+    "keys": [
+      "rad_m9"
+    ]
+  },
+  {
+    "id": "rad_pa",
+    "marks": [
+      {
+        "t": "Traqueia (linha média)",
+        "x": 50,
+        "y": 13,
+        "lx": 96,
+        "ly": 8
+      },
+      {
+        "t": "Arco aórtico",
+        "x": 57,
+        "y": 28,
+        "lx": 96,
+        "ly": 22
+      },
+      {
+        "t": "Hilo esquerdo",
+        "x": 62,
+        "y": 43,
+        "lx": 96,
+        "ly": 36
+      },
+      {
+        "t": "Borda cardíaca esquerda",
+        "x": 62,
+        "y": 62,
+        "lx": 96,
+        "ly": 52
+      },
+      {
+        "t": "Clavícula",
+        "x": 14,
+        "y": 10,
+        "lx": 4,
+        "ly": 4
+      },
+      {
+        "t": "Hilo direito",
+        "x": 38,
+        "y": 45,
+        "lx": 4,
+        "ly": 40
+      },
+      {
+        "t": "Cúpula diafragmática direita",
+        "x": 29,
+        "y": 74,
+        "lx": 4,
+        "ly": 66
+      },
+      {
+        "t": "Seio costofrênico direito",
+        "x": 12,
+        "y": 77,
+        "lx": 4,
+        "ly": 86
+      },
+      {
+        "t": "Bolha gástrica",
+        "x": 66,
+        "y": 83,
+        "lx": 96,
+        "ly": 90
+      }
+    ],
+    "keys": [
+      "rad_m2"
+    ]
+  },
+  {
+    "id": "rad_pelve",
+    "marks": [
+      {
+        "t": "Asa do ílio",
+        "x": 14,
+        "y": 28,
+        "lx": 4,
+        "ly": 12
+      },
+      {
+        "t": "Articulação sacroilíaca",
+        "x": 32,
+        "y": 30,
+        "lx": 4,
+        "ly": 44
+      },
+      {
+        "t": "Cabeça do fêmur",
+        "x": 21,
+        "y": 55,
+        "lx": 4,
+        "ly": 60
+      },
+      {
+        "t": "Forame obturado",
+        "x": 35,
+        "y": 78,
+        "lx": 4,
+        "ly": 88
+      },
+      {
+        "t": "Sínfise púbica",
+        "x": 50,
+        "y": 82,
+        "lx": 96,
+        "ly": 92
+      },
+      {
+        "t": "Coluna lombar",
+        "x": 50,
+        "y": 18,
+        "lx": 96,
+        "ly": 8
+      }
+    ],
+    "keys": [
+      "rad_m7"
+    ]
+  },
+  {
+    "id": "rad_ca_perfil",
+    "marks": [
+      {
+        "t": "Derrame pleural",
+        "x": 68,
+        "y": 95,
+        "lx": 60,
+        "ly": 80
+      }
+    ],
+    "keys": [
+      "rad_m4"
+    ]
+  },
+  {
+    "id": "rad_derrame",
+    "marks": [
+      {
+        "e": [
+          14,
+          58,
+          9,
+          17
+        ],
+        "t": "Derrame pleural (D)",
+        "x": 14,
+        "y": 58,
+        "lx": 6,
+        "ly": 88
+      },
+      {
+        "t": "Coração",
+        "x": 62,
+        "y": 70,
+        "lx": 94,
+        "ly": 86
+      },
+      {
+        "t": "Pulmão aerado restante",
+        "x": 31,
+        "y": 45,
+        "lx": 50,
+        "ly": 8
+      }
+    ],
+    "keys": [
+      "rad_m3"
+    ]
+  },
+  {
+    "id": "rad_femur_fx",
+    "marks": [
+      {
+        "e": [
+          50,
+          81,
+          12,
+          7
+        ],
+        "t": "Fratura diafisária desviada",
+        "x": 50,
+        "y": 81,
+        "lx": 94,
+        "ly": 60
+      },
+      {
+        "t": "Diáfise do fêmur",
+        "x": 55,
+        "y": 65,
+        "lx": 94,
+        "ly": 40
+      }
+    ],
+    "keys": [
+      "rad_m8"
+    ]
+  },
+  {
+    "id": "rad_lat",
+    "marks": [
+      {
+        "t": "Coluna torácica",
+        "x": 22,
+        "y": 45,
+        "lx": 6,
+        "ly": 30
+      },
+      {
+        "t": "Campo retroesternal",
+        "x": 62,
+        "y": 35,
+        "lx": 94,
+        "ly": 26
+      },
+      {
+        "t": "Hemidiafragmas",
+        "x": 52,
+        "y": 82,
+        "lx": 94,
+        "ly": 92
+      },
+      {
+        "t": "Seio costofrênico posterior",
+        "x": 37,
+        "y": 80,
+        "lx": 6,
+        "ly": 90
+      }
+    ],
+    "keys": [
+      "rad_m2"
+    ]
+  },
+  {
+    "id": "rad_punho",
+    "marks": [
+      {
+        "t": "Escafoide",
+        "x": 37,
+        "y": 53,
+        "lx": 6,
+        "ly": 64
+      },
+      {
+        "t": "Semilunar",
+        "x": 57,
+        "y": 57,
+        "lx": 60,
+        "ly": 92
+      },
+      {
+        "t": "Piramidal",
+        "x": 68,
+        "y": 50,
+        "lx": 96,
+        "ly": 60
+      },
+      {
+        "t": "Trapézio",
+        "x": 23,
+        "y": 40,
+        "lx": 6,
+        "ly": 36
+      },
+      {
+        "t": "Trapezoide",
+        "x": 35,
+        "y": 33,
+        "lx": 6,
+        "ly": 18
+      },
+      {
+        "t": "Capitato",
+        "x": 46,
+        "y": 43,
+        "lx": 50,
+        "ly": 8
+      },
+      {
+        "t": "Hamato",
+        "x": 60,
+        "y": 34,
+        "lx": 96,
+        "ly": 28
+      },
+      {
+        "t": "Rádio distal",
+        "x": 40,
+        "y": 85,
+        "lx": 6,
+        "ly": 88
+      },
+      {
+        "t": "Ulna distal",
+        "x": 72,
+        "y": 82,
+        "lx": 96,
+        "ly": 88
+      }
+    ],
+    "keys": [
+      "rad_m7"
+    ]
+  },
+  {
+    "id": "rad_ca_tc",
+    "marks": [
+      {
+        "e": [
+          35,
+          70,
+          11,
+          10
+        ],
+        "t": "Massa lobulada (LSD)",
+        "x": 35,
+        "y": 70,
+        "lx": 92,
+        "ly": 92
+      },
+      {
+        "t": "Corpo vertebral",
+        "x": 52,
+        "y": 77,
+        "lx": 92,
+        "ly": 60
+      },
+      {
+        "t": "Pulmão esquerdo",
+        "x": 80,
+        "y": 50,
+        "lx": 92,
+        "ly": 30
+      }
+    ],
+    "keys": [
+      "rad_m4"
+    ]
+  },
+  {
+    "id": "rad_joelhos",
+    "marks": [
+      {
+        "t": "Fêmur distal",
+        "x": 25,
+        "y": 15,
+        "lx": 4,
+        "ly": 6
+      },
+      {
+        "t": "Patela",
+        "x": 28,
+        "y": 35,
+        "lx": 4,
+        "ly": 26
+      },
+      {
+        "t": "Interlinha articular",
+        "x": 30,
+        "y": 51,
+        "lx": 4,
+        "ly": 48
+      },
+      {
+        "t": "Platô tibial",
+        "x": 28,
+        "y": 58,
+        "lx": 4,
+        "ly": 70
+      },
+      {
+        "t": "Tíbia",
+        "x": 27,
+        "y": 80,
+        "lx": 4,
+        "ly": 90
+      }
+    ],
+    "keys": [
+      "rad_m7"
+    ]
+  },
+  {
+    "id": "rad_pneumo",
+    "marks": [
+      {
+        "e": [
+          80,
+          55,
+          12,
+          28
+        ],
+        "t": "Hemitórax E (pneumotórax)",
+        "x": 80,
+        "y": 55,
+        "lx": 94,
+        "ly": 92
+      },
+      {
+        "t": "Traqueia",
+        "x": 50,
+        "y": 15,
+        "lx": 6,
+        "ly": 8
+      },
+      {
+        "t": "Coração",
+        "x": 66,
+        "y": 67,
+        "lx": 94,
+        "ly": 78
+      }
+    ],
+    "keys": [
+      "rad_m3"
+    ]
+  },
+  {
+    "id": "rad_hamman",
+    "marks": [
+      {
+        "t": "Pneumomediastino: ar junto ao coração",
+        "x": 68,
+        "y": 57,
+        "lx": 40,
+        "ly": 6
+      },
+      {
+        "t": "Enfisema subcutâneo, hemitórax E",
+        "x": 90,
+        "y": 61,
+        "lx": 92,
+        "ly": 92
+      }
+    ],
+    "keys": [
+      "rad_m3"
+    ]
+  },
+  {
+    "id": "rad_torn_ap",
+    "marks": [
+      {
+        "t": "Tíbia distal",
+        "x": 52,
+        "y": 15,
+        "lx": 4,
+        "ly": 8
+      },
+      {
+        "t": "Fíbula distal",
+        "x": 72,
+        "y": 15,
+        "lx": 96,
+        "ly": 8
+      },
+      {
+        "t": "Maléolo medial",
+        "x": 43,
+        "y": 50,
+        "lx": 4,
+        "ly": 40
+      },
+      {
+        "t": "Maléolo lateral",
+        "x": 72,
+        "y": 52,
+        "lx": 96,
+        "ly": 40
+      },
+      {
+        "t": "Interlinha tibiotalar",
+        "x": 48,
+        "y": 51,
+        "lx": 50,
+        "ly": 32
+      },
+      {
+        "t": "Tálus",
+        "x": 58,
+        "y": 68,
+        "lx": 96,
+        "ly": 70
+      }
+    ],
+    "keys": [
+      "rad_m7"
+    ]
+  },
+  {
+    "id": "rad_torn_perfil",
+    "marks": [
+      {
+        "t": "Tíbia",
+        "x": 70,
+        "y": 20,
+        "lx": 4,
+        "ly": 10
+      },
+      {
+        "t": "Tálus",
+        "x": 55,
+        "y": 46,
+        "lx": 4,
+        "ly": 38
+      },
+      {
+        "t": "Calcâneo",
+        "x": 28,
+        "y": 60,
+        "lx": 4,
+        "ly": 72
+      },
+      {
+        "t": "Navicular",
+        "x": 72,
+        "y": 62,
+        "lx": 96,
+        "ly": 78
+      }
+    ],
+    "keys": [
+      "rad_m7"
+    ]
+  },
+  {
+    "id": "radsch_dose",
+    "marks": [
+      {
+        "t": "Sem radiação: primeira escolha em gestante e criança",
+        "x": 31,
+        "y": 17,
+        "lx": 38,
+        "ly": 6
+      },
+      {
+        "t": "Dose baixa e resposta rápida à beira do leito",
+        "x": 33,
+        "y": 44,
+        "lx": 44,
+        "ly": 36
+      },
+      {
+        "t": "TC: muito mais informação e muito mais dose",
+        "x": 62,
+        "y": 70,
+        "lx": 54,
+        "ly": 60
+      },
+      {
+        "t": "A pergunta clínica é que justifica o exame",
+        "x": 72,
+        "y": 84,
+        "lx": 58,
+        "ly": 96
+      }
+    ],
+    "keys": [
+      "rad_m1"
+    ]
+  },
+  {
+    "id": "rad_cerv_linhas",
+    "marks": [
+      {
+        "t": "1 · margens anteriores dos corpos vertebrais",
+        "x": 17,
+        "y": 50,
+        "lx": 4,
+        "ly": 95
+      },
+      {
+        "t": "2 · margens posteriores: parede anterior do canal",
+        "x": 38,
+        "y": 50,
+        "lx": 28,
+        "ly": 95
+      },
+      {
+        "t": "3 · linha espinolaminar",
+        "x": 60,
+        "y": 54,
+        "lx": 58,
+        "ly": 95
+      },
+      {
+        "t": "4 · pontas dos processos espinhosos",
+        "x": 73,
+        "y": 52,
+        "lx": 82,
+        "ly": 95
+      },
+      {
+        "t": "Partes moles pré-vertebrais: finas em C2",
+        "x": 9,
+        "y": 32,
+        "lx": 4,
+        "ly": 8
+      },
+      {
+        "t": "Degrau em qualquer linha é lesão até prova em contrário",
+        "x": 30,
+        "y": 14,
+        "lx": 26,
+        "ly": 4
+      }
+    ],
+    "keys": [
+      "rad_m8"
+    ]
+  },
+  {
+    "id": "rad_iliofemoral",
+    "marks": [
+      {
+        "t": "Linha iliofemoral: ílio, borda do acetábulo e colo femoral",
+        "x": 13,
+        "y": 52,
+        "lx": 18,
+        "ly": 10
+      },
+      {
+        "t": "Do outro lado a curva deve ter o mesmo desenho",
+        "x": 88,
+        "y": 58,
+        "lx": 58,
+        "ly": 14
+      },
+      {
+        "t": "Assimetria: displasia, epifisiólise, luxação ou fratura",
+        "x": 50,
+        "y": 88,
+        "lx": 44,
+        "ly": 96
+      }
+    ],
+    "keys": [
+      "rad_m7"
+    ]
+  }
+]
