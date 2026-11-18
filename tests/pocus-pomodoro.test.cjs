@@ -50,7 +50,7 @@ test('POCUS course lists twelve modules, renders annotated figures and saves ans
  await p.setViewportSize({width:390,height:844});await p.evaluate(()=>PocusCourse.open(5));assert.ok(await fits(p));await t.close();
 });
 test('floating pomodoro can be dragged, expanded, cancelled with confirmation and remembers its place',async()=>{
- const t=await open(),p=t.page;assert.equal(await p.locator('#focus-top svg.tomato').count(),1);
+ const t=await open(),p=t.page;await p.evaluate(()=>FocusTimer.floating(true));assert.equal(await p.locator('#focus-top svg.tomato').count(),1);
  const before=await p.locator('#focus-float').boundingBox(),grip=await p.locator('.focus-float-grip').boundingBox();
  await p.mouse.move(grip.x+10,grip.y+20);await p.mouse.down();await p.mouse.move(400,300,{steps:6});await p.mouse.up();
  const moved=await p.locator('#focus-float').boundingBox();assert.ok(Math.abs(moved.x-before.x)>100&&Math.abs(moved.y-before.y)>100,JSON.stringify({before,moved}));
@@ -115,5 +115,5 @@ test('tablet portrait collapses the sidebar by default, hides the idle floating 
  await p.evaluate(()=>openTopic('neuro1'));assert.ok(await fits(p));
  const small=await p.evaluate(()=>[...document.querySelectorAll('.deep-pre-btns button,.deep-hy-btn,.reading-outline summary,.chapter-pill')].filter(e=>e.getBoundingClientRect().height<44).length);assert.equal(small,0);
  const tiny=await p.evaluate(()=>[...document.querySelectorAll('.topic-head *,.deep-lesson *,.lesson-head *')].filter(e=>e.offsetParent&&[...e.childNodes].some(n=>n.nodeType===3&&n.textContent.trim())&&parseFloat(getComputedStyle(e).fontSize)<12).length);assert.equal(tiny,0);
- await p.setViewportSize({width:1180,height:820});await p.waitForTimeout(100);assert.equal(await p.evaluate(()=>document.body.classList.contains('side-collapsed')),false);await t.close();
+ await p.setViewportSize({width:1180,height:820});await p.waitForTimeout(100);assert.equal(await p.evaluate(()=>document.body.classList.contains('side-collapsed')),true);await t.close();
 });

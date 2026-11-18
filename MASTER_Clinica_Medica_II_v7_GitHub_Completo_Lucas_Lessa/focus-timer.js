@@ -22,7 +22,7 @@ const FocusTimer=(()=>{
     const teto=(mode==='foco'?minutes:mode==='longo'?longMinutes:shortMinutes)*60000;
     for(const [key,value]of Object.entries(raw.days||{}))if(/^\d{4}-\d{2}-\d{2}$/.test(key)&&value&&typeof value==='object')days[key]={ms:Math.max(0,Math.min(86400000,Number(value.ms)||0)),completed:Math.max(0,Math.floor(Number(value.completed)||0)),breakMs:Math.max(0,Math.min(86400000,Number(value.breakMs)||0)),breaks:Math.max(0,Math.floor(Number(value.breaks)||0))};
     const ativoRaw=raw.ativo&&typeof raw.ativo==='object'&&typeof raw.ativo.dev==='string'&&Number(raw.ativo.fimEm)>0?{dev:raw.ativo.dev,modo:MODOS[raw.ativo.modo]?raw.ativo.modo:'foco',fimEm:Number(raw.ativo.fimEm)}:null;
-    return {version:2,em:Number(raw.em)||0,ativo:ativoRaw,minutes,shortMinutes,longMinutes,rodada,feitos,mode,auto:raw.auto===true,remainingMs:Number.isFinite(raw.remainingMs)?Math.max(0,Math.min(teto,raw.remainingMs)):teto,floating:raw.floating!==false,legacyMinutes:Math.max(0,Number(raw.legacyMinutes)||0),days,get breakMinutes(){return this.shortMinutes;}};
+    return {version:2,em:Number(raw.em)||0,ativo:ativoRaw,minutes,shortMinutes,longMinutes,rodada,feitos,mode,auto:raw.auto===true,remainingMs:Number.isFinite(raw.remainingMs)?Math.max(0,Math.min(teto,raw.remainingMs)):teto,floating:raw.floating===true,legacyMinutes:Math.max(0,Number(raw.legacyMinutes)||0),days,get breakMinutes(){return this.shortMinutes;}};
   }
   const minutosDe=modo=>modo==='foco'?state.minutes:modo==='longo'?state.longMinutes:state.shortMinutes;
   const duracao=modo=>minutosDe(modo)*60000;
@@ -356,9 +356,10 @@ const FocusTimer=(()=>{
   let floatPrefs={x:null,y:null,expanded:false};
   function loadFloat(){floatPrefs={x:null,y:null,expanded:false};try{const raw=JSON.parse(localStorage.getItem(floatKey())||'null');if(raw&&typeof raw==='object')floatPrefs={x:Number.isFinite(raw.x)?raw.x:null,y:Number.isFinite(raw.y)?raw.y:null,expanded:!!raw.expanded};}catch{}}
   function saveFloat(){try{if(owner)localStorage.setItem(floatKey(),JSON.stringify(floatPrefs));}catch{}}
+  function syncClockAnchor(){const el=document.getElementById('focus-float');document.body.classList.toggle('timer-is-floating',!!el&&!el.hidden&&getComputedStyle(el).display!=='none');}
   function placeFloat(){
     const el=document.getElementById('focus-float');if(!el)return;
-    el.dataset.expanded=String(floatPrefs.expanded);el.querySelector('.focus-float-size')?.setAttribute('aria-expanded',String(floatPrefs.expanded));
+    el.dataset.expanded=String(floatPrefs.expanded);syncClockAnchor();el.querySelector('.focus-float-size')?.setAttribute('aria-expanded',String(floatPrefs.expanded));
     if(floatPrefs.x===null||el.hidden){if(floatPrefs.x===null){el.style.left=el.style.top=el.style.right=el.style.bottom='';}return;}
     const box=el.getBoundingClientRect(),x=Math.max(8,Math.min(window.innerWidth-box.width-8,floatPrefs.x)),y=Math.max(8,Math.min(window.innerHeight-box.height-8,floatPrefs.y));
     el.style.left=x+'px';el.style.top=y+'px';el.style.right='auto';el.style.bottom='auto';

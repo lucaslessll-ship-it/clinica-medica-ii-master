@@ -118,7 +118,7 @@
       '<h1>Caderno de anotações</h1><p>Suas anotações e citações, organizadas por matéria e aula. ' +
       'Cada edição permanece no registro original da disciplina.</p>' +
       '<div class="caderno-resumo"><span>' + total + ' aulas com registros</span>' +
-      '<button type="button" class="btn secondary caderno-exportar">Exportar caderno completo</button></div></header>' +
+      '<button type="button" class="btn" onclick="CadernoUnificado.abrirPainel()">Abrir painel do caderno</button><button type="button" class="btn secondary caderno-exportar">Exportar caderno completo</button></div></header>' +
       '<div class="caderno-filtros"><label for="caderno-busca">Buscar no caderno</label>' +
       '<input id="caderno-busca" class="caderno-busca" type="search" placeholder="Buscar por aula, trecho ou anotação" autocomplete="off">' +
       '<div class="caderno-abas" role="group" aria-label="Tipo de anotação">' +

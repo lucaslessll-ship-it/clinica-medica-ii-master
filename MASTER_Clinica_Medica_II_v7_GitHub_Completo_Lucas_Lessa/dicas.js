@@ -61,7 +61,7 @@
     cartao.addEventListener('keydown', e => { if (e.key === 'Escape') { e.stopPropagation(); cartao.querySelector('[data-dica="fechar"]').click(); } });
   }
 
-  function exibir(dica) {
+  function exibir(dica,solicitada=false) {
     if (!cartao) montar();
     limparAlvo();
     const alvo = dica.alvo ? document.querySelector(dica.alvo) : null;
@@ -69,7 +69,11 @@
     cartao.dataset.id = dica.id;
     cartao.querySelector('.dica-titulo').textContent = dica.titulo;
     cartao.querySelector('.dica-texto').textContent = dica.texto;
+    const main=document.getElementById('main-content');
+    const intro=main?.querySelector('.ed-dashboard-intro');
+    if(intro)intro.after(cartao);else if(main)main.append(cartao);
     cartao.hidden = false;
+    if(solicitada)cartao.scrollIntoView({block:'center',behavior:'instant'});
     mostradaNaSessao = true;
     const estado = ler();
     estado.ultimo = Date.now();
@@ -115,7 +119,7 @@
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', iniciar, { once: true });
   else iniciar();
   window.Dicas = {
-    mostrar() { const e = ler(); e.desligado = false; e.vistas = []; e.ultimo = 0; gravar(e); mostradaNaSessao = false; const d = proxima(); if (d) exibir(d); },
+    mostrar() { const e = ler(); e.desligado = false; e.vistas = []; e.ultimo = 0; gravar(e); mostradaNaSessao = false; const d = proxima(); if (d) exibir(d,true); },
     fechar
   };
 })();

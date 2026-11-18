@@ -33,8 +33,8 @@ test('a primeira dica destaca o modo foco e some ao fechar, sem voltar na mesma 
  await p.waitForSelector('.dica:not([hidden])',{timeout:8000});
  assert.equal(await p.locator('.dica-titulo').textContent(),'Modo foco');
  assert.equal(await p.locator('.focus-trigger.dica-alvo').count(),1,'alvo não destacado');
- const caixa=await p.locator('.dica').evaluate(el=>{const r=el.getBoundingClientRect();return {dentro:r.left>=0&&r.right<=innerWidth&&r.bottom<=innerHeight,alvo:Math.min(...[...el.querySelectorAll('button')].map(b=>Math.min(b.getBoundingClientRect().width,b.getBoundingClientRect().height)))}});
- assert.ok(caixa.dentro);assert.ok(caixa.alvo>=36,`botão pequeno: ${caixa.alvo}`);
+ const caixa=await p.locator('.dica').evaluate(el=>{const r=el.getBoundingClientRect();return {dentro:r.left>=0&&r.right<=innerWidth,noFluxo:getComputedStyle(el).position==='relative'&&document.getElementById('main-content').contains(el),alvo:Math.min(...[...el.querySelectorAll('button')].map(b=>Math.min(b.getBoundingClientRect().width,b.getBoundingClientRect().height)))}});
+ assert.ok(caixa.dentro);assert.ok(caixa.noFluxo);assert.ok(caixa.alvo>=36,`botão pequeno: ${caixa.alvo}`);
  await p.click('.dica-x');
  assert.equal(await p.locator('.dica').isVisible(),false);
  assert.equal(await p.locator('.dica-alvo').count(),0);
@@ -71,17 +71,17 @@ test('as dicas vêm aos poucos: respeitam o intervalo e seguem para a próxima',
  await t.close();
 });
 
-test('em celular a dica cabe na tela, acima da barra inferior, sem rolagem lateral',async()=>{
+test('em celular a dica segue o fluxo da página, sem rolagem lateral',async()=>{
  const t=await abrir(390),p=t.page;
  await p.waitForSelector('.dica:not([hidden])',{timeout:8000});
- const r=await p.evaluate(()=>{const c=document.querySelector('.dica').getBoundingClientRect(),b=document.getElementById('mobile-tabbar')?.getBoundingClientRect();return {dentro:c.left>=0&&c.right<=innerWidth,acima:!b||c.bottom<=b.top+1,largura:document.documentElement.scrollWidth<=innerWidth+1}});
- assert.ok(r.dentro);assert.ok(r.acima,'dica cobre a barra inferior');assert.ok(r.largura);
+ const r=await p.evaluate(()=>{const c=document.querySelector('.dica').getBoundingClientRect(),b=document.getElementById('mobile-tabbar')?.getBoundingClientRect();return {dentro:c.left>=0&&c.right<=innerWidth,noFluxo:document.getElementById('main-content').contains(document.querySelector('.dica'))&&getComputedStyle(document.querySelector('.dica')).position==='relative',largura:document.documentElement.scrollWidth<=innerWidth+1}});
+ assert.ok(r.dentro);assert.ok(r.noFluxo,'dica deve fazer parte da página, sem sobrepor a leitura');assert.ok(r.largura);
  await t.close();
 });
 
 test('barra lateral reduzida mostra só ícones, sem rótulos cortados',async()=>{
  const t=await abrir(1280),p=t.page;
- await p.evaluate(()=>{HIG.toggleSidebar();});
+ await p.evaluate(()=>{if(!document.body.classList.contains('side-collapsed'))HIG.toggleSidebar();});
  await p.waitForFunction(()=>document.body.classList.contains('side-collapsed'));
  const r=await p.evaluate(()=>{
   const rotulos=[...document.querySelectorAll('.nav-section-label')].map(e=>({texto:e.textContent.length>0,altura:Math.round(e.getBoundingClientRect().height),visivel:getComputedStyle(e).display!=='none'}));
