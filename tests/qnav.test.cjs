@@ -195,3 +195,40 @@ test('simulado P2 mantém alternativa sem mostrar gabarito ao recarregar',async(
  assert.equal(await page.locator('.exam-result-circle').count(),0);
  await close();
 });
+
+
+test('questões respondidas em outra sessão mantêm cores e mostram a resposta anterior com opção de refazer',async()=>{
+ const {page,close}=await abrir(390);
+ await page.evaluate(()=>startPractice('neuro1'));
+ await page.evaluate(()=>{const q=QUESTION_BANK[ui.practice.ids[0]];ui.practice.chosen=q.a;submitPractice();});
+ const id=await page.evaluate(()=>ui.practice.ids[0]);
+ await page.evaluate(()=>startPractice('neuro1'));
+ const idx=await page.evaluate(id=>ui.practice.ids.indexOf(id),id);
+ assert.ok(idx>=0);
+ const cls=await page.locator('.qnav-dot').nth(idx).getAttribute('class');
+ assert.match(cls,/certa/);
+ await page.locator('.qnav-dot').nth(idx).click();
+ assert.equal(await page.evaluate(()=>ui.practice.historical),true);
+ await page.getByRole('button',{name:'Responder novamente'}).click();
+ assert.equal(await page.evaluate(()=>ui.practice.revealed),false);
+ await page.evaluate(()=>{const q=QUESTION_BANK[ui.practice.ids[ui.practice.step]];ui.practice.chosen=q.a;submitPractice();});
+ assert.equal(await page.evaluate(id=>store.results[id].attempts>=2,id),true);
+
+ await page.evaluate(()=>P1.startPractice('p1dm'));
+ const pid=await page.evaluate(()=>P1.qs.findIndex(q=>q.t==='p1dm'));
+ await page.evaluate(id=>P1.answerPractice(P1.qs[id].a),pid);
+ await page.evaluate(()=>P1.startPractice('p1dm'));
+ const pidx=await page.evaluate(id=>P1.getBackup().questionSessions.at(-1).run.ids.indexOf(id),pid);
+ assert.ok(pidx>=0);
+ await page.locator('.qnav-dot').nth(pidx).click();
+ assert.equal(await page.getByRole('button',{name:'Responder novamente'}).count(),1);
+ await page.evaluate(()=>CIR.startPractice({t:CIR.own[0].t,src:'own',mode:'all'}));
+ const cid=await page.evaluate(()=>CIR.own[0].id);
+ await page.evaluate(cid=>{const run=JSON.parse(localStorage.getItem('master_cir_lucas_v1')).questionSessions.at(-1).run;const id=run.ids[0];const q=CIR.own.find(q=>q.id===id);CIR.answer(q.a);},cid);
+ await page.evaluate(()=>CIR.startPractice({t:CIR.own[0].t,src:'own',mode:'all'}));
+ const cidx=await page.evaluate(cid=>{const st=JSON.parse(localStorage.getItem('master_cir_lucas_v1'));return st.questionSessions.at(-1).run.ids.indexOf(cid);},cid);
+ assert.ok(cidx>=0);
+ await page.locator('.qnav-dot').nth(cidx).click();
+ assert.equal(await page.getByRole('button',{name:'Responder novamente'}).count(),1);
+ await close();
+});
