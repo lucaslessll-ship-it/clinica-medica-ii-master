@@ -84,6 +84,7 @@ function clear(state,bank){
  if(bank==='p2'){state.examHistory=[];if(state.study)state.study.reviews={};}
  if(bank==='p1'){state.examHistory=[];}
  if(bank==='cir'){state.exams=[];}
+ window.QuestionReview?.clearBank?.(bank);
  if(window.HIG?.qlog){
   const log=HIG.qlog();Object.keys(log).filter(k=>k.startsWith(bank+':')).forEach(k=>delete log[k]);HIG.qlogSave?.();
  }
