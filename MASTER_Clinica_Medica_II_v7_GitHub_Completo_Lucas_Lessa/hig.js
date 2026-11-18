@@ -49,12 +49,13 @@ const HIG = (() => {
     preferences.focus=on;
     if(first)preferences.focusHintSeen=true;
     save();applyPrefs();
-    if(useFullscreen){on?enterFullscreen():leaveFullscreen()}
+    if(useFullscreen){if(on){if(window.matchMedia('(pointer:fine)').matches)enterFullscreen()}else leaveFullscreen()}
     const trigger=document.querySelector('.focus-trigger');if(trigger){trigger.setAttribute('aria-pressed',String(on));if(changed&&!on)trigger.focus({preventScroll:true});}
     // Aviso só na primeira vez, e sem citar teclas em quem usa toque.
-    if(first)toast(matchMedia('(pointer:fine)').matches?'Modo foco. Pressione F ou Esc para sair.':'Modo foco. Toque em Sair do foco quando quiser voltar.');
+    if(first)toast('Modo foco ativado. Para sair, use o botão Sair do foco no alto da página.');
   }
-  function toggleFocus(){setFocus(!preferences.focus)}
+  function toggleFocus(){if(!preferences.focus)setFocus(true)}
+  function exitFocus(){if(preferences.focus)setFocus(false)}
   function openOverlay(name,content){
     if(document.documentElement.classList.contains('master-auth-locked'))return;
     closeMobileNav(false);
@@ -243,19 +244,18 @@ const HIG = (() => {
   async function importProgress(event){const f=event?.target?.files?.[0];if(!f)return;if(f.size>3_000_000){toast('Arquivo muito grande para um backup de progresso.');return}try{let v=JSON.parse(await f.text());if(v.app!=='MASTER_P2_Lucas_Lessa'||!v.data||typeof v.data!=='object'||!v.data.results||!v.data.completed){throw new Error('Formato de backup incompatível')}if(!confirm('Substituir o progresso atual pelos dados deste backup? Exporte antes seus dados atuais, se quiser guardá-los.'))return;store={...store,...v.data};stateSave();if(v.p1&&window.P1)P1.restoreBackup(v.p1);if(v.experience&&typeof v.experience==='object'){preferences={...preferences,...v.experience,notes:{...preferences.notes,...(v.experience.notes||{})},bookmarks:{...preferences.bookmarks,...(v.experience.bookmarks||{})}};save();applyPrefs()}ui.exam=null;ui.practice=null;ui.flashDeck=[];closeOverlay();render();toast('Backup restaurado com sucesso.')}catch(e){toast('Não foi possível importar: '+e.message)}finally{event.target.value=''}}
   function init(){applyPrefs();searchItems=makeSearchItems();
     window.matchMedia('(prefers-color-scheme: dark)').addEventListener?.('change',()=>{if(preferences.theme==='system')applyPrefs()});
-    for(const evt of ['fullscreenchange','webkitfullscreenchange'])document.addEventListener(evt,()=>{if(!fullscreenOn()&&preferences.focus&&!fullscreenEntering)setFocus(false,false)});
-    // Uma sessão nunca começa presa no foco: a tela cheia não sobrevive ao recarregamento.
-    if(preferences.focus&&!fullscreenOn())setFocus(false,false);
+    // A ampliação, a rotação do tablet e a saída automática de fullscreen não encerram o modo foco.
+    // A preferência persiste no refresh e só o botão superior chama exitFocus().
     document.addEventListener('keydown',e=>{
       if(document.documentElement.classList.contains('master-auth-locked'))return;
       if(document.getElementById('hig-overlay').hidden===false){dialogKeys(e);return}
       if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==='k'){e.preventDefault();openSearch();return}
       if(e.target.closest('input,textarea,select,[contenteditable="true"]'))return;
-      if(e.key==='/'){e.preventDefault();openSearch()}else if(e.key.toLowerCase()==='f'&&!e.metaKey&&!e.ctrlKey){e.preventDefault();toggleFocus()}else if(e.key==='?'&&!e.metaKey&&!e.ctrlKey){openHelp()}else if(e.key==='Escape'&&preferences.focus){e.preventDefault();setFocus(false)}
+      if(e.key==='/'){e.preventDefault();openSearch()}else if(e.key.toLowerCase()==='f'&&!e.metaKey&&!e.ctrlKey){e.preventDefault();toggleFocus()}else if(e.key==='?'&&!e.metaKey&&!e.ctrlKey){openHelp()}else if(e.key==='Escape'&&preferences.focus){/* Esc pode sair do fullscreen nativo; o foco de leitura permanece. */}
     });
   }
   function reload(){preferences=load();applyPrefs();}
-  return {novidadeVista,questionReview,qlog,qlogSave,reload,init,afterRender,abrirAula,marcas,marcasTodas,paginasEstudo,registrarPaginaEstudo,marcaAdd,marcaEdita,marcaRemove,setFocus,fullscreenAvailable,openSearch,searchInput,searchKeys,chooseResult,openSettings,openHelp,closeOverlay,setTheme,setFont,togglePref,toggleSidebar,toggleFocus,lessonToolbar,lessonNotes,saveNote,bookmark,viewToday,viewNotes,configureTimer,toggleTimer,resetTimer,exportNotes,exportBackup,importProgress,openLast,resumeInfo,focusTopic,dueCards,focusData,saveFocus,refreshFocus,openTimer};
+  return {novidadeVista,questionReview,qlog,qlogSave,reload,init,afterRender,abrirAula,marcas,marcasTodas,paginasEstudo,registrarPaginaEstudo,marcaAdd,marcaEdita,marcaRemove,setFocus,exitFocus,fullscreenAvailable,openSearch,searchInput,searchKeys,chooseResult,openSettings,openHelp,closeOverlay,setTheme,setFont,togglePref,toggleSidebar,toggleFocus,lessonToolbar,lessonNotes,saveNote,bookmark,viewToday,viewNotes,configureTimer,toggleTimer,resetTimer,exportNotes,exportBackup,importProgress,openLast,resumeInfo,focusTopic,dueCards,focusData,saveFocus,refreshFocus,openTimer};
 })();
 window.HIG=HIG;
 window.addEventListener('DOMContentLoaded',HIG.init);
