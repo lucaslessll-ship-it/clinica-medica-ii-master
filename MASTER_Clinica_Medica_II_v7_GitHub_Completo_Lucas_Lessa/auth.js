@@ -449,7 +449,17 @@
       const queued=pending(user.id);
       const conflicts=keys.filter(key=>queued[key]&&localStorage.getItem(key)&&queued[key]!==localStorage.getItem(key));
       if(conflicts.length){originalSet.call(localStorage,'master_conflict_backup_'+user.id+'_'+Date.now(),JSON.stringify(Object.fromEntries(keys.map(key=>[key,read(key)]))));}
-      for(const key of keys)if(typeof queued[key]==='string')originalSet.call(localStorage,key,queued[key]);
+      for(const key of keys)if(typeof queued[key]==='string'){
+        if(window.QuestionHistory?.BANK_KEYS.includes(key)){
+          try{
+            const saved=JSON.parse(queued[key]),current=read(key);
+            const merged=QuestionHistory.mergeProgressState(null,saved,current);
+            queued[key]=JSON.stringify(merged);
+            originalSet.call(localStorage,key,queued[key]);
+            originalSet.call(localStorage,pendingKey(user.id),JSON.stringify(queued));
+          }catch{originalSet.call(localStorage,key,queued[key]);}
+        }else originalSet.call(localStorage,key,queued[key]);
+      }
       originalSet.call(localStorage,ownerKey,user.id);status.ready=true;
       if(importLocal||mergedQuestionProgress||Object.keys(queued).length){try{await syncAll();}catch{syncNotice('Sincronização pendente. Seu progresso continua salvo neste dispositivo.');}}
       if(epoch!==status.epoch)return;
