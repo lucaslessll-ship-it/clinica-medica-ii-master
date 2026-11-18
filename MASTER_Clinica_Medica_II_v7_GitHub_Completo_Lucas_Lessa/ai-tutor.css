@@ -116,3 +116,11 @@
 }
 @media(prefers-reduced-motion:reduce){.ai-tutor-welcome-choices button,.ai-tutor-welcome-start{transition:none}}
 @media print{.ai-tutor-welcome{display:none!important}}
+
+/* No celular o assistente ocupa menos conteúdo sem reduzir os alvos de toque. */
+@media(max-width:599px){
+ .ai-tutor-dock{padding:2px 4px;gap:0}
+ .ai-tutor-dock .ai-tutor-launch{width:48px;height:48px;min-height:48px}
+ .ai-tutor-dock .ai-tutor-launch img{width:48px;height:48px}
+ .ai-tutor-dock .ai-tutor-hide{width:44px;height:44px;min-height:44px}
+}
