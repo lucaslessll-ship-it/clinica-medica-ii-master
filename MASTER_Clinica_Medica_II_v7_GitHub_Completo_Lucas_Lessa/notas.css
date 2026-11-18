@@ -385,3 +385,7 @@ body[data-theme="dark"] .caderno-icone-3d{color:#c6ede1;background:linear-gradie
 .nota-painel-lateral .nota-acao-excluir{flex-shrink:0}
 
 .nota-acao-excluir::before{content:'🗑';display:inline-block;margin-right:5px;font-size:14px;vertical-align:middle}
+
+/* Destaques existentes também são controles de edição acessíveis ao teclado. */
+.nota-marca[role="button"]{cursor:pointer}
+.nota-marca[role="button"]:focus-visible{outline:2px solid var(--focus,#0b5f57);outline-offset:3px}
