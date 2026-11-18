@@ -98,7 +98,7 @@ test('central tem leitura acessível, sessões adicionais e limpeza respeita os 
  await p.getByRole('button',{name:'Mostrar mais sessões',exact:true}).click();assert.ok(await p.locator('.qr-session').count()>12);
  await p.evaluate(()=>window.scrollTo({top:0,behavior:'instant'}));await p.screenshot({path:'work/revisao-central-ipad.png'});
  const AxeBuilder=require('@axe-core/playwright').default;
- for(const theme of ['light','dark']){await p.evaluate(theme=>HIG.setTheme(theme),theme);const audit=await new AxeBuilder({page:p}).include('#main-content').withTags(['wcag2a','wcag2aa']).analyze();assert.deepEqual(audit.violations.map(v=>({id:v.id,impact:v.impact})),[]);}
+ for(const theme of ['light','dark']){await p.evaluate(theme=>HIG.setTheme(theme),theme);const audit=await new AxeBuilder({page:p}).include('#main-content').withTags(['wcag2a','wcag2aa']).analyze();if(audit.violations.length)console.log('AXE_DETAILS',theme,JSON.stringify(audit.violations.map(v=>({id:v.id,nodes:v.nodes.map(n=>({target:n.target,html:n.html,checks:[...n.any,...n.all,...n.none].map(x=>({message:x.message,data:x.data}))}))}))));assert.deepEqual(audit.violations.map(v=>({id:v.id,impact:v.impact})),[]);}
  p.once('dialog',d=>d.accept());await p.evaluate(()=>resetProgress());
  assert.equal(await p.evaluate(()=>!!HIG.qlog()['p2:0']),false);assert.equal(await p.evaluate(()=>!!HIG.qlog()['p1:0']),true);
  assert.ok(await p.evaluate(()=>QuestionReview.sessions().every(s=>Object.values(s.items).every(q=>q.b==='p1'||q.b==='cir'))));

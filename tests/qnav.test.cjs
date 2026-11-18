@@ -172,6 +172,7 @@ test('histórico mostra sessões distintas e limpeza confirmada mantém aulas e 
  const state=await page.evaluate(()=>JSON.parse(localStorage.getItem('master_p1_lucas_v4')));
  assert.equal(state.questionSessions.filter(s=>s.kind==='practice').length,2);
  await page.evaluate(()=>P1.go('p1practice'));
+ await page.locator('.qhistory-compact > summary').click();
  await page.waitForSelector('.qhistory-all');
  assert.match(await page.locator('.qhistory').innerText(),/2 sessões/);
  await page.evaluate(()=>{const s=JSON.parse(localStorage.getItem('master_p1_lucas_v4'));s.completed.p1dm_0=true;s.notes.p1dm_0='Preservar nota';localStorage.setItem('master_p1_lucas_v4',JSON.stringify(s));P1.reload();window.confirm=()=>true;P1.clearQuestionHistory();});
