@@ -121,7 +121,7 @@ const P1=(()=>{
  init();
  function resume(){init();go('p1topic')}
  function resumeInfo(){const t=topic(state.lastTopic),i=Math.max(0,Math.min(Number(state.lastChapter)||0,t.chapters.length-1));return {title:t.title,chapter:`P1 · Aula ${i+1}: ${t.chapters[i].name}`}}
- function reload(){clearInterval(examTick);examTick=null;state=load();practice=QuestionHistory.restore(state,'practice');exam=QuestionHistory.restore(state,'exam');flashDeck=[];flashPos=0;flashBack=false;activeCase=0;caseStage=0;caseReveal=false;activeDisc=0;discReveal=false;init();}
+ function reload(){clearInterval(examTick);examTick=null;state=load();QuestionHistory.ensure(state,'p1');practice=QuestionHistory.restore(state,'practice');exam=QuestionHistory.restore(state,'exam');if(window.MASTER_AUTH?.user?.())save();flashDeck=[];flashPos=0;flashBack=false;activeCase=0;caseStage=0;caseReveal=false;activeDisc=0;discReveal=false;init();}
  return {reload,resume,resumeInfo,view,afterRender,openTopic,chapter:setChapter,nextChapter,toggleDone,saveNote,saveExternalNote,startPractice,startReview,openQuestionSession,clearQuestionHistory,jumpPractice,answerPractice,nextPractice,startExam,answerExam,goExam,finishExam,selectCase,caseAnswer,caseNext,selectDisc,discFor,discCheck,flashSet,flashFlip,flashSkip,flashGrade,exportCSV,viewSources,go,searchItems,getBackup,restoreBackup,exportProgress,topics,qs,cases,cards,alloc,overall};
 })();
 if(window.QNav)QNav.registrarBanco('p1',{iniciar:ids=>P1.startReview(ids),tema:tid=>P1.startPractice(tid)});
