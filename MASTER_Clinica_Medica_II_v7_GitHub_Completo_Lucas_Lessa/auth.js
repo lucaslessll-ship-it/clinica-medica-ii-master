@@ -348,7 +348,7 @@
     if(alheio&&key===HIGKEY&&window.MASTER_SYNC_MERGE){
       // Outro aparelho mexeu: mescla em silêncio (marcas, notas, pomodoro) em vez de sobrescrever.
       outgoing=window.MASTER_SYNC_MERGE.mesclarPrefs(status.baseObj.get(key),value,remote.payload);outCanon=canon(outgoing);merged=outCanon!==localCanon;
-    }else if(alheio)keepConflictCopy(userId,latest);
+    }else if(alheio&&window.QuestionHistory?.BANK_KEYS.includes(key)){keepConflictCopy(userId,latest);outgoing=QuestionHistory.mergeProgressState(status.baseObj.get(key),value,remote.payload);outCanon=canon(outgoing);merged=outCanon!==localCanon;}else if(alheio)keepConflictCopy(userId,latest);
     rememberSent(key,outCanon);
     const {error}=await status.client.from('master_progress').upsert({user_id:userId,storage_key:key,payload:outgoing,updated_at:new Date().toISOString()},{onConflict:'user_id,storage_key'});
     if(error){if(epoch===status.epoch)syncNotice('Sincronização pendente. Seu progresso continua salvo neste dispositivo.');throw error;}
@@ -376,7 +376,28 @@
         originalSet.call(localStorage,HIGKEY,JSON.stringify(row.payload));status.baseline.set(HIGKEY,rc);status.baseObj.set(HIGKEY,row.payload);
         window.dispatchEvent(new CustomEvent('master-remote-merge',{detail:{key:HIGKEY}}));
       }else await syncKey(HIGKEY);
-    }catch{}finally{status.pulling=false;}
+    }catch{}finally{status.pulling=false;pullQuestionProgress().catch(()=>{});}
+  }
+  // Detecta alterações salvas em outros dispositivos para os três bancos de questões.
+  async function pullQuestionProgress(){
+    if(!status.ready||!status.user||navigator.onLine===false||status.pullingQuestions||!window.QuestionHistory)return;
+    status.pullingQuestions=true;const epoch=status.epoch,userId=status.user.id;
+    try{
+      const {data,error}=await status.client.from('master_progress').select('storage_key,payload').eq('user_id',userId);
+      if(error||epoch!==status.epoch)return;
+      for(const row of data||[]){
+        const key=row.storage_key;
+        if(!QuestionHistory.BANK_KEYS.includes(key)||!keys.includes(key))continue;
+        const rc=canon(row.payload),lc=canon(read(key)||{}),baseline=status.baseline.get(key);
+        if(rc===lc){status.baseline.set(key,rc);status.baseObj.set(key,row.payload);continue;}
+        if(rc===baseline||(sent.get(key)||[]).includes(rc))continue;
+        if(lc===baseline||!localStorage.getItem(key)){
+          originalSet.call(localStorage,key,JSON.stringify(row.payload));
+          status.baseline.set(key,rc);status.baseObj.set(key,row.payload);
+          window.dispatchEvent(new CustomEvent('master-remote-merge',{detail:{key}}));
+        }else await syncKey(key);
+      }
+    }catch{}finally{status.pullingQuestions=false;}
   }
   async function syncAll(){syncNotice('Sincronizando…');await Promise.all(keys.map(syncKey));syncNotice('Progresso sincronizado.');}
   function syncSoon(key){
@@ -407,13 +428,40 @@
         importLocal=confirm('Encontramos progresso anterior neste navegador. Deseja vinculá-lo à sua conta? Cancelar inicia com progresso vazio e mantém uma cópia de segurança local.');
         if(!importLocal){const backup=Object.fromEntries(keys.map(k=>[k,read(k)]));originalSet.call(localStorage,'master_guest_backup_'+Date.now(),JSON.stringify(backup));}
       }
-      if(!importLocal){for(const key of keys)localStorage.removeItem(key);for(const row of remote||[])if(keys.includes(row.storage_key))originalSet.call(localStorage,row.storage_key,JSON.stringify(row.payload));}
+      let mergedQuestionProgress=false;
+      const previousQuestionStates=new Map();
+      if(previousOwner===user.id&&window.QuestionHistory)for(const key of QuestionHistory.BANK_KEYS)previousQuestionStates.set(key,read(key));
+      if(!importLocal){
+        for(const key of keys)localStorage.removeItem(key);
+        for(const row of remote||[])if(keys.includes(row.storage_key))originalSet.call(localStorage,row.storage_key,JSON.stringify(row.payload));
+        if(previousOwner===user.id&&window.QuestionHistory){
+          for(const key of QuestionHistory.BANK_KEYS){
+            const local=previousQuestionStates.get(key),remoteState=read(key);
+            if(!local||!remoteState)continue;
+            const merged=QuestionHistory.mergeProgressState(null,local,remoteState);
+            if(canon(merged)!==canon(remoteState)){
+              originalSet.call(localStorage,key,JSON.stringify(merged));
+              mergedQuestionProgress=true;
+            }
+          }
+        }
+      }
       const queued=pending(user.id);
       const conflicts=keys.filter(key=>queued[key]&&localStorage.getItem(key)&&queued[key]!==localStorage.getItem(key));
       if(conflicts.length){originalSet.call(localStorage,'master_conflict_backup_'+user.id+'_'+Date.now(),JSON.stringify(Object.fromEntries(keys.map(key=>[key,read(key)]))));}
-      for(const key of keys)if(typeof queued[key]==='string')originalSet.call(localStorage,key,queued[key]);
+      for(const key of keys)if(typeof queued[key]==='string'){
+        if(window.QuestionHistory?.BANK_KEYS.includes(key)){
+          try{
+            const saved=JSON.parse(queued[key]),current=read(key);
+            const merged=QuestionHistory.mergeProgressState(null,saved,current);
+            queued[key]=JSON.stringify(merged);
+            originalSet.call(localStorage,key,queued[key]);
+            originalSet.call(localStorage,pendingKey(user.id),JSON.stringify(queued));
+          }catch{originalSet.call(localStorage,key,queued[key]);}
+        }else originalSet.call(localStorage,key,queued[key]);
+      }
       originalSet.call(localStorage,ownerKey,user.id);status.ready=true;
-      if(importLocal||Object.keys(queued).length){try{await syncAll();}catch{syncNotice('Sincronização pendente. Seu progresso continua salvo neste dispositivo.');}}
+      if(importLocal||mergedQuestionProgress||Object.keys(queued).length){try{await syncAll();}catch{syncNotice('Sincronização pendente. Seu progresso continua salvo neste dispositivo.');}}
       if(epoch!==status.epoch)return;
       // Refresh every module before exposing any account data; no reload or stale user state.
       window.dispatchEvent(new Event('master-auth-ready'));
