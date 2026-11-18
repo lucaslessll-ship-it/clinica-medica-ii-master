@@ -78,11 +78,11 @@ const FocusTimer=(()=>{
       HIG.refreshFocus();state=normalize(HIG.focusData());pararEspelho();
       {const a=state.ativo;if(a&&a.dev!==DEV&&a.fimEm>Date.now()){state.mode=a.modo;state.remainingMs=a.fimEm-Date.now();}}
       if(state.remainingMs<=0)state.remainingMs=duracao(state.mode);
-      const held=new Promise(resolve=>releaseLock=resolve);running=true;window.__pomodoroRunning=true;lastTick=performance.now();lastWall=Date.now();lastSave=lastTick;
+      const held=new Promise(resolve=>releaseLock=resolve);running=true;window.MasterActivity?.track('pomodoro_start');window.__pomodoroRunning=true;lastTick=performance.now();lastWall=Date.now();lastSave=lastTick;
       persist();window.MASTER_AUTH?.flush?.('master_p2_hig_v2')?.catch?.(()=>{});interval=setInterval(()=>tick(),1000);render();await held;
     });
   }
-  function pause(){if(!running)return;tick(true);release();persist();render();window.MASTER_AUTH?.flush?.('master_p2_hig_v2')?.catch?.(()=>{});}
+  function pause(){if(!running)return;window.MasterActivity?.track('pomodoro_pause');tick(true);release();persist();render();window.MASTER_AUTH?.flush?.('master_p2_hig_v2')?.catch?.(()=>{});}
   function configure(minutes){definir('foco',minutes);}
   function definir(campo,valor){
     if(!allowed()||!LIMITES[campo])return;

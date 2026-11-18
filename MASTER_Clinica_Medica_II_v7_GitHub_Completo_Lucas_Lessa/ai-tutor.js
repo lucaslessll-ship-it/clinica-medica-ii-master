@@ -73,7 +73,7 @@ async function ask(mode='ask'){
   }
   submitted=true;input.blur();dialog.querySelector('.ai-tutor-help').open=false;dialog.querySelector('.ai-tutor-tools').open=false;dialog.querySelector('[data-ai-help-toggle]').setAttribute('aria-expanded','false');message('Você',question);input.value='';
   if(!blocks.length){message('Assistente','Isso não está no conteúdo do site encontrado pela busca. Tente mencionar o tema ou o nome da aula.\n\nDica de estudo: comece identificando a síndrome principal.');state('Nenhuma chamada à IA foi feita.');return;}
-  pendingMessage();state('Preparando resposta',true);
+  window.MasterActivity?.track('assistant_request');pendingMessage();state('Preparando resposta',true);
   const client=auth().client(),session=await client.auth.getSession();const token=session.data?.session?.access_token;
   if(!token)throw new Error('auth');
   const config=window.MASTER_AUTH_CONFIG;
@@ -81,11 +81,11 @@ async function ask(mode='ask'){
   const result=await fetch(config.url+'/functions/v1/ai-tutor',{method:'POST',headers:{Authorization:'Bearer '+token,apikey:config.publishableKey,'Content-Type':'application/json'},body:JSON.stringify({question,blocks:blocks.map(b=>({id:b.id})),lessonTitle:blocks[0].title}),signal:activeController.signal});
   let value;try{value=await result.json();}catch{throw new Error('upstream');}
   if(mine!==generation||!unlocked()||auth().user().id!==uid)return;
-  if(!result.ok){fail(errors[value.error]||'Não foi possível responder agora.',blocks,['upstream','provider_busy','unavailable'].includes(value.error));state('As aulas encontradas estão disponíveis para consulta.');return;}
+  if(!result.ok){window.MasterActivity?.track('assistant_result','',{code:'unavailable'});fail(errors[value.error]||'Não foi possível responder agora.',blocks,['upstream','provider_busy','unavailable'].includes(value.error));state('As aulas encontradas estão disponíveis para consulta.');return;}
   if(typeof value.answer!=='string'||!value.answer.trim())throw new Error('upstream');
   const allowed=new Set(blocks.map(b=>b.id));const sources=Array.isArray(value.sources)?value.sources.filter(s=>allowed.has(s.id)):blocks;
-  message('Assistente',value.answer,sources);state(Number.isFinite(value.remaining)?`${value.remaining} perguntas disponíveis hoje.`:'Resposta baseada nas aulas encontradas.');
- }catch(e){if(mine===generation&&(e.name!=='AbortError'||timedOut)){fail(timedOut?'A resposta demorou mais que o esperado. Tente novamente em instantes.':errors[e.message]||(e.message==='index'?'Não foi possível carregar a busca. Confira a conexão e tente novamente.':'Sem conexão ou serviço indisponível. Tente novamente.'),[],e.message!=='auth');state('Não foi possível concluir a pergunta.');}}
+  window.MasterActivity?.track('assistant_result','',{code:'success'});message('Assistente',value.answer,sources);state(Number.isFinite(value.remaining)?`${value.remaining} perguntas disponíveis hoje.`:'Resposta baseada nas aulas encontradas.');
+ }catch(e){if(mine===generation&&(e.name!=='AbortError'||timedOut)){window.MasterActivity?.track('assistant_result','',{code:timedOut?'timeout':'unavailable'});fail(timedOut?'A resposta demorou mais que o esperado. Tente novamente em instantes.':errors[e.message]||(e.message==='index'?'Não foi possível carregar a busca. Confira a conexão e tente novamente.':'Sem conexão ou serviço indisponível. Tente novamente.'),[],e.message!=='auth');state('Não foi possível concluir a pergunta.');}}
  finally{clearTimeout(requestTimer);if(mine===generation){controller=null;history.querySelector('.ai-tutor-pending')?.remove();history.setAttribute('aria-busy','false');send.disabled=false;input.disabled=false;dialog.querySelectorAll('[data-ai-mode]').forEach(b=>b.disabled=false);status.classList.remove('ai-tutor-dots');if(!submitted)input.focus();}}
 }
 
@@ -129,7 +129,7 @@ function close(){
  else{dialog.close();restoreFocus();}
 }
 function show(from=launch,help=false){
- if(!unlocked())return;
+ if(!unlocked())return;window.MasterActivity?.track('assistant_open');
  returnFocus=from;
  if(typeof closeMobileNav==='function')closeMobileNav(false);
  const firstVisit=!help&&shouldWelcome();

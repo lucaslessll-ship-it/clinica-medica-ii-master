@@ -97,7 +97,7 @@ function lesson(t,i){
  <div class="p1-note-area"><label for="cir-note"><strong>✎ Meu caderno · ${esc(c.name)}</strong><small>Fica salvo na sua conta.</small></label><textarea id="cir-note" rows="3" placeholder="Dúvidas, associações, explicação com suas palavras…">${esc(state.notes[k]||'')}</textarea><button type="button" class="btn secondary" onclick="CIR.saveNote()">Salvar anotação</button></div>
  <div class="module-actions"><button type="button" class="btn primary" onclick="CIR.toggleDone()">${done(t.id,i)?'↺ Desmarcar aula':'✓ Marcar aula concluída'}</button><button type="button" class="btn" onclick="CIR.startPractice({t:'${t.id}',src:'all',mode:'all'})">◈ Questões deste tema</button><button type="button" class="btn" onclick="CIR.nextChapter()">Próxima aula →</button></div></div>`;
 }
-function topicView(){
+function topicView(){window.MasterActivity?.setContext('cir:'+sel+':'+chap);
  const t=topic(sel);chap=Math.max(0,Math.min(chap,t.chapters.length-1));const s=stats(t.id);
  return LearnUX.topicHead({id:t.id,eyebrow:'Cirurgia · '+(data.blocks.find(b=>b[0]===t.block)||[])[1],title:t.title,subtitle:t.focus,stats:`${t.chapters.length} aulas · ${s.total} questões · ${s.answered<5?'poucos dados':s.pct+'% de acertos'}`,pct:lessonPct(t),badges:[`Peso ${t.priority}/5`],actions:`<button type="button" class="btn ghost" onclick="CIR.go('cir')">← Cirurgia</button>`})+
  sec('Percurso do tema',`<div class="chapter-nav">${t.chapters.map((c,i)=>`<button type="button" class="chapter-pill ${i===chap?'current':''}" ${i===chap?'aria-current="step"':''} onclick="CIR.chapter(${i})">${done(t.id,i)?'✓ ':''}${i+1}. ${esc(c.name)}</button>`).join('')}</div>`)+lesson(t,chap);
@@ -152,7 +152,7 @@ function go(r){navigate(r);}
 function openTopic(id,i=0){sel=id;chap=i;state.lastTopic=id;state.lastChapter=i;save();go('cirtopic');}
 function setChapter(i){chap=i;state.lastChapter=i;save();render();window.scrollTo({top:160,behavior:'smooth'});}
 function nextChapter(){const t=topic(sel);if(chap<t.chapters.length-1)chap++;else{const k=topics.findIndex(x=>x.id===sel);sel=topics[(k+1)%topics.length].id;chap=0;}state.lastTopic=sel;state.lastChapter=chap;save();render();window.scrollTo({top:160,behavior:'smooth'});}
-function toggleDone(){const k=sel+'_'+chap;state.completed[k]=!state.completed[k];state.doneAt=state.doneAt||{};if(state.completed[k]){state.doneAt[k]=dayKey();const day=planActivity();day.lessons=day.lessons||[];if(!day.lessons.includes(k))day.lessons.push(k);}else{delete state.doneAt[k];for(const day of Object.values(state.plan?.days||{}))day.lessons=(day.lessons||[]).filter(key=>key!==k);}save();render();}
+function toggleDone(){const k=sel+'_'+chap;state.completed[k]=!state.completed[k];if(state.completed[k])window.MasterActivity?.track('lesson_complete','cir:'+k);state.doneAt=state.doneAt||{};if(state.completed[k]){state.doneAt[k]=dayKey();const day=planActivity();day.lessons=day.lessons||[];if(!day.lessons.includes(k))day.lessons.push(k);}else{delete state.doneAt[k];for(const day of Object.values(state.plan?.days||{}))day.lessons=(day.lessons||[]).filter(key=>key!==k);}save();render();}
 function saveExternalNote(key,value){state.notes[key]=String(value);save();}
  function saveNote(){state.notes[sel+'_'+chap]=document.getElementById('cir-note')?.value||'';save();toast('Anotação salva.');}
 function resume(){openTopic(topics.some(t=>t.id===state.lastTopic)?state.lastTopic:'ciraa',state.lastChapter||0);}

@@ -351,7 +351,7 @@ function practicalMarkup(m){
   return `<section class="pocus-sec pocus-practical"><h3>Como cai na prova prática</h3><p class="subtle">Treine uma estação didática. O escopo e os critérios específicos da sua banca dependem de confirmação docente.</p><ul>${m.practical.exam.map(item=>`<li>${item}</li>`).join('')}</ul></section><section class="pocus-sec pocus-technique-errors"><h3>Erros de técnica desta estação</h3><ul>${m.practical.errors.map(item=>`<li>${item}</li>`).join('')}</ul></section><details class="pocus-script"><summary>Roteiro de fala para a estação</summary><p>Pratique a sequência em voz alta enquanto demonstra os passos e aponte as limitações do que conseguiu adquirir.</p><ol>${m.practical.script.map(item=>`<li>${item}</li>`).join('')}</ol></details>`;
 }
 function moduleView(mi){
-  const m=MODULES[mi],done=!!st().done[m.id];
+  const m=MODULES[mi],done=!!st().done[m.id];window.MasterActivity?.setContext('pocus'+':'+m.id);
   return `<nav class="pocus-crumb" aria-label="Curso POCUS"><button type="button" class="btn" onclick="PocusCourse.open(null)">← Todos os módulos</button><span>Módulo ${mi+1} de ${MODULES.length}</span></nav>
   <article class="card pad pocus-module"><span class="kicker">${m.layer}</span><h1 class="pocus-title">${m.title}</h1><p class="pocus-lead">${m.summary}</p>
   ${mi?`<p class="info-notice">Este módulo usa o que foi visto em "${MODULES[mi-1].title}". Se algo parecer novo, volte um passo.</p>`:''}
@@ -376,8 +376,8 @@ function home(){
 }
 function page(){return view===null||!MODULES[view]?home():moduleView(view);}
 function open(i){view=i===null?null:Math.max(0,Math.min(MODULES.length-1,Number(i)||0));render();window.scrollTo({top:0,behavior:'instant'});const h=document.querySelector('#main-content h1');if(h){h.tabIndex=-1;h.focus({preventScroll:true});}}
-function answer(mi,qi,oi){const m=MODULES[mi];if(!m||!m.quiz[qi])return;st().quiz[m.id+'_'+qi]=oi;stateSave();const el=document.getElementById(`pq-${mi}-${qi}`);if(el)el.outerHTML=quizItem(mi,qi);}
-function complete(id,value){st().done[id]=!!value;stateSave();}
+function answer(mi,qi,oi){const m=MODULES[mi];if(!m||!m.quiz[qi])return;st().quiz[m.id+'_'+qi]=oi;window.MasterActivity?.track('question_answer','pocus'+':'+m.id+':'+qi,{correct:oi===m.quiz[qi].a});stateSave();const el=document.getElementById(`pq-${mi}-${qi}`);if(el)el.outerHTML=quizItem(mi,qi);}
+function complete(id,value){st().done[id]=!!value;if(value)window.MasterActivity?.track('lesson_complete','pocus'+':'+id);stateSave();}
 return {page,open,answer,complete,modules:()=>MODULES.length,findId:id=>MODULES.findIndex(m=>m.id===id),titleOf:id=>MODULES.find(m=>m.id===id)?.title||''};
 })();
 window.PocusCourse=PocusCourse;
