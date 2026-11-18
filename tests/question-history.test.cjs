@@ -1,0 +1,61 @@
+const {test}=require('node:test');
+const assert=require('node:assert/strict');
+const fs=require('node:fs');
+const path=require('node:path');
+const vm=require('node:vm');
+const file=path.resolve(__dirname,'../MASTER_Clinica_Medica_II_v7_GitHub_Completo_Lucas_Lessa/question-history.js');
+const sandbox={window:{HIG:{qlog:()=>({}),qlogSave(){}}},Date,Math,JSON};
+vm.runInNewContext(fs.readFileSync(file,'utf8'),sandbox);
+const H=sandbox.window.QuestionHistory;
+const plain=v=>JSON.parse(JSON.stringify(v));
+test('existing answers are preserved in an honest legacy history entry',()=>{
+ const state={results:{12:{answer:0,correct:false,date:'2026-11-17T12:00:00Z'},13:{answer:2,correct:true,date:'2026-11-18T11:00:00Z'}}};
+ H.ensure(state,'p1');
+ assert.equal(state.questionSessions.length,1);
+ assert.equal(state.questionSessions[0].kind,'legacy');
+ assert.deepEqual(plain(H.summary(state.questionSessions[0])),{total:2,answered:2,correct:1});
+ H.ensure(state,'p1');
+ assert.equal(state.questionSessions.length,1);
+ assert.match(H.panel(state,'p1','P1'),/Respostas anteriores/);
+});
+test('practice answers and navigation survive JSON save/reload, keeping each attempt',()=>{
+ const state={results:{}},run={tid:'neuro1',ids:[1,2,3],step:0,chosen:null,done:{}};
+ H.begin(state,'p2','practice',run,'Neurologia');
+ run.chosen=1;run.done[1]={chosen:1,ok:false,answeredAt:new Date().toISOString()};run.step=2;
+ H.touch(state,'practice',run);
+ const parsed=plain(state),saved=H.restore(parsed,'practice');
+ assert.equal(saved.step,2);
+ assert.equal(saved.done[1].ok,false);
+ assert.equal(H.summary(parsed.questionSessions[0]).answered,1);
+ assert.match(H.panel(parsed,'p2','QuestionSessionsP2'),/1\/3/);
+ assert.match(H.panel(parsed,'p2','QuestionSessionsP2'),/Limpar histórico/);
+});
+test('same session edited on two devices merges separate answers',()=>{
+ const base={results:{},questionSessions:[]},local=plain(base),remote=plain(base);
+ const date='2026-11-18T12:00:00Z';
+ local.questionSessions=[{id:'p2-1',bank:'p2',kind:'practice',startedAt:date,updatedAt:'2026-11-18T12:01:00Z',run:{ids:[1,2],step:0,done:{1:{chosen:0,ok:false}}}}];
+ remote.questionSessions=[{id:'p2-1',bank:'p2',kind:'practice',startedAt:date,updatedAt:'2026-11-18T12:02:00Z',run:{ids:[1,2],step:1,done:{2:{chosen:2,ok:true}}}}];
+ local.results={1:{answer:0,correct:false,date:'2026-11-18T12:01:00Z'}};
+ remote.results={2:{answer:2,correct:true,date:'2026-11-18T12:02:00Z'}};
+ const merged=H.mergeProgressState(base,local,remote);
+ assert.deepEqual(Object.keys(merged.results).sort(),['1','2']);
+ assert.equal(merged.questionSessions.length,1);
+ assert.deepEqual(Object.keys(merged.questionSessions[0].run.done).sort(),['1','2']);
+});
+test('confirmed clear only deletes question history and prevents stale device resurrection',()=>{
+ const old='2026-11-16T00:00:00Z',date='2026-11-18T15:00:00Z';
+ const remote={completed:{lesson:true},notes:{important:'preserve'},results:{1:{correct:true,date:old}},questionSessions:[{id:'p2-old',kind:'practice',startedAt:old,updatedAt:old,run:{ids:[1],done:{}}}]};
+ const local=plain(remote);H.clear(local,'p2');
+ local.questionResetAt=date;
+ const merged=H.mergeProgressState(remote,local,remote);
+ assert.equal(Object.keys(merged.results).length,0);
+ assert.equal(merged.questionSessions.length,0);
+ assert.equal(merged.completed.lesson,true);
+ assert.equal(merged.notes.important,'preserve');
+});
+test('session list does not discard older sessions during a new start',()=>{
+ const state={results:{}};
+ for(let i=0;i<250;i++)H.begin(state,'cir','practice',{ids:[i],step:0,done:{}},'Tema');
+ assert.equal(state.questionSessions.length,250);
+ assert.equal(H.restore(state,'practice').ids[0],249);
+});
