@@ -162,7 +162,7 @@ function resume(){openTopic(topics.some(t=>t.id===state.lastTopic)?state.lastTop
 function view(r){switch(r){case 'cirtopic':return topicView();case 'cirpractice':return practiceView();case 'cirexam':return examView();case 'cirp1':return hub('P1');case 'cirp2':return hub('P2');default:return hub();}}
 function afterRender(r){if(r==='cirexam'&&exam&&!exam.done)clock();else clearInterval(tick);}
 function searchItems(){return topics.flatMap(t=>[{type:'Cirurgia',label:t.title,sub:'Cirurgia · '+t.focus,icon:'✂',action:()=>openTopic(t.id),text:[t.title,t.focus]},...t.chapters.map((c,i)=>({type:'Aula de cirurgia',label:c.name,sub:t.title,icon:'✂',action:()=>openTopic(t.id,i),text:[c.name,c.hy]}))]);}
-function reload(){clearInterval(tick);state=load();practice=QuestionHistory.restore(state,'practice');exam=QuestionHistory.restore(state,'exam');if(practice?.filters)filt=practice.filters;sel=state.lastTopic;chap=state.lastChapter||0;}
+function reload(){clearInterval(tick);state=load();QuestionHistory.ensure(state,'cir');practice=QuestionHistory.restore(state,'practice');exam=QuestionHistory.restore(state,'exam');if(window.MASTER_AUTH?.user?.())save();if(practice?.filters)filt=practice.filters;sel=state.lastTopic;chap=state.lastChapter||0;}
 window.addEventListener('storage',e=>{if(e.key===KEY)state=load();});
 function dueCount(){return pool().filter(q=>isDue(q.id)).length;}
 function completed(){return state.completed;}
