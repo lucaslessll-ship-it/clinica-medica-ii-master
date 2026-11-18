@@ -215,7 +215,7 @@ test('questões respondidas em outra sessão mantêm cores e mostram a resposta 
  assert.equal(await page.evaluate(id=>store.results[id].attempts>=2,id),true);
 
  await page.evaluate(()=>P1.startPractice('p1dm'));
- const pid=await page.evaluate(()=>P1.qs.findIndex(q=>q.t==='p1dm'));
+ const pid=await page.evaluate(()=>P1.getBackup().questionSessions.at(-1).run.ids[0]);
  await page.evaluate(id=>P1.answerPractice(P1.qs[id].a),pid);
  await page.evaluate(()=>P1.startPractice('p1dm'));
  const pidx=await page.evaluate(id=>P1.getBackup().questionSessions.at(-1).run.ids.indexOf(id),pid);
@@ -223,8 +223,8 @@ test('questões respondidas em outra sessão mantêm cores e mostram a resposta 
  await page.locator('.qnav-dot').nth(pidx).click();
  assert.equal(await page.getByRole('button',{name:'Responder novamente'}).count(),1);
  await page.evaluate(()=>CIR.startPractice({t:CIR.own[0].t,src:'own',mode:'all'}));
- const cid=await page.evaluate(()=>CIR.own[0].id);
- await page.evaluate(cid=>{const run=JSON.parse(localStorage.getItem('master_cir_lucas_v1')).questionSessions.at(-1).run;const id=run.ids[0];const q=CIR.own.find(q=>q.id===id);CIR.answer(q.a);},cid);
+ const cid=await page.evaluate(()=>JSON.parse(localStorage.getItem('master_cir_lucas_v1')).questionSessions.at(-1).run.ids[0]);
+ await page.evaluate(cid=>{const q=CIR.own.find(q=>q.id===cid);CIR.answer(q.a);},cid);
  await page.evaluate(()=>CIR.startPractice({t:CIR.own[0].t,src:'own',mode:'all'}));
  const cidx=await page.evaluate(cid=>{const st=JSON.parse(localStorage.getItem('master_cir_lucas_v1'));return st.questionSessions.at(-1).run.ids.indexOf(cid);},cid);
  assert.ok(cidx>=0);
