@@ -1210,3 +1210,288 @@ window.EMERGENCY_CONTENT.push(...[
   "slide": "1HoONmIlE7r8fDqn0i7CS1SxHjOKZ6745"
  }
 ]);
+
+window.EMERGENCY_CONTENT.push(...[
+ {
+  "id": "hipertensiva",
+  "stage": "P2",
+  "title": "Emergência hipertensiva e edema agudo pulmonar",
+  "summary": "Lesão aguda de órgão-alvo, EAP e redução de PA orientada ao fenótipo.",
+  "goals": [
+   "Diferenciar urgência de emergência hipertensiva.",
+   "Reconhecer edema cardiogênico.",
+   "Escolher terapêutica e velocidade de queda de PA."
+  ],
+  "sections": [
+   {
+    "h": "Emergência não é só pressão alta",
+    "p": [
+     "PA muito elevada não define emergência sozinha. O diagnóstico depende de lesão aguda de órgão-alvo: encefalopatia, edema pulmonar, síndrome aórtica, lesão renal ou cardiomiocárdica aguda. Examine neurologia, dispneia, dor, perfusão e diurese, com ECG, exames e imagem dirigidos."
+    ]
+   },
+   {
+    "h": "Edema agudo cardiogênico",
+    "p": [
+     "Dispneia intensa, ortopneia, estertores, hipoxemia e congestão sugerem EAP; ultrassom pode demonstrar linhas B difusas no contexto correto. Posicione, monitore, titular oxigênio, considere CPAP/VNI em paciente elegível e vasodilatador como nitrato se PA adequada, evitando em hipotensão."
+    ]
+   },
+   {
+    "h": "Controle de PA com segurança",
+    "p": [
+     "A redução deve ser titulada com droga IV e monitorização conforme síndrome: a meta para dissecção aórtica difere de edema pulmonar ou encefalopatia. Evitar queda abrupta generalizada e uso indiscriminado de antihipertensivos orais de ação rápida. Tratar gatilho e reavaliar perfusão, sintomas e pressão."
+    ]
+   }
+  ],
+  "flow": [
+   [
+    "PA alta + sintomas",
+    "Buscar lesão aguda de órgão-alvo."
+   ],
+   [
+    "EAP com hipoxemia",
+    "Oxigenação, VNI quando adequada e terapia guiada por PA."
+   ],
+   [
+    "Emergência confirmada",
+    "Antihipertensivo IV conforme órgão-alvo e monitorização."
+   ],
+   [
+    "Reavaliação",
+    "PA, perfusão, respiração e resposta à terapia."
+   ]
+  ],
+  "pitfalls": [
+   "A PA elevada isolada não define emergência.",
+   "Nitrato em hipotensão pode piorar choque.",
+   "Não reduzir PA de todos os pacientes com a mesma meta."
+  ],
+  "quiz": [
+   {
+    "q": "Qual dado diferencia emergência hipertensiva?",
+    "o": [
+     "Lesão aguda de órgão-alvo",
+     "Qualquer PA >160/90",
+     "Cefaleia crônica isolada",
+     "Hipertensão diagnosticada há anos"
+    ],
+    "a": 0,
+    "why": "O marcador é lesão aguda de órgão-alvo."
+   },
+   {
+    "q": "EAP cardiogênico e PA elevada, paciente elegível: suporte útil?",
+    "o": [
+     "VNI/CPAP com tratamento etiológico",
+     "Bolus grande de soro em todos",
+     "Antibiótico universal",
+     "Apenas repouso"
+    ],
+    "a": 0,
+    "why": "VNI reduz esforço e melhora oxigenação em edema cardiogênico selecionado."
+   }
+  ],
+  "case": {
+   "id": "case-hipertensiva",
+   "focus": "Emergência hipertensiva e edema agudo pulmonar",
+   "stem": "Idoso com PA 220/120, dispneia aguda, estertores difusos e SpO₂ 85%.",
+   "ask": "Qual síndrome e as prioridades na primeira abordagem?",
+   "answer": [
+    "Reconhecer EAP com provável emergência hipertensiva e estabilizar ABCDE.",
+    "O₂ titulado, monitorização, considerar VNI e tratamento dirigido pela pressão/hemodinâmica.",
+    "ECG, investigar isquemia, diurese/congestão e acompanhar resposta; evitar redução de PA sem critério."
+   ]
+  },
+  "refs": [
+   "general",
+   "slideChoque"
+  ],
+  "slide": "1UQVs6wDfagDfxFhnN06i6AYx8BVQ-1d0"
+ },
+ {
+  "id": "sca",
+  "stage": "P2",
+  "title": "Dor torácica e síndrome coronariana aguda",
+  "summary": "ECG precoce, troponina seriada, reperfusão e diferenciais letais.",
+  "goals": [
+   "Identificar causas ameaçadoras de dor torácica.",
+   "Interpretar ECG e biomarcadores no contexto.",
+   "Priorizar reperfusão quando indicada."
+  ],
+  "sections": [
+   {
+    "h": "Dor torácica tempo-dependente",
+    "p": [
+     "Considere SCA, dissecção de aorta, TEP, pneumotórax hipertensivo, tamponamento e ruptura esofágica segundo história e sinais. A avaliação inclui ABCDE, ECG de 12 derivações idealmente em até 10 min na suspeita de SCA, monitorização e acesso. ECG não diagnóstico inicial não exclui SCA."
+    ]
+   },
+   {
+    "h": "SCA com e sem supra",
+    "p": [
+     "STEMI/padrão equivalente e contexto clínico exigem ativação de reperfusão coronariana sem esperar troponina. NSTE-ACS requer integração de ECG, troponina com mudança dinâmica, risco e estabilidade para decidir estratégia invasiva. Aspirina e outras terapias antitrombóticas dependem da suspeita, contraindicações e protocolos."
+    ]
+   },
+   {
+    "h": "Prevenção de erros",
+    "p": [
+     "Oxigênio não é rotina em saturação adequada; titular se hipoxemia. Não administrar nitratos em hipotensão, certos infartos de VD ou uso recente de inibidor PDE5. Dor lancinante com diferença de pulsos e déficit deve levantar dissecção antes de anticoagulação."
+    ]
+   }
+  ],
+  "flow": [
+   [
+    "Dor torácica de risco",
+    "ABCDE e ECG precoce."
+   ],
+   [
+    "Suspeita SCA",
+    "Troponina seriada e ECG repetido conforme cenário."
+   ],
+   [
+    "STEMI/equivalente",
+    "Acionar reperfusão urgente."
+   ],
+   [
+    "Outras causas letais",
+    "Excluir dissecção, TEP, pneumotórax e tamponamento se sinais."
+   ]
+  ],
+  "pitfalls": [
+   "Troponina inicial negativa não exclui SCA.",
+   "Não esperar troponina para reperfusão de STEMI.",
+   "Não anticoagular cegamente se forte suspeita de dissecção."
+  ],
+  "quiz": [
+   {
+    "q": "STEMI típico em ECG e clínica: deve-se:",
+    "o": [
+     "Acionar reperfusão imediata",
+     "Esperar troponina seriada antes de qualquer ação",
+     "Solicitar teste ergométrico",
+     "Dar alta"
+    ],
+    "a": 0,
+    "why": "A reperfusão é tempo-dependente."
+   },
+   {
+    "q": "ECG inicial normal exclui SCA?",
+    "o": [
+     "Sim",
+     "Não, pode exigir ECG/troponina seriados",
+     "Somente se menor de 50 anos",
+     "Apenas em mulheres"
+    ],
+    "a": 1,
+    "why": "SCA pode apresentar ECG inicial não diagnóstico."
+   }
+  ],
+  "case": {
+   "id": "case-sca",
+   "focus": "Dor torácica e síndrome coronariana aguda",
+   "stem": "Homem 57 anos com dor opressiva há 45 min, sudorese e supra de ST em derivações contíguas.",
+   "ask": "Quais primeiros passos e o que não deve atrasar?",
+   "answer": [
+    "ABCDE, ECG, monitorização, antitrombóticos conforme indicação e contraindicações.",
+    "Acionar cardiologia e sistema de reperfusão imediatamente.",
+    "Não aguardar troponina para acionar reperfusão em STEMI claro; monitorar arritmias e choque."
+   ]
+  },
+  "refs": [
+   "acs2025",
+   "slideArritmia"
+  ],
+  "slide": "1NsJly9D6nDyJ3YAHLS2otXhsqIiHFFks"
+ },
+ {
+  "id": "arritmias",
+  "stage": "P2",
+  "title": "Taquiarritmias e bradiarritmias",
+  "summary": "Regularidade, QRS, estabilidade e conduta elétrica/farmacológica.",
+  "goals": [
+   "Reconhecer instabilidade hemodinâmica.",
+   "Distinguir QRS largo de estreito e pulso.",
+   "Escolher cardioversão, desfibrilação ou estimulação."
+  ],
+  "sections": [
+   {
+    "h": "Triagem primeiro",
+    "p": [
+     "Paciente com taquicardia ou bradicardia: avaliar pulso, consciência, PA, dor isquêmica, sinais de choque e IC aguda; obter ECG e monitorização sem atrasar intervenção. Taquicardia instável com pulso e relacionada à arritmia geralmente exige cardioversão sincronizada."
+    ]
+   },
+   {
+    "h": "Ritmo e tratamento",
+    "p": [
+     "Complexo estreito/regular e estável pode ser TSV; manobras vagais e adenosina quando indicado e sem contraindicações. Taquicardia QRS largo deve ser tratada com cautela como possível TV. FA com pré-excitação e QRS irregular/largo exige evitar bloqueadores do nó AV e consulta especializada emergencial."
+    ]
+   },
+   {
+    "h": "Bradicardia e ritmos críticos",
+    "p": [
+     "Bradicardia sintomática com hipoperfusão exige medidas segundo ACLS, incluindo atropina e preparo para marcapasso transcutâneo/infusões conforme resposta. TV sem pulso e FV exigem desfibrilação, não cardioversão sincronizada. Sempre investigar isquemia, eletrólitos e causas precipitantes."
+    ]
+   }
+  ],
+  "flow": [
+   [
+    "Arritmia + instabilidade",
+    "Confirmar pulso e monitorizar, agir."
+   ],
+   [
+    "Taquicardia instável com pulso",
+    "Cardioversão sincronizada quando apropriada."
+   ],
+   [
+    "Sem pulso FV/TV",
+    "Desfibrilar conforme PCR."
+   ],
+   [
+    "Bradicardia com hipoperfusão",
+    "Algoritmo de bradicardia e preparo para pacing."
+   ]
+  ],
+  "pitfalls": [
+   "Confundir cardioversão sincronizada com desfibrilação.",
+   "Dar bloqueador AV em suspeita de FA pré-excitada.",
+   "Tomar QRS largo como TSV sem avaliar TV."
+  ],
+  "quiz": [
+   {
+    "q": "Taquicardia regular instável com pulso: tratamento elétrico usual?",
+    "o": [
+     "Cardioversão sincronizada",
+     "Desfibrilação assíncrona como regra",
+     "Nenhuma intervenção",
+     "Apenas observação"
+    ],
+    "a": 0,
+    "why": "Cardioversão sincronizada é intervenção para taquicardia instável com pulso, conforme ritmo."
+   },
+   {
+    "q": "Fibrilação ventricular sem pulso requer:",
+    "o": [
+     "Desfibrilação",
+     "Cardioversão sincronizada",
+     "Adenosina",
+     "Marcapasso"
+    ],
+    "a": 0,
+    "why": "FV é ritmo de PCR chocável."
+   }
+  ],
+  "case": {
+   "id": "case-arritmias",
+   "focus": "Taquiarritmias e bradiarritmias",
+   "stem": "Homem com FC 190 regular, QRS largo, PA 75/45 e rebaixamento, com pulso.",
+   "ask": "Explique avaliação e conduta, incluindo possível erro farmacológico.",
+   "answer": [
+    "Monitorizar e reconhecer taquicardia instável com pulso.",
+    "Considerar TV e realizar cardioversão sincronizada conforme protocolo sem atrasos.",
+    "Não administrar adenosina ou bloqueador nodal automaticamente sem identificar contexto; avaliar causas."
+   ]
+  },
+  "refs": [
+   "aha",
+   "slideArritmia"
+  ],
+  "slide": "1NsJly9D6nDyJ3YAHLS2otXhsqIiHFFks"
+ }
+]);
