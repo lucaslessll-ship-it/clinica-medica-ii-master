@@ -81,11 +81,32 @@ const p2=CourseKit.create({
 let examOpen=false;
 /* P2 é cumulativa: amostra autoral estruturada com 8 itens P1 e 12 itens P2. */
 const item=(m,q,i)=>({id:m.id+'-'+i,module:m.title,stage:m.stage,q:q.q,o:q.o,a:q.a,why:q.why});
-const examItems=[
+const legacyExamItems=[
  ...P1.slice(0,8).map(m=>item(m,m.quiz[0],0)),
  ...P2.map(m=>item(m,m.quiz[0],0)),
  ...P2.slice(0,2).map(m=>item(m,m.quiz[1],1))
 ];
+const examBank=all.flatMap(m=>m.quiz.map((q,i)=>item(m,q,i)));
+const examById=new Map(examBank.map(x=>[x.id,x]));
+function shuffled(items){
+ const arr=items.slice();
+ for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}
+ return arr;
+}
+function sampleExam(){
+ const p1=shuffled(P1).slice(0,8).map(m=>{const i=Math.floor(Math.random()*m.quiz.length);return item(m,m.quiz[i],i);}); 
+ const freshP1=p1;
+ const p2=P2.map(m=>{const i=Math.floor(Math.random()*m.quiz.length);return item(m,m.quiz[i],i);});
+ const used=new Set(p2.map(x=>x.id));
+ const extra=shuffled(examBank.filter(x=>x.stage==='P2'&&!used.has(x.id))).slice(0,2);
+ return shuffled([...freshP1,...p2,...extra]).map(x=>x.id);
+}
+function currentExamItems(){
+ const active=eState().active;
+ if(!active?.items?.length)return legacyExamItems;
+ const saved=active.items.map(id=>examById.get(id)).filter(Boolean);
+ return saved.length===20?saved:legacyExamItems;
+}
 function eState(){
  store.study=store.study||{version:1,since:new Date().toISOString(),reviews:{},steps:{},settings:{}};
  const s=store.study.ueExam||(store.study.ueExam={history:[],active:null});
@@ -94,7 +115,7 @@ function eState(){
 }
 function startExam(){
  const s=eState();
- if(!s.active||s.active.submitted){s.active={startedAt:Date.now(),deadline:Date.now()+90*60000,answers:{},submitted:false,score:null};stateSave();}
+ if(!s.active||s.active.submitted){s.active={startedAt:Date.now(),deadline:Date.now()+90*60000,items:sampleExam(),answers:{},submitted:false,score:null};stateSave();}
  examOpen=true;navigate('emergency-p2');
 }
 function examAnswer(i,choice){
@@ -102,17 +123,18 @@ function examAnswer(i,choice){
  s.answers[i]=choice;stateSave();
  const card=document.getElementById('ue-exam-q-'+i);
  if(card){card.querySelectorAll('button[data-option]').forEach(btn=>{btn.classList.toggle('picked',Number(btn.dataset.option)===choice);btn.setAttribute('aria-pressed',String(Number(btn.dataset.option)===choice));});}
- const p=document.getElementById('ue-exam-count');if(p)p.textContent=Object.keys(s.answers).length+' de '+examItems.length+' respondidas';
+ const p=document.getElementById('ue-exam-count');if(p)p.textContent=Object.keys(s.answers).length+' de '+currentExamItems().length+' respondidas';
 }
 function finishExam(){
  const s=eState(),e=s.active;if(!e||e.submitted)return;
- e.submitted=true;e.finishedAt=Date.now();e.score=examItems.reduce((n,q,i)=>n+(e.answers[i]===q.a?1:0),0);
- s.history.unshift({startedAt:e.startedAt,finishedAt:e.finishedAt,score:e.score,total:examItems.length,answers:{...e.answers}});
+ const examItems=currentExamItems();e.submitted=true;e.finishedAt=Date.now();e.score=examItems.reduce((n,q,i)=>n+(e.answers[i]===q.a?1:0),0);
+ s.history.unshift({startedAt:e.startedAt,finishedAt:e.finishedAt,score:e.score,total:examItems.length,answers:{...e.answers},items:e.items?e.items.slice():null});
  stateSave();render();
 }
 function exitExam(){examOpen=false;render();}
 function examPage(){
  const e=eState().active;if(!e)return p2.page();
+ const examItems=currentExamItems();
  const submitted=!!e.submitted;
  const remaining=Math.max(0,(e.deadline-Date.now())/1000);
  const displayTime=secs=>String(Math.floor(secs/3600)).padStart(2,'0')+':'+String(Math.floor(secs%3600/60)).padStart(2,'0')+':'+String(Math.floor(secs%60)).padStart(2,'0');
