@@ -61,7 +61,13 @@ const p2=CourseKit.create({
  extraHome:()=>'<div class="ue-exam-card"><strong>Modo prova · 20 questões · 90 minutos</strong><p>Simulado autoral, alinhado ao formato institucional. Não é reprodução de provas oficiais.</p><button type="button" class="btn primary" onclick="Emergency.startExam()">Iniciar ou retomar simulado P2</button></div>'
 });
 let examOpen=false;
-const examItems=P2.flatMap(m=>m.quiz.map((q,i)=>({id:m.id+'-'+i,module:m.title,q:q.q,o:q.o,a:q.a,why:q.why}))).slice(0,20);
+/* P2 é cumulativa: amostra autoral estruturada com 8 itens P1 e 12 itens P2. */
+const item=(m,q,i)=>({id:m.id+'-'+i,module:m.title,stage:m.stage,q:q.q,o:q.o,a:q.a,why:q.why});
+const examItems=[
+ ...P1.slice(0,8).map(m=>item(m,m.quiz[0],0)),
+ ...P2.map(m=>item(m,m.quiz[0],0)),
+ ...P2.slice(0,2).map(m=>item(m,m.quiz[1],1))
+];
 function eState(){
  store.study=store.study||{version:1,since:new Date().toISOString(),reviews:{},steps:{},settings:{}};
  const s=store.study.ueExam||(store.study.ueExam={history:[],active:null});
@@ -94,7 +100,7 @@ function examPage(){
  const displayTime=secs=>String(Math.floor(secs/3600)).padStart(2,'0')+':'+String(Math.floor(secs%3600/60)).padStart(2,'0')+':'+String(Math.floor(secs%60)).padStart(2,'0');
  const count=Object.keys(e.answers).length;
  return '<section class="emergency-page ue-exam"><button class="btn secondary" type="button" onclick="Emergency.exitExam()">← Voltar ao curso P2</button>'+
- '<header class="ue-exam-head"><span class="kicker">AVALIAÇÃO FORMATIVA AUTORAL</span><h1>Simulado de Urgência e Emergência</h1><p>20 questões · 4 opções · 90 minutos · P2 cumulativa (este simulado usa as questões P2 desta versão)</p>'+
+ '<header class="ue-exam-head"><span class="kicker">AVALIAÇÃO FORMATIVA AUTORAL</span><h1>Simulado de Urgência e Emergência</h1><p>20 questões · 4 opções · 90 minutos · P2 cumulativa (8 questões P1 + 12 questões P2 desta versão)</p>'+
  '<div class="ue-exam-metrics"><strong id="ue-exam-count">'+count+' de '+examItems.length+' respondidas</strong><strong id="ue-timer">'+(submitted?'Concluído':displayTime(remaining))+'</strong>'+(submitted?'<strong>'+e.score+'/'+examItems.length+' acertos</strong>':'')+'</div></header>'+
  examItems.map((q,i)=>'<fieldset id="ue-exam-q-'+i+'" class="pocus-q ue-exam-question"><legend><span>Questão '+(i+1)+' · '+esc(q.module)+'</span>'+esc(q.q)+'</legend><div class="pocus-q-options">'+q.o.map((o,j)=>'<button type="button" data-option="'+j+'" '+(submitted?'disabled':'onclick="Emergency.examAnswer('+i+','+j+')"')+' aria-pressed="'+(e.answers[i]===j)+'" class="pocus-q-opt '+(e.answers[i]===j?'picked ':'')+(submitted&&j===q.a?'right ':'')+(submitted&&e.answers[i]===j&&j!==q.a?'wrong':'')+'"><b>'+'ABCD'[j]+'</b><span>'+esc(o)+'</span></button>').join('')+'</div>'+(submitted?'<p class="pocus-q-why"><strong>Gabarito: '+'ABCD'[q.a]+'.</strong> '+esc(q.why)+'</p>':'')+'</fieldset>').join('')+
  (submitted?'<div class="ue-exam-card"><h2>Resultado: '+e.score+' de '+examItems.length+'</h2><p>Erros e acertos permanecem registrados nesta sessão. Use os módulos e casos para revisá-los.</p><button class="btn primary" type="button" onclick="Emergency.startExam()">Nova sessão de 20 questões</button></div>':
