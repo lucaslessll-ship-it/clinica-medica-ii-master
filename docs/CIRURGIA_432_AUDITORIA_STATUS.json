@@ -1,0 +1,4454 @@
+{
+  "source": "cir_questions.js",
+  "version": "2026-11-19-audit1",
+  "policy": "Fazer revisão individual, preservar texto base e gabarito, sem publicar versões não revisadas.",
+  "riskIsHeuristic": true,
+  "notes": [
+    "Pontuações de risco são sinais de revisão, não medida de dificuldade validada.",
+    "Itens ativos v2 permanecem na interface, rascunhos não são carregados no site.",
+    "Nenhum item registrado como pending_review deve ser considerado reformulado."
+  ],
+  "counts": {
+    "total": 432,
+    "activeV2": 24,
+    "draft": 32,
+    "pending": 376,
+    "riskFlagged": 80
+  },
+  "byTopic": [
+    {
+      "topic": "cirestom",
+      "total": 30,
+      "alreadyV2": 3,
+      "drafted": 1,
+      "pending": 26,
+      "highRisk": 10
+    },
+    {
+      "topic": "cirttor",
+      "total": 30,
+      "alreadyV2": 1,
+      "drafted": 7,
+      "pending": 22,
+      "highRisk": 8
+    },
+    {
+      "topic": "ciresof",
+      "total": 30,
+      "alreadyV2": 1,
+      "drafted": 5,
+      "pending": 24,
+      "highRisk": 8
+    },
+    {
+      "topic": "cirvb",
+      "total": 30,
+      "alreadyV2": 1,
+      "drafted": 1,
+      "pending": 28,
+      "highRisk": 8
+    },
+    {
+      "topic": "cirproc",
+      "total": 30,
+      "alreadyV2": 3,
+      "drafted": 5,
+      "pending": 22,
+      "highRisk": 7
+    },
+    {
+      "topic": "cirrad",
+      "total": 30,
+      "alreadyV2": 1,
+      "drafted": 0,
+      "pending": 29,
+      "highRisk": 7
+    },
+    {
+      "topic": "ciruro",
+      "total": 36,
+      "alreadyV2": 2,
+      "drafted": 0,
+      "pending": 34,
+      "highRisk": 7
+    },
+    {
+      "topic": "cirvasc",
+      "total": 30,
+      "alreadyV2": 1,
+      "drafted": 7,
+      "pending": 22,
+      "highRisk": 6
+    },
+    {
+      "topic": "cirher",
+      "total": 30,
+      "alreadyV2": 2,
+      "drafted": 0,
+      "pending": 28,
+      "highRisk": 4
+    },
+    {
+      "topic": "cirtabd",
+      "total": 30,
+      "alreadyV2": 1,
+      "drafted": 1,
+      "pending": 28,
+      "highRisk": 4
+    },
+    {
+      "topic": "cirremit",
+      "total": 30,
+      "alreadyV2": 3,
+      "drafted": 3,
+      "pending": 24,
+      "highRisk": 4
+    },
+    {
+      "topic": "cirfig",
+      "total": 30,
+      "alreadyV2": 3,
+      "drafted": 0,
+      "pending": 27,
+      "highRisk": 3
+    },
+    {
+      "topic": "ciraa",
+      "total": 36,
+      "alreadyV2": 2,
+      "drafted": 0,
+      "pending": 34,
+      "highRisk": 2
+    },
+    {
+      "topic": "cirpanc",
+      "total": 30,
+      "alreadyV2": 0,
+      "drafted": 2,
+      "pending": 28,
+      "highRisk": 2
+    }
+  ],
+  "questions": [
+    {
+      "id": "ciraa-01",
+      "t": "ciraa",
+      "status": "pending_review",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 1,
+      "stemWords": 71,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "ciraa-02",
+      "t": "ciraa",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 0,
+      "stemWords": 70,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "ciraa-03",
+      "t": "ciraa",
+      "status": "pending_review",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 2,
+      "stemWords": 60,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "ciraa-04",
+      "t": "ciraa",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 2,
+      "stemWords": 72,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "ciraa-05",
+      "t": "ciraa",
+      "status": "active_v2",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 1,
+      "stemWords": 62,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "ciraa-06",
+      "t": "ciraa",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 0,
+      "stemWords": 60,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "ciraa-07",
+      "t": "ciraa",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 2,
+      "stemWords": 52,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "ciraa-08",
+      "t": "ciraa",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 0,
+      "stemWords": 61,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "ciraa-09",
+      "t": "ciraa",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 3,
+      "stemWords": 68,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "ciraa-10",
+      "t": "ciraa",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 2,
+      "stemWords": 66,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "ciraa-11",
+      "t": "ciraa",
+      "status": "pending_review",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 3,
+      "stemWords": 61,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "ciraa-12",
+      "t": "ciraa",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 2,
+      "stemWords": 60,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "ciraa-13",
+      "t": "ciraa",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 2,
+      "stemWords": 62,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "ciraa-14",
+      "t": "ciraa",
+      "status": "pending_review",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 0,
+      "stemWords": 65,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "ciraa-15",
+      "t": "ciraa",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 3,
+      "stemWords": 51,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "ciraa-16",
+      "t": "ciraa",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 0,
+      "stemWords": 56,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "ciraa-17",
+      "t": "ciraa",
+      "status": "active_v2",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 3,
+      "stemWords": 68,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "ciraa-18",
+      "t": "ciraa",
+      "status": "pending_review",
+      "riskScore": 2,
+      "needsAttention": true,
+      "gabaritoIndex": 1,
+      "stemWords": 61,
+      "optionAbsoluteTerms": 2
+    },
+    {
+      "id": "ciraa-19",
+      "t": "ciraa",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 1,
+      "stemWords": 56,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "ciraa-20",
+      "t": "ciraa",
+      "status": "pending_review",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 3,
+      "stemWords": 54,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "ciraa-21",
+      "t": "ciraa",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 1,
+      "stemWords": 53,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "ciraa-22",
+      "t": "ciraa",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 3,
+      "stemWords": 49,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "ciraa-23",
+      "t": "ciraa",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 1,
+      "stemWords": 57,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "ciraa-24",
+      "t": "ciraa",
+      "status": "pending_review",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 3,
+      "stemWords": 58,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "ciraa-25",
+      "t": "ciraa",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 1,
+      "stemWords": 61,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "ciraa-26",
+      "t": "ciraa",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 3,
+      "stemWords": 53,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirpanc-01",
+      "t": "cirpanc",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 2,
+      "stemWords": 68,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirpanc-02",
+      "t": "cirpanc",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 3,
+      "stemWords": 64,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirpanc-03",
+      "t": "cirpanc",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 1,
+      "stemWords": 62,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirpanc-04",
+      "t": "cirpanc",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 1,
+      "stemWords": 56,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirpanc-05",
+      "t": "cirpanc",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 3,
+      "stemWords": 58,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirpanc-06",
+      "t": "cirpanc",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 1,
+      "stemWords": 53,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirpanc-07",
+      "t": "cirpanc",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 0,
+      "stemWords": 54,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirpanc-08",
+      "t": "cirpanc",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 0,
+      "stemWords": 61,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirpanc-09",
+      "t": "cirpanc",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 0,
+      "stemWords": 52,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirpanc-10",
+      "t": "cirpanc",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 2,
+      "stemWords": 57,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirpanc-11",
+      "t": "cirpanc",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 3,
+      "stemWords": 55,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirpanc-12",
+      "t": "cirpanc",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 1,
+      "stemWords": 54,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirpanc-13",
+      "t": "cirpanc",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 0,
+      "stemWords": 65,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirpanc-14",
+      "t": "cirpanc",
+      "status": "draft_edited",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 2,
+      "stemWords": 45,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirpanc-15",
+      "t": "cirpanc",
+      "status": "pending_review",
+      "riskScore": 2,
+      "needsAttention": true,
+      "gabaritoIndex": 3,
+      "stemWords": 51,
+      "optionAbsoluteTerms": 2
+    },
+    {
+      "id": "cirpanc-16",
+      "t": "cirpanc",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 0,
+      "stemWords": 55,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirher-01",
+      "t": "cirher",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 1,
+      "stemWords": 57,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirher-02",
+      "t": "cirher",
+      "status": "pending_review",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 1,
+      "stemWords": 64,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirher-03",
+      "t": "cirher",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 2,
+      "stemWords": 55,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirher-04",
+      "t": "cirher",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 3,
+      "stemWords": 55,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirher-05",
+      "t": "cirher",
+      "status": "pending_review",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 0,
+      "stemWords": 58,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "cirher-06",
+      "t": "cirher",
+      "status": "pending_review",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 1,
+      "stemWords": 57,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "cirher-07",
+      "t": "cirher",
+      "status": "pending_review",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 0,
+      "stemWords": 59,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "cirher-08",
+      "t": "cirher",
+      "status": "active_v2",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 0,
+      "stemWords": 54,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "cirher-09",
+      "t": "cirher",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 1,
+      "stemWords": 55,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirher-10",
+      "t": "cirher",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 2,
+      "stemWords": 58,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirher-11",
+      "t": "cirher",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 2,
+      "stemWords": 59,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirher-12",
+      "t": "cirher",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 3,
+      "stemWords": 55,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirher-13",
+      "t": "cirher",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 2,
+      "stemWords": 49,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirher-14",
+      "t": "cirher",
+      "status": "pending_review",
+      "riskScore": 2,
+      "needsAttention": true,
+      "gabaritoIndex": 2,
+      "stemWords": 59,
+      "optionAbsoluteTerms": 2
+    },
+    {
+      "id": "cirher-15",
+      "t": "cirher",
+      "status": "pending_review",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 2,
+      "stemWords": 52,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "cirher-16",
+      "t": "cirher",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 3,
+      "stemWords": 51,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirtabd-01",
+      "t": "cirtabd",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 0,
+      "stemWords": 67,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirtabd-02",
+      "t": "cirtabd",
+      "status": "pending_review",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 1,
+      "stemWords": 64,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "cirtabd-03",
+      "t": "cirtabd",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 1,
+      "stemWords": 71,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirtabd-04",
+      "t": "cirtabd",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 2,
+      "stemWords": 65,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirtabd-05",
+      "t": "cirtabd",
+      "status": "pending_review",
+      "riskScore": 2,
+      "needsAttention": true,
+      "gabaritoIndex": 0,
+      "stemWords": 57,
+      "optionAbsoluteTerms": 2
+    },
+    {
+      "id": "cirtabd-06",
+      "t": "cirtabd",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 1,
+      "stemWords": 62,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirtabd-07",
+      "t": "cirtabd",
+      "status": "pending_review",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 2,
+      "stemWords": 64,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "cirtabd-08",
+      "t": "cirtabd",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 3,
+      "stemWords": 62,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirtabd-09",
+      "t": "cirtabd",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 1,
+      "stemWords": 58,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirtabd-10",
+      "t": "cirtabd",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 3,
+      "stemWords": 65,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirtabd-11",
+      "t": "cirtabd",
+      "status": "pending_review",
+      "riskScore": 2,
+      "needsAttention": true,
+      "gabaritoIndex": 0,
+      "stemWords": 51,
+      "optionAbsoluteTerms": 2
+    },
+    {
+      "id": "cirtabd-12",
+      "t": "cirtabd",
+      "status": "pending_review",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 1,
+      "stemWords": 54,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "cirtabd-13",
+      "t": "cirtabd",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 2,
+      "stemWords": 59,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirtabd-14",
+      "t": "cirtabd",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 0,
+      "stemWords": 55,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirtabd-15",
+      "t": "cirtabd",
+      "status": "draft_edited",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 2,
+      "stemWords": 61,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "cirtabd-16",
+      "t": "cirtabd",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 2,
+      "stemWords": 64,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirtabd-17",
+      "t": "cirtabd",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 1,
+      "stemWords": 59,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirttor-01",
+      "t": "cirttor",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 0,
+      "stemWords": 65,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirttor-02",
+      "t": "cirttor",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 3,
+      "stemWords": 55,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirttor-03",
+      "t": "cirttor",
+      "status": "pending_review",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 0,
+      "stemWords": 57,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "cirttor-04",
+      "t": "cirttor",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 3,
+      "stemWords": 55,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirttor-05",
+      "t": "cirttor",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 3,
+      "stemWords": 59,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirttor-06",
+      "t": "cirttor",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 3,
+      "stemWords": 60,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirttor-07",
+      "t": "cirttor",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 1,
+      "stemWords": 54,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirttor-08",
+      "t": "cirttor",
+      "status": "pending_review",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 2,
+      "stemWords": 61,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "cirttor-09",
+      "t": "cirttor",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 0,
+      "stemWords": 59,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirttor-10",
+      "t": "cirttor",
+      "status": "pending_review",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 0,
+      "stemWords": 56,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "cirttor-11",
+      "t": "cirttor",
+      "status": "draft_edited",
+      "riskScore": 2,
+      "needsAttention": true,
+      "gabaritoIndex": 0,
+      "stemWords": 57,
+      "optionAbsoluteTerms": 2
+    },
+    {
+      "id": "cirttor-12",
+      "t": "cirttor",
+      "status": "pending_review",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 1,
+      "stemWords": 59,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "cirproc-01",
+      "t": "cirproc",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 1,
+      "stemWords": 65,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirproc-02",
+      "t": "cirproc",
+      "status": "pending_review",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 1,
+      "stemWords": 61,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "cirproc-03",
+      "t": "cirproc",
+      "status": "draft_edited",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 2,
+      "stemWords": 57,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "cirproc-04",
+      "t": "cirproc",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 1,
+      "stemWords": 58,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirproc-05",
+      "t": "cirproc",
+      "status": "pending_review",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 0,
+      "stemWords": 53,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "cirproc-06",
+      "t": "cirproc",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 3,
+      "stemWords": 58,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirproc-07",
+      "t": "cirproc",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 2,
+      "stemWords": 61,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirproc-08",
+      "t": "cirproc",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 3,
+      "stemWords": 64,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirproc-09",
+      "t": "cirproc",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 1,
+      "stemWords": 61,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirproc-10",
+      "t": "cirproc",
+      "status": "pending_review",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 2,
+      "stemWords": 63,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "cirproc-11",
+      "t": "cirproc",
+      "status": "pending_review",
+      "riskScore": 2,
+      "needsAttention": true,
+      "gabaritoIndex": 3,
+      "stemWords": 57,
+      "optionAbsoluteTerms": 2
+    },
+    {
+      "id": "cirproc-12",
+      "t": "cirproc",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 2,
+      "stemWords": 56,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirproc-13",
+      "t": "cirproc",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 3,
+      "stemWords": 58,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirproc-14",
+      "t": "cirproc",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 0,
+      "stemWords": 57,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirremit-01",
+      "t": "cirremit",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 0,
+      "stemWords": 62,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirremit-02",
+      "t": "cirremit",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 2,
+      "stemWords": 63,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirremit-03",
+      "t": "cirremit",
+      "status": "active_v2",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 0,
+      "stemWords": 59,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirremit-04",
+      "t": "cirremit",
+      "status": "pending_review",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 3,
+      "stemWords": 56,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "cirremit-05",
+      "t": "cirremit",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 0,
+      "stemWords": 57,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirremit-06",
+      "t": "cirremit",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 3,
+      "stemWords": 63,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirremit-07",
+      "t": "cirremit",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 3,
+      "stemWords": 53,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirremit-08",
+      "t": "cirremit",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 0,
+      "stemWords": 55,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirremit-09",
+      "t": "cirremit",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 2,
+      "stemWords": 60,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirremit-10",
+      "t": "cirremit",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 2,
+      "stemWords": 67,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirremit-11",
+      "t": "cirremit",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 2,
+      "stemWords": 62,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirremit-12",
+      "t": "cirremit",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 3,
+      "stemWords": 54,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirremit-13",
+      "t": "cirremit",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 2,
+      "stemWords": 59,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirremit-14",
+      "t": "cirremit",
+      "status": "draft_edited",
+      "riskScore": 2,
+      "needsAttention": true,
+      "gabaritoIndex": 3,
+      "stemWords": 58,
+      "optionAbsoluteTerms": 2
+    },
+    {
+      "id": "cirremit-15",
+      "t": "cirremit",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 0,
+      "stemWords": 59,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirremit-16",
+      "t": "cirremit",
+      "status": "active_v2",
+      "riskScore": 2,
+      "needsAttention": true,
+      "gabaritoIndex": 2,
+      "stemWords": 54,
+      "optionAbsoluteTerms": 3
+    },
+    {
+      "id": "cirvasc-01",
+      "t": "cirvasc",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 0,
+      "stemWords": 66,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirvasc-02",
+      "t": "cirvasc",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 3,
+      "stemWords": 56,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirvasc-03",
+      "t": "cirvasc",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 2,
+      "stemWords": 54,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirvasc-04",
+      "t": "cirvasc",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 1,
+      "stemWords": 58,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirvasc-05",
+      "t": "cirvasc",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 0,
+      "stemWords": 59,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirvasc-06",
+      "t": "cirvasc",
+      "status": "pending_review",
+      "riskScore": 2,
+      "needsAttention": true,
+      "gabaritoIndex": 0,
+      "stemWords": 60,
+      "optionAbsoluteTerms": 2
+    },
+    {
+      "id": "cirvasc-07",
+      "t": "cirvasc",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 0,
+      "stemWords": 57,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirvasc-08",
+      "t": "cirvasc",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 2,
+      "stemWords": 55,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirvasc-09",
+      "t": "cirvasc",
+      "status": "draft_edited",
+      "riskScore": 2,
+      "needsAttention": true,
+      "gabaritoIndex": 0,
+      "stemWords": 54,
+      "optionAbsoluteTerms": 3
+    },
+    {
+      "id": "cirvasc-10",
+      "t": "cirvasc",
+      "status": "draft_edited",
+      "riskScore": 2,
+      "needsAttention": true,
+      "gabaritoIndex": 1,
+      "stemWords": 50,
+      "optionAbsoluteTerms": 2
+    },
+    {
+      "id": "cirvasc-11",
+      "t": "cirvasc",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 3,
+      "stemWords": 54,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirvasc-12",
+      "t": "cirvasc",
+      "status": "pending_review",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 2,
+      "stemWords": 52,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "cirvasc-13",
+      "t": "cirvasc",
+      "status": "pending_review",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 3,
+      "stemWords": 57,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "cirvasc-14",
+      "t": "cirvasc",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 0,
+      "stemWords": 54,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirvasc-15",
+      "t": "cirvasc",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 1,
+      "stemWords": 56,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "ciresof-01",
+      "t": "ciresof",
+      "status": "pending_review",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 0,
+      "stemWords": 57,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "ciresof-02",
+      "t": "ciresof",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 3,
+      "stemWords": 60,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "ciresof-03",
+      "t": "ciresof",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 0,
+      "stemWords": 53,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "ciresof-04",
+      "t": "ciresof",
+      "status": "draft_edited",
+      "riskScore": 2,
+      "needsAttention": true,
+      "gabaritoIndex": 2,
+      "stemWords": 58,
+      "optionAbsoluteTerms": 2
+    },
+    {
+      "id": "ciresof-05",
+      "t": "ciresof",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 2,
+      "stemWords": 57,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "ciresof-06",
+      "t": "ciresof",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 3,
+      "stemWords": 57,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "ciresof-07",
+      "t": "ciresof",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 3,
+      "stemWords": 57,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "ciresof-08",
+      "t": "ciresof",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 0,
+      "stemWords": 56,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "ciresof-09",
+      "t": "ciresof",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 2,
+      "stemWords": 60,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirestom-01",
+      "t": "cirestom",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 1,
+      "stemWords": 64,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirestom-02",
+      "t": "cirestom",
+      "status": "pending_review",
+      "riskScore": 2,
+      "needsAttention": true,
+      "gabaritoIndex": 1,
+      "stemWords": 49,
+      "optionAbsoluteTerms": 2
+    },
+    {
+      "id": "cirestom-03",
+      "t": "cirestom",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 3,
+      "stemWords": 57,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirestom-04",
+      "t": "cirestom",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 3,
+      "stemWords": 55,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirestom-05",
+      "t": "cirestom",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 0,
+      "stemWords": 59,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirestom-06",
+      "t": "cirestom",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 3,
+      "stemWords": 58,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirestom-07",
+      "t": "cirestom",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 2,
+      "stemWords": 53,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirestom-08",
+      "t": "cirestom",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 2,
+      "stemWords": 58,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirestom-09",
+      "t": "cirestom",
+      "status": "pending_review",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 3,
+      "stemWords": 50,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "cirvb-01",
+      "t": "cirvb",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 1,
+      "stemWords": 57,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirvb-02",
+      "t": "cirvb",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 0,
+      "stemWords": 59,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirvb-03",
+      "t": "cirvb",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 3,
+      "stemWords": 54,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirvb-04",
+      "t": "cirvb",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 2,
+      "stemWords": 53,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirvb-05",
+      "t": "cirvb",
+      "status": "pending_review",
+      "riskScore": 2,
+      "needsAttention": true,
+      "gabaritoIndex": 1,
+      "stemWords": 57,
+      "optionAbsoluteTerms": 2
+    },
+    {
+      "id": "cirvb-06",
+      "t": "cirvb",
+      "status": "draft_edited",
+      "riskScore": 2,
+      "needsAttention": true,
+      "gabaritoIndex": 2,
+      "stemWords": 59,
+      "optionAbsoluteTerms": 2
+    },
+    {
+      "id": "cirvb-07",
+      "t": "cirvb",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 1,
+      "stemWords": 53,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirvb-08",
+      "t": "cirvb",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 1,
+      "stemWords": 56,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirvb-09",
+      "t": "cirvb",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 1,
+      "stemWords": 49,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirfig-01",
+      "t": "cirfig",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 0,
+      "stemWords": 58,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirfig-02",
+      "t": "cirfig",
+      "status": "pending_review",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 0,
+      "stemWords": 61,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "cirfig-03",
+      "t": "cirfig",
+      "status": "pending_review",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 1,
+      "stemWords": 60,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "cirfig-04",
+      "t": "cirfig",
+      "status": "pending_review",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 3,
+      "stemWords": 59,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "cirfig-05",
+      "t": "cirfig",
+      "status": "pending_review",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 2,
+      "stemWords": 57,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "cirfig-06",
+      "t": "cirfig",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 3,
+      "stemWords": 62,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirfig-07",
+      "t": "cirfig",
+      "status": "pending_review",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 2,
+      "stemWords": 58,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "cirfig-08",
+      "t": "cirfig",
+      "status": "pending_review",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 0,
+      "stemWords": 55,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "cirfig-09",
+      "t": "cirfig",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 3,
+      "stemWords": 51,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirrad-01",
+      "t": "cirrad",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 0,
+      "stemWords": 60,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirrad-02",
+      "t": "cirrad",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 0,
+      "stemWords": 56,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirrad-03",
+      "t": "cirrad",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 1,
+      "stemWords": 53,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirrad-04",
+      "t": "cirrad",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 3,
+      "stemWords": 58,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirrad-05",
+      "t": "cirrad",
+      "status": "pending_review",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 2,
+      "stemWords": 59,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "cirrad-06",
+      "t": "cirrad",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 0,
+      "stemWords": 56,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirrad-07",
+      "t": "cirrad",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 3,
+      "stemWords": 52,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirrad-08",
+      "t": "cirrad",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 1,
+      "stemWords": 59,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirrad-09",
+      "t": "cirrad",
+      "status": "active_v2",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 2,
+      "stemWords": 57,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirrad-10",
+      "t": "cirrad",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 2,
+      "stemWords": 59,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirrad-11",
+      "t": "cirrad",
+      "status": "pending_review",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 3,
+      "stemWords": 51,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "cirrad-12",
+      "t": "cirrad",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 1,
+      "stemWords": 64,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirrad-13",
+      "t": "cirrad",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 3,
+      "stemWords": 51,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirrad-14",
+      "t": "cirrad",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 0,
+      "stemWords": 58,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirrad-15",
+      "t": "cirrad",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 1,
+      "stemWords": 55,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirrad-16",
+      "t": "cirrad",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 2,
+      "stemWords": 52,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirrad-17",
+      "t": "cirrad",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 1,
+      "stemWords": 53,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirrad-18",
+      "t": "cirrad",
+      "status": "pending_review",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 3,
+      "stemWords": 53,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "ciruro-01",
+      "t": "ciruro",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 1,
+      "stemWords": 65,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "ciruro-02",
+      "t": "ciruro",
+      "status": "active_v2",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 1,
+      "stemWords": 57,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "ciruro-03",
+      "t": "ciruro",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 2,
+      "stemWords": 57,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "ciruro-04",
+      "t": "ciruro",
+      "status": "pending_review",
+      "riskScore": 2,
+      "needsAttention": true,
+      "gabaritoIndex": 3,
+      "stemWords": 62,
+      "optionAbsoluteTerms": 2
+    },
+    {
+      "id": "ciruro-05",
+      "t": "ciruro",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 3,
+      "stemWords": 57,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "ciruro-06",
+      "t": "ciruro",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 0,
+      "stemWords": 60,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "ciruro-07",
+      "t": "ciruro",
+      "status": "pending_review",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 0,
+      "stemWords": 55,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "ciruro-08",
+      "t": "ciruro",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 1,
+      "stemWords": 61,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "ciruro-09",
+      "t": "ciruro",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 0,
+      "stemWords": 59,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "ciruro-10",
+      "t": "ciruro",
+      "status": "pending_review",
+      "riskScore": 2,
+      "needsAttention": true,
+      "gabaritoIndex": 1,
+      "stemWords": 57,
+      "optionAbsoluteTerms": 2
+    },
+    {
+      "id": "ciruro-11",
+      "t": "ciruro",
+      "status": "active_v2",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 3,
+      "stemWords": 54,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "ciruro-12",
+      "t": "ciruro",
+      "status": "pending_review",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 0,
+      "stemWords": 60,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "ciruro-13",
+      "t": "ciruro",
+      "status": "pending_review",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 2,
+      "stemWords": 56,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "ciruro-14",
+      "t": "ciruro",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 0,
+      "stemWords": 62,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "ciruro-15",
+      "t": "ciruro",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 2,
+      "stemWords": 53,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "ciruro-16",
+      "t": "ciruro",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 1,
+      "stemWords": 55,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "ciruro-17",
+      "t": "ciruro",
+      "status": "pending_review",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 0,
+      "stemWords": 57,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "ciruro-18",
+      "t": "ciruro",
+      "status": "pending_review",
+      "riskScore": 2,
+      "needsAttention": true,
+      "gabaritoIndex": 2,
+      "stemWords": 53,
+      "optionAbsoluteTerms": 2
+    },
+    {
+      "id": "ciruro-19",
+      "t": "ciruro",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 3,
+      "stemWords": 57,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "ciruro-20",
+      "t": "ciruro",
+      "status": "pending_review",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 1,
+      "stemWords": 62,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "ciruro-21",
+      "t": "ciruro",
+      "status": "pending_review",
+      "riskScore": 2,
+      "needsAttention": true,
+      "gabaritoIndex": 3,
+      "stemWords": 61,
+      "optionAbsoluteTerms": 2
+    },
+    {
+      "id": "ciruro-22",
+      "t": "ciruro",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 3,
+      "stemWords": 51,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "ciruro-23",
+      "t": "ciruro",
+      "status": "pending_review",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 0,
+      "stemWords": 52,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "ciruro-24",
+      "t": "ciruro",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 2,
+      "stemWords": 54,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "ciruro-25",
+      "t": "ciruro",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 1,
+      "stemWords": 60,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "ciruro-26",
+      "t": "ciruro",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 3,
+      "stemWords": 54,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "ciraa-27",
+      "t": "ciraa",
+      "status": "pending_review",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 0,
+      "stemWords": 55,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "ciraa-28",
+      "t": "ciraa",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 0,
+      "stemWords": 54,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "ciraa-29",
+      "t": "ciraa",
+      "status": "pending_review",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 2,
+      "stemWords": 54,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "ciraa-30",
+      "t": "ciraa",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 2,
+      "stemWords": 51,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "ciraa-31",
+      "t": "ciraa",
+      "status": "pending_review",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 0,
+      "stemWords": 66,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "ciraa-32",
+      "t": "ciraa",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 2,
+      "stemWords": 54,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "ciraa-33",
+      "t": "ciraa",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 1,
+      "stemWords": 53,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "ciraa-34",
+      "t": "ciraa",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 0,
+      "stemWords": 56,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "ciraa-35",
+      "t": "ciraa",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 1,
+      "stemWords": 55,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "ciraa-36",
+      "t": "ciraa",
+      "status": "pending_review",
+      "riskScore": 2,
+      "needsAttention": true,
+      "gabaritoIndex": 3,
+      "stemWords": 53,
+      "optionAbsoluteTerms": 2
+    },
+    {
+      "id": "cirpanc-17",
+      "t": "cirpanc",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 3,
+      "stemWords": 56,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirpanc-18",
+      "t": "cirpanc",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 0,
+      "stemWords": 48,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirpanc-19",
+      "t": "cirpanc",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 1,
+      "stemWords": 46,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirpanc-20",
+      "t": "cirpanc",
+      "status": "pending_review",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 3,
+      "stemWords": 53,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "cirpanc-21",
+      "t": "cirpanc",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 1,
+      "stemWords": 52,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirpanc-22",
+      "t": "cirpanc",
+      "status": "pending_review",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 2,
+      "stemWords": 47,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "cirpanc-23",
+      "t": "cirpanc",
+      "status": "draft_edited",
+      "riskScore": 2,
+      "needsAttention": true,
+      "gabaritoIndex": 3,
+      "stemWords": 51,
+      "optionAbsoluteTerms": 3
+    },
+    {
+      "id": "cirpanc-24",
+      "t": "cirpanc",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 2,
+      "stemWords": 52,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirpanc-25",
+      "t": "cirpanc",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 0,
+      "stemWords": 47,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirpanc-26",
+      "t": "cirpanc",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 2,
+      "stemWords": 54,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirpanc-27",
+      "t": "cirpanc",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 2,
+      "stemWords": 45,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirpanc-28",
+      "t": "cirpanc",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 1,
+      "stemWords": 60,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirpanc-29",
+      "t": "cirpanc",
+      "status": "pending_review",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 0,
+      "stemWords": 56,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "cirpanc-30",
+      "t": "cirpanc",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 2,
+      "stemWords": 51,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirher-17",
+      "t": "cirher",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 0,
+      "stemWords": 60,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirher-18",
+      "t": "cirher",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 3,
+      "stemWords": 60,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirher-19",
+      "t": "cirher",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 1,
+      "stemWords": 54,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirher-20",
+      "t": "cirher",
+      "status": "pending_review",
+      "riskScore": 2,
+      "needsAttention": true,
+      "gabaritoIndex": 0,
+      "stemWords": 56,
+      "optionAbsoluteTerms": 2
+    },
+    {
+      "id": "cirher-21",
+      "t": "cirher",
+      "status": "pending_review",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 1,
+      "stemWords": 57,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "cirher-22",
+      "t": "cirher",
+      "status": "pending_review",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 3,
+      "stemWords": 50,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "cirher-23",
+      "t": "cirher",
+      "status": "pending_review",
+      "riskScore": 2,
+      "needsAttention": true,
+      "gabaritoIndex": 3,
+      "stemWords": 58,
+      "optionAbsoluteTerms": 2
+    },
+    {
+      "id": "cirher-24",
+      "t": "cirher",
+      "status": "pending_review",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 2,
+      "stemWords": 54,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "cirher-25",
+      "t": "cirher",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 1,
+      "stemWords": 56,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirher-26",
+      "t": "cirher",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 3,
+      "stemWords": 56,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirher-27",
+      "t": "cirher",
+      "status": "pending_review",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 3,
+      "stemWords": 53,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "cirher-28",
+      "t": "cirher",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 1,
+      "stemWords": 51,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirher-29",
+      "t": "cirher",
+      "status": "pending_review",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 0,
+      "stemWords": 45,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "cirher-30",
+      "t": "cirher",
+      "status": "active_v2",
+      "riskScore": 2,
+      "needsAttention": true,
+      "gabaritoIndex": 0,
+      "stemWords": 54,
+      "optionAbsoluteTerms": 2
+    },
+    {
+      "id": "cirtabd-18",
+      "t": "cirtabd",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 3,
+      "stemWords": 60,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirtabd-19",
+      "t": "cirtabd",
+      "status": "pending_review",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 0,
+      "stemWords": 58,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "cirtabd-20",
+      "t": "cirtabd",
+      "status": "active_v2",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 2,
+      "stemWords": 60,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "cirtabd-21",
+      "t": "cirtabd",
+      "status": "pending_review",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 3,
+      "stemWords": 57,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "cirtabd-22",
+      "t": "cirtabd",
+      "status": "pending_review",
+      "riskScore": 2,
+      "needsAttention": true,
+      "gabaritoIndex": 3,
+      "stemWords": 56,
+      "optionAbsoluteTerms": 2
+    },
+    {
+      "id": "cirtabd-23",
+      "t": "cirtabd",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 0,
+      "stemWords": 57,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirtabd-24",
+      "t": "cirtabd",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 2,
+      "stemWords": 55,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirtabd-25",
+      "t": "cirtabd",
+      "status": "pending_review",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 2,
+      "stemWords": 58,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "cirtabd-26",
+      "t": "cirtabd",
+      "status": "pending_review",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 0,
+      "stemWords": 65,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "cirtabd-27",
+      "t": "cirtabd",
+      "status": "pending_review",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 3,
+      "stemWords": 58,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "cirtabd-28",
+      "t": "cirtabd",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 3,
+      "stemWords": 58,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirtabd-29",
+      "t": "cirtabd",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 1,
+      "stemWords": 60,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirtabd-30",
+      "t": "cirtabd",
+      "status": "pending_review",
+      "riskScore": 2,
+      "needsAttention": true,
+      "gabaritoIndex": 1,
+      "stemWords": 61,
+      "optionAbsoluteTerms": 2
+    },
+    {
+      "id": "cirttor-13",
+      "t": "cirttor",
+      "status": "pending_review",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 1,
+      "stemWords": 58,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "cirttor-14",
+      "t": "cirttor",
+      "status": "draft_edited",
+      "riskScore": 2,
+      "needsAttention": true,
+      "gabaritoIndex": 3,
+      "stemWords": 53,
+      "optionAbsoluteTerms": 3
+    },
+    {
+      "id": "cirttor-15",
+      "t": "cirttor",
+      "status": "active_v2",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 1,
+      "stemWords": 55,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "cirttor-16",
+      "t": "cirttor",
+      "status": "pending_review",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 3,
+      "stemWords": 64,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "cirttor-17",
+      "t": "cirttor",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 0,
+      "stemWords": 56,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirttor-18",
+      "t": "cirttor",
+      "status": "pending_review",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 3,
+      "stemWords": 63,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "cirttor-19",
+      "t": "cirttor",
+      "status": "draft_edited",
+      "riskScore": 2,
+      "needsAttention": true,
+      "gabaritoIndex": 2,
+      "stemWords": 60,
+      "optionAbsoluteTerms": 2
+    },
+    {
+      "id": "cirttor-20",
+      "t": "cirttor",
+      "status": "draft_edited",
+      "riskScore": 2,
+      "needsAttention": true,
+      "gabaritoIndex": 1,
+      "stemWords": 53,
+      "optionAbsoluteTerms": 2
+    },
+    {
+      "id": "cirttor-21",
+      "t": "cirttor",
+      "status": "pending_review",
+      "riskScore": 2,
+      "needsAttention": true,
+      "gabaritoIndex": 2,
+      "stemWords": 55,
+      "optionAbsoluteTerms": 4
+    },
+    {
+      "id": "cirttor-22",
+      "t": "cirttor",
+      "status": "pending_review",
+      "riskScore": 2,
+      "needsAttention": true,
+      "gabaritoIndex": 1,
+      "stemWords": 55,
+      "optionAbsoluteTerms": 2
+    },
+    {
+      "id": "cirttor-23",
+      "t": "cirttor",
+      "status": "pending_review",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 0,
+      "stemWords": 55,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "cirttor-24",
+      "t": "cirttor",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 2,
+      "stemWords": 58,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirttor-25",
+      "t": "cirttor",
+      "status": "pending_review",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 0,
+      "stemWords": 53,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "cirttor-26",
+      "t": "cirttor",
+      "status": "draft_edited",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 3,
+      "stemWords": 53,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "cirttor-27",
+      "t": "cirttor",
+      "status": "draft_edited",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 2,
+      "stemWords": 55,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "cirttor-28",
+      "t": "cirttor",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 1,
+      "stemWords": 56,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirttor-29",
+      "t": "cirttor",
+      "status": "draft_edited",
+      "riskScore": 2,
+      "needsAttention": true,
+      "gabaritoIndex": 2,
+      "stemWords": 62,
+      "optionAbsoluteTerms": 2
+    },
+    {
+      "id": "cirttor-30",
+      "t": "cirttor",
+      "status": "pending_review",
+      "riskScore": 2,
+      "needsAttention": true,
+      "gabaritoIndex": 2,
+      "stemWords": 63,
+      "optionAbsoluteTerms": 2
+    },
+    {
+      "id": "cirproc-15",
+      "t": "cirproc",
+      "status": "active_v2",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 3,
+      "stemWords": 57,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "cirproc-16",
+      "t": "cirproc",
+      "status": "pending_review",
+      "riskScore": 2,
+      "needsAttention": true,
+      "gabaritoIndex": 1,
+      "stemWords": 62,
+      "optionAbsoluteTerms": 2
+    },
+    {
+      "id": "cirproc-17",
+      "t": "cirproc",
+      "status": "pending_review",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 2,
+      "stemWords": 60,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "cirproc-18",
+      "t": "cirproc",
+      "status": "active_v2",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 1,
+      "stemWords": 54,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "cirproc-19",
+      "t": "cirproc",
+      "status": "pending_review",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 2,
+      "stemWords": 59,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "cirproc-20",
+      "t": "cirproc",
+      "status": "pending_review",
+      "riskScore": 2,
+      "needsAttention": true,
+      "gabaritoIndex": 3,
+      "stemWords": 60,
+      "optionAbsoluteTerms": 2
+    },
+    {
+      "id": "cirproc-21",
+      "t": "cirproc",
+      "status": "pending_review",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 0,
+      "stemWords": 57,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "cirproc-22",
+      "t": "cirproc",
+      "status": "pending_review",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 0,
+      "stemWords": 58,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "cirproc-23",
+      "t": "cirproc",
+      "status": "draft_edited",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 1,
+      "stemWords": 54,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "cirproc-24",
+      "t": "cirproc",
+      "status": "active_v2",
+      "riskScore": 2,
+      "needsAttention": true,
+      "gabaritoIndex": 0,
+      "stemWords": 57,
+      "optionAbsoluteTerms": 2
+    },
+    {
+      "id": "cirproc-25",
+      "t": "cirproc",
+      "status": "pending_review",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 0,
+      "stemWords": 54,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "cirproc-26",
+      "t": "cirproc",
+      "status": "draft_edited",
+      "riskScore": 2,
+      "needsAttention": true,
+      "gabaritoIndex": 0,
+      "stemWords": 56,
+      "optionAbsoluteTerms": 2
+    },
+    {
+      "id": "cirproc-27",
+      "t": "cirproc",
+      "status": "draft_edited",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 2,
+      "stemWords": 53,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "cirproc-28",
+      "t": "cirproc",
+      "status": "draft_edited",
+      "riskScore": 2,
+      "needsAttention": true,
+      "gabaritoIndex": 3,
+      "stemWords": 62,
+      "optionAbsoluteTerms": 2
+    },
+    {
+      "id": "cirproc-29",
+      "t": "cirproc",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 1,
+      "stemWords": 54,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirproc-30",
+      "t": "cirproc",
+      "status": "pending_review",
+      "riskScore": 2,
+      "needsAttention": true,
+      "gabaritoIndex": 2,
+      "stemWords": 58,
+      "optionAbsoluteTerms": 2
+    },
+    {
+      "id": "cirremit-17",
+      "t": "cirremit",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 1,
+      "stemWords": 57,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirremit-18",
+      "t": "cirremit",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 3,
+      "stemWords": 53,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirremit-19",
+      "t": "cirremit",
+      "status": "pending_review",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 2,
+      "stemWords": 52,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "cirremit-20",
+      "t": "cirremit",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 1,
+      "stemWords": 55,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirremit-21",
+      "t": "cirremit",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 1,
+      "stemWords": 57,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirremit-22",
+      "t": "cirremit",
+      "status": "active_v2",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 0,
+      "stemWords": 47,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "cirremit-23",
+      "t": "cirremit",
+      "status": "pending_review",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 1,
+      "stemWords": 57,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "cirremit-24",
+      "t": "cirremit",
+      "status": "pending_review",
+      "riskScore": 2,
+      "needsAttention": true,
+      "gabaritoIndex": 3,
+      "stemWords": 45,
+      "optionAbsoluteTerms": 2
+    },
+    {
+      "id": "cirremit-25",
+      "t": "cirremit",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 0,
+      "stemWords": 52,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirremit-26",
+      "t": "cirremit",
+      "status": "draft_edited",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 0,
+      "stemWords": 49,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "cirremit-27",
+      "t": "cirremit",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 1,
+      "stemWords": 53,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirremit-28",
+      "t": "cirremit",
+      "status": "draft_edited",
+      "riskScore": 2,
+      "needsAttention": true,
+      "gabaritoIndex": 1,
+      "stemWords": 49,
+      "optionAbsoluteTerms": 2
+    },
+    {
+      "id": "cirremit-29",
+      "t": "cirremit",
+      "status": "pending_review",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 3,
+      "stemWords": 50,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "cirremit-30",
+      "t": "cirremit",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 1,
+      "stemWords": 53,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirvasc-16",
+      "t": "cirvasc",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 1,
+      "stemWords": 58,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirvasc-17",
+      "t": "cirvasc",
+      "status": "pending_review",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 1,
+      "stemWords": 54,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "cirvasc-18",
+      "t": "cirvasc",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 2,
+      "stemWords": 54,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirvasc-19",
+      "t": "cirvasc",
+      "status": "draft_edited",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 2,
+      "stemWords": 55,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirvasc-20",
+      "t": "cirvasc",
+      "status": "pending_review",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 3,
+      "stemWords": 61,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "cirvasc-21",
+      "t": "cirvasc",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 2,
+      "stemWords": 59,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirvasc-22",
+      "t": "cirvasc",
+      "status": "pending_review",
+      "riskScore": 2,
+      "needsAttention": true,
+      "gabaritoIndex": 0,
+      "stemWords": 57,
+      "optionAbsoluteTerms": 2
+    },
+    {
+      "id": "cirvasc-23",
+      "t": "cirvasc",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 3,
+      "stemWords": 58,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirvasc-24",
+      "t": "cirvasc",
+      "status": "active_v2",
+      "riskScore": 2,
+      "needsAttention": true,
+      "gabaritoIndex": 3,
+      "stemWords": 50,
+      "optionAbsoluteTerms": 2
+    },
+    {
+      "id": "cirvasc-25",
+      "t": "cirvasc",
+      "status": "draft_edited",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 3,
+      "stemWords": 57,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "cirvasc-26",
+      "t": "cirvasc",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 2,
+      "stemWords": 53,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirvasc-27",
+      "t": "cirvasc",
+      "status": "pending_review",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 3,
+      "stemWords": 57,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "cirvasc-28",
+      "t": "cirvasc",
+      "status": "draft_edited",
+      "riskScore": 2,
+      "needsAttention": true,
+      "gabaritoIndex": 0,
+      "stemWords": 52,
+      "optionAbsoluteTerms": 2
+    },
+    {
+      "id": "cirvasc-29",
+      "t": "cirvasc",
+      "status": "draft_edited",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 1,
+      "stemWords": 53,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "cirvasc-30",
+      "t": "cirvasc",
+      "status": "draft_edited",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 1,
+      "stemWords": 56,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "ciresof-10",
+      "t": "ciresof",
+      "status": "pending_review",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 1,
+      "stemWords": 56,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "ciresof-11",
+      "t": "ciresof",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 1,
+      "stemWords": 57,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "ciresof-12",
+      "t": "ciresof",
+      "status": "active_v2",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 2,
+      "stemWords": 56,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "ciresof-13",
+      "t": "ciresof",
+      "status": "pending_review",
+      "riskScore": 2,
+      "needsAttention": true,
+      "gabaritoIndex": 3,
+      "stemWords": 58,
+      "optionAbsoluteTerms": 2
+    },
+    {
+      "id": "ciresof-14",
+      "t": "ciresof",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 1,
+      "stemWords": 53,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "ciresof-15",
+      "t": "ciresof",
+      "status": "draft_edited",
+      "riskScore": 2,
+      "needsAttention": true,
+      "gabaritoIndex": 1,
+      "stemWords": 61,
+      "optionAbsoluteTerms": 2
+    },
+    {
+      "id": "ciresof-16",
+      "t": "ciresof",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 0,
+      "stemWords": 52,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "ciresof-17",
+      "t": "ciresof",
+      "status": "pending_review",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 2,
+      "stemWords": 50,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "ciresof-18",
+      "t": "ciresof",
+      "status": "draft_edited",
+      "riskScore": 2,
+      "needsAttention": true,
+      "gabaritoIndex": 0,
+      "stemWords": 52,
+      "optionAbsoluteTerms": 2
+    },
+    {
+      "id": "ciresof-19",
+      "t": "ciresof",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 3,
+      "stemWords": 54,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "ciresof-20",
+      "t": "ciresof",
+      "status": "pending_review",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 1,
+      "stemWords": 49,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "ciresof-21",
+      "t": "ciresof",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 1,
+      "stemWords": 60,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "ciresof-22",
+      "t": "ciresof",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 2,
+      "stemWords": 59,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "ciresof-23",
+      "t": "ciresof",
+      "status": "pending_review",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 1,
+      "stemWords": 59,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "ciresof-24",
+      "t": "ciresof",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 1,
+      "stemWords": 55,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "ciresof-25",
+      "t": "ciresof",
+      "status": "pending_review",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 0,
+      "stemWords": 54,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "ciresof-26",
+      "t": "ciresof",
+      "status": "draft_edited",
+      "riskScore": 2,
+      "needsAttention": true,
+      "gabaritoIndex": 3,
+      "stemWords": 60,
+      "optionAbsoluteTerms": 4
+    },
+    {
+      "id": "ciresof-27",
+      "t": "ciresof",
+      "status": "pending_review",
+      "riskScore": 2,
+      "needsAttention": true,
+      "gabaritoIndex": 2,
+      "stemWords": 52,
+      "optionAbsoluteTerms": 2
+    },
+    {
+      "id": "ciresof-28",
+      "t": "ciresof",
+      "status": "draft_edited",
+      "riskScore": 2,
+      "needsAttention": true,
+      "gabaritoIndex": 2,
+      "stemWords": 54,
+      "optionAbsoluteTerms": 2
+    },
+    {
+      "id": "ciresof-29",
+      "t": "ciresof",
+      "status": "pending_review",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 0,
+      "stemWords": 51,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "ciresof-30",
+      "t": "ciresof",
+      "status": "pending_review",
+      "riskScore": 2,
+      "needsAttention": true,
+      "gabaritoIndex": 3,
+      "stemWords": 55,
+      "optionAbsoluteTerms": 2
+    },
+    {
+      "id": "cirestom-10",
+      "t": "cirestom",
+      "status": "pending_review",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 0,
+      "stemWords": 52,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "cirestom-11",
+      "t": "cirestom",
+      "status": "active_v2",
+      "riskScore": 2,
+      "needsAttention": true,
+      "gabaritoIndex": 1,
+      "stemWords": 51,
+      "optionAbsoluteTerms": 2
+    },
+    {
+      "id": "cirestom-12",
+      "t": "cirestom",
+      "status": "pending_review",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 2,
+      "stemWords": 55,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "cirestom-13",
+      "t": "cirestom",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 0,
+      "stemWords": 59,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirestom-14",
+      "t": "cirestom",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 2,
+      "stemWords": 51,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirestom-15",
+      "t": "cirestom",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 0,
+      "stemWords": 53,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirestom-16",
+      "t": "cirestom",
+      "status": "pending_review",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 3,
+      "stemWords": 61,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "cirestom-17",
+      "t": "cirestom",
+      "status": "pending_review",
+      "riskScore": 2,
+      "needsAttention": true,
+      "gabaritoIndex": 0,
+      "stemWords": 59,
+      "optionAbsoluteTerms": 2
+    },
+    {
+      "id": "cirestom-18",
+      "t": "cirestom",
+      "status": "pending_review",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 3,
+      "stemWords": 54,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "cirestom-19",
+      "t": "cirestom",
+      "status": "pending_review",
+      "riskScore": 2,
+      "needsAttention": true,
+      "gabaritoIndex": 1,
+      "stemWords": 52,
+      "optionAbsoluteTerms": 3
+    },
+    {
+      "id": "cirestom-20",
+      "t": "cirestom",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 1,
+      "stemWords": 45,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirestom-21",
+      "t": "cirestom",
+      "status": "pending_review",
+      "riskScore": 2,
+      "needsAttention": true,
+      "gabaritoIndex": 3,
+      "stemWords": 56,
+      "optionAbsoluteTerms": 3
+    },
+    {
+      "id": "cirestom-22",
+      "t": "cirestom",
+      "status": "pending_review",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 2,
+      "stemWords": 52,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "cirestom-23",
+      "t": "cirestom",
+      "status": "pending_review",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 1,
+      "stemWords": 56,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "cirestom-24",
+      "t": "cirestom",
+      "status": "active_v2",
+      "riskScore": 2,
+      "needsAttention": true,
+      "gabaritoIndex": 1,
+      "stemWords": 49,
+      "optionAbsoluteTerms": 3
+    },
+    {
+      "id": "cirestom-25",
+      "t": "cirestom",
+      "status": "active_v2",
+      "riskScore": 2,
+      "needsAttention": true,
+      "gabaritoIndex": 2,
+      "stemWords": 53,
+      "optionAbsoluteTerms": 3
+    },
+    {
+      "id": "cirestom-26",
+      "t": "cirestom",
+      "status": "draft_edited",
+      "riskScore": 2,
+      "needsAttention": true,
+      "gabaritoIndex": 0,
+      "stemWords": 54,
+      "optionAbsoluteTerms": 4
+    },
+    {
+      "id": "cirestom-27",
+      "t": "cirestom",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 2,
+      "stemWords": 56,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirestom-28",
+      "t": "cirestom",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 0,
+      "stemWords": 53,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirestom-29",
+      "t": "cirestom",
+      "status": "pending_review",
+      "riskScore": 2,
+      "needsAttention": true,
+      "gabaritoIndex": 2,
+      "stemWords": 53,
+      "optionAbsoluteTerms": 3
+    },
+    {
+      "id": "cirestom-30",
+      "t": "cirestom",
+      "status": "pending_review",
+      "riskScore": 2,
+      "needsAttention": true,
+      "gabaritoIndex": 3,
+      "stemWords": 54,
+      "optionAbsoluteTerms": 2
+    },
+    {
+      "id": "cirvb-10",
+      "t": "cirvb",
+      "status": "pending_review",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 2,
+      "stemWords": 57,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "cirvb-11",
+      "t": "cirvb",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 3,
+      "stemWords": 55,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirvb-12",
+      "t": "cirvb",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 3,
+      "stemWords": 53,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirvb-13",
+      "t": "cirvb",
+      "status": "pending_review",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 1,
+      "stemWords": 53,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "cirvb-14",
+      "t": "cirvb",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 3,
+      "stemWords": 49,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirvb-15",
+      "t": "cirvb",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 1,
+      "stemWords": 61,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirvb-16",
+      "t": "cirvb",
+      "status": "pending_review",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 0,
+      "stemWords": 53,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "cirvb-17",
+      "t": "cirvb",
+      "status": "active_v2",
+      "riskScore": 2,
+      "needsAttention": true,
+      "gabaritoIndex": 0,
+      "stemWords": 55,
+      "optionAbsoluteTerms": 2
+    },
+    {
+      "id": "cirvb-18",
+      "t": "cirvb",
+      "status": "pending_review",
+      "riskScore": 2,
+      "needsAttention": true,
+      "gabaritoIndex": 2,
+      "stemWords": 57,
+      "optionAbsoluteTerms": 2
+    },
+    {
+      "id": "cirvb-19",
+      "t": "cirvb",
+      "status": "pending_review",
+      "riskScore": 2,
+      "needsAttention": true,
+      "gabaritoIndex": 0,
+      "stemWords": 56,
+      "optionAbsoluteTerms": 2
+    },
+    {
+      "id": "cirvb-20",
+      "t": "cirvb",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 2,
+      "stemWords": 52,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirvb-21",
+      "t": "cirvb",
+      "status": "pending_review",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 3,
+      "stemWords": 57,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "cirvb-22",
+      "t": "cirvb",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 3,
+      "stemWords": 53,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirvb-23",
+      "t": "cirvb",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 0,
+      "stemWords": 56,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirvb-24",
+      "t": "cirvb",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 3,
+      "stemWords": 53,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirvb-25",
+      "t": "cirvb",
+      "status": "pending_review",
+      "riskScore": 2,
+      "needsAttention": true,
+      "gabaritoIndex": 2,
+      "stemWords": 52,
+      "optionAbsoluteTerms": 2
+    },
+    {
+      "id": "cirvb-26",
+      "t": "cirvb",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 0,
+      "stemWords": 52,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirvb-27",
+      "t": "cirvb",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 0,
+      "stemWords": 53,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirvb-28",
+      "t": "cirvb",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 1,
+      "stemWords": 53,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirvb-29",
+      "t": "cirvb",
+      "status": "pending_review",
+      "riskScore": 2,
+      "needsAttention": true,
+      "gabaritoIndex": 0,
+      "stemWords": 54,
+      "optionAbsoluteTerms": 2
+    },
+    {
+      "id": "cirvb-30",
+      "t": "cirvb",
+      "status": "pending_review",
+      "riskScore": 2,
+      "needsAttention": true,
+      "gabaritoIndex": 2,
+      "stemWords": 53,
+      "optionAbsoluteTerms": 2
+    },
+    {
+      "id": "cirfig-10",
+      "t": "cirfig",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 2,
+      "stemWords": 60,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirfig-11",
+      "t": "cirfig",
+      "status": "active_v2",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 3,
+      "stemWords": 55,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "cirfig-12",
+      "t": "cirfig",
+      "status": "pending_review",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 2,
+      "stemWords": 52,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "cirfig-13",
+      "t": "cirfig",
+      "status": "pending_review",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 0,
+      "stemWords": 56,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "cirfig-14",
+      "t": "cirfig",
+      "status": "pending_review",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 3,
+      "stemWords": 63,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "cirfig-15",
+      "t": "cirfig",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 3,
+      "stemWords": 55,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirfig-16",
+      "t": "cirfig",
+      "status": "active_v2",
+      "riskScore": 2,
+      "needsAttention": true,
+      "gabaritoIndex": 1,
+      "stemWords": 55,
+      "optionAbsoluteTerms": 2
+    },
+    {
+      "id": "cirfig-17",
+      "t": "cirfig",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 1,
+      "stemWords": 52,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirfig-18",
+      "t": "cirfig",
+      "status": "active_v2",
+      "riskScore": 2,
+      "needsAttention": true,
+      "gabaritoIndex": 0,
+      "stemWords": 61,
+      "optionAbsoluteTerms": 2
+    },
+    {
+      "id": "cirfig-19",
+      "t": "cirfig",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 0,
+      "stemWords": 57,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirfig-20",
+      "t": "cirfig",
+      "status": "pending_review",
+      "riskScore": 2,
+      "needsAttention": true,
+      "gabaritoIndex": 2,
+      "stemWords": 51,
+      "optionAbsoluteTerms": 2
+    },
+    {
+      "id": "cirfig-21",
+      "t": "cirfig",
+      "status": "pending_review",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 2,
+      "stemWords": 55,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "cirfig-22",
+      "t": "cirfig",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 2,
+      "stemWords": 56,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirfig-23",
+      "t": "cirfig",
+      "status": "pending_review",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 1,
+      "stemWords": 56,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "cirfig-24",
+      "t": "cirfig",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 1,
+      "stemWords": 57,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirfig-25",
+      "t": "cirfig",
+      "status": "pending_review",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 0,
+      "stemWords": 55,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "cirfig-26",
+      "t": "cirfig",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 3,
+      "stemWords": 55,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirfig-27",
+      "t": "cirfig",
+      "status": "pending_review",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 1,
+      "stemWords": 55,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "cirfig-28",
+      "t": "cirfig",
+      "status": "pending_review",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 0,
+      "stemWords": 53,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "cirfig-29",
+      "t": "cirfig",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 1,
+      "stemWords": 51,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirfig-30",
+      "t": "cirfig",
+      "status": "pending_review",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 3,
+      "stemWords": 54,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "cirrad-19",
+      "t": "cirrad",
+      "status": "pending_review",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 0,
+      "stemWords": 53,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "cirrad-20",
+      "t": "cirrad",
+      "status": "pending_review",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 0,
+      "stemWords": 53,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "cirrad-21",
+      "t": "cirrad",
+      "status": "pending_review",
+      "riskScore": 2,
+      "needsAttention": true,
+      "gabaritoIndex": 1,
+      "stemWords": 59,
+      "optionAbsoluteTerms": 2
+    },
+    {
+      "id": "cirrad-22",
+      "t": "cirrad",
+      "status": "pending_review",
+      "riskScore": 2,
+      "needsAttention": true,
+      "gabaritoIndex": 3,
+      "stemWords": 60,
+      "optionAbsoluteTerms": 3
+    },
+    {
+      "id": "cirrad-23",
+      "t": "cirrad",
+      "status": "pending_review",
+      "riskScore": 2,
+      "needsAttention": true,
+      "gabaritoIndex": 3,
+      "stemWords": 58,
+      "optionAbsoluteTerms": 2
+    },
+    {
+      "id": "cirrad-24",
+      "t": "cirrad",
+      "status": "pending_review",
+      "riskScore": 2,
+      "needsAttention": true,
+      "gabaritoIndex": 2,
+      "stemWords": 60,
+      "optionAbsoluteTerms": 2
+    },
+    {
+      "id": "cirrad-25",
+      "t": "cirrad",
+      "status": "pending_review",
+      "riskScore": 2,
+      "needsAttention": true,
+      "gabaritoIndex": 2,
+      "stemWords": 53,
+      "optionAbsoluteTerms": 3
+    },
+    {
+      "id": "cirrad-26",
+      "t": "cirrad",
+      "status": "pending_review",
+      "riskScore": 2,
+      "needsAttention": true,
+      "gabaritoIndex": 1,
+      "stemWords": 54,
+      "optionAbsoluteTerms": 2
+    },
+    {
+      "id": "cirrad-27",
+      "t": "cirrad",
+      "status": "pending_review",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 2,
+      "stemWords": 56,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "cirrad-28",
+      "t": "cirrad",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 2,
+      "stemWords": 57,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "cirrad-29",
+      "t": "cirrad",
+      "status": "pending_review",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 1,
+      "stemWords": 58,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "cirrad-30",
+      "t": "cirrad",
+      "status": "pending_review",
+      "riskScore": 2,
+      "needsAttention": true,
+      "gabaritoIndex": 0,
+      "stemWords": 57,
+      "optionAbsoluteTerms": 3
+    },
+    {
+      "id": "ciruro-27",
+      "t": "ciruro",
+      "status": "pending_review",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 3,
+      "stemWords": 54,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "ciruro-28",
+      "t": "ciruro",
+      "status": "pending_review",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 0,
+      "stemWords": 59,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "ciruro-29",
+      "t": "ciruro",
+      "status": "pending_review",
+      "riskScore": 2,
+      "needsAttention": true,
+      "gabaritoIndex": 3,
+      "stemWords": 54,
+      "optionAbsoluteTerms": 2
+    },
+    {
+      "id": "ciruro-30",
+      "t": "ciruro",
+      "status": "pending_review",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 2,
+      "stemWords": 62,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "ciruro-31",
+      "t": "ciruro",
+      "status": "pending_review",
+      "riskScore": 2,
+      "needsAttention": true,
+      "gabaritoIndex": 2,
+      "stemWords": 54,
+      "optionAbsoluteTerms": 2
+    },
+    {
+      "id": "ciruro-32",
+      "t": "ciruro",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 2,
+      "stemWords": 55,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "ciruro-33",
+      "t": "ciruro",
+      "status": "pending_review",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 0,
+      "stemWords": 54,
+      "optionAbsoluteTerms": 1
+    },
+    {
+      "id": "ciruro-34",
+      "t": "ciruro",
+      "status": "pending_review",
+      "riskScore": 0,
+      "needsAttention": false,
+      "gabaritoIndex": 2,
+      "stemWords": 54,
+      "optionAbsoluteTerms": 0
+    },
+    {
+      "id": "ciruro-35",
+      "t": "ciruro",
+      "status": "pending_review",
+      "riskScore": 2,
+      "needsAttention": true,
+      "gabaritoIndex": 1,
+      "stemWords": 60,
+      "optionAbsoluteTerms": 4
+    },
+    {
+      "id": "ciruro-36",
+      "t": "ciruro",
+      "status": "pending_review",
+      "riskScore": 1,
+      "needsAttention": false,
+      "gabaritoIndex": 1,
+      "stemWords": 51,
+      "optionAbsoluteTerms": 1
+    }
+  ]
+}
