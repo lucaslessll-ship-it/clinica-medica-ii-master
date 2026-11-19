@@ -49,12 +49,10 @@ body[data-theme="dark"] .ue-exam-question .pocus-q-opt.wrong{background:#472523;
 @media(prefers-reduced-motion:reduce){.ue-stage-card{transition:none}.ue-stage-card:hover{transform:none}}
 
 /* Camada de alto rendimento: evocação, arguição e síntese. */
-.ue-oral,.ue-memory{margin-top:22px;background:var(--white);border:1px solid var(--line);border-radius:16px;padding:18px 21px}
-.ue-oral ol,.ue-memory ol{padding-left:22px;display:grid;gap:9px;margin:14px 0 0}
-.ue-oral li{padding:8px 0;border-bottom:1px solid var(--line);line-height:1.6}
-.ue-oral li:last-child{border-bottom:0}
+.ue-memory{margin-top:22px;background:var(--white);border:1px solid var(--line);border-radius:16px;padding:18px 21px}
+.ue-memory ol{padding-left:22px;display:grid;gap:9px;margin:14px 0 0}
 .ue-memory li{border-left:3px solid var(--green);padding:6px 9px;background:var(--soft);border-radius:0 8px 8px 0;line-height:1.5}
 .ue-disclaimer{font-size:.85rem;color:var(--muted);padding:13px 15px;border:1px solid var(--line);border-radius:12px}
-.ue-oral h3,.ue-memory h3{margin-top:0}
-body[data-theme="dark"] .ue-oral,body[data-theme="dark"] .ue-memory{background:var(--white);color:var(--ink)}
-@media(max-width:700px){.ue-oral,.ue-memory{padding:14px}.ue-oral ol,.ue-memory ol{padding-left:18px}}
+.ue-memory h3{margin-top:0}
+body[data-theme="dark"] .ue-memory{background:var(--white);color:var(--ink)}
+@media(max-width:700px){.ue-memory{padding:14px}.ue-memory ol{padding-left:18px}}
