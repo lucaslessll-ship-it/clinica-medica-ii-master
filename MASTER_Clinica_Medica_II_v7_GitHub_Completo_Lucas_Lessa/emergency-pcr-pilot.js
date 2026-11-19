@@ -104,6 +104,12 @@ function answer(id,value){
  s.attempts=s.attempts||[];
  s.attempts.push({id,choice:value,correct:value===q.a,at:s.lastDecisionAt,hint:!!s.hints[id]});
  if(s.attempts.length>180)s.attempts=s.attempts.slice(-180);
+ window.PCRAdaptive?.openSession(s.mode);
+ window.PCRAdaptive?.record(id,value===q.a,{hint:!!s.hints[id],type:id.startsWith("case_")?"transfer":"recall",critical:value!==q.a&&(id==="initial"||id==="rhythm_vf"||id==="rhythm_pea"||id==="rhythm_asys"||id==="case_1"||id==="case_2"||id==="case_4")});
+ save();refresh("ue-pcr-question-"+id);
+}
+function confidence(id,level){
+ window.PCRAdaptive?.confidence(id,level);
  save();refresh("ue-pcr-question-"+id);
 }
 function hint(id){
@@ -170,7 +176,7 @@ function question(id){
  return `<section class="ue-pcr-question" id="ue-pcr-question-${esc(id)}" aria-label="Decisão clínica">
   <div class="ue-pcr-question-kicker">RECUPERAÇÃO ATIVA · DECIDA ANTES DA EXPLICAÇÃO</div>
   <h3>${esc(q.prompt)}</h3><div class="ue-pcr-options">${q.options.map((opt,i)=>`<button type="button" ${answered?"disabled":""} class="ue-pcr-option${answered&&i===q.a?" is-correct":""}${answered&&i===selected&&selected!==q.a?" is-incorrect":""}" aria-pressed="${i===selected}" onclick="EmergencyPCR.answer('${id}',${i})"><span class="ue-pcr-opt-letter">${"ABCD"[i]}</span><span>${esc(opt)}</span></button>`).join("")}</div>
-  ${!answered?`<button type="button" class="ue-pcr-help" onclick="EmergencyPCR.hint('${id}')">Preciso de uma pista</button>${s.hints[id]?`<p class="ue-pcr-hint"><strong>Pista:</strong> ${esc(q.hint||"Pense na ameaça imediata e no próximo passo seguro.")}</p>`:""}`:`<div class="ue-pcr-feedback" role="status"><strong>${selected===q.a?"Decisão adequada.":"Revise esta decisão."}</strong><p>${esc(q.why)}</p>${selected!==q.a?`<small>Resposta recomendada: ${"ABCD"[q.a]}. ${esc(q.options[q.a])}</small>`:""}</div>`}
+  ${!answered?`<button type="button" class="ue-pcr-help" onclick="EmergencyPCR.hint('${id}')">Preciso de uma pista</button>${s.hints[id]?`<p class="ue-pcr-hint"><strong>Pista:</strong> ${esc(q.hint||"Pense na ameaça imediata e no próximo passo seguro.")}</p>`:""}`:`<div class="ue-pcr-feedback" role="status"><strong>${selected===q.a?"Decisão adequada.":"Revise esta decisão."}</strong><p>${esc(q.why)}</p>${selected!==q.a?`<small>Resposta recomendada: ${"ABCD"[q.a]}. ${esc(q.options[q.a])}</small>`:""}<div class="pcr-ai-confidence"><span>Quão seguro estava do raciocínio?</span>${[["low","Chutei"],["medium","Tive dúvida"],["high","Tenho certeza"]].map(([v,label])=>`<button type="button" aria-pressed="${window.PCRAdaptive?.state()?.confidence?.[id]===v}" onclick="EmergencyPCR.confidence('${id}','${v}')">${label}</button>`).join("")}</div></div>`}
   </section>`;
 }
 function overview(){
@@ -180,7 +186,7 @@ function overview(){
  <h1 id="ue-pcr-title">Parada cardiorrespiratória</h1>
  <p class="ue-pcr-lead">A cada etapa, uma pergunta clínica → uma decisão → uma explicação. Sem precisar ler tudo antes de começar.</p>
  <div class="ue-pcr-modes" role="group" aria-label="Escolher percurso de estudo">${Object.entries(MODES).map(([mins,config])=>`<button type="button" onclick="EmergencyPCR.mode('${mins}')" aria-pressed="${s.mode===mins}" class="ue-pcr-mode${s.mode===mins?" active":""}"><span class="ue-pcr-mode-mins">${mins} min</span><span>${esc(config.label)}</span></button>`).join("")}</div>
- <p class="ue-pcr-mode-note"><strong>${esc(modeInfo.label)}:</strong> ${esc(modeInfo.description)} Tempo estimado; você pode continuar estudando além dele.</p></section>`;
+ <p class="ue-pcr-mode-note"><strong>${esc(modeInfo.label)}:</strong> ${esc(modeInfo.description)} Tempo estimado; você pode continuar estudando além dele.</p>${window.PCRAdaptiveUI?.homepage?.()||''}</section>`;
 }
 function nav(){
  const s=state(),allSteps=paths(),idx=allSteps.indexOf(s.step);
@@ -279,7 +285,7 @@ function follow(){
  save();refresh("ue-pcr-step-heading");
 }
 function summary(){
- const s=state(),r=getRecommendation();
+ const s=state(),r=getRecommendation(),adaptive=window.PCRAdaptiveUI;
  const attempted=Object.keys(s.answers).filter(k=>QUESTIONS[k]).length;
  const correct=Object.entries(s.answers).filter(([id,v])=>QUESTIONS[id]&&QUESTIONS[id].a===v).length;
  return `<div class="ue-pcr-summary">
@@ -293,8 +299,10 @@ function summary(){
  </ol></div>
  <div class="ue-pcr-recommend"><span class="ue-pcr-eyebrow">PRÓXIMA ATIVIDADE RECOMENDADA · HEURÍSTICA INICIAL</span><strong>${esc(r.label)}</strong><p>${esc(r.why)}</p><button type="button" class="btn secondary" onclick="EmergencyPCR.follow()">Abrir treino recomendado</button></div>
  <div class="ue-pcr-reviews"><strong>Retenção por revisão distribuída</strong><p>Após concluir, o sistema propõe retestes no dia seguinte e uma semana depois. Nesta versão-piloto, os intervalos são fixos, não um FSRS calibrado.</p>${s.finishedAt&&s.reviews?`<p><strong>D+1:</strong> ${new Date(s.reviews.d1).toLocaleDateString("pt-BR")} · <strong>D+7:</strong> ${new Date(s.reviews.d7).toLocaleDateString("pt-BR")}</p>`:""}
- <div class="ue-pcr-review-actions"><button type="button" class="btn primary" onclick="EmergencyPCR.finish()">${s.finishedAt?"Atualizar conclusão e datas de revisão":"Concluir percurso e programar D+1 / D+7"}</button><button type="button" class="btn secondary" onclick="EmergencyPCR.restart()">Iniciar novo reteste de 5 min</button></div></div>
+ <div class="ue-pcr-review-actions"><button type="button" class="btn primary" onclick="EmergencyPCR.finish()">${s.finishedAt?"Atualizar conclusão da aula":"Concluir a aula e abrir plano de revisões"}</button><button type="button" class="btn secondary" onclick="EmergencyPCR.restart()">Iniciar novo reteste de 5 min</button></div></div>
  </div>
+ ${adaptive?.progress?.()||""}
+ ${adaptive?.review?.()||""}
  <details class="ue-pcr-expand ue-pcr-full"><summary>Consultar o conteúdo integral aprofundado (8 seções)</summary>${(ctx?.module?.sections||[]).map(section=>`<section class="ue-pcr-deep-section"><h3>${esc(section.h)}</h3>${(section.p||[]).map(p=>`<p>${esc(p)}</p>`).join("")}${section.table?`<div class="ue-pcr-table-scroll"><table><thead><tr>${(section.table.head||[]).map(h=>`<th>${esc(h)}</th>`).join("")}</tr></thead><tbody>${(section.table.rows||[]).map(row=>`<tr>${row.map(c=>`<td>${esc(c)}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`:""}</section>`).join("")}</details>
   <div class="ue-pcr-sources"><h3>Referências verificadas</h3><ul><li><a href="https://cpr.heart.org/en/resuscitation-science/cpr-and-ecc-guidelines/adult-basic-life-support/" target="_blank" rel="noopener noreferrer">AHA 2025 · Suporte básico adulto</a></li><li><a href="https://cpr.heart.org/en/resuscitation-science/cpr-and-ecc-guidelines/adult-advanced-life-support/" target="_blank" rel="noopener noreferrer">AHA 2025 · Suporte avançado adulto</a></li><li><a href="https://cpr.heart.org/en/resuscitation-science/cpr-and-ecc-guidelines/post-cardiac-arrest-care/" target="_blank" rel="noopener noreferrer">AHA 2025 · Cuidados pós-parada</a></li><li><a href="https://cpr.heart.org/-/media/CPR-Files/CPR-Guidelines-Files/2025-Algorithms/Algorithm-ACLS-CA-250527.pdf" target="_blank" rel="noopener noreferrer">Algoritmo oficial ACLS adulto (PDF)</a></li></ul></div>
  <p class="ue-pcr-caption">Material educacional para treino supervisionado. Doses, energia de desfibrilação e intervenções devem ser verificadas no algoritmo e protocolo institucional antes do cuidado real.</p>`;
@@ -324,5 +332,5 @@ function page(context){
  <div class="ue-pcr-endnote">Os resultados são salvos no progresso desta disciplina. As etapas vistas não equivalem a proficiência clínica demonstrada.</div>
  </div>`;
 }
-window.EmergencyPCR={page,mode,go,answer,hint,selectRhythm,cycle,cycleStep,nextCase,resetCase,restart,follow,finish,questionIds:Object.keys(QUESTIONS),paths:MODES};
+window.EmergencyPCR={page,mode,go,answer,hint,confidence,refresh,selectRhythm,cycle,cycleStep,nextCase,resetCase,restart,follow,finish,questionIds:Object.keys(QUESTIONS),paths:MODES};
 })();
