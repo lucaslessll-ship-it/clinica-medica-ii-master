@@ -558,3 +558,374 @@ window.EMERGENCY_CONTENT.push(...[
   "slide": "1UQVs6wDfagDfxFhnN06i6AYx8BVQ-1d0"
  }
 ]);
+
+window.EMERGENCY_CONTENT.push(...[
+ {
+  "id": "trauma",
+  "stage": "P1",
+  "title": "Atendimento ao politraumatizado",
+  "summary": "xABCDE, hemorragia exsanguinante, eFAST e prioridade de intervenção.",
+  "goals": [
+   "Iniciar xABCDE.",
+   "Identificar hemorragia crítica.",
+   "Decidir entre TC e intervenção."
+  ],
+  "sections": [
+   {
+    "h": "O xABCDE do ATLS 11",
+    "p": [
+     "A primeira etapa x é controle imediato da hemorragia externa ameaçadora. A: via aérea com proteção cervical conforme risco; B: ventilação e ameaças torácicas; C: circulação e hemorragia; D: avaliação neurológica; E: exposição completa com prevenção de hipotermia. Intervenções são simultâneas conforme equipe."
+    ]
+   },
+   {
+    "h": "Hemorragia e ressuscitação",
+    "p": [
+     "Buscar perdas em tórax, abdome, pelve, ossos longos e exterior; realizar eFAST quando disponível sem substituir julgamento. Se necessário, aplicar compressão/torniquete adequado, estabilizar pelve, ativar protocolo de hemorragia e controle definitivo. Evitar tríade de hipotermia, acidose e coagulopatia."
+    ]
+   },
+   {
+    "h": "Imagem e destino",
+    "p": [
+     "Trauma instável com alta suspeita de sangramento pode exigir cirurgia ou hemostasia imediata; tomografia não deve retardar controle de fonte. TC contrastada é mais útil no paciente suficientemente estável. Exame eFAST negativo não elimina lesão."
+    ]
+   }
+  ],
+  "flow": [
+   [
+    "Hemorragia externa grave",
+    "Controlar antes das demais etapas."
+   ],
+   [
+    "A/B",
+    "Proteger via aérea e tratar ameaças respiratórias."
+   ],
+   [
+    "C/D/E",
+    "Perfusão, neurologia e prevenção de hipotermia."
+   ],
+   [
+    "Instabilidade refratária",
+    "Avaliar intervenção imediata, não atrasar com TC."
+   ]
+  ],
+  "pitfalls": [
+   "Mandar instável para TC antes de controle de hemorragia.",
+   "Confundir eFAST negativo com ausência de lesão."
+  ],
+  "quiz": [
+   {
+    "q": "No xABCDE, x representa:",
+    "o": [
+     "Controle de hemorragia exsanguinante",
+     "Raio X",
+     "Xifoide",
+     "Analgesia"
+    ],
+    "a": 0,
+    "why": "ATLS 11 enfatiza hemorragia que ameaça a vida imediatamente."
+   },
+   {
+    "q": "Trauma abdominal instável com eFAST positivo requer:",
+    "o": [
+     "Controle de fonte e reanimação sem atrasos",
+     "Alta",
+     "TC obrigatória antes de qualquer intervenção",
+     "Somente analgesia"
+    ],
+    "a": 0,
+    "why": "Instabilidade e sangramento indicam abordagem tempo-dependente."
+   }
+  ],
+  "case": {
+   "id": "case-trauma",
+   "focus": "Atendimento ao politraumatizado",
+   "stem": "Homem de 26 anos, colisão, PA 78/42, abdome rígido e eFAST com líquido livre.",
+   "ask": "Como ordenar condutas e justificar não fazer TC imediata?",
+   "answer": [
+    "xABCDE, controle externo, vias aéreas, respiração e circulação.",
+    "Acionar cirurgia/trauma e ressuscitação hemostática.",
+    "Instabilidade com provável sangramento intra-abdominal pode demandar controle cirúrgico imediato; reavaliar."
+   ]
+  },
+  "refs": [
+   "atls",
+   "slideTrauma"
+  ],
+  "slide": "1a-w0A9LmmON2xHDNGrY7EtotbSx5L-Mg"
+ },
+ {
+  "id": "trauma-especifico",
+  "stage": "P1",
+  "title": "TCE, coluna e trauma torácico",
+  "summary": "Evitar lesão secundária e reconhecer ameaças torácicas e medulares.",
+  "goals": [
+   "Documentar Glasgow, pupilas e focalidade.",
+   "Prevenir hipóxia/hipotensão.",
+   "Identificar pneumotórax hipertensivo."
+  ],
+  "sections": [
+   {
+    "h": "TCE grave",
+    "p": [
+     "Avaliar Glasgow por componentes, resposta pupilar, déficit motor, convulsões e anticoagulação. Evitar hipóxia e hipotensão é prioritário para prevenir lesão cerebral secundária; TC de crânio é central quando indicada após estabilização inicial."
+    ]
+   },
+   {
+    "h": "Coluna/medula",
+    "p": [
+     "Pesquisar dor mediana, déficit motor/sensitivo, nível da lesão e disfunção autonômica. Restrição de movimento é seletiva e não pode prejudicar a via aérea. No trauma hipotenso com bradicardia, pensar em choque neurogênico, mas procurar sangramento antes de concluir."
+    ]
+   },
+   {
+    "h": "Trauma torácico",
+    "p": [
+     "Pneumotórax hipertensivo instável é diagnóstico clínico: descompressão não deve esperar RX. Hemotórax maciço, tamponamento e contusão pulmonar têm apresentações e intervenções distintas; integrar exame físico, eFAST e perfusão."
+    ]
+   }
+  ],
+  "flow": [
+   [
+    "TCE com rebaixamento",
+    "ABCDE, neuro seriado, evitar hipóxia e hipotensão."
+   ],
+   [
+    "Trauma de coluna",
+    "Proteger movimento conforme risco e examinar função medular."
+   ],
+   [
+    "Ventilação unilateral + choque",
+    "Tratar suspeita de pneumotórax hipertensivo sem atraso de RX."
+   ]
+  ],
+  "pitfalls": [
+   "Atribuir toda hipotensão à lesão medular sem excluir sangramento.",
+   "Adiar intervenção em pneumotórax hipertensivo instável para radiografia."
+  ],
+  "quiz": [
+   {
+    "q": "TCE grave: agressões secundárias a evitar:",
+    "o": [
+     "Hipóxia e hipotensão",
+     "Exames neurológicos",
+     "Analgésicos conforme indicação",
+     "Monitorização"
+    ],
+    "a": 0,
+    "why": "Hipóxia/hipotensão agravam lesão cerebral."
+   },
+   {
+    "q": "Choque com murmúrio unilateral abolido após trauma sugere:",
+    "o": [
+     "Pneumotórax hipertensivo",
+     "Bronquite simples",
+     "Faringite",
+     "Hipoglicemia isolada"
+    ],
+    "a": 0,
+    "why": "Sinais sugerem lesão torácica obstrutiva."
+   }
+  ],
+  "case": {
+   "id": "case-trauma-especifico",
+   "focus": "TCE, coluna e trauma torácico",
+   "stem": "Paciente com TCE, Glasgow 7 e PA 84/50; ventilação assimétrica à direita.",
+   "ask": "Quais riscos simultâneos?",
+   "answer": [
+    "Proteger oxigenação e hemodinâmica, avaliar via aérea e coluna.",
+    "Investigar e tratar rapidamente ameaça torácica, principalmente pneumotórax hipertensivo.",
+    "Buscar hemorragia e avaliar neuroimagem quando seguro."
+   ]
+  },
+  "refs": [
+   "atls",
+   "slideTrauma"
+  ],
+  "slide": "1a-w0A9LmmON2xHDNGrY7EtotbSx5L-Mg"
+ },
+ {
+  "id": "queimado",
+  "stage": "P1",
+  "title": "Grande queimado",
+  "summary": "SCQ, profundidade, lesão inalatória e ressuscitação guiada.",
+  "goals": [
+   "Estimar SCQ corretamente.",
+   "Identificar risco de via aérea.",
+   "Titular fluidos por perfusão."
+  ],
+  "sections": [
+   {
+    "h": "Primeira abordagem",
+    "p": [
+     "Segurança da cena, interromper queimadura, retirar adornos não aderidos e ABCDE. Rouquidão progressiva, estridor, fuligem oral e queimadura após fogo em ambiente fechado exigem atenção imediata à via aérea e intoxicação por fumaça. Não usar gelo diretamente."
+    ]
+   },
+   {
+    "h": "Extensão e gravidade",
+    "p": [
+     "Regra dos nove no adulto ou Lund-Browder; eritema isolado não entra na SCQ para reposição. Queimaduras de espessura parcial e total têm riscos distintos. Face, mãos, pés, genitais, articulações, circunferenciais e lesão inalatória podem indicar centro especializado."
+    ]
+   },
+   {
+    "h": "Fluidos e segurança",
+    "p": [
+     "Fórmulas para reposição em queimadura extensa apenas estimam volume inicial; ajuste por diurese, perfusão, balanço e sinais de sobrecarga. Analgesia, cobertura limpa, controle térmico e profilaxia antitetânica pertinente. Não usar antibiótico sistêmico profilático indiscriminadamente."
+    ]
+   }
+  ],
+  "flow": [
+   [
+    "Incêndio/queimadura",
+    "Segurança, ABCDE e retirar fonte."
+   ],
+   [
+    "Sinais de lesão inalatória",
+    "Avaliar via aérea precocemente."
+   ],
+   [
+    "SCQ e profundidade",
+    "Definir necessidade de fluidos/centro especializado."
+   ],
+   [
+    "Reavaliação",
+    "Diurese, perfusão, hipotermia e dor."
+   ]
+  ],
+  "pitfalls": [
+   "Contar eritema simples como SCQ profunda.",
+   "Dar volume de fórmula sem reavaliar.",
+   "Subestimar rouquidão e edema após fumaça."
+  ],
+  "quiz": [
+   {
+    "q": "Queimadura extensa: fluidos devem ser titulados por:",
+    "o": [
+     "Perfusão e diurese",
+     "Fórmula rígida sem ajuste",
+     "Número de bolhas",
+     "Saturação isolada"
+    ],
+    "a": 0,
+    "why": "A resposta clínica guia a ressuscitação."
+   },
+   {
+    "q": "Sinal prioritário no queimado após incêndio:",
+    "o": [
+     "Rouquidão progressiva",
+     "Dor leve em mão",
+     "Eritema localizado",
+     "Sudorese isolada"
+    ],
+    "a": 0,
+    "why": "Pode indicar lesão inalatória e edema de via aérea."
+   }
+  ],
+  "case": {
+   "id": "case-queimado",
+   "focus": "Grande queimado",
+   "stem": "Adulto com queimadura torácica e de braços após incêndio fechado; rouquidão e fuligem oral.",
+   "ask": "Qual sequência antes de qualquer fórmula de fluidos?",
+   "answer": [
+    "ABCDE com avaliação de lesão inalatória e oxigenação.",
+    "Estimar SCQ sem contar eritema isolado; analgesia e prevenção da hipotermia.",
+    "Ressuscitação individualizada por perfusão/diurese e centro de referência."
+   ]
+  },
+  "refs": [
+   "aba",
+   "atls"
+  ],
+  "slide": "1a-w0A9LmmON2xHDNGrY7EtotbSx5L-Mg"
+ },
+ {
+  "id": "asma",
+  "stage": "P1",
+  "title": "Crise asmática grave",
+  "summary": "Broncodilatação, corticoterapia e sinais de falência iminente.",
+  "goals": [
+   "Reconhecer gravidade clínica.",
+   "Iniciar terapêutica imediata.",
+   "Identificar momento de escalonamento."
+  ],
+  "sections": [
+   {
+    "h": "Avaliação",
+    "p": [
+     "Sinais: fala em palavras isoladas, FR elevada, uso de musculatura acessória, hipoxemia e taquicardia. Sonolência, tórax silencioso, exaustão e piora do sensório são sinais de vida ameaçada, não de melhora."
+    ]
+   },
+   {
+    "h": "Tratamento",
+    "p": [
+     "Iniciar SABA inalatório repetido, oxigênio titulado e corticoide sistêmico precoce; associar ipratrópio em crises graves. Magnésio IV pode ser considerado em casos graves refratários. Não administrar antibiótico sem indicação específica."
+    ]
+   },
+   {
+    "h": "Monitorização",
+    "p": [
+     "Reavaliar SpO₂, ausculta, esforço, capacidade de falar e fluxo expiratório quando viável. Ventilação em asma crítica exige cuidado com auto-PEEP, aprisionamento de ar e hipotensão; solicitar equipe experiente cedo."
+    ]
+   }
+  ],
+  "flow": [
+   [
+    "Crise suspeita",
+    "Classificar gravidade e monitorizar."
+   ],
+   [
+    "Moderada/grave",
+    "SABA repetido, oxigênio titulado e corticoide."
+   ],
+   [
+    "Grave",
+    "Ipratrópio e considerar magnésio quando pertinente."
+   ],
+   [
+    "Exaustão/sensório reduzido",
+    "Preparar suporte avançado."
+   ]
+  ],
+  "pitfalls": [
+   "Tórax silencioso não é sinal de melhora.",
+   "Não retardar broncodilatação esperando exames."
+  ],
+  "quiz": [
+   {
+    "q": "Asma aguda: achado ameaçador à vida:",
+    "o": [
+     "Tórax silencioso + sonolência",
+     "Sibilância leve",
+     "Coriza isolada",
+     "Tosse controlada"
+    ],
+    "a": 0,
+    "why": "Sinais de falência ventilatória."
+   },
+   {
+    "q": "Tratamento de crise grave inclui:",
+    "o": [
+     "SABA + ipratrópio + corticoide sistêmico",
+     "Somente antibiótico",
+     "Sedativo de rotina",
+     "Apenas anti-histamínico"
+    ],
+    "a": 0,
+    "why": "Broncodilatadores e corticoide são centrais no tratamento."
+   }
+  ],
+  "case": {
+   "id": "case-asma",
+   "focus": "Crise asmática grave",
+   "stem": "Jovem asmática, fala palavras isoladas, SpO₂ 88%, uso de musculatura acessória.",
+   "ask": "Descreva terapêutica e sinais de falha.",
+   "answer": [
+    "Monitor, O₂ titulado, SABA repetido, ipratrópio e corticoide.",
+    "Considerar magnésio se grave/refratária.",
+    "Exaustão, rebaixamento e hipoventilação exigem equipe de via aérea."
+   ]
+  },
+  "refs": [
+   "gina"
+  ],
+  "slide": null
+ }
+]);
