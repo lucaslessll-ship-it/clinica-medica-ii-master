@@ -929,3 +929,284 @@ window.EMERGENCY_CONTENT.push(...[
   "slide": null
  }
 ]);
+
+window.EMERGENCY_CONTENT.push(...[
+ {
+  "id": "adrenal",
+  "stage": "P1",
+  "title": "Insuficiência adrenal aguda",
+  "summary": "Choque, hiponatremia e hipoglicemia: tratar antes de testes.",
+  "goals": [
+   "Suspeitar em choque de causa não clara.",
+   "Administrar corticoide imediatamente.",
+   "Corrigir hipovolemia/glicemia e causa."
+  ],
+  "sections": [
+   {
+    "h": "Suspeita clínica",
+    "p": [
+     "Doença de Addison, suspensão abrupta de corticoide, infecção ou cirurgia podem precipitar crise adrenal. Quadro: hipotensão, vômitos, dor abdominal, hiponatremia, hipoglicemia e possivelmente hipercalemia. Pode coexistir sepse."
+    ]
+   },
+   {
+    "h": "Tratamento urgente",
+    "p": [
+     "Se não atrasar, colher cortisol/ACTH; iniciar hidrocortisona 100 mg IV/IM imediatamente no adulto, seguida de esquema de manutenção conforme protocolo, habitualmente 200 mg/dia. Administrar cristaloides, corrigir hipoglicemia, monitorar PA, sódio e potássio."
+    ]
+   },
+   {
+    "h": "Depois da estabilização",
+    "p": [
+     "Investigar gatilho, programar testes endócrinos adequados posteriormente, ajustar doses de estresse e orientar prevenção de novas crises. Não atrasar tratamento aguardando resposta laboratorial."
+    ]
+   }
+  ],
+  "flow": [
+   [
+    "Hipotensão + risco endócrino",
+    "Suspeitar crise adrenal."
+   ],
+   [
+    "Instabilidade",
+    "Hidrocortisona imediata sem teste prévio obrigatório."
+   ],
+   [
+    "Ressuscitação",
+    "Cristaloides e correção glicêmica."
+   ],
+   [
+    "Evolução",
+    "Tratar precipitante e reavaliar eletrólitos."
+   ]
+  ],
+  "pitfalls": [
+   "Esperar teste de estímulo para tratar choque.",
+   "Esquecer infecção precipitante concomitante."
+  ],
+  "quiz": [
+   {
+    "q": "Crise adrenal instável: droga específica inicial:",
+    "o": [
+     "Hidrocortisona parenteral",
+     "Levotiroxina isolada",
+     "Furosemida",
+     "Atenolol"
+    ],
+    "a": 0,
+    "why": "Glicocorticoide deve ser iniciado sem atraso."
+   },
+   {
+    "q": "Qual achado pode apoiar insuficiência adrenal primária?",
+    "o": [
+     "Hiponatremia e hipercalemia",
+     "Hipernatremia isolada",
+     "Policitemia",
+     "Hiperfosfatemia isolada"
+    ],
+    "a": 0,
+    "why": "Déficit mineralocorticoide pode causar sódio baixo e potássio alto."
+   }
+  ],
+  "case": {
+   "id": "case-adrenal",
+   "focus": "Insuficiência adrenal aguda",
+   "stem": "Mulher suspendeu prednisona crônica, está hipotensa, glicemia 54 mg/dL e Na 126.",
+   "ask": "Quais intervenções antes da confirmação hormonal?",
+   "answer": [
+    "ABCDE e suspeita de crise adrenal.",
+    "Hidrocortisona parenteral imediata, cristalóide e correção de hipoglicemia.",
+    "Monitorizar e tratar fator precipitante, colher hormônios se não atrasar."
+   ]
+  },
+  "refs": [
+   "general"
+  ],
+  "slide": null
+ },
+ {
+  "id": "afogamento",
+  "stage": "P1",
+  "title": "Afogamento",
+  "summary": "Ressuscitação de origem hipóxica com ventilação prioritária.",
+  "goals": [
+   "Orientar resgate seguro.",
+   "Priorizar ventilação efetiva.",
+   "Evitar manobras de retirada de água."
+  ],
+  "sections": [
+   {
+    "h": "Fisiopatologia e reconhecimento",
+    "p": [
+     "A hipóxia por imersão/aspiração leva a lesão pulmonar e, em casos graves, parada cardiorrespiratória. A gravidade é definida pelo estado neurológico, respiração, oxigenação e circulação, não pelo volume supostamente aspirado. Segurança de quem resgata vem antes de tudo."
+    ]
+   },
+   {
+    "h": "Ventilações e RCP",
+    "p": [
+     "Uma vez em local seguro, avaliar respiração e circulação. Em vítima sem respiração normal, a ventilação é essencial por se tratar de evento asfíxico; equipes treinadas podem iniciar ventilações de resgate conforme ERC 2025. Sem pulso, iniciar RCP e desfibrilar se ritmo chocável."
+    ]
+   },
+   {
+    "h": "Complicações e erros",
+    "p": [
+     "Não fazer Heimlich, inversão ou manobras para 'retirar água', que atrasam ventilação. Após estabilizar, vigiar desconforto respiratório, hipoxemia, aspiração e hipotermia. Antibiótico e corticoide profiláticos não são rotina."
+    ]
+   }
+  ],
+  "flow": [
+   [
+    "Resgate",
+    "Não entrar na água sem segurança/treino."
+   ],
+   [
+    "Sem respiração normal",
+    "Abrir via aérea e ventilar."
+   ],
+   [
+    "Sem circulação",
+    "RCP e DEA quando disponível."
+   ],
+   [
+    "Pós-resgate",
+    "Monitorar respiração e temperatura."
+   ]
+  ],
+  "pitfalls": [
+   "Tentar esvaziar água dos pulmões.",
+   "Negligenciar ventilação na PCR por hipóxia."
+  ],
+  "quiz": [
+   {
+    "q": "Na PCR após afogamento, é especialmente prioritário:",
+    "o": [
+     "Ventilação efetiva",
+     "Manobra de Heimlich",
+     "Antibiótico preventivo",
+     "Inverter paciente"
+    ],
+    "a": 0,
+    "why": "Trata-se de evento de origem principalmente hipóxica."
+   },
+   {
+    "q": "Por que não fazer Heimlich para expulsar água?",
+    "o": [
+     "Atrasa suporte e não resolve aspiração",
+     "Sempre causa ventilação melhor",
+     "É primeira conduta oficial",
+     "Substitui RCP"
+    ],
+    "a": 0,
+    "why": "Não é método de desobstrução por líquido aspirado."
+   }
+  ],
+  "case": {
+   "id": "case-afogamento",
+   "focus": "Afogamento",
+   "stem": "Jovem é retirado inconsciente do rio, não respira normalmente; familiares sugerem virá-lo para eliminar água.",
+   "ask": "Oriente a equipe.",
+   "answer": [
+    "Garantir segurança, pedir ajuda, avaliar respiração e circulação.",
+    "Priorizar ventilações de resgate conforme treinamento e RCP se PCR.",
+    "Evitar manobras para expulsar água e tratar hipoxemia/hipotermia."
+   ]
+  },
+  "refs": [
+   "erc",
+   "ahaSpecial"
+  ],
+  "slide": null
+ },
+ {
+  "id": "sensorio",
+  "stage": "P1",
+  "title": "Rebaixamento agudo de consciência",
+  "summary": "Coma: causas estruturais, tóxico-metabólicas e avaliação paralela ao ABC.",
+  "goals": [
+   "Checar glicose e proteção de via aérea.",
+   "Identificar sinais de lesão focal.",
+   "Escolher imagem e exames dirigidos."
+  ],
+  "sections": [
+   {
+    "h": "Abordagem imediata",
+    "p": [
+     "ABCDE, SpO₂, ECG, glicemia capilar e temperatura são medidas iniciais do paciente inconsciente. Proteger a via aérea quando necessário e avaliar ventilação; o diagnóstico é construído em paralelo ao suporte, nunca antes dele."
+    ]
+   },
+   {
+    "h": "Exame e diferenciais",
+    "p": [
+     "Documentar Glasgow por componentes, pupilas, simetria motora e sinais de trauma/infecção. Causas estruturais: hemorragia, AVC, TCE, lesão expansiva e estado epiléptico. Causas difusas: hipoglicemia, hipóxia, hipercapnia, eletrólitos, intoxicações, sepse e falência hepatorrenal."
+    ]
+   },
+   {
+    "h": "Investigação e tratamento",
+    "p": [
+     "Corrigir glicemia baixa, considerar naloxona se suspeita de opioide e depressão respiratória, investigar gasometria, sódio, tóxicos e ECG. TC sem contraste quando suspeita intracraniana; EEG se suspeita de estado epiléptico não convulsivo. Não atribuir causa psiquiátrica sem excluir doença orgânica."
+    ]
+   }
+  ],
+  "flow": [
+   [
+    "Coma",
+    "ABCDE, glicemia e monitorização."
+   ],
+   [
+    "Hipoglicemia",
+    "Corrigir imediatamente e reavaliar."
+   ],
+   [
+    "Focalidade/pupilas anormais",
+    "Avaliar neuroimagem urgente."
+   ],
+   [
+    "Causa não evidente",
+    "Gasometria, eletrólitos, toxinas, convulsões e infecção."
+   ]
+  ],
+  "pitfalls": [
+   "Atrasar glicose até a TC.",
+   "Concluir diagnóstico apenas pelo número do Glasgow."
+  ],
+  "quiz": [
+   {
+    "q": "Exame capilar prioritário no paciente desacordado:",
+    "o": [
+     "Glicemia",
+     "Vitamina D",
+     "Cortisol livre urinário",
+     "Colesterol"
+    ],
+    "a": 0,
+    "why": "Hipoglicemia é causa imediatamente reversível."
+   },
+   {
+    "q": "Coma + anisocoria + novo déficit focal sugere:",
+    "o": [
+     "Lesão intracraniana estrutural",
+     "Sinusite simples",
+     "Artrite",
+     "Anemia discreta"
+    ],
+    "a": 0,
+    "why": "Achados focais requerem avaliação intracraniana urgente."
+   }
+  ],
+  "case": {
+   "id": "case-sensorio",
+   "focus": "Rebaixamento agudo de consciência",
+   "stem": "Homem encontrado desacordado, respiração irregular, glicemia 38 mg/dL.",
+   "ask": "O que fazer sem ancorar em uma única causa?",
+   "answer": [
+    "ABCDE e proteção da via aérea/ventilação conforme necessidade.",
+    "Tratar hipoglicemia e reavaliar consciência/glicemia.",
+    "Persistência de coma exige investigação neuro, metabólica, tóxica e infecciosa."
+   ]
+  },
+  "refs": [
+   "general",
+   "slideSensorio"
+  ],
+  "slide": "1HoONmIlE7r8fDqn0i7CS1SxHjOKZ6745"
+ }
+]);
