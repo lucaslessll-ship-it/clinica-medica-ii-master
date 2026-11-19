@@ -17,6 +17,15 @@ const REFS={
  aba:{t:"American Burn Association — Resuscitation in Burn Patients",u:"https://www.aafp.org/afp/2025/0800/practice-guidelines-resuscitation-patients-burns"},
  erc:{t:"European Resuscitation Council — Diretrizes de Ressuscitação, 2025",u:"https://www.erc.edu/media/ad5dtph1/gl2025-01-exec-e.pdf"},
  general:{t:"HAJJAR et al. Medicina de emergência: abordagem prática, 18ª ed., 2024 (bibliografia da disciplina)",u:"https://integrada.minhabiblioteca.com.br/reader/books/9788520459553/"},
+ postAha:{t:"AHA 2025 — Cuidados pós-parada (oxigênio, temperatura e prognóstico)",u:"https://cpr.heart.org/en/resuscitation-science/cpr-and-ecc-guidelines/post-cardiac-arrest-care/"},
+ atsResp:{t:"ATS — Noninvasive Respiratory Support in Acute Respiratory Failure, 2025",u:"https://academic.oup.com/ajrccm/article/212/9/2135/8721554"},
+ ards:{t:"ATS/ESICM/SCCM — Ventilação protetora na SDRA",u:"https://www.thoracic.org/statements/resources/cc/ards-guidelines.pdf"},
+ htn2025:{t:"Diretriz Brasileira de Hipertensão Arterial, 2025 — Emergências hipertensivas",u:"https://www.scielo.br/j/abc/a/BXT7Vk4B9VKQnJFsJhgJ4Hn/?format=html&ilang=pt_BR"},
+ ukka2026:{t:"UK Kidney Association — Tratamento de hipercalemia aguda, atualização 2026",u:"https://guidelines.ukkidney.org/hyperkalaemia/"},
+ dka2024:{t:"ADA/EASD — Hyperglycemic Crises in Adults, consenso 2024",u:"https://doi.org/10.2337/dci24-0032"},
+ endocrine:{t:"Society for Endocrinology — Adrenal Crisis, tratamento imediato",u:"https://www.endocrinology.org/clinical-practice/clinical-guidance/adrenal-crisis/"},
+ thyroid2026:{t:"Consenso conjunto — Management of Thyroid Emergencies, 2026",u:"https://doi.org/10.1530/ETJ-26-0043"},
+ whoPall:{t:"Organização Mundial da Saúde — Palliative Care",u:"https://www.who.int/news-room/fact-sheets/detail/palliative-care"},
  slidePCR:{t:"Slides da disciplina — Parada cardiorrespiratória (Drive)",u:"https://drive.google.com/file/d/1WKQCE_tI0fmiyzYD0cHcl6KzjYZu5PGf/view"},
  slideIRPA:{t:"Slides da disciplina — Insuficiência Respiratória Aguda (Drive)",u:"https://drive.google.com/file/d/153JlL-QQwKekWgxqFn7qBHLCg9yPW-4a/view"},
  slideAVC:{t:"Slides da disciplina — AVC (Drive)",u:"https://drive.google.com/file/d/1NsPDBZref6SnQZzNg30bw5wSGPP3BEUg/view"},
@@ -27,6 +36,11 @@ const REFS={
  slideArritmia:{t:"Slides da disciplina — Arritmias (Drive)",u:"https://drive.google.com/file/d/1NsJly9D6nDyJ3YAHLS2otXhsqIiHFFks/view"},
  slideAcido:{t:"Slides da disciplina — Distúrbios hidroeletrolíticos e ácido-base (Drive)",u:"https://drive.google.com/file/d/1J3CGf_W_-KXdeXqU1ob9mrWk8Sfh6ld-/view"}
 };
+const scientificRefsById={
+ pcr:['postAha'],irpa:['atsResp'],vm:['ards'],adrenal:['endocrine'],hipertensiva:['htn2025'],
+ glicemia:['dka2024'],eletrolitos:['ukka2026'],tireoide:['thyroid2026'],paliativos:['whoPall']
+};
+for(const m of all)for(const ref of scientificRefsById[m.id]||[])if(!m.refs.includes(ref))m.refs.push(ref);
 function scheme(m){
  if(m.id==='pcr')return '<figure class="ue-schema" role="img" aria-label="Traçado ilustrativo de fibrilação ventricular, não diagnóstico"><svg viewBox="0 0 720 125" width="100%" aria-hidden="true"><defs><pattern id="ue-grid" width="16" height="16" patternUnits="userSpaceOnUse"><path d="M16 0H0V16" fill="none" stroke="#d8ece6" stroke-width=".8"/></pattern></defs><rect width="720" height="125" rx="10" fill="url(#ue-grid)"/><path d="M0 63L13 40 23 86 39 31 54 75 68 46 78 95 93 27 108 64 119 52 131 89 149 37 166 65 174 24 185 94 200 58 211 71 224 29 239 77 254 42 268 68 282 24 293 90 307 37 325 69 342 41 354 82 370 20 385 85 398 44 417 67 426 32 440 93 454 57 469 69 481 26 496 78 508 36 528 82 541 49 553 95 569 25 580 77 601 36 611 70 627 54 641 90 651 42 665 75 681 22 697 80 710 48 720 65" fill="none" stroke="#0b6c66" stroke-width="3" stroke-linecap="round"/></svg><figcaption><strong>Traçado esquemático autoral.</strong> Não reproduz ECG de paciente; compare com os slides originais e o módulo de ECG do site.</figcaption></figure>';
  return '';
