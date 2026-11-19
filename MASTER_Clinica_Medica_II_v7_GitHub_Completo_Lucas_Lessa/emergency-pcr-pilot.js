@@ -285,7 +285,7 @@ function follow(){
  save();refresh("ue-pcr-step-heading");
 }
 function summary(){
- const s=state(),r=getRecommendation(),adaptive=window.PCRAdaptiveUI;
+ const s=state(),adaptive=window.PCRAdaptiveUI;
  const attempted=Object.keys(s.answers).filter(k=>QUESTIONS[k]).length;
  const correct=Object.entries(s.answers).filter(([id,v])=>QUESTIONS[id]&&QUESTIONS[id].a===v).length;
  return `<div class="ue-pcr-summary">
@@ -297,8 +297,8 @@ function summary(){
  <li><strong>AESP/assistolia?</strong> RCP, adrenalina e causas reversíveis; sem choque.</li>
  <li><strong>RCE?</strong> Trate a causa, monitore oxigenação e perfusão e organize cuidados neurológicos.</li>
  </ol></div>
- <div class="ue-pcr-recommend"><span class="ue-pcr-eyebrow">PRÓXIMA ATIVIDADE RECOMENDADA · HEURÍSTICA INICIAL</span><strong>${esc(r.label)}</strong><p>${esc(r.why)}</p><button type="button" class="btn secondary" onclick="EmergencyPCR.follow()">Abrir treino recomendado</button></div>
- <div class="ue-pcr-reviews"><strong>Retenção por revisão distribuída</strong><p>Após concluir, o sistema propõe retestes no dia seguinte e uma semana depois. Nesta versão-piloto, os intervalos são fixos, não um FSRS calibrado.</p>${s.finishedAt&&s.reviews?`<p><strong>D+1:</strong> ${new Date(s.reviews.d1).toLocaleDateString("pt-BR")} · <strong>D+7:</strong> ${new Date(s.reviews.d7).toLocaleDateString("pt-BR")}</p>`:""}
+
+ <div class="ue-pcr-reviews"><strong>Revisão espaçada por competência</strong><p>Cada competência recebe uma data de revisão calculada a partir dos erros, acertos e histórico. Os intervalos são heurísticos nesta fase, não FSRS calibrado.</p><p>O painel abaixo mostra revisões disponíveis e recomenda a próxima questão inédita.</p>
  <div class="ue-pcr-review-actions"><button type="button" class="btn primary" onclick="EmergencyPCR.finish()">${s.finishedAt?"Atualizar conclusão da aula":"Concluir a aula e abrir plano de revisões"}</button><button type="button" class="btn secondary" onclick="EmergencyPCR.restart()">Iniciar novo reteste de 5 min</button></div></div>
  </div>
  ${adaptive?.progress?.()||""}
@@ -325,6 +325,10 @@ function footer(){
 function page(context){
  ctx=context;
  const s=state();
+ if(window.PCRAdaptive){
+   const session=window.PCRAdaptive.state().analytics.active;
+   if(!session||Date.now()-(session.lastAt||session.startedAt)>20*60*1000)window.PCRAdaptive.openSession(s.mode);
+ }
  return `<div id="ue-pcr-pilot" class="ue-pcr-pilot">
  <nav class="ue-pcr-breadcrumb" aria-label="Localização"><button type="button" class="btn secondary" onclick="Emergency.p1.open(null)">← Todas as aulas</button><span>Urgência e Emergência / P1 / PCR</span></nav>
  ${overview()}${nav()}
