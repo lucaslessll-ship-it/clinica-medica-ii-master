@@ -20,7 +20,38 @@ P2: emergência hipertensiva/EAP, SCA/dor torácica, arritmias, glicemias, ácid
 
 O modo prova da P2 sorteia 20 questões **autorais** dentre as 115 disponíveis (8 de P1 e 12 de P2, sendo ao menos uma de cada tema P2), com 90 minutos, correção comentada, registro das IDs sorteadas e possibilidade de retomar uma sessão não encerrada. O histórico guarda o resultado e as respostas de cada sessão. O curso utiliza as chaves `uep1`, `uep2` e `ueExam` no objeto `store.study`, reusando a persistência local e sincronização do Master conforme configuração de conta.
 
-## Aprofundamento de alto rendimento\nCada um dos 23 módulos agora contém 8 seções (184 no total), tabela comparativa clínica, algoritmo sequencial, cinco questões com comentários, caso básico e caso evolutivo, pódio da memória e evocação ativa. São 115 questões autorais e 46 casos clínicos. As respostas previamente gravadas continuam relacionadas às mesmas questões anteriores, pois os novos itens foram acrescentados ao final dos módulos.\n\nA P1 contém 13 temas e a P2 contém 10; a prova P2 é cumulativa. A camada de aprofundamento inclui fisiopatologia aplicada, raciocínio ABCDE, contraindicações, dose quando relevante, reavaliação, alertas de segurança e comparações de diferenciais.\n\n## Imagens e slides
+## Aprofundamento de alto rendimento
+Cada um dos 23 módulos agora contém 8 seções (184 no total), tabela comparativa clínica, algoritmo sequencial, cinco questões com comentários, caso básico e caso evolutivo, pódio da memória e evocação ativa. São 115 questões autorais e 46 casos clínicos. As respostas previamente gravadas continuam relacionadas às mesmas questões anteriores, pois os novos itens foram acrescentados ao final dos módulos.
+
+A P1 contém 13 temas e a P2 contém 10; a prova P2 é cumulativa. A camada de aprofundamento inclui fisiopatologia aplicada, raciocínio ABCDE, contraindicações, dose quando relevante, reavaliação, alertas de segurança e comparações de diferenciais.
+
+## Aula-piloto de PCR — aprendizagem guiada
+A primeira aula da P1 foi convertida em um percurso didático interativo **exclusivo da PCR**, sem alterar as outras 22 aulas. O motor comum `CourseKit.create` ganhou um hook opcional `moduleOverride`; a P1 ativa a experiência apenas quando `module.id==='pcr'`.
+
+**Arquivos**
+- `.../emergency-pcr-pilot.js`: sete etapas (pré-teste, fundamentos, fluxograma de ritmos, cronologia da RCP, caso clínico de cinco decisões, questões originais e síntese), quatro percursos de tempo (2/5/15/30 minutos), feedback e recomendação heurística de próximo treino.
+- `.../emergency-pcr-pilot.css`: visual editorial, responsivo, isolado das demais aulas. Os estados de resposta, etapas abertas e progresso são semanticamente diferentes de domínio clínico.
+- `tests/emergency-pcr-pilot.test.cjs`: verificações de regressão da PCR e preservação dos outros módulos.
+
+**Persistência**
+- Novo estado em `store.study.uep1.pcrPilot`: modo, etapa, respostas, dicas, histórico de tentativas, casos, revisões e conclusão. As questões existentes continuam em `store.study.uep1.quiz`; seus IDs e resultados não foram alterados.
+- O reteste de cinco minutos reinicia as decisões do percurso, mantendo registros de tentativas anteriores, marcação de conclusão e respostas históricas do banco.
+- Na conclusão, o piloto sugere revisões D+1 e D+7. **Não é FSRS nem envia notificações**; é uma regra inicial fixa para teste da experiência.
+- O recomendador seleciona reconhecimento, algoritmo, caso ou questões com regras simples e transparentes. A versão ainda não utiliza conhecimento bayesiano ou modelos proprietários calibrados.
+
+**Conteúdo clínico**
+- Embasado nos algoritmos AHA 2025 BLS, ACLS e pós-parada.
+- O fluxograma separa corretamente presença de pulso, PCR chocável e PCR não chocável; contém traçados SVG *esquemáticos, não diagnósticos*.
+- O PDF `Aula PCR.pdf` do Drive está incorporado por visualizador sob demanda, com link e identificação da fonte. **Não houve extração/republicação de figuras isoladas** do PDF.
+- Nenhuma interface de arguição oral foi adicionada à PCR; o treino usa apenas decisões, questões, caso e memória.
+- Doses e condutas requerem protocolo institucional e supervisão para uso clínico real.
+
+**Verificação inicial**
+- Sintaxe de todos os scripts envolvidos aprovada.
+- Simulação funcional das quatro rotas de tempo, respostas, alternativa de pulso/ritmo, cinco decisões de caso, salvamento das questões originais, marcação de conclusão e reteste sem apagar histórico.
+- Falta executar QA real em navegador com autenticação, persistência entre dispositivos, acessibilidade móvel/tablet e conferência do deploy.
+
+## Imagens e slides
 O curso **não publica cópias de imagens protegidas no repositório**. Quando há fonte identificada, inclui visualização embutida do PDF completo por iframe do próprio Drive e link à fonte original, sujeito a permissões do Google. O único ECG desenhado no código é figura esquemática autoral, explicitamente identificada como tal. A curadoria e inclusão de imagens individuais recortadas, com anotações clínicas e referência por figura, ainda precisa de análise de direitos/atribuição e revisão do conteúdo específico.
 
 Pasta de slides verificada:
@@ -36,7 +67,8 @@ https://drive.google.com/drive/folders/1ZVMHML4TFafZrVq29M57cZwQ8EumFPFD
 - Sintaxe JavaScript aprovada em `app.js`, `course-kit.js`, `emergency-content.js` e `emergency.js`.
 - Renderização das rotas P1/P2 testada em ambiente JS simulado com 23 módulos, 184 seções, 115 questões, 46 casos, fluxogramas, pódio da memória e visualizador de slides.
 - Modo prova testado em três sessões sorteadas: 20 itens únicos por sessão, exatamente 8 da P1 e 12 da P2, correção, histórico e criação de nova sessão.
-- Todas as 23 IDs de módulo foram encontradas e aprofundadas; todos os códigos de referência usados nas aulas possuem registro no dicionário de fontes.\n- Teste de integridade automatizado acrescentado em `tests/emergency-deep.test.cjs`.
+- Todas as 23 IDs de módulo foram encontradas e aprofundadas; todos os códigos de referência usados nas aulas possuem registro no dicionário de fontes.
+- Teste de integridade automatizado acrescentado em `tests/emergency-deep.test.cjs`.
 - **Não executados** nesta etapa: teste completo Vite/Playwright em navegador real, inspeção de PDFs originais por imagem, análise de acessibilidade em dispositivos, validação médica por docente e confirmação de deploy Cloudflare.
 
 ## Próximas etapas recomendadas para homologação
