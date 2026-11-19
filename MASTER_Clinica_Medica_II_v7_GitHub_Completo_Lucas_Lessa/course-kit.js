@@ -85,7 +85,7 @@ function create(cfg){
   function open(i){current=null;view=i===null?null:Math.max(0,Math.min(MODULES.length-1,Number(i)||0));render();focusTop();}
   function bank(){current=null;view='bank';render();focusTop();}
   function caseOpen(i){current=Math.max(0,Math.min(CASES.length-1,Number(i)||0));render();focusTop();}
-  function answer(mi,qi,oi){const m=MODULES[mi];if(!m||!m.quiz[qi])return;st().quiz[m.id+'_'+qi]=oi;window.QNav?.registrar(key,m.id+'_'+qi,oi===m.quiz[qi].a,{tid:m.id,tema:m.title,q:m.quiz[qi].q,resource:key+':'+m.id+':'+qi});stateSave();const el=document.getElementById(`${key}q-${mi}-${qi}`);if(el)el.outerHTML=quizItem(mi,qi);}
+  function answer(mi,qi,oi){const m=MODULES[mi];if(!m||!m.quiz[qi])return;const qid=m.id+'_'+qi;const previous=st().quiz[qid];st().quiz[qid]=oi;window.QNav?.registrar(key,qid,oi===m.quiz[qi].a,{tid:m.id,tema:m.title,q:m.quiz[qi].q,resource:key+':'+m.id+':'+qi});if(typeof cfg.onAnswer==='function'&&!Number.isInteger(previous)){cfg.onAnswer({module:m,index:mi,questionIndex:qi,option:oi,correct:oi===m.quiz[qi].a});}stateSave();const el=document.getElementById(`${key}q-${mi}-${qi}`);if(el)el.outerHTML=quizItem(mi,qi);}
   function complete(id,value){st().done[id]=!!value;if(value)window.MasterActivity?.track('lesson_complete',key+':'+id);stateSave();}
   function markSeen(id,value){st().seen[id]=!!value;if(value)window.MasterActivity?.track('case_complete',key+':'+id);stateSave();}
   function searchItems(){
