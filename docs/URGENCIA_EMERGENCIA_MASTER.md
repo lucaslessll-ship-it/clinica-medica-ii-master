@@ -77,3 +77,10 @@ https://drive.google.com/drive/folders/1ZVMHML4TFafZrVq29M57cZwQ8EumFPFD
 3. Curadoria de imagens individuais (figura/página, licença, referência, anotação e descrição alternativa).
 4. Evoluir as questões atuais para calibração N1/N2/N3 e novas estações em role-playing, com métricas de domínio.
 5. Testes de regressão em Clínica Médica e Cirurgia e auditoria de performance antes de declarar produção validada.
+
+## Curadoria visual e neutralidade editorial (19/11/2026)
+- Os **23 módulos** não renderizam mais PDFs integrais, iframes do Drive, blocos “Imagens da aula original” nem links diretos para os slides completos. Os nomes de docentes e instituições não são exibidos na interface de Urgência e Emergência.
+- Os PDFs foram **consultados como material de referência**; o arquivo-fonte continua identificado nos dados internos, mas não aparece na aula. As referências clínicas verificáveis permanecem disponíveis.
+- Diagramas **autorais**, derivados da seleção de tópicos pertinentes (e não recortes de imagens originais), foram acrescentados às aulas de insuficiência respiratória aguda, AVC, sepse, choque e trauma. A PCR permanece com seu traçado didático interativo autoral.
+- **Ainda não foram extraídas figuras gráficas específicas dos PDFs** para incorporação como arquivos de imagem. Essa etapa depende de extração, revisão de qualidade visual, checagem das marcações e atribuição apropriada por figura. Não declarar essa parte como concluída.
+- Verificação em motor JS simulado: 23 módulos/115 questões, ausência de iframe/preview nas 23 aulas, ausência de marcas institucionais na renderização, e nenhuma referência de fonte ausente.
