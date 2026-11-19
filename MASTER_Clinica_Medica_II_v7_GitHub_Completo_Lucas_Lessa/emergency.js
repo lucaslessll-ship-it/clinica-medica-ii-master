@@ -69,7 +69,7 @@ const p1=CourseKit.create({
  title:"Urgência e Emergência — P1",heading:"Fundamentos e ressuscitação · P1",lead:"Reconhecimento de emergências, ABCDE, suporte vital, sepse, trauma e falência orgânica.",
  notice:"Revisão cumulativa: este conteúdo também pode ser exigido na P2.",
  bankTitle:"Casos clínicos P1",bankHeading:"Primeiros minutos que mudam o desfecho",bankLead:"Cenários de atendimento inicial para conduzir a equipe.",MODULES:P1,CASES:P1.flatMap(x=>[x.case,...(x.moreCases||[])]),REFS,
- extraHome:()=>'<p class="ue-shortcut"><button type="button" class="btn secondary" onclick="navigate(\'emergency-p2\')">Seguir para P2 →</button></p>'
+ extraHome:()=>'<div class="ue-pcr-pilot-promo"><div><span class="kicker">NOVA EXPERIÊNCIA DE APRENDIZAGEM</span><strong>PCR · primeira aula interativa</strong><p>Escolha 2, 5, 15 ou 30 minutos. Decida, descubra o algoritmo e conduza um caso progressivo.</p></div><button class="btn primary" type="button" onclick="Emergency.p1.open(0)">Iniciar PCR →</button></div><p class="ue-shortcut"><button type="button" class="btn secondary" onclick="navigate(\'emergency-p2\')">Seguir para P2 →</button></p>'
 });
 const p2=CourseKit.create({
  ...base,key:"uep2",global:"Emergency.p2",route:"emergency-p2",
@@ -160,6 +160,7 @@ function landing(){
  return '<section class="emergency-page"><header class="emergency-hero"><div class="emergency-hero-icon">'+(window.StudyIcons?StudyIcons.emergency():'✚')+'</div><div><span class="kicker">8º PERÍODO · 2026.2</span><h1>Urgência e Emergência</h1><p>Reconhecer a emergência, decidir em sequência e reavaliar. Curso nativo do Estudo Master.</p></div></header>'+
  '<div class="info-notice"><strong>Base oficial:</strong> plano de ensino da FMP/UNIFASE 2026.2. A P2 é cumulativa e inclui 20 questões de múltipla escolha; as questões abaixo são autorais e os slides são materiais da disciplina, não provas oficiais.</div>'+
  '<div class="ue-stage-grid">'+tile('P1',P1,'uep1','Ressuscitação, síndromes críticas e trauma')+tile('P2',P2,'uep2','Decisões cardiovasculares, metabólicas e toxicológicas')+'</div>'+
+ '<div class="ue-pcr-pilot-promo"><div><span class="kicker">AULA-PILOTO DISPONÍVEL</span><strong>Comece pela PCR interativa</strong><p>Questão inicial, fluxograma de ritmos, RCP, caso evolutivo e revisão adaptada ao seu desempenho.</p></div><button class="btn primary" type="button" onclick="navigate(\'emergency-p1\');Emergency.p1.open(0)">Experimentar a aula →</button></div>'+
  '<section class="pocus-sec"><h2>Como estudar em alto rendimento</h2><div class="ue-flow"><div class="ue-flow-step"><span class="ue-flow-n">1</span><strong>Pré-teste clínico</strong><span>O que mata primeiro?</span></div><div class="ue-flow-step"><span class="ue-flow-n">2</span><strong>Algoritmo de decisão</strong><span>Se X, faço Y.</span></div><div class="ue-flow-step"><span class="ue-flow-n">3</span><strong>Caso e questões</strong><span>Decidir antes de revelar.</span></div><div class="ue-flow-step"><span class="ue-flow-n">4</span><strong>Revisão D+1/D+7</strong><span>Revisar erros e reavaliar domínio.</span></div></div></section></section>';
 }
 function page(){
