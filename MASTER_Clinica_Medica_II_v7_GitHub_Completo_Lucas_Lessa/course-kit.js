@@ -32,6 +32,10 @@ function create(cfg){
   const refItem=r=>REFS[r].u?`<li><a href="${REFS[r].u}" target="_blank" rel="noopener">${REFS[r].t}</a></li>`:`<li>${REFS[r].t}</li>`;
   function moduleView(mi){
     const m=MODULES[mi],done=!!st().done[m.id];window.MasterActivity?.setContext(key+':'+m.id);
+    if(typeof cfg.moduleOverride==='function'){
+      const custom=cfg.moduleOverride({module:m,index:mi,done,global:G,courseKey:key,quizItem:qi=>quizItem(mi,qi),refs:m.refs.map(refItem).join(''),state:st()});
+      if(typeof custom==='string')return custom;
+    }
     return `<nav class="pocus-crumb" aria-label="${cfg.title}"><button type="button" class="btn" onclick="${G}.open(null)">← Todos os módulos</button><span>Módulo ${mi+1} de ${MODULES.length}</span></nav>
     <article class="card pad pocus-module"><span class="kicker">${m.layer}</span><h1 class="pocus-title">${m.title}</h1><p class="pocus-lead">${m.summary}</p>
     ${mi?`<p class="info-notice">Este módulo usa o que foi visto em "${MODULES[mi-1].title}". Se algo parecer novo, volte um passo.</p>`:''}
