@@ -1495,3 +1495,380 @@ window.EMERGENCY_CONTENT.push(...[
   "slide": "1NsJly9D6nDyJ3YAHLS2otXhsqIiHFFks"
  }
 ]);
+
+window.EMERGENCY_CONTENT.push(...[
+ {
+  "id": "glicemia",
+  "stage": "P2",
+  "title": "Emergências glicêmicas",
+  "summary": "Hipoglicemia, cetoacidose diabética e estado hiperosmolar.",
+  "goals": [
+   "Reconhecer hipoglicemia e tratá-la imediatamente.",
+   "Diferenciar CAD e EHH.",
+   "Priorizar potássio, fluidos e insulina com segurança."
+  ],
+  "sections": [
+   {
+    "h": "Hipoglicemia",
+    "p": [
+     "Sudorese, tremor, confusão, convulsões e coma em paciente com risco exigem glicemia capilar imediata. Se não pode ingerir com segurança, tratar com glicose IV; glucagon pode ser usado quando acesso não disponível. Reavaliar glicemia e identificar causa/risco de recorrência."
+    ]
+   },
+   {
+    "h": "CAD x EHH",
+    "p": [
+     "CAD: cetonemia importante (beta-hidroxibutirato), acidose metabólica e glicemia elevada ou história conhecida de diabetes; uso de iSGLT2 pode gerar CAD euglicêmica. EHH: hiperglicemia muito intensa, hiperosmolalidade e desidratação, com cetose/acidose ausentes ou menos pronunciadas. Quadros mistos existem."
+    ]
+   },
+   {
+    "h": "Tratamento em sequência",
+    "p": [
+     "Repor fluidos conforme estado e comorbidades, medir eletrólitos e corrigir potássio ANTES da insulina se K perigosamente baixo, monitorar resposta e tratar gatilho. Insulina IV deve seguir protocolo e reavaliações frequentes. Quedas rápidas de osmolaridade são perigosas, sobretudo em EHH."
+    ]
+   }
+  ],
+  "flow": [
+   [
+    "Rebaixamento ou sintomas neuroglicopênicos",
+    "Medir HGT e tratar hipoglicemia."
+   ],
+   [
+    "Cetonas + acidose",
+    "Considerar CAD, inclusive euglicêmica."
+   ],
+   [
+    "Osmolaridade alta + desidratação",
+    "Considerar EHH."
+   ],
+   [
+    "Antes da insulina IV",
+    "Checar e corrigir K quando indicado."
+   ]
+  ],
+  "pitfalls": [
+   "Não iniciar insulina com hipocalemia grave sem correção.",
+   "Glicemia pouco elevada não exclui CAD com iSGLT2.",
+   "Não corrigir hiperosmolaridade abruptamente."
+  ],
+  "quiz": [
+   {
+    "q": "CAD, K 2,9 mEq/L: próximo passo seguro?",
+    "o": [
+     "Corrigir potássio antes da insulina",
+     "Insulina em alta dose imediatamente",
+     "Bicarbonato rotineiro em todos",
+     "Suspender monitorização"
+    ],
+    "a": 0,
+    "why": "Insulina pode agravar hipocalemia grave e precipitar arritmias."
+   },
+   {
+    "q": "CAD pode ocorrer com glicemia relativamente baixa em uso de:",
+    "o": [
+     "Inibidor de SGLT2",
+     "Estatina",
+     "Antiácido",
+     "Vitamina C"
+    ],
+    "a": 0,
+    "why": "CAD euglicêmica é reconhecida em usuários de iSGLT2."
+   }
+  ],
+  "case": {
+   "id": "case-glicemia",
+   "focus": "Emergências glicêmicas",
+   "stem": "Paciente com diabetes em iSGLT2, vômitos, pH 7,18, beta-hidroxibutirato elevado e glicemia 185 mg/dL.",
+   "ask": "Qual síndrome e primeira sequência?",
+   "answer": [
+    "Reconhecer CAD euglicêmica; ABCDE, volume/perfusão e pesquisa de gatilho.",
+    "Dosar K, eletrólitos, função renal e osmolaridade; corrigir hipocalemia grave antes de insulina.",
+    "Iniciar protocolo monitorado de CAD conforme status volêmico e K, acompanhar cetonemia, eletrólitos e glicemia."
+   ]
+  },
+  "refs": [
+   "ada"
+  ],
+  "slide": null
+ },
+ {
+  "id": "acidobase",
+  "stage": "P2",
+  "title": "Distúrbios ácido-base e gasometria",
+  "summary": "Passo a passo de pH, PaCO₂, HCO₃⁻, compensação e ânion gap.",
+  "goals": [
+   "Identificar distúrbio primário.",
+   "Calcular compensação esperada.",
+   "Reconhecer distúrbios mistos e causas urgentes."
+  ],
+  "sections": [
+   {
+    "h": "Sequência interpretativa",
+    "p": [
+     "1) Verificar pH: acidemia ou alcalemia. 2) Comparar PaCO₂ e HCO₃⁻: componente respiratório ou metabólico primário. 3) Calcular compensação para detectar distúrbio misto. 4) Na acidose metabólica, calcular ânion gap, considerar albumina e avaliar lactato, cetonas, rim e intoxicações."
+    ]
+   },
+   {
+    "h": "Equações úteis",
+    "p": [
+     "Ânion gap sem potássio = Na − (Cl + HCO₃), normal depende do laboratório e albumina. Na acidose metabólica, fórmula de Winter: PaCO₂ esperada ≈ 1,5 × HCO₃ + 8 (±2). PaCO₂ medida acima da esperada sugere acidose respiratória adicional; abaixo sugere alcalose respiratória associada."
+    ]
+   },
+   {
+    "h": "Decisões",
+    "p": [
+     "Gasometria é ferramenta, não diagnóstico isolado. Acidose láctica exige buscar hipoperfusão; cetose exige investigar CAD; retenção aguda de CO₂ pode demandar suporte ventilatório. Use valores coerentes com contexto e compare com séries para avaliar resposta."
+    ]
+   }
+  ],
+  "flow": [
+   [
+    "pH alterado",
+    "Classificar acidemia/alcalemia."
+   ],
+   [
+    "PaCO₂/HCO₃",
+    "Definir componente primário."
+   ],
+   [
+    "Compensação",
+    "Aplicar regra adequada e buscar distúrbio misto."
+   ],
+   [
+    "Acidose metabólica",
+    "Calcular AG e investigar lactato/cetonas/renal/tóxicos."
+   ]
+  ],
+  "pitfalls": [
+   "Não usar fórmula de Winter em alcalose metabólica.",
+   "Não interpretar AG sem considerar albumina.",
+   "Não tratar apenas o número de pH sem buscar causa."
+  ],
+  "quiz": [
+   {
+    "q": "pH 7,20, HCO₃ 10, PaCO₂ 23: qual processo predomina?",
+    "o": [
+     "Acidose metabólica",
+     "Alcalose metabólica",
+     "Alcalose respiratória isolada",
+     "Normal"
+    ],
+    "a": 0,
+    "why": "HCO₃ reduzido e acidemia indicam acidose metabólica; avaliar compensação."
+   },
+   {
+    "q": "Na acidose metabólica, a fórmula de Winter estima:",
+    "o": [
+     "PaCO₂ compensatória",
+     "Sódio corrigido",
+     "Lactato",
+     "pH urinário"
+    ],
+    "a": 0,
+    "why": "PaCO₂ esperada ≈ 1,5×HCO₃ + 8 ±2."
+   }
+  ],
+  "case": {
+   "id": "case-acidobase",
+   "focus": "Distúrbios ácido-base e gasometria",
+   "stem": "Paciente séptico com pH 7,19, HCO₃ 12, PaCO₂ 26, Na 140, Cl 101 e lactato 6.",
+   "ask": "Calcule AG e explique mecanismo e compensação.",
+   "answer": [
+    "AG = 140−(101+12)=27, elevado; investigar acidose láctica da hipoperfusão.",
+    "Winter: PaCO₂ esperada ≈26±2, compatível com compensação respiratória.",
+    "Tratar sepse/hipoperfusão e reavaliar gasometria, lactato e perfusão."
+   ]
+  },
+  "refs": [
+   "general",
+   "slideAcido"
+  ],
+  "slide": "1J3CGf_W_-KXdeXqU1ob9mrWk8Sfh6ld-"
+ },
+ {
+  "id": "eletrolitos",
+  "stage": "P2",
+  "title": "Distúrbios eletrolíticos graves",
+  "summary": "Hipercalemia, hipocalemia, sódio e magnésio em risco de arritmia ou convulsão.",
+  "goals": [
+   "Reconhecer alterações de ECG da hipercalemia.",
+   "Priorizar proteção miocárdica quando indicada.",
+   "Corrigir sódio com velocidade segura."
+  ],
+  "sections": [
+   {
+    "h": "Hipercalemia: coração primeiro",
+    "p": [
+     "K elevado pode produzir ondas T apiculadas, PR prolongado, QRS largo e arritmias, mas ECG normal não exclui gravidade. Instabilidade ou alterações ECG exigem estabilização de membrana com cálcio IV sob monitorização, depois deslocamento de K com insulina/glicose e outras medidas apropriadas; remoção definitiva via renal ou diálise conforme indicação."
+    ]
+   },
+   {
+    "h": "Hipocalemia e magnésio",
+    "p": [
+     "Hipocalemia pode causar fraqueza, alterações de repolarização, ondas U e arritmias; corrigir K avaliando função renal e magnésio, evitando reposição IV excessivamente rápida. Hipomagnesemia pode perpetuar hipocalemia e arritmias, e magnésio é tratamento de torsades de pointes."
+    ]
+   },
+   {
+    "h": "Sódio e neurologia",
+    "p": [
+     "Hiponatremia gravemente sintomática com convulsão/encefalopatia requer salina hipertônica por esquema controlado e monitorização seriada. Corrigir hiponatremia crônica excessivamente rápido pode causar síndrome de desmielinização osmótica. Hipernatremia requer avaliar tempo de instalação, déficit hídrico e reposição gradual."
+    ]
+   }
+  ],
+  "flow": [
+   [
+    "K alto + ECG alterado",
+    "Cálcio IV para proteção miocárdica."
+   ],
+   [
+    "Após estabilizar membrana",
+    "Deslocar potássio e planejar eliminação."
+   ],
+   [
+    "Na baixo + convulsões",
+    "Salina hipertônica com controle e monitorização."
+   ],
+   [
+    "Qualquer correção",
+    "Repetir eletrólitos e avaliar ECG/perfusão."
+   ]
+  ],
+  "pitfalls": [
+   "Não confiar em ECG normal para excluir hipercalemia.",
+   "Não corrigir hiponatremia crônica rapidamente.",
+   "Não dar insulina sem monitorar glicemia."
+  ],
+  "quiz": [
+   {
+    "q": "K 7,2 e QRS alargado: prioridade:",
+    "o": [
+     "Cálcio IV monitorizado",
+     "Aguardar diálise sem estabilizar",
+     "Apenas dieta",
+     "Restrição hídrica"
+    ],
+    "a": 0,
+    "why": "O cálcio reduz risco elétrico enquanto outras medidas removem potássio."
+   },
+   {
+    "q": "Hiponatremia grave com convulsão: tratamento inicial apropriado:",
+    "o": [
+     "Salina hipertônica monitorizada",
+     "Água livre",
+     "Insulina",
+     "Furosemida sempre isolada"
+    ],
+    "a": 0,
+    "why": "Neurossintomas graves exigem correção controlada com solução hipertônica."
+   }
+  ],
+  "case": {
+   "id": "case-eletrolitos",
+   "focus": "Distúrbios eletrolíticos graves",
+   "stem": "Paciente com IRC, K 7,0 mEq/L, QRS alargado e fraqueza.",
+   "ask": "Ordene proteção do coração, deslocamento e remoção de K.",
+   "answer": [
+    "Monitorização ECG contínua e cálcio IV de acordo com protocolo.",
+    "Insulina/glicose e medidas complementares de deslocamento conforme indicação.",
+    "Remover K (diurese/quelantes/diálise conforme cenário), reavaliar glicemia e K em intervalos curtos."
+   ]
+  },
+  "refs": [
+   "general",
+   "slideAcido"
+  ],
+  "slide": "1J3CGf_W_-KXdeXqU1ob9mrWk8Sfh6ld-"
+ },
+ {
+  "id": "tireoide",
+  "stage": "P2",
+  "title": "Emergências tireoidianas",
+  "summary": "Tempestade tireotóxica e coma mixedematoso: diagnóstico clínico e tratamento.",
+  "goals": [
+   "Distinguir hipertermia agitada de hipotermia com coma.",
+   "Iniciar suporte e terapia específica.",
+   "Identificar gatilhos e evitar atrasos."
+  ],
+  "sections": [
+   {
+    "h": "Tempestade tireotóxica",
+    "p": [
+     "Febre, taquicardia intensa, arritmia, agitação/delirium, sintomas gastrointestinais e insuficiência cardíaca podem representar tempestade em paciente hipertireóideo. O diagnóstico é sobretudo clínico; não aguarde função tireoidiana para iniciar suporte, correção de gatilho e terapia de controle hormonal."
+    ]
+   },
+   {
+    "h": "Tratamento da tempestade",
+    "p": [
+     "Abordagem multimodal: controle adrenérgico conforme hemodinâmica (betabloqueador com cautela em IC/choque), antitireoidiano, iodeto após o antitireoidiano conforme protocolo, glicocorticoide, suporte térmico e tratamento do precipitante. Encaminhar UTI e endocrinologia."
+    ]
+   },
+   {
+    "h": "Coma mixedematoso",
+    "p": [
+     "Alteração de sensório, hipotermia, bradicardia, hipoventilação, hiponatremia e hipoglicemia sugerem hipotireoidismo extremo descompensado. Proteger via aérea, aquecimento cuidadoso e suporte hemodinâmico; hormônio tireoidiano IV e glicocorticoide empírico antes ou junto, após avaliação apropriada, conforme especialista."
+    ]
+   }
+  ],
+  "flow": [
+   [
+    "Febre + taquiarritmia + hipertireoidismo",
+    "Suspeitar tempestade tireotóxica."
+   ],
+   [
+    "Tempestade",
+    "Suporte + terapia hormonal multimodal e gatilho."
+   ],
+   [
+    "Hipotermia + coma/bradicardia",
+    "Suspeitar coma mixedematoso e proteger ventilação."
+   ],
+   [
+    "Coma mixedematoso",
+    "Glicocorticoide de estresse e reposição tireoidiana conforme protocolo."
+   ]
+  ],
+  "pitfalls": [
+   "Não usar betabloqueador sem avaliar choque/IC.",
+   "Não dar iodeto antes de tionamida na tempestade, em esquema convencional.",
+   "Não esquecer insuficiência adrenal associada no coma mixedematoso."
+  ],
+  "quiz": [
+   {
+    "q": "Hipotermia, bradicardia, hipoventilação e coma: principal hipótese?",
+    "o": [
+     "Coma mixedematoso",
+     "Tempestade tireotóxica",
+     "Crise asmática",
+     "SCA típica"
+    ],
+    "a": 0,
+    "why": "O conjunto é compatível com hipotireoidismo extremo descompensado."
+   },
+   {
+    "q": "Na tempestade tireotóxica, o iodeto convencionalmente é dado:",
+    "o": [
+     "Após antitireoidiano",
+     "Antes de qualquer bloqueio hormonal",
+     "Sem suporte hemodinâmico",
+     "Em todos apenas por via oral domiciliar"
+    ],
+    "a": 0,
+    "why": "A sequência evita fornecer substrato hormonal antes de inibir síntese."
+   }
+  ],
+  "case": {
+   "id": "case-tireoide",
+   "focus": "Emergências tireoidianas",
+   "stem": "Mulher com hipotireoidismo, hipotermia 33 °C, bradicardia, hipoventilação e rebaixamento.",
+   "ask": "Qual suspeita, suportes e precauções?",
+   "answer": [
+    "Suspeitar coma mixedematoso e estabilizar ABCDE/ventilação, temperatura e hemodinâmica.",
+    "Solicitar avaliação endócrina/UTI, iniciar reposição tireoidiana IV e glicocorticoide conforme protocolo.",
+    "Corrigir distúrbios e investigar desencadeante, como infecção."
+   ]
+  },
+  "refs": [
+   "general"
+  ],
+  "slide": null
+ }
+]);
