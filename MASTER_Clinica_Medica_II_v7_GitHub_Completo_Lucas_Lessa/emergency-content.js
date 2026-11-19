@@ -1872,3 +1872,286 @@ window.EMERGENCY_CONTENT.push(...[
   "slide": null
  }
 ]);
+
+window.EMERGENCY_CONTENT.push(...[
+ {
+  "id": "intox",
+  "stage": "P2",
+  "title": "Intoxicações exógenas",
+  "summary": "Toxidromes, suporte vital, antídotos e descontaminação seletiva.",
+  "goals": [
+   "Reconhecer toxidromes.",
+   "Estabilizar sem atrasar suporte.",
+   "Selecionar antídotos com segurança."
+  ],
+  "sections": [
+   {
+    "h": "Abordagem da intoxicação",
+    "p": [
+     "ABCDE, glicemia, ECG, temperatura, oximetria, gasometria e eletrólitos conforme suspeita. Coletar história de agente, quantidade, via, horário, comorbidades e embalagens; contatar Centro de Informações Toxicológicas. Considerar múltiplas substâncias e riscos para equipe."
+    ]
+   },
+   {
+    "h": "Toxidromes",
+    "p": [
+     "Opioide: depressão ventilatória, miose frequentemente e rebaixamento; priorizar ventilação e naloxona conforme contexto. Colinérgico (organofosforados): broncorreia, salivação, miose, diarreia e bradicardia, requer descontaminação segura e antídotos dirigidos. Simpaticomimético: agitação, hipertensão, hipertermia e taquicardia; tratar complicações sob monitorização."
+    ]
+   },
+   {
+    "h": "Descontaminação e antídotos",
+    "p": [
+     "Não induzir vômitos; carvão ativado e lavagem gástrica não são rotinas, pois podem causar aspiração/complicações e dependem de agente, janela e segurança da via aérea. Paracetamol em dose tóxica exige avaliação de horário/dose, níveis e N-acetilcisteína conforme nomograma/protocolo. Tratamento é também suporte e controle de consequências."
+    ]
+   }
+  ],
+  "flow": [
+   [
+    "Suspeita de intoxicação",
+    "ABCDE, glicemia, ECG, horário/agente e contato toxicológico."
+   ],
+   [
+    "Depressão ventilatória por opioide",
+    "Ventilar e considerar naloxona."
+   ],
+   [
+    "Toxidrome colinérgica",
+    "Proteção da equipe, suporte e antídoto apropriado."
+   ],
+   [
+    "Descontaminação",
+    "Somente se indicada, após avaliar riscos e via aérea."
+   ]
+  ],
+  "pitfalls": [
+   "Não induzir vômito.",
+   "Não presumir que naloxona substitui ventilação.",
+   "Não usar carvão de rotina em paciente sem proteção da via aérea."
+  ],
+  "quiz": [
+   {
+    "q": "Paciente com bradipneia, miose e rebaixamento sugere:",
+    "o": [
+     "Intoxicação opioide",
+     "Tempestade tireoidiana",
+     "Dengue leve",
+     "Reação alérgica cutânea"
+    ],
+    "a": 0,
+    "why": "O toxidrome opioide frequentemente causa depressão respiratória e miose."
+   },
+   {
+    "q": "Carvão ativado em intoxicação é:",
+    "o": [
+     "Considerado apenas em situações selecionadas",
+     "Universal e sempre seguro",
+     "Indicado para qualquer cáustico",
+     "Substituto da avaliação de via aérea"
+    ],
+    "a": 0,
+    "why": "Indicação depende de agente, tempo e riscos."
+   }
+  ],
+  "case": {
+   "id": "case-intox",
+   "focus": "Intoxicações exógenas",
+   "stem": "Homem encontrado com FR 5/min, pupilas mióticas, SpO₂ 79% e suspeita de overdose opioide.",
+   "ask": "Qual a primeira sequência?",
+   "answer": [
+    "Garantir ventilação, oxigenação e suporte de via aérea; monitorizar.",
+    "Considerar naloxona conforme quadro e protocolo, sem esperar resposta para ventilar.",
+    "Observar recorrência da depressão respiratória e investigar coingestões."
+   ]
+  },
+  "refs": [
+   "ahaSpecial",
+   "general"
+  ],
+  "slide": null
+ },
+ {
+  "id": "catastrofes",
+  "stage": "P2",
+  "title": "Atendimento a múltiplas vítimas e catástrofes",
+  "summary": "Cena segura, comando, triagem e alocação de recursos.",
+  "goals": [
+   "Garantir segurança da cena.",
+   "Aplicar triagem de múltiplas vítimas.",
+   "Comunicar e reavaliar prioridades."
+  ],
+  "sections": [
+   {
+    "h": "Organização da resposta",
+    "p": [
+     "Antes de cuidar da primeira vítima, verificar riscos, descontaminação, EPI e cadeia de comando; acionar recursos, delimitar zonas e estabelecer comunicação. Uma catástrofe altera disponibilidade de pessoal, equipamento e transporte."
+    ]
+   },
+   {
+    "h": "Triagem e destino",
+    "p": [
+     "Sistemas como START organizam vítimas por capacidade de deambular, respiração, perfusão e comando mental. Triagem não é diagnóstico definitivo e suas categorias dependem do protocolo local, tipo de incidente e recursos; a mesma vítima pode mudar de categoria."
+    ]
+   },
+   {
+    "h": "Ética e reavaliação",
+    "p": [
+     "Priorize medidas rápidas salvadoras compatíveis com capacidade da equipe, documente identificação/categoria e reavalie após movimentação ou alteração clínica. Comunicação fechada, segurança do socorrista e registro minimizam erros em ambiente de alta pressão."
+    ]
+   }
+  ],
+  "flow": [
+   [
+    "Chegada à cena",
+    "Segurança, EPI, comando e acionamento de apoio."
+   ],
+   [
+    "Muitas vítimas",
+    "Triagem rápida com método oficial/local."
+   ],
+   [
+    "Encaminhamento",
+    "Áreas de tratamento, transporte e rastreio."
+   ],
+   [
+    "Reavaliação",
+    "Categorias mudam com estado e recursos."
+   ]
+  ],
+  "pitfalls": [
+   "Cuidar de uma vítima sem garantir segurança da cena.",
+   "Tratar triagem como classificação definitiva.",
+   "Não documentar identificação/transferência."
+  ],
+  "quiz": [
+   {
+    "q": "Em evento com múltiplas vítimas, a primeira prioridade da equipe é:",
+    "o": [
+     "Segurança da cena e organização do comando",
+     "Atender quem grita mais alto sem triagem",
+     "Fotografar o evento",
+     "Preencher relatório final antes de avaliar"
+    ],
+    "a": 0,
+    "why": "A segurança e o comando antecedem atendimento organizado."
+   },
+   {
+    "q": "A triagem de múltiplas vítimas é:",
+    "o": [
+     "Dinâmica e reavaliável",
+     "Diagnóstico definitivo",
+     "Independentemente dos recursos",
+     "Substituta de toda assistência"
+    ],
+    "a": 0,
+    "why": "A categoria se altera com a evolução e capacidade de resposta."
+   }
+  ],
+  "case": {
+   "id": "case-catastrofes",
+   "focus": "Atendimento a múltiplas vítimas e catástrofes",
+   "stem": "Após colisão com ônibus, há 18 vítimas, fumaça em veículo e apenas uma equipe inicial.",
+   "ask": "Como conduzir os primeiros minutos?",
+   "answer": [
+    "Afastar riscos e acionar recursos; estabelecer comando e perímetro seguro.",
+    "Triagem rápida segundo protocolo local, priorizando intervenções que salvam vidas dentro dos recursos.",
+    "Organizar zonas, transporte, rastreabilidade e reavaliação."
+   ]
+  },
+  "refs": [
+   "general"
+  ],
+  "slide": null
+ },
+ {
+  "id": "paliativos",
+  "stage": "P2",
+  "title": "Cuidados paliativos em situações de emergência",
+  "summary": "Proporcionalidade terapêutica, sintomas e comunicação em crise.",
+  "goals": [
+   "Reconhecer necessidade de cuidado paliativo simultâneo.",
+   "Controlar sofrimento sem abandonar tratamento reversível.",
+   "Comunicar decisões e limites de intervenção."
+  ],
+  "sections": [
+   {
+    "h": "Cuidado paliativo não é ausência de cuidado",
+    "p": [
+     "Pacientes com doença avançada podem apresentar dispneia, dor, delirium, hemorragia ou crise de ansiedade. Avalie causas reversíveis e trate quando alinhado a objetivos de cuidado; cuidados paliativos podem coexistir com medidas modificadoras de doença."
+    ]
+   },
+   {
+    "h": "Sintomas e proporcionalidade",
+    "p": [
+     "Controle de dor e dispneia exige avaliação, prescrição segura e monitorização; opioides podem ser usados em contextos selecionados por equipe habilitada, com ajuste de doses e avaliação renal. Delirium: avaliar retenção, infecção, hipóxia, fármacos e ambiente. Evite procedimentos invasivos que não ofereçam benefício proporcional aos objetivos estabelecidos."
+    ]
+   },
+   {
+    "h": "Conversas difíceis e ética",
+    "p": [
+     "Investigar capacidade, preferências do paciente, representante e diretivas antecipadas quando existentes. Explicar prognóstico e opções em linguagem clara, compartilhar decisões, documentar limites terapêuticos e fornecer plano de conforto e suporte à família. Não presumir que ordem de não reanimar equivale a não tratar sintomas ou infecções."
+    ]
+   }
+  ],
+  "flow": [
+   [
+    "Paciente grave com doença avançada",
+    "Avaliar sintomas, causas reversíveis e objetivos."
+   ],
+   [
+    "Sofrimento intenso",
+    "Alívio proporcional e monitorizado."
+   ],
+   [
+    "Decisão complexa",
+    "Comunicação com paciente/representante e equipe."
+   ],
+   [
+    "Plano",
+    "Documentar limites, escalonamento e continuidade de conforto."
+   ]
+  ],
+  "pitfalls": [
+   "Confundir paliativo com abandono.",
+   "Não tratar sintomas por haver limitação de RCP.",
+   "Impor decisões sem verificar desejos/capacidade."
+  ],
+  "quiz": [
+   {
+    "q": "Cuidados paliativos podem coexistir com:",
+    "o": [
+     "Tratamento de condição reversível",
+     "Abandono do paciente",
+     "Ausência obrigatória de monitorização",
+     "Proibição de analgesia"
+    ],
+    "a": 0,
+    "why": "O foco é qualidade de vida e proporcionalidade, com tratamento conforme objetivos."
+   },
+   {
+    "q": "Uma ordem de não reanimar significa:",
+    "o": [
+     "Limite específico de reanimação, não abandono de outros cuidados",
+     "Proibir analgesia",
+     "Negar oxigênio em todos os casos",
+     "Alta obrigatória"
+    ],
+    "a": 0,
+    "why": "Limites devem ser interpretados de forma específica e documentada."
+   }
+  ],
+  "case": {
+   "id": "case-paliativos",
+   "focus": "Cuidados paliativos em situações de emergência",
+   "stem": "Paciente com câncer avançado, dispneia intensa, familiar pede 'fazer tudo'; paciente já expressou preferência por conforto.",
+   "ask": "Como abordar comunicação e sintoma?",
+   "answer": [
+    "Tratar sofrimento e avaliar causas potencialmente reversíveis de acordo com valores do paciente.",
+    "Verificar capacidade, diretivas, conversar com familiar e equipe e alinhar limites.",
+    "Documentar plano proporcional e manter cuidado ativo e conforto."
+   ]
+  },
+  "refs": [
+   "general"
+  ],
+  "slide": null
+ }
+]);
