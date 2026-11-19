@@ -11,7 +11,7 @@ const REFS={
  ahaStroke:{t:"AHA/ASA — Early Management of Acute Ischemic Stroke, 2026",u:"https://professional.heart.org/en/science-news/2026-guideline-for-the-early-management-of-patients-with-acute-ischemic-stroke"},
  acs2025:{t:"ACC/AHA — Síndromes coronarianas agudas, 2025",u:"https://professional.heart.org/en/science-news/2025-guideline-for-the-management-of-patients-with-acute-coronary-syndromes/top-things-to-know"},
  ssc:{t:"Surviving Sepsis Campaign — Diretriz de Sepse e Choque Séptico, 2026",u:"https://www.sccm.org/clinical-resources/guidelines/guidelines/surviving-sepsis-campaign-international-guidelines-for-management-of-sepsis-and-septic-shock-2026"},
- gina:{t:"GINA — Summary Guide, 2026",u:"https://ginasthma.org/2026-gina-summary-guide/"},
+ gina:{t:"GINA — Summary Guide, 2026",u:"https://ginasthma.org/wp-content/uploads/2026/07/GINA-Summary-Guide-2026-WEB-WMS.pdf"},
  ada:{t:"ADA — Standards of Care in Diabetes, 2026",u:"https://diabetesjournals.org/care/issue/49/Supplement_1"},
  atls:{t:"American College of Surgeons — ATLS, 11ª edição (xABCDE)",u:"https://www.facs.org/quality-programs/trauma/education/advanced-trauma-life-support/atls-11/"},
  aba:{t:"American Burn Association — Resuscitation in Burn Patients",u:"https://www.aafp.org/afp/2025/0800/practice-guidelines-resuscitation-patients-burns"},
@@ -35,7 +35,11 @@ function addOn(m){
  const flows=(m.flow||[]).map((s,i)=>'<div class="ue-flow-step"><span class="ue-flow-n">'+(i+1)+'</span><span class="ue-flow-q">'+esc(s[0])+'</span><span class="ue-flow-arrow" aria-hidden="true">→</span><strong>'+esc(s[1])+'</strong></div>').join('');
  const cards=(m.flow||[]).slice(0,4).map((s,i)=>'<details class="ue-flash"><summary><span>Cartão '+(i+1)+'</span> Quando: '+esc(s[0])+'?</summary><p>'+esc(s[1])+'</p></details>').join('');
  const slide=m.slide?'<section class="pocus-sec ue-slide-block"><h3>Imagens da aula original</h3><p>Slides originais vinculados ao Google Drive informado. Abra o documento para observar esquemas, imagens e marcações. O acesso depende das permissões do próprio Drive; comentários clínicos desta página são autorais e devem ser cotejados com a diretriz indicada.</p><details class="ue-slide-detail"><summary>Visualizar os slides completos desta aula</summary><div class="ue-pdf"><iframe loading="lazy" title="Slides originais: '+esc(m.title)+'" src="https://drive.google.com/file/d/'+encodeURIComponent(m.slide)+'/preview"></iframe></div></details><p><a href="https://drive.google.com/file/d/'+encodeURIComponent(m.slide)+'/view" target="_blank" rel="noopener noreferrer">Abrir PDF original no Drive ↗</a></p></section>':'';
- return '<section class="pocus-sec ue-flow-block"><h3>Fluxograma de raciocínio e conduta</h3><p>Reconhecimento → decisão → ação → reavaliação. Se a primeira resposta falhar, reinicie o ciclo de avaliação.</p><div class="ue-flow">'+flows+'</div></section>'+scheme(m)+'<section class="pocus-sec"><h3>Evocação ativa — pódio da memória</h3><p class="subtle">Tente responder sem consultar a aula antes de expandir cada cartão.</p><div class="ue-flashes">'+cards+'</div></section>'+slide;
+ const oral=(m.oral||[]).length?'<section class="pocus-sec ue-oral"><h3>Prova oral · treinamento ativo</h3><p class="subtle">Responda em voz alta antes de reabrir o conteúdo. Critério: reconhecer, justificar, tratar e reavaliar.</p><ol>'+m.oral.map(x=>'<li>'+esc(x)+'</li>').join('')+'</ol></section>':'';
+ const memory=(m.memory||[]).length?'<section class="pocus-sec ue-memory"><h3>Pódio da memória · quatro frases essenciais</h3><ol>'+m.memory.map(x=>'<li>'+esc(x)+'</li>').join('')+'</ol></section>':'';
+ const alerts=(m.alerts||[]).length?'<p class="ue-disclaimer">'+m.alerts.map(esc).join(' ')+'</p>':'';
+ const depthCards=oral+memory+alerts;
+ return '<section class="pocus-sec ue-flow-block"><h3>Fluxograma de raciocínio e conduta</h3><p>Reconhecimento → decisão → ação → reavaliação. Se a primeira resposta falhar, reinicie o ciclo de avaliação.</p><div class="ue-flow">'+flows+'</div></section>'+scheme(m)+'<section class="pocus-sec"><h3>Evocação ativa — pódio da memória</h3><p class="subtle">Tente responder sem consultar a aula antes de expandir cada cartão.</p><div class="ue-flashes">'+cards+'</div></section>'+slide+depthCards;
 }
 const base={
  label:"Urgência e Emergência",
@@ -50,14 +54,14 @@ const p1=CourseKit.create({
  ...base,key:"uep1",global:"Emergency.p1",route:"emergency-p1",
  title:"Urgência e Emergência — P1",heading:"Fundamentos e ressuscitação · P1",lead:"Reconhecimento de emergências, ABCDE, suporte vital, sepse, trauma e falência orgânica.",
  notice:"Revisão cumulativa: este conteúdo também pode ser exigido na P2.",
- bankTitle:"Casos clínicos P1",bankHeading:"Primeiros minutos que mudam o desfecho",bankLead:"Cenários de atendimento inicial para conduzir a equipe.",MODULES:P1,CASES:P1.map(x=>x.case),REFS,
+ bankTitle:"Casos clínicos P1",bankHeading:"Primeiros minutos que mudam o desfecho",bankLead:"Cenários de atendimento inicial para conduzir a equipe.",MODULES:P1,CASES:P1.flatMap(x=>[x.case,...(x.moreCases||[])]),REFS,
  extraHome:()=>'<p class="ue-shortcut"><button type="button" class="btn secondary" onclick="navigate(\'emergency-p2\')">Seguir para P2 →</button></p>'
 });
 const p2=CourseKit.create({
  ...base,key:"uep2",global:"Emergency.p2",route:"emergency-p2",
  title:"Urgência e Emergência — P2",heading:"Decisões clínicas em emergência · P2",lead:"Cardiovascular, metabólico, eletrolítico, toxicológico, comunicação e prova cumulativa.",
  notice:"P2 cumulativa: 20 questões, 4 alternativas, 90 minutos, conforme plano de ensino 2026.2.",
- bankTitle:"Casos clínicos P2",bankHeading:"Do sintoma à conduta",bankLead:"Cenários para treinar decisão e reavaliação.",MODULES:P2,CASES:P2.map(x=>x.case),REFS,
+ bankTitle:"Casos clínicos P2",bankHeading:"Do sintoma à conduta",bankLead:"Cenários para treinar decisão e reavaliação.",MODULES:P2,CASES:P2.flatMap(x=>[x.case,...(x.moreCases||[])]),REFS,
  extraHome:()=>'<div class="ue-exam-card"><strong>Modo prova · 20 questões · 90 minutos</strong><p>Simulado autoral, alinhado ao formato institucional. Não é reprodução de provas oficiais.</p><button type="button" class="btn primary" onclick="Emergency.startExam()">Iniciar ou retomar simulado P2</button></div>'
 });
 let examOpen=false;
