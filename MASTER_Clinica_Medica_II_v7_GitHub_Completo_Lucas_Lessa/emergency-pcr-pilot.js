@@ -139,6 +139,19 @@ function resetCase(){
  s.caseStage=0;s.caseCompletedAt=null;
  save();refresh("ue-pcr-step-heading");
 }
+function restart(){
+ const s=state(),now=Date.now();
+ const tried=Object.keys(s.answers).filter(k=>QUESTIONS[k]);
+ if(tried.length){
+  s.reviewHistory=s.reviewHistory||[];
+  s.reviewHistory.unshift({at:now,count:tried.length,correct:tried.filter(k=>s.answers[k]===QUESTIONS[k].a).length});
+  if(s.reviewHistory.length>30)s.reviewHistory=s.reviewHistory.slice(0,30);
+ }
+ for(const key of tried)delete s.answers[key];
+ s.hints={};s.step="start";s.mode="5";s.visited=["start"];s.caseStage=0;s.caseCompletedAt=null;
+ s.rhythm="vf";s.cycle="shock";s.cycleIndex=0;
+ save();refresh("ue-pcr-step-heading");
+}
 function finish(){
  const s=state(),now=Date.now();
  s.finishedAt=now;
@@ -171,8 +184,9 @@ function overview(){
 }
 function nav(){
  const s=state(),allSteps=paths(),idx=allSteps.indexOf(s.step);
- return `<nav class="ue-pcr-step-nav" aria-label="Etapas da aula"><div class="ue-pcr-step-progress"><span>Etapa ${idx+1} de ${allSteps.length}</span><span>${Math.round((idx+1)/allSteps.length*100)}% do percurso</span></div>
- <div class="ue-pcr-progress" role="progressbar" aria-label="Etapas percorridas" aria-valuenow="${Math.round((idx+1)/allSteps.length*100)}" aria-valuemin="0" aria-valuemax="100"><div style="width:${Math.round((idx+1)/allSteps.length*100)}%"></div></div>
+ const opened=allSteps.filter(id=>s.visited.includes(id)).length,pct=Math.round(opened/allSteps.length*100);
+ return `<nav class="ue-pcr-step-nav" aria-label="Etapas da aula"><div class="ue-pcr-step-progress"><span>Etapa ${idx+1} de ${allSteps.length}</span><span>${opened} de ${allSteps.length} etapas abertas · ${pct}%</span></div>
+ <div class="ue-pcr-progress" role="progressbar" aria-label="Etapas abertas" aria-valuenow="${pct}" aria-valuemin="0" aria-valuemax="100"><div style="width:${pct}%"></div></div>
  <div class="ue-pcr-step-tabs">${allSteps.map((id,i)=>`<button type="button" aria-current="${s.step===id?"step":"false"}" class="ue-pcr-step-tab${s.step===id?" active":""}${s.visited.includes(id)?" visited":""}" onclick="EmergencyPCR.go('${id}')"><span>${String(i+1).padStart(2,"0")}</span>${esc(STEPS[id].short)}</button>`).join("")}</div></nav>`;
 }
 function headline(){
@@ -210,7 +224,10 @@ function algorithm(){
  <div class="ue-pcr-rhythms" role="group" aria-label="Selecionar ritmo">${RHYTHMS.map(r=>`<button type="button" aria-pressed="${r.id===s.rhythm}" class="ue-pcr-rhythm${r.id===s.rhythm?" active":""}" onclick="EmergencyPCR.selectRhythm('${r.id}')">${esc(r.label)}</button>`).join("")}</div>
  <section class="ue-pcr-surface"><div class="ue-pcr-eyebrow">TRAÇADO CLÍNICO ILUSTRATIVO</div><h3>${esc(item.label)}</h3>${wave(item.id)}<p>${esc(item.note)}</p></section>
  ${question(qid)}
- <div class="ue-pcr-branch"><div class="ue-pcr-branch-node"><strong>O paciente tem pulso?</strong><span>Essa decisão vem antes de escolher o choque.</span></div><div class="ue-pcr-branch-arrows"><span>Sem pulso</span><span>Com pulso</span></div><div class="ue-pcr-branch-leaves"><div><strong>FV / TV sem pulso</strong><p>Desfibrilar + RCP</p><small>Ritmo chocável</small></div><div><strong>AESP / assistolia</strong><p>RCP + adrenalina + causas</p><small>Não chocáveis</small></div></div></div>
+ <div class="ue-pcr-branch"><div class="ue-pcr-branch-node"><strong>O paciente tem pulso?</strong><span>Decisão clínica inicial</span></div><div class="ue-pcr-branch-fork">
+ <div class="ue-pcr-branch-lane"><strong>Não: seguir algoritmo de PCR</strong><p>O ritmo é chocável?</p><div class="ue-pcr-branch-choices"><div><small>SIM · FV / TV SEM PULSO</small><b>Desfibrilar + RCP</b></div><div><small>NÃO · AESP / ASSISTOLIA</small><b>RCP + adrenalina + causas reversíveis</b></div></div></div>
+ <div class="ue-pcr-branch-lane"><strong>Sim: não é PCR</strong><p>Avaliar perfusão e ritmo.</p><div class="ue-pcr-branch-choices"><div><small>TAQUICARDIA INSTÁVEL COM PULSO</small><b>Considerar cardioversão sincronizada conforme protocolo</b></div></div></div>
+ </div></div>
  <details class="ue-pcr-expand"><summary>Por que AESP não deve receber choque?</summary><p>Na AESP já existe atividade elétrica organizada no monitor, mas falta circulação mecânica. A desfibrilação não trata essa falha; RCP e correção de hipóxia, hipovolemia, acidose, eletrólitos, tamponamento, trombose e outras causas podem ser decisivas.</p></details>`;
 }
 function timeline(){
@@ -270,7 +287,7 @@ function summary(){
  </ol></div>
  <div class="ue-pcr-recommend"><span class="ue-pcr-eyebrow">PRÓXIMA ATIVIDADE RECOMENDADA · HEURÍSTICA INICIAL</span><strong>${esc(r.label)}</strong><p>${esc(r.why)}</p><button type="button" class="btn secondary" onclick="EmergencyPCR.${available?"go('"+r.step+"')":"mode('30')"}">${available?"Abrir treino recomendado":"Ver percurso completo"}</button></div>
  <div class="ue-pcr-reviews"><strong>Retenção por revisão distribuída</strong><p>Após concluir, o sistema propõe retestes no dia seguinte e uma semana depois. Nesta versão-piloto, os intervalos são fixos, não um FSRS calibrado.</p>${s.finishedAt&&s.reviews?`<p><strong>D+1:</strong> ${new Date(s.reviews.d1).toLocaleDateString("pt-BR")} · <strong>D+7:</strong> ${new Date(s.reviews.d7).toLocaleDateString("pt-BR")}</p>`:""}
- <button type="button" class="btn primary" onclick="EmergencyPCR.finish()">${s.finishedAt?"Atualizar conclusão e datas de revisão":"Concluir percurso e programar D+1 / D+7"}</button></div>
+ <div class="ue-pcr-review-actions"><button type="button" class="btn primary" onclick="EmergencyPCR.finish()">${s.finishedAt?"Atualizar conclusão e datas de revisão":"Concluir percurso e programar D+1 / D+7"}</button><button type="button" class="btn secondary" onclick="EmergencyPCR.restart()">Iniciar novo reteste de 5 min</button></div></div>
  </div>
  <details class="ue-pcr-expand ue-pcr-full"><summary>Consultar o conteúdo integral aprofundado (8 seções)</summary>${(ctx?.module?.sections||[]).map(section=>`<section class="ue-pcr-deep-section"><h3>${esc(section.h)}</h3>${(section.p||[]).map(p=>`<p>${esc(p)}</p>`).join("")}${section.table?`<div class="ue-pcr-table-scroll"><table><thead><tr>${(section.table.head||[]).map(h=>`<th>${esc(h)}</th>`).join("")}</tr></thead><tbody>${(section.table.rows||[]).map(row=>`<tr>${row.map(c=>`<td>${esc(c)}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`:""}</section>`).join("")}</details>
  <details class="ue-pcr-expand"><summary>Slides originais da disciplina e diretrizes AHA 2025</summary><p>O documento abaixo é incorporado diretamente do Drive, sujeito às permissões do arquivo, sem reproduzir nem alterar suas figuras.</p><div class="ue-pcr-drive"><iframe loading="lazy" title="Slides de parada cardiorrespiratória no Drive" src="https://drive.google.com/file/d/1WKQCE_tI0fmiyzYD0cHcl6KzjYZu5PGf/preview"></iframe></div>
@@ -303,5 +320,5 @@ function page(context){
  <div class="ue-pcr-endnote">Os resultados são salvos no progresso desta disciplina. As etapas vistas não equivalem a proficiência clínica demonstrada.</div>
  </div>`;
 }
-window.EmergencyPCR={page,mode,go,answer,hint,selectRhythm,cycle,cycleStep,nextCase,resetCase,finish,questionIds:Object.keys(QUESTIONS),paths:MODES};
+window.EmergencyPCR={page,mode,go,answer,hint,selectRhythm,cycle,cycleStep,nextCase,resetCase,restart,finish,questionIds:Object.keys(QUESTIONS),paths:MODES};
 })();
