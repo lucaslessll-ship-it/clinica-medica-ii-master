@@ -65,5 +65,5 @@ test('HTML carrega módulo e estilos antes do script principal',()=>{
  const html=fs.readFileSync(path.join(root,'index.html'),'utf8');
  assert.ok(html.includes('emergency-pcr-pilot.css'));
  assert.ok(html.indexOf('emergency-pcr-pilot.js')<html.indexOf('emergency.js?v='));
- assert.match(html,/course-kit\.js\?v=20261119-pcr-pilot1/);
+ assert.match(html,/course-kit\.js\?v=20261119-curated1/);
 });
