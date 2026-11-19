@@ -84,3 +84,20 @@ https://drive.google.com/drive/folders/1ZVMHML4TFafZrVq29M57cZwQ8EumFPFD
 - Diagramas **autorais**, derivados da seleção de tópicos pertinentes (e não recortes de imagens originais), foram acrescentados às aulas de insuficiência respiratória aguda, AVC, sepse, choque e trauma. A PCR permanece com seu traçado didático interativo autoral.
 - **Ainda não foram extraídas figuras gráficas específicas dos PDFs** para incorporação como arquivos de imagem. Essa etapa depende de extração, revisão de qualidade visual, checagem das marcações e atribuição apropriada por figura. Não declarar essa parte como concluída.
 - Verificação em motor JS simulado: 23 módulos/115 questões, ausência de iframe/preview nas 23 aulas, ausência de marcas institucionais na renderização, e nenhuma referência de fonte ausente.
+
+
+## PCR — piloto de aprendizagem adaptativa (19/11/2026)
+
+**Escopo concluído na implementação:** PCR somente. Os demais 22 módulos continuam com a estrutura anterior. Os novos arquivos `pcr-adaptive-engine.js`, `pcr-adaptive-ui.js`, `pcr-adaptive-ui.css` são carregados antes da experiência PCR.
+
+- **Mapa de competências:** 8 competências identificadas em respostas da aula, casos progressivos, questões antigas e novas questões de retenção/transferência. Domínio estimado com evidência e incerteza, sem atribuir proficiência apenas por abrir páginas.
+- **Recuperação ativa:** 16 questões adicionais em variantes de recuperação e transferência, com justificativa de cada uma das quatro alternativas; as 11 decisões guiadas também passam a mostrar a explicação por alternativa.
+- **Confiança:** após uma resposta inicial, usuário pode classificar "chutei", "tive dúvida" ou "tenho certeza"; a escolha integra o registro da tentativa.
+- **Recomendador:** regras auditáveis de lacuna de domínio (30%), urgência de revisão (25%), peso para prova (20%), importância clínica (15%) e pré-requisitos (10%), com penalidade de repetição imediata. Estes pesos **não foram validados empiricamente**.
+- **Revisão:** intervalos *heurísticos* e específicos por competência (1, 3, 7, 14, 30, 60 e 90 dias em sequência de acertos; reteste breve após erro), não o algoritmo FSRS real. Agendamentos são internos à plataforma, **sem criação de lembretes externos**.
+- **Leitura anti-procrastinação:** entrada em um clique, quatro durações, tarefas pequenas, navegação progressiva e opção entre decisões guiadas e leitura integral. O modo integral expande o conteúdo aprofundado, preservando o histórico.
+- **Indicadores:** acurácia de tentativas, acurácia em perguntas de transferência, confiança, tempo até primeira ação, necessidade de revisão e contagem de evidências. São indicadores exploratórios no estado do navegador, não provas de ganho de notas.
+- **Compatibilidade:** o `CourseKit` ganhou `onAnswer` opcional, usado somente em `module.id==='pcr'`. A primeira resposta do banco alimenta o motor adaptativo; respostas pré-existentes permanecem no `store.study.uep1.quiz`. Os novos eventos ficam isolados em `store.study.uep1.pcrAdaptive`.
+- **Regressões:** testes automatizados adicionados em `tests/pcr-adaptive.test.cjs`. Testes iniciais em motor JS simulado demonstraram renderização, integração e preservação das outras 22 aulas. **Ainda faltam** navegador real, persistência autenticada entre dispositivos, teste com usuários, experimentos A/B válidos e calibração estatística do algoritmo.
+
+**Itens não implementados como tecnologia comprovada:** FSRS completo com parâmetros otimizados por histórico, Bayesian Knowledge Tracing, IRT/Rasch calibrado, sincronização verificada entre aparelhos e conclusão de experimentos A/B. A etapa atual é um piloto funcional fundamentado em mecanismos didáticos, não a validação dessas tecnologias.
