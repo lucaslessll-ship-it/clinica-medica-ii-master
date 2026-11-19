@@ -65,6 +65,7 @@ const base={
 };
 const p1=CourseKit.create({
  ...base,key:"uep1",global:"Emergency.p1",route:"emergency-p1",
+ moduleOverride:params=>params.module.id==='pcr'&&window.EmergencyPCR?window.EmergencyPCR.page(params):null,
  title:"Urgência e Emergência — P1",heading:"Fundamentos e ressuscitação · P1",lead:"Reconhecimento de emergências, ABCDE, suporte vital, sepse, trauma e falência orgânica.",
  notice:"Revisão cumulativa: este conteúdo também pode ser exigido na P2.",
  bankTitle:"Casos clínicos P1",bankHeading:"Primeiros minutos que mudam o desfecho",bankLead:"Cenários de atendimento inicial para conduzir a equipe.",MODULES:P1,CASES:P1.flatMap(x=>[x.case,...(x.moreCases||[])]),REFS,
