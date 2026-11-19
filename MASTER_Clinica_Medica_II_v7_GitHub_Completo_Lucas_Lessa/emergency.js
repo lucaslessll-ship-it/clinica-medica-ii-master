@@ -26,15 +26,7 @@ const REFS={
  endocrine:{t:"Society for Endocrinology — Adrenal Crisis, tratamento imediato",u:"https://www.endocrinology.org/clinical-practice/clinical-guidance/adrenal-crisis/"},
  thyroid2026:{t:"Consenso conjunto — Management of Thyroid Emergencies, 2026",u:"https://doi.org/10.1530/ETJ-26-0043"},
  whoPall:{t:"Organização Mundial da Saúde — Palliative Care",u:"https://www.who.int/news-room/fact-sheets/detail/palliative-care"},
- slidePCR:{t:"Slides da disciplina — Parada cardiorrespiratória (Drive)",u:"https://drive.google.com/file/d/1WKQCE_tI0fmiyzYD0cHcl6KzjYZu5PGf/view"},
- slideIRPA:{t:"Slides da disciplina — Insuficiência Respiratória Aguda (Drive)",u:"https://drive.google.com/file/d/153JlL-QQwKekWgxqFn7qBHLCg9yPW-4a/view"},
- slideAVC:{t:"Slides da disciplina — AVC (Drive)",u:"https://drive.google.com/file/d/1NsPDBZref6SnQZzNg30bw5wSGPP3BEUg/view"},
- slideSepse:{t:"Slides da disciplina — Sepse (Drive)",u:"https://drive.google.com/file/d/1TtBdtL0ednrpQ16dzgIfi1F8vZPcX8js/view"},
- slideChoque:{t:"Slides da disciplina — Choque (Drive)",u:"https://drive.google.com/file/d/1UQVs6wDfagDfxFhnN06i6AYx8BVQ-1d0/view"},
- slideTrauma:{t:"Slides da disciplina — Trauma (Drive)",u:"https://drive.google.com/file/d/1a-w0A9LmmON2xHDNGrY7EtotbSx5L-Mg/view"},
- slideSensorio:{t:"Slides da disciplina — Rebaixamento de sensório (Drive)",u:"https://drive.google.com/file/d/1HoONmIlE7r8fDqn0i7CS1SxHjOKZ6745/view"},
- slideArritmia:{t:"Slides da disciplina — Arritmias (Drive)",u:"https://drive.google.com/file/d/1NsJly9D6nDyJ3YAHLS2otXhsqIiHFFks/view"},
- slideAcido:{t:"Slides da disciplina — Distúrbios hidroeletrolíticos e ácido-base (Drive)",u:"https://drive.google.com/file/d/1J3CGf_W_-KXdeXqU1ob9mrWk8Sfh6ld-/view"}
+
 };
 // Os arquivos completos são apenas fonte interna para curadoria; não aparecem como referências navegáveis nas aulas.
 for(const m of all)m.refs=(m.refs||[]).filter(k=>!/^slide[A-Z]/.test(k));
