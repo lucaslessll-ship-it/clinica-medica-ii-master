@@ -65,7 +65,7 @@ function daysTo(iso){return Math.ceil((Date.parse(iso)-Date.now())/86400000);}
 function sec(title,html,extra=''){return `<section class="section-spaced"><div class="section-header"><h2 class="section-title">${title}</h2>${extra}</div>${html}</section>`;}
 function dayKey(date=new Date()){return CirPlan.dayKey(date);}
 
-function studyPlan(now=new Date()){const key=CirPlan.dayKey(now),activity={...(state.plan?.days||{})},day=activity[key]||{};activity[key]={...day,lessons:[...new Set([...(day.lessons||[]),...Object.keys(state.doneAt||{}).filter(id=>state.doneAt[id]===key)])]};return CirPlan.build({topics,completed:state.completed,questions:own,results:state.results,activity,now});}
+function studyPlan(now=new Date()){const key=CirPlan.dayKey(now),activity={...(state.plan?.days||{})},day=activity[key]||{};activity[key]={...day,lessons:[...new Set([...(day.lessons||[]),...Object.keys(state.doneAt||{}).filter(id=>state.doneAt[id]===key)])]};return CirPlan.build({topics,completed:state.completed,questions:pool().filter(q=>!q.bank),results:state.results,activity,now});}
 function planActivity(){if(!state.plan||typeof state.plan!=='object')state.plan={version:1,days:{}};state.plan.days=state.plan.days||{};const key=CirPlan.dayKey(new Date());return state.plan.days[key]||(state.plan.days[key]={lessons:[],questions:[]});}
 function openPlannedLesson(){const next=studyPlan().next;if(next)openTopic(next.topic,next.index);}
 function startPlannedQuestions(){const ids=studyPlan().days[0]?.questions||[];if(ids.length)startPractice({t:'all',src:'own',mode:'all',ids});}
@@ -151,7 +151,7 @@ function select(f){return pool().filter(q=>(f.t==='all'||q.t===f.t)&&(f.src==='a
 function startPractice(f){const {ids:plannedIds,...filters}=f||{},allowed=Array.isArray(plannedIds)?new Set(plannedIds):null;filt={...filt,...filters};const ids=shuffle(select(filt).filter(q=>!allowed||allowed.has(q.id)||allowed.has(familyId(q))).map(q=>q.id));practice={ids,step:0,chosen:null,revealed:false,order:ids.length?orderOf(byId(ids[0])):[],hits:0,done:{},filters:{...filt}};window.QuestionReview?.begin('cir','Treino de Cirurgia');QuestionHistory.begin(state,'cir','practice',practice,filt.t==='all'?'Todos os temas':topic(filt.t).short);save();go('cirpractice');}
 function record(q,a){
  const prev=state.results[q.id],ok=a===q.a,current=isCurrent(q,prev);let box=ok?Math.min(((current?prev?.box:undefined)??-1)+1,LADDER.length-1):0;
- if(!prev&&own.some(item=>item.id===familyId(q))){const day=planActivity();day.questions=day.questions||[];const planned=familyId(q);if(!day.questions.includes(planned))day.questions.push(planned);}
+ if(!prev&&own.some(item=>item.id===familyId(q))){const day=planActivity();day.questions=day.questions||[];const planned=q.id;if(!day.questions.includes(planned))day.questions.push(planned);}
  const next=new Date();next.setDate(next.getDate()+(ok?LADDER[box]:1));
  state.results[q.id]={revision:q.revision,correct:ok,answer:a,attempts:(prev?.attempts||0)+1,date:new Date().toISOString(),box,next:ok?null:next.toISOString()};
 }
