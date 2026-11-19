@@ -27,19 +27,23 @@ function makeV2(base){
   src:'Reformulada · padrão FMP',qualityLevel:draft.level||null,
   originalSource:base.src,legacyRevision:base.revision};
 }
-function hasHistoricalAnswer(id){
- if(state.results[id])return true;
- // Tentativas já respondidas em sessão, inclusive ainda não entregue.
- return (state.questionSessions||[]).some(entry=>{
-   const run=entry.run||{};
-   return Object.prototype.hasOwnProperty.call(run.done||{},id)
-     ||Object.prototype.hasOwnProperty.call(run.ans||{},id);
- });
+function answeredFamilies(){
+ const answered=new Set(Object.keys(state.results||{}));
+ // Inclui respostas ainda não entregues em provas ativas e respostas de sessões anteriores.
+ for(const entry of state.questionSessions||[]){
+  const run=entry.run||{};
+  for(const id of Object.keys(run.done&&typeof run.done==='object'?run.done:{}))answered.add(id);
+  for(const id of Object.keys(run.ans||{}))answered.add(id);
+ }
+ return answered;
 }
-const pool=()=>originalPool().map(base=>{
- const revised=makeV2(base);
- return revised&&!hasHistoricalAnswer(base.id)?revised:base;
-});
+const pool=()=>{
+ const answered=answeredFamilies();
+ return originalPool().map(base=>{
+  const revised=makeV2(base);
+  return revised&&!answered.has(base.id)?revised:base;
+ });
+};
 function byId(id){
  const visible=pool().find(q=>q.id===id);
  if(visible)return visible;
