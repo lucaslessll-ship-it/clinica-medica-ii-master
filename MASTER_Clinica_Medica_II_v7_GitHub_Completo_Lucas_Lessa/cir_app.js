@@ -4,7 +4,7 @@
 const CIR=(()=>{
 'use strict';
 const data=window.MASTER_CIR_DATA,topics=data.topics,own=(window.MASTER_CIR_QUESTIONS||[]).map(q=>({...q,src:'Autoral',shuffle:true}));
-const KEY='master_cir_lucas_v1',LADDER=[1,3,7,14,30];
+const KEY='master_cir_lucas_v1',LADDER=[1,3,7,14,30]; // Chave de armazenamento preservada.
 const def=()=>({completed:{},doneAt:{},results:{},notes:{},lastTopic:'ciraa',lastChapter:0,exams:[],questionSessions:[]});
 function load(){try{const o=JSON.parse(localStorage.getItem(KEY));if(o&&typeof o==='object')return {...def(),...o};}catch(e){}return def();}
 let state=load(),bank=[],bankStatus='idle',sel=state.lastTopic,chap=state.lastChapter||0,practice=null,exam=null,tick=null;
@@ -12,8 +12,45 @@ let filt={t:'all',src:'all',mode:'all'};
 function save(){try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){toast('Não foi possível salvar o progresso neste navegador.')}}
 const esc=s=>escapeHtml(String(s??'')),ph=s=>esc(s).replace(/\n/g,'<br>');
 const topic=id=>topics.find(t=>t.id===id)||topics[0];
-const pool=()=>own.concat(bank);
-const byId=id=>pool().find(q=>q.id===id);
+/* Seleção editorial sem migração destrutiva: usuários que responderam
+   continuam no item original; sessões em andamento e encerradas resolvem
+   o ID original mesmo quando o banco padrão já oferece a nova versão. */
+const originalPool=()=>own.concat(bank);
+const quality=()=>window.CIR_QUALITY_V2;
+function familyId(q){return q?.originalId||q?.id;}
+function makeV2(base){
+ const config=quality(),draft=config?.items?.[base.id];
+ if(!draft)return null;
+ if(!Array.isArray(draft.o)||draft.o.length!==base.o.length||new Set(draft.o).size!==draft.o.length)return null;
+ const id=base.id+config.suffix;
+ return {...base,...draft,id,originalId:base.id,revision:config.version,
+  src:'Reformulada · padrão FMP',qualityLevel:draft.level||null,
+  originalSource:base.src,legacyRevision:base.revision};
+}
+function hasHistoricalAnswer(id){
+ if(state.results[id])return true;
+ // Tentativas já respondidas em sessão, inclusive ainda não entregue.
+ return (state.questionSessions||[]).some(entry=>{
+   const run=entry.run||{};
+   return Object.prototype.hasOwnProperty.call(run.done||{},id)
+     ||Object.prototype.hasOwnProperty.call(run.ans||{},id);
+ });
+}
+const pool=()=>originalPool().map(base=>{
+ const revised=makeV2(base);
+ return revised&&!hasHistoricalAnswer(base.id)?revised:base;
+});
+function byId(id){
+ const visible=pool().find(q=>q.id===id);
+ if(visible)return visible;
+ const suffix=quality()?.suffix||'@fmp2';
+ if(id.endsWith(suffix)){
+   const old=originalPool().find(q=>q.id===id.slice(0,-suffix.length));
+   return old?makeV2(old):undefined;
+ }
+ // Consulta de IDs históricos: nunca resolve uma prova antiga com um gabarito novo.
+ return originalPool().find(q=>q.id===id);
+}
 const isCurrent=(q,r=state.results[q.id])=>!!r&&(!q.revision||r.revision===q.revision);
 const nLessons=topics.reduce((n,t)=>n+t.chapters.length,0);
 const done=(t,i)=>!!state.completed[t+'_'+i];
@@ -107,10 +144,10 @@ function topicView(){window.MasterActivity?.setContext('cir:'+sel+':'+chap);
 const shuffle=a=>{const o=[...a];for(let i=o.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[o[i],o[j]]=[o[j],o[i]]}return o;};
 const orderOf=q=>q.shuffle?shuffle(q.o.map((_,i)=>i)):q.o.map((_,i)=>i);
 function select(f){return pool().filter(q=>(f.t==='all'||q.t===f.t)&&(f.src==='all'||(f.src==='bank'?q.bank:!q.bank))&&(f.mode==='all'||(f.mode==='new'&&!isCurrent(q))||(f.mode==='wrong'&&state.results[q.id]&&!state.results[q.id].correct)||(f.mode==='due'&&isDue(q.id))));}
-function startPractice(f){const {ids:plannedIds,...filters}=f||{},allowed=Array.isArray(plannedIds)?new Set(plannedIds):null;filt={...filt,...filters};const ids=shuffle(select(filt).filter(q=>!allowed||allowed.has(q.id)).map(q=>q.id));practice={ids,step:0,chosen:null,revealed:false,order:ids.length?orderOf(byId(ids[0])):[],hits:0,done:{},filters:{...filt}};window.QuestionReview?.begin('cir','Treino de Cirurgia');QuestionHistory.begin(state,'cir','practice',practice,filt.t==='all'?'Todos os temas':topic(filt.t).short);save();go('cirpractice');}
+function startPractice(f){const {ids:plannedIds,...filters}=f||{},allowed=Array.isArray(plannedIds)?new Set(plannedIds):null;filt={...filt,...filters};const ids=shuffle(select(filt).filter(q=>!allowed||allowed.has(q.id)||allowed.has(familyId(q))).map(q=>q.id));practice={ids,step:0,chosen:null,revealed:false,order:ids.length?orderOf(byId(ids[0])):[],hits:0,done:{},filters:{...filt}};window.QuestionReview?.begin('cir','Treino de Cirurgia');QuestionHistory.begin(state,'cir','practice',practice,filt.t==='all'?'Todos os temas':topic(filt.t).short);save();go('cirpractice');}
 function record(q,a){
  const prev=state.results[q.id],ok=a===q.a,current=isCurrent(q,prev);let box=ok?Math.min(((current?prev?.box:undefined)??-1)+1,LADDER.length-1):0;
- if(!prev&&own.some(item=>item.id===q.id)){const day=planActivity();day.questions=day.questions||[];if(!day.questions.includes(q.id))day.questions.push(q.id);}
+ if(!prev&&own.some(item=>item.id===familyId(q))){const day=planActivity();day.questions=day.questions||[];const planned=familyId(q);if(!day.questions.includes(planned))day.questions.push(planned);}
  const next=new Date();next.setDate(next.getDate()+(ok?LADDER[box]:1));
  state.results[q.id]={revision:q.revision,correct:ok,answer:a,attempts:(prev?.attempts||0)+1,date:new Date().toISOString(),box,next:ok?null:next.toISOString()};
 }
@@ -139,15 +176,44 @@ function practiceView(){
 }
 
 /* Simulado */
-function startExam(n){const ids=shuffle(pool().map(q=>q.id)).slice(0,n);exam={ids,n:ids.length,step:0,start:Date.now(),dur:ids.length*3*60000,ans:{},orders:Object.fromEntries(ids.map(id=>[id,orderOf(byId(id))])),done:false};QuestionHistory.begin(state,'cir','exam',exam,'Simulado Cirurgia');save();go('cirexam');}
+/* Matriz FMP experimental: 5 Radiologia, 5 Urologia, quatro eixos clínicos
+   (trauma, coloprocto, hérnias, REMIT) e quatro itens complementares.
+   Não se afirma ser proporção estatística das provas históricas. */
+function fmpSelection(){
+ const all=pool(),chosen=[],used=new Set();
+ const draw=(filter,n)=>{
+   const candidates=shuffle(all.filter(q=>filter(q)&&!used.has(q.id)));
+   for(const q of candidates.slice(0,n)){chosen.push(q.id);used.add(q.id);}
+ };
+ const inTopic=(...ids)=>q=>ids.includes(q.t);
+ draw(inTopic('cirtabd'),2);
+ draw(inTopic('cirttor'),2);
+ draw(inTopic('cirproc'),4);
+ draw(inTopic('cirher'),4);
+ draw(inTopic('cirremit'),4);
+ const remaining=['ciraa','cirpanc','cirvasc','ciresof','cirestom','cirvb','cirfig'];
+ // Complementar com quatro temas distintos, evitando quatro vezes o mesmo eixo.
+ for(const t of shuffle(remaining).slice(0,4))draw(inTopic(t),1);
+ draw(inTopic('cirrad'),5);
+ draw(inTopic('ciruro'),5);
+ if(chosen.length<30)draw(()=>true,30-chosen.length);
+ return chosen.slice(0,30);
+}
+function startExam(n,variant='free'){
+ const ids=variant==='fmp'?fmpSelection():shuffle(pool().map(q=>q.id)).slice(0,n);
+ exam={ids,n:ids.length,variant,step:0,start:Date.now(),dur:ids.length*3*60000,
+  ans:{},orders:Object.fromEntries(ids.map(id=>[id,orderOf(byId(id))])),done:false};
+ QuestionHistory.begin(state,'cir','exam',exam,variant==='fmp'?'Simulado FMP · Matriz experimental':'Simulado Cirurgia · livre');
+ save();go('cirexam');
+}
 function clock(){clearInterval(tick);if(!exam||exam.done)return;tick=setInterval(()=>{const el=document.getElementById('cir-clock');if(!el){clearInterval(tick);return;}const left=exam.dur-(Date.now()-exam.start);el.textContent=String(Math.max(0,Math.floor(left/60000))).padStart(2,'0')+':'+String(Math.max(0,Math.floor(left%60000/1000))).padStart(2,'0');if(left<=0){clearInterval(tick);finishExam(true);}},1000);}
 function exAnswer(a){if(!exam||exam.done)return;exam.ans[exam.ids[exam.step]]=a;QuestionHistory.touch(state,'exam',exam);save();render();}
 function exGo(i){if(!exam)return;exam.step=Math.max(0,Math.min(exam.n-1,i));QuestionHistory.touch(state,'exam',exam);save();render();}
-function finishExam(timeout=false){if(!exam||exam.done)return;if(!timeout&&Object.keys(exam.ans).length<exam.n&&!confirm('Há questões em branco. Entregar mesmo assim?'))return;clearInterval(tick);exam.done=true;exam.score=0;window.QuestionReview?.begin('cir','Simulado de Cirurgia');exam.ids.forEach(id=>{const q=byId(id);if(exam.ans[id]!==undefined){record(q,exam.ans[id]);window.QNav?.registrar('cir',q.id,exam.ans[id]===q.a,{tid:q.t,tema:topic(q.t).short,q:q.q});if(exam.ans[id]===q.a)exam.score++;}});state.exams.push({at:new Date().toISOString(),score:exam.score,total:exam.n});QuestionHistory.touch(state,'exam',exam,true);save();render();}
+function finishExam(timeout=false){if(!exam||exam.done)return;if(!timeout&&Object.keys(exam.ans).length<exam.n&&!confirm('Há questões em branco. Entregar mesmo assim?'))return;clearInterval(tick);exam.done=true;exam.score=0;window.QuestionReview?.begin('cir','Simulado de Cirurgia');exam.ids.forEach(id=>{const q=byId(id);if(exam.ans[id]!==undefined){record(q,exam.ans[id]);window.QNav?.registrar('cir',q.id,exam.ans[id]===q.a,{tid:q.t,tema:topic(q.t).short,q:q.q});if(exam.ans[id]===q.a)exam.score++;}});state.exams.push({at:new Date().toISOString(),score:exam.score,total:exam.n,variant:exam.variant||'free'});QuestionHistory.touch(state,'exam',exam,true);save();render();}
 function examView(){
- if(!exam)return questionHistoryPanel()+header('CIRURGIA · SIMULADO','Simulado <em>cronometrado.</em>','Questões sorteadas de todos os temas, três minutos por questão e gabarito comentado só na entrega.')+`<div class="p1-back"><button type="button" class="btn ghost" onclick="CIR.go('cir')">← Cirurgia</button></div>`+bankLine()+`<div class="card pad"><h2>Escolha o tamanho</h2><div class="btn-row">${[20,40,60].map(n=>`<button type="button" class="btn ${n===40?'primary':''}" onclick="CIR.startExam(${n})" ${pool().length<n?'disabled':''}>${n} questões · ${n*3} min</button>`).join('')}</div>${state.exams.length?`<p class="subtle">Últimos: ${state.exams.slice(-5).map(e=>`${e.score}/${e.total}`).join(' · ')}</p>`:''}</div>`;
+ if(!exam)return questionHistoryPanel()+header('CIRURGIA · SIMULADO','Simulado <em>cronometrado.</em>','Questões sorteadas de todos os temas, três minutos por questão e gabarito comentado só na entrega.')+`<div class="p1-back"><button type="button" class="btn ghost" onclick="CIR.go('cir')">← Cirurgia</button></div>`+bankLine()+`<div class="card pad"><h2>Escolha o modo</h2><div class="cir-fmp-entry"><strong>Prova FMP · matriz experimental</strong><p>30 questões · 90 minutos · 5 de Radiologia · 5 de Urologia · 20 de Clínica Cirúrgica, com quatro núcleos de casos. A distribuição é uma proposta baseada nos materiais, não uma reprodução oficial.</p><button type="button" class="btn primary" onclick="CIR.startExam(30,'fmp')" ${pool().length<30?'disabled':''}>Iniciar simulado FMP · 30 questões</button></div><h3>Simulado livre</h3><div class="btn-row">${[20,40,60].map(n=>`<button type="button" class="btn ${n===40?'primary':''}" onclick="CIR.startExam(${n})" ${pool().length<n?'disabled':''}>${n} questões · ${n*3} min</button>`).join('')}</div>${state.exams.length?`<p class="subtle">Últimos: ${state.exams.slice(-5).map(e=>`${e.score}/${e.total}`).join(' · ')}</p>`:''}</div>`;
  if(exam.ids?.some(id=>!byId(id)))return header('CIRURGIA · SIMULADO','Restaurando <em>sua sessão.</em>','As alternativas serão recuperadas sem revelar o gabarito.')+`<div class="card pad" role="status">${bankStatus==='loading'?'Carregando as questões privadas da sua sessão salva…':'Questões da sessão ainda indisponíveis. Confira a conexão e tente novamente.'}</div>`;
- if(exam.done)return questionHistoryPanel()+header('SIMULADO CONCLUÍDO',`${exam.score} de <em>${exam.n}.</em>`,`${Math.round(exam.score/exam.n*100)}% de acertos. Os erros já entraram na revisão do dia seguinte.`)+(window.QNav?QNav.resumo({bank:'cir',itens:exam.ids.map(id=>{const q=byId(id),a=exam.ans[id];return {id,ok:a===undefined?null:a===q.a,tid:q.t,tema:topic(q.t).short};})}):'')+`<div class="btn-row"><button type="button" class="btn primary" onclick="CIR.startExam(${exam.n})">Novo simulado</button><button type="button" class="btn" onclick="CIR.go('cir')">Voltar à Cirurgia</button></div>`+sec('Correção comentada',`<div class="card pad">${exam.ids.map((id,k)=>{const q=byId(id),ok=exam.ans[id]===q.a;return `<div class="p1-correction"><strong>${k+1}. ${esc(topic(q.t).short)} · ${ok?'✓ acertou':exam.ans[id]===undefined?'em branco':'✗ errou'}</strong><p>${ph(q.q)}</p><p><b>Correta:</b> ${esc(q.o[q.a])}${!ok&&exam.ans[id]!==undefined?`<br><b>Sua:</b> ${esc(q.o[exam.ans[id]])}`:''}</p>${q.why?`<p>${ph(q.why)}</p>`:''}</div>`}).join('')}</div>`);
+ if(exam.done)return questionHistoryPanel()+header('SIMULADO CONCLUÍDO',`${exam.score} de <em>${exam.n}.</em>`,`${Math.round(exam.score/exam.n*100)}% de acertos. Os erros já entraram na revisão do dia seguinte.`)+(window.QNav?QNav.resumo({bank:'cir',itens:exam.ids.map(id=>{const q=byId(id),a=exam.ans[id];return {id,ok:a===undefined?null:a===q.a,tid:q.t,tema:topic(q.t).short};})}):'')+`<div class="btn-row"><button type="button" class="btn primary" onclick="CIR.startExam(${exam.n},'${exam.variant==='fmp'?'fmp':'free'}')">Novo simulado</button><button type="button" class="btn" onclick="CIR.go('cir')">Voltar à Cirurgia</button></div>`+sec('Correção comentada',`<div class="card pad">${exam.ids.map((id,k)=>{const q=byId(id),ok=exam.ans[id]===q.a;return `<div class="p1-correction"><strong>${k+1}. ${esc(topic(q.t).short)} · ${ok?'✓ acertou':exam.ans[id]===undefined?'em branco':'✗ errou'}</strong><p>${ph(q.q)}</p><p><b>Correta:</b> ${esc(q.o[q.a])}${!ok&&exam.ans[id]!==undefined?`<br><b>Sua:</b> ${esc(q.o[exam.ans[id]])}`:''}</p>${q.why?`<p>${ph(q.why)}</p>`:''}</div>`}).join('')}</div>`);
  const id=exam.ids[exam.step],q=byId(id);
  return header('SIMULADO · CIRURGIA',`Questão <em>${exam.step+1} / ${exam.n}</em>`,'Gabarito na entrega')+`<div class="card pad"><div class="status-row"><b>Tempo: <span id="cir-clock">--:--</span></b><span>${Object.keys(exam.ans).length}/${exam.n} respondidas</span></div><div class="p1-exam-steps">${exam.ids.map((v,k)=>`<button type="button" class="${k===exam.step?'current':''} ${exam.ans[v]!==undefined?'done':''}" onclick="CIR.exGo(${k})" aria-label="Questão ${k+1}">${k+1}</button>`).join('')}</div>${q.img?`<img class="cir-q-img" src="${esc(q.img)}" alt="Imagem da questão" loading="lazy">`:''}<p class="p1-question">${ph(q.q)}</p>${opts(q,exam.orders[id],exam.ans[id],false,'CIR.exAnswer')}<div class="module-actions"><button type="button" class="btn" onclick="CIR.exGo(${exam.step-1})" ${exam.step===0?'disabled':''}>← Anterior</button><button type="button" class="btn" onclick="CIR.exGo(${exam.step+1})" ${exam.step===exam.n-1?'disabled':''}>Próxima →</button><button type="button" class="btn primary" onclick="CIR.finishExam()">Entregar</button></div></div>`;
 }
