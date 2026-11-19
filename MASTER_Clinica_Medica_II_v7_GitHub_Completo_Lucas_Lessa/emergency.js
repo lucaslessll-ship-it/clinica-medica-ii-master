@@ -36,6 +36,8 @@ const REFS={
  slideArritmia:{t:"Slides da disciplina — Arritmias (Drive)",u:"https://drive.google.com/file/d/1NsJly9D6nDyJ3YAHLS2otXhsqIiHFFks/view"},
  slideAcido:{t:"Slides da disciplina — Distúrbios hidroeletrolíticos e ácido-base (Drive)",u:"https://drive.google.com/file/d/1J3CGf_W_-KXdeXqU1ob9mrWk8Sfh6ld-/view"}
 };
+// Os arquivos completos são apenas fonte interna para curadoria; não aparecem como referências navegáveis nas aulas.
+for(const m of all)m.refs=(m.refs||[]).filter(k=>!/^slide[A-Z]/.test(k));
 const scientificRefsById={
  pcr:['postAha'],irpa:['atsResp'],vm:['ards'],adrenal:['endocrine'],hipertensiva:['htn2025'],
  glicemia:['dka2024'],eletrolitos:['ukka2026'],tireoide:['thyroid2026'],paliativos:['whoPall']
@@ -48,17 +50,16 @@ function scheme(m){
 function addOn(m){
  const flows=(m.flow||[]).map((s,i)=>'<div class="ue-flow-step"><span class="ue-flow-n">'+(i+1)+'</span><span class="ue-flow-q">'+esc(s[0])+'</span><span class="ue-flow-arrow" aria-hidden="true">→</span><strong>'+esc(s[1])+'</strong></div>').join('');
  const cards=(m.flow||[]).slice(0,4).map((s,i)=>'<details class="ue-flash"><summary><span>Cartão '+(i+1)+'</span> Quando: '+esc(s[0])+'?</summary><p>'+esc(s[1])+'</p></details>').join('');
- const slide=m.slide?'<section class="pocus-sec ue-slide-block"><h3>Imagens da aula original</h3><p>Slides originais vinculados ao Google Drive informado. Abra o documento para observar esquemas, imagens e marcações. O acesso depende das permissões do próprio Drive; comentários clínicos desta página são autorais e devem ser cotejados com a diretriz indicada.</p><details class="ue-slide-detail"><summary>Visualizar os slides completos desta aula</summary><div class="ue-pdf"><iframe loading="lazy" title="Slides originais: '+esc(m.title)+'" src="https://drive.google.com/file/d/'+encodeURIComponent(m.slide)+'/preview"></iframe></div></details><p><a href="https://drive.google.com/file/d/'+encodeURIComponent(m.slide)+'/view" target="_blank" rel="noopener noreferrer">Abrir PDF original no Drive ↗</a></p></section>':'';
  const memory=(m.memory||[]).length?'<section class="pocus-sec ue-memory"><h3>Pódio da memória · quatro frases essenciais</h3><ol>'+m.memory.map(x=>'<li>'+esc(x)+'</li>').join('')+'</ol></section>':'';
  const alerts=(m.alerts||[]).length?'<p class="ue-disclaimer">'+m.alerts.map(esc).join(' ')+'</p>':'';
  const depthCards=memory+alerts;
- return '<section class="pocus-sec ue-flow-block"><h3>Fluxograma de raciocínio e conduta</h3><p>Reconhecimento → decisão → ação → reavaliação. Se a primeira resposta falhar, reinicie o ciclo de avaliação.</p><div class="ue-flow">'+flows+'</div></section>'+scheme(m)+'<section class="pocus-sec"><h3>Evocação ativa — pódio da memória</h3><p class="subtle">Tente responder sem consultar a aula antes de expandir cada cartão.</p><div class="ue-flashes">'+cards+'</div></section>'+slide+depthCards;
+ return '<section class="pocus-sec ue-flow-block"><h3>Fluxograma de raciocínio e conduta</h3><p>Reconhecimento → decisão → ação → reavaliação. Se a primeira resposta falhar, reinicie o ciclo de avaliação.</p><div class="ue-flow">'+flows+'</div></section>'+scheme(m)+'<section class="pocus-sec"><h3>Evocação ativa — pódio da memória</h3><p class="subtle">Tente responder sem consultar a aula antes de expandir cada cartão.</p><div class="ue-flashes">'+cards+'</div></section>'+depthCards;
 }
 const base={
  label:"Urgência e Emergência",
  images:false,
  refNote:"As doses são educativas e precisam ser conferidas com prescrição, protocolo institucional e supervisão; não substituem atendimento real.",
- sourcesNote:"Conteúdo autoral organizado pelo plano de ensino 2026.2 do 8º período (FMP/UNIFASE); referências oficiais e slides originais da pasta do Drive. Os PDFs exigem permissão de acesso.",
+ sourcesNote:"Conteúdo autoral para estudo de Urgência e Emergência, com fontes clínicas verificáveis e recursos visuais selecionados por pertinência.",
  pathHint:"Percurso orientado por reconhecimento, diagnóstico, conduta, reavaliação, questões e casos.",
  caseHint:"Formule avaliação inicial, hipótese, conduta, monitorização e justificativa antes de revelar.",
  extraModule:addOn
@@ -158,7 +159,7 @@ function landing(){
  const state=store.study||{},done=(key,mods)=>mods.filter(m=>state[key]?.done?.[m.id]).length;
  const tile=(stage,mods,key,desc)=>'<button class="ue-stage-card" type="button" onclick="navigate(\'emergency-'+stage.toLowerCase()+'\')"><span class="kicker">'+stage+'</span><strong>'+esc(desc)+'</strong><span>'+mods.length+' aulas · '+mods.reduce((n,m)=>n+m.quiz.length,0)+' questões · '+mods.length+' casos</span><small>'+done(key,mods)+' de '+mods.length+' aulas marcadas como estudadas</small><em>Entrar no curso →</em></button>';
  return '<section class="emergency-page"><header class="emergency-hero"><div class="emergency-hero-icon">'+(window.StudyIcons?StudyIcons.emergency():'✚')+'</div><div><span class="kicker">8º PERÍODO · 2026.2</span><h1>Urgência e Emergência</h1><p>Reconhecer a emergência, decidir em sequência e reavaliar. Curso nativo do Estudo Master.</p></div></header>'+
- '<div class="info-notice"><strong>Base oficial:</strong> plano de ensino da FMP/UNIFASE 2026.2. A P2 é cumulativa e inclui 20 questões de múltipla escolha; as questões abaixo são autorais e os slides são materiais da disciplina, não provas oficiais.</div>'+
+ '<div class="info-notice"><strong>Formato de estudo:</strong> P2 cumulativa com 20 questões de múltipla escolha; questões autorais, fluxogramas e casos de decisão clínica.</div>'+
  '<div class="ue-stage-grid">'+tile('P1',P1,'uep1','Ressuscitação, síndromes críticas e trauma')+tile('P2',P2,'uep2','Decisões cardiovasculares, metabólicas e toxicológicas')+'</div>'+
  '<div class="ue-pcr-pilot-promo"><div><span class="kicker">AULA-PILOTO DISPONÍVEL</span><strong>Comece pela PCR interativa</strong><p>Questão inicial, fluxograma de ritmos, RCP, caso evolutivo e revisão adaptada ao seu desempenho.</p></div><button class="btn primary" type="button" onclick="navigate(\'emergency-p1\');Emergency.p1.open(0)">Experimentar a aula →</button></div>'+
  '<section class="pocus-sec"><h2>Como estudar em alto rendimento</h2><div class="ue-flow"><div class="ue-flow-step"><span class="ue-flow-n">1</span><strong>Pré-teste clínico</strong><span>O que mata primeiro?</span></div><div class="ue-flow-step"><span class="ue-flow-n">2</span><strong>Algoritmo de decisão</strong><span>Se X, faço Y.</span></div><div class="ue-flow-step"><span class="ue-flow-n">3</span><strong>Caso e questões</strong><span>Decidir antes de revelar.</span></div><div class="ue-flow-step"><span class="ue-flow-n">4</span><strong>Revisão D+1/D+7</strong><span>Revisar erros e reavaliar domínio.</span></div></div></section></section>';
