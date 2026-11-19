@@ -272,8 +272,14 @@ function getRecommendation(){
  if(Object.keys(a).length<2)return {label:"Treinar a escolha do ritmo",step:"algorithm",why:"Ainda há poucas decisões registradas para personalizar."};
  return {label:"Resolver outro caso ou revisar em D+1",step:"case",why:"Você já praticou decisões iniciais; fortaleça a recuperação em um contexto novo."};
 }
+function follow(){
+ const r=getRecommendation(),s=state();
+ if(!MODES[s.mode].steps.includes(r.step))s.mode="30";
+ s.step=r.step;if(!s.visited.includes(r.step))s.visited.push(r.step);
+ save();refresh("ue-pcr-step-heading");
+}
 function summary(){
- const s=state(),r=getRecommendation(),p=paths(),available=p.includes(r.step);
+ const s=state(),r=getRecommendation();
  const attempted=Object.keys(s.answers).filter(k=>QUESTIONS[k]).length;
  const correct=Object.entries(s.answers).filter(([id,v])=>QUESTIONS[id]&&QUESTIONS[id].a===v).length;
  return `<div class="ue-pcr-summary">
@@ -285,7 +291,7 @@ function summary(){
  <li><strong>AESP/assistolia?</strong> RCP, adrenalina e causas reversíveis; sem choque.</li>
  <li><strong>RCE?</strong> Trate a causa, monitore oxigenação e perfusão e organize cuidados neurológicos.</li>
  </ol></div>
- <div class="ue-pcr-recommend"><span class="ue-pcr-eyebrow">PRÓXIMA ATIVIDADE RECOMENDADA · HEURÍSTICA INICIAL</span><strong>${esc(r.label)}</strong><p>${esc(r.why)}</p><button type="button" class="btn secondary" onclick="EmergencyPCR.${available?"go('"+r.step+"')":"mode('30')"}">${available?"Abrir treino recomendado":"Ver percurso completo"}</button></div>
+ <div class="ue-pcr-recommend"><span class="ue-pcr-eyebrow">PRÓXIMA ATIVIDADE RECOMENDADA · HEURÍSTICA INICIAL</span><strong>${esc(r.label)}</strong><p>${esc(r.why)}</p><button type="button" class="btn secondary" onclick="EmergencyPCR.follow()">Abrir treino recomendado</button></div>
  <div class="ue-pcr-reviews"><strong>Retenção por revisão distribuída</strong><p>Após concluir, o sistema propõe retestes no dia seguinte e uma semana depois. Nesta versão-piloto, os intervalos são fixos, não um FSRS calibrado.</p>${s.finishedAt&&s.reviews?`<p><strong>D+1:</strong> ${new Date(s.reviews.d1).toLocaleDateString("pt-BR")} · <strong>D+7:</strong> ${new Date(s.reviews.d7).toLocaleDateString("pt-BR")}</p>`:""}
  <div class="ue-pcr-review-actions"><button type="button" class="btn primary" onclick="EmergencyPCR.finish()">${s.finishedAt?"Atualizar conclusão e datas de revisão":"Concluir percurso e programar D+1 / D+7"}</button><button type="button" class="btn secondary" onclick="EmergencyPCR.restart()">Iniciar novo reteste de 5 min</button></div></div>
  </div>
@@ -320,5 +326,5 @@ function page(context){
  <div class="ue-pcr-endnote">Os resultados são salvos no progresso desta disciplina. As etapas vistas não equivalem a proficiência clínica demonstrada.</div>
  </div>`;
 }
-window.EmergencyPCR={page,mode,go,answer,hint,selectRhythm,cycle,cycleStep,nextCase,resetCase,restart,finish,questionIds:Object.keys(QUESTIONS),paths:MODES};
+window.EmergencyPCR={page,mode,go,answer,hint,selectRhythm,cycle,cycleStep,nextCase,resetCase,restart,follow,finish,questionIds:Object.keys(QUESTIONS),paths:MODES};
 })();
