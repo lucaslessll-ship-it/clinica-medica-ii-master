@@ -13,9 +13,9 @@ function competencies(){
  const stats=E().allStats();
  return `<section class="pcr-ai-section" aria-label="Mapa de competências">
  <div class="pcr-ai-header"><div><span class="ue-pcr-eyebrow">PROGRESSO POR HABILIDADE</span><h3>O que você realmente consegue resolver?</h3></div><span class="pcr-ai-secondary">Estimativa inicial · não é certificação clínica</span></div>
- <p class="pcr-ai-caption">A barra expressa desempenho estimado e a linha inferior mostra quantas tentativas a sustentam. A pontuação não cresce apenas por abrir a aula.</p>
+ <p class="pcr-ai-caption">A barra só aparece quando há tentativas; a linha inferior mostra a quantidade de evidências. Concluir uma página não aumenta domínio.</p>
  <div class="pcr-ai-skills">${stats.map(s=>`<div class="pcr-ai-skill"><div class="pcr-ai-skill-head"><strong>${esc(s.title)}</strong>${badge(s.status)}</div>
- <div class="pcr-ai-skill-bar" role="progressbar" aria-label="${esc(s.title)}: ${pct(s.mean)} por cento estimados" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${pct(s.mean)}"><div style="width:${pct(s.mean)}%"></div></div>
+ <div class="pcr-ai-skill-bar" role="progressbar" aria-label="${esc(s.title)}: ${pct(s.mean)} por cento estimados" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${s.attempts?pct(s.mean):0}"><div style="width:${s.attempts?pct(s.mean):0}%"></div></div>
  <div class="pcr-ai-skill-foot"><span>${s.attempts} tentativa${s.attempts!==1?"s":""} · evidência ${pct(s.evidence)}%</span><span>${s.overdue?"Revisão disponível":s.review?"Próxima: "+new Date(s.due).toLocaleDateString("pt-BR"):"Ainda sem revisão"}</span></div></div>`).join("")}</div></section>`;
 }
 function recommendation(){
