@@ -277,3 +277,28 @@ body .dica-alvo{animation:none;outline-color:var(--ed-copper)}
     gap:0;
   }
 }
+
+
+/* Aviso editorial do módulo OSCE no início do Dashboard. */
+.ed-osce-announcement{
+ display:flex;justify-content:space-between;align-items:center;gap:18px;
+ margin:0 0 clamp(20px,2.4vw,30px);padding:clamp(16px,2.15vw,24px);
+ border:1px solid var(--border,#d8d7c9);border-left:4px solid #b17d4f;
+ border-radius:14px;
+ background:color-mix(in srgb,#d9c3a2 11%,var(--card,#fffdf9));
+ color:inherit;
+}
+.ed-osce-announcement-copy{flex:1 1 510px;min-width:0}
+.ed-osce-announcement-kicker{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin:0 0 7px;letter-spacing:.1em;font-size:.68rem;font-weight:750;color:var(--ed-copper,#97673d)}
+.ed-osce-new{display:inline-flex;align-items:center;min-height:23px;padding:3px 8px;border-radius:99px;color:#155342;background:color-mix(in srgb,#1c6e58 12%,var(--card,#fff));border:1px solid #a2c7b6;font-size:.65rem;letter-spacing:.08em}
+.ed-osce-announcement h2{font-family:var(--font-display,Georgia,serif);font-size:clamp(1.21rem,2vw,1.55rem);line-height:1.3;letter-spacing:-.015em;font-weight:600;margin:0 0 5px;color:var(--green,#17493c)}
+.ed-osce-announcement-copy>p:last-child{font-size:.86rem;line-height:1.65;color:var(--text-muted,var(--muted,#56645d));max-width:78ch;margin:0}
+.ed-osce-announcement-copy>p:last-child strong{color:inherit;font-weight:750}
+.ed-osce-announcement-actions{display:flex;flex-direction:column;align-items:stretch;justify-content:center;gap:9px;flex:0 0 min(250px,27%)}
+.ed-osce-announcement .ed-osce-launch{min-height:43px;padding:9px 14px;white-space:normal;font-size:.86rem;font-weight:700;justify-content:center;gap:10px}
+.ed-osce-secondary-actions{display:flex;align-items:center;justify-content:center;gap:10px 15px;flex-wrap:wrap}
+.ed-osce-secondary-actions>button{background:none;color:var(--text-muted,var(--muted,#57665b));border:0;font:inherit;font-size:.73rem;line-height:1.4;padding:3px 2px;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.ed-osce-secondary-actions>button:hover{color:var(--green,#17493c)}
+.ed-osce-announcement button:focus-visible{outline:2px solid #348363;outline-offset:3px}
+@media(max-width:830px){.ed-osce-announcement{align-items:flex-start;flex-direction:column;gap:13px}.ed-osce-announcement-actions{flex:0 1 auto;align-self:stretch;align-items:flex-start;flex-direction:row;flex-wrap:wrap;gap:10px}.ed-osce-announcement .ed-osce-launch{min-width:180px}.ed-osce-secondary-actions{align-self:center;justify-content:flex-start}}
+@media(max-width:470px){.ed-osce-announcement{padding:15px}.ed-osce-announcement-actions{flex-direction:column;align-items:stretch;width:100%}.ed-osce-announcement .ed-osce-launch{width:100%}.ed-osce-secondary-actions{justify-content:space-between}.ed-osce-announcement h2{font-size:1.25rem}}
