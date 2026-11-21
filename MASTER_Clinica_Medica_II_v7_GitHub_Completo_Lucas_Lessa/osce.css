@@ -308,3 +308,38 @@ body[data-theme="dark"] .osce-index-group[open] summary{background:color-mix(in 
  .osce-visual-lightbox .osce-image-frame img{max-height:min(55vh,650px)}
 }
 @media(prefers-reduced-motion:reduce){.osce-visual-pin{transition:none}}
+
+
+/* Boas-vindas OSCE: explicação breve, sem modal obrigatório ou bloqueio de navegação. */
+.osce-welcome-entry{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:0 0 13px}
+.osce-welcome-entry>p{margin:0;line-height:1.6;flex:1 1 340px}
+.osce-welcome-reopen{min-height:35px!important;font-size:.8rem;white-space:normal}
+.osce-welcome{border:1px solid var(--border,#d7e0d8);border-left:4px solid #427c66;border-radius:17px;padding:clamp(16px,2.3vw,25px);background:color-mix(in srgb,#6eaa8b 4%,var(--card,#fff));margin:8px 0 21px;box-shadow:0 8px 30px rgba(12,40,25,.045);color:inherit}
+.osce-welcome-header{display:flex;align-items:flex-start;gap:13px;margin-bottom:17px}
+.osce-welcome-icon{flex:0 0 42px;display:flex;align-items:center;justify-content:center;width:42px;height:42px;font-size:1.5rem;border-radius:13px;border:1px solid #aac8ba;background:color-mix(in srgb,#3b8564 11%,var(--card,#fff));color:#307053}
+.osce-welcome-header .eyebrow{margin:0 0 6px;letter-spacing:.08em;font-weight:750;font-size:.72rem}
+.osce-welcome-header h2{font-size:clamp(1.2rem,2vw,1.48rem);line-height:1.28;margin:0 0 8px;letter-spacing:-.015em}
+.osce-welcome-header p:not(.eyebrow){font-size:.88rem;max-width:75ch;line-height:1.65;margin:0;color:var(--text-muted,#55645c)}
+.osce-welcome-header p strong{color:inherit;font-weight:750}
+.osce-welcome-method{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px 13px;margin:13px 0 15px}
+.osce-welcome-method>div{border:1px solid var(--border,#dce5dd);border-radius:11px;background:var(--card,#fff);padding:12px 13px;min-width:0;display:grid;grid-template-columns:25px minmax(0,1fr);column-gap:9px;align-content:start}
+.osce-welcome-method>div>span{grid-row:span 2;display:inline-flex;align-items:center;justify-content:center;width:25px;height:25px;background:color-mix(in srgb,#3b886a 11%,var(--card,#fff));border:1px solid #acd2c1;color:#307054;font-size:.68rem;font-weight:800;border-radius:8px;font-variant-numeric:tabular-nums}
+.osce-welcome-method strong{font-size:.88rem;line-height:1.4;margin:1px 0 3px}
+.osce-welcome-method p{margin:0;font-size:.8rem;line-height:1.62;color:var(--text-muted,#5a6e61)}
+.osce-welcome-method b{color:inherit;font-weight:750}
+.osce-welcome-ai{display:flex;gap:12px;align-items:flex-start;padding:13px 15px;background:color-mix(in srgb,#6b9cce 6%,var(--card,#fff));border:1px solid var(--border,#d4e0e4);border-radius:11px}
+.osce-welcome-ai>span{flex:0 0 23px;font-size:1.15rem;color:#567dab}
+.osce-welcome-ai strong{display:block;font-size:.91rem;line-height:1.45}
+.osce-welcome-ai p{font-size:.83rem;line-height:1.63;color:var(--text-muted,#5e6c69);margin:5px 0 0}
+.osce-welcome-bottom{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px 20px;margin:17px 0 8px}
+.osce-welcome-checkbox{display:inline-flex;align-items:center;gap:9px;cursor:pointer;font-size:.86rem;font-weight:600;line-height:1.5}
+.osce-welcome-checkbox input{width:18px;height:18px;accent-color:#327358;cursor:pointer;margin:0;flex:none}
+.osce-welcome-checkbox input:focus-visible{outline:2px solid #307b5c;outline-offset:3px}
+.osce-welcome-bottom .btn{min-height:42px;white-space:normal}
+.osce-welcome-disclaimer{font-size:.76rem;line-height:1.58;color:var(--text-muted,#617167);margin:10px 0 0}
+@media(max-width:720px){.osce-welcome-method{grid-template-columns:1fr}.osce-welcome-icon{width:35px;height:35px;flex-basis:35px}.osce-welcome{padding:15px}}
+@media(max-width:430px){.osce-welcome-header{gap:9px}.osce-welcome-bottom .btn{width:100%}.osce-welcome-method>div{grid-template-columns:24px minmax(0,1fr);padding:11px}.osce-welcome-entry{gap:5px}}
+@media(prefers-reduced-motion:reduce){.osce-welcome *{scroll-behavior:auto}}
+
+.osce-welcome-ai .osce-welcome-ai-link{margin-top:11px;min-height:38px;font-size:.8rem;white-space:normal}
+.osce-welcome-ai-hint{display:block;margin-top:7px;font-size:.76rem;line-height:1.5;color:var(--text-muted,#5a6a60)}
