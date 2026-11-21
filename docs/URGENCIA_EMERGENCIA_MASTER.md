@@ -42,7 +42,7 @@ A primeira aula da P1 foi convertida em um percurso didático interativo **exclu
 **Conteúdo clínico**
 - Embasado nos algoritmos AHA 2025 BLS, ACLS e pós-parada.
 - O fluxograma separa corretamente presença de pulso, PCR chocável e PCR não chocável; contém traçados SVG *esquemáticos, não diagnósticos*.
-- O PDF `Aula PCR.pdf` do Drive está incorporado por visualizador sob demanda, com link e identificação da fonte. **Não houve extração/republicação de figuras isoladas** do PDF.
+- Foi extraído um ECG individual do PDF de PCR e inserido na etapa de escolha de ritmos, sem slide inteiro nem link ao documento.
 - Nenhuma interface de arguição oral foi adicionada à PCR; o treino usa apenas decisões, questões, caso e memória.
 - Doses e condutas requerem protocolo institucional e supervisão para uso clínico real.
 
@@ -51,11 +51,13 @@ A primeira aula da P1 foi convertida em um percurso didático interativo **exclu
 - Simulação funcional das quatro rotas de tempo, respostas, alternativa de pulso/ritmo, cinco decisões de caso, salvamento das questões originais, marcação de conclusão e reteste sem apagar histórico.
 - Falta executar QA real em navegador com autenticação, persistência entre dispositivos, acessibilidade móvel/tablet e conferência do deploy.
 
-## Imagens e slides
-O curso **não publica cópias de imagens protegidas no repositório**. Quando há fonte identificada, inclui visualização embutida do PDF completo por iframe do próprio Drive e link à fonte original, sujeito a permissões do Google. O único ECG desenhado no código é figura esquemática autoral, explicitamente identificada como tal. A curadoria e inclusão de imagens individuais recortadas, com anotações clínicas e referência por figura, ainda precisa de análise de direitos/atribuição e revisão do conteúdo específico.
+## Imagens e esquemas visuais (atualizado em 21/11/2026)
+- **23 JPEGs individuais foram extraídos de slides e resumos**, sem publicar páginas inteiras; 22 são exibidos na interface (uma imagem ficou reservada por não ser específica o suficiente para EAP).
+- Imagens e diagramas aparecem após a seção teórica relevante: ECGs, TC/RX, anatomia, manobras e sinais clínicos, com legendas dirigidas ao raciocínio.
+- Nos demais 14 temas usam-se fluxogramas autorais em lugar de fotografias inadequadas ou decorativas.
+- Não há mais `iframe`, previews ou links para PDFs completos. O trabalho de checagem de direitos de republicação de figuras de terceiros ainda deve ser feito antes de distribuição externa.
+- Inventário e páginas de origem: `docs/URGENCIA_FIGURAS_CURADORIA_2026.md`.
 
-Pasta de slides verificada:
-https://drive.google.com/drive/folders/1ZVMHML4TFafZrVq29M57cZwQ8EumFPFD
 
 ## Fontes e atualização
 - AHA 2025, ACLS adulto: https://cpr.heart.org/en/resuscitation-science/cpr-and-ecc-guidelines/adult-advanced-life-support
@@ -65,24 +67,24 @@ https://drive.google.com/drive/folders/1ZVMHML4TFafZrVq29M57cZwQ8EumFPFD
 
 ## Verificações executadas em 19/11/2026
 - Sintaxe JavaScript aprovada em `app.js`, `course-kit.js`, `emergency-content.js` e `emergency.js`.
-- Renderização das rotas P1/P2 testada em ambiente JS simulado com 23 módulos, 184 seções, 115 questões, 46 casos, fluxogramas, pódio da memória e visualizador de slides.
+- Renderização das rotas P1/P2 testada em ambiente JS simulado com 23 módulos, 184 seções, 115 questões, 46 casos, fluxogramas, pódio da memória e figuras clínicas no contexto.
 - Modo prova testado em três sessões sorteadas: 20 itens únicos por sessão, exatamente 8 da P1 e 12 da P2, correção, histórico e criação de nova sessão.
 - Todas as 23 IDs de módulo foram encontradas e aprofundadas; todos os códigos de referência usados nas aulas possuem registro no dicionário de fontes.
 - Teste de integridade automatizado acrescentado em `tests/emergency-deep.test.cjs`.
-- **Não executados** nesta etapa: teste completo Vite/Playwright em navegador real, inspeção de PDFs originais por imagem, análise de acessibilidade em dispositivos, validação médica por docente e confirmação de deploy Cloudflare.
+- **Não executados** nesta etapa: teste completo Vite/Playwright em navegador real, análise de acessibilidade em dispositivos, validação médica por docente e confirmação de deploy Cloudflare.
 
 ## Próximas etapas recomendadas para homologação
 1. Teste real desktop/iPad/celular, com autenticação e sincronização de respostas.
 2. Revisão médica das condutas e doses, com atenção a diferenças entre slides históricos e diretrizes atuais.
-3. Curadoria de imagens individuais (figura/página, licença, referência, anotação e descrição alternativa).
+3. Auditar direitos/atribuição das imagens individuais já extraídas; revisar legendas e descrição alternativa com docentes.
 4. Evoluir as questões atuais para calibração N1/N2/N3 e novas estações em role-playing, com métricas de domínio.
 5. Testes de regressão em Clínica Médica e Cirurgia e auditoria de performance antes de declarar produção validada.
 
 ## Curadoria visual e neutralidade editorial (19/11/2026)
 - Os **23 módulos** não renderizam mais PDFs integrais, iframes do Drive, blocos “Imagens da aula original” nem links diretos para os slides completos. Os nomes de docentes e instituições não são exibidos na interface de Urgência e Emergência.
 - Os PDFs foram **consultados como material de referência**; o arquivo-fonte continua identificado nos dados internos, mas não aparece na aula. As referências clínicas verificáveis permanecem disponíveis.
-- Diagramas **autorais**, derivados da seleção de tópicos pertinentes (e não recortes de imagens originais), foram acrescentados às aulas de insuficiência respiratória aguda, AVC, sepse, choque e trauma. A PCR permanece com seu traçado didático interativo autoral.
-- **Ainda não foram extraídas figuras gráficas específicas dos PDFs** para incorporação como arquivos de imagem. Essa etapa depende de extração, revisão de qualidade visual, checagem das marcações e atribuição apropriada por figura. Não declarar essa parte como concluída.
+- Diagramas autorais foram mantidos onde não havia imagem fonte adequada; os módulos de IRpA, AVC, sepse, choque e trauma usam figuras individuais extraídas dos PDFs.
+- **Atualização de 21/11/2026:** foram extraídas 23 figuras individuais dos PDFs, das quais 22 estão vinculadas às aulas. Os outros módulos recebem esquemas de decisão. Consultar o inventário de fonte e de direitos.
 - Verificação em motor JS simulado: 23 módulos/115 questões, ausência de iframe/preview nas 23 aulas, ausência de marcas institucionais na renderização, e nenhuma referência de fonte ausente.
 
 
