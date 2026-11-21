@@ -45,7 +45,7 @@ test('Super Foco persists per signed-in user and does not expose previous user p
  user.id='student-b';
  f.resetUser();
  const html=f.page();
- assert.match(html,/0<\/strong> desafios revisados/);
+ assert.match(html,/0<\/strong> desafios treinados/);
  assert.ok(storage.has('master_super_foco_v1:student-a'));
  assert.equal(storage.has('master_super_foco_v1:student-b'),false);
 });
