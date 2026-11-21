@@ -36,7 +36,8 @@ function question(id,course,topic,title,prompt,answer,extra,kind,priority,contex
   kind:kind||'recuperacao',priority:priority||'media',context:stext(context),
   criteria:(detail.criteria||[]).filter(Boolean).map(stext).filter(Boolean).slice(0,9),
   mechanism:stext(detail.mechanism),pitfall:stext(detail.pitfall),memory:stext(detail.memory),
-  example:stext(detail.example),transfer:stext(detail.transfer),sources:detail.sources||[]
+  example:stext(detail.example),transfer:stext(detail.transfer),sources:detail.sources||[],
+  image:detail.image&&/^(https:\/\/|assets\/)/.test(detail.image.src||'')&&!detail.image.revealedOnly?detail.image:null
  };
 }
 function enrich(base,deep,topic,part){
@@ -70,7 +71,8 @@ function catalog(){
      criteria:q.criteria,mechanism:st.essential?.oneMinute,pitfall:(st.deeper||[])[0]?.body,
      memory:q.memory||st.essential?.mnemonic,
      example:q.caseText||st.subtitle,transfer:'Como esse achado mudaria sua hipótese ou conduta em outro paciente?',
-     sources:st.sources||[]
+     sources:st.sources||[],
+     image:(st.images||[]).find(img=>img?.src&&!img.revealedOnly&&img.kind==='reference')
     });
    if(item){item.fromSimulationError=weakOsce.has(item.id);entries.push(item);}
   });
@@ -238,7 +240,7 @@ function finishSession(){
  stage='summary';persist();rerender();
 }
 function score(n){
- const item=current(),run=session(),x=currentNote();if(!x||!item||!run||x.phase==='challenge')return;
+ const item=current(),run=session(),x=currentNote();if(!x||!item||!run||x.phase==='challenge'||x.grade!==undefined)return;
  const pct=[0,40,75,100][Math.max(0,Math.min(3,Number(n)||0))],prev=state.records[item.id],high=x.confidence===3&&pct<80;
  const interval=pct<50||high?1:pct<80?3:pct===100&&(prev?.score||0)>=80?21:7;
  const at=new Date().toISOString();
@@ -314,6 +316,21 @@ function rationalePanel(x){
  return '<div class="sf-deep-panels">'+blocks.map((z,i)=>
   '<details class="sf-deep" '+(i===0?'open ':'')+'><summary>'+esc(z[0])+' <span>abrir / recolher</span></summary><div>'+z[1]+'</div></details>').join('')+'</div>';
 }
+function readAloud(which){
+ const x=current();if(!x)return;
+ const text=which==='answer'?x.answer:x.prompt;
+ if(!window.speechSynthesis||!window.SpeechSynthesisUtterance){inform('Leitura em voz alta indisponível neste navegador.');return;}
+ try{window.speechSynthesis.cancel();const utterance=new window.SpeechSynthesisUtterance(text);utterance.lang='pt-BR';utterance.rate=0.96;window.speechSynthesis.speak(utterance);}
+ catch{inform('A reprodução da fala não está disponível neste dispositivo.');}
+}
+function listenButton(which){
+ return window.speechSynthesis&&window.SpeechSynthesisUtterance?
+  '<button type="button" class="btn ghost sf-listen" onclick="SuperFoco.readAloud(\''+which+'\')">🔊 Ouvir '+(which==='answer'?'a resposta':'a pergunta')+'</button>':'';
+}
+function caseImage(x){
+ if(!x.image?.src)return '';
+ return '<figure class="sf-case-image"><img src="'+esc(x.image.src)+'" loading="lazy" alt="Imagem clínica de referência para esta estação; interpretação a realizar pelo aluno"><figcaption>Imagem de referência didática, não necessariamente do paciente da vinheta. Veja as marcações e fontes na estação OSCE completa.</figcaption></figure>';
+}
 function voiceButton(which){
  return window.SpeechRecognition||window.webkitSpeechRecognition?
   '<button type="button" class="btn ghost sf-dictate" onclick="SuperFoco.dictate(\''+which+'\')">🎤 Ditar com microfone</button>':
@@ -324,9 +341,9 @@ function challengePage(x,n){
   x.kind==='discriminacao'?'Qual achado realmente diferencia as duas hipóteses?':
   x.kind==='aplicacao'?'Comece pela gravidade e pela primeira decisão.':'Recupere o mecanismo e diga como ele aparece na clínica.';
  return '<section class="sf-question"><p class="eyebrow">ARRANCO DA GAVETA · ETAPA 1</p><h2>'+esc(x.prompt)+'</h2>'+
-  '<p class="sf-prompt-guidance">Feche mentalmente o material. Recupere o máximo que conseguir, mesmo que a resposta seja incompleta. Não precisa acertar para começar.</p>'+
+  '<p class="sf-prompt-guidance">Feche mentalmente o material. Recupere o máximo que conseguir, mesmo que a resposta seja incompleta. Não precisa acertar para começar.</p>'+caseImage(x)+
   '<label for="sf-answer">O que você consegue lembrar sem consultar?</label><textarea id="sf-answer" rows="6" oninput="SuperFoco.input(this.value)" placeholder="Pode escrever uma palavra, os passos essenciais ou “não sei”...">'+esc(n.draft)+'</textarea>'+
-  '<div class="sf-voice-row">'+voiceButton('draft')+'</div>'+
+  '<div class="sf-voice-row">'+listenButton('question')+voiceButton('draft')+'</div>'+
   (n.hints?'<p class="sf-hint"><strong>Pista de raciocínio:</strong> '+esc(hintText)+'</p>':'')+
   '<fieldset class="sf-confidence"><legend>Qual sua confiança nesta resposta?</legend>'+[[1,'Baixa'],[2,'Média'],[3,'Alta']].map(z=>
    '<button type="button" data-sf-confidence="'+z[0]+'" aria-pressed="'+(n.confidence===z[0])+'" onclick="SuperFoco.conf('+z[0]+')">'+z[1]+'</button>').join('')+'</fieldset>'+
@@ -337,7 +354,7 @@ function challengePage(x,n){
 function feedbackPage(x,n){
  return '<section class="sf-question sf-feedback"><p class="eyebrow">FEEDBACK FORMATIVO · ETAPA 2</p><h2>Compare seu raciocínio com o esperado</h2>'+
   '<div class="sf-attempt"><strong>Sua tentativa</strong><p>'+esc(n.draft)+'</p></div>'+
-  '<div class="sf-answer"><h3>Modelo de resposta</h3><p>'+esc(x.answer)+'</p></div>'+
+  '<div class="sf-answer"><h3>Modelo de resposta</h3><p>'+esc(x.answer)+'</p>'+listenButton('answer')+'</div>'+
   rationalePanel(x)+
   '<div class="sf-action-row"><button type="button" class="btn primary" onclick="SuperFoco.mirror()">Agora explicar sem olhar →</button>'+
   '<button type="button" class="btn" onclick="SuperFoco.connect()">Criar uma conexão clínica</button>'+
@@ -349,7 +366,7 @@ function mirrorPage(x,n){
   '<p class="sf-prompt-guidance">Imagine que você está explicando a um colega mais novo: qual é a lógica da decisão, por que acontece e como reconhecer? Fale primeiro, depois registre o essencial.</p>'+
   '<div class="sf-mirror-prompt"><strong>Seu desafio</strong><p>'+esc(x.prompt)+'</p></div>'+
   '<label for="sf-mirror">Minha explicação com palavras simples</label><textarea id="sf-mirror" rows="5" oninput="SuperFoco.mirrorInput(this.value)" placeholder="A ideia central é... porque... então na prática...">'+esc(n.mirror||'')+'</textarea>'+
-  '<div class="sf-voice-row">'+voiceButton('mirror')+'</div>'+
+  '<div class="sf-voice-row">'+listenButton('question')+voiceButton('mirror')+'</div>'+
   (n.mirrorChecked?'<div class="sf-answer"><h3>Compare mais uma vez</h3><p>'+esc(x.answer)+'</p></div>':'')+
   '<div class="sf-action-row"><button type="button" class="btn primary" onclick="SuperFoco.connect()">Agora conectar conceitos →</button>'+
   '<button type="button" class="btn ghost" onclick="SuperFoco.mirrorCheck()">Mostrar resposta para conferir</button>'+
@@ -367,6 +384,8 @@ function connectionPage(x,n){
   gradePanel()+'</section>';
 }
 function gradePanel(){
+ const n=currentNote();
+ if(n?.grade!==undefined)return '<div class="sf-grade"><p><strong>Autoavaliação registrada: '+n.grade+'%.</strong> Abrir estes painéis não cria uma nova tentativa. Para testar a memória outra vez, use o botão abaixo.</p><button type="button" class="btn ghost" onclick="SuperFoco.retry()">Nova tentativa sem consulta</button></div>';
  return '<div class="sf-grade"><p><strong>Como foi sua recuperação antes de consultar?</strong> Avalie com rigor. A nota do Super Foco é só autoavaliação e não interfere na Simulação.</p>'+
   [[0,'Não sabia'],[1,'Pouco'],[2,'Quase tudo'],[3,'Completo']].map(z=>
   '<button type="button" class="btn" onclick="SuperFoco.score('+z[0]+')">'+z[1]+'</button>').join('')+'</div>';
@@ -469,5 +488,5 @@ window.addEventListener('master-auth-ended',()=>{owner='local';state=empty();sta
 window.addEventListener('storage',e=>{if(e.key===key()){resetUser();rerender();}});
 return {page,open,choose,resume,back,setLength,setMixed,searchSet,toggleMix,input,mirrorInput,connectionInput,
  conf,hint,reveal,mirror,mirrorCheck,connect,feedback,goTo,previous,next,finishSession,score,retry,dictate,
- openSource,catalog,topics,afterRender,resetUser};
+ readAloud,openSource,catalog,topics,afterRender,resetUser};
 })();
