@@ -177,7 +177,7 @@ window.OSCEPilot=(()=>{
   const mediaTitle=st.pocusOrder?'<p class="osce-note osce-pocus-disclaimer"><strong>POCUS:</strong> as imagens de referência podem mostrar pessoas ou condições diferentes das descritas na vinheta. As anotações distinguem achado observável de interpretação clínica.</p>':'';
   return mediaTitle+st.images.map((img,index)=>{
    if(hidden&&img.src?.startsWith('data:image/svg+xml'))return '<div class="osce-pocus-image-locked"><span aria-hidden="true">📖</span><strong>Esquema com sinais, exames e condutas</strong><p>Este esquema didático já contém parte do gabarito e aparecerá com marcações explicativas depois da tentativa. No pré-estudo, fica aberto desde o início.</p></div>';
-   if(img.revealedOnly&&hidden)return '<div class="osce-pocus-image-locked"><span aria-hidden="true">🔒</span><strong>Imagem de referência com resposta identificada</strong><p>Será revelada depois da tentativa. No estudo, pode ser explorada com marcações e explicações.</p></div>';
+   if(img.revealedOnly&&hidden)return '<div class="osce-pocus-image-locked"><span aria-hidden="true">🔒</span><strong>Imagem de referência com a resposta sinalizada</strong><p>Será revelada depois da tentativa. No estudo, pode ser explorada com marcações e explicações.</p></div>';
    return visualAnnotated(img,st,index,showNotes,hidden);
   }).join('');
  }
