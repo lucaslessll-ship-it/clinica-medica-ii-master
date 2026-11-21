@@ -1,0 +1,63 @@
+
+/* Banco de Urgência: componentes compatíveis com Cirurgia e sistema visual Master. */
+.ue-bank-page{max-width:1120px;margin:0 auto;padding-bottom:70px}
+.ue-bank-page .ue-bank-heading{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
+.ue-bank-heading h1,.ue-bank-heading h2{margin:3px 0 7px;letter-spacing:-.035em}
+.ue-bank-heading p{color:var(--muted);max-width:780px;line-height:1.65;margin:4px 0 11px}
+.ue-bank-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:16px 0 19px}
+.ue-bank-stats>div{border:1px solid var(--line);background:var(--white);border-radius:15px;padding:13px 16px}
+.ue-bank-stats strong{font-size:clamp(1.4rem,3vw,2rem);font-weight:800;display:block;letter-spacing:-.05em;color:var(--ink)}
+.ue-bank-stats span{font-size:.78rem;color:var(--muted);line-height:1.5}
+.ue-bank-config{margin-bottom:24px}
+.ue-bank-filter-group{border-top:1px solid var(--line);padding:18px 0}
+.ue-bank-filter-group>strong,.ue-bank-filter-group>.ue-bank-heading>strong{display:block;font-size:.91rem;margin-bottom:10px}
+.ue-bank-choices{display:flex;flex-wrap:wrap;gap:8px}
+.ue-choice{appearance:none;border:1px solid var(--line);background:var(--white);color:var(--ink);border-radius:9px;padding:9px 12px;font-size:.85rem;min-height:39px;cursor:pointer;font-weight:550}
+.ue-choice.active{background:var(--soft);border-color:var(--green2);color:var(--green2);box-shadow:inset 0 0 0 1px var(--green2);font-weight:700}
+.ue-choice:focus-visible,.ue-bank-dot:focus-visible,.ue-bank-option:focus-visible{outline:3px solid #6cbea8;outline-offset:3px}
+.ue-bank-themes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.ue-bank-themes label{display:flex;gap:8px;align-items:flex-start;background:var(--soft);padding:10px 11px;border:1px solid var(--line);border-radius:9px;cursor:pointer;font-size:.82rem;line-height:1.4}
+.ue-bank-themes label input{accent-color:var(--green2);margin-top:3px;flex:0 0 auto}
+.ue-bank-parameters{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:14px 0 19px}
+.ue-bank-parameters label{font-size:.82rem;font-weight:700;display:flex;flex-direction:column;gap:7px}
+.ue-bank-parameters input{width:100%;border:1px solid var(--line);border-radius:9px;padding:12px;color:var(--ink);background:var(--white);font-size:1rem}
+.ue-bank-buttons{display:flex;flex-wrap:wrap;gap:9px;margin:13px 0}
+.ue-bank-buttons button{min-height:43px}
+.ue-bank-originals{margin:20px 0}
+.ue-bank-source-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:13px}
+.ue-bank-source{border:1px solid var(--line);background:var(--soft);border-radius:11px;padding:13px 14px;color:var(--ink);text-decoration:none;display:flex;flex-direction:column;gap:5px;min-width:0}
+.ue-bank-source:hover{border-color:var(--green2);background:var(--white)}
+.ue-bank-source small{font-size:.69rem;color:var(--green2);font-weight:800}
+.ue-bank-source strong{font-size:.89rem;line-height:1.42}
+.ue-bank-source span{color:var(--muted);font-size:.74rem}
+.ue-bank-clock{display:flex;flex-direction:column;align-items:flex-end;gap:3px;min-width:140px}
+.ue-bank-clock>span{font-size:.72rem;color:var(--muted)}
+.ue-bank-clock strong{font-size:1.6rem;letter-spacing:-.04em;font-variant-numeric:tabular-nums}
+.ue-bank-dots{display:flex;flex-wrap:wrap;gap:7px;padding:14px;margin:13px 0 18px;background:var(--white);border:1px solid var(--line);border-radius:13px}
+.ue-bank-dot{appearance:none;border:1px solid #d5ded9;color:#65736c;background:#fff;border-radius:8px;width:35px;height:35px;font-size:.76rem;font-weight:700;cursor:pointer;display:grid;place-items:center;font-variant-numeric:tabular-nums}
+.ue-bank-dot.answered{background:#ecf0ff;border-color:#a9b9ff;color:#293f9f}
+.ue-bank-dot.right{background:#dcf4e7;border-color:#83caa5;color:#0d7248}
+.ue-bank-dot.wrong{background:#fde8e8;border-color:#efb2ae;color:#b32929}
+.ue-bank-dot.current{outline:2px solid var(--green2);outline-offset:2px}
+.ue-bank-question .ue-bank-meta{display:flex;gap:8px;flex-wrap:wrap;color:var(--muted);font-size:.7rem;font-weight:700;letter-spacing:.015em}
+.ue-bank-question .ue-bank-meta span{padding:5px 8px;background:var(--soft);border-radius:6px}
+.ue-bank-question h2{font-size:clamp(1.03rem,2vw,1.22rem);line-height:1.66;font-weight:700;margin:15px 0}
+.ue-bank-options{display:grid;gap:10px}
+.ue-bank-option{appearance:none;border:1px solid var(--line);text-align:left;background:var(--white);color:var(--ink);border-radius:11px;padding:12px 13px;display:flex;align-items:flex-start;gap:12px;font-size:.9rem;line-height:1.6;cursor:pointer}
+.ue-bank-option:hover:not(:disabled){border-color:var(--green2);background:var(--soft)}
+.ue-bank-option>b{height:26px;width:26px;flex:0 0 26px;display:grid;place-items:center;border:1px solid var(--line);border-radius:7px;font-size:.79rem}
+.ue-bank-option.picked{border-color:var(--green2);background:var(--soft)}
+.ue-bank-option.right{border-color:#83caa5;background:#eaf8f0}
+.ue-bank-option.wrong{border-color:#edaaa5;background:#fff0ef}
+.ue-bank-option:disabled{cursor:default;opacity:1}
+.ue-bank-feedback{border:1px solid var(--line);border-left:3px solid var(--green2);background:var(--soft);margin-top:17px;padding:14px;border-radius:10px}
+.ue-bank-feedback.wrong{border-left-color:#d64a43}
+.ue-bank-feedback p{line-height:1.6;font-size:.86rem;margin:7px 0}
+.ue-bank-deep{border-top:1px solid var(--line);margin-top:12px;padding-top:12px}
+.ue-bank-deep summary{font-size:.85rem;cursor:pointer;font-weight:750}
+.ue-bank-deep p{line-height:1.7}
+.ue-bank-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:19px}
+.ue-bank-summary{margin:20px 0}
+.ue-bank-summary p{line-height:1.6}
+@media(max-width:840px){.ue-bank-themes{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:620px){.ue-bank-stats{grid-template-columns:repeat(2,minmax(0,1fr))}.ue-bank-themes,.ue-bank-source-grid,.ue-bank-parameters{grid-template-columns:1fr}.ue-bank-dots{gap:6px;padding:12px}.ue-bank-dot{width:32px;height:32px}.ue-bank-clock{min-width:0}}
