@@ -9,7 +9,7 @@ const SOURCES=()=>window.UE_BANK_SOURCES||{};
 const ORIGINALS=()=>window.UE_BANK_ORIGINALS||[];
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const MAX=120,ALPHABET='ABCDE',STAGES=['P1','P2'];
-const defaultFilter=()=>({types:['fixacao','modelo'],levels:[1,2,3],themes:DATA().map(m=>m.id),stages:['P1','P2'],count:20,minutes:60,onlyWrong:false,onlyUnanswered:false});
+const defaultFilter=()=>({types:['fixacao','modelo','prova'],levels:[1,2,3],themes:DATA().map(m=>m.id),stages:['P1','P2'],count:20,minutes:60,onlyWrong:false,onlyUnanswered:false});
 let filter=defaultFilter(),view='setup',current=null;
 const bank=()=>{
  const root=store.study||(store.study={version:1,reviews:{},steps:{}});
@@ -151,7 +151,7 @@ function externalSources(){
 function progressDots(r){
  const answerFor=id=>r.kind==='exam'?r.ans[id]:(r.done[id]?.chosen);
  return '<div class="ue-bank-dots" aria-label="Navegação entre questões">'+r.ids.map((id,i)=>{
- const a=answerFor(id),answered=Number.isInteger(a),q=get(id),ok=r.kind==='practice'&&answered?r.done[id]?.ok:null;
+ const a=answerFor(id),answered=Number.isInteger(a),q=get(id),ok=answered&&(r.kind==='practice'||r.done===true)?a===q?.a:null;
  let cls=ok===true?'right':ok===false?'wrong':answered?'answered':'pending';
  return '<button type="button" class="ue-bank-dot '+cls+' '+(i===r.step?'current':'')+'" aria-label="Questão '+(i+1)+(answered?', respondida':'')+'" aria-current="'+(i===r.step?'step':'false')+'" onclick="UEQuestions.jump('+i+')">'+(i+1)+'</button>';
  }).join('')+'</div>';
@@ -159,8 +159,9 @@ function progressDots(r){
 function details(q,answer,show){
  if(!show)return '';
  const ok=answer===q.a,explanation=esc(q.why||'');
+ const source=q.sourceLink?'<p><a href="'+esc(q.sourceLink)+'" target="_blank" rel="noopener noreferrer">Abrir questão original no PDF ↗</a>'+(q.verifiedKey?' · Gabarito publicado da original: <b>'+esc(q.verifiedKey)+'</b>':'')+'</p>':'';
  const addition=q.extra?'<details class="ue-bank-deep"><summary>Aprofundamento resumido</summary><p>'+esc(q.extra)+'</p><button class="btn secondary" onclick="navigate('+(q.stage==='P1'? "'emergency-p1'":"'emergency-p2'")+');Emergency.'+(q.stage==='P1'?'p1':'p2')+'.open('+DATA().filter(m=>m.stage===q.stage).findIndex(m=>m.id===q.t)+')">Estudar aula completa →</button></details>':'';
- return '<div class="ue-bank-feedback '+(ok?'right':'wrong')+'"><strong>'+(ok?'Resposta correta.':'Revise esta questão.')+'</strong><p>Gabarito: <b>'+esc(q.o[q.a])+'</b></p><p>'+explanation+'</p>'+addition+'</div>';
+ return '<div class="ue-bank-feedback '+(ok?'right':'wrong')+'"><strong>'+(ok?'Resposta correta.':'Revise esta questão.')+'</strong><p>Gabarito: <b>'+esc(q.o[q.a])+'</b></p><p>'+explanation+'</p>'+source+addition+'</div>';
 }
 function sessionView(){
  const r=active();if(!r){view='setup';return setupView();}
@@ -172,8 +173,8 @@ function sessionView(){
  return '<section class="emergency-page ue-bank-page"><nav class="pocus-crumb"><button class="btn" onclick="UEQuestions.setMode(\'setup\')">← Configurações</button><span>'+(r.kind==='exam'?'Simulado':'Treino')+' · '+answered+'/'+r.ids.length+' respondidas</span></nav>'+
  '<div class="ue-bank-heading"><div><span class="kicker">'+(r.kind==='exam'?'MODO PROVA':'ESTUDO COM FEEDBACK')+'</span><h1>'+(r.done===true?'Correção do simulado':'Questão '+(r.step+1)+' de '+r.ids.length)+'</h1><p>'+(submitted?'Resultado: '+r.score+' / '+r.ids.length+' acertos':'Respostas registradas automaticamente após cada seleção.')+'</p></div>'+
  (r.kind==='exam'&&r.minutes>0?'<div class="ue-bank-clock" aria-live="off"><span>Tempo restante</span><strong id="ue-bank-timer">'+(submitted?'Finalizado':formatTime(remain(r)))+'</strong></div>':'')+'</div>'+
- progressDots(r)+'<article class="card pad ue-bank-question"><div class="ue-bank-meta"><span>'+esc(title(q.t))+'</span><span>'+esc(q.kind==='fixacao'?'Fixação':'Modelo de residência')+'</span><span>N'+q.level+'</span></div>'+
- '<h2>'+esc(q.q)+'</h2><div class="ue-bank-options">'+r.orders[id].map((orig,i)=>'<button type="button" '+(show||r.kind==='practice'&&Number.isInteger(answer)?'disabled':'')+' class="ue-bank-option '+(answer===orig?'picked ':'')+(show&&orig===q.a?'right ':'')+(show&&answer===orig&&orig!==q.a?'wrong':'')+'" onclick="UEQuestions.answer('+orig+')"><b>'+(ALPHABET[i])+'</b><span>'+esc(q.o[orig])+'</span></button>').join('')+'</div>'+
+ progressDots(r)+'<article class="card pad ue-bank-question"><div class="ue-bank-meta"><span>'+esc(title(q.t))+'</span><span>'+esc(q.kind==='fixacao'?'Fixação':q.kind==='prova'?'Prova identificada · adaptação':'Modelo de residência')+'</span><span>N'+q.level+'</span></div>'+
+ '<h2>'+esc(q.q)+'</h2>'+(q.sourceLink?'<p class="ue-bank-provenance">Adaptação didática, não transcrição literal. <a href="'+esc(q.sourceLink)+'" target="_blank" rel="noopener noreferrer">Ver a questão original no PDF ↗</a></p>':'')+'<div class="ue-bank-options">'+r.orders[id].map((orig,i)=>'<button type="button" '+(show||r.kind==='practice'&&Number.isInteger(answer)?'disabled':'')+' class="ue-bank-option '+(answer===orig?'picked ':'')+(show&&orig===q.a?'right ':'')+(show&&answer===orig&&orig!==q.a?'wrong':'')+'" onclick="UEQuestions.answer('+orig+')"><b>'+(ALPHABET[i])+'</b><span>'+esc(q.o[orig])+'</span></button>').join('')+'</div>'+
  details(q,answer,show)+'<div class="ue-bank-actions"><button class="btn" onclick="UEQuestions.jump('+(r.step-1)+')" '+(r.step===0?'disabled':'')+'>← Anterior</button>'+
  '<button class="btn primary" onclick="UEQuestions.jump('+(r.step+1)+')" '+(r.step===r.ids.length-1?'disabled':'')+'>Próxima →</button>'+
  (r.kind==='exam'&&!r.done?'<button class="btn secondary" onclick="UEQuestions.finish()">Entregar simulado</button>':r.kind==='practice'?'<button class="btn secondary" onclick="UEQuestions.finish(false)">Encerrar treino</button>':'')+'</div></article>'+
@@ -185,7 +186,7 @@ function setupView(){
  return '<section class="emergency-page ue-bank-page"><header class="emergency-hero"><div class="emergency-hero-icon">◈</div><div><span class="kicker">URGÊNCIA E EMERGÊNCIA · BANCO COMPLETO</span><h1>Questões e simulados</h1><p>O mesmo padrão de navegação, progresso e histórico de Cirurgia — com questões novas, modelos de residência e provas de referência.</p></div></header>'+
  '<div class="ue-bank-stats"><div><strong>'+s.total+'</strong><span>Questões avaliáveis</span></div><div><strong>'+s.answered+'</strong><span>Já respondidas</span></div><div><strong>'+s.correct+'</strong><span>Acertos registrados</span></div><div><strong>'+s.sessions+'</strong><span>Sessões no histórico</span></div></div>'+
  '<section class="card pad ue-bank-config"><div class="ue-bank-heading"><div><h2>Montar meu treino ou simulado</h2><p>Escolha temas, nível, fonte, quantidade e duração.</p></div><span>'+available.length+' questões elegíveis</span></div>'+
- group('types','Tipo de questão',[['fixacao','Fixação da aula'],['modelo','Modelo residência']],'UEQuestions.toggleType')+
+ group('types','Tipo de questão',[['fixacao','Fixação da aula'],['modelo','Modelo residência'],['prova','Provas reais · adaptadas']],'UEQuestions.toggleType')+
  group('stages','Período',[['P1','P1'],['P2','P2']],'UEQuestions.toggleStage')+
  group('levels','Nível de dificuldade',[[1,'N1 · Essencial'],[2,'N2 · Aplicação'],[3,'N3 · Decisão']],'UEQuestions.toggleLevel')+
  '<div class="ue-bank-filter-group"><div class="ue-bank-heading"><strong>Temas ('+selectedThemes+' de '+DATA().length+')</strong><div class="btn-row"><button type="button" class="btn ghost" onclick="UEQuestions.allThemes()">Todos</button><button type="button" class="btn ghost" onclick="UEQuestions.noThemes()">Nenhum</button></div></div><div class="ue-bank-themes">'+DATA().map(m=>'<label><input type="checkbox" '+(filter.themes.includes(m.id)?'checked':'')+' onchange="UEQuestions.toggleTheme(\''+m.id+'\')"> <span>'+esc(m.title)+'</span></label>').join('')+'</div></div>'+
