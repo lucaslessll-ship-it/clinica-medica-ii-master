@@ -123,6 +123,60 @@ window.OSCEPilot=(()=>{
   +'<details class="osce-deep"><summary>Palácio da memória e armadilhas <span>memorizar</span></summary><div><p>'+esc(q.memory||st.essential.mnemonic)+'</p></div></details>'
   +blocks.map(x=>'<details class="osce-deep"><summary>'+esc(x.title)+' <span>aprofundar</span></summary><div><p>'+mark(st,x.body)+'</p><p><strong>Memorização:</strong> '+esc(x.tip)+'</p></div></details>').join('')+'</div>';
  }
+
+ function learningStation(){return MAP.get(Number(state.learning?.station))||MAP.get(61);}
+ function learnedCount(st,ids){const a=state.learned?.[st.number]||[];return ids.filter(id=>a.includes(id)).length;}
+ function learn(tier='completa',number=61){
+  const st=MAP.get(Number(number));if(!st||!st.tiers[tier])return;
+  state.learning={station:st.number,tier};
+  screen='learn';glossary='';save();renderAgain();
+ }
+ function jumpLearn(id){
+  if(typeof document==='undefined')return;
+  const el=document.getElementById('osce-learn-'+String(id).replace(/[^a-zA-Z0-9_-]/g,''));
+  if(el){el.scrollIntoView({block:'start',behavior:'smooth'});el.querySelector('button.osce-study-mark')?.focus({preventScroll:true});}
+ }
+ function markLearn(number,id){
+  const st=MAP.get(Number(number)),q=st?.questions.find(x=>x.id===id);if(!q)return;
+  state.learned=state.learned||{};const prev=state.learned[st.number]||[];
+  const wasMarked=prev.includes(id);
+  state.learned[st.number]=wasMarked?prev.filter(x=>x!==id):[...prev,id];
+  save();
+  if(typeof document!=='undefined'){
+   const b=document.getElementById('osce-learn-mark-'+st.number+'-'+id);
+   if(b){b.setAttribute('aria-pressed',String(!wasMarked));b.textContent=wasMarked?'Marcar como estudado':'✓ Estudado';}
+   const ids=(st.tiers[state.learning?.tier]?.ids||[]);
+   const progress=document.getElementById('osce-learn-progress');
+   if(progress)progress.textContent=learnedCount(st,ids)+'/'+ids.length+' pontos estudados';
+  }
+ }
+ function learnPage(){
+  const st=learningStation(),tier=st.tiers[state.learning?.tier]?state.learning.tier:'completa',conf=st.tiers[tier],all=conf.ids.map(id=>st.questions.find(q=>q.id===id)).filter(Boolean),read=state.learned[st.number]||[],sim=state.current;
+  let out=sectionTitle('Estudo <em>'+esc(st.title)+'.</em>');
+  out+='<button type="button" class="btn ghost" onclick="OSCEPilot.home()">← Escolher outra estação</button>';
+  out+='<div class="osce-learning-banner" role="note"><div><p class="eyebrow">MODO ESTUDO · SEM NOTA</p><h2>Aprenda antes de ser avaliado.</h2><p>As respostas estão disponíveis desde o início. Leia o raciocínio, revise os conceitos e depois escolha quando começar a simulação.</p></div><div class="osce-actions"><button class="btn primary" onclick="OSCEPilot.start(\''+tier+'\',null,'+st.number+')">🩺 Simular este tema</button>'+(sim&&sim.station===st.number?'<button class="btn" onclick="OSCEPilot.resume()">Retomar simulação anterior</button>':'')+'</div></div>';
+  out+='<div class="osce-study-switch" role="group" aria-label="Profundidade de estudo">'+Object.entries(st.tiers).map(([k,t])=>'<button type="button" class="osce-study-switch-btn '+(tier===k?'active':'')+'" aria-pressed="'+(tier===k)+'" onclick="OSCEPilot.learn(\''+k+'\','+st.number+')"><strong>'+esc(t.label)+'</strong><small>≈ '+t.minutes+' min · '+t.ids.length+' tópico(s)</small></button>').join('')+'</div>';
+  out+=toolBar(st);
+  out+='<section class="osce-case"><div class="osce-stepbar"><strong>CASO CLÍNICO · ESTAÇÃO '+st.number+'</strong><span>Prioridade alta</span></div><p>'+esc(st.caseText)+'</p>'+media(st)+'</section>';
+  if(st.number===52)out+=annotatedMedia(st,true);
+  out+='<section class="osce-case osce-study-essential"><h2>O essencial em cerca de 1 minuto</h2><p>'+mark(st,st.essential.oneMinute)+'</p><p><strong>Para memorizar:</strong> '+esc(st.essential.mnemonic)+'</p></section>';
+  out+='<section class="osce-case osce-study-outline"><div class="osce-study-title"><div><p class="eyebrow">ROTEIRO DA ESTAÇÃO</p><h2>O que estudar e saber responder</h2></div><span class="osce-study-progress" id="osce-learn-progress" aria-live="polite">'+learnedCount(st,conf.ids)+'/'+all.length+' pontos estudados</span></div>';
+  out+='<div class="osce-study-index">'+all.map((q,i)=>'<button type="button" onclick="OSCEPilot.jumpLearn(\''+q.id+'\')">'+(i+1)+'. '+esc(q.competence)+'</button>').join('')+'</div></section>';
+  out+='<section class="osce-learning-questions" aria-label="Perguntas e respostas para estudar">'+all.map((q,i)=>{
+   const marked=read.includes(q.id);
+   return '<article class="osce-study-question" id="osce-learn-'+esc(q.id)+'"><div class="osce-stepbar"><strong>TÓPICO '+(i+1)+' DE '+all.length+'</strong><span>'+esc(q.competence)+'</span></div>'
+    +'<h3>'+esc(q.prompt)+'</h3>'
+    +'<div class="osce-study-model"><p class="eyebrow">RESPOSTA-MODELO MASTER · DISPONÍVEL PARA ESTUDO</p><p>'+mark(st,q.answer)+'</p></div>'
+    +'<div class="osce-study-points"><h4>O que não pode faltar na sua resposta</h4><ul>'+q.criteria.map(c=>'<li>'+esc(c)+'</li>').join('')+'</ul></div>'
+    +'<div class="osce-study-memory"><strong>Para fixar:</strong> '+esc(q.memory||st.essential.mnemonic||'Associe o sinal ao mecanismo e à decisão clínica.')+'</div>'
+    +'<details class="osce-deep"><summary>Como raciocinar e lembrar <span>aprofundamento opcional</span></summary><div><p>Faça três conexões: dado do caso → mecanismo que o explica → decisão que muda o cuidado.</p><p><strong>Perguntas para autoexplicação:</strong> '+esc(q.hints.join(' · '))+'</p><p class="osce-note">Releia a resposta-modelo e tente explicá-la sem olhar, como faria na arguição oral.</p></div></details>'
+    +'<div class="osce-study-card-actions"><button class="btn osce-study-mark '+(marked?'is-studied':'')+'" id="osce-learn-mark-'+st.number+'-'+esc(q.id)+'" type="button" aria-pressed="'+marked+'" onclick="OSCEPilot.markLearn('+st.number+',\''+q.id+'\')">'+(marked?'✓ Estudado':'Marcar como estudado')+'</button></div></article>';
+   }).join('')+'</section>';
+  out+='<section class="osce-case osce-study-depth"><div class="osce-study-title"><div><p class="eyebrow">CONTEÚDO COMPLEMENTAR</p><h2>Aprofundamentos e memorização</h2></div><span class="osce-label medium">Abra só o que precisar</span></div><p class="osce-note">Essas explicações são opcionais e permanecem recolhidas, para não sobrecarregar a leitura. No modo Completo, você pode percorrer todos os assuntos.</p><div class="osce-deep-stack">'+(st.deeper||[]).map(d=>'<details class="osce-deep"><summary>'+esc(d.title)+' <span>aprofundar</span></summary><div><p>'+mark(st,d.body)+'</p><p><strong>Memorização:</strong> '+esc(d.tip)+'</p></div></details>').join('')+'</div></section>';
+  out+='<section class="osce-case"><h2>Para estudar até o final</h2><div class="osce-deep-stack">'+termPanel(st)+lessonBar(st)+sourcePanel(st)+'</div><div class="osce-actions"><button class="btn primary" onclick="OSCEPilot.start(\''+tier+'\',null,'+st.number+')">🩺 Agora quero simular</button><button class="btn" onclick="OSCEPilot.learn(\'completa\','+st.number+')">Ver o estudo completo</button><button class="btn" onclick="OSCEPilot.home()">Escolher outra estação</button></div><p class="osce-note">Estudar e marcar tópicos não cria tentativas nem notas. Apenas o modo Simulação registra desempenho e programa retestes por erro.</p></section>';
+  return out;
+ }
+
  function currentQ(st){return st.questions.find(q=>q.id===state.current?.ids[state.current.pos]);}
  function activePage(){
   const st=study(),r=state.current;
@@ -197,12 +251,12 @@ window.OSCEPilot=(()=>{
  }
  function promptPage(){return sectionTitle('Script de <em>revisão por erros.</em>')+'<button class="btn ghost" onclick="OSCEPilot.home()">← Voltar</button><p>Copie para uma IA a análise dos critérios não cumpridos. Nenhuma resposta é transmitida automaticamente.</p><section class="osce-step"><label class="osce-answer-label" for="osce-prompt">Roteiro personalizado</label><textarea readonly id="osce-prompt" rows="19">'+esc(makePrompt())+'</textarea><div class="osce-actions"><button class="btn primary" onclick="OSCEPilot.copyPrompt()">Copiar para IA</button><button class="btn" onclick="OSCEPilot.showReview()">Ver erros</button></div></section>';}
  function donePage(){const st=data(reviewStation),run=state.runs.at(-1),n=run?.results.length||0;return sectionTitle('Sessão <em>concluída.</em>')+'<p>Você concluiu '+n+' pergunta(s) da estação '+st.number+' ('+esc(st.title)+'). Não precisa concluir tudo em um dia.</p><section class="osce-case"><h2>Consolide sem consultar</h2><p>'+esc(st.essential.oneMinute)+'</p><p class="osce-note">Próxima ação: abra a fila de erros ou repita amanhã uma pergunta sem olhar o gabarito.</p><div class="osce-actions"><button class="btn primary" onclick="OSCEPilot.showReview()">Ver minha revisão</button><button class="btn" onclick="OSCEPilot.showPrompt()">Copiar script para IA</button><button class="btn" onclick="OSCEPilot.home()">Todas as estações</button></div></section>';}
- function page(){return screen==='study'?activePage():screen==='review'?reviewPage():screen==='prompt'?promptPage():screen==='done'?donePage():homePage();}
+ function page(){return screen==='learn'?learnPage():screen==='study'?activePage():screen==='review'?reviewPage():screen==='prompt'?promptPage():screen==='done'?donePage():homePage();}
  function showReview(){screen='review';renderAgain();}
  function showPrompt(){screen='prompt';renderAgain();}
  function reviewDue(){const list=dueItems();if(!list.length)return notify('Nenhum reteste vencido ainda.');const x=list[0];start('rapida',[x.q.id],x.st.number);}
  function term(k){
-  const st=screen==='study'?study():data(reviewStation);const arr=st.terms||[
+  const st=screen==='study'?study():screen==='learn'?learningStation():data(reviewStation);const arr=st.terms||[
    {key:'sincope',name:'Síncope',definition:'Hipoperfusão cerebral global transitória.',source:'esc2018'},
    {key:'ecg',name:'ECG',definition:'Avaliação eletrocardiográfica de 12 derivações.',source:'esc2018'},
    {key:'eco',name:'Ecocardiograma',definition:'Exame cardíaco estrutural.',source:'esc2018'},
@@ -234,5 +288,5 @@ window.OSCEPilot=(()=>{
  window.addEventListener('master-auth-ended',()=>{state=empty();screen='home';shown=false;glossary='';});
  window.addEventListener('master-remote-merge',e=>{if(e.detail?.key===KEY)reload()});
  window.addEventListener('storage',e=>{if(e.key===KEY)reload()});
- return {page,start,daily,resume,home,setDate,setMinutes,answer,conf,hint,reveal,criterion,retry,finish,showReview,showPrompt,reviewDue,term,showSources,showTerms,showAnnotated,openLesson,showFullLesson,expandImage,copyPrompt,reload};
+ return {page,start,daily,resume,home,learn,jumpLearn,markLearn,setDate,setMinutes,answer,conf,hint,reveal,criterion,retry,finish,showReview,showPrompt,reviewDue,term,showSources,showTerms,showAnnotated,openLesson,showFullLesson,expandImage,copyPrompt,reload};
 })();
