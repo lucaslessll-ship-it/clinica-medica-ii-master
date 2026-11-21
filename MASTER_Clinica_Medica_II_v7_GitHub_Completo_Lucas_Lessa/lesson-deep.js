@@ -197,6 +197,6 @@ function render(id,index){
   <section class="deep-block deep-refs"><h4>Referências</h4><ul>${d.refs.map(r=>`<li><a href="${refLink(r)}" target="_blank" rel="noopener">${r.t}</a></li>`).join('')}</ul>${d.note?`<p class="subtle">${d.note} Revisado em ${d.updated}.</p>`:''}</section>
   </section>`;
 }
-return {render,has,add,extend,keys:()=>Object.keys(DATA),figures};
+return {render,has,add,extend,keys:()=>Object.keys(DATA),get:(id,index)=>DATA[id+'_'+index]||null,figures};
 })();
 window.LessonDeep=LessonDeep;
