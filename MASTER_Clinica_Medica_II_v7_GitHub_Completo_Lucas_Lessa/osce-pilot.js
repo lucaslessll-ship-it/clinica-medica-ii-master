@@ -134,20 +134,83 @@ window.OSCEPilot=(()=>{
  function illustration(){
   return '<figure class="osce-illustration"><img src="assets/osce/ilustracao-sincope-estacao61.png" alt="Ilustração criada para o Master: idoso com perda de consciência durante esforço, hipótese de estreitamento da valva aórtica e redução da perfusão cerebral; não é o paciente original." loading="lazy" onclick="OSCEPilot.expandImage(this)"><figcaption><strong>ILUSTRAÇÃO DIDÁTICA — NÃO É IMAGEM DO CASO ORIGINAL.</strong> Esquema autoral baseado no cenário clínico descrito; estreitamento valvar é hipótese a investigar, não diagnóstico confirmado.</figcaption></figure>';
  }
+
+ function visualNotes(st,img,index){
+  const data=window.OSCE_VISUAL_NOTES?.[String(st.number)]?.[index];
+  if(data)return data;
+  if(!img.src?.startsWith('data:image/svg+xml'))return null;
+  // Os 79 SVG autorais criados pelo catálogo têm três caixas fixas: Sinais / Confirmação / Plano.
+  const by=(ids)=>st.questions.find(q=>ids.includes(q.id))?.answer||'Relacione o conceito do quadro ao caso clínico.';
+  return {intro:'Esquema AUTORAL, não fotografia ou exame do paciente. Os três círculos assinalam as três caixas do próprio resumo visual.',notes:[
+   {name:'Sinais e síndrome',meaning:by(['sindrome','diagnostico']),limitation:'Este cartão é um resumo de sinais, não um achado ultrassonográfico ou eletrocardiográfico real.',x:19,y:55},
+   {name:'Exame e confirmação',meaning:by(['investigacao','exames','diagnostico']),limitation:'Confirmação diagnóstica depende de história, exame físico e investigação pertinente.',x:50,y:55},
+   {name:'Conduta e segurança',meaning:by(['conduta','tratamento','plano']),limitation:'Condutas dependem da gravidade e não devem ser copiadas de uma figura sem contexto.',x:81,y:55}
+  ]};
+ }
+ function visualAnnotated(img,st,index,showNotes,hidden){
+  const raw=visualNotes(st,img,index),canMark=showNotes&&raw?.notes?.length;
+  const isMoving=!!raw?.moving,keys=raw?.notes||[];
+  const imgSrc=esc(img.src),caption=hidden?'Observe a imagem antes de revelar as informações clínicas sobre o achado.':esc(img.caption||'Imagem de referência para estudo');
+  const markType=img.kind==='illustration'?'ILUSTRAÇÃO DIDÁTICA — NÃO É EXAME':img.kind==='reference'?'IMAGEM REAL DE REFERÊNCIA — NÃO DO PACIENTE':'IMAGEM ORIGINAL RECEBIDA';
+  const lessonIntro=canMark?'<p class="osce-note osce-annotation-intro">'+esc(raw.intro||'Aponte os achados e conecte-os à conduta.')+'</p>':'';
+  const pins=canMark&&!isMoving?keys.map((n,i)=>Number.isFinite(n.x)&&Number.isFinite(n.y)?
+    '<button type="button" class="osce-visual-pin" data-step="'+i+'" style="left:'+n.x+'%;top:'+n.y+'%" aria-label="Achado '+(i+1)+': '+esc(n.name)+'" title="'+esc(n.name)+'" onclick="OSCEPilot.focusVisualNote(this)">'+(i+1)+'</button>':'').join(''):'';
+  const notes=canMark?
+   '<div class="osce-annotation-content"><div class="osce-annotation-note-heading"><strong>Identifique na imagem</strong><small>'+(isMoving?'Imagem dinâmica: guia por texto, sem pinos fixos':'Toque nos números sobre a imagem ou abra os tópicos abaixo')+'</small></div>'
+    +keys.map((n,i)=>'<details class="osce-annotation-detail" data-step="'+i+'" '+(i===0?'open':'')+'>'
+      +'<summary>'+(i+1)+'. '+esc(n.name)+'</summary>'
+      +'<div><p><strong>O que você está vendo:</strong> '+esc(n.meaning)+'</p>'
+      +'<p class="osce-annotation-caution"><strong>Não conclua apenas por este achado:</strong> '+esc(n.limitation)+'</p></div></details>').join('')
+    +'</div>':'';
+  const zoom=canMark?' <button type="button" class="btn osce-annotated-zoom" onclick="OSCEPilot.expandVisual(this)">'+(isMoving?'Ampliar imagem com explicações':'Ampliar com marcações')+'</button>':'';
+  return '<figure class="osce-visual osce-annotated'+(canMark?' is-marked':'')+'">'
+    +'<div class="osce-image-frame"><img src="'+imgSrc+'" loading="lazy" alt="'+(hidden?'Exame clínico a interpretar — diagnóstico oculto até a tentativa':esc(img.alt||'Imagem clínica'))+'" onclick="OSCEPilot.expandImage(this)" onerror="this.hidden=true;this.nextElementSibling.hidden=false;this.closest(\'.osce-annotated\')?.classList.remove(\'is-marked\')"><p hidden>Imagem não carregada; use a legenda e a referência. As marcações não substituem o exame original.</p>'+pins+'</div>'
+    +'<figcaption><strong>'+markType+'</strong> · '+caption+(img.creditUrl?' · <a href="'+esc(img.creditUrl)+'" target="_blank" rel="noopener noreferrer">Fonte e crédito da imagem</a>':'')+'</figcaption>'
+    +(canMark?'<div class="osce-annotation-toolbar"><button type="button" class="btn" aria-pressed="true" onclick="OSCEPilot.toggleVisualMarks(this)">Ocultar marcações</button>'+zoom+'</div>':'')
+    +(!showNotes&&raw?.notes?.length?'<p class="osce-note"><strong>Após responder:</strong> aparecem marcações numeradas e explicações de cada achado. Em “Revisar respostas antes”, elas ficam disponíveis imediatamente.</p>':'')
+    +lessonIntro+notes+'</figure>';
+ }
  function media(st){
   if(st.number===61&&!st.images?.length)return illustration();
-  if(!st.images?.length)return '<p class="osce-note">Nenhuma imagem de referência está disponível; use os achados fornecidos na vinheta e as diretrizes.</p>';
-  const hidden=screen==='study'&&!shown;
-  const mediaTitle=st.pocusOrder?'<p class="osce-note osce-pocus-disclaimer"><strong>POCUS:</strong> imagens reais de referência de terceiros, não do paciente fictício. Algumas mostram anatomia normal ou outra doença; leia a legenda após a tentativa para não confundir o exemplo com a hipótese clínica.</p>':'';
-  return mediaTitle+st.images.map(img=>{
-   if(img.revealedOnly&&hidden)return '<div class="osce-pocus-image-locked"><span aria-hidden="true">🔒</span><strong>Imagem de referência com a resposta sinalizada</strong><p>Será liberada após você responder e conferir. A vinheta oferece dados suficientes para discutir a interpretação e a conduta.</p></div>';
-   const alt=hidden?'Imagem ultrassonográfica de referência; descreva os achados antes de consultar o gabarito':esc(img.alt||'Imagem médica de referência');
-   const note=hidden?'Imagem médica de referência licenciada; não corresponde ao paciente da vinheta. Toque para ampliar e descreva o que observa, sem assumir diagnóstico apenas pela imagem.':esc(img.caption||'Imagem de referência para estudo; não é exame do paciente.');
-   const license=img.creditUrl?'<a href="'+esc(img.creditUrl)+'" target="_blank" rel="noopener noreferrer">Crédito: '+esc(img.credit||'Wikimedia Commons')+'</a>':'';
-   const label=img.kind==='illustration'?'ILUSTRAÇÃO EDUCACIONAL — NÃO É EXAME':img.kind==='reference'?'IMAGEM REAL DE REFERÊNCIA — NÃO DO CASO':'IMAGEM ORIGINAL RECEBIDA';
-   return '<figure class="osce-visual"><img src="'+esc(img.src)+'" loading="lazy" alt="'+alt+'" onclick="OSCEPilot.expandImage(this)" onerror="this.hidden=true;this.nextElementSibling.hidden=false"><p hidden>Não foi possível carregar o arquivo externo. A origem está disponível no crédito abaixo.</p><figcaption><strong>'+label+'</strong> · '+note+(license?' · '+license:'')+'</figcaption></figure>';
+  if(!st.images?.length)return '<p class="osce-note">Nenhuma imagem de referência disponível nesta estação.</p>';
+  const hidden=screen==='study'&&!shown,showNotes=screen==='preview'||(screen==='study'&&shown);
+  const mediaTitle=st.pocusOrder?'<p class="osce-note osce-pocus-disclaimer"><strong>POCUS:</strong> as imagens de referência podem mostrar pessoas ou condições diferentes das descritas na vinheta. As anotações distinguem achado observável de interpretação clínica.</p>':'';
+  return mediaTitle+st.images.map((img,index)=>{
+   if(hidden&&img.src?.startsWith('data:image/svg+xml'))return '<div class="osce-pocus-image-locked"><span aria-hidden="true">📖</span><strong>Esquema com sinais, exames e condutas</strong><p>Este esquema didático já contém parte do gabarito e aparecerá com marcações explicativas depois da tentativa. No pré-estudo, fica aberto desde o início.</p></div>';
+   if(img.revealedOnly&&hidden)return '<div class="osce-pocus-image-locked"><span aria-hidden="true">🔒</span><strong>Imagem de referência com a resposta sinalizada</strong><p>Será revelada depois da tentativa. No estudo, pode ser explorada com marcações e explicações.</p></div>';
+   return visualAnnotated(img,st,index,showNotes,hidden);
   }).join('');
  }
+ function focusVisualNote(button){
+  const root=button?.closest('.osce-annotated');if(!root)return;
+  const step=String(button.dataset.step);
+  for(const p of root.querySelectorAll('.osce-visual-pin'))p.classList.toggle('is-selected',p.dataset.step===step);
+  for(const d of root.querySelectorAll('.osce-annotation-detail'))d.open=d.dataset.step===step;
+  root.classList.add('is-marked');
+  const toggle=root.querySelector('.osce-annotation-toolbar button:first-child');
+  if(toggle){toggle.setAttribute('aria-pressed','true');toggle.textContent='Ocultar marcações';}
+  const detail=root.querySelector('.osce-annotation-detail[data-step="'+step+'"]');
+  if(detail)detail.scrollIntoView({block:'nearest',behavior:window.matchMedia?.('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});
+ }
+ function toggleVisualMarks(btn){
+  const root=btn?.closest('.osce-annotated');if(!root)return;
+  const show=root.classList.toggle('is-marked');
+  btn.setAttribute('aria-pressed',String(show));btn.textContent=show?'Ocultar marcações':'Mostrar marcações';
+ }
+ function expandVisual(btn){
+  const root=btn?.closest('.osce-annotated');if(!root||typeof document==='undefined')return;
+  const overlay=document.createElement('div');overlay.className='osce-lightbox osce-visual-lightbox';overlay.setAttribute('role','dialog');overlay.setAttribute('aria-modal','true');overlay.setAttribute('aria-label','Imagem ampliada com marcações');
+  const close=document.createElement('button');close.type='button';close.textContent='✕ Fechar';close.setAttribute('aria-label','Fechar imagem ampliada');
+  close.addEventListener('click',()=>overlay.remove());
+  const content=root.cloneNode(true);
+  content.querySelector('.osce-annotation-toolbar')?.remove();
+  // A imagem é uma referência; o desenho SVG não é alterado e as marcações continuam reversíveis.
+  overlay.append(close,content);
+  overlay.addEventListener('click',e=>{if(e.target===overlay)overlay.remove()});
+  overlay.addEventListener('keydown',e=>{if(e.key==='Escape'){overlay.remove();btn.focus()}});
+  document.body.append(overlay);close.focus();
+ }
+
  function sourcePanel(st){
   const sourceItems=(st.sources||[]).map(s=>'<li><a href="'+esc(s.url)+'" target="_blank" rel="noopener noreferrer">'+esc(s.label||s.title)+'</a> ('+esc(s.year)+')</li>').join('');
   return '<details id="osce-sources" class="osce-deep"><summary>Referências clínicas oficiais e links <span>abrir fontes</span></summary><div><ul>'+sourceItems+'</ul><p class="osce-note">Links podem abrir bibliotecas de diretrizes, não necessariamente recomendações específicas da doença. Respostas e critérios são material didático autoral do Master, não gabarito institucional. Confirme conduta e atualização na diretriz específica.</p></div></details>';
@@ -310,5 +373,5 @@ window.OSCEPilot=(()=>{
  window.addEventListener('master-auth-ended',()=>{state=empty();screen='home';shown=false;glossary='';});
  window.addEventListener('master-remote-merge',e=>{if(e.detail?.key===KEY)reload()});
  window.addEventListener('storage',e=>{if(e.key===KEY)reload()});
- return {page,start,daily,resume,home,preview,previewTierSet,previewPage,filterCatalog,setCatalogPriority,moreCatalog,jumpToIndex,setDate,setMinutes,answer,conf,hint,reveal,criterion,retry,finish,showReview,showPrompt,reviewDue,term,showSources,showTerms,openLesson,showFullLesson,expandImage,copyPrompt,reload};
+ return {page,start,daily,resume,home,preview,previewTierSet,previewPage,filterCatalog,setCatalogPriority,moreCatalog,jumpToIndex,setDate,setMinutes,answer,conf,hint,reveal,criterion,retry,finish,showReview,showPrompt,reviewDue,term,showSources,showTerms,openLesson,showFullLesson,expandImage,focusVisualNote,toggleVisualMarks,expandVisual,copyPrompt,reload};
 })();
