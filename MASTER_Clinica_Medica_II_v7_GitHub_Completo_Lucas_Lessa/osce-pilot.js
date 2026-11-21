@@ -162,7 +162,7 @@ window.OSCEPilot=(()=>{
       +'<div><p><strong>O que você está vendo:</strong> '+esc(n.meaning)+'</p>'
       +'<p class="osce-annotation-caution"><strong>Não conclua apenas por este achado:</strong> '+esc(n.limitation)+'</p></div></details>').join('')
     +'</div>':'';
-  const zoom=canMark?' <button type="button" class="btn osce-annotated-zoom" onclick="OSCEPilot.expandVisual(this)">Ampliar com marcações</button>':'';
+  const zoom=canMark?' <button type="button" class="btn osce-annotated-zoom" onclick="OSCEPilot.expandVisual(this)">'+(isMoving?'Ampliar imagem com explicações':'Ampliar com marcações')+'</button>':'';
   return '<figure class="osce-visual osce-annotated'+(canMark?' is-marked':'')+'">'
     +'<div class="osce-image-frame"><img src="'+imgSrc+'" loading="lazy" alt="'+(hidden?'Exame clínico a interpretar — diagnóstico oculto até a tentativa':esc(img.alt||'Imagem clínica'))+'" onclick="OSCEPilot.expandImage(this)" onerror="this.hidden=true;this.nextElementSibling.hidden=false;this.closest(\'.osce-annotated\')?.classList.remove(\'is-marked\')"><p hidden>Imagem não carregada; use a legenda e a referência. As marcações não substituem o exame original.</p>'+pins+'</div>'
     +'<figcaption><strong>'+markType+'</strong> · '+caption+(img.creditUrl?' · <a href="'+esc(img.creditUrl)+'" target="_blank" rel="noopener noreferrer">Fonte e crédito da imagem</a>':'')+'</figcaption>'
