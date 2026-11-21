@@ -25,6 +25,7 @@ const REFS={
  dka2024:{t:"ADA/EASD — Hyperglycemic Crises in Adults, consenso 2024",u:"https://doi.org/10.2337/dci24-0032"},
  endocrine:{t:"Society for Endocrinology — Adrenal Crisis, tratamento imediato",u:"https://www.endocrinology.org/clinical-practice/clinical-guidance/adrenal-crisis/"},
  thyroid2026:{t:"Consenso conjunto — Management of Thyroid Emergencies, 2026",u:"https://doi.org/10.1530/ETJ-26-0043"},
+ thyroidMyxedema2026:{t:"Consenso conjunto — Coma mixedematoso, 2026",u:"https://pmc.ncbi.nlm.nih.gov/articles/PMC13452032/"},
  whoPall:{t:"Organização Mundial da Saúde — Palliative Care",u:"https://www.who.int/news-room/fact-sheets/detail/palliative-care"},
 
 };
@@ -32,43 +33,12 @@ const REFS={
 for(const m of all)m.refs=(m.refs||[]).filter(k=>!/^slide[A-Z]/.test(k));
 const scientificRefsById={
  pcr:['postAha'],irpa:['atsResp'],vm:['ards'],adrenal:['endocrine'],hipertensiva:['htn2025'],
- glicemia:['dka2024'],eletrolitos:['ukka2026'],tireoide:['thyroid2026'],paliativos:['whoPall']
+ glicemia:['dka2024'],eletrolitos:['ukka2026'],tireoide:['thyroid2026','thyroidMyxedema2026'],paliativos:['whoPall']
 };
 for(const m of all)for(const ref of scientificRefsById[m.id]||[])if(!m.refs.includes(ref))m.refs.push(ref);
 function scheme(m){
  if(m.id==='pcr')return '<figure class="ue-schema" role="img" aria-label="Traçado ilustrativo de fibrilação ventricular, não diagnóstico"><svg viewBox="0 0 720 125" width="100%" aria-hidden="true"><defs><pattern id="ue-grid" width="16" height="16" patternUnits="userSpaceOnUse"><path d="M16 0H0V16" fill="none" stroke="#d8ece6" stroke-width=".8"/></pattern></defs><rect width="720" height="125" rx="10" fill="url(#ue-grid)"/><path d="M0 63L13 40 23 86 39 31 54 75 68 46 78 95 93 27 108 64 119 52 131 89 149 37 166 65 174 24 185 94 200 58 211 71 224 29 239 77 254 42 268 68 282 24 293 90 307 37 325 69 342 41 354 82 370 20 385 85 398 44 417 67 426 32 440 93 454 57 469 69 481 26 496 78 508 36 528 82 541 49 553 95 569 25 580 77 601 36 611 70 627 54 641 90 651 42 665 75 681 22 697 80 710 48 720 65" fill="none" stroke="#0b6c66" stroke-width="3" stroke-linecap="round"/></svg><figcaption><strong>Traçado esquemático autoral.</strong> Não reproduz ECG de paciente; compare com os slides originais e o módulo de ECG do site.</figcaption></figure>';
  return '';
-}
-/* Sínteses visuais editoriais selecionadas por pertinência clínica.
-   Não são imagens extraídas, copiadas ou modificadas de PDFs. */
-const studyVisuals={
- irpa:{title:"Duas falhas respiratórias, duas perguntas",subtitle:"Leia a gasometria junto do esforço respiratório.",cells:[
- ["Oxigenação","PaO₂ / SpO₂ baixas","Pneumonia, EAP, SDRA e desequilíbrio V/Q"],
- ["Ventilação","PaCO₂ elevada e eventual acidose","DPOC, fraqueza muscular, depressão ventilatória"],
- ["Falência iminente","Fadiga, rebaixamento e instabilidade","Reavaliar suporte e proteção da via aérea"]]},
- avci:{title:"Do último momento bem à reperfusão",subtitle:"A decisão é tempo-dependente e depende de imagem e elegibilidade.",cells:[
- ["Primeira checagem","Glicemia e último momento conhecido bem","Não confundir horário em que foi encontrado com início"],
- ["Imagem inicial","TC sem contraste ± investigação vascular","Excluir hemorragia e identificar oclusão relevante"],
- ["Terapia","Discutir trombólise/trombectomia","Aplicar critérios e janelas conforme protocolo"]]},
- sepse:{title:"Sepse: reconhecimento → perfusão → foco",subtitle:"Medidas iniciais paralelas e reavaliação repetida.",cells:[
- ["Reconhecer","Infecção suspeita + disfunção orgânica","Avaliar perfusão, ventilação, consciência e lactato"],
- ["Intervir","Antimicrobiano e ressuscitação individualizada","Culturas sem atrasar terapia; fluidos e vasopressor conforme necessidade"],
- ["Reavaliar","PAM, TEC, diurese, congestão e fonte","Controle de foco quando indicado"]]},
- choque:{title:"Choque: localize o mecanismo antes da terapia",subtitle:"A pressão é apenas um dos sinais de hipoperfusão.",cells:[
- ["Hipovolêmico","Perdas sanguíneas ou hídricas","Controle de perdas e reposição conforme caso"],
- ["Distributivo","Vasoplegia e má distribuição","Tratar causa e suporte vascular"],
- ["Cardiogênico","Falha de bomba e congestão","Evitar volume indiscriminado"],
- ["Obstrutivo","Impedimento mecânico ao fluxo","Tratar a obstrução"]]},
- trauma:{title:"Atendimento inicial: sequência xABCDE",subtitle:"Reavaliar todo o ciclo depois de cada intervenção.",cells:[
- ["x","Controlar hemorragia externa exsanguinante","Primeira ameaça tratável"],
- ["A/B","Via aérea e ventilação","Proteção cervical conforme cenário"],
- ["C/D","Circulação e neurologia breve","Perfusão, Glasgow e pupilas"],
- ["E","Exposição com prevenção de hipotermia","Identificar lesões e aquecer"]]}
-};
-function studyVisual(m){
- const v=studyVisuals[m.id];
- if(!v)return '';
- return '<figure class="ue-inline-visual"><div class="ue-visual-kicker">MAPA CLÍNICO · SÍNTESE VISUAL</div><h3>'+esc(v.title)+'</h3><p>'+esc(v.subtitle)+'</p><div class="ue-visual-cells">'+v.cells.map((cell,i)=>'<div class="ue-visual-cell"><span class="ue-visual-counter">'+(i+1)+'</span><div><strong>'+esc(cell[0])+'</strong><b>'+esc(cell[1])+'</b><small>'+esc(cell[2])+'</small></div></div>').join('')+'</div><figcaption>Esquema autoral de estudo. Interprete sempre com o contexto clínico e as diretrizes da aula.</figcaption></figure>';
 }
 function addOn(m){
  const flows=(m.flow||[]).map((s,i)=>'<div class="ue-flow-step"><span class="ue-flow-n">'+(i+1)+'</span><span class="ue-flow-q">'+esc(s[0])+'</span><span class="ue-flow-arrow" aria-hidden="true">→</span><strong>'+esc(s[1])+'</strong></div>').join('');
@@ -76,7 +46,7 @@ function addOn(m){
  const memory=(m.memory||[]).length?'<section class="pocus-sec ue-memory"><h3>Pódio da memória · quatro frases essenciais</h3><ol>'+m.memory.map(x=>'<li>'+esc(x)+'</li>').join('')+'</ol></section>':'';
  const alerts=(m.alerts||[]).length?'<p class="ue-disclaimer">'+m.alerts.map(esc).join(' ')+'</p>':'';
  const depthCards=memory+alerts;
- return studyVisual(m)+'<section class="pocus-sec ue-flow-block"><h3>Fluxograma de raciocínio e conduta</h3><p>Reconhecimento → decisão → ação → reavaliação. Se a primeira resposta falhar, reinicie o ciclo de avaliação.</p><div class="ue-flow">'+flows+'</div></section>'+scheme(m)+'<section class="pocus-sec"><h3>Evocação ativa — pódio da memória</h3><p class="subtle">Tente responder sem consultar a aula antes de expandir cada cartão.</p><div class="ue-flashes">'+cards+'</div></section>'+depthCards;
+ return '<section class="pocus-sec ue-flow-block"><h3>Fluxograma de raciocínio e conduta</h3><p>Reconhecimento → decisão → ação → reavaliação. Se a primeira resposta falhar, reinicie o ciclo de avaliação.</p><div class="ue-flow">'+flows+'</div></section>'+scheme(m)+'<section class="pocus-sec"><h3>Evocação ativa — pódio da memória</h3><p class="subtle">Tente responder sem consultar a aula antes de expandir cada cartão.</p><div class="ue-flashes">'+cards+'</div></section>'+depthCards;
 }
 const base={
  label:"Urgência e Emergência",
@@ -85,7 +55,8 @@ const base={
  sourcesNote:"Conteúdo autoral para estudo de Urgência e Emergência, com fontes clínicas verificáveis e recursos visuais selecionados por pertinência.",
  pathHint:"Percurso orientado por reconhecimento, diagnóstico, conduta, reavaliação, questões e casos.",
  caseHint:"Formule avaliação inicial, hipótese, conduta, monitorização e justificativa antes de revelar.",
- extraModule:addOn
+ extraModule:addOn,
+ sectionAddon:(module,index)=>window.EmergencyFigureAtlas?.afterSection(module,index)||''
 };
 const p1=CourseKit.create({
  ...base,key:"uep1",global:"Emergency.p1",route:"emergency-p1",
