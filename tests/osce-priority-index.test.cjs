@@ -45,7 +45,7 @@ test('clicar no índice destaca catálogo sem sobrescrever tentativas',()=>{
  P.home();P.jumpToIndex(61);
  const html=P.page();
  assert.match(html,/id="osce-station-61"/);
- assert.match(html,/id="osce-station-52"/);
+ assert.doesNotMatch(html,/id="osce-station-52"/,"should show only selected station");
  assert.equal(memory.get('master_osce_pilot_v1'),before,'index must never change recorded progress');
 });
 test('novos arquivos carregam na ordem correta no HTML',()=>{
