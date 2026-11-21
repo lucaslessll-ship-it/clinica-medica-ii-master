@@ -340,3 +340,6 @@ body[data-theme="dark"] .osce-index-group[open] summary{background:color-mix(in 
 @media(max-width:720px){.osce-welcome-method{grid-template-columns:1fr}.osce-welcome-icon{width:35px;height:35px;flex-basis:35px}.osce-welcome{padding:15px}}
 @media(max-width:430px){.osce-welcome-header{gap:9px}.osce-welcome-bottom .btn{width:100%}.osce-welcome-method>div{grid-template-columns:24px minmax(0,1fr);padding:11px}.osce-welcome-entry{gap:5px}}
 @media(prefers-reduced-motion:reduce){.osce-welcome *{scroll-behavior:auto}}
+
+.osce-welcome-ai .osce-welcome-ai-link{margin-top:11px;min-height:38px;font-size:.8rem;white-space:normal}
+.osce-welcome-ai-hint{display:block;margin-top:7px;font-size:.76rem;line-height:1.5;color:var(--text-muted,#5a6a60)}
