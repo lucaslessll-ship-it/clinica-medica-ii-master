@@ -35,7 +35,7 @@ test('23 módulos, 115 questões e histórico preservado',()=>{
 });
 test('atlas: all lessons have meaningful visuals in context, not full slides',()=>{
  const {win,E,atlas}=setup();
- assert.equal(atlas.countExtracted,22); // 23 extracted assets; one left in catalogue for review
+ assert.equal(atlas.countExtracted,23);
  assert.equal(Object.keys(atlas.images).length,9);
  assert.equal(Object.keys(atlas.diagrams).length,14);
  assert.equal(Object.keys(atlas.placement).length,23);
