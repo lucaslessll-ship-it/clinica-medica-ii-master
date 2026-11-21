@@ -12,7 +12,7 @@ window.HomeOSCENotice=(()=>{
   return '<aside class="ed-osce-announcement" id="ed-osce-announcement" aria-labelledby="ed-osce-announcement-title">'
    +'<div class="ed-osce-announcement-copy"><p class="ed-osce-announcement-kicker"><span class="ed-osce-new">NOVO</span> TREINAMENTO PRÁTICO-ORAL</p>'
    +'<h2 id="ed-osce-announcement-title">Conheça o OSCE Clínica Médica</h2>'
-   +'<p>Agora você pode treinar casos clínicos, <strong>POCUS e ECG com imagens comentadas</strong>, responder uma pergunta por vez e receber correção por critérios. Revise seus erros com retestes e um roteiro para estudar com IA.</p></div>'
+   +'<p>O OSCE agora oferece <strong>três maneiras de estudar</strong>: Revisão (aprenda o roteiro e as condutas), Simulação (treine como na prova e corrija os erros) e Super Foco (recuperação ativa, explicação e retestes). <strong>POCUS e ECG</strong> continuam com imagens comentadas. A faixa POCUS pode ser expandida ou ocultada.</p></div>'
    +'<div class="ed-osce-announcement-actions"><button class="btn primary ed-osce-launch" type="button" onclick="HomeOSCENotice.open()">Explorar o OSCE <span aria-hidden="true">→</span></button>'
    +'<div class="ed-osce-secondary-actions"><button type="button" onclick="HomeOSCENotice.close()">Agora não</button><button type="button" onclick="HomeOSCENotice.never()">Não mostrar novamente</button></div></div></aside>';
  }

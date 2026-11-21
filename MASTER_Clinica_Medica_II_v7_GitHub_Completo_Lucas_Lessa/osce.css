@@ -343,3 +343,15 @@ body[data-theme="dark"] .osce-index-group[open] summary{background:color-mix(in 
 
 .osce-welcome-ai .osce-welcome-ai-link{margin-top:11px;min-height:38px;font-size:.8rem;white-space:normal}
 .osce-welcome-ai-hint{display:block;margin-top:7px;font-size:.76rem;line-height:1.5;color:var(--text-muted,#5a6a60)}
+
+/* POCUS recolhível: faixa grande, sem empurrar a lista de prioridades. */
+.osce-pocus-disclosure{display:block;padding:0;overflow:hidden;border-left-width:4px}
+.osce-pocus-disclosure .osce-pocus-heading{display:flex;margin:0;padding:clamp(17px,2.6vw,26px);align-items:center;min-height:115px;cursor:pointer;list-style:none}
+.osce-pocus-disclosure .osce-pocus-heading::-webkit-details-marker{display:none}
+.osce-pocus-disclosure .osce-pocus-heading:focus-visible{outline:3px solid #35785f;outline-offset:-4px}
+.osce-pocus-disclosure:not([open]) .osce-pocus-heading p:not(.eyebrow){margin-bottom:0}
+.osce-pocus-disclosure .osce-pocus-flag{white-space:normal;text-align:center}
+.osce-pocus-disclosure #osce-pocus-content{padding:0 clamp(17px,2.6vw,26px) 22px}
+.osce-pocus-disclosure #osce-pocus-content>.osce-note:first-child{padding-top:14px;border-top:1px solid var(--border,#d5ded8)}
+.osce-super-focus-cta{border-color:#6e9d86!important;background:color-mix(in srgb,#6ca88b 10%,var(--card,#fff))!important}
+@media(max-width:600px){.osce-pocus-disclosure .osce-pocus-heading{padding:16px;min-height:110px;align-items:flex-start}.osce-pocus-disclosure #osce-pocus-content{padding:0 16px 17px}}
