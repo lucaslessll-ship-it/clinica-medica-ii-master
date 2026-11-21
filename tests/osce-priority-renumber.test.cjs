@@ -14,8 +14,8 @@ function build(initial){
 test('renumeração: 86 posições consecutivas na ordem pedagógica, independentemente do ID de origem',()=>{
  const {index,P}=build(),ids=index.groups.flatMap(g=>g.numbers);
  assert.equal(ids.length,86);assert.equal(new Set(ids).size,86);
- assert.deepEqual(ids.slice(0,5),[61,43,7,24,37]);
- assert.deepEqual(index.groups.map(g=>g.numbers.length),[43,31,12]);
+ assert.deepEqual(Array.from(ids.slice(0,5)),[61,43,7,24,37]);
+ assert.deepEqual(Array.from(index.groups,g=>g.numbers.length),[43,31,12]);
  assert.equal(index.displayNumberBySource['61'],1);
  assert.equal(index.displayNumberBySource['52'],10);
  assert.equal(index.sourceIdByDisplayNumber['1'],61);
@@ -24,7 +24,8 @@ test('renumeração: 86 posições consecutivas na ordem pedagógica, independen
  assert.match(html,/<span class="osce-index-number">01<\/span>/);
  assert.match(html,/<span class="osce-index-number">86<\/span>/);
  assert.ok(html.indexOf('Síndrome de Guillain-Barré')>html.indexOf('Síncope × crise convulsiva'));
- assert.ok(html.indexOf('Estação 1')<html.indexOf('Estações disponíveis')||html.includes('osce-index-number'));
+ assert.ok(html.indexOf('id="osce-priority-overview"')<html.indexOf('<h2>Estações disponíveis</h2>'));
+ assert.match(html,/<span>ESTAÇÃO 1<\/span>/);
 });
 test('cards, busca e treinamento usam o novo número sem alterar os IDs das estações',()=>{
  const {P}=build();
