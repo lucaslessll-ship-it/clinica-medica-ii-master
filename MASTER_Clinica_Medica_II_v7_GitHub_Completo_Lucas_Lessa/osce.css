@@ -159,3 +159,25 @@ body[data-theme=dark] .osce-pilot-emblem{color:#b6ead2}
 .osce-visual figcaption{line-height:1.65}
 @media(max-width:520px){.osce-preview-note{display:block}.osce-preview-note>.btn{width:100%;margin-top:12px}.osce-study-levels .btn{flex:1 1 140px}.osce-preview-answer{padding:12px}}
 @media(prefers-reduced-motion:reduce){.osce-preview-questions,.osce-preview-note{scroll-behavior:auto}}
+
+
+/* Catalogo OSCE com prioridade explícita e carga visual baixa. */
+.osce-catalog-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,310px),1fr));gap:15px;margin:16px 0 22px}
+.osce-catalog-grid>.osce-theme-card{margin:0;min-width:0;display:flex;flex-direction:column}
+.osce-catalog-grid .osce-depth-grid{margin-top:auto;padding-top:12px;grid-template-columns:repeat(3,minmax(0,1fr))}
+.osce-catalog-grid .osce-depth-btn{padding:10px 9px;min-height:110px}
+.osce-catalog-grid .osce-depth-btn strong{font-size:.82rem}
+.osce-catalog-grid .osce-depth-btn span,.osce-catalog-grid .osce-depth-btn small{font-size:.72rem}
+.osce-priority{display:inline;font-size:.79rem;font-weight:700;letter-spacing:.015em}
+.osce-priority-alta{color:#a32324}.osce-priority-media{color:#996100}.osce-priority-baixa{color:#20704b}
+.osce-filter{display:grid;grid-template-columns:minmax(0,2fr) minmax(160px,1fr);gap:13px;margin:15px 0;align-items:end}
+.osce-filter label{display:grid;gap:7px;font-size:.84rem;font-weight:650}
+.osce-filter input,.osce-filter select{width:100%;min-height:44px;border:1px solid var(--border,#cfd8d1);border-radius:10px;padding:9px 12px;background:var(--card,#fff);color:inherit;font:inherit}
+.osce-filter :is(input,select):focus-visible{outline:2px solid #27734d;outline-offset:2px}
+.osce-visual img[src^="data:image/svg"]{border-radius:10px;background:#fff}
+.osce-catalog-grid .osce-actions{margin-top:auto}
+@media(max-width:720px){.osce-catalog-grid{grid-template-columns:repeat(auto-fit,minmax(min(100%,270px),1fr))}}
+@media(max-width:480px){.osce-filter{grid-template-columns:1fr}.osce-catalog-grid{grid-template-columns:1fr}}
+body[data-theme=dark] .osce-priority-alta{color:#ffadac}
+body[data-theme=dark] .osce-priority-media{color:#ffd68b}
+body[data-theme=dark] .osce-priority-baixa{color:#8ce0ab}
