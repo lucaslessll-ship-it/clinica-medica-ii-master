@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 650" role="img" aria-label="Interpretação da gasometria">
+<defs>
+ <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f9fcfa"/><stop offset="1" stop-color="#eaf3ee"/></linearGradient>
+ <linearGradient id="tissue" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#ffc3a8"/><stop offset=".55" stop-color="#d45d5c"/><stop offset="1" stop-color="#873b4e"/></linearGradient>
+ <linearGradient id="organ" x1="0" y1="0" x2=".8" y2="1"><stop stop-color="#ffdad0"/><stop offset=".68" stop-color="#de807d"/><stop offset="1" stop-color="#a6474f"/></linearGradient>
+ <linearGradient id="blue" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#a6d8ec"/><stop offset="1" stop-color="#3389b7"/></linearGradient>
+ <linearGradient id="artery" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#ffcab4"/><stop offset="1" stop-color="#c75b5e"/></linearGradient>
+ <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#173c39" flood-opacity=".12"/></filter>
+ <pattern id="grid" width="22" height="22" patternUnits="userSpaceOnUse"><path d="M22 0H0V22" stroke="#c5e0d3" fill="none" stroke-width=".65"/></pattern>
+ <marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8" fill="none" stroke="#348f82" stroke-width="1.4"/></marker>
+</defs>
+<rect width="1100" height="650" fill="url(#bg)"/>
+<rect x="34" y="29" width="1032" height="592" rx="30" fill="#ffffff" stroke="#dfeae3" filter="url(#shadow)"/>
+<rect x="67" y="59" width="169" height="28" rx="14" fill="#e4f5eb" stroke="none"/><text x="80" y="79" font-family="Arial, sans-serif" font-size="14" fill="#176d5a" font-weight="700" text-anchor="start">ILUSTRAÇÃO CLÍNICA</text>
+<text x="67" y="129" font-family="Arial, sans-serif" font-size="35" fill="#173c39" font-weight="750" text-anchor="start">Interpretação da gasometria</text>
+<text x="67" y="164" font-family="Arial, sans-serif" font-size="17" fill="#667d77" font-weight="400" text-anchor="start">Pulmões, rins, pH e compensações</text>
+
+<rect x="76" y="210" width="446" height="313" rx="20" fill="#edf8fb" stroke="#dce5df"/>
+<g transform="translate(274 335) scale(0.59)"><path d="M-18 -68 C-55 -80 -101 -38 -110 21 C-118 80 -113 143 -58 158 C-25 168 -13 129 -14 84L-14 -68Z" fill="url(#organ)" stroke="#aa5358" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M18 -68 C57 -80 100 -38 110 21 C116 81 112 143 58 158 C25 168 13 129 14 84L14 -68Z" fill="url(#organ)" stroke="#aa5358" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><line x1="0" y1="-115" x2="0" y2="-48" stroke="#8ebdcb" stroke-width="21" stroke-linecap="round"/><path d="M0 -43 L-55 18 M0 -43 L55 18 M-55 18 L-70 72 M55 18 L70 72" fill="none" stroke="#79abc3" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/></g><text x="376" y="299" font-family="Arial, sans-serif" font-size="25" fill="#287693" font-weight="600" text-anchor="start">PaCO₂</text><text x="376" y="345" font-family="Arial, sans-serif" font-size="18" fill="#173c39" font-weight="600" text-anchor="start">Respiratório</text>
+<rect x="552" y="210" width="474" height="313" rx="20" fill="#fff5ef" stroke="#dce5df"/>
+<path d="M720 270 C670 260 652 302 665 335 C690 375 739 376 752 345 C767 302 738 277 720 270 Z" fill="url(#organ)" stroke="#bb7573" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M795 270 C834 255 859 285 857 323 C854 352 824 369 800 345 C784 330 785 290 795 270Z" fill="url(#organ)" stroke="#bb7573" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="895" y="305" font-family="Arial, sans-serif" font-size="24" fill="#a75e50" font-weight="600" text-anchor="start">HCO₃⁻</text><text x="895" y="344" font-family="Arial, sans-serif" font-size="17" fill="#173c39" font-weight="600" text-anchor="start">Metabólico</text>
+<text x="470" y="544" font-family="Arial, sans-serif" font-size="18" fill="#245e56" font-weight="600" text-anchor="middle">pH = relação entre componente metabólico e respiratório</text>
+<path d="M517 362 L551 362" fill="none" stroke="#368e84" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+
+<line x1="67" y1="570" x2="1033" y2="570" stroke="#d8e5de" stroke-width="1" stroke-linecap="round"/>
+<text x="67" y="600" font-family="Arial, sans-serif" font-size="16" fill="#54736a" font-weight="500" text-anchor="start">A compensação deve ser calculada: valores próximos do normal podem ocultar distúrbios mistos.</text>
+</svg>
