@@ -13,7 +13,7 @@ A pedido do usuário, os **23 módulos** foram revisados para incorporar figuras
 ## Arquitetura
 
 - `assets/urgencia/figures/*`: JPEGs extraídos como imagens individuais de PDFs, sem recapturar página ou slide.
-- `emergency-visual-data.js`: catálogo com título acessível, pergunta de observação e aplicação clínica, mais 14 diagramas de decisão e nove alertas de revisão de diretrizes.
+- `emergency-visual-data.js`: catálogo com título acessível, pergunta de observação e aplicação clínica, mais 14 diagramas de decisão e 17 alertas de revisão de diretrizes.
 - `course-kit.js`: novo callback **opcional** `sectionAddon(m,si)`, acionado após a seção de conteúdo escolhida. A mudança não modifica cursos não participantes.
 - `emergency.js`: usa o Atlas apenas nas aulas de Urgência, no ponto relacionado à teoria; elimina mapa genérico redundante.
 - `emergency-pcr-pilot.js`: mostra um registro de taquicardia ventricular extraído do PDF juntamente com o traçado esquemático no bloco de algoritmo.
