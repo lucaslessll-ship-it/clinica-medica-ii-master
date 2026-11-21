@@ -49,14 +49,19 @@ test('ECG real mostrado antes da resposta e resposta oculta até tentativa com c
  const initial=P.page();
  assert.match(initial,/ECG REAL DO MATERIAL ENVIADO/);
  assert.match(initial,/ecg-estacao-52\.jpg/);
+ assert.doesNotMatch(initial,/osce-ecg-commented/,'não pode revelar marcações antes de responder');
  assert.doesNotMatch(initial,/Resposta-modelo Master/);
  P.answer('Não sei');
  P.reveal();
  assert.doesNotMatch(P.page(),/Resposta-modelo Master/);
  P.conf(3);P.reveal();
  assert.match(P.page(),/Resposta-modelo Master/);
+ assert.match(P.page(),/osce-ecg-commented/);
+ assert.match(P.page(),/RR desiguais/);
+ assert.match(P.page(),/ANOTAÇÕES DIDÁTICAS/);
+ assert.match(P.page(),/Diretriz 2025/);
  assert.match(P.page(),/Termos marcados e referências/);
- assert.match(P.page(),/Aula completa já existente no Master/);
+ assert.match(P.page(),/Aula relacionada na biblioteca Master/);
 });
 test('registra erros de alta confiança, critério faltante, reteste D+1 e script para IA',()=>{
  const {P,localStorage}=make();
