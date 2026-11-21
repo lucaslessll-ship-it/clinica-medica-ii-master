@@ -1,3 +1,33 @@
+/* Aviso de novo módulo na página inicial. Não altera o guia interno do OSCE. */
+window.HomeOSCENotice=(()=>{
+ 'use strict';
+ const key=()=> 'master_osce_home_notice_v1:'+(window.MASTER_AUTH?.user?.()?.id||'visitor');
+ let dismissedInTab=false;
+ function neverDismissed(){
+  try{return localStorage.getItem(key())==='hidden'}catch{return false}
+ }
+ function visible(){return !dismissedInTab&&!neverDismissed()}
+ function html(){
+  if(!visible())return '';
+  return '<aside class="ed-osce-announcement" id="ed-osce-announcement" aria-labelledby="ed-osce-announcement-title">'
+   +'<div class="ed-osce-announcement-copy"><p class="ed-osce-announcement-kicker"><span class="ed-osce-new">NOVO</span> TREINAMENTO PRÁTICO-ORAL</p>'
+   +'<h2 id="ed-osce-announcement-title">Conheça o OSCE Clínica Médica</h2>'
+   +'<p>Agora você pode treinar casos clínicos, <strong>POCUS e ECG com imagens comentadas</strong>, responder uma pergunta por vez e receber correção por critérios. Revise seus erros com retestes e um roteiro para estudar com IA.</p></div>'
+   +'<div class="ed-osce-announcement-actions"><button class="btn primary ed-osce-launch" type="button" onclick="HomeOSCENotice.open()">Explorar o OSCE <span aria-hidden="true">→</span></button>'
+   +'<div class="ed-osce-secondary-actions"><button type="button" onclick="HomeOSCENotice.close()">Agora não</button><button type="button" onclick="HomeOSCENotice.never()">Não mostrar novamente</button></div></div></aside>';
+ }
+ function close(){
+  dismissedInTab=true;
+  if(typeof document!=='undefined')document.getElementById('ed-osce-announcement')?.remove();
+ }
+ function never(){
+  try{localStorage.setItem(key(),'hidden')}catch{}
+  close();
+ }
+ function open(){close();if(typeof navigate==='function')navigate('osce')}
+ return {html,open,close,never,visible};
+})();
+
 /* Apresentação editorial: usa apenas progresso real e mantém os destinos existentes. */
 window.EditorialUI=(()=>{
  'use strict';
@@ -12,6 +42,7 @@ window.EditorialUI=(()=>{
   const completed=topic?topic.chapters.filter((_,i)=>doneMap[topic.id+'_'+i]).length:0,total=topic?.chapters.length||0,percent=total?Math.round(completed/total*100):0;
   const recall=LearnUX.dueList().length,cirDue=window.CIR?CIR.dueCount():0,reviewCount=recall+cirDue;
   return `<section class="ed-dashboard-intro"><header class="ed-greeting"><div><p class="page-eyebrow">ESTUDO MASTER · SEU ESPAÇO DE ESTUDO</p><h1 class="page-title">${esc(title)}</h1><p class="ed-greeting-note">Estudo consistente, evolução real.</p></div>${ornament()}</header>
+  ${window.HomeOSCENotice?.html()||''}
   <article class="resume-card ed-resume" aria-label="Continuar estudando"><div class="ed-resume-art">${ornament()}</div><div class="ed-resume-copy"><span class="kicker">CONTINUAR ESTUDANDO</span><h2>${esc(resume.started?resume.title:"Seu próximo capítulo começa aqui")}</h2><p class="subtle">${esc(resume.started?resume.chapter:"Explore sua biblioteca de Clínica Médica, Cirurgia e interpretação de exames.")}</p><div class="ed-resume-progress"><div class="progress-track" role="progressbar" aria-label="${resume.started?'Aulas revisadas neste módulo':'Progresso de leitura'}" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${percent}"><div class="progress-fill" style="width:${percent}%"></div></div><span>${resume.started?completed+'/'+total+' aulas revisadas':'Comece no seu ritmo'}</span></div></div><button class="btn primary ed-resume-action" type="button" onclick="${resume.started?'HIG.openLast()':'DashboardUX.showSubjects()'}">${icon('play')} ${resume.started?'Retomar aula':'Explorar matérias'}</button></article>
   <section class="ed-overview" aria-label="Seu estudo em resumo"><article><h2>${icon('plan')}Seu plano de hoje</h2><p class="ed-overview-caption">Um passo de cada vez</p><ul class="ed-plan-list"><li><span></span>Retomar a aula</li><li><span></span>${esc(focus.short)}</li><li><span></span>${due} flashcards disponíveis</li></ul><button class="ed-text-link" type="button" onclick="navigate('today')">Abrir meu plano <span>${icon('arrow')}</span></button></article>
   <article><h2>${icon('review')}Revisões pendentes</h2><p class="ed-overview-caption">Recordação e prática</p><p class="ed-review-number"><strong>${reviewCount}</strong> ${reviewCount===1?'revisão agendada':'revisões agendadas'}</p><div class="ed-review-lines" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div><button class="ed-text-link" type="button" onclick="${recall?'LearnUX.openDue()':cirDue?"CIR.startPractice({t:'all',src:'all',mode:'due'})":"navigate('practice')"}">${reviewCount?'Começar revisão':'Praticar questões'} <span>${icon('arrow')}</span></button></article>
