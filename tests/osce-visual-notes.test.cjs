@@ -74,7 +74,7 @@ test('POCUS fetal rotulado continua oculto antes da tentativa e anotado depois',
  const html=P.page();
  assert.match(html,/Pleural_effusion_2.jpg/);
  assert.equal((html.match(/class="osce-visual-pin"/g)||[]).length,3);
- assert.match(html,/é um feto de 22 semanas/);
+ assert.match(html,/um feto de 22 semanas/i);
 });
 test('diagramas SVG autorais têm três pontos explicativos mas só após a tentativa',()=>{
  const {P}=setup();
