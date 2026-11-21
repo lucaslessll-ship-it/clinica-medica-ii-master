@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 650" role="img" aria-label="Duas emergências tireoidianas">
+<defs>
+ <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f9fcfa"/><stop offset="1" stop-color="#eaf3ee"/></linearGradient>
+ <linearGradient id="tissue" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#ffc3a8"/><stop offset=".55" stop-color="#d45d5c"/><stop offset="1" stop-color="#873b4e"/></linearGradient>
+ <linearGradient id="organ" x1="0" y1="0" x2=".8" y2="1"><stop stop-color="#ffdad0"/><stop offset=".68" stop-color="#de807d"/><stop offset="1" stop-color="#a6474f"/></linearGradient>
+ <linearGradient id="blue" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#a6d8ec"/><stop offset="1" stop-color="#3389b7"/></linearGradient>
+ <linearGradient id="artery" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#ffcab4"/><stop offset="1" stop-color="#c75b5e"/></linearGradient>
+ <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#173c39" flood-opacity=".12"/></filter>
+ <pattern id="grid" width="22" height="22" patternUnits="userSpaceOnUse"><path d="M22 0H0V22" stroke="#c5e0d3" fill="none" stroke-width=".65"/></pattern>
+ <marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8" fill="none" stroke="#348f82" stroke-width="1.4"/></marker>
+</defs>
+<rect width="1100" height="650" fill="url(#bg)"/>
+<rect x="34" y="29" width="1032" height="592" rx="30" fill="#ffffff" stroke="#dfeae3" filter="url(#shadow)"/>
+<rect x="67" y="59" width="169" height="28" rx="14" fill="#e4f5eb" stroke="none"/><text x="80" y="79" font-family="Arial, sans-serif" font-size="14" fill="#176d5a" font-weight="700" text-anchor="start">ILUSTRAÇÃO CLÍNICA</text>
+<text x="67" y="129" font-family="Arial, sans-serif" font-size="35" fill="#173c39" font-weight="750" text-anchor="start">Duas emergências tireoidianas</text>
+<text x="67" y="164" font-family="Arial, sans-serif" font-size="17" fill="#667d77" font-weight="400" text-anchor="start">Tempestade tireotóxica e coma mixedematoso</text>
+
+<rect x="76" y="213" width="946" height="327" rx="22" fill="#f7fbfa" stroke="#dce5df"/>
+<path d="M420 279 C382 251 360 305 388 350 C418 386 438 368 461 340 L484 340 C508 366 536 380 565 349 C598 310 579 250 538 279 C502 300 493 330 483 330 C475 313 452 298 420 279Z" fill="url(#organ)" stroke="#aa6266" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M478 211 L478 299" fill="none" stroke="#86afb0" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="309" cy="356" r="68" fill="#ffe7d5" stroke="#e4b77a" stroke-width="3"/><circle cx="669" cy="356" r="68" fill="#dcecf9" stroke="#9ac1dc" stroke-width="3"/>
+<line x1="392" y1="356" x2="410" y2="356" stroke="#e3a35a" stroke-width="4" stroke-linecap="round"/><line x1="367.68986283848346" y1="414.68986283848346" x2="380.4177848998413" y2="427.4177848998413" stroke="#e3a35a" stroke-width="4" stroke-linecap="round"/><line x1="309" y1="439" x2="309" y2="457" stroke="#e3a35a" stroke-width="4" stroke-linecap="round"/><line x1="250.31013716151656" y1="414.68986283848346" x2="237.5822151001587" y2="427.4177848998413" stroke="#e3a35a" stroke-width="4" stroke-linecap="round"/><line x1="226" y1="356" x2="208" y2="356" stroke="#e3a35a" stroke-width="4" stroke-linecap="round"/><line x1="250.31013716151654" y1="297.31013716151654" x2="237.5822151001587" y2="284.5822151001587" stroke="#e3a35a" stroke-width="4" stroke-linecap="round"/><line x1="309" y1="273" x2="309" y2="255" stroke="#e3a35a" stroke-width="4" stroke-linecap="round"/><line x1="367.6898628384834" y1="297.31013716151654" x2="380.4177848998413" y2="284.5822151001587" stroke="#e3a35a" stroke-width="4" stroke-linecap="round"/>
+<text x="311" y="462" font-family="Arial, sans-serif" font-size="23" fill="#ad6637" font-weight="750" text-anchor="middle">HIPER</text>
+<text x="671" y="462" font-family="Arial, sans-serif" font-size="23" fill="#387fa9" font-weight="750" text-anchor="middle">HIPO</text>
+<text x="308" y="496" font-family="Arial, sans-serif" font-size="17" fill="#98614d" font-weight="500" text-anchor="middle">Taquicardia · hipertermia</text>
+<text x="670" y="496" font-family="Arial, sans-serif" font-size="17" fill="#3d7b96" font-weight="500" text-anchor="middle">Bradicardia · hipotermia</text>
+
+<line x1="67" y1="570" x2="1033" y2="570" stroke="#d8e5de" stroke-width="1" stroke-linecap="round"/>
+<text x="67" y="600" font-family="Arial, sans-serif" font-size="16" fill="#54736a" font-weight="500" text-anchor="start">Ambas são emergências clínicas: reconhecer disfunção orgânica antes de aguardar exames.</text>
+</svg>
