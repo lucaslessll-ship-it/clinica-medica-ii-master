@@ -125,6 +125,7 @@ window.OSCE_PILOT_DATA = {
       "description": "Dez perguntas: raciocínio completo, anamnese, exame, diferenciais, conduta e comunicação."
     }
   },
+  "lesson": {"kind":"topic","id":"neuro1","label":"Clínica Médica II · Síncope e crise convulsiva"},
   "questions": [
     {
       "id": "sindrome",
