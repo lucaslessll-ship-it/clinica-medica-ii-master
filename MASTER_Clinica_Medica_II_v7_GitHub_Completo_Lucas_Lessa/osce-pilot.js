@@ -147,10 +147,10 @@ window.OSCEPilot=(()=>{
    {name:'Conduta e segurança',meaning:by(['conduta','tratamento','plano']),limitation:'Condutas dependem da gravidade e não devem ser copiadas de uma figura sem contexto.',x:81,y:55}
   ]};
  }
- function visualAnnotated(img,st,index,showNotes){
+ function visualAnnotated(img,st,index,showNotes,hidden){
   const raw=visualNotes(st,img,index),canMark=showNotes&&raw?.notes?.length;
   const isMoving=!!raw?.moving,keys=raw?.notes||[];
-  const imgSrc=esc(img.src),caption=esc(img.caption||'Imagem de referência para estudo');
+  const imgSrc=esc(img.src),caption=hidden?'Observe a imagem antes de revelar as informações clínicas sobre o achado.':esc(img.caption||'Imagem de referência para estudo');
   const markType=img.kind==='illustration'?'ILUSTRAÇÃO DIDÁTICA — NÃO É EXAME':img.kind==='reference'?'IMAGEM REAL DE REFERÊNCIA — NÃO DO PACIENTE':'IMAGEM ORIGINAL RECEBIDA';
   const lessonIntro=canMark?'<p class="osce-note osce-annotation-intro">'+esc(raw.intro||'Aponte os achados e conecte-os à conduta.')+'</p>':'';
   const pins=canMark&&!isMoving?keys.map((n,i)=>Number.isFinite(n.x)&&Number.isFinite(n.y)?
@@ -164,7 +164,7 @@ window.OSCEPilot=(()=>{
     +'</div>':'';
   const zoom=canMark?' <button type="button" class="btn osce-annotated-zoom" onclick="OSCEPilot.expandVisual(this)">Ampliar com marcações</button>':'';
   return '<figure class="osce-visual osce-annotated'+(canMark?' is-marked':'')+'">'
-    +'<div class="osce-image-frame"><img src="'+imgSrc+'" loading="lazy" alt="'+esc(img.alt||'Imagem clínica')+'" onclick="OSCEPilot.expandImage(this)" onerror="this.hidden=true;this.nextElementSibling.hidden=false"><p hidden>Imagem não carregada; use a legenda e a referência. As marcações não substituem o exame original.</p>'+pins+'</div>'
+    +'<div class="osce-image-frame"><img src="'+imgSrc+'" loading="lazy" alt="'+(hidden?'Exame clínico a interpretar — diagnóstico oculto até a tentativa':esc(img.alt||'Imagem clínica'))+'" onclick="OSCEPilot.expandImage(this)" onerror="this.hidden=true;this.nextElementSibling.hidden=false;this.closest(\'.osce-annotated\')?.classList.remove(\'is-marked\')"><p hidden>Imagem não carregada; use a legenda e a referência. As marcações não substituem o exame original.</p>'+pins+'</div>'
     +'<figcaption><strong>'+markType+'</strong> · '+caption+(img.creditUrl?' · <a href="'+esc(img.creditUrl)+'" target="_blank" rel="noopener noreferrer">Fonte e crédito da imagem</a>':'')+'</figcaption>'
     +(canMark?'<div class="osce-annotation-toolbar"><button type="button" class="btn" aria-pressed="true" onclick="OSCEPilot.toggleVisualMarks(this)">Ocultar marcações</button>'+zoom+'</div>':'')
     +(!showNotes&&raw?.notes?.length?'<p class="osce-note"><strong>Após responder:</strong> aparecem marcações numeradas e explicações de cada achado. Em “Revisar respostas antes”, elas ficam disponíveis imediatamente.</p>':'')
@@ -176,8 +176,9 @@ window.OSCEPilot=(()=>{
   const hidden=screen==='study'&&!shown,showNotes=screen==='preview'||(screen==='study'&&shown);
   const mediaTitle=st.pocusOrder?'<p class="osce-note osce-pocus-disclaimer"><strong>POCUS:</strong> as imagens de referência podem mostrar pessoas ou condições diferentes das descritas na vinheta. As anotações distinguem achado observável de interpretação clínica.</p>':'';
   return mediaTitle+st.images.map((img,index)=>{
+   if(hidden&&img.src?.startsWith('data:image/svg+xml'))return '<div class="osce-pocus-image-locked"><span aria-hidden="true">📖</span><strong>Esquema com sinais, exames e condutas</strong><p>Este esquema didático já contém parte do gabarito e aparecerá com marcações explicativas depois da tentativa. No pré-estudo, fica aberto desde o início.</p></div>';
    if(img.revealedOnly&&hidden)return '<div class="osce-pocus-image-locked"><span aria-hidden="true">🔒</span><strong>Imagem de referência com resposta identificada</strong><p>Será revelada depois da tentativa. No estudo, pode ser explorada com marcações e explicações.</p></div>';
-   return visualAnnotated(img,st,index,showNotes);
+   return visualAnnotated(img,st,index,showNotes,hidden);
   }).join('');
  }
  function focusVisualNote(button){
