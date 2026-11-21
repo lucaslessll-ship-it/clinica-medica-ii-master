@@ -11,7 +11,7 @@ const esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&
 function figure(id){
  const original=images[id]||[],diagram=diagrams[id],info=updated[id],art=illustrations[id];
  const srcList=art?[["../illustrations/"+id+".svg",art[0],art[1],"Ilustração vetorial clínica autoral"],...original]:original;
- const selected=srcList.length?'<div class="ue-atlas-grid '+(srcList.length===1?'ue-atlas-single':'')+'">'+srcList.map(([src,title,reason,kind])=>{
+ const selected=srcList.length?'<div class="ue-atlas-grid '+(srcList.length===1?'ue-atlas-single ':'')+(art?'ue-atlas-illustrated':'')+'">'+srcList.map(([src,title,reason,kind])=>{
    const path=src.startsWith("../illustrations/")?"assets/urgencia/illustrations/"+src.split("/").pop():PREFIX+src;
    return '<figure class="ue-atlas-card"><button type="button" class="ue-zoom-trigger" aria-label="Ampliar figura: '+esc(title)+'"><img loading="lazy" decoding="async" src="'+esc(path)+'" alt="'+esc(title)+'. '+esc(reason)+'" /><span class="ue-zoom-hint" aria-hidden="true">⤢ Ampliar imagem</span></button><figcaption><strong>'+esc(title)+'</strong><span>'+esc(reason)+'</span><small>'+esc(kind)+'</small></figcaption></figure>';
  }).join('')+'</div>':'';
