@@ -210,6 +210,7 @@ function mirrorInput(v){const n=currentNote();if(!n||n.phase!=='mirror')return;n
 function connectionInput(v){const n=currentNote();if(!n||n.phase!=='connection')return;n.connection=String(v||'').slice(0,5000);persist();}
 function conf(n){const x=currentNote();if(!x||x.phase!=='challenge')return;x.confidence=Math.min(3,Math.max(0,Number(n)||0));persist();if(typeof document!=='undefined')document.querySelectorAll('[data-sf-confidence]').forEach(b=>b.setAttribute('aria-pressed',String(Number(b.dataset.sfConfidence)===x.confidence)));}
 function hint(){const n=currentNote();if(!n||n.phase!=='challenge')return;n.hints=Math.min(2,(n.hints||0)+1);persist();rerender();}
+function criterion(i,on){const n=currentNote(),x=current(),idx=Number(i);if(!n||!x||!Number.isInteger(idx)||idx<0||idx>=x.criteria.length)return;const selected=new Set(n.criteria||[]);if(on)selected.add(idx);else selected.delete(idx);n.criteria=[...selected].sort((a,b)=>a-b);persist();if(typeof document!=='undefined'){const el=document.getElementById('sf-criterion-count');if(el)el.textContent=n.criteria.length+'/'+x.criteria.length;}}
 function reveal(){
  const n=currentNote();if(!n||n.phase!=='challenge')return;
  if(!trim(n.draft)){inform('Escreva a tentativa ou “não sei” antes de conferir.');return;}
@@ -307,7 +308,7 @@ function phaseBar(phase){
 }
 function rationalePanel(x){
  const blocks=[
-  ['Checklist do que não pode faltar',x.criteria.length?'<ul>'+x.criteria.map(s=>'<li>'+esc(s)+'</li>').join('')+'</ul>':'<p>'+esc(x.extra||'Consulte os critérios do roteiro completo.')+'</p>','criteria'],
+  ['Checklist do que não pode faltar',x.criteria.length?'<p class="sf-criterion-counter">Critérios reconhecidos: <strong id="sf-criterion-count">'+(currentNote()?.criteria?.length||0)+'/'+x.criteria.length+'</strong></p><ul class="sf-criteria-list">'+x.criteria.map((s,i)=>'<li><label><input type="checkbox" '+((currentNote()?.criteria||[]).includes(i)?'checked ':'')+'onchange="SuperFoco.criterion('+i+',this.checked)"><span>'+esc(s)+'</span></label></li>').join('')+'</ul>':'<p>'+esc(x.extra||'Consulte os critérios do roteiro completo.')+'</p>','criteria'],
   ['Entenda o mecanismo',x.mechanism?'<p>'+esc(x.mechanism)+'</p>':'','mechanism'],
   ['Armadilhas e diagnósticos diferenciais',x.pitfall?'<p>'+esc(x.pitfall)+'</p>':'','pitfall'],
   ['Âncora de memória',x.memory?'<p>'+esc(x.memory)+'</p>':'','memory'],
@@ -337,7 +338,8 @@ function voiceButton(which){
   '<span class="sf-voice-hint">Você também pode explicar em voz alta, sem gravação.</span>';
 }
 function challengePage(x,n){
- const hintText=x.kind==='raciocinio'?'Organize a resposta em antes, durante, depois, exame e conduta.':
+ const hintText=n.hints>=2?'Tente uma sequência em três passos: o que reconheço, o que preciso confirmar, o que faria primeiro?':
+  x.kind==='raciocinio'?'Organize a resposta em antes, durante, depois, exame e conduta.':
   x.kind==='discriminacao'?'Qual achado realmente diferencia as duas hipóteses?':
   x.kind==='aplicacao'?'Comece pela gravidade e pela primeira decisão.':'Recupere o mecanismo e diga como ele aparece na clínica.';
  return '<section class="sf-question"><p class="eyebrow">ARRANCO DA GAVETA · ETAPA 1</p><h2>'+esc(x.prompt)+'</h2>'+
@@ -487,6 +489,6 @@ window.addEventListener('master-auth-ready',resetUser);
 window.addEventListener('master-auth-ended',()=>{owner='local';state=empty();stage='catalog';search='';loadingMessage='';});
 window.addEventListener('storage',e=>{if(e.key===key()){resetUser();rerender();}});
 return {page,open,choose,resume,back,setLength,setMixed,searchSet,toggleMix,input,mirrorInput,connectionInput,
- conf,hint,reveal,mirror,mirrorCheck,connect,feedback,goTo,previous,next,finishSession,score,retry,dictate,
+ conf,hint,criterion,reveal,mirror,mirrorCheck,connect,feedback,goTo,previous,next,finishSession,score,retry,dictate,
  readAloud,openSource,catalog,topics,afterRender,resetUser};
 })();
