@@ -265,8 +265,11 @@ body[data-theme="dark"] .osce-index-group[open] summary{background:color-mix(in 
 .osce-image-frame>img{display:block;max-width:100%;height:auto;max-height:600px;object-fit:contain;border-radius:9px;cursor:zoom-in}
 .osce-image-frame>p[hidden]{display:none}
 .osce-visual-pin{position:absolute;z-index:2;left:50%;top:50%;width:31px;height:31px;min-width:31px;min-height:31px;border:2px solid #fff;border-radius:50%;transform:translate(-50%,-50%);display:none;align-items:center;justify-content:center;cursor:pointer;line-height:1;font:750 13px/1 system-ui,-apple-system,sans-serif;text-shadow:none;background:#be563a;color:#fff;box-shadow:0 0 0 2px rgba(119,39,31,.65),0 2px 8px rgba(0,0,0,.4);transition:background .15s,transform .15s}
+.osce-visual-pin{transform:translate(-50%,-100%) translateY(-7px)}
+.osce-visual-pin::after{content:'';position:absolute;left:50%;top:calc(100% + 1px);width:2px;height:7px;background:#be563a;transform:translateX(-50%);box-shadow:0 0 1px #fff;pointer-events:none}
+.osce-visual-pin.is-selected::after,.osce-visual-pin:hover::after,.osce-visual-pin:focus-visible::after{background:#174d73}
 .osce-annotated.is-marked .osce-visual-pin{display:flex}
-.osce-visual-pin:hover,.osce-visual-pin:focus-visible,.osce-visual-pin.is-selected{background:#174d73;transform:translate(-50%,-50%) scale(1.12);outline:2px solid #fff;outline-offset:2px;z-index:3}
+.osce-visual-pin:hover,.osce-visual-pin:focus-visible,.osce-visual-pin.is-selected{background:#174d73;transform:translate(-50%,-100%) translateY(-7px) scale(1.12);outline:2px solid #fff;outline-offset:2px;z-index:3}
 .osce-annotation-toolbar{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0 11px}
 .osce-annotation-toolbar .btn{min-height:40px;font-size:.79rem}
 .osce-annotated .osce-annotation-intro{margin:9px 0 12px;padding:10px 12px;border-left:3px solid #528b78;background:color-mix(in srgb,#65a78d 8%,var(--card,#fff));line-height:1.6;font-size:.86rem}
