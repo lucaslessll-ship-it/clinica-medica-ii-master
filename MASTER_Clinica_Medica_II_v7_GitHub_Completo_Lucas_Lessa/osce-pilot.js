@@ -72,7 +72,7 @@ window.OSCEPilot=(()=>{
    +'<p class="osce-note">Estações com perguntas e respostas autorais do Master; não se trata de conteúdo oficial da banca. A autoavaliação é manual. O ECG da estação 52 é derivado do arquivo real i-031.jpg enviado para este projeto.</p>';
  }
  function toolBar(st){
-  return '<div class="osce-top-links"><button class="btn" onclick="OSCEPilot.openLesson('+st.number+')">↗ Aula do tema</button>'
+  return '<div class="osce-top-links">'+((st.lesson?.id||st.number===52||st.number===61)?'<button class="btn" onclick="OSCEPilot.openLesson('+st.number+')">↗ Aula do tema</button>':'')
    +'<button class="btn" onclick="OSCEPilot.showSources()">📚 Referências e diretrizes</button>'
    +'<button class="btn" onclick="OSCEPilot.showTerms()">🔎 Termos com referências</button>'
    +'<button class="btn" onclick="OSCEPilot.preview('+st.number+')">📖 Revisar respostas antes</button></div>';
@@ -87,11 +87,12 @@ window.OSCEPilot=(()=>{
  }
  function sourcePanel(st){
   const sourceItems=(st.sources||[]).map(s=>'<li><a href="'+esc(s.url)+'" target="_blank" rel="noopener noreferrer">'+esc(s.label||s.title)+'</a> ('+esc(s.year)+')</li>').join('');
-  return '<details id="osce-sources" class="osce-deep"><summary>Referências clínicas oficiais e links <span>abrir fontes</span></summary><div><ul>'+sourceItems+'</ul><p class="osce-note">Diretrizes fundamentam os pontos gerais; respostas e critérios são material didático autoral do Master, não gabarito institucional.</p></div></details>';
+  return '<details id="osce-sources" class="osce-deep"><summary>Referências clínicas oficiais e links <span>abrir fontes</span></summary><div><ul>'+sourceItems+'</ul><p class="osce-note">Links podem abrir bibliotecas de diretrizes, não necessariamente recomendações específicas da doença. Respostas e critérios são material didático autoral do Master, não gabarito institucional. Confirme conduta e atualização na diretriz específica.</p></div></details>';
  }
  function lessonText(st){return st.lesson?.label||(st.number===61?'Clínica Médica II · Síncope e crise convulsiva':st.number===52?'Biblioteca P1 · Arritmias cardíacas':'Sem aula interna identificada');}
  function lessonBar(st){
-  return '<details id="osce-lesson" class="osce-deep"><summary>Aula completa já existente no Master <span>abrir tema</span></summary><div><p>'+esc(lessonText(st))+'</p><div class="osce-actions"><button class="btn primary" onclick="OSCEPilot.openLesson('+st.number+')">Ir para a aula completa</button></div><p class="osce-note">A aula abre na própria navegação do Master. Você poderá voltar ao OSCE pelo menu lateral.</p></div></details>';
+  if(!(st.lesson?.id||st.number===52||st.number===61))return '<details id="osce-lesson" class="osce-deep"><summary>Aula relacionada <span>não localizada nesta versão</span></summary><div><p>Não foi identificada uma aula interna específica para esta estação. Utilize as diretrizes e a revisão completa do Master sem links quebrados.</p><button type="button" class="btn" onclick="OSCEPilot.showSources()">Ver referências disponíveis</button></div></details>';
+  return '<details id="osce-lesson" class="osce-deep"><summary>Aula relacionada no Master <span>abrir tema</span></summary><div><p>'+esc(lessonText(st))+'</p><div class="osce-actions"><button class="btn primary" onclick="OSCEPilot.openLesson('+st.number+')">Ir para aula relacionada</button></div></details>';
  }
  function termPanel(st){
   const a=st.terms||[
