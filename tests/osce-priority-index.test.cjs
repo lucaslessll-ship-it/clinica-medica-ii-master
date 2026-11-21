@@ -14,8 +14,8 @@ function setup(){
 test('índice contém exatamente as 74 estações originais na matriz 33/29/12 + 12 curriculares',()=>{
  const {index,bank}=setup(),groups=index.groups,items=groups.flatMap(g=>g.numbers);
  assert.equal(Object.keys(index.names).length,86);
- assert.deepEqual(groups.map(g=>g.numbers.length),[43,31,12]);
- assert.deepEqual(index.originalDistribution,{alta:33,media:29,baixa:12});
+ assert.deepEqual(Array.from(groups,g=>g.numbers.length),[43,31,12]);
+ assert.deepEqual(JSON.parse(JSON.stringify(index.originalDistribution)),{alta:33,media:29,baixa:12});
  assert.equal(new Set(items).size,86);
  assert.deepEqual([...items].sort((a,b)=>a-b),Array.from({length:86},(_,i)=>i+1));
  assert.equal(bank.length,86);
