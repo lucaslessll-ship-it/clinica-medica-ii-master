@@ -145,7 +145,7 @@ function externalSources(){
  const files=SOURCES(),filtered=ORIGINALS().filter(x=>filter.themes.includes(x.theme)),total=filtered.length;
  return '<section class="card pad ue-bank-originals"><div class="ue-bank-heading"><div><span class="kicker">CADERNOS OFICIAIS CONFERIDOS</span><h2>Questões reais de provas</h2><p>Índice por tema com banca, ano e número da questão. Clique para ler o enunciado <b>original</b> no PDF. Não foram republicados integralmente os enunciados das bancas nem inventados gabaritos oficiais.</p></div><strong>'+total+' localizadas</strong></div><div class="ue-bank-source-grid">'+filtered.map(v=>{
   const s=files[v.source];
-  return '<a class="ue-bank-source" target="_blank" rel="noopener noreferrer" href="'+esc(v.link)+'"><small>'+esc(s.label)+' · Q'+v.number+'</small><strong>'+esc(v.subject)+'</strong><span>'+esc(title(v.theme))+' · abrir no PDF ↗</span></a>';
+  return '<a class="ue-bank-source" target="_blank" rel="noopener noreferrer" href="'+esc(v.link)+'"><small>'+esc(s.label)+' · Q'+v.number+'</small><strong>'+esc(v.subject)+'</strong><span>'+esc(title(v.theme))+' · abrir no PDF ↗</span>'+(v.key?'<span>Gabarito publicado: <b>'+esc(v.key)+'</b></span>':'')+'</a>';
  }).join('')+'</div><p class="subtle">ENARE 2021/2022: o endereço original não pôde ser conferido; <a target="_blank" rel="noopener noreferrer" href="'+esc(files.enare.url)+'">consulte o índice oficial</a>. Apenas itens verificados aparecem nesta seleção.</p></section>';
 }
 function progressDots(r){
@@ -196,9 +196,13 @@ function setupView(){
  history()+externalSources()+'</section>';
 }
 function page(){
- if(ui.route==='emergency-simulado'&&current?.kind!=='exam'){const b=bank(),id=b.activeQuestionExamId,run=id&&QuestionHistory.restore(b,'exam',id);if(run)current=run;}
- if(ui.route==='emergency-questions'&&current?.kind==='exam'){const b=bank(),id=b.activeQuestionPracticeId,run=id&&QuestionHistory.restore(b,'practice',id);current=run||null;}
- return view==='run'||ui.route==='emergency-simulado'&&!!active()?sessionView():setupView();
+ const expected=ui.route==='emergency-simulado'?'exam':'practice';
+ if(view==='run'&&(!current||current.kind!==expected)){
+  const b=bank(),id=b[expected==='exam'?'activeQuestionExamId':'activeQuestionPracticeId'];
+  const r=id&&QuestionHistory.restore(b,expected,id);
+  if(r)current=r;else{current=null;view='setup';}
+ }
+ return view==='run'?sessionView():setupView();
 }
 function openExam(){view='setup';current=null;navigate('emergency-simulado');}
 function openQuestions(){view='setup';current=null;navigate('emergency-questions');}
