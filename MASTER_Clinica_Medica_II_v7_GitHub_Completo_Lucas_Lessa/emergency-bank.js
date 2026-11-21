@@ -22,7 +22,9 @@ const title=id=>DATA().find(m=>m.id===id)?.title||id;
 const pool=()=>[
  ...DATA().flatMap(m=>m.quiz.map((q,i)=>({id:'ue-fix-'+m.id+'-'+i,t:m.id,stage:m.stage,kind:'fixacao',
   level:i%3+1,q:q.q,o:[...q.o],a:q.a,why:q.why,revision:'base-2026',origin:'Curso Clínica Master',extra:m.sections.find(x=>x.p?.length)?.p?.[0]||''}))),
- ...ADD().map(q=>({...q,stage:DATA().find(m=>m.id===q.t)?.stage||'P2'}))
+ ...ADD().map(q=>{const m=DATA().find(x=>x.id===q.t),deep=m?.sections?.[4]||m?.sections?.[2]||m?.sections?.[0];return {...q,stage:m?.stage||'P2',
+  extra:(q.kind==='prova'?'Adaptação de prova pública; consulte o PDF para o enunciado original. ':'')+
+   (deep?.h?deep.h+': ':'')+(Array.isArray(deep?.p)?deep.p.join(' '):'')};})
 ];
 const get=id=>pool().find(q=>q.id===id);
 const randomize=a=>{const b=[...a];for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]];}return b;};
