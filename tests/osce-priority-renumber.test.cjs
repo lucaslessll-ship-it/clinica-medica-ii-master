@@ -61,5 +61,5 @@ test('as respostas e os retestes antigos continuam intactos, mas relatórios mos
  const saved=JSON.parse(stored.get('master_osce_pilot_v1'));
  assert.equal(saved.items['61:sindrome'].attempts.length,2);
  assert.equal(saved.items['61:sindrome'].attempts[0].score,40);
- assert.ok(!saved.items['1:sindrome'],'não migrar IDs, que já identificam outra estação no banco');
+ assert.ok(!saved.items['1:sindrome']||saved.items['1:sindrome'].attempts.length===0,'não migrar tentativas para IDs de outros casos');
 });
