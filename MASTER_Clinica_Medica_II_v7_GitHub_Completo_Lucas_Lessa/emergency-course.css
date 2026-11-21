@@ -95,3 +95,17 @@ body[data-theme="dark"] .ue-memory{background:var(--white);color:var(--ink)}
 @media(max-width:640px){.ue-atlas{padding:13px}.ue-atlas-grid{grid-template-columns:1fr}.ue-atlas-card img{max-height:280px}.ue-atlas-steps{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:390px){.ue-atlas-steps{grid-template-columns:1fr}}
 @media(prefers-reduced-motion:reduce){.ue-atlas *{scroll-behavior:auto}}
+
+
+/* Ajuste de largura em telefones estreitos: preservar conteúdo sem criar rolagem horizontal da página. */
+@media(max-width:600px){
+ .emergency-page{width:100%;max-width:100%;min-width:0}
+ .emergency-page .ue-stage-grid,.emergency-page .ue-flashes{grid-template-columns:minmax(0,1fr)}
+ .emergency-page .ue-stage-card{min-width:0;max-width:100%;overflow-wrap:anywhere}
+ .emergency-page .ue-flow-step{grid-template-columns:28px minmax(0,1fr);gap:8px;min-width:0;padding:11px}
+ .emergency-page .ue-flow-step .ue-flow-arrow{display:none}
+ .emergency-page .ue-flow-step strong{grid-column:2;overflow-wrap:anywhere}
+ .emergency-page .emergency-hero{gap:11px;min-width:0}
+ .emergency-page .emergency-hero>div:last-child{min-width:0;overflow-wrap:anywhere}
+ .emergency-page img,.emergency-page svg{max-width:100%}
+}
