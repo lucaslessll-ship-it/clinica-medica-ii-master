@@ -1,7 +1,7 @@
 /* OSCE Master: duas estações completas, conteúdos autorais e revisão por critérios. */
 window.OSCEPilot=(()=>{
  'use strict';
- const BANK=[window.OSCE_PILOT_DATA,window.OSCE_FA_DATA].filter(Boolean);
+ const BANK=[window.OSCE_PILOT_DATA,window.OSCE_FA_DATA,...(Array.isArray(window.OSCE_EXTRA_STATIONS)?window.OSCE_EXTRA_STATIONS:[])].filter(st=>st&&Number.isInteger(st.number)&&Array.isArray(st.questions));
  const MAP=new Map(BANK.map(s=>[s.number,s]));
  const KEY='master_osce_pilot_v1';
  const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -48,9 +48,9 @@ window.OSCEPilot=(()=>{
   const total=BANK.reduce((n,st)=>n+attempted(st),0),dueCount=dueItems().length,weakCount=weakItems().length,shallow=BANK.filter(st=>Object.values(state.covered[st.number]||{}).some(Boolean)).length,deep=BANK.filter(st=>state.covered[st.number]?.completa).length;
   const d=diffDays(),selection=dueCount?dueItems()[0].st:BANK.find(st=>attempted(st)===0)||BANK[0];
   return sectionTitle('OSCE <em>Clínica Médica.</em>')+'<p>Treine primeiro, aprofunde ao clicar, recupere os erros e retome sem perder seu progresso.</p>'
-   +'<section class="osce-pilot-hero"><div><p class="eyebrow">SESSÃO DE HOJE · COMEÇO SEM ATRITO</p><h2>Uma pergunta já é progresso.</h2><p>'+esc(d===null?'Data não definida.':d<0?'A data registrada passou; ajuste abaixo.':d===0?'Avaliação hoje.':d+' dia(s) até a avaliação.')+' Comece pelo erro vencido ou pela próxima estação prioritária.</p><div class="osce-actions"><button class="btn primary" onclick="OSCEPilot.daily()">▶ Sessão de hoje · 15 min</button>'+(state.current?'<button class="btn" onclick="OSCEPilot.resume()">Retomar onde parei</button>':'')+'</div></div><div class="osce-pilot-emblem" aria-hidden="true">2<span>estações</span></div></section>'
+   +'<section class="osce-pilot-hero"><div><p class="eyebrow">SESSÃO DE HOJE · COMEÇO SEM ATRITO</p><h2>Uma pergunta já é progresso.</h2><p>'+esc(d===null?'Data não definida.':d<0?'A data registrada passou; ajuste abaixo.':d===0?'Avaliação hoje.':d+' dia(s) até a avaliação.')+' Comece pelo erro vencido ou pela próxima estação prioritária.</p><div class="osce-actions"><button class="btn primary" onclick="OSCEPilot.daily()">▶ Sessão de hoje · 15 min</button>'+(state.current?'<button class="btn" onclick="OSCEPilot.resume()">Retomar onde parei</button>':'')+'</div></div><div class="osce-pilot-emblem" aria-hidden="true">'+BANK.length+'<span>estações</span></div></section>'
    +'<div class="osce-stats"><div><b>'+total+'</b><span>perguntas testadas</span></div><div><b>'+dueCount+'</b><span>revisões vencidas</span></div><div><b>'+weakCount+'</b><span>lacunas registradas</span></div><div><b>'+deep+'/74</b><span>estações completas</span></div></div>'
-   +'<section class="osce-case"><h2>Triagem e cobertura</h2><div class="osce-settings"><label>Data da APO<input type="date" value="'+esc(state.settings.examDate)+'" onchange="OSCEPilot.setDate(this.value)"></label><label>Tempo disponível<select onchange="OSCEPilot.setMinutes(this.value)">'+[5,15,30,45].map(m=>'<option value="'+m+'"'+(Number(state.settings.minutes)===m?' selected':'')+'>'+m+' min</option>').join('')+'</select></label></div><p class="osce-note">Amplitude: '+shallow+'/74 · Profundidade: '+deep+'/74. Há duas estações publicadas neste projeto; as demais são fases posteriores, não conteúdo indisponível escondido.</p><div class="osce-track"><span style="width:'+(100*shallow/74)+'%"></span></div><div class="osce-track osce-track-secondary"><span style="width:'+(100*deep/74)+'%"></span></div></section>'
+   +'<section class="osce-case"><h2>Triagem e cobertura</h2><div class="osce-settings"><label>Data da APO<input type="date" value="'+esc(state.settings.examDate)+'" onchange="OSCEPilot.setDate(this.value)"></label><label>Tempo disponível<select onchange="OSCEPilot.setMinutes(this.value)">'+[5,15,30,45].map(m=>'<option value="'+m+'"'+(Number(state.settings.minutes)===m?' selected':'')+'>'+m+' min</option>').join('')+'</select></label></div><p class="osce-note">Amplitude: '+shallow+'/74 · Profundidade: '+deep+'/74. Há '+BANK.length+' estações disponíveis neste projeto; as demais dependem de validação e publicação.</p><div class="osce-track"><span style="width:'+(100*shallow/74)+'%"></span></div><div class="osce-track osce-track-secondary"><span style="width:'+(100*deep/74)+'%"></span></div></section>'
    +'<h2>Estações disponíveis</h2>'+BANK.map(selector).join('')
    +'<div class="osce-actions"><button class="btn" onclick="OSCEPilot.showReview()">↻ Revisão por erros</button><button class="btn" onclick="OSCEPilot.showPrompt()">Gerar script de revisão → Copiar para IA</button></div>'
    +'<p class="osce-note">Estações com perguntas e respostas autorais do Master; não se trata de conteúdo oficial da banca. A autoavaliação é manual. O ECG da estação 52 é derivado do arquivo real i-031.jpg enviado para este projeto.</p>';
@@ -68,8 +68,9 @@ window.OSCEPilot=(()=>{
   return '<figure class="osce-illustration"><img src="assets/osce/ilustracao-sincope-estacao61.png" alt="Ilustração criada para o Master: idoso com perda de consciência durante esforço, hipótese de estreitamento da valva aórtica e redução da perfusão cerebral; não é o paciente original." loading="lazy" onclick="OSCEPilot.expandImage(this)"><figcaption><strong>ILUSTRAÇÃO DIDÁTICA — NÃO É IMAGEM DO CASO ORIGINAL.</strong> Esquema autoral baseado no cenário clínico descrito; estreitamento valvar é hipótese a investigar, não diagnóstico confirmado.</figcaption></figure>';
  }
  function media(st){
-  if(st.number===61)return illustration();
-  return '<figure class="osce-visual osce-real-ecg"><img src="'+esc(st.images[0].src)+'" loading="lazy" alt="'+esc(st.images[0].alt)+'" onclick="OSCEPilot.expandImage(this)" onerror="this.hidden=true;this.nextElementSibling.hidden=false"><p hidden>O ECG não foi carregado. Verifique sua conexão e use o botão Recarregar imagem.</p><figcaption><strong>ECG REAL DO MATERIAL ENVIADO</strong> · i-031.jpg. Toque para ampliar. O diagnóstico permanece oculto até a resposta.</figcaption></figure>';
+  if(st.number===61&&!st.images?.length)return illustration();
+  if(!st.images?.length)return '<p class="osce-note">Imagem original indisponível para esta estação; estude o caso sem inferir exames não fornecidos.</p>';
+  return st.images.map(img=>'<figure class="osce-visual"><img src="'+esc(img.src)+'" loading="lazy" alt="'+esc(img.alt||'Imagem da estação')+'" onclick="OSCEPilot.expandImage(this)" onerror="this.hidden=true;this.nextElementSibling.hidden=false"><p hidden>Imagem indisponível. Confira o arquivo associado à estação.</p><figcaption><strong>'+(img.kind==='illustration'?'ILUSTRAÇÃO EDUCACIONAL — NÃO É IMAGEM ORIGINAL':'IMAGEM ORIGINAL DO MATERIAL ENVIADO')+'</strong> · '+esc(img.caption||'Imagem do caso. Toque para ampliar.')+'</figcaption></figure>').join('');
  }
  function annotatedMedia(st){
   if(st.number!==52||!st.images?.[0])return '';
@@ -90,11 +91,9 @@ window.OSCEPilot=(()=>{
   const sourceItems=(st.sources||[]).map(s=>'<li><a href="'+esc(s.url)+'" target="_blank" rel="noopener noreferrer">'+esc(s.label||s.title)+'</a> ('+esc(s.year)+')</li>').join('');
   return '<details id="osce-sources" class="osce-deep"><summary>Referências clínicas oficiais e links <span>abrir fontes</span></summary><div><ul>'+sourceItems+'</ul><p class="osce-note">Diretrizes fundamentam os pontos gerais; respostas e critérios são material didático autoral do Master, não gabarito institucional.</p></div></details>';
  }
- function lessonText(st){
-  return st.number===61?'Aula Clínica Médica II · Síncope e Crise Convulsiva':'Biblioteca P1 · Cardiologia · Arritmias cardíacas · Fibrilação atrial';
- }
  function lessonBar(st){
-  return '<details id="osce-lesson" class="osce-deep"><summary>Aula relacionada na biblioteca Master <span>abrir tema</span></summary><div><p>'+esc(lessonText(st))+'</p><div class="osce-actions"><button class="btn primary" onclick="OSCEPilot.openLesson('+st.number+')">Ir para a aula completa</button></div><p class="osce-note">A aula abre na própria navegação do Master. Você poderá voltar ao OSCE pelo menu lateral.</p></div></details>';
+  if(!st.lesson?.id)return '<details id="osce-lesson" class="osce-deep"><summary>Estudar o assunto completo <span>sem aula interna confirmada</span></summary><div><p>Não há aula específica confirmada nesta biblioteca. Consulte as diretrizes oficiais desta estação.</p><button type="button" class="btn" onclick="OSCEPilot.showSources()">Abrir diretrizes</button></div></details>';
+  return '<details id="osce-lesson" class="osce-deep"><summary>Aula relacionada na biblioteca Master <span>abrir tema</span></summary><div><p>'+esc(st.lesson.label||st.title)+'</p><div class="osce-actions"><button class="btn primary" onclick="OSCEPilot.openLesson('+st.number+')">Ir para a aula relacionada</button></div><p class="osce-note">Conteúdo interno complementar. Para recomendações atuais, consulte as diretrizes da estação.</p></div></details>';
  }
  function termPanel(st){
   const a=st.terms||[
@@ -186,7 +185,7 @@ window.OSCEPilot=(()=>{
   return sectionTitle('Revisão <em>adaptativa.</em>')+'<button class="btn ghost" onclick="OSCEPilot.home()">← Voltar</button><p>Erros, respostas parciais e confiança excessiva voltam primeiro. Reavaliação por recuperação ativa, sem séries punitivas.</p>'
    +'<div class="osce-stats"><div><b>'+dues.length+'</b><span>vencidas</span></div><div><b>'+weak.length+'</b><span>lacunas insatisfatórias</span></div></div><div class="osce-actions"><button class="btn primary" onclick="OSCEPilot.reviewDue()">▶ Retestar agora</button><button class="btn" onclick="OSCEPilot.showPrompt()">Gerar script para IA</button></div>'
    +'<section class="osce-case"><h2>Agendamento explicável</h2><p>Erro importante/alta confiança errada: D+1 · parcial: D+3 · boa resposta: D+7 · domínio repetido, sem dicas: D+21. O escore é produzido por marcação manual dos critérios da resposta.</p></section>'
-   +'<div class="osce-review-list">'+(weak.length?weak.map(x=>'<button onclick="OSCEPilot.start(\'rapida\',[ \''+esc(x.q.id)+'\' ],'+x.st.number+')"><b>Estação '+x.st.number+' — '+esc(x.q.competence)+' · '+x.a.score+'%</b><span>'+esc(x.q.prompt)+'</span><small>Reteste: '+formatDate(x.a.due)+'</small></button>').join(''):'<div class="card pad"><p>Nenhum erro insatisfatório registrado. Comece por uma das duas estações.</p></div>')+'</div>';
+   +'<div class="osce-review-list">'+(weak.length?weak.map(x=>'<button onclick="OSCEPilot.start(\'rapida\',[ \''+esc(x.q.id)+'\' ],'+x.st.number+')"><b>Estação '+x.st.number+' — '+esc(x.q.competence)+' · '+x.a.score+'%</b><span>'+esc(x.q.prompt)+'</span><small>Reteste: '+formatDate(x.a.due)+'</small></button>').join(''):'<div class="card pad"><p>Nenhum erro insatisfatório registrado. Comece por uma das estações disponíveis.</p></div>')+'</div>';
  }
  function makePrompt(){
   const weak=BANK.flatMap(st=>st.questions.map(q=>({st,q,a:last(st,q)})).filter(x=>x.a&&(x.a.score<80||x.a.overconfident))).sort((a,b)=>a.a.score-b.a.score||b.a.confidence-a.a.confidence);
@@ -218,9 +217,11 @@ window.OSCEPilot=(()=>{
  function showTerms(){const d=document.getElementById('osce-terms');if(d){d.open=true;d.scrollIntoView({block:'start',behavior:'smooth'});}}
  function showAnnotated(){const d=typeof document!=='undefined'?document.getElementById('osce-ecg-commented'):null;if(!d){notify('Interpretação comentada disponível após uma tentativa com correção.');return;}d.open=true;d.scrollIntoView({block:'start',behavior:'smooth'});}
  function openLesson(n){
-  if(Number(n)===52&&window.P1?.openTopic){window.P1.openTopic('p1arr');return;}
-  if(Number(n)===61&&typeof window.openTopic==='function'){window.openTopic('neuro1');return;}
-  notify('Aula relacionada indisponível neste momento. Consulte as referências abaixo.');
+  const st=MAP.get(Number(n)),lesson=st?.lesson;
+  if(!lesson?.id)return notify('Não há aula interna validada para esta estação. Consulte as referências.');
+  if(lesson.kind==='p1'&&typeof window.P1?.openTopic==='function'){window.P1.openTopic(lesson.id);return;}
+  if((lesson.kind==='topic'||lesson.kind==='p2')&&typeof window.openTopic==='function'){window.openTopic(lesson.id);return;}
+  notify('A aula relacionada não está disponível nesta versão da biblioteca.');
  }
  function showFullLesson(n){openLesson(n);}
  function expandImage(img){
