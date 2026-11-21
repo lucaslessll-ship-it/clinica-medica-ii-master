@@ -9,7 +9,7 @@ window.OSCEPilot=(()=>{
  const shift=(n)=>{const d=new Date();d.setHours(12,0,0,0);d.setDate(d.getDate()+n);return d.toISOString()};
  const empty=()=>({version:2,settings:{examDate:'2026-11-24',minutes:15},items:{},runs:[],current:null,covered:{},updatedAt:null});
  function load(){try{const s=JSON.parse(localStorage.getItem(KEY));if(s&&s.items&&s.settings)return {...empty(),...s,covered:s.covered||{}}}catch{}return empty();}
- let state=load(),screen='home',shown=false,confidence=0,hints=0,checked=[],reviewStation=61,previewStation=61,previewTier='completa',glossary='';
+ let state=load(),screen='home',shown=false,confidence=0,hints=0,checked=[],reviewStation=61,previewStation=61,previewTier='completa',glossary='',catalogSearch='',catalogPriority='alta',catalogLimit=12;
  const bank=()=>BANK;
  function study(){return MAP.get(state.current?.station)||MAP.get(61)}
  function data(s){return MAP.get(Number(s))||MAP.get(61)}
@@ -35,7 +35,7 @@ window.OSCEPilot=(()=>{
  function sectionTitle(t){return '<header class="page-header osce-head"><p class="eyebrow">CLÍNICA MÉDICA II · AVALIAÇÃO PRÁTICO-ORAL</p><h1>'+t+'</h1></header>';}
  function selector(st){
   const p=recommended(st),completed=attempted(st),covered=state.covered[st.number]||{};
-  return '<article class="osce-case osce-theme-card"><div class="osce-stepbar"><span>ESTAÇÃO '+st.number+' · PRIORIDADE ALTA</span><strong>'+completed+'/'+st.questions.length+' questões</strong></div>'
+  return '<article class="osce-case osce-theme-card"><div class="osce-stepbar"><span>ESTAÇÃO '+st.number+(st.number>74?' · COMPLEMENTAR':'')+'</span><span class="osce-priority osce-priority-'+esc(st.priority)+'">● PRIORIDADE '+({alta:'ALTA',media:'MÉDIA',baixa:'BAIXA'}[st.priority]||'ADICIONAL')+'</span><strong>'+completed+'/'+st.questions.length+' questões</strong></div>'
    +'<h2>'+esc(st.title)+'</h2><p>'+esc(st.subtitle)+'</p>'
    +(st.images?.length?'<p class="osce-note">✓ '+st.images.length+' imagem(ns) do caso</p>':st.number===61?'<p class="osce-note">Ilustração didática identificada como tal.</p>':'<p class="osce-note">Caso sem imagem original; explicações clínicas disponíveis.</p>')
    +'<p class="osce-note">'+esc(p.reason)+'</p>'
@@ -45,19 +45,34 @@ window.OSCEPilot=(()=>{
    +'<button class="btn" onclick="OSCEPilot.start(\'completa\',null,'+st.number+')">Completo</button></div>'
    +'<div class="osce-depth-grid">'+Object.entries(st.tiers).map(([tier,t])=>'<button class="osce-depth-btn '+(p.tier===tier?'suggested':'')+'" onclick="OSCEPilot.start(\''+tier+'\',null,'+st.number+')"><strong>'+esc(t.label)+'</strong><span>≈'+t.minutes+' min · '+t.ids.length+' pergunta(s)</span><small>'+esc(t.description)+'</small>'+(covered[tier]?'<em>✓ já percorrida</em>':'')+'</button>').join('')+'</div></article>';
  }
+ function filteredCatalog(){
+  return BANK.filter(st=>(catalogPriority==='todas'||(catalogPriority==='complementar'?st.number>74:st.priority===catalogPriority))
+   &&(!catalogSearch||[st.title,st.subtitle,st.area,String(st.number)].join(' ').toLocaleLowerCase('pt-BR').includes(catalogSearch.toLocaleLowerCase('pt-BR'))))
+   .sort((a,b)=>({alta:0,media:1,baixa:2}[a.priority]??3)-({alta:0,media:1,baixa:2}[b.priority]??3)||a.number-b.number);
+ }
+ function filterCatalog(v){
+  catalogSearch=String(v||'').slice(0,120);catalogLimit=12;renderAgain();
+  if(typeof document!=='undefined'){const field=document.getElementById('osce-catalog-search');if(field){field.focus();try{field.setSelectionRange(field.value.length,field.value.length)}catch{}}}
+ }
+ function setCatalogPriority(v){catalogPriority=String(v);catalogLimit=12;renderAgain();}
+ function moreCatalog(){catalogLimit+=12;renderAgain();}
  function homePage(){
-  const total=BANK.reduce((n,st)=>n+attempted(st),0),dueCount=dueItems().length,weakCount=weakItems().length,shallow=BANK.filter(st=>Object.values(state.covered[st.number]||{}).some(Boolean)).length,deep=BANK.filter(st=>state.covered[st.number]?.completa).length;
+  const total=BANK.reduce((n,st)=>n+attempted(st),0),dueCount=dueItems().length,weakCount=weakItems().length,shallow=BANK.filter(st=>st.number<=74&&Object.values(state.covered[st.number]||{}).some(Boolean)).length,deep=BANK.filter(st=>st.number<=74&&state.covered[st.number]?.completa).length;
   const d=diffDays(),selection=dueCount?dueItems()[0].st:BANK.find(st=>attempted(st)===0)||BANK[0];
   return sectionTitle('OSCE <em>Clínica Médica.</em>')+'<p>Treine primeiro, aprofunde ao clicar, recupere os erros e retome sem perder seu progresso.</p>'
-   +'<section class="osce-pilot-hero"><div><p class="eyebrow">SESSÃO DE HOJE · COMEÇO SEM ATRITO</p><h2>Uma pergunta já é progresso.</h2><p>'+esc(d===null?'Data não definida.':d<0?'A data registrada passou; ajuste abaixo.':d===0?'Avaliação hoje.':d+' dia(s) até a avaliação.')+' Comece pelo erro vencido ou pela próxima estação prioritária.</p><div class="osce-actions"><button class="btn primary" onclick="OSCEPilot.daily()">▶ Sessão de hoje · 15 min</button>'+(state.current?'<button class="btn" onclick="OSCEPilot.resume()">Retomar onde parei</button>':'')+'</div></div><div class="osce-pilot-emblem" aria-hidden="true">2<span>estações</span></div></section>'
+   +'<section class="osce-pilot-hero"><div><p class="eyebrow">SESSÃO DE HOJE · COMEÇO SEM ATRITO</p><h2>Uma pergunta já é progresso.</h2><p>'+esc(d===null?'Data não definida.':d<0?'A data registrada passou; ajuste abaixo.':d===0?'Avaliação hoje.':d+' dia(s) até a avaliação.')+' Comece pelo erro vencido ou pela próxima estação prioritária.</p><div class="osce-actions"><button class="btn primary" onclick="OSCEPilot.daily()">▶ Sessão de hoje · 15 min</button>'+(state.current?'<button class="btn" onclick="OSCEPilot.resume()">Retomar onde parei</button>':'')+'</div></div><div class="osce-pilot-emblem" aria-hidden="true">'+BANK.filter(x=>x.number<=74).length+'<span>estações</span></div></section>'
    +'<div class="osce-stats"><div><b>'+total+'</b><span>perguntas testadas</span></div><div><b>'+dueCount+'</b><span>revisões vencidas</span></div><div><b>'+weakCount+'</b><span>lacunas registradas</span></div><div><b>'+deep+'/74</b><span>estações completas</span></div></div>'
-   +'<section class="osce-case"><h2>Triagem e cobertura</h2><div class="osce-settings"><label>Data da APO<input type="date" value="'+esc(state.settings.examDate)+'" onchange="OSCEPilot.setDate(this.value)"></label><label>Tempo disponível<select onchange="OSCEPilot.setMinutes(this.value)">'+[5,15,30,45].map(m=>'<option value="'+m+'"'+(Number(state.settings.minutes)===m?' selected':'')+'>'+m+' min</option>').join('')+'</select></label></div><p class="osce-note">Amplitude: '+shallow+'/74 · Profundidade: '+deep+'/74. Há duas estações publicadas neste projeto; as demais são fases posteriores, não conteúdo indisponível escondido.</p><div class="osce-track"><span style="width:'+(100*shallow/74)+'%"></span></div><div class="osce-track osce-track-secondary"><span style="width:'+(100*deep/74)+'%"></span></div></section>'
-   +'<h2>Estações disponíveis</h2>'+BANK.map(selector).join('')
+   +'<section class="osce-case"><h2>Triagem e cobertura</h2><div class="osce-settings"><label>Data da APO<input type="date" value="'+esc(state.settings.examDate)+'" onchange="OSCEPilot.setDate(this.value)"></label><label>Tempo disponível<select onchange="OSCEPilot.setMinutes(this.value)">'+[5,15,30,45].map(m=>'<option value="'+m+'"'+(Number(state.settings.minutes)===m?' selected':'')+'>'+m+' min</option>').join('')+'</select></label></div><p class="osce-note">Amplitude: '+shallow+'/74 · Profundidade: '+deep+'/74. Há '+BANK.filter(x=>x.number<=74).length+' estações principais e '+BANK.filter(x=>x.number>74).length+' complementares, com fichas originais de estudo.</p><div class="osce-track"><span style="width:'+(100*shallow/74)+'%"></span></div><div class="osce-track osce-track-secondary"><span style="width:'+(100*deep/74)+'%"></span></div></section>'
+   +'<h2>Estações disponíveis</h2><p class="osce-note">Prioridade: <span class="osce-priority osce-priority-alta">● Alta</span> · <span class="osce-priority osce-priority-media">● Média</span> · <span class="osce-priority osce-priority-baixa">● Baixa</span>. Critério pedagógico, não previsão estatística da prova.</p>'
+   +'<div class="osce-filter"><label>Buscar estação<input type="search" id="osce-catalog-search" placeholder="Síndrome, ECG, 74..." value="'+esc(catalogSearch)+'" oninput="OSCEPilot.filterCatalog(this.value)"></label><label>Prioridade<select onchange="OSCEPilot.setCatalogPriority(this.value)">'+[['alta','Alta'],['media','Média'],['baixa','Baixa'],['complementar','Complementares'],['todas','Todas']].map(([k,l])=>'<option value="'+k+'"'+(catalogPriority===k?' selected':'')+'>'+l+'</option>').join('')+'</select></label></div>'
+   +'<p class="osce-note">'+filteredCatalog().length+' estações neste filtro; exibindo até '+Math.min(catalogLimit,filteredCatalog().length)+'.</p>'
+   +'<div class="osce-catalog-grid">'+filteredCatalog().slice(0,catalogLimit).map(selector).join('')+'</div>'
+   +(filteredCatalog().length>catalogLimit?'<button type="button" class="btn" onclick="OSCEPilot.moreCatalog()">Mostrar mais estações</button>':'')
    +'<div class="osce-actions"><button class="btn" onclick="OSCEPilot.showReview()">↻ Revisão por erros</button><button class="btn" onclick="OSCEPilot.showPrompt()">Gerar script de revisão → Copiar para IA</button></div>'
    +'<p class="osce-note">Estações com perguntas e respostas autorais do Master; não se trata de conteúdo oficial da banca. A autoavaliação é manual. O ECG da estação 52 é derivado do arquivo real i-031.jpg enviado para este projeto.</p>';
  }
  function toolBar(st){
-  return '<div class="osce-top-links"><button class="btn" onclick="OSCEPilot.openLesson('+st.number+')">↗ Aula do tema</button>'
+  return '<div class="osce-top-links">'+((st.lesson?.id||st.number===52||st.number===61)?'<button class="btn" onclick="OSCEPilot.openLesson('+st.number+')">↗ Aula do tema</button>':'')
    +'<button class="btn" onclick="OSCEPilot.showSources()">📚 Referências e diretrizes</button>'
    +'<button class="btn" onclick="OSCEPilot.showTerms()">🔎 Termos com referências</button>'
    +'<button class="btn" onclick="OSCEPilot.preview('+st.number+')">📖 Revisar respostas antes</button></div>';
@@ -72,11 +87,12 @@ window.OSCEPilot=(()=>{
  }
  function sourcePanel(st){
   const sourceItems=(st.sources||[]).map(s=>'<li><a href="'+esc(s.url)+'" target="_blank" rel="noopener noreferrer">'+esc(s.label||s.title)+'</a> ('+esc(s.year)+')</li>').join('');
-  return '<details id="osce-sources" class="osce-deep"><summary>Referências clínicas oficiais e links <span>abrir fontes</span></summary><div><ul>'+sourceItems+'</ul><p class="osce-note">Diretrizes fundamentam os pontos gerais; respostas e critérios são material didático autoral do Master, não gabarito institucional.</p></div></details>';
+  return '<details id="osce-sources" class="osce-deep"><summary>Referências clínicas oficiais e links <span>abrir fontes</span></summary><div><ul>'+sourceItems+'</ul><p class="osce-note">Links podem abrir bibliotecas de diretrizes, não necessariamente recomendações específicas da doença. Respostas e critérios são material didático autoral do Master, não gabarito institucional. Confirme conduta e atualização na diretriz específica.</p></div></details>';
  }
  function lessonText(st){return st.lesson?.label||(st.number===61?'Clínica Médica II · Síncope e crise convulsiva':st.number===52?'Biblioteca P1 · Arritmias cardíacas':'Sem aula interna identificada');}
  function lessonBar(st){
-  return '<details id="osce-lesson" class="osce-deep"><summary>Aula completa já existente no Master <span>abrir tema</span></summary><div><p>'+esc(lessonText(st))+'</p><div class="osce-actions"><button class="btn primary" onclick="OSCEPilot.openLesson('+st.number+')">Ir para a aula completa</button></div><p class="osce-note">A aula abre na própria navegação do Master. Você poderá voltar ao OSCE pelo menu lateral.</p></div></details>';
+  if(!(st.lesson?.id||st.number===52||st.number===61))return '<details id="osce-lesson" class="osce-deep"><summary>Aula relacionada <span>não localizada nesta versão</span></summary><div><p>Não foi identificada uma aula interna específica para esta estação. Utilize as diretrizes e a revisão completa do Master sem links quebrados.</p><button type="button" class="btn" onclick="OSCEPilot.showSources()">Ver referências disponíveis</button></div></details>';
+  return '<details id="osce-lesson" class="osce-deep"><summary>Aula relacionada no Master <span>abrir tema</span></summary><div><p>'+esc(lessonText(st))+'</p><div class="osce-actions"><button class="btn primary" onclick="OSCEPilot.openLesson('+st.number+')">Ir para aula relacionada</button></div></details>';
  }
  function termPanel(st){
   const a=st.terms||[
@@ -112,7 +128,7 @@ window.OSCEPilot=(()=>{
   const q=currentQ(st);if(!q)return homePage();
   const attemptedEntry=entry(st,q),prev=last(st,q);
   let out=sectionTitle(esc(st.title))+'<button class="btn ghost" onclick="OSCEPilot.home()">← Voltar e salvar</button>'+toolBar(st)
-   +'<section class="osce-case"><div class="osce-stepbar"><span>ESTAÇÃO '+st.number+' · PRIORIDADE ALTA</span><span>'+esc(st.tiers[r.tier].label)+' · '+(r.pos+1)+'/'+r.ids.length+'</span></div><p>'+esc(st.caseText)+'</p>'+media(st)+'</section>'
+   +'<section class="osce-case"><div class="osce-stepbar"><span>ESTAÇÃO '+st.number+(st.number>74?' · COMPLEMENTAR':'')+'</span><span class="osce-priority osce-priority-'+esc(st.priority)+'">● PRIORIDADE '+({alta:'ALTA',media:'MÉDIA',baixa:'BAIXA'}[st.priority]||'ADICIONAL')+'</span><span>'+esc(st.tiers[r.tier].label)+' · '+(r.pos+1)+'/'+r.ids.length+'</span></div><p>'+esc(st.caseText)+'</p>'+media(st)+'</section>'
    +'<section class="osce-step"><div class="osce-track"><span style="width:'+(r.pos/r.ids.length*100)+'%"></span></div><div class="osce-stepbar"><b>PERGUNTA '+(r.pos+1)+' DE '+r.ids.length+'</b><span>'+esc(q.competence)+'</span></div><h2>'+esc(q.prompt)+'</h2>'
    +(prev?'<p class="osce-note">Última tentativa: '+prev.score+'% de critérios · próxima revisão '+formatDate(prev.due)+'.</p>':'')
    +'<p class="osce-note"><strong>Após a tentativa você verá:</strong> resposta-modelo, checklist dos pontos essenciais, aprofundamentos, referências e memorização. Se preferir, pode <button class="osce-inline-action" onclick="OSCEPilot.preview('+st.number+')">revisar as respostas agora</button> antes de simular.</p>'+'<label class="osce-answer-label" for="osce-answer">Sua resposta (como na arguição oral)</label><textarea id="osce-answer" rows="6" placeholder="Digite seu raciocínio; pode escrever não sei para aprender pelo erro." oninput="OSCEPilot.answer(this.value)" '+(shown?'readonly':'')+'>'+esc(attemptedEntry.draft||'')+'</textarea>';
@@ -156,7 +172,7 @@ window.OSCEPilot=(()=>{
  }
  function daily(){
   const a=dueItems();if(a.length)return start('rapida',[a[0].q.id],a[0].st.number);
-  const st=BANK.find(x=>attempted(x)===0)||BANK[0];start(recommended(st).tier,null,st.number);
+  const st=BANK.filter(x=>x.priority==='alta').find(x=>attempted(x)===0)||BANK.find(x=>attempted(x)===0)||BANK[0];start(recommended(st).tier,null,st.number);
  }
  function resume(){if(!state.current)return daily();screen='study';shown=false;confidence=0;hints=0;checked=[];renderAgain();}
  function home(){screen='home';shown=false;renderAgain();}
@@ -231,5 +247,5 @@ window.OSCEPilot=(()=>{
  window.addEventListener('master-auth-ended',()=>{state=empty();screen='home';shown=false;glossary='';});
  window.addEventListener('master-remote-merge',e=>{if(e.detail?.key===KEY)reload()});
  window.addEventListener('storage',e=>{if(e.key===KEY)reload()});
- return {page,start,daily,resume,home,preview,previewTierSet,previewPage,setDate,setMinutes,answer,conf,hint,reveal,criterion,retry,finish,showReview,showPrompt,reviewDue,term,showSources,showTerms,openLesson,showFullLesson,expandImage,copyPrompt,reload};
+ return {page,start,daily,resume,home,preview,previewTierSet,previewPage,filterCatalog,setCatalogPriority,moreCatalog,setDate,setMinutes,answer,conf,hint,reveal,criterion,retry,finish,showReview,showPrompt,reviewDue,term,showSources,showTerms,openLesson,showFullLesson,expandImage,copyPrompt,reload};
 })();
