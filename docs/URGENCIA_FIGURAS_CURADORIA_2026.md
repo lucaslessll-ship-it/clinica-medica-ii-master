@@ -5,7 +5,7 @@
 A pedido do usuário, os **23 módulos** foram revisados para incorporar figuras quando realmente favorecem a compreensão clínica, **sem incorporar o slide/PDF completo, sem mencionar docentes ou instituições na interface** e sem mexer nas questões ou nos registros dos alunos.
 
 - **23 arquivos JPEG individuais** extraídos de objetos de imagem já presentes nos PDFs. Os objetos foram extraídos sem renderizar a página inteira; preservam resolução e cores originais. A origem ficou registrada abaixo para conferência.
-- **22 figuras vinculadas à interface em 9 módulos**. A 23ª radiografia foi mantida como recurso técnico, mas não exibida em EAP porque a origem não prova que ela representa edema cardiogênico. Critério: pertinência acima de quantidade.
+- **23 figuras vinculadas à interface em 9 módulos**. Foi evitado reutilizar uma radiografia de IRpA como se representasse EAP cardiogênico; esse tema recebeu um algoritmo visual específico. Critério: pertinência acima de quantidade.
 - **14 módulos com diagramas editoriais autorais**, quando não havia figura adequada extraível dos documentos fornecidos. O módulo PCR oferece a figura diretamente na decisão de ritmo dentro da experiência guiada.
 - Imagens com autoria ou licença de terceiros devem ser verificadas antes de qualquer redistribuição externa; extração do arquivo não implica transferência dos direitos de publicação.
 - **Não há iframe, preview de PDF nem link para slides completos** na aula. O material original do Drive não foi modificado.
