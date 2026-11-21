@@ -60,50 +60,67 @@ function enrich(base,deep,topic,part){
  return out;
 }
 function catalog(){
- const entries=[];
- const weakOsce=new Set((window.OSCEPilot?.weakItems?.()||[]).map(x=>'osce:'+x.st.number+':'+x.q.id));
+ const entries=[],weakOsce=new Set((window.OSCEPilot?.weakItems?.()||[]).map(x=>'osce:'+x.st.number+':'+x.q.id));
  const osce=window.OSCEPilot?.bank?.()||[];
  for(const st of osce){
   const course=st.pocusOrder?'pocus':'osce',topic=String(st.number);
   (st.questions||[]).forEach(q=>{
-   const extra=[...(q.criteria||[]),q.memory].filter(Boolean).join(' · ');
-   const item=question('osce:'+topic+':'+q.id,course,topic,st.title,q.prompt,q.answer,extra,'raciocinio',st.priority,st.caseText);
+   const item=question('osce:'+topic+':'+q.id,course,topic,st.title,q.prompt,q.answer,[q.memory,...(q.criteria||[])].filter(Boolean).join(' · '),
+    'raciocinio',st.priority,st.caseText,{
+     criteria:q.criteria,mechanism:st.essential?.oneMinute,pitfall:(st.deeper||[])[0]?.body,
+     memory:q.memory||st.essential?.mnemonic,
+     example:q.caseText||st.subtitle,transfer:'Como esse achado mudaria sua hipótese ou conduta em outro paciente?',
+     sources:st.sources||[]
+    });
    if(item){item.fromSimulationError=weakOsce.has(item.id);entries.push(item);}
   });
  }
- const p2=window.MASTER_DATA?.topics||[];
- for(const t of p2)(t.chapters||[]).forEach((c,i)=>{
-  const base='p2:'+t.id+':'+i,ctx=t.title+' · '+c.name;
+ for(const t of window.MASTER_DATA?.topics||[])(t.chapters||[]).forEach((c,i)=>{
+  const base='p2:'+t.id+':'+i,ctx=t.title+' · '+c.name,common={mechanism:c.patho,pitfall:c.exception,memory:c.memory,example:c.exam,transfer:c.discursive};
   const rows=[
-   ['mecanismo','Explique a fisiopatologia de '+c.name+'.',c.patho,c.why,'explicacao'],
-   ['clinica','Quais sinais clínicos e achados direcionam a investigação de '+c.name+'?',c.clinic,[c.tests,c.exception].filter(Boolean).join(' · '),'discriminacao'],
-   ['conduta','Descreva a estratégia inicial e os principais riscos no manejo de '+c.name+'.',c.strategy,[c.exception,c.exam].filter(Boolean).join(' · '),'aplicacao']
+   ['mecanismo','Explique a fisiopatologia de '+c.name+'.',c.patho,c.why,'explicacao',{...common,criteria:[c.anchor,c.why,c.clinic]}],
+   ['clinica','Quais sinais clínicos e achados direcionam a investigação de '+c.name+'?',c.clinic,[c.tests,c.exception].filter(Boolean).join(' · '),'discriminacao',{...common,criteria:[c.clinic,c.tests,c.exception]}],
+   ['conduta','Descreva a estratégia inicial e os principais riscos no manejo de '+c.name+'.',c.strategy,[c.exception,c.exam].filter(Boolean).join(' · '),'aplicacao',{...common,criteria:[c.strategy,c.exception,c.exam]}]
   ];
-  rows.forEach(row=>{const item=question(base+':'+row[0],'p2',t.id,t.title,row[1],row[2],row[3],row[4],String(t.priority).toLowerCase(),ctx);if(item)entries.push(item);});
+  rows.forEach(row=>{const item=question(base+':'+row[0],'p2',t.id,t.title,row[1],row[2],row[3],row[4],String(t.priority).toLowerCase(),ctx,row[5]);if(item)entries.push(item);});
+  entries.push(...enrich(base,window.LessonDeep?.get?.(t.id,i),t.id,'p2'));
  });
  const p1=window.P1?.topics||window.MASTER_P1_DATA?.topics||[];
  for(const t of p1)(t.chapters||[]).forEach((c,i)=>{
-  const base='p1:'+t.id+':'+i,ctx=t.title+' · '+c.name;
+  const base='p1:'+t.id+':'+i,ctx=t.title+' · '+c.name,common={mechanism:c.mechanism,pitfall:c.pitfall,memory:c.memorize,example:c.exam,transfer:c.discursive};
   [
-   ['mecanismo','Explique o mecanismo e a apresentação de '+c.name+'.',[c.mechanism,c.clinical].filter(Boolean).join(' · '),c.memorize,'explicacao'],
-   ['diagnostico','Como você investiga e diferencia '+c.name+'?',c.diagnostics,[c.pitfall,c.comparison].filter(Boolean).join(' · '),'discriminacao'],
-   ['tratamento','Qual sua conduta inicial diante de '+c.name+'?',c.treatment,[c.protocol,c.exam].filter(Boolean).join(' · '),'aplicacao']
-  ].forEach(row=>{const item=question(base+':'+row[0],'p1',t.id,t.title,row[1],row[2],row[3],row[4],'media',ctx);if(item)entries.push(item);});
+   ['mecanismo','Explique o mecanismo e a apresentação de '+c.name+'.',[c.mechanism,c.clinical].filter(Boolean).join(' · '),c.memorize,'explicacao',{...common,criteria:[c.mechanism,c.clinical]}],
+   ['diagnostico','Como você investiga e diferencia '+c.name+'?',c.diagnostics,[c.pitfall,c.comparison].filter(Boolean).join(' · '),'discriminacao',{...common,criteria:[c.diagnostics,c.pitfall,c.comparison]}],
+   ['tratamento','Qual sua conduta inicial diante de '+c.name+'?',c.treatment,[c.protocol,c.exam].filter(Boolean).join(' · '),'aplicacao',{...common,criteria:[c.treatment,c.protocol,c.exam]}]
+  ].forEach(row=>{const item=question(base+':'+row[0],'p1',t.id,t.title,row[1],row[2],row[3],row[4],'media',ctx,row[5]);if(item)entries.push(item);});
+  entries.push(...enrich(base,window.LessonDeep?.get?.(t.id,i),t.id,'p1'));
  });
  const cir=window.CIR?.topics||window.MASTER_CIR_DATA?.topics||[];
  for(const t of cir)(t.chapters||[]).forEach((c,i)=>{
-  const id='cir:'+t.id+':'+i,ctx=t.title+' · '+c.name;
-  const item=question(id,'cir',t.id,t.title,'Sem consultar a aula, explique os pontos essenciais de '+c.name+'.',c.hy,'O resumo serve como ponto de partida; abra a aula completa para critérios, exceções e decisões clínicas.','recuperacao','media',ctx);
+  const id='cir:'+t.id+':'+i,ctx=t.title+' · '+c.name,deep=window.LessonDeep?.get?.(t.id,i);
+  const item=question(id,'cir',t.id,t.title,'Sem consultar a aula, explique os pontos essenciais de '+c.name+'.',c.hy,
+   'O resumo é uma pista inicial: confira os detalhes da aula antes de concluir que domina o tema.','recuperacao','media',ctx,{
+    criteria:(deep?.reasoning||[]).slice(0,4),mechanism:deep?.sections?.[0]?.p?.[0],pitfall:deep?.pitfalls?.[0],memory:deep?.mnemonics?.[0]?.t,
+    example:deep?.practice?.[0],transfer:deep?.cases?.[0]?.ask,sources:deep?.refs||[]
+   });
   if(item)entries.push(item);
+  entries.push(...enrich(id,deep,t.id,'cir'));
  });
  const ue=window.Emergency?.all||window.EMERGENCY_CONTENT||[];
  for(const m of ue){
-  const caseItem=question('ue:'+m.id+':case','ue',m.id,m.title,m.case?.ask,m.case?.answer?.join(' · '),m.case?.stem,'aplicacao','alta',m.case?.stem);
-  if(caseItem)entries.push(caseItem);
+  const common={mechanism:m.sections?.[0]?.p?.[0],pitfall:m.pitfalls?.[0],memory:m.summary,example:m.case?.stem,transfer:m.case?.ask,criteria:m.case?.answer||[]};
+  const item=question('ue:'+m.id+':case','ue',m.id,m.title,m.case?.ask,m.case?.answer?.join(' · '),m.case?.stem,'aplicacao','alta',m.case?.stem,common);
+  if(item)entries.push(item);
   (m.quiz||[]).forEach((q,i)=>{
    const correct=Array.isArray(q.o)?q.o[q.a]:null;
-   const item=question('ue:'+m.id+':quiz:'+i,'ue',m.id,m.title,'Justifique sua decisão: '+q.q,correct,q.why,'discriminacao','media',m.summary);
-   if(item)entries.push(item);
+   const x=question('ue:'+m.id+':quiz:'+i,'ue',m.id,m.title,'Justifique sua decisão: '+q.q,correct,q.why,'discriminacao','media',m.summary,
+    {...common,criteria:[correct,q.why].filter(Boolean)});
+   if(x)entries.push(x);
+  });
+  (m.flow||[]).slice(0,6).forEach((flow,i)=>{
+   if(!Array.isArray(flow)||flow.length<2)return;
+   const x=question('ue:'+m.id+':decision:'+i,'ue',m.id,m.title,'Diante de '+flow[0]+', qual a decisão inicial e por quê?',flow[1],m.pitfalls?.join(' · '),'aplicacao','alta',m.summary,common);
+   if(x)entries.push(x);
   });
  }
  return entries;
