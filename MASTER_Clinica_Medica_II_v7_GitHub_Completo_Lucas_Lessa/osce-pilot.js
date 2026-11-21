@@ -102,7 +102,7 @@ window.OSCEPilot=(()=>{
  function jumpToIndex(number){
   const st=MAP.get(Number(number));
   if(!st)return notify('Esta estação ainda está em preparação.');
-  catalogSearch='#'+displayNo(st.number);catalogPriority='todas';catalogLimit=12;screen='home';renderAgain();
+  markWelcomeVisited();catalogSearch='#'+displayNo(st.number);catalogPriority='todas';catalogLimit=12;screen='home';renderAgain();
   if(typeof document!=='undefined'){
    const target=document.getElementById('osce-station-'+st.number);
    if(target){target.scrollIntoView({block:'center',behavior:window.matchMedia?.('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});target.focus({preventScroll:true});}
@@ -123,6 +123,7 @@ window.OSCEPilot=(()=>{
    +'<div class="osce-welcome-bottom"><label class="osce-welcome-checkbox"><input type="checkbox" id="osce-welcome-never" '+(welcomeSkipNext?'checked ':'')+'onchange="OSCEPilot.welcomePreference(this.checked)"><span>Não mostrar novamente</span></label><button type="button" class="btn primary" onclick="OSCEPilot.closeWelcome()">Entendi, começar <span aria-hidden="true">→</span></button></div>'
    +'<p class="osce-welcome-disclaimer">Dica: uma sessão curta e concentrada é melhor do que adiar. A pontuação é uma <b>autoavaliação por checklist</b>, não uma correção automática da banca.</p></section>';
  }
+ function markWelcomeVisited(){if(welcomeOpen){welcomeOpen=false;welcomeDismissedThisLoad=true;}}
  function welcomePreference(v){welcomeSkipNext=!!v;}
  function showWelcome(){welcomeOpen=true;welcomeSkipNext=!!state.settings.hideWelcome;renderAgain();}
  function closeWelcome(){
@@ -297,7 +298,7 @@ window.OSCEPilot=(()=>{
   return out;
  }
  function preview(n){
-  if(!MAP.has(Number(n)))return;previewStation=Number(n);previewTier='completa';screen='preview';glossary='';renderAgain();
+  if(!MAP.has(Number(n)))return;markWelcomeVisited();previewStation=Number(n);previewTier='completa';screen='preview';glossary='';renderAgain();
  }
  function previewTierSet(t){
   const st=MAP.get(previewStation);if(st?.tiers[t]){previewTier=t;renderAgain();}
@@ -316,7 +317,7 @@ window.OSCEPilot=(()=>{
  }
  function start(tier,ids,number){
   const st=data(number||61);if(!st?.tiers[tier])return;
-  const chosen=(Array.isArray(ids)&&ids.length?ids:st.tiers[tier].ids).filter(id=>st.questions.some(q=>q.id===id));
+  markWelcomeVisited();const chosen=(Array.isArray(ids)&&ids.length?ids:st.tiers[tier].ids).filter(id=>st.questions.some(q=>q.id===id));
   state.current={station:st.number,tier,ids:chosen,pos:0,startedAt:now(),itemStartedAt:Date.now(),prepared:screen==='preview',results:[]};
   screen='study';shown=false;confidence=0;hints=0;checked=[];glossary='';save();renderAgain();
  }
