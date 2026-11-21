@@ -181,3 +181,46 @@ body[data-theme=dark] .osce-pilot-emblem{color:#b6ead2}
 body[data-theme=dark] .osce-priority-alta{color:#ffadac}
 body[data-theme=dark] .osce-priority-media{color:#ffd68b}
 body[data-theme=dark] .osce-priority-baixa{color:#8ce0ab}
+
+
+/* Índice OSCE: 74 estações originais + 12 complementares, antes dos cards. */
+.osce-priority-overview{margin:20px 0 24px}
+.osce-priority-overview .eyebrow{margin:0 0 5px}
+.osce-index-head{display:flex;justify-content:space-between;align-items:start;gap:15px;margin-bottom:12px}
+.osce-index-head h2{font-size:clamp(1.15rem,2.1vw,1.45rem);margin:0 0 5px}
+.osce-index-head .osce-note{margin:4px 0 0}
+.osce-index-available{display:inline-block;white-space:nowrap;padding:7px 10px;border:1px solid var(--border,#d5ded8);border-radius:99px;font-size:.76rem;color:var(--text-muted,#536c5d)}
+.osce-index-legend{display:flex;gap:8px 17px;flex-wrap:wrap;font-size:.79rem;color:var(--text-muted,#627167);margin:12px 0 16px}
+.osce-index-legend>span{display:inline-flex;align-items:center;gap:7px}
+.osce-index-dot{display:inline-block;flex:0 0 10px;width:10px;height:10px;border-radius:99px;background:var(--osce-index-accent,#a5b6a8)}
+.osce-index-legend-high{background:#bc4545}.osce-index-legend-medium{background:#d1a438}.osce-index-legend-low{background:#419a6e}
+.osce-index-group{--osce-index-accent:#bb4545;--osce-index-fill:#faf0ef;border:1px solid var(--border,#d5ddd7);border-radius:12px;overflow:hidden;margin:9px 0;background:var(--card,#fff)}
+.osce-index-media{--osce-index-accent:#ca9b27;--osce-index-fill:#fff8e5}
+.osce-index-baixa{--osce-index-accent:#3f936b;--osce-index-fill:#ecf6f0}
+.osce-index-group summary{display:flex;align-items:center;gap:11px;padding:13px 14px;cursor:pointer;list-style:none;min-height:46px}
+.osce-index-group summary::-webkit-details-marker{display:none}
+.osce-index-group summary:focus-visible{outline:2px solid #39795a;outline-offset:-3px}
+.osce-index-group summary strong{font-size:.94rem}
+.osce-index-description{color:var(--text-muted,#647167);font-size:.79rem;margin-right:auto}
+.osce-index-total{font-size:.75rem;white-space:nowrap;color:var(--text-muted,#5f6a63)}
+.osce-index-group summary:after{content:'⌄';font-size:1.15rem;font-weight:bold;line-height:1;opacity:.7}
+.osce-index-group[open] summary:after{transform:rotate(180deg)}
+.osce-index-group[open] summary{border-bottom:1px solid var(--border,#dce4dd);background:color-mix(in srgb,var(--osce-index-accent) 5%,var(--card,#fff))}
+.osce-index-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px 9px;padding:12px}
+.osce-index-entry{display:flex;align-items:center;gap:8px;min-width:0;min-height:43px;text-align:left;padding:9px 10px;border:1px solid var(--border,#e0e5df);border-left:3px solid var(--osce-index-accent);border-radius:8px;background:var(--card,#fff);color:inherit;font:inherit}
+button.osce-index-entry{cursor:pointer}
+button.osce-index-entry:hover{border-color:var(--osce-index-accent);background:color-mix(in srgb,var(--osce-index-accent) 6%,var(--card,#fff))}
+button.osce-index-entry:focus-visible{outline:2px solid var(--osce-index-accent);outline-offset:2px}
+.osce-index-number{font-weight:750;font-variant-numeric:tabular-nums;font-size:.78rem;flex:0 0 22px;color:var(--osce-index-accent)}
+.osce-index-name{flex:1 1 auto;min-width:0;font-size:.8rem;font-weight:550;line-height:1.36;overflow-wrap:anywhere}
+.osce-index-status{margin-left:auto;flex:0 0 auto;font-size:.68rem;color:var(--text-muted,#61766a);white-space:nowrap}
+.osce-index-pending{opacity:.69;cursor:default;border-style:dashed}
+.osce-index-pending .osce-index-status{font-style:italic}
+.osce-index-footnote{font-size:.76rem!important;line-height:1.65;margin:15px 1px 1px}
+.osce-theme-card:focus{outline:2px solid #3e8062;outline-offset:3px}
+body[data-theme="dark"] .osce-index-number{filter:brightness(1.35)}
+body[data-theme="dark"] .osce-index-group{--osce-index-fill:transparent}
+body[data-theme="dark"] .osce-index-group[open] summary{background:color-mix(in srgb,var(--osce-index-accent) 13%,var(--card,#1a2220))}
+@media(max-width:1050px){.osce-index-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:650px){.osce-index-grid{grid-template-columns:1fr;padding:9px}.osce-index-head{flex-direction:column;gap:9px}.osce-index-available{align-self:flex-start}.osce-index-description{display:none}.osce-index-entry{min-height:42px}.osce-index-head h2{font-size:1.22rem}}
+@media(prefers-reduced-motion:reduce){.osce-index-group summary:after{transition:none}}
