@@ -45,14 +45,29 @@ window.OSCEPilot=(()=>{
    +'<button class="btn" onclick="OSCEPilot.start(\'completa\',null,'+st.number+')">Completo</button></div>'
    +'<div class="osce-depth-grid">'+Object.entries(st.tiers).map(([tier,t])=>'<button class="osce-depth-btn '+(p.tier===tier?'suggested':'')+'" onclick="OSCEPilot.start(\''+tier+'\',null,'+st.number+')"><strong>'+esc(t.label)+'</strong><span>≈'+t.minutes+' min · '+t.ids.length+' pergunta(s)</span><small>'+esc(t.description)+'</small>'+(covered[tier]?'<em>✓ já percorrida</em>':'')+'</button>').join('')+'</div></article>';
  }
+ function filteredCatalog(){
+  return BANK.filter(st=>(catalogPriority==='todas'||(catalogPriority==='complementar'?st.number>74:st.priority===catalogPriority))
+   &&(!catalogSearch||[st.title,st.subtitle,st.area,String(st.number)].join(' ').toLocaleLowerCase('pt-BR').includes(catalogSearch.toLocaleLowerCase('pt-BR'))))
+   .sort((a,b)=>({alta:0,media:1,baixa:2}[a.priority]??3)-({alta:0,media:1,baixa:2}[b.priority]??3)||a.number-b.number);
+ }
+ function filterCatalog(v){
+  catalogSearch=String(v||'').slice(0,120);catalogLimit=12;renderAgain();
+  if(typeof document!=='undefined'){const field=document.getElementById('osce-catalog-search');if(field){field.focus();try{field.setSelectionRange(field.value.length,field.value.length)}catch{}}}
+ }
+ function setCatalogPriority(v){catalogPriority=String(v);catalogLimit=12;renderAgain();}
+ function moreCatalog(){catalogLimit+=12;renderAgain();}
  function homePage(){
-  const total=BANK.reduce((n,st)=>n+attempted(st),0),dueCount=dueItems().length,weakCount=weakItems().length,shallow=BANK.filter(st=>Object.values(state.covered[st.number]||{}).some(Boolean)).length,deep=BANK.filter(st=>state.covered[st.number]?.completa).length;
+  const total=BANK.reduce((n,st)=>n+attempted(st),0),dueCount=dueItems().length,weakCount=weakItems().length,shallow=BANK.filter(st=>st.number<=74&&Object.values(state.covered[st.number]||{}).some(Boolean)).length,deep=BANK.filter(st=>st.number<=74&&state.covered[st.number]?.completa).length;
   const d=diffDays(),selection=dueCount?dueItems()[0].st:BANK.find(st=>attempted(st)===0)||BANK[0];
   return sectionTitle('OSCE <em>Clínica Médica.</em>')+'<p>Treine primeiro, aprofunde ao clicar, recupere os erros e retome sem perder seu progresso.</p>'
    +'<section class="osce-pilot-hero"><div><p class="eyebrow">SESSÃO DE HOJE · COMEÇO SEM ATRITO</p><h2>Uma pergunta já é progresso.</h2><p>'+esc(d===null?'Data não definida.':d<0?'A data registrada passou; ajuste abaixo.':d===0?'Avaliação hoje.':d+' dia(s) até a avaliação.')+' Comece pelo erro vencido ou pela próxima estação prioritária.</p><div class="osce-actions"><button class="btn primary" onclick="OSCEPilot.daily()">▶ Sessão de hoje · 15 min</button>'+(state.current?'<button class="btn" onclick="OSCEPilot.resume()">Retomar onde parei</button>':'')+'</div></div><div class="osce-pilot-emblem" aria-hidden="true">'+BANK.filter(x=>x.number<=74).length+'<span>estações</span></div></section>'
    +'<div class="osce-stats"><div><b>'+total+'</b><span>perguntas testadas</span></div><div><b>'+dueCount+'</b><span>revisões vencidas</span></div><div><b>'+weakCount+'</b><span>lacunas registradas</span></div><div><b>'+deep+'/74</b><span>estações completas</span></div></div>'
    +'<section class="osce-case"><h2>Triagem e cobertura</h2><div class="osce-settings"><label>Data da APO<input type="date" value="'+esc(state.settings.examDate)+'" onchange="OSCEPilot.setDate(this.value)"></label><label>Tempo disponível<select onchange="OSCEPilot.setMinutes(this.value)">'+[5,15,30,45].map(m=>'<option value="'+m+'"'+(Number(state.settings.minutes)===m?' selected':'')+'>'+m+' min</option>').join('')+'</select></label></div><p class="osce-note">Amplitude: '+shallow+'/74 · Profundidade: '+deep+'/74. Há '+BANK.filter(x=>x.number<=74).length+' estações principais e '+BANK.filter(x=>x.number>74).length+' complementares, com fichas originais de estudo.</p><div class="osce-track"><span style="width:'+(100*shallow/74)+'%"></span></div><div class="osce-track osce-track-secondary"><span style="width:'+(100*deep/74)+'%"></span></div></section>'
-   +'<h2>Estações disponíveis</h2>'+BANK.map(selector).join('')
+   +'<h2>Estações disponíveis</h2><p class="osce-note">Prioridade: <span class="osce-priority osce-priority-alta">● Alta</span> · <span class="osce-priority osce-priority-media">● Média</span> · <span class="osce-priority osce-priority-baixa">● Baixa</span>. Critério pedagógico, não previsão estatística da prova.</p>'
+   +'<div class="osce-filter"><label>Buscar estação<input type="search" id="osce-catalog-search" placeholder="Síndrome, ECG, 74..." value="'+esc(catalogSearch)+'" oninput="OSCEPilot.filterCatalog(this.value)"></label><label>Prioridade<select onchange="OSCEPilot.setCatalogPriority(this.value)">'+[['alta','Alta'],['media','Média'],['baixa','Baixa'],['complementar','Complementares'],['todas','Todas']].map(([k,l])=>'<option value="'+k+'"'+(catalogPriority===k?' selected':'')+'>'+l+'</option>').join('')+'</select></label></div>'
+   +'<p class="osce-note">'+filteredCatalog().length+' estações neste filtro; exibindo até '+Math.min(catalogLimit,filteredCatalog().length)+'.</p>'
+   +'<div class="osce-catalog-grid">'+filteredCatalog().slice(0,catalogLimit).map(selector).join('')+'</div>'
+   +(filteredCatalog().length>catalogLimit?'<button type="button" class="btn" onclick="OSCEPilot.moreCatalog()">Mostrar mais estações</button>':'')
    +'<div class="osce-actions"><button class="btn" onclick="OSCEPilot.showReview()">↻ Revisão por erros</button><button class="btn" onclick="OSCEPilot.showPrompt()">Gerar script de revisão → Copiar para IA</button></div>'
    +'<p class="osce-note">Estações com perguntas e respostas autorais do Master; não se trata de conteúdo oficial da banca. A autoavaliação é manual. O ECG da estação 52 é derivado do arquivo real i-031.jpg enviado para este projeto.</p>';
  }
@@ -231,5 +246,5 @@ window.OSCEPilot=(()=>{
  window.addEventListener('master-auth-ended',()=>{state=empty();screen='home';shown=false;glossary='';});
  window.addEventListener('master-remote-merge',e=>{if(e.detail?.key===KEY)reload()});
  window.addEventListener('storage',e=>{if(e.key===KEY)reload()});
- return {page,start,daily,resume,home,preview,previewTierSet,previewPage,setDate,setMinutes,answer,conf,hint,reveal,criterion,retry,finish,showReview,showPrompt,reviewDue,term,showSources,showTerms,openLesson,showFullLesson,expandImage,copyPrompt,reload};
+ return {page,start,daily,resume,home,preview,previewTierSet,previewPage,filterCatalog,setCatalogPriority,moreCatalog,setDate,setMinutes,answer,conf,hint,reveal,criterion,retry,finish,showReview,showPrompt,reviewDue,term,showSources,showTerms,openLesson,showFullLesson,expandImage,copyPrompt,reload};
 })();
