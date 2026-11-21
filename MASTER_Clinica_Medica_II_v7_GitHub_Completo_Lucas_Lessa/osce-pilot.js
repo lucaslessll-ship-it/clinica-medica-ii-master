@@ -56,9 +56,12 @@ window.OSCEPilot=(()=>{
    +'<p class="osce-note">Estações com perguntas e respostas autorais do Master; não se trata de conteúdo oficial da banca. A autoavaliação é manual. O ECG da estação 52 é derivado do arquivo real i-031.jpg enviado para este projeto.</p>';
  }
  function toolBar(st){
-  return '<div class="osce-top-links"><button class="btn" onclick="OSCEPilot.openLesson('+st.number+')">↗ Aula do tema</button>'
+  const src=st.sources?.[0],direct=src?.url?'<a class="btn" target="_blank" rel="noopener noreferrer" href="'+esc(src.url)+'">↗ Diretriz '+esc(src.year)+'</a>':'';
+  return '<div class="osce-top-links"><button class="btn" onclick="OSCEPilot.openLesson('+st.number+')">↗ Aula relacionada</button>'
    +'<button class="btn" onclick="OSCEPilot.showSources()">📚 Referências e diretrizes</button>'
-   +'<button class="btn" onclick="OSCEPilot.showTerms()">🔎 Termos com referências</button>'
+   +direct
+   +'<button class="btn" onclick="OSCEPilot.showTerms()">🔎 Conceitos com referências</button>'
+   +(st.number===52?(shown?'<button class="btn" onclick="OSCEPilot.showAnnotated()">ECG comentado</button>':'<button class="btn" disabled title="Disponível após você tentar responder">ECG comentado · após responder</button>'):'')
    +'<button class="btn" onclick="OSCEPilot.showFullLesson('+st.number+')">Estudar assunto completo</button></div>';
  }
  function illustration(){
@@ -68,6 +71,21 @@ window.OSCEPilot=(()=>{
   if(st.number===61)return illustration();
   return '<figure class="osce-visual osce-real-ecg"><img src="'+esc(st.images[0].src)+'" loading="lazy" alt="'+esc(st.images[0].alt)+'" onclick="OSCEPilot.expandImage(this)" onerror="this.hidden=true;this.nextElementSibling.hidden=false"><p hidden>O ECG não foi carregado. Verifique sua conexão e use o botão Recarregar imagem.</p><figcaption><strong>ECG REAL DO MATERIAL ENVIADO</strong> · i-031.jpg. Toque para ampliar. O diagnóstico permanece oculto até a resposta.</figcaption></figure>';
  }
+ function annotatedMedia(st){
+  if(st.number!==52||!st.images?.[0])return '';
+  const src=esc(st.images[0].src);
+  return '<details class="osce-deep osce-annotated-card" id="osce-ecg-commented"><summary>ECG comentado após a tentativa <span>imagem original + marcações didáticas</span></summary><div>'
+   +'<p class="osce-note"><strong>ANOTAÇÕES DIDÁTICAS SOBRE A IMAGEM RECEBIDA.</strong> As marcações são autorais, não constavam do arquivo i-031.jpg e não devem ser confundidas com laudo de ECG de 12 derivações.</p>'
+   +'<div class="osce-ecg-annotated"><img src="'+src+'" alt="Mesmo recorte de ECG da estação 52 com marcações de alguns picos R para comparação dos intervalos RR." loading="lazy">'
+   +'<svg class="osce-ecg-overlay" viewBox="0 0 678 554" preserveAspectRatio="xMidYMid meet" aria-hidden="true"><g fill="none" stroke="#006f64" stroke-width="3.6" stroke-linecap="round">'
+   +'<circle cx="79" cy="61" r="13"/><circle cx="182" cy="60" r="13"/><circle cx="248" cy="72" r="13"/><circle cx="350" cy="66" r="13"/>'
+   +'<path d="M79 143V158M182 143V158M79 151H182M182 143V158M248 143V158M182 151H248"/>'
+   +'</g><rect x="74" y="171" width="250" height="35" rx="8" fill="#fff" opacity=".94"/><text x="199" y="194" text-anchor="middle" font-size="19" font-weight="700" fill="#075b52">RR desiguais</text></svg></div>'
+   +'<ol class="osce-ecg-notes"><li><strong>Ritmo:</strong> intervalos entre complexos R sucessivos variam sem padrão regular.</li><li><strong>Atividade atrial:</strong> ondas P sinusais consistentes não são identificáveis no fragmento.</li><li><strong>Complexos diferentes:</strong> algumas morfologias são distintas; não determine automaticamente a origem dos batimentos a partir deste recorte.</li><li><strong>Limite:</strong> a foto não é um ECG completo de 12 derivações; não é possível concluir eixo, topografia ou outros diagnósticos que dependam do exame completo.</li></ol>'
+   +'<div class="osce-actions"><button type="button" class="btn" onclick="OSCEPilot.expandImage(this.closest(\'.osce-annotated-card\').querySelector(\'.osce-ecg-annotated img\'))">Ampliar ECG original</button><button type="button" class="btn" onclick="OSCEPilot.showTerms()">Ver conceitos com fontes</button></div>'
+   +'<p class="osce-note">Interpretação educacional compatível com o enunciado de fibrilação atrial, a ser correlacionada com paciente e ECG completo.</p></div></details>';
+ }
+ 
  function sourcePanel(st){
   const sourceItems=(st.sources||[]).map(s=>'<li><a href="'+esc(s.url)+'" target="_blank" rel="noopener noreferrer">'+esc(s.label||s.title)+'</a> ('+esc(s.year)+')</li>').join('');
   return '<details id="osce-sources" class="osce-deep"><summary>Referências clínicas oficiais e links <span>abrir fontes</span></summary><div><ul>'+sourceItems+'</ul><p class="osce-note">Diretrizes fundamentam os pontos gerais; respostas e critérios são material didático autoral do Master, não gabarito institucional.</p></div></details>';
@@ -76,7 +94,7 @@ window.OSCEPilot=(()=>{
   return st.number===61?'Aula Clínica Médica II · Síncope e Crise Convulsiva':'Biblioteca P1 · Cardiologia · Arritmias cardíacas · Fibrilação atrial';
  }
  function lessonBar(st){
-  return '<details id="osce-lesson" class="osce-deep"><summary>Aula completa já existente no Master <span>abrir tema</span></summary><div><p>'+esc(lessonText(st))+'</p><div class="osce-actions"><button class="btn primary" onclick="OSCEPilot.openLesson('+st.number+')">Ir para a aula completa</button></div><p class="osce-note">A aula abre na própria navegação do Master. Você poderá voltar ao OSCE pelo menu lateral.</p></div></details>';
+  return '<details id="osce-lesson" class="osce-deep"><summary>Aula relacionada na biblioteca Master <span>abrir tema</span></summary><div><p>'+esc(lessonText(st))+'</p><div class="osce-actions"><button class="btn primary" onclick="OSCEPilot.openLesson('+st.number+')">Ir para a aula completa</button></div><p class="osce-note">A aula abre na própria navegação do Master. Você poderá voltar ao OSCE pelo menu lateral.</p></div></details>';
  }
  function termPanel(st){
   const a=st.terms||[
@@ -125,6 +143,7 @@ window.OSCEPilot=(()=>{
     +q.criteria.map((txt,i)=>'<label><input type="checkbox" '+(checked.includes(i)?'checked':'')+' onchange="OSCEPilot.criterion('+i+',this.checked)"><span>'+esc(txt)+'</span></label>').join('')+'</div>'
     +'<p class="osce-note"><b id="osce-criteria-count">'+checked.length+'/'+q.criteria.length+'</b> critérios marcados; autoavaliação sem IA corretora.</p><div class="osce-actions"><button class="btn primary" onclick="OSCEPilot.finish()">Registrar resultado e avançar</button><button class="btn" onclick="OSCEPilot.retry()">Voltar à resposta</button></div></div>';
    if(r.tier==='essencial')out+='<details class="osce-deep" open><summary>Essencial · illness script de 1 minuto</summary><div><p>'+esc(st.essential.oneMinute)+'</p><p><strong>Âncora:</strong> '+esc(st.essential.mnemonic)+'</p></div></details>';
+   if(st.number===52)out+=annotatedMedia(st);
    out+=deepPanels(st,q);
   }
   out+='</section><section class="osce-case"><h2>Estude mais, quando precisar</h2><div class="osce-deep-stack">'+termPanel(st)+lessonBar(st)+sourcePanel(st)+'</div></section>';
@@ -197,6 +216,7 @@ window.OSCEPilot=(()=>{
  }
  function showSources(){const d=document.getElementById('osce-sources');if(d){d.open=true;d.scrollIntoView({block:'start',behavior:'smooth'});}}
  function showTerms(){const d=document.getElementById('osce-terms');if(d){d.open=true;d.scrollIntoView({block:'start',behavior:'smooth'});}}
+ function showAnnotated(){const d=typeof document!=='undefined'?document.getElementById('osce-ecg-commented'):null;if(!d){notify('Interpretação comentada disponível após uma tentativa com correção.');return;}d.open=true;d.scrollIntoView({block:'start',behavior:'smooth'});}
  function openLesson(n){
   if(Number(n)===52&&window.P1?.openTopic){window.P1.openTopic('p1arr');return;}
   if(Number(n)===61&&typeof window.openTopic==='function'){window.openTopic('neuro1');return;}
@@ -212,5 +232,5 @@ window.OSCEPilot=(()=>{
  window.addEventListener('master-auth-ended',()=>{state=empty();screen='home';shown=false;glossary='';});
  window.addEventListener('master-remote-merge',e=>{if(e.detail?.key===KEY)reload()});
  window.addEventListener('storage',e=>{if(e.key===KEY)reload()});
- return {page,start,daily,resume,home,setDate,setMinutes,answer,conf,hint,reveal,criterion,retry,finish,showReview,showPrompt,reviewDue,term,showSources,showTerms,openLesson,showFullLesson,expandImage,copyPrompt,reload};
+ return {page,start,daily,resume,home,setDate,setMinutes,answer,conf,hint,reveal,criterion,retry,finish,showReview,showPrompt,reviewDue,term,showSources,showTerms,showAnnotated,openLesson,showFullLesson,expandImage,copyPrompt,reload};
 })();
