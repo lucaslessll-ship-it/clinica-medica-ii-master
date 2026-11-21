@@ -229,7 +229,9 @@ function algorithm(){
  const s=state(),item=RHYTHMS.find(x=>x.id===s.rhythm)||RHYTHMS[0],qid="rhythm_"+item.id;
  return `<p class="ue-pcr-stage-intro">Escolha um cenário. O circuito muda conforme <strong>pulso e ritmo</strong>, não apenas conforme o aspecto do monitor.</p>
  <div class="ue-pcr-rhythms" role="group" aria-label="Selecionar ritmo">${RHYTHMS.map(r=>`<button type="button" aria-pressed="${r.id===s.rhythm}" class="ue-pcr-rhythm${r.id===s.rhythm?" active":""}" onclick="EmergencyPCR.selectRhythm('${r.id}')">${esc(r.label)}</button>`).join("")}</div>
- <section class="ue-pcr-surface"><div class="ue-pcr-eyebrow">TRAÇADO CLÍNICO ILUSTRATIVO</div><h3>${esc(item.label)}</h3>${wave(item.id)}<p>${esc(item.note)}</p></section>
+ <section class="ue-pcr-surface"><div class="ue-pcr-eyebrow">TRAÇADO CLÍNICO ILUSTRATIVO</div><h3>${esc(item.label)}</h3>${wave(item.id)}<p>${esc(item.note)}</p>
+ ${item.id==="vf"?'<figure class="ue-atlas-card ue-pcr-source-figure"><img loading="lazy" decoding="async" src="assets/urgencia/figures/pcr/taquicardia-ventricular.jpg" alt="Registro de taquicardia ventricular; complexos ventriculares largos, a avaliar em conjunto com o pulso"/><figcaption><strong>ECG verdadeiro para comparar com o esquema</strong><span>Descreva frequência, largura e regularidade. Este traçado isolado não informa se existe pulso; a decisão sobre desfibrilação depende do contexto clínico.</span><small>Figura individual extraída do material de PCR, sem slide completo.</small></figcaption></figure>':''}
+ </section>
  ${question(qid)}
  <div class="ue-pcr-branch"><div class="ue-pcr-branch-node"><strong>O paciente tem pulso?</strong><span>Decisão clínica inicial</span></div><div class="ue-pcr-branch-fork">
  <div class="ue-pcr-branch-lane"><strong>Não: seguir algoritmo de PCR</strong><p>O ritmo é chocável?</p><div class="ue-pcr-branch-choices"><div><small>SIM · FV / TV SEM PULSO</small><b>Desfibrilar + RCP</b></div><div><small>NÃO · AESP / ASSISTOLIA</small><b>RCP + adrenalina + causas reversíveis</b></div></div></div>
