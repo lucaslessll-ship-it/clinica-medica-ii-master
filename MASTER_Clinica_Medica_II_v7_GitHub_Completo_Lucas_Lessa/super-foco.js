@@ -3,22 +3,61 @@
  */
 window.SuperFoco=(()=>{
 'use strict';
-const VERSION=1,PREFIX='master_super_foco_v1:';
+const VERSION=2,PREFIX='master_super_foco_v1:';
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const stext=s=>String(s??'').replace(/<[^>]*>/g,'').replace(/\s+/g,' ').trim();
+const trim=s=>String(s??'').trim().slice(0,5000);
 const daysFromNow=n=>{const d=new Date();d.setDate(d.getDate()+n);return d.toISOString();};
 const username=()=>window.MASTER_AUTH?.user?.()?.id||'local';
 const key=()=>PREFIX+username();
-const empty=()=>({version:VERSION,records:{},updatedAt:null});
-function load(){try{const x=JSON.parse(localStorage.getItem(key()));if(x&&x.records&&typeof x.records==='object')return x;}catch{}return empty();}
-let state=load(),owner=username(),selection={course:'osce',topic:'',mixed:false},stage='catalog',step=0,shown=false,draft='',confidence=0,activeId='',search='';
+const empty=()=>({version:VERSION,records:{},session:null,settings:{size:5,mixed:false},updatedAt:null});
+function load(){
+ try{const x=JSON.parse(localStorage.getItem(key()));if(x&&x.records&&typeof x.records==='object')
+  return {...empty(),...x,settings:{...empty().settings,...x.settings}};}catch{}
+ return empty();
+}
+let state=load(),owner=username(),selection={course:'osce',topic:'',mixed:false},stage='catalog',search='',focusPhase='challenge',loadingMessage='';
 const courseTitles={osce:'OSCE · Clínica Médica',pocus:'POCUS · Estações',p2:'Clínica Médica II · P2',p1:'Clínica Médica · P1',cir:'Cirurgia',ue:'Urgência e Emergência'};
-function ensureOwner(){const current=username();if(owner!==current){owner=current;state=load();stage='catalog';activeId='';draft='';shown=false;}}
-function persist(){state.updatedAt=new Date().toISOString();try{localStorage.setItem(key(),JSON.stringify(state));}catch{if(typeof toast==='function')toast('O progresso do Super Foco não pôde ser salvo neste navegador.');}}
+if(state.session?.status==='active'){
+ selection={course:state.session.course,topic:state.session.topic,mixed:!!state.session.mixed};
+ stage='exercise';
+}
+function ensureOwner(){
+ const current=username();if(owner!==current){owner=current;state=load();stage=state.session?.status==='active'?'exercise':'catalog';selection=state.session?{course:state.session.course,topic:state.session.topic,mixed:!!state.session.mixed}:{course:'osce',topic:'',mixed:false};}
+}
+function persist(){state.updatedAt=new Date().toISOString();try{localStorage.setItem(key(),JSON.stringify(state));}catch{if(typeof toast==='function')toast('Não foi possível salvar esta sessão no navegador.');}}
+function rerender(){if(typeof render==='function')render();}
+function inform(message){if(typeof toast==='function')toast(message);}
 function hasText(v){return typeof v==='string'&&v.trim().length>3;}
-function question(id,course,topic,title,prompt,answer,extra,kind,priority,context){
+function question(id,course,topic,title,prompt,answer,extra,kind,priority,context,detail={}){
  if(!hasText(prompt)||!hasText(answer))return null;
- return {id,course,topic,title,prompt:stext(prompt),answer:stext(answer),extra:stext(extra),kind:kind||'recuperacao',priority:priority||'media',context:stext(context)};
+ return {
+  id,course,topic,title:stext(title),prompt:stext(prompt),answer:stext(answer),extra:stext(extra),
+  kind:kind||'recuperacao',priority:priority||'media',context:stext(context),
+  criteria:(detail.criteria||[]).filter(Boolean).map(stext).filter(Boolean).slice(0,9),
+  mechanism:stext(detail.mechanism),pitfall:stext(detail.pitfall),memory:stext(detail.memory),
+  example:stext(detail.example),transfer:stext(detail.transfer),sources:detail.sources||[]
+ };
+}
+function enrich(base,deep,topic,part){
+ if(!base||!deep)return [];
+ const out=[];
+ (deep.recall||[]).forEach((r,i)=>{
+  const q=question(base+':recall:'+i,part,topic,deep.sections?.[0]?.h||'Aprofundamento clínico',r.q,r.a,
+    [deep.reasoning?.[i%Math.max(1,deep.reasoning?.length||1)],deep.mnemonics?.[0]?.t].filter(Boolean).join(' · '),
+    i%3===0?'aplicacao':i%3===1?'discriminacao':'explicacao','media',
+    deep.cases?.[0]?.stem||deep.sections?.[0]?.h,{
+     criteria:deep.reasoning?.slice(0,4)||[],
+     mechanism:deep.sections?.[0]?.p?.[0],
+     pitfall:deep.pitfalls?.[i%(deep.pitfalls?.length||1)],
+     memory:deep.mnemonics?.[0]?.t,
+     example:deep.practice?.[i%(deep.practice?.length||1)],
+     transfer:deep.cases?.[0]?.ask||'Em que novo paciente ou cenário você reconheceria este padrão?',
+     sources:deep.refs||[]
+    });
+  if(q)out.push(q);
+ });
+ return out;
 }
 function catalog(){
  const entries=[];
