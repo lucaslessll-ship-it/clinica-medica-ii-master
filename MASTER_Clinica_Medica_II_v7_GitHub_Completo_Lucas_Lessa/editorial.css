@@ -248,3 +248,32 @@ body .dica-alvo{animation:none;outline-color:var(--ed-copper)}
 :root:has(body[data-theme="dark"]),:root:has(body.dark){--scroll-thumb:rgba(190,207,185,.4);--scroll-thumb-active:rgba(215,225,197,.68)}
 :root:has(body.high-contrast){--scroll-thumb:#536e59}
 :root:has(body[data-theme="dark"].high-contrast){--scroll-thumb:#cadaae}
+
+/* Navegação: Urgência e Emergência em duas linhas equilibradas, sem selo. */
+.sidebar .nav-destination.nav-subject-emergency{
+  gap:9px;
+  padding:10px 7px;
+  font-size:14px;
+  font-weight:600;
+  line-height:1.32;
+  text-align:left;
+}
+.sidebar .nav-subject-emergency>.nav-emergency-label{
+  display:block;
+  flex:1 1 auto;
+  min-width:0;
+  white-space:normal;
+  overflow-wrap:normal;
+  word-break:normal;
+}
+.sidebar .nav-subject-emergency .nav-emergency-line{
+  display:block;
+  white-space:nowrap;
+}
+/* Preservar o modo recolhido, que exibe apenas ícones. */
+@media(min-width:801px){
+  body.side-collapsed .sidebar .nav-destination.nav-subject-emergency{
+    padding:10px 0;
+    gap:0;
+  }
+}
