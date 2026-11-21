@@ -144,3 +144,47 @@ body[data-theme=dark] .osce-pilot-emblem{color:#b6ead2}
 .osce-top-links .btn:disabled{cursor:not-allowed;opacity:.48}
 .osce-top-links a.btn{text-decoration:none;display:inline-flex;align-items:center;justify-content:center}
 @media(max-width:600px){.osce-ecg-notes{font-size:.87rem}.osce-ecg-annotated{margin:10px auto}}
+
+/* Duas trilhas: leitura aberta sem nota e avaliação prático-oral com tentativa. */
+.osce-two-paths{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:16px 0}
+.osce-path-btn{display:grid;grid-template-columns:auto 1fr;align-content:start;column-gap:12px;row-gap:4px;min-height:110px;padding:17px;text-align:left;color:inherit;background:var(--card,#fff);border:1px solid var(--border,#d3ddd5);border-radius:14px;cursor:pointer;font:inherit}
+.osce-path-btn:hover,.osce-path-btn:focus-visible{border-color:#3f8063;box-shadow:0 2px 12px rgba(22,74,45,.09);outline-offset:3px}
+.osce-path-study{border-color:#4d906e;background:color-mix(in srgb,#4a8d65 6%,var(--card,#fff))}
+.osce-path-icon{font-size:1.4rem;grid-row:span 2;line-height:1.25}
+.osce-path-btn strong{font-size:1.05rem;font-weight:750}
+.osce-path-btn small{font-size:.81rem;color:var(--text-muted,#626f67);line-height:1.5;max-width:32ch}
+.osce-learning-banner{display:flex;align-items:center;justify-content:space-between;gap:14px;border:1px solid #a9ccba;border-radius:17px;background:color-mix(in srgb,#78b392 8%,var(--card,#fff));padding:clamp(18px,3vw,28px);margin:16px 0}
+.osce-learning-banner h2{font-size:clamp(1.35rem,3vw,1.8rem);margin:3px 0 8px}
+.osce-learning-banner p:not(.eyebrow){font-size:.94rem;line-height:1.65;margin:0;max-width:68ch}
+.osce-learning-banner .osce-actions{margin:0;justify-content:flex-end}
+.osce-study-switch{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:18px 0}
+.osce-study-switch-btn{display:flex;flex-direction:column;gap:5px;min-height:67px;align-items:flex-start;text-align:left;padding:12px 14px;border:1px solid var(--border,#ced9d1);background:var(--card,#fff);border-radius:11px;color:inherit;font:inherit;cursor:pointer}
+.osce-study-switch-btn.active{border:2px solid #317953;background:color-mix(in srgb,#3a8f5e 7%,var(--card,#fff));padding:11px 13px}
+.osce-study-switch-btn strong{font-size:.96rem}
+.osce-study-switch-btn small{color:var(--text-muted,#65756a);font-size:.78rem}
+.osce-study-switch-btn:hover,.osce-study-switch-btn:focus-visible{outline-offset:2px;border-color:#377c59}
+.osce-study-essential{border-left:4px solid #528567}
+.osce-study-essential p{line-height:1.8;font-size:.95rem}
+.osce-study-title{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
+.osce-study-title h2{margin:3px 0}
+.osce-study-progress{font-size:.81rem;border:1px solid var(--border,#d9dfd9);border-radius:99px;padding:7px 11px;white-space:nowrap}
+.osce-study-index{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0 0}
+.osce-study-index button{padding:8px 11px;border:1px solid var(--border,#ced8cf);border-radius:99px;background:var(--card,#fff);color:inherit;font:inherit;font-size:.81rem;cursor:pointer}
+.osce-study-index button:hover{border-color:#488966}
+.osce-learning-questions{display:grid;gap:15px;margin:16px 0}
+.osce-study-question{border:1px solid var(--border,#d5ded6);border-radius:15px;background:var(--card,#fff);padding:clamp(16px,2.6vw,25px);scroll-margin-top:80px}
+.osce-study-question h3{font-size:clamp(1.08rem,2vw,1.3rem);line-height:1.47;margin:10px 0 18px}
+.osce-study-model{border:1px solid #bcd9c5;background:color-mix(in srgb,#78b392 7%,var(--card,#fff));border-radius:11px;padding:16px}
+.osce-study-model p:not(.eyebrow){font-size:.94rem;line-height:1.82;margin:9px 0 0}
+.osce-study-points{padding:8px 2px}
+.osce-study-points h4{font-size:.9rem;margin:12px 0 7px}
+.osce-study-points ul{margin:9px 0 9px 4px;padding-left:20px;line-height:1.67;font-size:.9rem}
+.osce-study-points li{margin:4px 0}
+.osce-study-memory{font-size:.9rem;line-height:1.6;border-left:3px solid #d3b678;background:color-mix(in srgb,#cba664 6%,var(--card,#fff));padding:11px 14px;margin:12px 0}
+.osce-study-card-actions{display:flex;justify-content:flex-end;margin-top:14px}
+.osce-study-card-actions .btn{min-height:40px}
+.osce-study-mark[aria-pressed=true]{border-color:#3c7957;color:#255e43;background:color-mix(in srgb,#439369 8%,var(--card,#fff))}
+.osce-study-depth{margin:20px 0}
+.osce-study-depth .osce-deep{scroll-margin-top:80px}
+@media(max-width:700px){.osce-learning-banner{flex-direction:column;align-items:stretch}.osce-learning-banner .osce-actions{justify-content:flex-start}.osce-two-paths{grid-template-columns:1fr}.osce-study-switch{grid-template-columns:1fr}.osce-study-switch-btn{min-height:57px}}
+@media(prefers-reduced-motion:reduce){.osce-study-question,.osce-study-index button{scroll-behavior:auto}}
