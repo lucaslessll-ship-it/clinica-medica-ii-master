@@ -58,8 +58,8 @@ test('catálogo pesquisável prioriza altas e possui páginas de 12',()=>{
  assert.match(base,/Buscar estação/);
  assert.match(base,/Mostrar mais estações/);
  assert.match(base,/Síndrome de Guillain-Barré/);
- P.setCatalogPriority('baixa');assert.match(P.page(),/Carcinoma anaplásico de tireoide/);
- P.setCatalogPriority('complementar');assert.match(P.page(),/Neutropenia febril pós-quimioterapia/);
+ P.home();P.setCatalogPriority('baixa');assert.match(P.page(),/Carcinoma anaplásico de tireoide/);
+ P.setCatalogPriority('complementar');assert.match(P.page(),/Pneumonia adquirida na comunidade/);
  P.filterCatalog('86');assert.match(P.page(),/Pericardite aguda/);
 });
 test('pré-estudo não altera notas; simulação revela o modelo apenas depois da tentativa',()=>{
