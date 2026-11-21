@@ -454,14 +454,20 @@ function afterRender(route){
  else if(route==='pocus')course='pocus';
  const available=catalog().some(x=>x.course===course&&(!topic||x.topic===topic));
  if(!available)return;
- const banner=document.createElement('div');banner.className='sf-context-entry';banner.innerHTML='<span><strong>Super Foco</strong><small>Recuperação ativa, explicação e reteste adaptativo</small></span><button type="button" class="btn" data-sf-open>Treinar agora →</button>';
+ const banner=document.createElement('div');banner.className='sf-context-entry';banner.innerHTML='<span><strong>Super Foco</strong><small>Sessões com mapa de perguntas, recuperação ativa e conexões clínicas</small></span><button type="button" class="btn" data-sf-open>Treinar agora →</button>';
  banner.querySelector('button').addEventListener('click',()=>open(course,topic));
  const crumb=root.querySelector('.study-breadcrumb');
  if(crumb)crumb.insertAdjacentElement('afterend',banner);else root.prepend(banner);
 }
-function resetUser(){owner=username();state=load();stage='catalog';activeId='';draft='';shown=false;search='';}
+function resetUser(){
+ owner=username();state=load();search='';loadingMessage='';
+ stage=state.session?.status==='active'?'exercise':state.session?.status==='complete'?'summary':'catalog';
+ selection=state.session?{course:state.session.course,topic:state.session.topic,mixed:!!state.session.mixed}:{course:'osce',topic:'',mixed:false};
+}
 window.addEventListener('master-auth-ready',resetUser);
-window.addEventListener('master-auth-ended',()=>{owner='local';state=empty();stage='catalog';activeId='';draft='';shown=false;});
-window.addEventListener('storage',e=>{if(e.key===key())state=load();});
-return {page,open,choose,back,searchSet,toggleMix,input,conf,reveal,score,openSource,catalog,topics,afterRender,resetUser};
+window.addEventListener('master-auth-ended',()=>{owner='local';state=empty();stage='catalog';search='';loadingMessage='';});
+window.addEventListener('storage',e=>{if(e.key===key()){resetUser();rerender();}});
+return {page,open,choose,resume,back,setLength,setMixed,searchSet,toggleMix,input,mirrorInput,connectionInput,
+ conf,hint,reveal,mirror,mirrorCheck,connect,feedback,goTo,previous,next,finishSession,score,retry,dictate,
+ openSource,catalog,topics,afterRender,resetUser};
 })();
