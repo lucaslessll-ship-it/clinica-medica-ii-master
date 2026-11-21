@@ -93,7 +93,7 @@ function saveResult(q,chosen,ok){
   attempts:(before?.attempts||0)+1,revision:q.revision,kind:q.kind,topic:q.t,level:q.level};
 }
 function answer(choice){
- const r=active();if(!r||r.done)return;
+ const r=active();if(!r||r.done===true)return;
  const id=r.ids[r.step],q=get(id);if(!q||!Number.isInteger(choice)||choice<0||choice>=q.o.length)return;
  if(r.kind==='practice'){
   if(r.done[id])return;
