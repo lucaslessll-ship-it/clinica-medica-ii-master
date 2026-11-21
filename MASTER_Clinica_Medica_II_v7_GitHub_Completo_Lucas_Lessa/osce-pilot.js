@@ -18,6 +18,7 @@ window.OSCEPilot=(()=>{
  const empty=()=>({version:2,settings:{examDate:'2026-11-24',minutes:15},items:{},runs:[],current:null,covered:{},updatedAt:null});
  function load(){try{const s=JSON.parse(localStorage.getItem(KEY));if(s&&s.items&&s.settings)return {...empty(),...s,covered:s.covered||{}}}catch{}return empty();}
  let state=load(),screen='home',shown=false,confidence=0,hints=0,checked=[],reviewStation=61,previewStation=61,previewTier='completa',glossary='',catalogSearch='',catalogPriority='alta',catalogLimit=12;
+ let welcomeOpen=!state.settings?.hideWelcome, welcomeSkipNext=!!state.settings?.hideWelcome, welcomeDismissedThisLoad=false;
  const bank=()=>BANK;
  function study(){return MAP.get(state.current?.station)||MAP.get(61)}
  function data(s){return MAP.get(Number(s))||MAP.get(61)}
@@ -108,10 +109,33 @@ window.OSCEPilot=(()=>{
   }
  }
 
+ function welcomeGuide(){
+  if(!welcomeOpen)return '';
+  return '<section class="osce-welcome" id="osce-welcome" aria-labelledby="osce-welcome-title">'
+   +'<div class="osce-welcome-header"><span class="osce-welcome-icon" aria-hidden="true">◎</span><div><p class="eyebrow">SEU GUIA DE ESTUDO · OSCE CLÍNICA MÉDICA</p><h2 id="osce-welcome-title">Como estudar e realmente consolidar</h2><p>O método combina <strong>recuperação ativa, tentativa antes da explicação, feedback por critérios, espaçamento, intercalação e calibração da confiança</strong>. Não é necessário saber a resposta para começar.</p></div></div>'
+   +'<div class="osce-welcome-method">'
+    +'<div><span>01</span><strong>Escolha por onde começar</strong><p>Comece pelos POCUS e temas de alta prioridade. Prefira <b>Simular</b>; se estiver perdido, use <b>Revisar respostas antes</b>, sem nota.</p></div>'
+    +'<div><span>02</span><strong>Tente antes de consultar</strong><p>Responda uma pergunta por vez, explique seu raciocínio e registre a confiança. Pode escrever <b>“não sei”</b> para avançar e aprender.</p></div>'
+    +'<div><span>03</span><strong>Corrija e aprofunde</strong><p>Confira o gabarito, marque manualmente os critérios cumpridos e abra apenas os painéis de dúvida. Explore as marcações em <b>ECG e POCUS</b>.</p></div>'
+    +'<div><span>04</span><strong>Revisite os pontos críticos</strong><p>O sistema prioriza erros e confiança excessiva e agenda retestes em <b>D+1, D+3, D+7 ou D+21</b>, conforme o desempenho.</p></div>'
+   +'</div>'
+   +'<div class="osce-welcome-ai"><span aria-hidden="true">✦</span><div><strong>Quer aprofundar as dificuldades com IA?</strong><p>Abra <b>Revisão por erros → Gerar script para IA → Copiar para IA</b>. O roteiro reúne os critérios não cumpridos e suas respostas. Cole na IA que preferir e peça uma arguição oral, uma pergunta por vez, com correção e reteste. Nada é enviado automaticamente.</p></div></div>'
+   +'<div class="osce-welcome-bottom"><label class="osce-welcome-checkbox"><input type="checkbox" id="osce-welcome-never" '+(welcomeSkipNext?'checked ':'')+'onchange="OSCEPilot.welcomePreference(this.checked)"><span>Não mostrar novamente</span></label><button type="button" class="btn primary" onclick="OSCEPilot.closeWelcome()">Entendi, começar <span aria-hidden="true">→</span></button></div>'
+   +'<p class="osce-welcome-disclaimer">Dica: uma sessão curta e concentrada é melhor do que adiar. A pontuação é uma <b>autoavaliação por checklist</b>, não uma correção automática da banca.</p></section>';
+ }
+ function welcomePreference(v){welcomeSkipNext=!!v;}
+ function showWelcome(){welcomeOpen=true;welcomeSkipNext=!!state.settings.hideWelcome;renderAgain();}
+ function closeWelcome(){
+  state.settings.hideWelcome=!!welcomeSkipNext;
+  welcomeOpen=false;welcomeDismissedThisLoad=true;
+  save();renderAgain();
+ }
+
  function homePage(){
   const total=BANK.reduce((n,st)=>n+attempted(st),0),dueCount=dueItems().length,weakCount=weakItems().length,shallow=BANK.filter(st=>Object.values(state.covered[st.number]||{}).some(Boolean)).length,deep=BANK.filter(st=>state.covered[st.number]?.completa).length;
   const d=diffDays(),selection=dueCount?dueItems()[0].st:BANK.find(st=>attempted(st)===0)||BANK[0];
-  return sectionTitle('OSCE <em>Clínica Médica.</em>')+'<p>Treine primeiro, aprofunde ao clicar, recupere os erros e retome sem perder seu progresso.</p>'
+  return sectionTitle('OSCE <em>Clínica Médica.</em>')+'<div class="osce-welcome-entry"><p>Treine primeiro, aprofunde ao clicar, recupere os erros e retome sem perder seu progresso.</p>'+(welcomeOpen?'':'<button type="button" class="btn ghost osce-welcome-reopen" onclick="OSCEPilot.showWelcome()">ⓘ Como estudar no OSCE</button>')+'</div>'
+   +welcomeGuide()
    +'<section class="osce-pilot-hero"><div><p class="eyebrow">SESSÃO DE HOJE · COMEÇO SEM ATRITO</p><h2>Uma pergunta já é progresso.</h2><p>'+esc(d===null?'Data não definida.':d<0?'A data registrada passou; ajuste abaixo.':d===0?'Avaliação hoje.':d+' dia(s) até a avaliação.')+' Comece pelo erro vencido ou pela próxima estação prioritária.</p><div class="osce-actions"><button class="btn primary" onclick="OSCEPilot.daily()">▶ Sessão de hoje · 15 min</button>'+(state.current?'<button class="btn" onclick="OSCEPilot.resume()">Retomar onde parei</button>':'')+'</div></div><div class="osce-pilot-emblem" aria-hidden="true">'+BANK.length+'<span>estações</span></div></section>'
    +'<div class="osce-stats"><div><b>'+total+'</b><span>perguntas testadas</span></div><div><b>'+dueCount+'</b><span>revisões vencidas</span></div><div><b>'+weakCount+'</b><span>lacunas registradas</span></div><div><b>'+deep+'/'+BANK.length+'</b><span>estações completas</span></div></div>'
    +'<section class="osce-case"><h2>Triagem e cobertura</h2><div class="osce-settings"><label>Data da APO<input type="date" value="'+esc(state.settings.examDate)+'" onchange="OSCEPilot.setDate(this.value)"></label><label>Tempo disponível<select onchange="OSCEPilot.setMinutes(this.value)">'+[5,15,30,45].map(m=>'<option value="'+m+'"'+(Number(state.settings.minutes)===m?' selected':'')+'>'+m+' min</option>').join('')+'</select></label></div><p class="osce-note">Amplitude: '+shallow+'/'+BANK.length+' · Profundidade: '+deep+'/'+BANK.length+'. O roteiro inclui '+BANK.filter(st=>st.pocusOrder).length+' POCUS e '+BANK.filter(st=>!st.pocusOrder).length+' outras estações; o bloco POCUS fica no início.</p><div class="osce-track"><span style="width:'+(100*shallow/BANK.length)+'%"></span></div><div class="osce-track osce-track-secondary"><span style="width:'+(100*deep/BANK.length)+'%"></span></div></section>'
@@ -338,7 +362,7 @@ window.OSCEPilot=(()=>{
  }
  function promptPage(){return sectionTitle('Script de <em>revisão por erros.</em>')+'<button class="btn ghost" onclick="OSCEPilot.home()">← Voltar</button><p>Copie para uma IA a análise dos critérios não cumpridos. Nenhuma resposta é transmitida automaticamente.</p><section class="osce-step"><label class="osce-answer-label" for="osce-prompt">Roteiro personalizado</label><textarea readonly id="osce-prompt" rows="19">'+esc(makePrompt())+'</textarea><div class="osce-actions"><button class="btn primary" onclick="OSCEPilot.copyPrompt()">Copiar para IA</button><button class="btn" onclick="OSCEPilot.showReview()">Ver erros</button></div></section>';}
  function donePage(){const st=data(reviewStation),run=state.runs.at(-1),n=run?.results.length||0;return sectionTitle('Sessão <em>concluída.</em>')+'<p>Você concluiu '+n+' pergunta(s) da '+displayLabel(st).toLowerCase()+' ('+esc(st.title)+'). Não precisa concluir tudo em um dia.</p><section class="osce-case"><h2>Consolide sem consultar</h2><p>'+esc(st.essential.oneMinute)+'</p><p class="osce-note">Próxima ação: abra a fila de erros ou repita amanhã uma pergunta sem olhar o gabarito.</p><div class="osce-actions"><button class="btn primary" onclick="OSCEPilot.showReview()">Ver minha revisão</button><button class="btn" onclick="OSCEPilot.showPrompt()">Copiar script para IA</button><button class="btn" onclick="OSCEPilot.home()">Todas as estações</button></div></section>';}
- function page(){return screen==='preview'?previewPage():screen==='study'?activePage():screen==='review'?reviewPage():screen==='prompt'?promptPage():screen==='done'?donePage():homePage();}
+ function page(){if(screen!=='home'&&welcomeOpen){welcomeOpen=false;welcomeDismissedThisLoad=true;}return screen==='preview'?previewPage():screen==='study'?activePage():screen==='review'?reviewPage():screen==='prompt'?promptPage():screen==='done'?donePage():homePage();}
  function showReview(){screen='review';renderAgain();}
  function showPrompt(){screen='prompt';renderAgain();}
  function reviewDue(){const list=dueItems();if(!list.length)return notify('Nenhum reteste vencido ainda.');const x=list[0];start('rapida',[x.q.id],x.st.number);}
@@ -368,10 +392,10 @@ window.OSCEPilot=(()=>{
   if(!img?.src)return;const overlay=document.createElement('div');overlay.className='osce-lightbox';overlay.setAttribute('role','dialog');overlay.setAttribute('aria-modal','true');overlay.innerHTML='<button type="button" aria-label="Fechar imagem" onclick="this.parentElement.remove()">✕ Fechar</button><img src="'+esc(img.src)+'" alt="'+esc(img.alt)+'" /><p>Imagem de referência usada nesta estação · ampliação</p>';overlay.addEventListener('click',e=>{if(e.target===overlay)overlay.remove();});document.body.append(overlay);overlay.querySelector('button').focus();
  }
  async function copyPrompt(){const x=document.getElementById('osce-prompt');if(!x)return;try{await navigator.clipboard.writeText(x.value);notify('Roteiro copiado.');}catch{x.focus();x.select();notify('Selecione e copie o roteiro.');}}
- function reload(){state=load();screen='home';shown=false;confidence=0;hints=0;checked=[];glossary='';renderAgain();}
+ function reload(){state=load();screen='home';shown=false;confidence=0;hints=0;checked=[];glossary='';welcomeOpen=!state.settings.hideWelcome&&!welcomeDismissedThisLoad;welcomeSkipNext=!!state.settings.hideWelcome;renderAgain();}
  window.addEventListener('master-auth-ready',reload);
- window.addEventListener('master-auth-ended',()=>{state=empty();screen='home';shown=false;glossary='';});
+ window.addEventListener('master-auth-ended',()=>{state=empty();screen='home';shown=false;glossary='';welcomeDismissedThisLoad=false;welcomeOpen=true;welcomeSkipNext=false;});
  window.addEventListener('master-remote-merge',e=>{if(e.detail?.key===KEY)reload()});
  window.addEventListener('storage',e=>{if(e.key===KEY)reload()});
- return {page,start,daily,resume,home,preview,previewTierSet,previewPage,filterCatalog,setCatalogPriority,moreCatalog,jumpToIndex,setDate,setMinutes,answer,conf,hint,reveal,criterion,retry,finish,showReview,showPrompt,reviewDue,term,showSources,showTerms,openLesson,showFullLesson,expandImage,focusVisualNote,toggleVisualMarks,expandVisual,copyPrompt,reload};
+ return {page,start,daily,resume,home,welcomePreference,showWelcome,closeWelcome,preview,previewTierSet,previewPage,filterCatalog,setCatalogPriority,moreCatalog,jumpToIndex,setDate,setMinutes,answer,conf,hint,reveal,criterion,retry,finish,showReview,showPrompt,reviewDue,term,showSources,showTerms,openLesson,showFullLesson,expandImage,focusVisualNote,toggleVisualMarks,expandVisual,copyPrompt,reload};
 })();
