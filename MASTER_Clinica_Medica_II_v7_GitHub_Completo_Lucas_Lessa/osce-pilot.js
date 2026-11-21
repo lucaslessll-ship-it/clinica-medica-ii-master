@@ -68,7 +68,7 @@ window.OSCEPilot=(()=>{
  function media(st){
   if(st.number===61&&!st.images?.length)return illustration();
   if(!st.images?.length)return '<p class="osce-note">Não há imagem original neste caso; o raciocínio é baseado no quadro descrito.</p>';
-  return st.images.map(img=>'<figure class="osce-visual"><img src="'+esc(img.src)+'" loading="lazy" alt="'+esc(img.alt||'Imagem do caso')+'" onclick="OSCEPilot.expandImage(this)" onerror="this.hidden=true;this.nextElementSibling.hidden=false"><p hidden>A imagem não pôde ser carregada.</p><figcaption><strong>'+(img.kind==='illustration'?'ILUSTRAÇÃO DIDÁTICA — NÃO ORIGINAL':img.kind==='reference'?'IMAGEM DE REFERÊNCIA LICENCIADA — NÃO É O ARQUIVO ORIGINAL':'IMAGEM ORIGINAL RECEBIDA')+'</strong> · '+esc(img.caption||'Toque para ampliar.')+'</figcaption></figure>').join('');
+  return st.images.map(img=>'<figure class="osce-visual"><img src="'+esc(img.src)+'" loading="lazy" alt="'+esc(img.alt||'Imagem do caso')+'" onclick="OSCEPilot.expandImage(this)" onerror="this.hidden=true;this.nextElementSibling.hidden=false"><p hidden>A imagem não pôde ser carregada.</p><figcaption><strong>'+(img.kind==='illustration'?'ILUSTRAÇÃO DIDÁTICA — NÃO ORIGINAL':img.kind==='reference'?'IMAGEM DE REFERÊNCIA LICENCIADA — NÃO É O ARQUIVO ORIGINAL':'IMAGEM ORIGINAL RECEBIDA')+'</strong> · '+esc(img.caption||'Toque para ampliar.')+(img.creditUrl?' · <a href="'+esc(img.creditUrl)+'" target="_blank" rel="noopener noreferrer">Crédito da imagem</a>':'')+'</figcaption></figure>').join('');
  }
  function sourcePanel(st){
   const sourceItems=(st.sources||[]).map(s=>'<li><a href="'+esc(s.url)+'" target="_blank" rel="noopener noreferrer">'+esc(s.label||s.title)+'</a> ('+esc(s.year)+')</li>').join('');
@@ -139,19 +139,19 @@ window.OSCEPilot=(()=>{
  function previewPage(){
   const st=MAP.get(previewStation)||BANK[0],tier=st.tiers[previewTier]?previewTier:'completa',t=st.tiers[tier],qs=t.ids.map(id=>st.questions.find(q=>q.id===id)).filter(Boolean);
   let html=sectionTitle('Revisar <em>'+esc(st.title)+'.</em>');
-  html+='<button class="btn ghost" onclick="OSCEPilot.home()">← Voltar às estações</button><div class="osce-preview-note"><strong>REVISÃO ANTES DO SIMULADO · SEM NOTA</strong><p>Todas as respostas-modelo estão abertas para estudar. Percorra as perguntas, leia o essencial e abra somente os aprofundamentos de que precisar. Isso não conta como tentativa de prova.</p><button class="btn primary" onclick="OSCEPilot.start(\''+tier+'\',null,'+st.number+')">🩺 Agora quero simular</button></div>';
+  html+='<button class="btn ghost" onclick="OSCEPilot.home()">← Voltar às estações</button><div class="osce-preview-note"><strong>REVISÃO ANTES DO SIMULADO · SEM NOTA</strong><p>Todas as respostas-modelo estão abertas para estudar. Percorra as perguntas, leia o essencial e abra somente os aprofundamentos de que precisar. Isso não conta como tentativa de prova.</p><button class="btn primary" onclick="'+(state.current?.station===st.number?'OSCEPilot.resume()':'OSCEPilot.start(\''+tier+'\',null,'+st.number+')')+'">'+(state.current?.station===st.number?'🩺 Retomar simulação':'🩺 Agora quero simular')+'</button></div>';
   html+='<div class="osce-study-levels">'+Object.entries(st.tiers).map(([k,x])=>'<button type="button" class="btn '+(k===tier?'primary':'')+'" onclick="OSCEPilot.previewTierSet(\''+k+'\')">'+esc(x.label)+' · '+x.minutes+'min</button>').join('')+'</div>';
   html+='<section class="osce-case"><h2>Contexto e imagem do caso</h2><p>'+esc(st.caseText)+'</p>'+media(st)+'</section>';
   html+='<section class="osce-case"><h2>Essencial — síntese para explicar em 1 minuto</h2><p>'+mark(st,st.essential.oneMinute)+'</p><p class="osce-note"><b>Âncora:</b> '+esc(st.essential.mnemonic)+'</p></section>';
   html+='<section class="osce-preview-questions"><h2>O que preciso saber responder</h2>'+qs.map((q,i)=>'<article class="osce-preview-question"><p class="eyebrow">ETAPA '+(i+1)+'/'+qs.length+' · '+esc(q.competence)+'</p><h3>'+esc(q.prompt)+'</h3><div class="osce-preview-answer"><strong>Resposta-modelo do Master</strong><p>'+mark(st,q.answer)+'</p></div><details class="osce-deep"><summary>Checklist do que não posso esquecer <span>expandir</span></summary><div><ul>'+q.criteria.map(x=>'<li>'+esc(x)+'</li>').join('')+'</ul></div></details><details class="osce-deep"><summary>Dicas para memorizar e raciocinar <span>aprofundar</span></summary><div><p>'+esc(q.memory||'Reconheça síndrome, explique fisiopatologia e escolha a conduta.')+'</p><p><strong>Perguntas de apoio:</strong> '+esc(q.hints.join(' · '))+'</p></div></details></article>').join('')+'</section>';
   html+='<section class="osce-case"><h2>Aprofundamentos do assunto</h2><p class="osce-note">Esses painéis permanecem recolhidos para reduzir a sobrecarga. Abra apenas quando quiser entender melhor.</p><div class="osce-deep-stack">'+(st.deeper||[]).map(d=>'<details class="osce-deep"><summary>'+esc(d.title)+' <span>abrir explicação</span></summary><div><p>'+mark(st,d.body)+'</p><p><strong>Memorização:</strong> '+esc(d.tip)+'</p></div></details>').join('')+'</div></section>';
-  html+='<section class="osce-case"><h2>Fontes, conceitos e aulas</h2><div class="osce-deep-stack">'+termPanel(st)+lessonBar(st)+sourcePanel(st)+'</div><div class="osce-actions"><button type="button" class="btn primary" onclick="OSCEPilot.start(\''+tier+'\',null,'+st.number+')">Iniciar simulado agora</button><button type="button" class="btn" onclick="OSCEPilot.home()">Voltar ao catálogo</button></div></section>';
+  html+='<section class="osce-case"><h2>Fontes, conceitos e aulas</h2><div class="osce-deep-stack">'+termPanel(st)+lessonBar(st)+sourcePanel(st)+'</div><div class="osce-actions"><button type="button" class="btn primary" onclick="'+(state.current?.station===st.number?'OSCEPilot.resume()':'OSCEPilot.start(\''+tier+'\',null,'+st.number+')')+'">'+(state.current?.station===st.number?'Retomar simulação':'Iniciar simulado agora')+'</button><button type="button" class="btn" onclick="OSCEPilot.home()">Voltar ao catálogo</button></div></section>';
   return html;
  }
  function start(tier,ids,number){
   const st=data(number||61);if(!st?.tiers[tier])return;
   const chosen=(Array.isArray(ids)&&ids.length?ids:st.tiers[tier].ids).filter(id=>st.questions.some(q=>q.id===id));
-  state.current={station:st.number,tier,ids:chosen,pos:0,startedAt:now(),itemStartedAt:Date.now(),results:[]};
+  state.current={station:st.number,tier,ids:chosen,pos:0,startedAt:now(),itemStartedAt:Date.now(),prepared:screen==='preview',results:[]};
   screen='study';shown=false;confidence=0;hints=0;checked=[];glossary='';save();renderAgain();
  }
  function daily(){
@@ -172,7 +172,7 @@ window.OSCEPilot=(()=>{
   if(!shown)return;const r=state.current,st=study(),q=currentQ(st);if(!r||!q)return;
   const x=entry(st,q),last0=last(st,q),score=Math.round(100*checked.length/q.criteria.length),high=confidence===3&&score<80;
   const interval=score<50||high||hints>=2?1:score<80?3:score===100&&hints===0&&(last0?.score||0)>=80?21:7;
-  const attempt={at:now(),answer:x.draft||'',score,criteria:[...checked],confidence,hintsUsed:hints,overconfident:high,due:shift(interval),depth:r.tier,durationMs:Math.max(0,Date.now()-(r.itemStartedAt||Date.now())),source:'autoauditoria'};
+  const attempt={at:now(),answer:x.draft||'',score,criteria:[...checked],confidence,hintsUsed:hints,overconfident:high,due:shift(interval),depth:r.tier,prepared:!!r.prepared,durationMs:Math.max(0,Date.now()-(r.itemStartedAt||Date.now())),source:'autoauditoria'};
   x.attempts=[...(x.attempts||[]),attempt].slice(-50);x.draft='';r.results.push({question:q.id,score,at:attempt.at});
   if(window.MasterActivity?.track)window.MasterActivity.track('question_answer','osce:'+st.number+':'+q.id,{correct:score>=80});
   shown=false;checked=[];confidence=0;hints=0;glossary='';
