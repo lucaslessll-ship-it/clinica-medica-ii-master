@@ -109,3 +109,9 @@
 .sf-case-image img{display:block;max-width:100%;max-height:330px;object-fit:contain;margin:0 auto}
 .sf-case-image figcaption{padding:10px 13px;font-size:.74rem;line-height:1.5;color:var(--text-muted,#67766c);border-top:1px solid var(--border,#dae3dc)}
 .sf-listen,.sf-dictate{font-size:.82rem;min-height:40px}
+
+.sf-criterion-counter{font-size:.81rem;color:var(--text-muted,#5e6c61);margin:0 0 8px}
+.sf-criteria-list{list-style:none;padding:0!important;margin:0!important;display:grid;gap:7px}
+.sf-criteria-list li{margin:0!important}
+.sf-criteria-list label{display:flex;align-items:flex-start;gap:12px;padding:10px 12px;border-radius:8px;border:1px solid var(--border,#d6ded7);background:var(--card,#fff);line-height:1.5;font-weight:450;cursor:pointer}
+.sf-criteria-list input{flex:0 0 18px;height:18px;margin:2px 0 0;accent-color:#39805e}
