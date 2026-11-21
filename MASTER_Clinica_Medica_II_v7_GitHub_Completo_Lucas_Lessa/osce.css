@@ -133,3 +133,29 @@ body[data-theme=dark] .osce-pilot-emblem{color:#b6ead2}
 .osce-depth-btn.suggested{background:color-mix(in srgb,#6c967c 9%,var(--card,#fff))}
 @media(max-width:700px){.osce-top-links{display:grid;grid-template-columns:1fr 1fr}.osce-top-links .btn{font-size:.8rem;padding:10px 8px}.osce-illustration,.osce-real-ecg{padding:7px}.osce-deep summary{font-size:.85rem}}
 @media(max-width:370px){.osce-top-links{grid-template-columns:1fr}}
+
+
+/* Pré-estudo opcional: a simulação segue como experiência principal. */
+.osce-preview-note{margin:14px 0 19px;padding:clamp(14px,2.7vw,23px);border:1px solid var(--border,#cbd9ce);border-left:4px solid #3f805c;border-radius:14px;background:var(--card,#fff);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:13px}
+.osce-preview-note>strong{display:block;width:100%;letter-spacing:.055em;font-size:.77rem}
+.osce-preview-note>p{line-height:1.65;max-width:65ch;font-size:.9rem;margin:0;flex:1 1 420px}
+.osce-preview-note>.btn{min-height:43px}
+.osce-study-levels{display:flex;flex-wrap:wrap;gap:8px;margin:15px 0 20px}
+.osce-preview-questions{display:grid;gap:12px;margin:22px 0}
+.osce-preview-questions>h2{font-size:clamp(1.15rem,2.2vw,1.45rem);margin-bottom:3px}
+.osce-preview-question{border:1px solid var(--border,#ccd6ce);border-radius:13px;background:var(--card,#fff);padding:clamp(14px,2.5vw,24px);display:grid;gap:12px}
+.osce-preview-question h3{font-size:clamp(1.03rem,1.8vw,1.2rem);line-height:1.5;margin:0}
+.osce-preview-answer{padding:15px;border-radius:11px;border:1px solid #a7cbb2;background:color-mix(in srgb,#45865c 7%,var(--card,#fff))}
+.osce-preview-answer>strong{font-size:.8rem;letter-spacing:.02em}
+.osce-preview-answer>p{font-size:.95rem;line-height:1.77;margin:9px 0 0}
+.osce-preview-question .osce-deep{margin:0}
+.osce-preview-question .eyebrow{color:var(--text-muted,#65746a);font-weight:700;margin:0}
+.osce-inline-action{display:inline;border:0;padding:0;margin:0;color:#2d7452;background:none;text-decoration:underline;cursor:pointer;font:inherit}
+.osce-inline-action:hover,.osce-inline-action:focus-visible{color:#17593b;outline-offset:2px}
+.osce-theme-card .osce-actions{row-gap:8px}
+.osce-theme-card .osce-actions .btn{white-space:normal}
+.osce-visual{max-width:850px}
+.osce-visual img{display:block;max-width:100%;height:auto;object-fit:contain;max-height:520px;margin:0 auto}
+.osce-visual figcaption{line-height:1.65}
+@media(max-width:520px){.osce-preview-note{display:block}.osce-preview-note>.btn{width:100%;margin-top:12px}.osce-study-levels .btn{flex:1 1 140px}.osce-preview-answer{padding:12px}}
+@media(prefers-reduced-motion:reduce){.osce-preview-questions,.osce-preview-note{scroll-behavior:auto}}
