@@ -64,3 +64,34 @@ body[data-theme="dark"] .ue-memory{background:var(--white);color:var(--ink)}
 .ue-visual-cell small{font-size:.78rem;color:var(--muted);margin-top:5px}
 .ue-inline-visual figcaption{font-size:.73rem;color:var(--muted);line-height:1.5;margin-top:11px}
 @media(max-width:600px){.ue-inline-visual{padding:14px}.ue-visual-cells{grid-template-columns:1fr}}
+
+/* Atlas clínico 2026: imagens isoladas dos PDFs, no contexto da aula.
+   Sem exibir documento completo ou identificar docentes/instituições. */
+.ue-atlas{max-width:100%;margin:20px 0 25px;padding:clamp(14px,2vw,24px);border:1px solid var(--line);border-radius:17px;background:var(--white)}
+.ue-atlas-title{margin-bottom:15px}
+.ue-atlas-title .kicker{font-size:.68rem;font-weight:800;letter-spacing:.09em;color:var(--green2)}
+.ue-atlas-title h3{font-size:clamp(1.08rem,1.9vw,1.3rem);letter-spacing:-.015em;line-height:1.35;margin:7px 0}
+.ue-atlas-title p{font-size:.88rem;line-height:1.55;color:var(--muted);margin:4px 0}
+.ue-atlas-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:13px;margin:13px 0}
+.ue-atlas-card{margin:0;min-width:0;border:1px solid var(--line);border-radius:13px;background:var(--soft);overflow:hidden}
+.ue-atlas-card img{display:block;width:100%;height:auto;max-height:330px;object-fit:contain;object-position:center;background:#fff}
+.ue-atlas-card figcaption{padding:12px 14px;color:var(--ink)}
+.ue-atlas-card figcaption strong,.ue-atlas-card figcaption span,.ue-atlas-card figcaption small{display:block;line-height:1.52}
+.ue-atlas-card figcaption strong{font-size:.91rem;font-weight:800;margin-bottom:5px}
+.ue-atlas-card figcaption span{font-size:.83rem}
+.ue-atlas-card figcaption small{font-size:.72rem;color:var(--muted);margin-top:6px}
+.ue-atlas-steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,185px),1fr));gap:8px;margin:10px 0 12px}
+.ue-atlas-step{display:grid;align-content:start;gap:6px;border:1px solid var(--line);background:var(--soft);border-radius:12px;padding:14px}
+.ue-atlas-stepno{display:grid;place-items:center;width:29px;height:29px;border-radius:9px;background:var(--mint);color:var(--green2);font-weight:850;font-size:.78rem}
+.ue-atlas-step strong{font-size:.88rem;color:var(--ink)}
+.ue-atlas-step>span:last-child{font-size:.8rem;color:var(--muted);line-height:1.55}
+.ue-atlas-tip{background:var(--soft);border-left:3px solid var(--green2);border-radius:0 9px 9px 0;padding:10px 13px;font-size:.87rem;line-height:1.6;margin:11px 0}
+.ue-atlas-update{margin-top:14px;padding:14px 16px;border:1px solid var(--line);border-radius:11px;background:var(--soft)}
+.ue-atlas-update>span{display:block;font-size:.68rem;letter-spacing:.06em;color:var(--green2);font-weight:800}
+.ue-atlas-update p{font-size:.85rem;line-height:1.65;margin:6px 0}
+.ue-atlas-update a{font-size:.83rem;color:var(--green2);text-decoration:underline;text-underline-offset:3px}
+.ue-pcr-source-figure{max-width:730px;margin:17px 0 0}
+.ue-pcr-source-figure img{max-height:210px}
+@media(max-width:640px){.ue-atlas{padding:13px}.ue-atlas-grid{grid-template-columns:1fr}.ue-atlas-card img{max-height:280px}.ue-atlas-steps{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:390px){.ue-atlas-steps{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){.ue-atlas *{scroll-behavior:auto}}
