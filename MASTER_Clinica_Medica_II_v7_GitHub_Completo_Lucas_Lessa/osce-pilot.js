@@ -46,8 +46,9 @@ window.OSCEPilot=(()=>{
    +'<div class="osce-depth-grid">'+Object.entries(st.tiers).map(([tier,t])=>'<button class="osce-depth-btn '+(p.tier===tier?'suggested':'')+'" onclick="OSCEPilot.start(\''+tier+'\',null,'+st.number+')"><strong>'+esc(t.label)+'</strong><span>≈'+t.minutes+' min · '+t.ids.length+' pergunta(s)</span><small>'+esc(t.description)+'</small>'+(covered[tier]?'<em>✓ já percorrida</em>':'')+'</button>').join('')+'</div></article>';
  }
  function filteredCatalog(){
+  const exact=/^#(\d{1,3})$/.exec(catalogSearch.trim());
   return BANK.filter(st=>(catalogPriority==='todas'||(catalogPriority==='complementar'?st.number>74:st.priority===catalogPriority))
-   &&(!catalogSearch||[st.title,st.subtitle,st.area,String(st.number)].join(' ').toLocaleLowerCase('pt-BR').includes(catalogSearch.toLocaleLowerCase('pt-BR'))))
+   &&(!catalogSearch||(exact?st.number===Number(exact[1]):[st.title,st.subtitle,st.area,String(st.number)].join(' ').toLocaleLowerCase('pt-BR').includes(catalogSearch.toLocaleLowerCase('pt-BR')))))
    .sort((a,b)=>({alta:0,media:1,baixa:2}[a.priority]??3)-({alta:0,media:1,baixa:2}[b.priority]??3)||a.number-b.number);
  }
  function filterCatalog(v){
@@ -82,7 +83,7 @@ window.OSCEPilot=(()=>{
  function jumpToIndex(number){
   const st=MAP.get(Number(number));
   if(!st)return notify('Esta estação ainda está em preparação.');
-  catalogSearch='';catalogPriority='todas';catalogLimit=BANK.length;screen='home';renderAgain();
+  catalogSearch='#'+st.number;catalogPriority='todas';catalogLimit=12;screen='home';renderAgain();
   if(typeof document!=='undefined'){
    const target=document.getElementById('osce-station-'+st.number);
    if(target){target.scrollIntoView({block:'center',behavior:window.matchMedia?.('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});target.focus({preventScroll:true});}
