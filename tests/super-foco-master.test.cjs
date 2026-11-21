@@ -14,7 +14,7 @@ function setup(){
   Emergency:{all:[{id:'pcr',title:'PCR',summary:'Emergência',case:{stem:'Paciente inconsciente.',ask:'Qual a primeira conduta?',answer:['Avaliar segurança.','Iniciar RCP.']},quiz:[{q:'Qual ritmo é chocável?',o:['FV','Assistolia'],a:0,why:'FV é chocável.'}]}]},
   OSCEPilot:{bank:()=>[{number:61,title:'Síncope versus epilepsia',priority:'alta',caseText:'Paciente colapsou.',questions:[{id:'q1',prompt:'Diferencie síncope de epilepsia.',answer:'História e pós-evento.',criteria:['Pródromos','Recuperação'],memory:'Síncope breve'}]},{number:87,pocusOrder:1,title:'POCUS pulmonar',priority:'alta',caseText:'Dispneia.',questions:[{id:'q1',prompt:'O que representam linhas B?',answer:'Artefatos verticais originados na pleura.',criteria:['Origem pleural']}]}]}
  };
- const context={window,localStorage:{getItem:k=>storage.get(k)||null,setItem:(k,v)=>storage.set(k,v)},navigate:r=>routes.push(r),render:()=>{},toast:s=>notes.push(s),Date,document:{getElementById:()=>null}};
+ const context={window,localStorage:{getItem:k=>storage.get(k)||null,setItem:(k,v)=>storage.set(k,v)},navigate:r=>routes.push(r),render:()=>{},toast:s=>notes.push(s),Date,document:{getElementById:()=>null,querySelectorAll:()=>[]}};
  vm.runInNewContext(script,context);
  return {f:window.SuperFoco,storage,user,routes,notes};
 }
