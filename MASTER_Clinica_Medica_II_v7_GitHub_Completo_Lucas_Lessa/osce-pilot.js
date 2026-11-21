@@ -39,7 +39,7 @@ window.OSCEPilot=(()=>{
    +'<h2>'+esc(st.title)+'</h2><p>'+esc(st.subtitle)+'</p>'
    +(st.images?.length?'<p class="osce-note">✓ '+st.images.length+' imagem(ns) do caso</p>':st.number===61?'<p class="osce-note">Ilustração didática identificada como tal.</p>':'<p class="osce-note">Caso sem imagem original; explicações clínicas disponíveis.</p>')
    +'<p class="osce-note">'+esc(p.reason)+'</p>'
-   +'<p class="osce-note"><strong>Depois de responder:</strong> você verá o gabarito comentado, checklist, aprofundamentos e dicas de memorização. Pode responder “não sei”.</p>'
+   +'<p class="osce-note"><strong>Depois de responder:</strong> aparece a resposta-modelo, correção passo a passo, dicas, referências e os painéis para aprofundar. Não precisa acertar para aprender: pode responder “não sei”.</p>'
    +'<div class="osce-actions"><button class="btn primary" onclick="OSCEPilot.start(\''+p.tier+'\',null,'+st.number+')">▶ Simular esta estação</button><button class="btn" onclick="OSCEPilot.preview('+st.number+')">📖 Revisar respostas antes</button>'
    +'<button class="btn" onclick="OSCEPilot.start(\'essencial\',null,'+st.number+')">1 minuto</button>'
    +'<button class="btn" onclick="OSCEPilot.start(\'completa\',null,'+st.number+')">Completo</button></div>'
@@ -68,7 +68,7 @@ window.OSCEPilot=(()=>{
  function media(st){
   if(st.number===61&&!st.images?.length)return illustration();
   if(!st.images?.length)return '<p class="osce-note">Não há imagem original neste caso; o raciocínio é baseado no quadro descrito.</p>';
-  return st.images.map(img=>'<figure class="osce-visual"><img src="'+esc(img.src)+'" loading="lazy" alt="'+esc(img.alt||'Imagem do caso')+'" onclick="OSCEPilot.expandImage(this)" onerror="this.hidden=true;this.nextElementSibling.hidden=false"><p hidden>A imagem não pôde ser carregada.</p><figcaption><strong>'+(img.kind==='illustration'?'ILUSTRAÇÃO DIDÁTICA — NÃO ORIGINAL':'IMAGEM ORIGINAL RECEBIDA')+'</strong> · '+esc(img.caption||'Toque para ampliar.')+'</figcaption></figure>').join('');
+  return st.images.map(img=>'<figure class="osce-visual"><img src="'+esc(img.src)+'" loading="lazy" alt="'+esc(img.alt||'Imagem do caso')+'" onclick="OSCEPilot.expandImage(this)" onerror="this.hidden=true;this.nextElementSibling.hidden=false"><p hidden>A imagem não pôde ser carregada.</p><figcaption><strong>'+(img.kind==='illustration'?'ILUSTRAÇÃO DIDÁTICA — NÃO ORIGINAL':img.kind==='reference'?'IMAGEM DE REFERÊNCIA LICENCIADA — NÃO É O ARQUIVO ORIGINAL':'IMAGEM ORIGINAL RECEBIDA')+'</strong> · '+esc(img.caption||'Toque para ampliar.')+'</figcaption></figure>').join('');
  }
  function sourcePanel(st){
   const sourceItems=(st.sources||[]).map(s=>'<li><a href="'+esc(s.url)+'" target="_blank" rel="noopener noreferrer">'+esc(s.label||s.title)+'</a> ('+esc(s.year)+')</li>').join('');
