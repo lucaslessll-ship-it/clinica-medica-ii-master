@@ -93,7 +93,7 @@ window.OSCEPilot=(()=>{
   }).join('');
   const available=index.groups.flatMap(g=>g.numbers).filter(n=>MAP.has(n)).length;
   return '<section class="osce-case osce-priority-overview" aria-labelledby="osce-priority-title" id="osce-priority-overview">'
-   +'<div class="osce-index-head"><div><p class="eyebrow">ROTEIRO DE PRIORIDADES</p><h2 id="osce-priority-title">Índice das '+Object.keys(index.names).length+' demais estações</h2><p class="osce-note">Lista simplificada antes dos cartões, em ordem de prioridade. Toque em um tema disponível para ir ao treinamento.</p></div><span class="osce-index-available">'+available+' disponíveis</span></div>'
+   +'<div class="osce-index-head"><div><p class="eyebrow">ROTEIRO DE PRIORIDADES</p><h2 id="osce-priority-title">Índice das '+Object.keys(index.names).length+(BANK.some(st=>st.pocusOrder)?' demais estações':' estações')+'</h2><p class="osce-note">Lista simplificada antes dos cartões, em ordem de prioridade. Toque em um tema disponível para ir ao treinamento.</p></div><span class="osce-index-available">'+available+' disponíveis</span></div>'
    +'<div class="osce-index-legend"><span><i class="osce-index-dot osce-index-legend-high" aria-hidden="true"></i>Alta · vermelho</span><span><i class="osce-index-dot osce-index-legend-medium" aria-hidden="true"></i>Média · amarelo</span><span><i class="osce-index-dot osce-index-legend-low" aria-hidden="true"></i>Baixa · verde</span></div>'
    +sections
    +'<p class="osce-note osce-index-footnote">As estações desta lista conservam a numeração de <strong>1 a 86</strong>; POCUS usa P1–P7 separado, definida pela ordem de estudo: <strong>43 altas, 31 médias e 12 baixas.</strong> A cor indica prioridade pedagógica, não probabilidade de cair na prova.</p></section>';
