@@ -1,7 +1,14 @@
 /* OSCE Master: duas estações completas, conteúdos autorais e revisão por critérios. */
 window.OSCEPilot=(()=>{
  'use strict';
- const BANK=[window.OSCE_PILOT_DATA,window.OSCE_FA_DATA,...(window.OSCE_EXTRA_STATIONS||[])].filter(x=>x&&Number.isInteger(x.number)&&Array.isArray(x.questions));
+ const PRIORITY_GROUPS=window.OSCE_PRIORITY_INDEX?.groups||[];
+ const PRIORITY_ORDER=PRIORITY_GROUPS.flatMap(g=>g.numbers);
+ // A ordem visual é pela prioridade; a numeração interna não muda para preservar o histórico.
+ const POSITION=new Map(PRIORITY_ORDER.map((id,i)=>[id,i+1]));
+ const displayNo=id=>POSITION.get(Number(id))||Number(id);
+ const BANK=[window.OSCE_PILOT_DATA,window.OSCE_FA_DATA,...(window.OSCE_EXTRA_STATIONS||[])]
+  .filter(x=>x&&Number.isInteger(x.number)&&Array.isArray(x.questions))
+  .sort((a,b)=>displayNo(a.number)-displayNo(b.number));
  const MAP=new Map(BANK.map(s=>[s.number,s]));
  const KEY='master_osce_pilot_v1';
  const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -35,7 +42,7 @@ window.OSCEPilot=(()=>{
  function sectionTitle(t){return '<header class="page-header osce-head"><p class="eyebrow">CLÍNICA MÉDICA II · AVALIAÇÃO PRÁTICO-ORAL</p><h1>'+t+'</h1></header>';}
  function selector(st){
   const p=recommended(st),completed=attempted(st),covered=state.covered[st.number]||{};
-  return '<article class="osce-case osce-theme-card" id="osce-station-'+st.number+'" tabindex="-1"><div class="osce-stepbar"><span>ESTAÇÃO '+st.number+(st.number>74?' · COMPLEMENTAR':'')+'</span><span class="osce-priority osce-priority-'+esc(st.priority)+'">● PRIORIDADE '+({alta:'ALTA',media:'MÉDIA',baixa:'BAIXA'}[st.priority]||'ADICIONAL')+'</span><strong>'+completed+'/'+st.questions.length+' questões</strong></div>'
+  return '<article class="osce-case osce-theme-card" id="osce-station-'+st.number+'" tabindex="-1"><div class="osce-stepbar"><span>ESTAÇÃO '+displayNo(st.number)+'</span><span class="osce-priority osce-priority-'+esc(st.priority)+'">● PRIORIDADE '+({alta:'ALTA',media:'MÉDIA',baixa:'BAIXA'}[st.priority]||'ADICIONAL')+'</span><strong>'+completed+'/'+st.questions.length+' questões</strong></div>'
    +'<h2>'+esc(st.title)+'</h2><p>'+esc(st.subtitle)+'</p>'
    +(st.images?.length?'<p class="osce-note">✓ '+st.images.length+' imagem(ns) do caso</p>':st.number===61?'<p class="osce-note">Ilustração didática identificada como tal.</p>':'<p class="osce-note">Caso sem imagem original; explicações clínicas disponíveis.</p>')
    +'<p class="osce-note">'+esc(p.reason)+'</p>'
@@ -46,10 +53,10 @@ window.OSCEPilot=(()=>{
    +'<div class="osce-depth-grid">'+Object.entries(st.tiers).map(([tier,t])=>'<button class="osce-depth-btn '+(p.tier===tier?'suggested':'')+'" onclick="OSCEPilot.start(\''+tier+'\',null,'+st.number+')"><strong>'+esc(t.label)+'</strong><span>≈'+t.minutes+' min · '+t.ids.length+' pergunta(s)</span><small>'+esc(t.description)+'</small>'+(covered[tier]?'<em>✓ já percorrida</em>':'')+'</button>').join('')+'</div></article>';
  }
  function filteredCatalog(){
-  const exact=/^#(\d{1,3})$/.exec(catalogSearch.trim());
+  const exact=/^#?(\d{1,3})$/.exec(catalogSearch.trim());
   return BANK.filter(st=>(catalogPriority==='todas'||(catalogPriority==='complementar'?st.number>74:st.priority===catalogPriority))
-   &&(!catalogSearch||(exact?st.number===Number(exact[1]):[st.title,st.subtitle,st.area,String(st.number)].join(' ').toLocaleLowerCase('pt-BR').includes(catalogSearch.toLocaleLowerCase('pt-BR')))))
-   .sort((a,b)=>({alta:0,media:1,baixa:2}[a.priority]??3)-({alta:0,media:1,baixa:2}[b.priority]??3)||a.number-b.number);
+   &&(!catalogSearch||(exact?displayNo(st.number)===Number(exact[1]):[st.title,st.subtitle,st.area,String(displayNo(st.number))].join(' ').toLocaleLowerCase('pt-BR').includes(catalogSearch.toLocaleLowerCase('pt-BR')))))
+   .sort((a,b)=>({alta:0,media:1,baixa:2}[a.priority]??3)-({alta:0,media:1,baixa:2}[b.priority]??3)||displayNo(a.number)-displayNo(b.number));
  }
  function filterCatalog(v){
   catalogSearch=String(v||'').slice(0,120);catalogLimit=12;renderAgain();
@@ -64,12 +71,12 @@ window.OSCEPilot=(()=>{
   const sections=index.groups.map(group=>{
    const count=group.numbers.length;
    const rows=group.numbers.map(n=>{
-    const st=MAP.get(n),label=index.names[n]||st?.title||('Estação '+n),suffix=n>74?' · Complementar':'';
-    const number='<span class="osce-index-number">'+String(n).padStart(2,'0')+'</span>';
+    const st=MAP.get(n),rank=displayNo(n),label=index.names[n]||st?.title||('Estação '+rank);
+    const number='<span class="osce-index-number">'+String(rank).padStart(2,'0')+'</span>';
     const name='<span class="osce-index-name">'+esc(label)+'</span>';
-    if(!st)return '<div class="osce-index-entry osce-index-pending" title="Estação ainda não publicada" aria-label="Estação '+n+': '+esc(label)+', em preparação">'+number+name+'<span class="osce-index-status">Em preparação</span></div>';
+    if(!st)return '<div class="osce-index-entry osce-index-pending" title="Estação ainda não publicada" aria-label="Estação '+rank+': '+esc(label)+', em preparação">'+number+name+'<span class="osce-index-status">Em preparação</span></div>';
     const progress=attempted(st),stateLabel=progress>0?progress+'/'+st.questions.length+' feitas':'Abrir';
-    return '<button type="button" class="osce-index-entry osce-index-ready" title="Abrir estação '+n+suffix+'" aria-label="Abrir estação '+n+', '+esc(label)+', prioridade '+esc(group.label)+'" onclick="OSCEPilot.jumpToIndex('+n+')">'+number+name+'<span class="osce-index-status">'+esc(stateLabel)+'</span></button>';
+    return '<button type="button" class="osce-index-entry osce-index-ready" title="Abrir estação '+rank+'" aria-label="Abrir estação '+rank+', '+esc(label)+', prioridade '+esc(group.label)+'" onclick="OSCEPilot.jumpToIndex('+n+')">'+number+name+'<span class="osce-index-status">'+esc(stateLabel)+'</span></button>';
    }).join('');
    return '<details class="osce-index-group osce-index-'+group.key+'" '+(group.key==='alta'?'open':'')+'><summary><span class="osce-index-dot" aria-hidden="true"></span><strong>'+esc(group.label)+'</strong><span class="osce-index-description">'+esc(group.description)+'</span><span class="osce-index-total">'+count+' estações</span></summary><div class="osce-index-grid">'+rows+'</div></details>';
   }).join('');
@@ -78,12 +85,12 @@ window.OSCEPilot=(()=>{
    +'<div class="osce-index-head"><div><p class="eyebrow">ROTEIRO DE PRIORIDADES</p><h2 id="osce-priority-title">Índice das '+Object.keys(index.names).length+' estações</h2><p class="osce-note">Lista simplificada antes dos cartões, em ordem de prioridade. Toque em um tema disponível para ir ao treinamento.</p></div><span class="osce-index-available">'+available+' disponíveis</span></div>'
    +'<div class="osce-index-legend"><span><i class="osce-index-dot osce-index-legend-high" aria-hidden="true"></i>Alta · vermelho</span><span><i class="osce-index-dot osce-index-legend-medium" aria-hidden="true"></i>Média · amarelo</span><span><i class="osce-index-dot osce-index-legend-low" aria-hidden="true"></i>Baixa · verde</span></div>'
    +sections
-   +'<p class="osce-note osce-index-footnote">As 74 estações originais mantêm a matriz anterior: <strong>33 altas, 29 médias e 12 baixas.</strong> As 12 estações curriculares complementares acrescentam 10 altas e 2 médias. A cor indica prioridade pedagógica, não probabilidade de cair na prova. Abra Média ou Baixa para ver os demais temas.</p></section>';
+   +'<p class="osce-note osce-index-footnote">Numeração contínua de <strong>1 a 86</strong>, definida pela ordem de estudo: <strong>43 altas, 31 médias e 12 baixas.</strong> A cor indica prioridade pedagógica, não probabilidade de cair na prova.</p></section>';
  }
  function jumpToIndex(number){
   const st=MAP.get(Number(number));
   if(!st)return notify('Esta estação ainda está em preparação.');
-  catalogSearch='#'+st.number;catalogPriority='todas';catalogLimit=12;screen='home';renderAgain();
+  catalogSearch='#'+displayNo(st.number);catalogPriority='todas';catalogLimit=12;screen='home';renderAgain();
   if(typeof document!=='undefined'){
    const target=document.getElementById('osce-station-'+st.number);
    if(target){target.scrollIntoView({block:'center',behavior:window.matchMedia?.('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});target.focus({preventScroll:true});}
@@ -91,20 +98,20 @@ window.OSCEPilot=(()=>{
  }
 
  function homePage(){
-  const total=BANK.reduce((n,st)=>n+attempted(st),0),dueCount=dueItems().length,weakCount=weakItems().length,shallow=BANK.filter(st=>st.number<=74&&Object.values(state.covered[st.number]||{}).some(Boolean)).length,deep=BANK.filter(st=>st.number<=74&&state.covered[st.number]?.completa).length;
+  const total=BANK.reduce((n,st)=>n+attempted(st),0),dueCount=dueItems().length,weakCount=weakItems().length,shallow=BANK.filter(st=>Object.values(state.covered[st.number]||{}).some(Boolean)).length,deep=BANK.filter(st=>state.covered[st.number]?.completa).length;
   const d=diffDays(),selection=dueCount?dueItems()[0].st:BANK.find(st=>attempted(st)===0)||BANK[0];
   return sectionTitle('OSCE <em>Clínica Médica.</em>')+'<p>Treine primeiro, aprofunde ao clicar, recupere os erros e retome sem perder seu progresso.</p>'
-   +'<section class="osce-pilot-hero"><div><p class="eyebrow">SESSÃO DE HOJE · COMEÇO SEM ATRITO</p><h2>Uma pergunta já é progresso.</h2><p>'+esc(d===null?'Data não definida.':d<0?'A data registrada passou; ajuste abaixo.':d===0?'Avaliação hoje.':d+' dia(s) até a avaliação.')+' Comece pelo erro vencido ou pela próxima estação prioritária.</p><div class="osce-actions"><button class="btn primary" onclick="OSCEPilot.daily()">▶ Sessão de hoje · 15 min</button>'+(state.current?'<button class="btn" onclick="OSCEPilot.resume()">Retomar onde parei</button>':'')+'</div></div><div class="osce-pilot-emblem" aria-hidden="true">'+BANK.filter(x=>x.number<=74).length+'<span>estações</span></div></section>'
-   +'<div class="osce-stats"><div><b>'+total+'</b><span>perguntas testadas</span></div><div><b>'+dueCount+'</b><span>revisões vencidas</span></div><div><b>'+weakCount+'</b><span>lacunas registradas</span></div><div><b>'+deep+'/74</b><span>estações completas</span></div></div>'
-   +'<section class="osce-case"><h2>Triagem e cobertura</h2><div class="osce-settings"><label>Data da APO<input type="date" value="'+esc(state.settings.examDate)+'" onchange="OSCEPilot.setDate(this.value)"></label><label>Tempo disponível<select onchange="OSCEPilot.setMinutes(this.value)">'+[5,15,30,45].map(m=>'<option value="'+m+'"'+(Number(state.settings.minutes)===m?' selected':'')+'>'+m+' min</option>').join('')+'</select></label></div><p class="osce-note">Amplitude: '+shallow+'/74 · Profundidade: '+deep+'/74. Há '+BANK.filter(x=>x.number<=74).length+' estações principais e '+BANK.filter(x=>x.number>74).length+' complementares, com fichas originais de estudo.</p><div class="osce-track"><span style="width:'+(100*shallow/74)+'%"></span></div><div class="osce-track osce-track-secondary"><span style="width:'+(100*deep/74)+'%"></span></div></section>'
+   +'<section class="osce-pilot-hero"><div><p class="eyebrow">SESSÃO DE HOJE · COMEÇO SEM ATRITO</p><h2>Uma pergunta já é progresso.</h2><p>'+esc(d===null?'Data não definida.':d<0?'A data registrada passou; ajuste abaixo.':d===0?'Avaliação hoje.':d+' dia(s) até a avaliação.')+' Comece pelo erro vencido ou pela próxima estação prioritária.</p><div class="osce-actions"><button class="btn primary" onclick="OSCEPilot.daily()">▶ Sessão de hoje · 15 min</button>'+(state.current?'<button class="btn" onclick="OSCEPilot.resume()">Retomar onde parei</button>':'')+'</div></div><div class="osce-pilot-emblem" aria-hidden="true">'+BANK.length+'<span>estações</span></div></section>'
+   +'<div class="osce-stats"><div><b>'+total+'</b><span>perguntas testadas</span></div><div><b>'+dueCount+'</b><span>revisões vencidas</span></div><div><b>'+weakCount+'</b><span>lacunas registradas</span></div><div><b>'+deep+'/'+BANK.length+'</b><span>estações completas</span></div></div>'
+   +'<section class="osce-case"><h2>Triagem e cobertura</h2><div class="osce-settings"><label>Data da APO<input type="date" value="'+esc(state.settings.examDate)+'" onchange="OSCEPilot.setDate(this.value)"></label><label>Tempo disponível<select onchange="OSCEPilot.setMinutes(this.value)">'+[5,15,30,45].map(m=>'<option value="'+m+'"'+(Number(state.settings.minutes)===m?' selected':'')+'>'+m+' min</option>').join('')+'</select></label></div><p class="osce-note">Amplitude: '+shallow+'/'+BANK.length+' · Profundidade: '+deep+'/'+BANK.length+'. O roteiro reúne todas as '+BANK.length+' estações em ordem de prioridade.</p><div class="osce-track"><span style="width:'+(100*shallow/BANK.length)+'%"></span></div><div class="osce-track osce-track-secondary"><span style="width:'+(100*deep/BANK.length)+'%"></span></div></section>'
    +priorityIndex()
    +'<h2>Estações disponíveis</h2><p class="osce-note">Prioridade: <span class="osce-priority osce-priority-alta">● Alta</span> · <span class="osce-priority osce-priority-media">● Média</span> · <span class="osce-priority osce-priority-baixa">● Baixa</span>. Critério pedagógico, não previsão estatística da prova.</p>'
-   +'<div class="osce-filter"><label>Buscar estação<input type="search" id="osce-catalog-search" placeholder="Síndrome, ECG, 74..." value="'+esc(catalogSearch)+'" oninput="OSCEPilot.filterCatalog(this.value)"></label><label>Prioridade<select onchange="OSCEPilot.setCatalogPriority(this.value)">'+[['alta','Alta'],['media','Média'],['baixa','Baixa'],['complementar','Complementares'],['todas','Todas']].map(([k,l])=>'<option value="'+k+'"'+(catalogPriority===k?' selected':'')+'>'+l+'</option>').join('')+'</select></label></div>'
+   +'<div class="osce-filter"><label>Buscar estação<input type="search" id="osce-catalog-search" placeholder="Tema ou novo número (ex.: 1, 8, síncope)" value="'+esc(catalogSearch)+'" oninput="OSCEPilot.filterCatalog(this.value)"></label><label>Prioridade<select onchange="OSCEPilot.setCatalogPriority(this.value)">'+[['alta','Alta'],['media','Média'],['baixa','Baixa'],['todas','Todas']].map(([k,l])=>'<option value="'+k+'"'+(catalogPriority===k?' selected':'')+'>'+l+'</option>').join('')+'</select></label></div>'
    +'<p class="osce-note">'+filteredCatalog().length+' estações neste filtro; exibindo até '+Math.min(catalogLimit,filteredCatalog().length)+'.</p>'
    +'<div class="osce-catalog-grid">'+filteredCatalog().slice(0,catalogLimit).map(selector).join('')+'</div>'
    +(filteredCatalog().length>catalogLimit?'<button type="button" class="btn" onclick="OSCEPilot.moreCatalog()">Mostrar mais estações</button>':'')
    +'<div class="osce-actions"><button class="btn" onclick="OSCEPilot.showReview()">↻ Revisão por erros</button><button class="btn" onclick="OSCEPilot.showPrompt()">Gerar script de revisão → Copiar para IA</button></div>'
-   +'<p class="osce-note">Estações com perguntas e respostas autorais do Master; não se trata de conteúdo oficial da banca. A autoavaliação é manual. O ECG da estação 52 é derivado do arquivo real i-031.jpg enviado para este projeto.</p>';
+   +'<p class="osce-note">Estações com perguntas e respostas autorais do Master; não se trata de conteúdo oficial da banca. A autoavaliação é manual. O ECG da estação '+displayNo(52)+' (fibrilação atrial) é derivado do arquivo i-031.jpg enviado para este projeto.</p>';
  }
  function toolBar(st){
   return '<div class="osce-top-links">'+((st.lesson?.id||st.number===52||st.number===61)?'<button class="btn" onclick="OSCEPilot.openLesson('+st.number+')">↗ Aula do tema</button>':'')
@@ -163,7 +170,7 @@ window.OSCEPilot=(()=>{
   const q=currentQ(st);if(!q)return homePage();
   const attemptedEntry=entry(st,q),prev=last(st,q);
   let out=sectionTitle(esc(st.title))+'<button class="btn ghost" onclick="OSCEPilot.home()">← Voltar e salvar</button>'+toolBar(st)
-   +'<section class="osce-case"><div class="osce-stepbar"><span>ESTAÇÃO '+st.number+(st.number>74?' · COMPLEMENTAR':'')+'</span><span class="osce-priority osce-priority-'+esc(st.priority)+'">● PRIORIDADE '+({alta:'ALTA',media:'MÉDIA',baixa:'BAIXA'}[st.priority]||'ADICIONAL')+'</span><span>'+esc(st.tiers[r.tier].label)+' · '+(r.pos+1)+'/'+r.ids.length+'</span></div><p>'+esc(st.caseText)+'</p>'+media(st)+'</section>'
+   +'<section class="osce-case"><div class="osce-stepbar"><span>ESTAÇÃO '+displayNo(st.number)+'</span><span class="osce-priority osce-priority-'+esc(st.priority)+'">● PRIORIDADE '+({alta:'ALTA',media:'MÉDIA',baixa:'BAIXA'}[st.priority]||'ADICIONAL')+'</span><span>'+esc(st.tiers[r.tier].label)+' · '+(r.pos+1)+'/'+r.ids.length+'</span></div><p>'+esc(st.caseText)+'</p>'+media(st)+'</section>'
    +'<section class="osce-step"><div class="osce-track"><span style="width:'+(r.pos/r.ids.length*100)+'%"></span></div><div class="osce-stepbar"><b>PERGUNTA '+(r.pos+1)+' DE '+r.ids.length+'</b><span>'+esc(q.competence)+'</span></div><h2>'+esc(q.prompt)+'</h2>'
    +(prev?'<p class="osce-note">Última tentativa: '+prev.score+'% de critérios · próxima revisão '+formatDate(prev.due)+'.</p>':'')
    +'<p class="osce-note"><strong>Após a tentativa você verá:</strong> resposta-modelo, checklist dos pontos essenciais, aprofundamentos, referências e memorização. Se preferir, pode <button class="osce-inline-action" onclick="OSCEPilot.preview('+st.number+')">revisar as respostas agora</button> antes de simular.</p>'+'<label class="osce-answer-label" for="osce-answer">Sua resposta (como na arguição oral)</label><textarea id="osce-answer" rows="6" placeholder="Digite seu raciocínio; pode escrever não sei para aprender pelo erro." oninput="OSCEPilot.answer(this.value)" '+(shown?'readonly':'')+'>'+esc(attemptedEntry.draft||'')+'</textarea>';
@@ -189,7 +196,7 @@ window.OSCEPilot=(()=>{
  }
  function previewPage(){
   const st=MAP.get(previewStation)||BANK[0],tier=st.tiers[previewTier]?previewTier:'completa',t=st.tiers[tier],qs=t.ids.map(id=>st.questions.find(q=>q.id===id)).filter(Boolean);
-  let html=sectionTitle('Revisar <em>'+esc(st.title)+'.</em>');
+  let html=sectionTitle('Revisar estação '+displayNo(st.number)+' — <em>'+esc(st.title)+'.</em>');
   html+='<button class="btn ghost" onclick="OSCEPilot.home()">← Voltar às estações</button><div class="osce-preview-note"><strong>REVISÃO ANTES DO SIMULADO · SEM NOTA</strong><p>Todas as respostas-modelo estão abertas para estudar. Percorra as perguntas, leia o essencial e abra somente os aprofundamentos de que precisar. Isso não conta como tentativa de prova.</p><button class="btn primary" onclick="'+(state.current?.station===st.number?'OSCEPilot.resume()':'OSCEPilot.start(\''+tier+'\',null,'+st.number+')')+'">'+(state.current?.station===st.number?'🩺 Retomar simulação':'🩺 Agora quero simular')+'</button></div>';
   html+='<div class="osce-study-levels">'+Object.entries(st.tiers).map(([k,x])=>'<button type="button" class="btn '+(k===tier?'primary':'')+'" onclick="OSCEPilot.previewTierSet(\''+k+'\')">'+esc(x.label)+' · '+x.minutes+'min</button>').join('')+'</div>';
   html+='<section class="osce-case"><h2>Contexto e imagem do caso</h2><p>'+esc(st.caseText)+'</p>'+media(st)+'</section>';
@@ -236,17 +243,17 @@ window.OSCEPilot=(()=>{
   return sectionTitle('Revisão <em>adaptativa.</em>')+'<button class="btn ghost" onclick="OSCEPilot.home()">← Voltar</button><p>Erros, respostas parciais e confiança excessiva voltam primeiro. Reavaliação por recuperação ativa, sem séries punitivas.</p>'
    +'<div class="osce-stats"><div><b>'+dues.length+'</b><span>vencidas</span></div><div><b>'+weak.length+'</b><span>lacunas insatisfatórias</span></div></div><div class="osce-actions"><button class="btn primary" onclick="OSCEPilot.reviewDue()">▶ Retestar agora</button><button class="btn" onclick="OSCEPilot.showPrompt()">Gerar script para IA</button></div>'
    +'<section class="osce-case"><h2>Agendamento explicável</h2><p>Erro importante/alta confiança errada: D+1 · parcial: D+3 · boa resposta: D+7 · domínio repetido, sem dicas: D+21. O escore é produzido por marcação manual dos critérios da resposta.</p></section>'
-   +'<div class="osce-review-list">'+(weak.length?weak.map(x=>'<button onclick="OSCEPilot.start(\'rapida\',[ \''+esc(x.q.id)+'\' ],'+x.st.number+')"><b>Estação '+x.st.number+' — '+esc(x.q.competence)+' · '+x.a.score+'%</b><span>'+esc(x.q.prompt)+'</span><small>Reteste: '+formatDate(x.a.due)+'</small></button>').join(''):'<div class="card pad"><p>Nenhum erro insatisfatório registrado. Comece por uma das duas estações.</p></div>')+'</div>';
+   +'<div class="osce-review-list">'+(weak.length?weak.map(x=>'<button onclick="OSCEPilot.start(\'rapida\',[ \''+esc(x.q.id)+'\' ],'+x.st.number+')"><b>Estação '+displayNo(x.st.number)+' — '+esc(x.q.competence)+' · '+x.a.score+'%</b><span>'+esc(x.q.prompt)+'</span><small>Reteste: '+formatDate(x.a.due)+'</small></button>').join(''):'<div class="card pad"><p>Nenhum erro insatisfatório registrado. Comece por uma das duas estações.</p></div>')+'</div>';
  }
  function makePrompt(){
   const weak=BANK.flatMap(st=>st.questions.map(q=>({st,q,a:last(st,q)})).filter(x=>x.a&&(x.a.score<80||x.a.overconfident))).sort((a,b)=>a.a.score-b.a.score||b.a.confidence-a.a.confidence);
   if(!weak.length)return 'Ainda não há erros ou respostas parciais. Responda uma pergunta para gerar um roteiro específico.';
   let out='Você é avaliador de Clínica Médica II (FMP), especializado em arguição prático-oral. Faça UMA pergunta por vez e aguarde minha resposta. Não trate perguntas do Master como oficiais da FMP.\n\nFaça revisão de diagnóstico sindrômico e etiológico, anamnese, exame físico, diferenciais, fisiopatologia, exames e conduta. Use diretrizes atuais verificáveis (SBC FA 2025, ESC AF 2024, ESC Síncope 2018, EUSEM 2024). Não invente imagens, doses ou referências.\n\nApós cada resposta: (1) aponte lacuna específica, (2) explique mecanismo e conduta, (3) forneça mnemônico, (4) crie caso breve semelhante mas não idêntico, (5) avalie por checklist, (6) agende D+1/D+3/D+7/D+21 conforme desempenho. Dê prioridade aos erros de alta confiança.\n\nERROS ('+weak.length+'):\n';
-  for(const x of weak.slice(0,24)){const missing=x.q.criteria.filter((_,i)=>!x.a.criteria.includes(i));out+='\nEstação '+x.st.number+' — '+x.st.title+' | '+x.q.competence+' | '+x.a.score+'% | confiança '+x.a.confidence+'/3 | dicas '+x.a.hintsUsed+'/3\nPergunta: '+x.q.prompt+'\nNão cumpriu: '+(missing.join('; ')||'reavaliar raciocínio')+'\nMinha resposta: '+x.a.answer.slice(0,900)+'\n';}
+  for(const x of weak.slice(0,24)){const missing=x.q.criteria.filter((_,i)=>!x.a.criteria.includes(i));out+='\nEstação '+displayNo(x.st.number)+' — '+x.st.title+' | '+x.q.competence+' | '+x.a.score+'% | confiança '+x.a.confidence+'/3 | dicas '+x.a.hintsUsed+'/3\nPergunta: '+x.q.prompt+'\nNão cumpriu: '+(missing.join('; ')||'reavaliar raciocínio')+'\nMinha resposta: '+x.a.answer.slice(0,900)+'\n';}
   return out+'\nComece só com a primeira pergunta, sem revelar a resposta.';
  }
  function promptPage(){return sectionTitle('Script de <em>revisão por erros.</em>')+'<button class="btn ghost" onclick="OSCEPilot.home()">← Voltar</button><p>Copie para uma IA a análise dos critérios não cumpridos. Nenhuma resposta é transmitida automaticamente.</p><section class="osce-step"><label class="osce-answer-label" for="osce-prompt">Roteiro personalizado</label><textarea readonly id="osce-prompt" rows="19">'+esc(makePrompt())+'</textarea><div class="osce-actions"><button class="btn primary" onclick="OSCEPilot.copyPrompt()">Copiar para IA</button><button class="btn" onclick="OSCEPilot.showReview()">Ver erros</button></div></section>';}
- function donePage(){const st=data(reviewStation),run=state.runs.at(-1),n=run?.results.length||0;return sectionTitle('Sessão <em>concluída.</em>')+'<p>Você concluiu '+n+' pergunta(s) da estação '+st.number+' ('+esc(st.title)+'). Não precisa concluir tudo em um dia.</p><section class="osce-case"><h2>Consolide sem consultar</h2><p>'+esc(st.essential.oneMinute)+'</p><p class="osce-note">Próxima ação: abra a fila de erros ou repita amanhã uma pergunta sem olhar o gabarito.</p><div class="osce-actions"><button class="btn primary" onclick="OSCEPilot.showReview()">Ver minha revisão</button><button class="btn" onclick="OSCEPilot.showPrompt()">Copiar script para IA</button><button class="btn" onclick="OSCEPilot.home()">Todas as estações</button></div></section>';}
+ function donePage(){const st=data(reviewStation),run=state.runs.at(-1),n=run?.results.length||0;return sectionTitle('Sessão <em>concluída.</em>')+'<p>Você concluiu '+n+' pergunta(s) da estação '+displayNo(st.number)+' ('+esc(st.title)+'). Não precisa concluir tudo em um dia.</p><section class="osce-case"><h2>Consolide sem consultar</h2><p>'+esc(st.essential.oneMinute)+'</p><p class="osce-note">Próxima ação: abra a fila de erros ou repita amanhã uma pergunta sem olhar o gabarito.</p><div class="osce-actions"><button class="btn primary" onclick="OSCEPilot.showReview()">Ver minha revisão</button><button class="btn" onclick="OSCEPilot.showPrompt()">Copiar script para IA</button><button class="btn" onclick="OSCEPilot.home()">Todas as estações</button></div></section>';}
  function page(){return screen==='preview'?previewPage():screen==='study'?activePage():screen==='review'?reviewPage():screen==='prompt'?promptPage():screen==='done'?donePage():homePage();}
  function showReview(){screen='review';renderAgain();}
  function showPrompt(){screen='prompt';renderAgain();}
