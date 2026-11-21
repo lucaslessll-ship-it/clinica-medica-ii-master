@@ -7,8 +7,8 @@ window.OSCEPilot=(()=>{
  const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  const now=()=>new Date().toISOString();
  const shift=(n)=>{const d=new Date();d.setHours(12,0,0,0);d.setDate(d.getDate()+n);return d.toISOString()};
- const empty=()=>({version:2,settings:{examDate:'2026-11-24',minutes:15},items:{},runs:[],current:null,covered:{},updatedAt:null});
- function load(){try{const s=JSON.parse(localStorage.getItem(KEY));if(s&&s.items&&s.settings)return {...empty(),...s,covered:s.covered||{}}}catch{}return empty();}
+ const empty=()=>({version:3,settings:{examDate:'2026-11-24',minutes:15},items:{},runs:[],current:null,covered:{},learned:{},learning:{station:61,tier:'completa'},updatedAt:null});
+ function load(){try{const s=JSON.parse(localStorage.getItem(KEY));if(s&&s.items&&s.settings)return {...empty(),...s,covered:s.covered||{},learned:s.learned||{},learning:s.learning||empty().learning}}catch{}return empty();}
  let state=load(),screen='home',shown=false,confidence=0,hints=0,checked=[],reviewStation=61,glossary='';
  const bank=()=>BANK;
  function study(){return MAP.get(state.current?.station)||MAP.get(61)}
@@ -39,16 +39,17 @@ window.OSCEPilot=(()=>{
    +'<h2>'+esc(st.title)+'</h2><p>'+esc(st.subtitle)+'</p>'
    +(st.images?.length?'<p class="osce-note">✓ ECG original do material recebido</p>':'<p class="osce-note">Ilustração didática identificada como tal; ECG original ausente.</p>')
    +'<p class="osce-note">'+esc(p.reason)+'</p>'
-   +'<div class="osce-actions"><button class="btn primary" onclick="OSCEPilot.start(\''+p.tier+'\',null,'+st.number+')">▶ Começar esta estação</button>'
-   +'<button class="btn" onclick="OSCEPilot.start(\'essencial\',null,'+st.number+')">1 minuto</button>'
-   +'<button class="btn" onclick="OSCEPilot.start(\'completa\',null,'+st.number+')">Completo</button></div>'
+   +'<div class="osce-two-paths"><button type="button" class="osce-path-btn osce-path-study" onclick="OSCEPilot.learn(\'completa\','+st.number+')"><span class="osce-path-icon" aria-hidden="true">📖</span><strong>Estudar primeiro</strong><small>Respostas, explicações e condutas abertas. Sem nota.</small></button>'
+   +'<button type="button" class="osce-path-btn" onclick="OSCEPilot.start(\''+p.tier+'\',null,'+st.number+')"><span class="osce-path-icon" aria-hidden="true">🩺</span><strong>Simular agora</strong><small>Arguição sem gabarito; feedback após responder.</small></button></div>'
+   +'<div class="osce-actions"><button class="btn" onclick="OSCEPilot.learn(\'essencial\','+st.number+')">Estudo essencial · 1 min</button><button class="btn" onclick="OSCEPilot.learn(\'rapida\','+st.number+')">Estudo rápido · 5 min</button><button class="btn" onclick="OSCEPilot.learn(\'completa\','+st.number+')">Estudo completo</button></div>'
+   +'<p class="osce-note">Estudo: '+(state.learned?.[st.number]?.length||0)+'/'+st.questions.length+' pontos marcados como vistos. A leitura não altera o histórico do simulador.</p>'
    +'<div class="osce-depth-grid">'+Object.entries(st.tiers).map(([tier,t])=>'<button class="osce-depth-btn '+(p.tier===tier?'suggested':'')+'" onclick="OSCEPilot.start(\''+tier+'\',null,'+st.number+')"><strong>'+esc(t.label)+'</strong><span>≈'+t.minutes+' min · '+t.ids.length+' pergunta(s)</span><small>'+esc(t.description)+'</small>'+(covered[tier]?'<em>✓ já percorrida</em>':'')+'</button>').join('')+'</div></article>';
  }
  function homePage(){
   const total=BANK.reduce((n,st)=>n+attempted(st),0),dueCount=dueItems().length,weakCount=weakItems().length,shallow=BANK.filter(st=>Object.values(state.covered[st.number]||{}).some(Boolean)).length,deep=BANK.filter(st=>state.covered[st.number]?.completa).length;
   const d=diffDays(),selection=dueCount?dueItems()[0].st:BANK.find(st=>attempted(st)===0)||BANK[0];
-  return sectionTitle('OSCE <em>Clínica Médica.</em>')+'<p>Treine primeiro, aprofunde ao clicar, recupere os erros e retome sem perder seu progresso.</p>'
-   +'<section class="osce-pilot-hero"><div><p class="eyebrow">SESSÃO DE HOJE · COMEÇO SEM ATRITO</p><h2>Uma pergunta já é progresso.</h2><p>'+esc(d===null?'Data não definida.':d<0?'A data registrada passou; ajuste abaixo.':d===0?'Avaliação hoje.':d+' dia(s) até a avaliação.')+' Comece pelo erro vencido ou pela próxima estação prioritária.</p><div class="osce-actions"><button class="btn primary" onclick="OSCEPilot.daily()">▶ Sessão de hoje · 15 min</button>'+(state.current?'<button class="btn" onclick="OSCEPilot.resume()">Retomar onde parei</button>':'')+'</div></div><div class="osce-pilot-emblem" aria-hidden="true">'+BANK.length+'<span>estações</span></div></section>'
+  return sectionTitle('OSCE <em>Clínica Médica.</em>')+'<p>Escolha o caminho: estude com respostas e aprofundamentos ou simule a arguição sem gabarito. O progresso de leitura não interfere na nota.</p>'
+   +'<section class="osce-pilot-hero"><div><p class="eyebrow">SESSÃO DE HOJE · COMEÇO SEM ATRITO</p><h2>Uma pergunta já é progresso.</h2><p>'+esc(d===null?'Data não definida.':d<0?'A data registrada passou; ajuste abaixo.':d===0?'Avaliação hoje.':d+' dia(s) até a avaliação.')+' Comece pelo erro vencido ou pela próxima estação prioritária.</p><div class="osce-actions"><button class="btn primary" onclick="OSCEPilot.learn(\'completa\',52)">📖 Estudar primeiro</button><button class="btn" onclick="OSCEPilot.daily()">🩺 Simular sessão de hoje</button>'+(state.current?'<button class="btn" onclick="OSCEPilot.resume()">Retomar onde parei</button>':'')+'</div></div><div class="osce-pilot-emblem" aria-hidden="true">'+BANK.length+'<span>estações</span></div></section>'
    +'<div class="osce-stats"><div><b>'+total+'</b><span>perguntas testadas</span></div><div><b>'+dueCount+'</b><span>revisões vencidas</span></div><div><b>'+weakCount+'</b><span>lacunas registradas</span></div><div><b>'+deep+'/74</b><span>estações completas</span></div></div>'
    +'<section class="osce-case"><h2>Triagem e cobertura</h2><div class="osce-settings"><label>Data da APO<input type="date" value="'+esc(state.settings.examDate)+'" onchange="OSCEPilot.setDate(this.value)"></label><label>Tempo disponível<select onchange="OSCEPilot.setMinutes(this.value)">'+[5,15,30,45].map(m=>'<option value="'+m+'"'+(Number(state.settings.minutes)===m?' selected':'')+'>'+m+' min</option>').join('')+'</select></label></div><p class="osce-note">Amplitude: '+shallow+'/74 · Profundidade: '+deep+'/74. Há '+BANK.length+' estações disponíveis neste projeto; as demais dependem de validação e publicação.</p><div class="osce-track"><span style="width:'+(100*shallow/74)+'%"></span></div><div class="osce-track osce-track-secondary"><span style="width:'+(100*deep/74)+'%"></span></div></section>'
    +'<h2>Estações disponíveis</h2>'+BANK.map(selector).join('')
@@ -61,8 +62,8 @@ window.OSCEPilot=(()=>{
    +'<button class="btn" onclick="OSCEPilot.showSources()">📚 Referências e diretrizes</button>'
    +direct
    +'<button class="btn" onclick="OSCEPilot.showTerms()">🔎 Conceitos com referências</button>'
-   +(st.number===52?(shown?'<button class="btn" onclick="OSCEPilot.showAnnotated()">ECG comentado</button>':'<button class="btn" disabled title="Disponível após você tentar responder">ECG comentado · após responder</button>'):'')
-   +'<button class="btn" onclick="OSCEPilot.showFullLesson('+st.number+')">Estudar assunto completo</button></div>';
+   +(st.number===52?((shown||screen==='learn')?'<button class="btn" onclick="OSCEPilot.showAnnotated()">ECG comentado</button>':'<button class="btn" disabled title="Disponível após você tentar responder">ECG comentado · após responder</button>'):'')
+   +'<button class="btn" onclick="OSCEPilot.learn(\'completa\','+st.number+')">📖 Estudo completo com respostas</button></div>';
  }
  function illustration(){
   return '<figure class="osce-illustration"><img src="assets/osce/ilustracao-sincope-estacao61.png" alt="Ilustração criada para o Master: idoso com perda de consciência durante esforço, hipótese de estreitamento da valva aórtica e redução da perfusão cerebral; não é o paciente original." loading="lazy" onclick="OSCEPilot.expandImage(this)"><figcaption><strong>ILUSTRAÇÃO DIDÁTICA — NÃO É IMAGEM DO CASO ORIGINAL.</strong> Esquema autoral baseado no cenário clínico descrito; estreitamento valvar é hipótese a investigar, não diagnóstico confirmado.</figcaption></figure>';
@@ -72,10 +73,10 @@ window.OSCEPilot=(()=>{
   if(!st.images?.length)return '<p class="osce-note">Imagem original indisponível para esta estação; estude o caso sem inferir exames não fornecidos.</p>';
   return st.images.map(img=>'<figure class="osce-visual"><img src="'+esc(img.src)+'" loading="lazy" alt="'+esc(img.alt||'Imagem da estação')+'" onclick="OSCEPilot.expandImage(this)" onerror="this.hidden=true;this.nextElementSibling.hidden=false"><p hidden>Imagem indisponível. Confira o arquivo associado à estação.</p><figcaption><strong>'+(img.kind==='illustration'?'ILUSTRAÇÃO EDUCACIONAL — NÃO É IMAGEM ORIGINAL':'IMAGEM ORIGINAL DO MATERIAL ENVIADO')+'</strong> · '+esc(img.caption||'Imagem do caso. Toque para ampliar.')+'</figcaption></figure>').join('');
  }
- function annotatedMedia(st){
+ function annotatedMedia(st,studyMode=false){
   if(st.number!==52||!st.images?.[0])return '';
   const src=esc(st.images[0].src);
-  return '<details class="osce-deep osce-annotated-card" id="osce-ecg-commented"><summary>ECG comentado após a tentativa <span>imagem original + marcações didáticas</span></summary><div>'
+  return '<details class="osce-deep osce-annotated-card" id="osce-ecg-commented"><summary>'+(studyMode?'ECG comentado para estudar':'ECG comentado após a tentativa')+' <span>imagem original + marcações didáticas</span></summary><div>'
    +'<p class="osce-note"><strong>ANOTAÇÕES DIDÁTICAS SOBRE A IMAGEM RECEBIDA.</strong> As marcações são autorais, não constavam do arquivo i-031.jpg e não devem ser confundidas com laudo de ECG de 12 derivações.</p>'
    +'<div class="osce-ecg-annotated"><img src="'+src+'" alt="Mesmo recorte de ECG da estação 52 com marcações de alguns picos R para comparação dos intervalos RR." loading="lazy">'
    +'<svg class="osce-ecg-overlay" viewBox="0 0 678 554" preserveAspectRatio="xMidYMid meet" aria-hidden="true"><g fill="none" stroke="#006f64" stroke-width="3.6" stroke-linecap="round">'
