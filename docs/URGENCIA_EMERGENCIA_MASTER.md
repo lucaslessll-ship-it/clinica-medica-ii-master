@@ -52,7 +52,7 @@ A primeira aula da P1 foi convertida em um percurso didático interativo **exclu
 - Falta executar QA real em navegador com autenticação, persistência entre dispositivos, acessibilidade móvel/tablet e conferência do deploy.
 
 ## Imagens e esquemas visuais (atualizado em 21/11/2026)
-- **23 JPEGs individuais foram extraídos de slides e resumos**, sem publicar páginas inteiras; 22 são exibidos na interface (uma imagem ficou reservada por não ser específica o suficiente para EAP).
+- **23 JPEGs individuais foram extraídos de slides e resumos**, sem publicar páginas inteiras; as 23 são exibidas na interface nas aulas pertinentes.
 - Imagens e diagramas aparecem após a seção teórica relevante: ECGs, TC/RX, anatomia, manobras e sinais clínicos, com legendas dirigidas ao raciocínio.
 - Nos demais 14 temas usam-se fluxogramas autorais em lugar de fotografias inadequadas ou decorativas.
 - Não há mais `iframe`, previews ou links para PDFs completos. O trabalho de checagem de direitos de republicação de figuras de terceiros ainda deve ser feito antes de distribuição externa.
@@ -84,7 +84,7 @@ A primeira aula da P1 foi convertida em um percurso didático interativo **exclu
 - Os **23 módulos** não renderizam mais PDFs integrais, iframes do Drive, blocos “Imagens da aula original” nem links diretos para os slides completos. Os nomes de docentes e instituições não são exibidos na interface de Urgência e Emergência.
 - Os PDFs foram **consultados como material de referência**; o arquivo-fonte continua identificado nos dados internos, mas não aparece na aula. As referências clínicas verificáveis permanecem disponíveis.
 - Diagramas autorais foram mantidos onde não havia imagem fonte adequada; os módulos de IRpA, AVC, sepse, choque e trauma usam figuras individuais extraídas dos PDFs.
-- **Atualização de 21/11/2026:** foram extraídas 23 figuras individuais dos PDFs, das quais 22 estão vinculadas às aulas. Os outros módulos recebem esquemas de decisão. Consultar o inventário de fonte e de direitos.
+- **Atualização de 21/11/2026:** foram extraídas 23 figuras individuais dos PDFs, todas vinculadas às aulas. Os outros módulos recebem esquemas de decisão. Consultar o inventário de fonte e de direitos.
 - Verificação em motor JS simulado: 23 módulos/115 questões, ausência de iframe/preview nas 23 aulas, ausência de marcas institucionais na renderização, e nenhuma referência de fonte ausente.
 
 
