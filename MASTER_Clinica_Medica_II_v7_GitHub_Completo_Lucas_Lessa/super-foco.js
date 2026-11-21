@@ -107,6 +107,20 @@ function score(n){
  shown=false;confidence=0;draft='';
  if(typeof render==='function')render();
 }
+function openSource(){
+ const x=current();if(!x)return;
+ if(x.course==='osce'||x.course==='pocus'){
+  window.OSCEPilot?.preview?.(Number(x.topic));gotoSource('osce');return;
+ }
+ if(x.course==='p2'&&typeof window.openTopic==='function'){window.openTopic(x.topic);return;}
+ if(x.course==='p1'&&window.P1?.openTopic){window.P1.openTopic(x.topic);return;}
+ if(x.course==='cir'&&window.CIR?.openTopic){window.CIR.openTopic(x.topic);return;}
+ if(x.course==='ue'){
+  const mod=(window.EMERGENCY_CONTENT||[]).find(m=>m.id===x.topic);
+  gotoSource(mod?.stage==='P2'?'emergency-p2':'emergency-p1');
+ }
+}
+function gotoSource(route){if(typeof navigate==='function')navigate(route);}
 function modeTitle(kind){return ({recuperacao:'Recuperação ativa',explicacao:'Explicação em voz alta',discriminacao:'Diferenciação clínica',aplicacao:'Aplicação clínica',raciocinio:'Arguição prática'})[kind]||'Aprendizagem ativa';}
 function catalogPage(){
  const list=topics().filter(x=>(!search||[x.title,courseTitles[x.course]].join(' ').toLowerCase().includes(search.toLowerCase())));
@@ -129,7 +143,7 @@ function exercisePage(){
   +'<section class="sf-question"><p class="eyebrow">PERGUNTA · SEM CONSULTAR O GABARITO</p><h2>'+esc(x.prompt)+'</h2>'
   +'<label for="sf-answer">Explique com suas palavras (você pode escrever “não sei”)</label><textarea id="sf-answer" rows="5" '+(shown?'readonly ':'')+'oninput="SuperFoco.input(this.value)" placeholder="Anamnese, mecanismo, raciocínio, exames, conduta...">'+esc(draft)+'</textarea>'
   +(!shown?'<fieldset class="sf-confidence"><legend>Sua confiança antes de conferir</legend>'+[[1,'Baixa'],[2,'Média'],[3,'Alta']].map(z=>'<button type="button" data-sf-confidence="'+z[0]+'" aria-pressed="'+(confidence===z[0])+'" onclick="SuperFoco.conf('+z[0]+')">'+z[1]+'</button>').join('')+'</fieldset><button class="btn primary" onclick="SuperFoco.reveal()">Conferir e aprofundar</button>'
-  :'<div class="sf-answer" role="status"><h3>Resposta esperada</h3><p>'+esc(x.answer)+'</p>'+(x.extra?'<details><summary>Critérios, armadilhas e conexões</summary><p>'+esc(x.extra)+'</p></details>':'')+'<p class="sf-reflect"><strong>Espelho cego:</strong> feche mentalmente a resposta e explique em voz alta por que essa conduta ou mecanismo faz sentido. Que conceito anterior ajuda a lembrar?</p></div><div class="sf-grade"><p>Marque o quanto você conseguiu responder <strong>antes</strong> de revelar. Isso é autoavaliação, não correção automática.</p>'+[[0,'Não sabia'],[1,'Pouco'],[2,'Quase'],[3,'Completo']].map(z=>'<button type="button" class="btn" onclick="SuperFoco.score('+z[0]+')">'+z[1]+'</button>').join('')+'</div>')
+  :'<div class="sf-answer" role="status"><h3>Resposta esperada</h3><p>'+esc(x.answer)+'</p>'+(x.extra?'<details><summary>Critérios, armadilhas e conexões</summary><p>'+esc(x.extra)+'</p></details>':'')+'<p class="sf-reflect"><strong>Espelho cego:</strong> feche mentalmente a resposta e explique em voz alta por que essa conduta ou mecanismo faz sentido. Que conceito anterior ajuda a lembrar?</p><button type="button" class="btn ghost" onclick="SuperFoco.openSource()">↗ Abrir aula, roteiro e referências do tema</button></div><div class="sf-grade"><p>Marque o quanto você conseguiu responder <strong>antes</strong> de revelar. Isso é autoavaliação, não correção automática.</p>'+[[0,'Não sabia'],[1,'Pouco'],[2,'Quase'],[3,'Completo']].map(z=>'<button type="button" class="btn" onclick="SuperFoco.score('+z[0]+')">'+z[1]+'</button>').join('')+'</div>')
   +'</section><p class="sf-disclaimer">Treino acadêmico. O modo Super Foco não altera as notas de OSCE, provas ou simulados. Progresso salvo somente neste navegador, por usuário.</p></div>';
 }
 function page(){ensureOwner();return stage==='catalog'?catalogPage():exercisePage();}
@@ -153,5 +167,5 @@ function resetUser(){owner=username();state=load();stage='catalog';activeId='';d
 window.addEventListener('master-auth-ready',resetUser);
 window.addEventListener('master-auth-ended',()=>{owner='local';state=empty();stage='catalog';activeId='';draft='';shown=false;});
 window.addEventListener('storage',e=>{if(e.key===key())state=load();});
-return {page,open,choose,back,searchSet,toggleMix,input,conf,reveal,score,catalog,topics,afterRender,resetUser};
+return {page,open,choose,back,searchSet,toggleMix,input,conf,reveal,score,openSource,catalog,topics,afterRender,resetUser};
 })();
