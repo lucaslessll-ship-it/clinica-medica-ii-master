@@ -60,6 +60,15 @@ test('script de revisão por falhas usa referências do tema real e reconhece er
  assert.match(html,/Copiar para IA/);
  assert.doesNotMatch(html,/Use diretrizes atuais verificáveis \(SBC FA 2025/);
 });
+test('atalho para IA aparece somente quando existem erros reais a revisar',()=>{
+ const {P}=make();
+ assert.match(P.page(),/O roteiro fica personalizado depois que você registrar lacunas/);
+ assert.doesNotMatch(P.page(),/Gerar roteiro com meus erros/);
+ P.start('essencial',null,87);P.answer('não sei');P.conf(3);P.reveal();P.finish();P.home();P.showWelcome();
+ assert.match(P.page(),/Gerar roteiro com meus erros/);
+ P.showPrompt();
+ assert.match(P.page(),/Copiar para IA/);
+});
 test('ao iniciar uma estação, o guia não reaparece quando voltar ao início durante a sessão',()=>{
  const {P}=make();
  P.start('essencial',null,52);P.home();
