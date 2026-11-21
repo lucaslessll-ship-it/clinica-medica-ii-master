@@ -1,8 +1,8 @@
-/* Índice integral das 74 estações OSCE de Clínica Médica II — FMP. Prioridade não equivale à probabilidade de cair na APO. */
+/* Índice integral: 74 estações originais + 12 complementares do OSCE Clínica Médica II. */
 window.OSCE_PRIORITY_INDEX={
-  "version": "2026-11-21-curriculo-fmp-v2",
+  "version": "2026-11-21-osce-86",
   "title": "Índice prioritário · OSCE Clínica Médica",
-  "basis": "Matriz pedagógica anterior do projeto, por aderência curricular e risco clínico; não é probabilidade estatística da APO.",
+  "basis": "Matriz pedagógica original (74 estações: 33 altas, 29 médias, 12 baixas), acrescida de 12 estações curriculares complementares (10 altas e 2 médias). Não é estimativa estatística da APO.",
   "names": {
     "1": "Feocromocitoma",
     "2": "Taquicardia sinusal",
@@ -77,7 +77,19 @@ window.OSCE_PRIORITY_INDEX={
     "71": "DM2 com doença cardiovascular (DAC/DCV)",
     "72": "Carcinoma anaplásico de tireoide",
     "73": "Nódulo de tireoide — avaliação e conduta",
-    "74": "Hipotireoidismo subclínico"
+    "74": "Hipotireoidismo subclínico",
+    "75": "Pneumonia adquirida na comunidade",
+    "76": "Pielonefrite e ITU complicada",
+    "77": "Infecção de pele: celulite, erisipela e abscesso",
+    "78": "Diarreia infecciosa e diferenciação de DII",
+    "79": "Neutropenia febril pós-quimioterapia",
+    "80": "Síndrome de lise tumoral",
+    "81": "Leucostase em leucemia aguda",
+    "82": "Leucemia promielocítica aguda e coagulopatia",
+    "83": "Compressão medular maligna",
+    "84": "Hipercalcemia da malignidade",
+    "85": "Tromboembolismo pulmonar (TEP)",
+    "86": "Pericardite aguda"
   },
   "groups": [
     {
@@ -117,7 +129,17 @@ window.OSCE_PRIORITY_INDEX={
         44,
         71,
         73,
-        53
+        53,
+        75,
+        76,
+        77,
+        78,
+        79,
+        80,
+        81,
+        82,
+        83,
+        84
       ]
     },
     {
@@ -153,7 +175,9 @@ window.OSCE_PRIORITY_INDEX={
         51,
         74,
         3,
-        19
+        19,
+        85,
+        86
       ]
     },
     {
@@ -175,5 +199,12 @@ window.OSCE_PRIORITY_INDEX={
         50
       ]
     }
-  ]
+  ],
+  "originalCount": 74,
+  "complementaryCount": 12,
+  "originalDistribution": {
+    "alta": 33,
+    "media": 29,
+    "baixa": 12
+  }
 };
