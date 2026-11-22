@@ -53,7 +53,7 @@ test('P1 abre em simulação primeiro, sem revelar resposta antes de confiança'
  P.conf(1);P.reveal();
  h=P.page();
  assert.match(h,/Resposta-modelo Master/);
- assert.match(h,/Explicação da questão/);
+ assert.match(h,/Para lembrar nesta etapa/);
  P.finish();
  const state=JSON.parse(memory.get('master_osce_pilot_v1'));
  const attempt=state.items['87:interpretacao'].attempts[0];
