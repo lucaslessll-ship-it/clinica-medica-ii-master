@@ -1,0 +1,44 @@
+/* Estudo Master · Farmacologia clínica em todas as aulas, questões e resumos.
+   Fichas estruturadas antes de dosagem, sem expor dose isolada por padrão. */
+.rx-card.pharm-card{min-width:0;max-width:100%;overflow-wrap:anywhere;border:1px solid var(--line,#dcded6);border-radius:17px;padding:clamp(16px,2.6vw,25px);background:var(--white,#fffdf8);box-shadow:0 5px 26px rgb(20 50 34 / .035);margin:14px 0 23px}
+.pharm-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:12px 22px;flex-wrap:wrap;margin-bottom:10px}
+.pharm-heading h3{margin:2px 0 0!important;font-size:clamp(1.28rem,2.5vw,1.65rem);letter-spacing:-.03em;line-height:1.25}
+.pharm-eyebrow{font-size:.7rem!important;font-weight:750;color:var(--green2,#4c7666);letter-spacing:.08em;margin:0!important}
+.pharm-quality{display:inline-flex;align-items:center;max-width:min(100%,350px);padding:6px 10px;border-radius:100px;border:1px solid color-mix(in srgb,#51866d 28%,var(--line,#dcded6));font-size:.72rem;line-height:1.4;font-weight:660;color:var(--green2,#34694b);background:color-mix(in srgb,#4a906e 7%,var(--white,#fff))}
+.pharm-card.pharm-needs-check .pharm-quality{border-color:#c5a16f;color:var(--ink,#59452d);background:color-mix(in srgb,#cea769 10%,var(--white,#fff))}
+.rx-card.pharm-card>.rx-context{font-size:.85rem;line-height:1.6;padding:9px 12px;border-left:3px solid #73937d;border-radius:4px;margin:10px 0 17px}
+.rx-card.pharm-card h4{margin:0 0 10px;font-size:clamp(.96rem,1.2vw,1.08rem);letter-spacing:-.012em}
+.pharm-card :is(.pharm-overview,.pharm-uses){padding:14px 15px;border:1px solid var(--line,#e0e4da);border-radius:13px;background:color-mix(in srgb,#5f9c7b 3%,var(--white,#fff));margin:10px 0}
+.pharm-card .pharm-uses>p{font-size:.89rem;line-height:1.68;margin:0;max-width:85ch}
+.pharm-facts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:0}
+.pharm-fact{min-width:0;padding:11px 12px;border-radius:11px;border:1px solid var(--line,#e1e4dc);background:var(--white,#fff)}
+.pharm-fact dt{font-size:.78rem;font-weight:750;color:var(--green2,#345e4a);line-height:1.35;margin:0 0 6px}
+.pharm-fact dd{margin:0;font-size:.87rem;line-height:1.65;overflow-wrap:anywhere}
+.pharm-card :is(.pharm-safety,.pharm-posology){border:1px solid var(--line,#dce3d9);border-radius:13px;margin:12px 0;overflow:hidden;background:var(--white,#fff)}
+.pharm-card :is(.pharm-safety,.pharm-posology)>summary{display:flex;flex-wrap:wrap;align-items:center;gap:7px;min-height:48px;cursor:pointer;list-style:none;font-size:.91rem;font-weight:750;line-height:1.5;padding:12px 15px;background:color-mix(in srgb,#598b75 5%,var(--white,#fff))}
+.pharm-card :is(.pharm-safety,.pharm-posology)>summary::-webkit-details-marker{display:none}
+.pharm-card :is(.pharm-safety,.pharm-posology)>summary::after{content:"⌄";margin-left:auto;font-size:1.1rem}
+.pharm-card :is(.pharm-safety,.pharm-posology)[open]>summary::after{transform:rotate(180deg)}
+.pharm-card :is(.pharm-safety,.pharm-posology)>summary:focus-visible{outline:3px solid #348064;outline-offset:-4px}
+.pharm-card .pharm-safety>.pharm-facts{padding:13px}
+.pharm-card .pharm-posology>.clinical-note{margin:13px 15px;line-height:1.68}
+.pharm-card .pharm-posology>.posology-regimen{margin:13px;border:1px solid var(--line,#dce3d9);border-radius:12px;padding:15px}
+.pharm-card .pharm-posology>.rx-calculation{margin:15px}
+.pharm-card .pharm-posology>summary span{font-size:.73rem;font-weight:500;color:var(--muted,#758278)}
+.pharm-clinical-alert{margin:0 13px 14px;border-left:3px solid #c18d4a;background:color-mix(in srgb,#deb17a 12%,var(--white,#fff));padding:10px 12px;border-radius:5px;font-size:.86rem;line-height:1.58}
+.pharm-footer{border-top:1px solid var(--line,#e0e5de);margin-top:16px;padding-top:12px;font-size:.8rem;line-height:1.68}
+.pharm-footer .clinical-note{font-size:.79rem;margin:10px 0 0}
+.pharm-footer a{overflow-wrap:anywhere}
+.posology-dialog{overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+.posology-dialog-head{position:sticky;top:-24px;z-index:4;background:var(--white,#fffdf8);padding:12px 0;border-bottom:1px solid var(--line,#dfddd3)}
+.posology-dialog-head h2{font-size:clamp(1.12rem,2.4vw,1.45rem)!important;line-height:1.25;letter-spacing:-.02em}
+.posology-guide summary{letter-spacing:-.015em}
+.posology-guide button:focus-visible,.posology-term:focus-visible{outline:3px solid #398764;outline-offset:3px}
+@media(max-width:700px){
+ .pharm-heading{flex-direction:column;gap:8px}
+ .pharm-facts{grid-template-columns:1fr}
+ .posology-dialog{padding:14px!important;max-width:calc(100vw - 12px);width:calc(100vw - 12px);max-height:calc(100dvh - 12px);border-radius:15px}
+ .pharm-card .pharm-safety>.pharm-facts{padding:9px}
+ .pharm-card .pharm-posology>.posology-regimen{margin:9px;padding:11px}
+}
+@media(prefers-reduced-motion:reduce){.pharm-card *, .posology-dialog *{transition:none!important;animation:none!important}}
