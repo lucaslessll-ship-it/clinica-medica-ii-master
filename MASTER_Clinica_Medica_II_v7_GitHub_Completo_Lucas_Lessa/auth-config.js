@@ -15,7 +15,8 @@ window.MASTER_AUTH_CONFIG = {
     "master_clinica_banca_v7",
     "MASTER_EVIDENCE_UI_v5",
     "master_cir_lucas_v1",
-    "master_osce_pilot_v1"
+    "master_osce_pilot_v1",
+    "master_study_planner_v1"
   ],
 
   privacyVersion: "2026-11-08"
