@@ -30,6 +30,22 @@ window.OSCEPilot=(()=>{
  function weakItems(){return BANK.flatMap(st=>st.questions.filter(q=>{const a=last(st,q);return a&&a.score<80}).map(q=>({st,q,a:last(st,q)})))}
  function dueItems(){return BANK.flatMap(st=>st.questions.filter(q=>due(st,q)).map(q=>({st,q,a:last(st,q)}))).sort((a,b)=>new Date(a.a.due)-new Date(b.a.due))}
  function attempted(st){return st.questions.filter(q=>!!last(st,q)).length}
+ function stationCompletion(st){
+  const total=st.questions.length,done=attempted(st);
+  const weak=st.questions.filter(q=>{const a=last(st,q);return a&&a.score<80}).length;
+  const pct=total?Math.round(done/total*100):0;
+  const label=done===0?'Não iniciada':done<total?'Em andamento':weak?'Concluída · revisar':'Concluída';
+  return {total,done,weak,pct,label};
+ }
+ function completionBar(st,compact=false){
+  const p=stationCompletion(st);
+  const detail=p.done+'/'+p.total+' questões respondidas';
+  return '<div class="osce-topic-completion'+(compact?' is-compact':'')+'" aria-label="Progresso da estação: '+esc(p.label)+', '+detail+'">'
+   +'<div class="osce-topic-completion-head"><span>'+esc(p.label)+'</span><strong>'+p.pct+'%</strong></div>'
+   +'<div class="osce-topic-completion-track" role="progressbar" aria-label="Cobertura de '+esc(st.title)+'" aria-valuemin="0" aria-valuemax="100" aria-valuenow="'+p.pct+'"><span style="width:'+p.pct+'%"></span></div>'
+   +(compact?'':'<small>'+detail+(p.weak?' · '+p.weak+' ponto(s) para revisar':'')+'</small>')
+   +'</div>';
+ }
  function formatDate(s){return s?new Date(s).toLocaleDateString('pt-BR'):'—'}
  function save(){state.updatedAt=now();try{localStorage.setItem(KEY,JSON.stringify(state))}catch{notify('Seu navegador não pôde salvar o progresso.');}}
  function renderAgain(destination){
@@ -66,6 +82,7 @@ window.OSCEPilot=(()=>{
   const p=recommended(st),completed=attempted(st),covered=state.covered[st.number]||{};
   return '<article class="osce-case osce-theme-card" id="osce-station-'+st.number+'" tabindex="-1"><div class="osce-stepbar"><span>'+displayLabel(st)+'</span><span class="osce-priority osce-priority-'+esc(st.priority)+'">● PRIORIDADE '+({alta:'ALTA',media:'MÉDIA',baixa:'BAIXA'}[st.priority]||'ADICIONAL')+'</span><strong>'+completed+'/'+st.questions.length+' questões</strong></div>'
    +'<h2>'+esc(st.title)+'</h2><p>'+esc(st.subtitle)+'</p>'
+   +completionBar(st)
    +(st.images?.length?'<p class="osce-note">✓ '+st.images.length+' imagem(ns) do caso</p>':st.number===61?'<p class="osce-note">Ilustração didática identificada como tal.</p>':'<p class="osce-note">Caso sem imagem original; explicações clínicas disponíveis.</p>')
    +'<p class="osce-note">'+esc(p.reason)+'</p>'
    +'<p class="osce-note"><strong>Depois de responder:</strong> aparece a resposta-modelo, correção passo a passo, dicas, referências e os painéis para aprofundar. Não precisa acertar para aprender: pode responder “não sei”.</p>'
@@ -116,8 +133,8 @@ window.OSCEPilot=(()=>{
     const number='<span class="osce-index-number">'+String(rank).padStart(2,'0')+'</span>';
     const name='<span class="osce-index-name">'+esc(label)+'</span>';
     if(!st)return '<div class="osce-index-entry osce-index-pending" title="Estação ainda não publicada" aria-label="Estação '+rank+': '+esc(label)+', em preparação">'+number+name+'<span class="osce-index-status">Em preparação</span></div>';
-    const progress=attempted(st),stateLabel=progress>0?progress+'/'+st.questions.length+' feitas':'Abrir';
-    return '<button type="button" class="osce-index-entry osce-index-ready" title="Abrir estação '+rank+'" aria-label="Abrir estação '+rank+', '+esc(label)+', prioridade '+esc(group.label)+'" onclick="OSCEPilot.jumpToIndex('+n+')">'+number+name+'<span class="osce-index-status">'+esc(stateLabel)+'</span></button>';
+    const progress=stationCompletion(st),stateLabel=progress.done?progress.done+'/'+progress.total+' feitas':'Abrir';
+    return '<button type="button" class="osce-index-entry osce-index-ready" title="Abrir estação '+rank+'" aria-label="Abrir estação '+rank+', '+esc(label)+', prioridade '+esc(group.label)+'" onclick="OSCEPilot.jumpToIndex('+n+')">'+number+name+'<span class="osce-index-status">'+esc(stateLabel)+'</span>'+completionBar(st,true)+'</button>';
    }).join('');
    return '<details class="osce-index-group osce-index-'+group.key+'" '+(group.key==='alta'?'open':'')+'><summary><span class="osce-index-dot" aria-hidden="true"></span><strong>'+esc(group.label)+'</strong><span class="osce-index-description">'+esc(group.description)+'</span><span class="osce-index-total">'+count+' estações</span></summary><div class="osce-index-grid">'+rows+'</div></details>';
   }).join('');
