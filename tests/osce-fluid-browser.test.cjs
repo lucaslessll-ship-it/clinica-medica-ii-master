@@ -73,6 +73,7 @@ test('tablet: buscar estação preserva cursor, filtro e evita rolagem lateral',
 test('termo clínico abre referência contextual sem deslocar a página e fecha com Escape',async()=>{
  const t=await open(),p=t.page;
  await p.evaluate(()=>OSCEPilot.preview(61));
+ await p.locator('#osce-library > summary').click();
  await p.locator('#osce-terms summary').click();
  const trigger=p.locator('#osce-terms .osce-term').first();
  await trigger.scrollIntoViewIfNeeded();
@@ -93,6 +94,7 @@ test('termo clínico abre referência contextual sem deslocar a página e fecha 
 test('celular: definição abre como folha contextual com botão grande e sem rolagem lateral',async()=>{
  const t=await open({width:390,height:844}),p=t.page;
  await p.evaluate(()=>OSCEPilot.preview(61));
+ await p.locator('#osce-library > summary').click();
  await p.locator('#osce-terms summary').click();
  await p.locator('#osce-terms .osce-term').first().click();
  const flyout=p.locator('.osce-context-popover');
@@ -103,6 +105,37 @@ test('celular: definição abre como folha contextual com botão grande e sem ro
  assert.ok((await close.boundingBox()).width>=44);
  await close.click();
  assert.equal(await flyout.count(),0);
+ await t.close();
+});
+
+test('estudo guiado oferece uma pergunta por vez, navegação rápida e visão geral sem perder histórico',async()=>{
+ const t=await open({width:768,height:880}),p=t.page;
+ await p.evaluate(()=>OSCEPilot.preview(12));
+ assert.equal(await p.locator('.osce-reading-card').count(),1);
+ assert.ok(await p.locator('.osce-keyword').count()>0);
+ assert.equal(await p.locator('.osce-reading-index').count(),9);
+ await p.locator('.osce-reading-pagination .btn.primary').click();
+ assert.match(await p.locator('.osce-reading-card-head .eyebrow').innerText(),/ETAPA 2\/9/);
+ await p.locator('.osce-reading-index').nth(3).click();
+ assert.match(await p.locator('.osce-reading-card-head .eyebrow').innerText(),/ETAPA 4\/9/);
+ await p.locator('.osce-reading-view').filter({hasText:'Ver todas'}).click();
+ assert.equal(await p.locator('.osce-reading-card').count(),9);
+ const overflow=await p.evaluate(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth);
+ assert.ok(overflow<=2,'tablet guided view overflow: '+overflow);
+ await t.close();
+});
+test('celular respeita realces desligáveis e botões de 44px na leitura guiada',async()=>{
+ const t=await open({width:390,height:844}),p=t.page;
+ await p.evaluate(()=>OSCEPilot.preview(64));
+ assert.equal(await p.locator('.osce-reading-card').count(),1);
+ const before=await p.locator('mark.osce-keyword').count();
+ assert.ok(before>0,'marcações semânticas devem aparecer no texto');
+ await p.locator('.osce-reading-emphasis').click();
+ assert.equal(await p.locator('mark.osce-keyword').count(),0);
+ const tap=await p.locator('.osce-reading-index').first().boundingBox();
+ assert.ok(tap.height>=44,'touch target no índice');
+ const overflow=await p.evaluate(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth);
+ assert.ok(overflow<=2,'mobile guided view overflow: '+overflow);
  await t.close();
 });
 
