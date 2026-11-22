@@ -172,6 +172,10 @@
       }else{
         window.OSCEPilot?.preview?.(meta.indice);
       }
+    }else if(rota==='osce'){
+      if(chave==='estudo_osce_review')window.OSCEPilot?.showReview?.();
+      else if(chave==='estudo_osce_prompt')window.OSCEPilot?.showPrompt?.();
+      else window.OSCEPilot?.home?.();
     }else{
     const modulos={
       pocus:window.PocusCourse,ecg:window.ECGCourse,
