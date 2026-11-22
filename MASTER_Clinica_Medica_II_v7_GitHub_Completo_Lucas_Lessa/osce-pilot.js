@@ -6,7 +6,7 @@ window.OSCEPilot=(()=>{
  // A ordem visual é pela prioridade; a numeração interna não muda para preservar o histórico.
  const POSITION=new Map(PRIORITY_ORDER.map((id,i)=>[id,i+1]));
  const displayNo=id=>POSITION.get(Number(id))||Number(id);
- const displayLabel=st=>st?.pocusOrder?'POCUS '+String(st.pocusOrder).padStart(2,'0'):'ESTAÇÃO '+displayNo(st?.number);
+ const displayLabel=st=>st?.pocusOrder?'POCCUS '+String(st.pocusOrder).padStart(2,'0'):'ESTAÇÃO '+displayNo(st?.number);
  const BANK=[window.OSCE_PILOT_DATA,window.OSCE_FA_DATA,...(window.OSCE_EXTRA_STATIONS||[])]
   .filter(x=>x&&Number.isInteger(x.number)&&Array.isArray(x.questions))
   .sort((a,b)=>(a.pocusOrder?0:1)-(b.pocusOrder?0:1)||(a.pocusOrder||displayNo(a.number))-(b.pocusOrder||displayNo(b.number)));
@@ -118,9 +118,9 @@ window.OSCEPilot=(()=>{
   if(!a.length)return '';
   const rows=a.map(st=>{
    const done=attempted(st),showNum='P'+st.pocusOrder;
-   return '<article class="osce-pocus-item"><div class="osce-pocus-item-head"><span class="osce-pocus-index">'+showNum+'</span><span class="osce-pocus-area">Alta prioridade sugerida</span></div><h3>'+esc(st.title)+'</h3><p>'+esc(st.subtitle)+'</p><div class="osce-pocus-item-actions"><button type="button" class="btn primary" onclick="OSCEPilot.start(\'rapida\',null,'+st.number+')">Simular</button><button type="button" class="btn" onclick="OSCEPilot.preview('+st.number+')">Estudar</button><button type="button" class="btn" onclick="SuperFoco.open(\'pocus\',\''+st.number+'\')">Super Foco</button><small>'+done+'/'+st.questions.length+' respondidas</small></div></article>';
+   return '<article class="osce-pocus-item"><div class="osce-pocus-item-head"><span class="osce-pocus-index">'+showNum+'</span><span class="osce-pocus-area">Alta prioridade sugerida</span></div><h3>'+esc(st.title)+'</h3><p>'+esc(st.subtitle)+'</p><div class="osce-pocus-item-actions"><button type="button" class="btn primary" onclick="OSCEPilot.start(\'rapida\',null,'+st.number+')">Simular</button><button type="button" class="btn" onclick="OSCEPilot.preview('+st.number+')">Estudar</button><button type="button" class="btn" onclick="SuperFoco.open(\'pocus\',\''+st.number+'\')">Super Foco</button><small>'+done+'/'+st.questions.length+' respondidas</small></div>'+completionBar(st)+'</article>';
   }).join('');
-   return '<details class="osce-pocus-section osce-pocus-disclosure" id="osce-pocus-top"><summary class="osce-pocus-heading" aria-controls="osce-pocus-content"><div><p class="eyebrow">TREINO PRIORITÁRIO · EXAME À BEIRA-LEITO</p><h2 id="osce-pocus-title">POCUS — '+a.length+' estações para começar</h2><p>Toque para ampliar ou ocultar todas as estações de POCUS. O índice de prioridades fica visível logo abaixo.</p></div><span class="osce-pocus-flag">POCUS · MOSTRAR / OCULTAR</span></summary><div id="osce-pocus-content"><p class="osce-note">POCUS foi indicado como conteúdo da avaliação. Os subtemas são uma seleção pedagógica, não uma lista oficial.</p><div class="osce-pocus-grid">'+rows+'</div><p class="osce-note">As imagens são referências independentes das vinhetas, com fonte identificada. Os retestes e o histórico continuam disponíveis.</p></div></details>';
+   return '<details class="osce-pocus-section osce-pocus-disclosure" id="osce-pocus-top"><summary class="osce-pocus-heading" aria-controls="osce-pocus-content"><div><p class="eyebrow">TREINO PRIORITÁRIO · EXAME À BEIRA-LEITO</p><h2 id="osce-pocus-title">POCCUS — '+a.length+' estações para começar</h2><p>Toque para ampliar ou ocultar todas as estações de POCCUS. O índice de prioridades fica visível logo abaixo.</p></div><span class="osce-pocus-flag">POCCUS · MOSTRAR / OCULTAR</span></summary><div id="osce-pocus-content"><p class="osce-note">POCCUS foi indicado como conteúdo da avaliação. Os subtemas são uma seleção pedagógica, não uma lista oficial.</p><div class="osce-pocus-grid">'+rows+'</div><p class="osce-note">As imagens são referências independentes das vinhetas, com fonte identificada. Os retestes e o histórico continuam disponíveis.</p></div></details>';
  }
 
  function priorityIndex(){
@@ -143,7 +143,7 @@ window.OSCEPilot=(()=>{
    +'<div class="osce-index-head"><div><p class="eyebrow">ROTEIRO DE PRIORIDADES</p><h2 id="osce-priority-title">Índice das '+Object.keys(index.names).length+(BANK.some(st=>st.pocusOrder)?' demais estações':' estações')+'</h2><p class="osce-note">Lista simplificada antes dos cartões, em ordem de prioridade. Toque em um tema disponível para ir ao treinamento.</p></div><span class="osce-index-available">'+available+' disponíveis</span></div>'
    +'<div class="osce-index-legend"><span><i class="osce-index-dot osce-index-legend-high" aria-hidden="true"></i>Alta · vermelho</span><span><i class="osce-index-dot osce-index-legend-medium" aria-hidden="true"></i>Média · amarelo</span><span><i class="osce-index-dot osce-index-legend-low" aria-hidden="true"></i>Baixa · verde</span></div>'
    +sections
-   +'<p class="osce-note osce-index-footnote">As estações desta lista conservam a numeração de <strong>1 a 86</strong>; POCUS usa P1–P7 separado, definida pela ordem de estudo: <strong>43 altas, 31 médias e 12 baixas.</strong> A cor indica prioridade pedagógica, não probabilidade de cair na prova.</p></section>';
+   +'<p class="osce-note osce-index-footnote">As estações desta lista conservam a numeração de <strong>1 a 86</strong>; POCCUS usa P1–P7 separado, definida pela ordem de estudo: <strong>43 altas, 31 médias e 12 baixas.</strong> A cor indica prioridade pedagógica, não probabilidade de cair na prova.</p></section>';
  }
  function jumpToIndex(number){
   const st=MAP.get(Number(number));
@@ -181,7 +181,7 @@ window.OSCEPilot=(()=>{
  function quickNav(){
   return '<nav class="osce-quicknav" aria-label="Acesso rápido ao OSCE">'
    +'<button type="button" onclick="OSCEPilot.jumpSection(\'today\')">Hoje</button>'
-   +'<button type="button" onclick="OSCEPilot.jumpSection(\'pocus\')">POCUS</button>'
+   +'<button type="button" onclick="OSCEPilot.jumpSection(\'pocus\')">POCCUS</button>'
    +'<button type="button" onclick="OSCEPilot.jumpSection(\'priority\')">Prioridades</button>'
    +'<button type="button" onclick="OSCEPilot.jumpSection(\'search\')">Buscar</button>'
    +'<button type="button" onclick="OSCEPilot.showReview()">Revisão</button></nav>';
@@ -208,7 +208,7 @@ window.OSCEPilot=(()=>{
    +quickNav()
    +'<section class="osce-pilot-hero" id="osce-today"><div><p class="eyebrow">SESSÃO DE HOJE · COMEÇO SEM ATRITO</p><h2>Uma pergunta já é progresso.</h2><p>'+esc(d===null?'Data não definida.':d<0?'A data registrada passou; ajuste abaixo.':d===0?'Avaliação hoje.':d+' dia(s) até a avaliação.')+' Comece pelo erro vencido ou pela próxima estação prioritária.</p><div class="osce-actions"><button class="btn primary" onclick="OSCEPilot.daily()">Sessão de hoje · '+state.settings.minutes+' min (até '+planCount+' itens)</button>'+(state.current?'<button class="btn" onclick="OSCEPilot.resume()">Retomar onde parei</button>':'')+'</div></div><div class="osce-pilot-emblem" aria-hidden="true">'+BANK.length+'<span>estações</span></div></section>'
    +'<div class="osce-stats"><div><b>'+total+'</b><span>perguntas testadas</span></div><div><b>'+dueCount+'</b><span>revisões vencidas</span></div><div><b>'+weakCount+'</b><span>lacunas registradas</span></div><div><b>'+deep+'/'+BANK.length+'</b><span>estações completas</span></div></div>'
-   +'<section class="osce-case"><h2>Triagem e cobertura</h2><div class="osce-settings"><label>Data da APO<input type="date" value="'+esc(state.settings.examDate)+'" onchange="OSCEPilot.setDate(this.value)"></label><label>Tempo disponível<select onchange="OSCEPilot.setMinutes(this.value)">'+[5,15,30,45].map(m=>'<option value="'+m+'"'+(Number(state.settings.minutes)===m?' selected':'')+'>'+m+' min</option>').join('')+'</select></label></div><p class="osce-note">Amplitude: '+shallow+'/'+BANK.length+' · Profundidade: '+deep+'/'+BANK.length+'. O roteiro inclui '+BANK.filter(st=>st.pocusOrder).length+' POCUS e '+BANK.filter(st=>!st.pocusOrder).length+' outras estações; a seção POCUS fica recolhida por padrão.</p><div class="osce-track"><span style="width:'+(100*shallow/BANK.length)+'%"></span></div><div class="osce-track osce-track-secondary"><span style="width:'+(100*deep/BANK.length)+'%"></span></div></section>'
+   +'<section class="osce-case"><h2>Triagem e cobertura</h2><div class="osce-settings"><label>Data da APO<input type="date" value="'+esc(state.settings.examDate)+'" onchange="OSCEPilot.setDate(this.value)"></label><label>Tempo disponível<select onchange="OSCEPilot.setMinutes(this.value)">'+[5,15,30,45].map(m=>'<option value="'+m+'"'+(Number(state.settings.minutes)===m?' selected':'')+'>'+m+' min</option>').join('')+'</select></label></div><p class="osce-note">Amplitude: '+shallow+'/'+BANK.length+' · Profundidade: '+deep+'/'+BANK.length+'. O roteiro inclui '+BANK.filter(st=>st.pocusOrder).length+' POCCUS e '+BANK.filter(st=>!st.pocusOrder).length+' outras estações; a seção POCCUS fica recolhida por padrão.</p><div class="osce-track"><span style="width:'+(100*shallow/BANK.length)+'%"></span></div><div class="osce-track osce-track-secondary"><span style="width:'+(100*deep/BANK.length)+'%"></span></div></section>'
    +pocusSection()
    +priorityIndex()
    +'<h2>Estações disponíveis</h2><p class="osce-note">Prioridade: <span class="osce-priority osce-priority-alta">● Alta</span> · <span class="osce-priority osce-priority-media">● Média</span> · <span class="osce-priority osce-priority-baixa">● Baixa</span>. Critério pedagógico, não previsão estatística da prova.</p>'
@@ -269,7 +269,7 @@ window.OSCEPilot=(()=>{
   if(st.number===61&&!st.images?.length)return illustration();
   if(!st.images?.length)return '<p class="osce-note">Nenhuma imagem de referência disponível nesta estação.</p>';
   const hidden=screen==='study'&&!shown,showNotes=screen==='preview'||(screen==='study'&&shown);
-  const mediaTitle=st.pocusOrder?'<p class="osce-note osce-pocus-disclaimer"><strong>POCUS:</strong> as imagens de referência podem mostrar pessoas ou condições diferentes das descritas na vinheta. As anotações distinguem achado observável de interpretação clínica.</p>':'';
+  const mediaTitle=st.pocusOrder?'<p class="osce-note osce-pocus-disclaimer"><strong>POCCUS:</strong> as imagens de referência podem mostrar pessoas ou condições diferentes das descritas na vinheta. As anotações distinguem achado observável de interpretação clínica.</p>':'';
   return mediaTitle+st.images.map((img,index)=>{
    if(hidden&&img.src?.startsWith('data:image/svg+xml'))return '<div class="osce-pocus-image-locked"><span aria-hidden="true">📖</span><strong>Esquema com sinais, exames e condutas</strong><p>Este esquema didático já contém parte do gabarito e aparecerá com marcações explicativas depois da tentativa. No pré-estudo, fica aberto desde o início.</p></div>';
    if(img.revealedOnly&&hidden)return '<div class="osce-pocus-image-locked"><span aria-hidden="true">🔒</span><strong>Imagem de referência com a resposta sinalizada</strong><p>Será revelada depois da tentativa. No estudo, pode ser explorada com marcações e explicações.</p></div>';
