@@ -239,7 +239,7 @@ window.OSCEPilot=(()=>{
 
  function sourcePanel(st){
   const sourceItems=(st.sources||[]).map(s=>'<li><a href="'+esc(s.url)+'" target="_blank" rel="noopener noreferrer">'+esc(s.label||s.title)+'</a> ('+esc(s.year)+')</li>').join('');
-  return '<details id="osce-sources" class="osce-deep"><summary>Referências clínicas oficiais e links <span>abrir fontes</span></summary><div><ul>'+sourceItems+'</ul><p class="osce-note">Links podem abrir bibliotecas de diretrizes, não necessariamente recomendações específicas da doença. Respostas e critérios são material didático autoral do Master, não gabarito institucional. Confirme conduta e atualização na diretriz específica.</p></div></details>';
+  return '<details id="osce-sources" class="osce-deep"><summary>Fontes e diretrizes para conferência <span>abrir referências</span></summary><div><ul>'+sourceItems+'</ul><p class="osce-note">As fontes são cadastradas por estação, não obrigatoriamente por questão: podem levar a diretrizes gerais. Confirme doses, critérios, indicação e ano diretamente na seção pertinente da fonte. Respostas e checklists são material didático, não gabarito institucional.</p></div></details>';
  }
  function lessonText(st){return st.lesson?.label||(st.number===61?'Clínica Médica II · Síncope e crise convulsiva':st.number===52?'Biblioteca P1 · Arritmias cardíacas':'Sem aula interna identificada');}
  function lessonBar(st){
