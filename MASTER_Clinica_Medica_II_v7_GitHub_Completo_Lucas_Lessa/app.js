@@ -14,7 +14,7 @@ const STORAGE='master_p2_lucas_v1'; // mantém compatibilidade com o progresso d
 const ROUTES=[
  ['emergency','✚','Urgência e Emergência'],['emergency-p1','✚','Urgência e Emergência · P1'],['emergency-p2','✚','Urgência e Emergência · P2'],
  ['labarea-fundamentos','◎','Fundamentos'],['labarea-hematologia','◎','Hemograma e hematologia'],['labarea-renal','◎','Rim e urina'],['labarea-equilibrio','◎','Eletrólitos e gasometria'],['labarea-metabolismo','◎','Metabolismo e hormônios'],['labarea-digestivo','◎','Fígado, digestão e proteínas'],['labarea-infeccao','◎','Infecção e imunologia'],['labarea-cardio','◎','Coração e músculo'],['labarea-liquidos','◎','Líquidos biológicos'],['labmicrocitose','◎','Laboratório visual de microcitose'],
- ['decisionlab','◎','Microdecisões'],['prescriptions','✚','Manual de prescrição'],['pocus','◎','Curso de POCUS'],['rad','◎','Curso de Radiologia'],['ecg','◎','Curso de ECG'],['hemo','◎','Curso de Hemograma'],['labferro','◎','Laboratório · Anemia microcítica'],['labmaster','◎','Laboratório Master'],['labrenal','◎','Laboratório · Exames'], ['atb','◎','Curso de Antimicrobianos'],['micro','◎','Laboratório · Urocultura e antibiograma'],['dashboard','▦','Visão geral'],['planner','▦','Master Planner'],['banca','◈','Radar da Banca'],['today','◎','Meu plano de hoje'],['topics','▤','Temas da P2'],['reverse','⌕','Engenharia reversa'],
+ ['decisionlab','◎','Microdecisões'],['prescriptions','✚','Manual de prescrição'],['pocus','◎','Curso de POCCUS'],['rad','◎','Curso de Radiologia'],['ecg','◎','Curso de ECG'],['hemo','◎','Curso de Hemograma'],['labferro','◎','Laboratório · Anemia microcítica'],['labmaster','◎','Laboratório Master'],['labrenal','◎','Laboratório · Exames'], ['atb','◎','Curso de Antimicrobianos'],['micro','◎','Laboratório · Urocultura e antibiograma'],['dashboard','▦','Visão geral'],['planner','▦','Master Planner'],['banca','◈','Radar da Banca'],['today','◎','Meu plano de hoje'],['topics','▤','Temas da P2'],['reverse','⌕','Engenharia reversa'],
  ['practice','◈','Questões N1 / N2 / N3'],['revisao','↻','Revisão das erradas'],['exam','◷','Simulado de 20 questões'],
  ['cases','♧','Casos clínicos'],['discursive','✎','Discursivas'],['oral','♩','Prova oral'],['osce','◎','OSCE Clínica Médica'],['superfoco','✦','Super Foco · Aprendizagem ativa'],
  ['flashcards','▧','Flashcards'],['notes','✎','Meu caderno'],['sources','◇','Fontes e provas'],['p1','▣','Biblioteca P1 · secundária'],['cir','✂','Cirurgia · aulas'],['cirp1','✂','Cirurgia · Matérias P1'],['cirp2','✂','Cirurgia · Matérias P2'],['cirpractice','◈','Cirurgia · questões'],['cirexam','◷','Cirurgia · simulado']
@@ -88,7 +88,7 @@ function navMarkup(){
   ['Questões e revisões','train',['practice','flashcards','discursive','revisao','exam'],'practice'],
   ['Raciocínio clínico','lab',['decisionlab','banca','reverse'],'decisionlab'],
   ['ECG','pulse',['ecg'],'ecg','INTERPRETAR EXAMES'],
-  ['POCUS','probe',['pocus'],'pocus'],
+  ['POCCUS','probe',['pocus'],'pocus'],
   ['Radiologia','image',['rad'],'rad'],
   ['Laboratório Master','lab',['labmaster','labarea-fundamentos','labarea-hematologia','labarea-renal','labarea-equilibrio','labarea-metabolismo','labarea-digestivo','labarea-infeccao','labarea-cardio','labarea-liquidos'],'labmaster'],
   ['Farmacologia','pill',['prescriptions'],'prescriptions','CONDUTAS E TERAPÊUTICA'],
