@@ -148,23 +148,23 @@ function make(s){
  // Não reutilizamos o mesmo mnemônico da estação em todas as etapas.
  const clip=(v,n=170)=>String(v||'').replace(/\s+/g,' ').trim().slice(0,n);
  const cues={
-  sindrome:{memory: 'PADRÃO → HIPÓTESE: '+clip(s.syndrome?('síndrome '+s.syndrome+'; causa suspeita '+s.t):cl,155),
+  sindrome:{memory:'PADRÃO → HIPÓTESE: '+clip(s.syndrome?('síndrome '+s.syndrome+'; doença suspeita '+s.t):cl,110),
    hints:['Identifique o conjunto dominante de sinais e sintomas, não apenas um detalhe.','Quais achados discriminam essa hipótese de um diagnóstico alternativo?','Se houver síndrome e etiologia, diga cada uma separadamente antes da justificativa.']},
-  anamnese:{memory:'ANAMNESE-ALVO: '+clip(s.hx||cl),
+  anamnese:{memory:'3 PERGUNTAS: início → fator de risco → alerta. Pista deste caso: '+clip(cl,86),
    hints:['Pergunte início, cronologia e evolução antes de perguntar por exames.','Busque fatores de risco, exposições e antecedentes diretamente relacionados ao problema.','Priorize perguntas que mudariam sua hipótese ou a segurança da conduta.']},
-  exame:{memory:'EXAME DIRIGIDO: '+clip(s.pe||cl),
+  exame:{memory:'3 PASSOS: estabilidade → exame do órgão-alvo → sinal de gravidade. Pista: '+clip(cl,80),
    hints:['Comece por estabilidade, sinais vitais e perfusão.','Que estrutura ou sistema precisa ser examinado para sustentar a hipótese?','Diga que achado de gravidade mudaria sua próxima decisão.']},
-  mecanismo:{memory:'MECANISMO: '+clip(s.path||cl),
+  mecanismo:{memory:'3 ELOS: origem da lesão → disfunção → sintoma. Reconstrua a cadeia a partir de '+clip(cl,84),
    hints:['Pense no tecido ou órgão inicialmente afetado.','Ligue a alteração funcional aos dois sintomas dominantes.','Complete a sequência lesão → alteração fisiológica → manifestação clínica.']},
-  investigacao:{memory:'CONFIRMAR: '+clip(dx),
+  investigacao:{memory:'TRIAGEM ≠ CONFIRMAÇÃO ≠ GRAVIDADE. Que exame transforma esta pista em evidência? '+clip(cl,75),
    hints:['Separe exames de triagem, confirmação e gravidade.','Qual teste responde à principal dúvida clínica deste caso?','Interprete o possível resultado e cite ao menos uma limitação do teste.']},
-  diferenciais:{memory:'CONTRASTE: '+clip(differ),
+  diferenciais:{memory:'CONTRASTE: uma pista A FAVOR e uma CONTRA cada hipótese. Compare '+clip(differ,83),
    hints:['Escolha o diagnóstico alternativo que mais se parece com a apresentação.','Qual achado da história ou do exame diferencia as hipóteses?','Use uma pista discriminadora para cada diferencial, sem listar nomes soltos.']},
-  conduta:{memory:'CONDUTA: '+clip(pl),
+  conduta:{memory:'3T: TRIAR urgência → TRATAR mecanismo → TESTAR resposta. Observe o risco: '+clip(risk,80),
    hints:['Avalie primeiro se há instabilidade ou intervenção imediata.','Que tratamento responde ao mecanismo principal da doença?','Cite a contraindicação ou erro terapêutico que mais mudaria a segurança.']},
-  gravidade:{memory:'ALARME: '+clip(risk),
+  gravidade:{memory:'SEMÁFORO VERMELHO: que achado muda a urgência? No caso, considere '+clip(risk,84),
    hints:['Que sinal vital ou alteração de consciência muda o nível de urgência?','Pense nas complicações tempo-dependentes deste quadro.','Defina o que exige reavaliação imediata, internação ou encaminhamento.']},
-  orientacoes:{memory:'EXPLICAR AO PACIENTE: '+clip(pl,100)+' | RETORNO: '+clip(risk,95),
+  orientacoes:{memory:'3 FRASES AO PACIENTE: hipótese → plano → quando retornar. Use a pista '+clip(cl,78),
    hints:['Use palavras comuns para a hipótese e explique a incerteza diagnóstica.','Descreva o próximo exame ou tratamento sem prometer resultado.','Peça que o paciente repita o plano e diga quando deve procurar urgência.']}
  };
  questions.forEach(q=>{if(cues[q.id]){q.memory=cues[q.id].memory;q.hints=cues[q.id].hints;}});
