@@ -80,7 +80,7 @@ window.OSCEPilot=(()=>{
  function sectionTitle(t){return '<header class="page-header osce-head"><p class="eyebrow">CLÍNICA MÉDICA II · AVALIAÇÃO PRÁTICO-ORAL</p><h1>'+t+'</h1></header>';}
  function selector(st){
   const p=recommended(st),completed=attempted(st),covered=state.covered[st.number]||{};
-  return '<article class="osce-case osce-theme-card" id="osce-station-'+st.number+'" tabindex="-1"><div class="osce-stepbar"><span>'+displayLabel(st)+'</span><span class="osce-priority osce-priority-'+esc(st.priority)+'">● PRIORIDADE '+({alta:'ALTA',media:'MÉDIA',baixa:'BAIXA'}[st.priority]||'ADICIONAL')+'</span><strong>'+completed+'/'+st.questions.length+' questões</strong></div>'
+  return '<article class="osce-case osce-theme-card" id="osce-station-'+st.number+'" tabindex="-1"><div class="osce-stepbar"><span>'+displayLabel(st)+'</span><span class="osce-priority osce-priority-'+esc(st.priority)+'">● PRIORIDADE '+({alta:'ALTA',media:'MÉDIA',baixa:'BAIXA'}[st.priority]||'ADICIONAL')+'</span>'+personalBadge(st)+'<strong>'+completed+'/'+st.questions.length+' questões</strong></div>'
    +'<h2>'+esc(st.title)+'</h2><p>'+esc(st.subtitle)+'</p>'
    +completionBar(st)
    +(st.images?.length?'<p class="osce-note">✓ '+st.images.length+' imagem(ns) do caso</p>':st.number===61?'<p class="osce-note">Ilustração didática identificada como tal.</p>':'<p class="osce-note">Caso sem imagem original; explicações clínicas disponíveis.</p>')
@@ -93,9 +93,13 @@ window.OSCEPilot=(()=>{
  }
  function filteredCatalog(){
   const exact=/^#?(\d{1,3})$/.exec(catalogSearch.trim());
-  return BANK.filter(st=>(catalogPriority==='todas'||(catalogPriority==='complementar'?st.number>74:st.priority===catalogPriority))
+  return BANK.filter(st=>(catalogPriority==='minhas'?!!personalGroupFor(st):(catalogPriority==='todas'||(catalogPriority==='complementar'?st.number>74:st.priority===catalogPriority)))
    &&(!catalogSearch||(exact?displayNo(st.number)===Number(exact[1]):[st.title,st.subtitle,st.area,String(displayNo(st.number))].join(' ').toLocaleLowerCase('pt-BR').includes(catalogSearch.toLocaleLowerCase('pt-BR')))))
-   .sort((a,b)=>({alta:0,media:1,baixa:2}[a.priority]??3)-({alta:0,media:1,baixa:2}[b.priority]??3)||(a.pocusOrder?0:1)-(b.pocusOrder?0:1)||(a.pocusOrder||displayNo(a.number))-(b.pocusOrder||displayNo(b.number)));
+   .sort((a,b)=>catalogPriority==='minhas'
+    ? ((personalGroupFor(a)?.n??99)-(personalGroupFor(b)?.n??99)
+       ||(personalGroupFor(a)?.ids.indexOf(a.number)??99)-(personalGroupFor(b)?.ids.indexOf(b.number)??99))
+    : ({alta:0,media:1,baixa:2}[a.priority]??3)-({alta:0,media:1,baixa:2}[b.priority]??3)
+       ||(a.pocusOrder?0:1)-(b.pocusOrder?0:1)||(a.pocusOrder||displayNo(a.number))-(b.pocusOrder||displayNo(b.number)));
  }
  let catalogPaint=0;
  function filterCatalog(v){
@@ -113,12 +117,49 @@ window.OSCEPilot=(()=>{
  function setCatalogPriority(v){catalogPriority=String(v);catalogLimit=12;renderAgain();}
  function moreCatalog(){catalogLimit+=12;renderAgain();}
 
+
+ function personalIsOwner(){return window.OSCE_PERSONAL_PRIORITIES?.isOwner?.()===true;}
+ function personalGroups(){return personalIsOwner()?window.OSCE_PERSONAL_PRIORITIES.groups:[];}
+ function personalGroupFor(st){return personalGroups().find(g=>g.ids.includes(st?.number));}
+ function personalBadge(st){const g=personalGroupFor(st);return g?'<span class="osce-personal-chip tier-'+g.tier.toLowerCase()+'" title="Prioridade somente desta conta">★ Minha '+g.tier+g.n+'</span>':'';}
+ function personalPlan(){
+  if(!personalIsOwner())return '';
+  const groups=personalGroups(),doneMap=state.settings.personalPlanDone||{},doneCount=groups.filter(g=>doneMap[g.n]===true).length;
+  const categories=[['A','Dominar · não pular'],['B','Saber o essencial'],['C','Proteção contra surpresas']];
+  const sections=categories.map(([tier,caption])=>{
+   const list=groups.filter(g=>g.tier===tier),completed=list.filter(g=>doneMap[g.n]===true).length;
+   const rows=list.map(g=>{
+    const completedNow=doneMap[g.n]===true,touched=g.ids.filter(id=>MAP.has(id)&&attempted(MAP.get(id))>0).length;
+    return '<article class="osce-personal-row'+(completedNow?' is-done':'')+'">'
+     +'<div class="osce-personal-topic"><span class="osce-personal-num">'+String(g.n).padStart(2,'0')+'</span><div><strong>'+esc(g.title)+'</strong><p>'+esc(g.hint)+'</p><small>'+g.minutes+' min sugeridos · '+touched+'/'+g.ids.length+' estações iniciadas</small></div></div>'
+     +'<div class="osce-personal-actions"><button type="button" class="btn" onclick="OSCEPilot.personalOpen('+g.ids[0]+')">Abrir treino</button>'
+     +'<button type="button" class="btn osce-personal-done" aria-pressed="'+String(completedNow)+'" aria-label="'+(completedNow?'Desmarcar':'Marcar')+' bloco '+g.n+' como concluído" onclick="OSCEPilot.personalDone('+g.n+')">'+(completedNow?'✓ Concluído':'Marcar concluído')+'</button></div></article>';
+   }).join('');
+   return '<details class="osce-personal-group tier-'+tier.toLowerCase()+'" '+(tier==='A'?'open':'')+'><summary><span class="osce-personal-tier">'+tier+'</span><strong>'+esc(caption)+'</strong><span class="osce-personal-count">'+completed+'/'+list.length+' concluídos</span></summary><div class="osce-personal-list">'+rows+'</div></details>';
+  }).join('');
+  return '<section id="osce-my-plan" class="osce-personal-plan" aria-labelledby="osce-my-plan-title">'
+   +'<header class="osce-personal-header"><div><p class="eyebrow">ROTEIRO EXCLUSIVO DESTA CONTA</p><h2 id="osce-my-plan-title">Minha trilha OSCE · 15 blocos</h2>'
+   +'<p>Seis blocos para dominar, seis para saber o essencial e três para reconhecer rapidamente. Esta marcação é <strong>pessoal</strong> e não muda a prioridade geral das outras contas.</p></div>'
+   +'<div class="osce-personal-summary"><strong>'+doneCount+'/15</strong><span>blocos marcados</span><small>≈ 6h20 de estudo líquido</small></div></header>'
+   +sections
+   +'<p class="osce-personal-note">Marque “Concluído” apenas quando conseguir explicar o tema sem consultar. O progresso fica na sua conta. Estas prioridades são estratégia de estudo, não previsão da prova.</p></section>';
+ }
+ function personalOpen(id){if(!personalIsOwner())return;jumpToIndex(Number(id));}
+ function personalDone(number){
+  if(!personalIsOwner())return;
+  const g=personalGroups().find(x=>x.n===Number(number));if(!g)return;
+  const m={...(state.settings.personalPlanDone||{})};
+  m[g.n]=m[g.n]!==true;
+  state.settings.personalPlanDone=m;
+  save();renderAgain();
+ }
+
  function pocusSection(){
   const a=BANK.filter(st=>st.pocusOrder).sort((x,y)=>x.pocusOrder-y.pocusOrder);
   if(!a.length)return '';
   const rows=a.map(st=>{
    const done=attempted(st),showNum='P'+st.pocusOrder;
-   return '<article class="osce-pocus-item"><div class="osce-pocus-item-head"><span class="osce-pocus-index">'+showNum+'</span><span class="osce-pocus-area">Alta prioridade sugerida</span></div><h3>'+esc(st.title)+'</h3><p>'+esc(st.subtitle)+'</p><div class="osce-pocus-item-actions"><button type="button" class="btn primary" onclick="OSCEPilot.start(\'rapida\',null,'+st.number+')">Simular</button><button type="button" class="btn" onclick="OSCEPilot.preview('+st.number+')">Estudar</button><button type="button" class="btn" onclick="SuperFoco.open(\'pocus\',\''+st.number+'\')">Super Foco</button><small>'+done+'/'+st.questions.length+' respondidas</small></div>'+completionBar(st)+'</article>';
+   return '<article class="osce-pocus-item"><div class="osce-pocus-item-head"><span class="osce-pocus-index">'+showNum+'</span><span class="osce-pocus-area">Alta prioridade sugerida</span>'+personalBadge(st)+'</div><h3>'+esc(st.title)+'</h3><p>'+esc(st.subtitle)+'</p><div class="osce-pocus-item-actions"><button type="button" class="btn primary" onclick="OSCEPilot.start(\'rapida\',null,'+st.number+')">Simular</button><button type="button" class="btn" onclick="OSCEPilot.preview('+st.number+')">Estudar</button><button type="button" class="btn" onclick="SuperFoco.open(\'pocus\',\''+st.number+'\')">Super Foco</button><small>'+done+'/'+st.questions.length+' respondidas</small></div>'+completionBar(st)+'</article>';
   }).join('');
    return '<details class="osce-pocus-section osce-pocus-disclosure" id="osce-pocus-top"><summary class="osce-pocus-heading" aria-controls="osce-pocus-content"><div><p class="eyebrow">TREINO PRIORITÁRIO · EXAME À BEIRA-LEITO</p><h2 id="osce-pocus-title">POCCUS — '+a.length+' estações para começar</h2><p>Toque para ampliar ou ocultar todas as estações de POCCUS. O índice de prioridades fica visível logo abaixo.</p></div><span class="osce-pocus-flag">POCCUS · MOSTRAR / OCULTAR</span></summary><div id="osce-pocus-content"><p class="osce-note">POCCUS foi indicado como conteúdo da avaliação. Os subtemas são uma seleção pedagógica, não uma lista oficial.</p><div class="osce-pocus-grid">'+rows+'</div><p class="osce-note">As imagens são referências independentes das vinhetas, com fonte identificada. Os retestes e o histórico continuam disponíveis.</p></div></details>';
  }
@@ -134,7 +175,7 @@ window.OSCEPilot=(()=>{
     const name='<span class="osce-index-name">'+esc(label)+'</span>';
     if(!st)return '<div class="osce-index-entry osce-index-pending" title="Estação ainda não publicada" aria-label="Estação '+rank+': '+esc(label)+', em preparação">'+number+name+'<span class="osce-index-status">Em preparação</span></div>';
     const progress=stationCompletion(st),stateLabel=progress.done?progress.done+'/'+progress.total+' feitas':'Abrir';
-    return '<button type="button" class="osce-index-entry osce-index-ready" title="Abrir estação '+rank+'" aria-label="Abrir estação '+rank+', '+esc(label)+', prioridade '+esc(group.label)+'" onclick="OSCEPilot.jumpToIndex('+n+')">'+number+name+'<span class="osce-index-status">'+esc(stateLabel)+'</span>'+completionBar(st,true)+'</button>';
+    return '<button type="button" class="osce-index-entry osce-index-ready" title="Abrir estação '+rank+'" aria-label="Abrir estação '+rank+', '+esc(label)+', prioridade '+esc(group.label)+'" onclick="OSCEPilot.jumpToIndex('+n+')">'+number+name+personalBadge(st)+'<span class="osce-index-status">'+esc(stateLabel)+'</span>'+completionBar(st,true)+'</button>';
    }).join('');
    return '<details class="osce-index-group osce-index-'+group.key+'" '+(group.key==='alta'?'open':'')+'><summary><span class="osce-index-dot" aria-hidden="true"></span><strong>'+esc(group.label)+'</strong><span class="osce-index-description">'+esc(group.description)+'</span><span class="osce-index-total">'+count+' estações</span></summary><div class="osce-index-grid">'+rows+'</div></details>';
   }).join('');
@@ -181,13 +222,14 @@ window.OSCEPilot=(()=>{
  function quickNav(){
   return '<nav class="osce-quicknav" aria-label="Acesso rápido ao OSCE">'
    +'<button type="button" onclick="OSCEPilot.jumpSection(\'today\')">Hoje</button>'
+   +(personalIsOwner()?'<button type="button" onclick="OSCEPilot.jumpSection(\'mine\')">★ Minha trilha</button>':'')
    +'<button type="button" onclick="OSCEPilot.jumpSection(\'pocus\')">POCCUS</button>'
    +'<button type="button" onclick="OSCEPilot.jumpSection(\'priority\')">Prioridades</button>'
    +'<button type="button" onclick="OSCEPilot.jumpSection(\'search\')">Buscar</button>'
    +'<button type="button" onclick="OSCEPilot.showReview()">Revisão</button></nav>';
  }
  function jumpSection(which){
-  const ids={today:'osce-today',pocus:'osce-pocus-top',priority:'osce-priority-overview',search:'osce-catalog-search'};
+  const ids={today:'osce-today',mine:'osce-my-plan',pocus:'osce-pocus-top',priority:'osce-priority-overview',search:'osce-catalog-search'};
   const id=ids[which];if(!id||typeof document==='undefined')return;
   const el=document.getElementById(id);if(!el)return;
   if(which==='pocus'&&el.tagName==='DETAILS')el.open=true;
@@ -207,12 +249,13 @@ window.OSCEPilot=(()=>{
    +welcomeGuide()
    +quickNav()
    +'<section class="osce-pilot-hero" id="osce-today"><div><p class="eyebrow">SESSÃO DE HOJE · COMEÇO SEM ATRITO</p><h2>Uma pergunta já é progresso.</h2><p>'+esc(d===null?'Data não definida.':d<0?'A data registrada passou; ajuste abaixo.':d===0?'Avaliação hoje.':d+' dia(s) até a avaliação.')+' Comece pelo erro vencido ou pela próxima estação prioritária.</p><div class="osce-actions"><button class="btn primary" onclick="OSCEPilot.daily()">Sessão de hoje · '+state.settings.minutes+' min (até '+planCount+' itens)</button>'+(state.current?'<button class="btn" onclick="OSCEPilot.resume()">Retomar onde parei</button>':'')+'</div></div><div class="osce-pilot-emblem" aria-hidden="true">'+BANK.length+'<span>estações</span></div></section>'
+   +personalPlan()
    +'<div class="osce-stats"><div><b>'+total+'</b><span>perguntas testadas</span></div><div><b>'+dueCount+'</b><span>revisões vencidas</span></div><div><b>'+weakCount+'</b><span>lacunas registradas</span></div><div><b>'+deep+'/'+BANK.length+'</b><span>estações completas</span></div></div>'
    +'<section class="osce-case"><h2>Triagem e cobertura</h2><div class="osce-settings"><label>Data da APO<input type="date" value="'+esc(state.settings.examDate)+'" onchange="OSCEPilot.setDate(this.value)"></label><label>Tempo disponível<select onchange="OSCEPilot.setMinutes(this.value)">'+[5,15,30,45].map(m=>'<option value="'+m+'"'+(Number(state.settings.minutes)===m?' selected':'')+'>'+m+' min</option>').join('')+'</select></label></div><p class="osce-note">Amplitude: '+shallow+'/'+BANK.length+' · Profundidade: '+deep+'/'+BANK.length+'. O roteiro inclui '+BANK.filter(st=>st.pocusOrder).length+' POCCUS e '+BANK.filter(st=>!st.pocusOrder).length+' outras estações; a seção POCCUS fica recolhida por padrão.</p><div class="osce-track"><span style="width:'+(100*shallow/BANK.length)+'%"></span></div><div class="osce-track osce-track-secondary"><span style="width:'+(100*deep/BANK.length)+'%"></span></div></section>'
    +pocusSection()
    +priorityIndex()
    +'<h2>Estações disponíveis</h2><p class="osce-note">Prioridade: <span class="osce-priority osce-priority-alta">● Alta</span> · <span class="osce-priority osce-priority-media">● Média</span> · <span class="osce-priority osce-priority-baixa">● Baixa</span>. Critério pedagógico, não previsão estatística da prova.</p>'
-   +'<div class="osce-filter" id="osce-catalog-filter"><label>Buscar estação<input type="search" id="osce-catalog-search" placeholder="Tema ou novo número (ex.: 1, 8, síncope)" value="'+esc(catalogSearch)+'" oninput="OSCEPilot.filterCatalog(this.value)"></label><label>Prioridade<select onchange="OSCEPilot.setCatalogPriority(this.value)">'+[['alta','Alta'],['media','Média'],['baixa','Baixa'],['todas','Todas']].map(([k,l])=>'<option value="'+k+'"'+(catalogPriority===k?' selected':'')+'>'+l+'</option>').join('')+'</select></label></div>'
+   +'<div class="osce-filter" id="osce-catalog-filter"><label>Buscar estação<input type="search" id="osce-catalog-search" placeholder="Tema ou novo número (ex.: 1, 8, síncope)" value="'+esc(catalogSearch)+'" oninput="OSCEPilot.filterCatalog(this.value)"></label><label>Prioridade<select onchange="OSCEPilot.setCatalogPriority(this.value)">'+(personalIsOwner()?[['minhas','★ Minhas prioridades']]:[]).concat([['alta','Alta'],['media','Média'],['baixa','Baixa'],['todas','Todas']]).map(([k,l])=>'<option value="'+k+'"'+(catalogPriority===k?' selected':'')+'>'+l+'</option>').join('')+'</select></label></div>'
    +'<p class="osce-note">'+filteredCatalog().length+' estações neste filtro; exibindo até '+Math.min(catalogLimit,filteredCatalog().length)+'.</p>'
    +'<div class="osce-catalog-grid">'+filteredCatalog().slice(0,catalogLimit).map(selector).join('')+'</div>'
    +(filteredCatalog().length>catalogLimit?'<button type="button" class="btn" onclick="OSCEPilot.moreCatalog()">Mostrar mais estações</button>':'')
@@ -568,7 +611,8 @@ window.OSCEPilot=(()=>{
   const limit=minutes<=5?3:minutes<=15?8:minutes<=30?14:20;
   const due=dueItems().sort((a,b)=>Number(!!b.a?.overconfident)-Number(!!a.a?.overconfident)
    ||Number(b.st.priority==='alta')-Number(a.st.priority==='alta')||new Date(a.a.due)-new Date(b.a.due));
-  const fresh=BANK.flatMap(st=>st.questions.filter(q=>!last(st,q)).slice(0,st.priority==='alta'?2:1).map(q=>({st,q})));
+  const byStudyOrder=personalIsOwner()?[...BANK].sort((a,b)=>{const ga=personalGroupFor(a),gb=personalGroupFor(b);return (ga?.n??99)-(gb?.n??99)||(ga?.ids.indexOf(a.number)??99)-(gb?.ids.indexOf(b.number)??99);}):BANK;
+  const fresh=byStudyOrder.flatMap(st=>st.questions.filter(q=>!last(st,q)).slice(0,st.priority==='alta'?2:1).map(q=>({st,q})));
   const selected=[],seen=new Set();
   function add(pool,quota){
    let count=0;
@@ -700,10 +744,10 @@ window.OSCEPilot=(()=>{
   openOSCEDialog(overlay,img);
  }
  async function copyPrompt(){const x=document.getElementById('osce-prompt');if(!x)return;try{await navigator.clipboard.writeText(x.value);notify('Roteiro copiado.');}catch{x.focus();x.select();notify('Selecione e copie o roteiro.');}}
- function reload(){state=load();screen='home';shown=false;confidence=0;hints=0;checked=[];glossary='';welcomeOpen=!state.settings.hideWelcome&&!welcomeDismissedThisLoad;welcomeSkipNext=!!state.settings.hideWelcome;renderAgain();}
+ function reload(){state=load();screen='home';shown=false;confidence=0;hints=0;checked=[];glossary='';if(!personalIsOwner()&&catalogPriority==='minhas')catalogPriority='alta';welcomeOpen=!state.settings.hideWelcome&&!welcomeDismissedThisLoad;welcomeSkipNext=!!state.settings.hideWelcome;renderAgain();}
  window.addEventListener('master-auth-ready',reload);
- window.addEventListener('master-auth-ended',()=>{state=empty();screen='home';shown=false;glossary='';welcomeDismissedThisLoad=false;welcomeOpen=true;welcomeSkipNext=false;});
+ window.addEventListener('master-auth-ended',()=>{state=empty();screen='home';shown=false;glossary='';if(catalogPriority==='minhas')catalogPriority='alta';welcomeDismissedThisLoad=false;welcomeOpen=true;welcomeSkipNext=false;});
  window.addEventListener('master-remote-merge',e=>{if(e.detail?.key===KEY)reload()});
  window.addEventListener('storage',e=>{if(e.key===KEY)reload()});
- return {bank,weakItems,page,start,daily,resume,home,previewQuestion,previewStepSet,previewLayoutSet,toggleClinicalHighlights,answerKey,jumpSection,welcomePreference,showWelcome,closeWelcome,preview,previewTierSet,previewPage,filterCatalog,setCatalogPriority,moreCatalog,jumpToIndex,setDate,setMinutes,answer,conf,hint,reveal,criterion,retry,finish,showReview,showPrompt,reviewDue,term,showSources,showTerms,openLesson,showFullLesson,expandImage,focusVisualNote,toggleVisualMarks,expandVisual,copyPrompt,reload};
+ return {bank,weakItems,page,start,daily,resume,home,personalIsOwner,personalDone,personalOpen,previewQuestion,previewStepSet,previewLayoutSet,toggleClinicalHighlights,answerKey,jumpSection,welcomePreference,showWelcome,closeWelcome,preview,previewTierSet,previewPage,filterCatalog,setCatalogPriority,moreCatalog,jumpToIndex,setDate,setMinutes,answer,conf,hint,reveal,criterion,retry,finish,showReview,showPrompt,reviewDue,term,showSources,showTerms,openLesson,showFullLesson,expandImage,focusVisualNote,toggleVisualMarks,expandVisual,copyPrompt,reload};
 })();
