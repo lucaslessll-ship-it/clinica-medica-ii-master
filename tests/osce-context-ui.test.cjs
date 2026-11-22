@@ -39,3 +39,15 @@ test('camada de ajuda tem contraste, fonte legível e navegação adaptável',()
  assert.match(css,/safe-area-inset-bottom/);
  assert.match(css,/44px/);
 });
+
+test('navegação segmentada identifica sessões, prioridades, POCUS e busca',()=>{
+ const js=fs.readFileSync(path.join(ROOT,'osce-pilot.js'),'utf8');
+ const css=fs.readFileSync(path.join(ROOT,'osce-context-ui.css'),'utf8');
+ for(const section of ['Hoje','POCUS','Prioridades','Buscar','Revisão'])
+  assert.ok(js.includes('>'+section+'</button>')||js.includes('>'+section+'</button></nav>'),section);
+ assert.match(js,/function jumpSection\(which\)/);
+ assert.match(js,/if\(which==='pocus'&&el\.tagName==='DETAILS'\)el\.open=true/);
+ assert.match(js,/id="osce-today"/);
+ assert.match(css,/\.osce-app-shell \.osce-quicknav/);
+ assert.match(css,/overflow-x:auto/);
+});
