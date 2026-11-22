@@ -10,6 +10,8 @@
  --master-safe-bottom:env(safe-area-inset-bottom,0px);
 }
 :where(.app-shell,.app-body,.topbar,.topbar-left,.topbar-right,#main-content){min-width:0;box-sizing:border-box}
+html{scroll-padding-top:calc(var(--master-header-h) + 12px)}
+#main-content :is(.mp-editor,.osce-step,.mp-panel){scroll-margin-top:calc(var(--master-header-h) + 12px)}
 .app-shell,.app-body{max-width:100%;width:auto}
 .app-body{flex:1 1 auto}
 #main-content{width:100%;min-width:0;max-width:1560px;margin-inline:auto}
@@ -110,6 +112,7 @@ body:has(.mp-root .mp-editor) .section-rail{display:none!important}
 @media(max-width:800px){
  :root{--master-header-h:65px}
  #main-content{padding-bottom:calc(var(--master-bottom-nav-h) + var(--master-safe-bottom) + 38px)!important}
+ #main-content :is(.mp-editor-footer .btn,.mp-topic-search input,.mp-topic-search select,.osce-step textarea){scroll-margin-bottom:calc(var(--master-bottom-nav-h) + var(--master-safe-bottom) + 20px)}
  .mobile-tabbar{
   box-sizing:border-box;
   position:fixed;inset-inline:0;bottom:0;
