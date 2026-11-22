@@ -156,26 +156,32 @@ window.OSCEPilot=(()=>{
 
  function ecgSection(){
   const groups=[
-   {title:'Fibrilação atrial (FA)',re:/fibrila.{0,8}atrial|\bFA\b/i,priority:'alta',hint:'Ritmo irregular, ausência de P organizada, estabilidade e risco tromboembólico'},
-   {title:'Bloqueios atrioventriculares (BAV)',re:/bloqueio.{0,22}atrioventricular|\bBAV\b|mobitz/i,priority:'alta',hint:'PR, condução AV, Mobitz I × II, BAV total e marcapasso'},
-   {title:'Torsades de pointes',re:/torsades|QT longo/i,priority:'alta',hint:'Taquicardia ventricular polimórfica, QT longo, magnésio e instabilidade'},
-   {title:'Fibrilação ventricular (FV)',re:/fibrila.{0,12}ventricular|\bFV\b/i,priority:'alta',hint:'Reconhecer ritmo chocável, desfibrilar e retomar RCP'},
-   {title:'Taquicardia ventricular',re:/taquicardia ventricular|\bTV\b/i,priority:'alta',hint:'Pulso × ausência de pulso, estabilidade e cardioversão/desfibrilação'},
-   {title:'Taquiarritmias supraventriculares',re:/supraventricular|flutter/i,priority:'media',hint:'Regularidade, QRS, manobras vagais e conduta'},
-   {title:'Bradicardias e distúrbios de condução',re:/bradicardia|sinusal|condução/i,priority:'media',hint:'Sintomas, causas reversíveis e indicação de estimulação'},
-   {title:'Alterações de ST e isquemia',re:/isquemia|infarto|\bIAM\b|segmento ST|supradesnivelamento/i,priority:'media',hint:'Derivações contíguas, localização e conduta urgente'}
+   ['Fibrilação atrial (FA)',/fibrila.{0,8}atrial|\bFA\b/i,'alta','Ritmo, estabilidade, anticoagulação e controle de frequência'],
+   ['Bloqueios atrioventriculares (BAV)',/bloqueio.{0,22}atrioventricular|\bBAV\b|mobitz/i,'alta','PR, condução AV, risco e marcapasso'],
+   ['Torsades de pointes',/torsades|QT longo/i,'alta','QTc, TV polimórfica, magnésio e choque quando indicado'],
+   ['Fibrilação ventricular (FV)',/fibrila.{0,12}ventricular|\bFV\b/i,'alta','Ritmo chocável, desfibrilação e RCP'],
+   ['Taquicardia ventricular',/taquicardia ventricular|\bTV\b/i,'alta','Estabilidade, pulso, QRS largo e intervenção'],
+   ['Taquiarritmias supraventriculares',/supraventricular|flutter/i,'media','Regularidade, QRS, manobras e conduta'],
+   ['Bradicardias e distúrbios de condução',/bradicardia|sinusal|condução/i,'media','Sintomas, causas reversíveis e estimulação'],
+   ['Alterações de ST e isquemia',/isquemia|infarto|\bIAM\b|segmento ST|supradesnivelamento/i,'media','Territórios, derivações e reperfusão']
   ];
   const used=new Set();
-  const cards=groups.map((g,i)=>{
-   const matches=BANK.filter(st=>!st.pocusOrder&&!used.has(st.number)&&g.re.test([st.title,st.subtitle,st.area].join(' '))).sort((a,b)=>(a.priority==='alta'?0:a.priority==='media'?1:2)-(b.priority==='alta'?0:b.priority==='media'?1:2));
+  const cards=groups.map(([title,re,priority,hint],i)=>{
+   // Não usar "area": muitas estações compartilham a área genérica "Cardiologia e ECG".
+   const matches=BANK.filter(st=>!st.pocusOrder&&!used.has(st.number)&&re.test([st.title,st.subtitle].join(' ')))
+    .sort((a,b)=>(a.priority==='alta'?0:a.priority==='media'?1:2)-(b.priority==='alta'?0:b.priority==='media'?1:2));
    matches.forEach(st=>used.add(st.number));
-   const available=matches.length,answered=matches.reduce((n,st)=>n+attempted(st),0),total=matches.reduce((n,st)=>n+st.questions.length,0),pct=total?Math.round(100*answered/total):0;
-   return '<article class="osce-ecg-card"><div class="osce-ecg-card-head"><span class="osce-priority osce-priority-'+g.priority+'">'+(g.priority==='alta'?'Alta':'Média')+'</span><small>'+String(i+1).padStart(2,'0')+'</small></div><h3>'+esc(g.title)+'</h3><p>'+esc(g.hint)+'</p>'
-    +'<div class="osce-topic-completion"><div class="osce-topic-completion-head"><span>'+(available?answered+'/'+total+' perguntas':'Estação específica não cadastrada')+'</span><strong>'+pct+'%</strong></div><div class="osce-topic-completion-track" role="progressbar" aria-label="Cobertura de '+esc(g.title)+'" aria-valuemin="0" aria-valuemax="100" aria-valuenow="'+pct+'"><span style="width:'+pct+'%"></span></div></div>'
-    +(available?'<div class="osce-ecg-actions">'+matches.slice(0,3).map(st=>'<button type="button" class="btn" onclick="OSCEPilot.preview('+st.number+')">Estudar · '+displayLabel(st)+'</button><button type="button" class="btn primary" onclick="OSCEPilot.start(\'rapida\',null,'+st.number+')">Simular</button>').join('')+'</div>':'<p class="osce-note">Tema no roteiro; sem estação específica correspondente identificada no banco atual.</p>')+'</article>';
+   const done=matches.reduce((n,st)=>n+attempted(st),0),total=matches.reduce((n,st)=>n+st.questions.length,0),pct=total?Math.round(100*done/total):0;
+   return '<article class="osce-ecg-card"><div class="osce-ecg-card-head"><span class="osce-priority osce-priority-'+priority+'">'+(priority==='alta'?'Alta':'Média')+'</span><small>TRILHA '+String(i+1).padStart(2,'0')+'</small></div><h3>'+esc(title)+'</h3><p>'+esc(hint)+'</p>'
+    +'<div class="osce-topic-completion"><div class="osce-topic-completion-head"><span>'+done+'/'+total+' questões · '+matches.length+' estações</span><strong>'+pct+'%</strong></div><div class="osce-topic-completion-track" role="progressbar" aria-label="Cobertura de '+esc(title)+'" aria-valuemin="0" aria-valuemax="100" aria-valuenow="'+pct+'"><span style="width:'+pct+'%"></span></div></div>'
+    +(matches.length?'<details class="osce-ecg-card-details"><summary>Ver '+matches.length+' estação(ões)</summary><div class="osce-ecg-station-list">'+matches.map(st=>'<div class="osce-ecg-station-row"><span>'+esc(st.title)+' <small>· '+displayLabel(st)+'</small></span><div><button type="button" class="btn" onclick="OSCEPilot.preview('+st.number+')">Estudar</button><button type="button" class="btn primary" onclick="OSCEPilot.start(\'rapida\',null,'+st.number+')">Simular</button></div></div>').join('')+'</div></details>':'<small class="osce-note">Sem estação específica identificada no banco; não confundir com conteúdo concluído.</small>')+'</article>';
   }).join('');
-  return '<section class="osce-ecg-section" id="osce-ecg-top" aria-labelledby="osce-ecg-title"><header><p class="eyebrow">CENTRAL DE ECG · TREINO PRÁTICO-ORAL</p><h2 id="osce-ecg-title">ECG — estações prioritárias</h2><p>Os conteúdos relacionados a eletrocardiograma estão organizados de forma centralizada, reunindo as principais estações, achados e condutas. Os temas continuam disponíveis também no catálogo geral. A prioridade é pedagógica, não uma probabilidade confirmada da prova.</p></header><div class="osce-ecg-grid">'+cards+'</div><p class="osce-note">Treine sempre: reconhecer o traçado, avaliar estabilidade, formular diferenciais, pedir exames pertinentes e justificar a conduta. Imagens e referências originais permanecem dentro de cada estação quando cadastradas.</p></section>';
+  const open=(()=>{try{return localStorage.getItem('master_osce_ecg_expanded')==='1'}catch{return false}})();
+  return '<details class="osce-ecg-section" id="osce-ecg-top" '+(open?'open ':'')+'ontoggle="OSCEPilot.ecgToggle(this.open)">'
+   +'<summary class="osce-ecg-summary"><span class="osce-ecg-summary-icon" aria-hidden="true">♡</span><span class="osce-ecg-summary-copy"><strong>ECG · Central de estações</strong><small>FA, BAV, torsades, FV, TV e outras alterações · '+groups.length+' trilhas prioritárias</small></span><span class="osce-ecg-summary-action" aria-hidden="true">Expandir <span>⌄</span></span></summary>'
+   +'<div class="osce-ecg-content"><p>Os conteúdos relacionados a eletrocardiograma estão organizados de forma centralizada. Revise os achados, abra as estações e simule as condutas. As prioridades são pedagógicas, não probabilidades oficiais de prova.</p><div class="osce-ecg-grid">'+cards+'</div><p class="osce-note">Roteiro oral: traçado → estabilidade → hipótese → diferenciais → exames → conduta. Imagens e referências aparecem nas estações que as possuem.</p></div></details>';
  }
+ function ecgToggle(open){try{localStorage.setItem('master_osce_ecg_expanded',open?'1':'0')}catch{}}
  function pocusSection(){
   const a=BANK.filter(st=>st.pocusOrder).sort((x,y)=>x.pocusOrder-y.pocusOrder);
   if(!a.length)return '';
@@ -773,5 +779,5 @@ window.OSCEPilot=(()=>{
  window.addEventListener('master-auth-ended',()=>{state=empty();screen='home';shown=false;glossary='';if(catalogPriority==='minhas')catalogPriority='alta';welcomeDismissedThisLoad=false;welcomeOpen=true;welcomeSkipNext=false;});
  window.addEventListener('master-remote-merge',e=>{if(e.detail?.key===KEY)reload()});
  window.addEventListener('storage',e=>{if(e.key===KEY)reload()});
- return {bank,weakItems,page,start,daily,resume,home,personalIsOwner,personalDone,personalOpen,previewQuestion,previewStepSet,previewLayoutSet,toggleClinicalHighlights,answerKey,jumpSection,welcomePreference,showWelcome,closeWelcome,preview,previewTierSet,previewPage,filterCatalog,setCatalogPriority,moreCatalog,jumpToIndex,setDate,setMinutes,answer,conf,hint,reveal,criterion,retry,finish,showReview,showPrompt,reviewDue,term,showSources,showTerms,openLesson,showFullLesson,expandImage,focusVisualNote,toggleVisualMarks,expandVisual,copyPrompt,reload};
+ return {bank,weakItems,page,start,daily,resume,home,personalIsOwner,personalDone,personalOpen,previewQuestion,previewStepSet,previewLayoutSet,toggleClinicalHighlights,answerKey,jumpSection,welcomePreference,showWelcome,closeWelcome,preview,previewTierSet,previewPage,filterCatalog,setCatalogPriority,moreCatalog,ecgToggle,jumpToIndex,setDate,setMinutes,answer,conf,hint,reveal,criterion,retry,finish,showReview,showPrompt,reviewDue,term,showSources,showTerms,openLesson,showFullLesson,expandImage,focusVisualNote,toggleVisualMarks,expandVisual,copyPrompt,reload};
 })();
