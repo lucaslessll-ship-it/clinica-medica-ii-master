@@ -291,6 +291,30 @@ function taskRow(plan,task,i){
   +(theme?.course==='osce'?'<button type="button" class="btn" onclick="MasterPlanner.openTheme(\''+task.id+'\',\'practice\')">Simular</button>':'')
   +'<div class="mp-self-grade" role="group" aria-label="Autoavaliação após estudar '+esc(task.title)+'"><button type="button" onclick="MasterPlanner.register(\''+plan.id+'\',\''+task.id+'\',\'again\')">Preciso revisar</button><button type="button" onclick="MasterPlanner.register(\''+plan.id+'\',\''+task.id+'\',\'help\')">Com ajuda</button><button type="button" onclick="MasterPlanner.register(\''+plan.id+'\',\''+task.id+'\',\'good\')">Sem ajuda</button></div></div></article>';
 }
+function radarPanel(plan){
+ const groups=new Map();
+ for(const t of topicList(plan)){
+  const g=groups.get(t.subject)||{subject:t.subject,novo:0,consolidando:0,consistente:0,total:0};
+  g[mastery(plan,t)]++;g.total++;groups.set(t.subject,g);
+ }
+ return '<section class="mp-panel mp-radar"><div class="mp-panel-head"><div><h2>Radar de consolidação</h2><p>Cobertura e retenção por matéria, com critérios visíveis.</p></div></div>'
+  +'<div class="mp-radar-list">'+[...groups.values()].map(g=>
+    '<div class="mp-radar-row"><div><b>'+esc(g.subject)+'</b><small>'+g.consistente+'/'+g.total+' temas consistentes</small></div>'
+    +'<div class="mp-radar-bar" role="img" aria-label="'+esc(g.subject)+': '+g.novo+' novos, '+g.consolidando+' em consolidação, '+g.consistente+' consistentes">'
+    +'<span class="novo" style="width:'+(100*g.novo/g.total)+'%"></span>'
+    +'<span class="consolidando" style="width:'+(100*g.consolidando/g.total)+'%"></span>'
+    +'<span class="consistente" style="width:'+(100*g.consistente/g.total)+'%"></span>'
+    +'</div></div>').join('')
+  +'</div><div class="mp-radar-legend"><span>○ Ainda não coberto</span><span>◒ Em consolidação</span><span>● Consistente</span></div>'
+  +'</section>';
+}
+function surprise(){
+ const plan=activePlan();if(!plan)return notify('Crie um plano para receber uma pergunta surpresa.');
+ const cards=topicList(plan).filter(t=>t.course==='osce');
+ if(!cards.length)return notify('Adicione uma estação OSCE à avaliação para receber uma pergunta surpresa.');
+ const date=localDate(),order=Number(date.replace(/-/g,''))%cards.length;
+ openTheme(cards[order].id,'practice');
+}
 function gamePanel(){
  const summary=stats(),week=weeklySummary(),achievements=achievementList(),goal=week.goal,
   missions=[{title:'Estudar em '+goal+' dias da semana',done:Math.min(week.days,goal),target:goal},{title:'Realizar 2 retestes',done:Math.min(week.reviews,2),target:2},{title:'Recuperar 1 dificuldade',done:Math.min(week.recovered,1),target:1}];
@@ -299,6 +323,7 @@ function gamePanel(){
   +'<div class="mp-week-goal"><label for="mp-weekly-goal">Meta semanal (dias)</label><select id="mp-weekly-goal" onchange="MasterPlanner.setWeeklyGoal(this.value)">'+[1,2,3,4,5,6,7].map(n=>'<option value="'+n+'" '+(n===goal?'selected':'')+'>'+n+' dia(s)</option>').join('')+'</select><span>'+week.days+'/'+goal+' dias</span></div>'
   +'<div class="mp-missions">'+missions.map(m=>'<div><span>'+esc(m.title)+'</span><strong>'+m.done+'/'+m.target+'</strong><div class="mp-progress"><span style="width:'+(m.done/m.target*100)+'%"></span></div></div>').join('')+'</div>'
   +'<div class="mp-achievements">'+achievements.map(a=>'<div class="'+(a.earned?'earned':'pending')+'"><span aria-hidden="true">'+a.icon+'</span><b>'+esc(a.title)+'</b><small>'+esc(a.detail)+'</small></div>').join('')+'</div>'
+  +(activePlan()&&topicList(activePlan()).some(t=>t.course==='osce')?'<div class="mp-surprise"><span><strong>Banca surpresa</strong><small>Uma estação OSCE do seu plano, escolhida para hoje. Nenhum XP por apenas abrir.</small></span><button type="button" class="btn" onclick="MasterPlanner.surprise()">Treinar surpresa →</button></div>':'')
   +'<p class="mp-small">Um dia mínimo com uma recuperação ativa já conta. Descansos e ausências não geram penalidades ou perdas de XP.</p></section>';
 }
 function editor(){
@@ -323,7 +348,7 @@ function page(){
  let out='<div class="mp-root"><header class="mp-header"><p class="mp-eyebrow">ESTUDO MASTER · PLANEJAMENTO INTELIGENTE</p><h1>Master <em>Planner.</em></h1><p>Uma próxima ação clara para cada dia. Planeje avaliações, consolide as dificuldades e acompanhe sua constância.</p><div class="mp-actions"><button class="btn primary" onclick="MasterPlanner.openEditor()">+ Nova avaliação</button><button class="btn ghost" onclick="MasterPlanner.toggleArchived()">'+(showArchived?'Ocultar arquivadas':'Ver arquivadas')+'</button></div></header>';
  if(all.length)out+='<div class="mp-plan-switch" role="group" aria-label="Planos de avaliação">'+all.map(x=>'<button type="button" class="'+(x.id===plan?.id?'active':'')+'" onclick="MasterPlanner.activate(\''+x.id+'\')" '+(x.archived?'disabled':'')+'>'+esc(x.title)+(x.archived?' · arquivado':'')+'</button>').join('')+'</div>';
  if(editing)out+=editor();
- if(plan){out+=htmlDays();out+=heatmap();out+=gamePanel();}
+ if(plan){out+=htmlDays();out+=radarPanel(plan);out+=heatmap();out+=gamePanel();}
  else if(!editing)out+='<section class="mp-panel mp-empty-state"><h2>Seu planejamento começa com uma avaliação.</h2><p>Informe a data, os temas e seus minutos disponíveis. O Master distribui atividades e mostra quando a carga não cabe no prazo.</p><button class="btn primary" onclick="MasterPlanner.openEditor()">Configurar primeira avaliação</button></section>';
  // O mapa e as conquistas aparecem após criar um plano; antes disso a tela permanece enxuta.
  out+='<p class="mp-footer-note">O planejador não cria respostas nem altera o histórico original de provas, questões ou OSCE. Atividades assinaladas são autoavaliações; a revisão real deve ser realizada no módulo correspondente.</p></div>';
@@ -368,5 +393,5 @@ window.addEventListener('master-remote-merge',e=>{if(e.detail?.key===KEY){state=
 window.addEventListener('storage',e=>{if(e.key===KEY){state=load();renderPage();}});
 return {page,homeCard,catalog,schedule,dailyTasks,stats,heatmap,openEditor,closeEditor,changeDraft,toggleTheme,toggleDay,
  setSubject,searchThemes,selectVisible,savePlan,activate,archive,setWeeklyGoal,setMetric,setSessionMinutes,
- register,inspectDay,openTheme,toggleArchived,load,activePlan,externalEvidence,mergeProgress};
+ register,inspectDay,openTheme,surprise,toggleArchived,load,activePlan,externalEvidence,mergeProgress};
 })();
