@@ -46,7 +46,7 @@ function drugCard(id){
   +'<details class="pharm-safety" open><summary>3 · Segurança: contraindicações, efeitos adversos e interações</summary><dl class="pharm-facts">'
   +pair('Efeitos adversos e toxicidade',p?.risks)+pair('Quando evitar ou ter cautela',p?.contra)+pair('Interações importantes',p?.interaction)+pair('Como monitorizar',p?.monitor)
   +'</dl>'+(p?.pearl?'<p class="pharm-clinical-alert"><strong>Ponto crítico:</strong> '+esc(p.pearl)+'</p>':'')+'</details>'
-  +'<details class="pharm-posology"><summary>4 · Posologia e administração por indicação <span>'+(d.regimens?.length||1)+' esquema(s)</span></summary>'
+  +'<details class="pharm-posology" open><summary>4 · Posologia e administração por indicação <span>'+(d.regimens?.length||1)+' esquema(s)</span></summary>'
   +'<p class="clinical-note">Primeiro confirme diagnóstico, população, apresentação, função renal/hepática, contraindicações e protocolo local. Não transfira doses entre indicações. Os esquemas abaixo são históricos/documentais, não receita individual.</p>'
   +regimens+doseCalculation(id)+'</details>'
   +'<div class="pharm-footer"><strong>Fontes para conferência:</strong> '+(d.sources||[]).map(source).join(' · ')+'.'
