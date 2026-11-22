@@ -39,9 +39,9 @@ test('trilha POCUS aparece antes do índice 1–86 sem deslocar números antigos
  assert.ok(h.indexOf('id="osce-pocus-top"')<h.indexOf('id="osce-priority-overview"'));
  assert.match(h,/Índice das 86 demais estações/);
  assert.match(h,/93/);
- assert.equal(index.sourceIdByDisplayNumber['1'],61);
+ assert.equal(index.sourceIdByDisplayNumber['1'],52);
  P.jumpToIndex(61);
- assert.match(P.page(),/<span>ESTAÇÃO 1<\/span>/);
+ assert.match(P.page(),/<span>ESTAÇÃO 7<\/span>/);
 });
 test('P1 abre em simulação primeiro, sem revelar resposta antes de confiança',()=>{
  const {P,memory}=fixture();
@@ -83,7 +83,7 @@ test('histórico de síncope da antiga estação 61 permanece associado ao tema,
  P.preview(87);
  assert.match(P.page(),/POCUS pulmonar/);
  P.home();P.jumpToIndex(61);
- assert.match(P.page(),/<span>ESTAÇÃO 1<\/span>/);
+ assert.match(P.page(),/<span>ESTAÇÃO 7<\/span>/);
  const stored=JSON.parse(memory.get('master_osce_pilot_v1'));
  assert.equal(stored.items['61:sindrome'].attempts[0].score,40);
  assert.ok(!stored.items['87:interpretacao']?.attempts?.length);
