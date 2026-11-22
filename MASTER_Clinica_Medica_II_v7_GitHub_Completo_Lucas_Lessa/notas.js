@@ -708,7 +708,16 @@
     addEventListener('scroll', () => { if (barra && !barra.hidden) esconderBarra(); }, { passive: true });
 
     const raiz = document.getElementById('main-content');
-    if (raiz) new MutationObserver(() => { if (caixa && !caixa.hidden && caixa.dataset.aula !== aulaAtual()) fecharCaixa(); if (!document.querySelector('.nota-marca')) agendar(); }).observe(raiz, { childList: true, subtree: false });
+    if (raiz) new MutationObserver(mudancas => {
+      if (caixa && !caixa.hidden && caixa.dataset.aula !== aulaAtual()) fecharCaixa();
+      // Inclui aulas e questões que redesenham apenas um painel interno.
+      // Ignora nossas próprias bolhas/marcações e fragmentos de texto, para
+      // não entrar em ciclo de reprocessamento do DOM.
+      const conteudoAlterado=mudancas.some(m=>[...m.addedNodes,...m.removedNodes].some(no=>
+        no.nodeType===1 && !no.matches?.('.nota-marca,.nota-bolha,.nota-atalho-pagina')
+      ));
+      if(conteudoAlterado)agendar();
+    }).observe(raiz, { childList: true, subtree: true });
     agendar();
   }
 
