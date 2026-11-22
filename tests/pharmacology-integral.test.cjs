@@ -4,7 +4,7 @@ const ROOT=path.resolve(__dirname,'../MASTER_Clinica_Medica_II_v7_GitHub_Complet
 const read=f=>fs.readFileSync(path.join(ROOT,f),'utf8');
 function fixture(){
  const window={MASTER_CLINICAL_GUIDES:{},addEventListener(){}};
- const ctx=vm.createContext({window,escapeHtml:s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'),TOPICS:[],P1:{topics:[]}});
+ const ctx=vm.createContext({window,escapeHtml:s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'),TOPICS:[],P1:{topics:[]},header:()=>'',render:()=>{},navigate:()=>{},document:{getElementById:()=>null}});
  for(const file of ['prescription-data.js','posology-data.js','pharmacology-education.js','prescription-calculations.js','clinical.js'])
   vm.runInContext(read(file),ctx,{filename:file});
  return {rx:window.MASTER_RX,pharm:window.MASTER_PHARMACOLOGY,clinical:vm.runInContext('Clinical',ctx)};
@@ -66,4 +66,16 @@ test('layout de fármacos é responsivo e doses continuam acessíveis para teste
  assert.match(css,/@media\(max-width:700px\)/);
  assert.match(css,/grid-template-columns:1fr/);
  assert.match(clinical,/<details class="pharm-posology" open>/);
+});
+
+test('manual completo renderiza 18 fichas por vez para preservar fluidez',()=>{
+ const {clinical}=fixture();
+ const first=clinical.page();
+ assert.equal((first.match(/class="rx-card pharm-card/g)||[]).length,18);
+ assert.match(first,/Exibindo 18 de 279 fichas/);
+ assert.match(first,/Clinical\.loadMore\(\)/);
+ clinical.loadMore();
+ const more=clinical.page();
+ assert.equal((more.match(/class="rx-card pharm-card/g)||[]).length,36);
+ assert.match(more,/Exibindo 36 de 279 fichas/);
 });
