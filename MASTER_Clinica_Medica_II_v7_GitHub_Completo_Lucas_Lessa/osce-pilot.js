@@ -12,6 +12,7 @@ window.OSCEPilot=(()=>{
   .sort((a,b)=>(a.pocusOrder?0:1)-(b.pocusOrder?0:1)||(a.pocusOrder||displayNo(a.number))-(b.pocusOrder||displayNo(b.number)));
  const MAP=new Map(BANK.map(s=>[s.number,s]));
  const KEY='master_osce_pilot_v1';
+ const isBlankAttempt=v=>/^(?:não sei|nao sei|não lembro|nao lembro|sem resposta|não consegui|nao consegui)[\s.!?]*$/i.test(String(v||'').trim());
  const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  const now=()=>new Date().toISOString();
  const shift=(n)=>{const d=new Date();d.setHours(12,0,0,0);d.setDate(d.getDate()+n);return d.toISOString()};
@@ -20,11 +21,11 @@ window.OSCEPilot=(()=>{
  let state=load(),screen='home',shown=false,confidence=0,hints=0,checked=[],reviewStation=61,previewStation=61,previewTier='completa',glossary='',catalogSearch='',catalogPriority='alta',catalogLimit=12;
  let welcomeOpen=!state.settings?.hideWelcome, welcomeSkipNext=!!state.settings?.hideWelcome, welcomeDismissedThisLoad=false;
  const bank=()=>BANK;
- function study(){return MAP.get(state.current?.station)||MAP.get(61)}
+ function study(){const r=state.current;return MAP.get(r?.mode==='daily'?r.queue?.[r.pos]?.station:r?.station)||MAP.get(61)}
  function data(s){return MAP.get(Number(s))||MAP.get(61)}
  function qkey(st,q){return st.number+':'+q.id}
  function entry(st,q){const k=qkey(st,q);return state.items[k]||(state.items[k]={draft:'',attempts:[]})}
- function last(st,q){const a=entry(st,q).attempts||[];return a[a.length-1]||null}
+ function last(st,q){const a=state.items[qkey(st,q)]?.attempts||[];return a[a.length-1]||null}
  function due(st,q){const r=last(st,q);return !!r?.due&&new Date(r.due).getTime()<=Date.now();}
  function weakItems(){return BANK.flatMap(st=>st.questions.filter(q=>{const a=last(st,q);return a&&a.score<80}).map(q=>({st,q,a:last(st,q)})))}
  function dueItems(){return BANK.flatMap(st=>st.questions.filter(q=>due(st,q)).map(q=>({st,q,a:last(st,q)}))).sort((a,b)=>new Date(a.a.due)-new Date(b.a.due))}
@@ -133,11 +134,11 @@ window.OSCEPilot=(()=>{
  }
 
  function homePage(){
-  const total=BANK.reduce((n,st)=>n+attempted(st),0),dueCount=dueItems().length,weakCount=weakItems().length,shallow=BANK.filter(st=>Object.values(state.covered[st.number]||{}).some(Boolean)).length,deep=BANK.filter(st=>state.covered[st.number]?.completa).length;
-  const d=diffDays(),selection=dueCount?dueItems()[0].st:BANK.find(st=>attempted(st)===0)||BANK[0];
+  const total=BANK.reduce((n,st)=>n+attempted(st),0),dueCount=dueItems().length,weakCount=weakItems().length,shallow=BANK.filter(st=>attempted(st)>0||Object.values(state.covered[st.number]||{}).some(Boolean)).length,deep=BANK.filter(st=>state.covered[st.number]?.completa).length;
+  const d=diffDays(),selection=dueCount?dueItems()[0].st:BANK.find(st=>attempted(st)===0)||BANK[0],planCount=dailyPlan(Number(state.settings.minutes)||15).length;
   return sectionTitle('OSCE <em>Clínica Médica.</em>')+'<div class="osce-welcome-entry"><p>Treine primeiro, aprofunde ao clicar, recupere os erros e retome sem perder seu progresso.</p>'+(welcomeOpen?'':'<button type="button" class="btn ghost osce-welcome-reopen" onclick="OSCEPilot.showWelcome()">ⓘ Como estudar no OSCE</button>')+'</div>'
    +welcomeGuide()
-   +'<section class="osce-pilot-hero"><div><p class="eyebrow">SESSÃO DE HOJE · COMEÇO SEM ATRITO</p><h2>Uma pergunta já é progresso.</h2><p>'+esc(d===null?'Data não definida.':d<0?'A data registrada passou; ajuste abaixo.':d===0?'Avaliação hoje.':d+' dia(s) até a avaliação.')+' Comece pelo erro vencido ou pela próxima estação prioritária.</p><div class="osce-actions"><button class="btn primary" onclick="OSCEPilot.daily()">▶ Sessão de hoje · 15 min</button>'+(state.current?'<button class="btn" onclick="OSCEPilot.resume()">Retomar onde parei</button>':'')+'</div></div><div class="osce-pilot-emblem" aria-hidden="true">'+BANK.length+'<span>estações</span></div></section>'
+   +'<section class="osce-pilot-hero"><div><p class="eyebrow">SESSÃO DE HOJE · COMEÇO SEM ATRITO</p><h2>Uma pergunta já é progresso.</h2><p>'+esc(d===null?'Data não definida.':d<0?'A data registrada passou; ajuste abaixo.':d===0?'Avaliação hoje.':d+' dia(s) até a avaliação.')+' Comece pelo erro vencido ou pela próxima estação prioritária.</p><div class="osce-actions"><button class="btn primary" onclick="OSCEPilot.daily()">▶ Sessão de hoje · '+state.settings.minutes+' min (até '+planCount+' itens)</button>'+(state.current?'<button class="btn" onclick="OSCEPilot.resume()">Retomar onde parei</button>':'')+'</div></div><div class="osce-pilot-emblem" aria-hidden="true">'+BANK.length+'<span>estações</span></div></section>'
    +'<div class="osce-stats"><div><b>'+total+'</b><span>perguntas testadas</span></div><div><b>'+dueCount+'</b><span>revisões vencidas</span></div><div><b>'+weakCount+'</b><span>lacunas registradas</span></div><div><b>'+deep+'/'+BANK.length+'</b><span>estações completas</span></div></div>'
    +'<section class="osce-case"><h2>Triagem e cobertura</h2><div class="osce-settings"><label>Data da APO<input type="date" value="'+esc(state.settings.examDate)+'" onchange="OSCEPilot.setDate(this.value)"></label><label>Tempo disponível<select onchange="OSCEPilot.setMinutes(this.value)">'+[5,15,30,45].map(m=>'<option value="'+m+'"'+(Number(state.settings.minutes)===m?' selected':'')+'>'+m+' min</option>').join('')+'</select></label></div><p class="osce-note">Amplitude: '+shallow+'/'+BANK.length+' · Profundidade: '+deep+'/'+BANK.length+'. O roteiro inclui '+BANK.filter(st=>st.pocusOrder).length+' POCUS e '+BANK.filter(st=>!st.pocusOrder).length+' outras estações; a seção POCUS fica recolhida por padrão.</p><div class="osce-track"><span style="width:'+(100*shallow/BANK.length)+'%"></span></div><div class="osce-track osce-track-secondary"><span style="width:'+(100*deep/BANK.length)+'%"></span></div></section>'
    +pocusSection()
@@ -238,7 +239,7 @@ window.OSCEPilot=(()=>{
 
  function sourcePanel(st){
   const sourceItems=(st.sources||[]).map(s=>'<li><a href="'+esc(s.url)+'" target="_blank" rel="noopener noreferrer">'+esc(s.label||s.title)+'</a> ('+esc(s.year)+')</li>').join('');
-  return '<details id="osce-sources" class="osce-deep"><summary>Referências clínicas oficiais e links <span>abrir fontes</span></summary><div><ul>'+sourceItems+'</ul><p class="osce-note">Links podem abrir bibliotecas de diretrizes, não necessariamente recomendações específicas da doença. Respostas e critérios são material didático autoral do Master, não gabarito institucional. Confirme conduta e atualização na diretriz específica.</p></div></details>';
+  return '<details id="osce-sources" class="osce-deep"><summary>Fontes e diretrizes para conferência <span>abrir referências</span></summary><div><ul>'+sourceItems+'</ul><p class="osce-note">As fontes são cadastradas por estação, não obrigatoriamente por questão: podem levar a diretrizes gerais. Confirme doses, critérios, indicação e ano diretamente na seção pertinente da fonte. Respostas e checklists são material didático, não gabarito institucional.</p></div></details>';
  }
  function lessonText(st){return st.lesson?.label||(st.number===61?'Clínica Médica II · Síncope e crise convulsiva':st.number===52?'Biblioteca P1 · Arritmias cardíacas':'Sem aula interna identificada');}
  function lessonBar(st){
@@ -272,16 +273,17 @@ window.OSCEPilot=(()=>{
   +'<details class="osce-deep"><summary>Palácio da memória e armadilhas <span>memorizar</span></summary><div><p>'+esc(q.memory||st.essential.mnemonic)+'</p></div></details>'
   +blocks.map(x=>'<details class="osce-deep"><summary>'+esc(x.title)+' <span>aprofundar</span></summary><div><p>'+mark(st,x.body)+'</p><p><strong>Memorização:</strong> '+esc(x.tip)+'</p></div></details>').join('')+'</div>';
  }
- function currentQ(st){return st.questions.find(q=>q.id===state.current?.ids[state.current.pos]);}
+ function currentQ(st){const r=state.current;const id=r?.mode==='daily'?r.queue?.[r.pos]?.id:r?.ids?.[r.pos];return st?.questions.find(q=>q.id===id);}
  function activePage(){
   const st=study(),r=state.current;
   if(!r||!st)return homePage();
   const q=currentQ(st);if(!q)return homePage();
-  const attemptedEntry=entry(st,q),prev=last(st,q);
-  let out=sectionTitle(esc(st.title))+'<button class="btn ghost" onclick="OSCEPilot.home()">← Voltar e salvar</button>'+toolBar(st)
+  const attemptedEntry=entry(st,q),prev=last(st,q),dailyMode=r.mode==='daily',elapsed=Math.max(0,Math.floor((Date.now()-new Date(r.startedAt))/60000));
+  let out=sectionTitle(esc(st.title))+(dailyMode?'<p class="osce-session-timing"><b>Sessão mista:</b> '+(r.pos+1)+'/'+r.queue.length+' questões · meta '+r.targetMinutes+' min · '+elapsed+' min decorridos. O tempo-alvo interrompe apenas após concluir uma questão.</p>':'')+'<button class="btn ghost" onclick="OSCEPilot.home()">← Voltar e salvar</button>'+toolBar(st)
    +'<section class="osce-case"><div class="osce-stepbar"><span>'+displayLabel(st)+'</span><span class="osce-priority osce-priority-'+esc(st.priority)+'">● PRIORIDADE '+({alta:'ALTA',media:'MÉDIA',baixa:'BAIXA'}[st.priority]||'ADICIONAL')+'</span><span>'+esc(st.tiers[r.tier].label)+' · '+(r.pos+1)+'/'+r.ids.length+'</span></div><p>'+esc(st.caseText)+'</p>'+media(st)+'</section>'
    +'<section class="osce-step"><div class="osce-track"><span style="width:'+(r.pos/r.ids.length*100)+'%"></span></div><div class="osce-stepbar"><b>PERGUNTA '+(r.pos+1)+' DE '+r.ids.length+'</b><span>'+esc(q.competence)+'</span></div><h2>'+esc(q.prompt)+'</h2>'
    +(prev?'<p class="osce-note">Última tentativa: '+prev.score+'% de critérios · próxima revisão '+formatDate(prev.due)+'.</p>':'')
+   +'<p class="osce-note"><strong>Origem:</strong> '+(q.origin==='original'?'Pergunta do banco original, com correção didática.':'Questão didática do Master; revisar conteúdo clínico crítico com as fontes.')+' Não é gabarito institucional.</p>'
    +'<p class="osce-note"><strong>Após a tentativa você verá:</strong> resposta-modelo, checklist dos pontos essenciais, aprofundamentos, referências e memorização. Se preferir, pode <button class="osce-inline-action" onclick="OSCEPilot.preview('+st.number+')">revisar as respostas agora</button> antes de simular.</p>'+'<label class="osce-answer-label" for="osce-answer">Sua resposta (como na arguição oral)</label><textarea id="osce-answer" rows="6" placeholder="Digite seu raciocínio; pode escrever não sei para aprender pelo erro." oninput="OSCEPilot.answer(this.value)" '+(shown?'readonly':'')+'>'+esc(attemptedEntry.draft||'')+'</textarea>';
   if(!shown){
    out+='<p class="osce-note">Qual é sua confiança ANTES de conferir?</p><div class="osce-confidence" role="group" aria-label="Confiança antes do gabarito">'+[[1,'Baixa'],[2,'Média'],[3,'Alta']].map(([i,txt])=>'<button type="button" aria-pressed="'+(confidence===i)+'" onclick="OSCEPilot.conf('+i+')">'+txt+'</button>').join('')+'</div>';
@@ -290,7 +292,7 @@ window.OSCEPilot=(()=>{
   }else{
    out+='<div class="osce-feedback"><p class="eyebrow">RESPOSTA DIDÁTICA · CORREÇÃO POR CRITÉRIOS</p><h3>Resposta-modelo Master</h3><p>'+mark(st,q.answer)+'</p><div class="osce-criteria"><h3>O que você realmente incluiu?</h3>'
     +q.criteria.map((txt,i)=>'<label><input type="checkbox" '+(checked.includes(i)?'checked':'')+' onchange="OSCEPilot.criterion('+i+',this.checked)"><span>'+esc(txt)+'</span></label>').join('')+'</div>'
-    +'<p class="osce-note"><b id="osce-criteria-count">'+checked.length+'/'+q.criteria.length+'</b> critérios marcados; autoavaliação sem IA corretora.</p><div class="osce-actions"><button class="btn primary" onclick="OSCEPilot.finish()">Registrar resultado e avançar</button><button class="btn" onclick="OSCEPilot.retry()">Voltar à resposta</button></div></div>';
+    +'<p class="osce-note"><b id="osce-criteria-count">'+checked.length+'/'+q.criteria.length+'</b> critérios marcados; pontuação por <strong>autoavaliação manual</strong>, não por análise da resposta. Responder apenas “não sei” registra 0% mesmo se algum critério for marcado.</p><div class="osce-actions"><button class="btn primary" onclick="OSCEPilot.finish()">Registrar resultado e avançar</button><button class="btn" onclick="OSCEPilot.retry()">Voltar à resposta</button></div></div>';
    if(r.tier==='essencial')out+='<details class="osce-deep" open><summary>Essencial · illness script de 1 minuto</summary><div><p>'+esc(st.essential.oneMinute)+'</p><p><strong>Âncora:</strong> '+esc(st.essential.mnemonic)+'</p></div></details>';
    out+=deepPanels(st,q);
   }
@@ -315,54 +317,105 @@ window.OSCEPilot=(()=>{
   html+='<section class="osce-case"><h2>Fontes, conceitos e aulas</h2><div class="osce-deep-stack">'+termPanel(st)+lessonBar(st)+sourcePanel(st)+'</div><div class="osce-actions"><button type="button" class="btn primary" onclick="'+(state.current?.station===st.number?'OSCEPilot.resume()':'OSCEPilot.start(\''+tier+'\',null,'+st.number+')')+'">'+(state.current?.station===st.number?'Retomar simulação':'Iniciar simulado agora')+'</button><button type="button" class="btn" onclick="OSCEPilot.home()">Voltar ao catálogo</button></div></section>';
   return html;
  }
+ function resetView(){shown=false;confidence=0;hints=0;checked=[];glossary='';}
+ function storeView(){if(state.current){state.current.view={shown,confidence,hints,checked:[...checked]};save();}}
+ function restoreView(){const v=state.current?.view||{};shown=!!v.shown;confidence=[1,2,3].includes(v.confidence)?v.confidence:0;hints=Math.min(3,Math.max(0,Number(v.hints)||0));checked=Array.isArray(v.checked)?v.checked.filter(Number.isInteger):[];}
  function start(tier,ids,number){
   const st=data(number||61);if(!st?.tiers[tier])return;
   markWelcomeVisited();const chosen=(Array.isArray(ids)&&ids.length?ids:st.tiers[tier].ids).filter(id=>st.questions.some(q=>q.id===id));
-  state.current={station:st.number,tier,ids:chosen,pos:0,startedAt:now(),itemStartedAt:Date.now(),prepared:screen==='preview',results:[]};
-  screen='study';shown=false;confidence=0;hints=0;checked=[];glossary='';save();renderAgain();
+  state.current={station:st.number,tier,ids:chosen,pos:0,startedAt:now(),itemStartedAt:Date.now(),prepared:screen==='preview',results:[],view:{shown:false,confidence:0,hints:0,checked:[]}};
+  screen='study';resetView();save();renderAgain();
+ }
+ function dailyPlan(minutes){
+  const limit=minutes<=5?3:minutes<=15?8:minutes<=30?14:20;
+  const due=dueItems().sort((a,b)=>Number(!!b.a?.overconfident)-Number(!!a.a?.overconfident)
+   ||Number(b.st.priority==='alta')-Number(a.st.priority==='alta')||new Date(a.a.due)-new Date(b.a.due));
+  const fresh=BANK.flatMap(st=>st.questions.filter(q=>!last(st,q)).slice(0,st.priority==='alta'?2:1).map(q=>({st,q})));
+  const selected=[],seen=new Set();
+  function add(pool,quota){
+   let count=0;
+   while(pool.length&&selected.length<limit&&count<quota){
+    let at=pool.findIndex(x=>!seen.has(qkey(x.st,x.q))&&x.st.area!==selected.at(-1)?.st.area);
+    if(at<0)at=pool.findIndex(x=>!seen.has(qkey(x.st,x.q)));
+    if(at<0)break;
+    const x=pool.splice(at,1)[0];seen.add(qkey(x.st,x.q));selected.push(x);count++;
+   }
+  }
+  add([...due],Math.ceil(limit*.6));
+  add(fresh,limit-selected.length);
+  add([...due],limit-selected.length);
+  const weakest=weakItems().sort((a,b)=>a.a.score-b.a.score);
+  add(weakest,limit-selected.length);
+  if(!selected.length){const st=BANK[0],q=st.questions[0];return [{station:st.number,id:q.id}];}
+  return selected.map(x=>({station:x.st.number,id:x.q.id}));
  }
  function daily(){
-  const a=dueItems();if(a.length)return start('rapida',[a[0].q.id],a[0].st.number);
-  const st=BANK.filter(x=>x.pocusOrder).find(x=>attempted(x)===0)||BANK.filter(x=>x.priority==='alta').find(x=>attempted(x)===0)||BANK.find(x=>attempted(x)===0)||BANK[0];start(recommended(st).tier,null,st.number);
+  const minutes=[5,15,30,45].includes(Number(state.settings.minutes))?Number(state.settings.minutes):15;
+  const queue=dailyPlan(minutes);
+  if(!queue.length)return notify('Nenhuma questão de estudo disponível.');
+  markWelcomeVisited();
+  state.current={station:queue[0].station,mode:'daily',tier:'rapida',ids:queue.map(x=>x.id),queue,
+   targetMinutes:minutes,pos:0,startedAt:now(),itemStartedAt:Date.now(),prepared:false,results:[],
+   view:{shown:false,confidence:0,hints:0,checked:[]}};
+  screen='study';resetView();save();renderAgain();
  }
- function resume(){if(!state.current)return daily();screen='study';shown=false;confidence=0;hints=0;checked=[];renderAgain();}
- function home(){screen='home';shown=false;renderAgain();}
+ function resume(){if(!state.current)return daily();screen='study';restoreView();renderAgain();}
+ function home(){screen='home';renderAgain();}
  function setDate(v){state.settings.examDate=v;save();renderAgain();}
  function setMinutes(v){state.settings.minutes=Number(v);save();renderAgain();}
  function answer(v){const q=currentQ(study());if(q&&!shown){entry(study(),q).draft=String(v).slice(0,6000);save()}}
- function conf(n){if(shown)return;confidence=n;if(typeof document!=='undefined')document.querySelectorAll('.osce-confidence button').forEach((b,i)=>b.setAttribute('aria-pressed',String(i+1===n)));}
- function hint(){if(!shown){hints=Math.min(3,hints+1);renderAgain();}}
- function reveal(){const q=currentQ(study());if(!q)return;if(!entry(study(),q).draft?.trim())return notify('Escreva sua tentativa primeiro (ou “não sei”).');if(!confidence)return notify('Registre primeiro sua confiança.');shown=true;checked=[];renderAgain();}
- function criterion(i,on){const q=currentQ(study());if(!q)return;checked=on?[...new Set([...checked,i])]:checked.filter(x=>x!==i);if(typeof document!=='undefined'){const el=document.getElementById('osce-criteria-count');if(el)el.textContent=checked.length+'/'+q.criteria.length;}}
- function retry(){shown=false;checked=[];renderAgain();}
+ function conf(n){if(shown)return;confidence=n;storeView();if(typeof document!=='undefined')document.querySelectorAll('.osce-confidence button').forEach((b,i)=>b.setAttribute('aria-pressed',String(i+1===n)));}
+ function hint(){if(!shown){hints=Math.min(3,hints+1);storeView();renderAgain();}}
+ function reveal(){const q=currentQ(study());if(!q)return;if(!entry(study(),q).draft?.trim())return notify('Escreva sua tentativa primeiro (ou “não sei”).');if(!confidence)return notify('Registre primeiro sua confiança.');shown=true;checked=[];storeView();renderAgain();}
+ function criterion(i,on){const q=currentQ(study());if(!q)return;checked=on?[...new Set([...checked,i])]:checked.filter(x=>x!==i);storeView();if(typeof document!=='undefined'){const el=document.getElementById('osce-criteria-count');if(el)el.textContent=checked.length+'/'+q.criteria.length;}}
+ function retry(){shown=false;checked=[];storeView();renderAgain();}
  function finish(){
   if(!shown)return;const r=state.current,st=study(),q=currentQ(st);if(!r||!q)return;
-  const x=entry(st,q),last0=last(st,q),score=Math.round(100*checked.length/q.criteria.length),high=confidence===3&&score<80;
+  const x=entry(st,q),last0=last(st,q),emptyResponse=isBlankAttempt(x.draft),validCriteria=emptyResponse?[]:checked.filter(i=>i>=0&&i<q.criteria.length),score=q.criteria.length?Math.round(100*validCriteria.length/q.criteria.length):0,high=confidence===3&&score<80;
   const interval=score<50||high||hints>=2?1:score<80?3:score===100&&hints===0&&(last0?.score||0)>=80?21:7;
-  const attempt={at:now(),answer:x.draft||'',score,criteria:[...checked],confidence,hintsUsed:hints,overconfident:high,due:shift(interval),depth:r.tier,prepared:!!r.prepared,durationMs:Math.max(0,Date.now()-(r.itemStartedAt||Date.now())),source:'autoauditoria'};
-  x.attempts=[...(x.attempts||[]),attempt].slice(-50);x.draft='';r.results.push({question:q.id,score,at:attempt.at});
+  const attempt={at:now(),answer:x.draft||'',score,criteria:validCriteria,confidence,hintsUsed:hints,overconfident:high,due:shift(interval),depth:r.tier,prepared:!!r.prepared,durationMs:Math.max(0,Date.now()-(r.itemStartedAt||Date.now())),source:'autoauditoria',scoring:'manual-checklist-v2',blankAnswer:emptyResponse};
+  x.attempts=[...(x.attempts||[]),attempt].slice(-50);x.draft='';r.results.push({station:st.number,question:q.id,score,at:attempt.at});
   if(window.MasterActivity?.track)window.MasterActivity.track('question_answer','osce:'+st.number+':'+q.id,{correct:score>=80});
-  shown=false;checked=[];confidence=0;hints=0;glossary='';
-  if(r.pos<r.ids.length-1){r.pos++;r.itemStartedAt=Date.now();}
-  else{state.covered[st.number]={...(state.covered[st.number]||{}),[r.tier]:true};state.runs.push({...r,completedAt:now()});state.runs=state.runs.slice(-120);state.current=null;screen='done';reviewStation=st.number;}
+  resetView();
+  const timeout=r.mode==='daily'&&Date.now()-new Date(r.startedAt).getTime()>=r.targetMinutes*60000;
+  if(r.pos<r.ids.length-1&&!timeout){r.pos++;r.itemStartedAt=Date.now();r.view={shown:false,confidence:0,hints:0,checked:[]};}
+  else{if(r.mode!=='daily')state.covered[st.number]={...(state.covered[st.number]||{}),[r.tier]:true};state.runs.push({...r,completedAt:now()});state.runs=state.runs.slice(-120);state.current=null;screen='done';reviewStation=st.number;}
   save();renderAgain();
+ }
+ function competencyRadar(){
+  const groups=new Map();
+  for(const st of BANK)for(const q of st.questions){
+   const a=last(st,q);if(!a)continue;
+   const name=(q.competence||'Raciocínio clínico').trim();
+   const g=groups.get(name)||{name,count:0,total:0,confidentErrors:0,station:st.number,question:q.id};
+   g.count++;g.total+=a.score;
+   if(a.overconfident)g.confidentErrors++;
+   if(a.score<80){g.station=st.number;g.question=q.id;}
+   groups.set(name,g);
+  }
+  const arr=[...groups.values()].map(g=>({...g,mean:Math.round(g.total/g.count)})).sort((a,b)=>b.confidentErrors-a.confidentErrors||a.mean-b.mean);
+  if(!arr.length)return '<section class="osce-case"><h2>Mapa de competências</h2><p>Seu mapa aparece após a primeira tentativa. Ele mostra médias <strong>autoavaliadas</strong> por competência, não capacidade clínica comprovada.</p></section>';
+  return '<section class="osce-case osce-competence-radar"><h2>Mapa de competências · minhas lacunas</h2><p class="osce-note">Média dos checklists marcados por você. Amostra pequena não é diagnóstico de proficiência; priorize acertos retestados sem consulta.</p><div class="osce-competence-grid">'+arr.slice(0,6).map(g=>{
+   const flag=g.confidentErrors?' · erro com alta confiança':'';
+   return '<div class="osce-competence-item"><div class="osce-competence-name"><b>'+esc(g.name)+'</b><span>'+g.mean+'% · '+g.count+' tentativa(s)'+flag+'</span></div><div class="osce-competence-progress" role="img" aria-label="Média autodeclarada de '+g.mean+' por cento"><span style="width:'+g.mean+'%"></span></div></div>';
+  }).join('')+'</div></section>';
  }
  function reviewPage(){
   const weak=weakItems(),dues=dueItems();
   return sectionTitle('Revisão <em>adaptativa.</em>')+'<button class="btn ghost" onclick="OSCEPilot.home()">← Voltar</button><p>Erros, respostas parciais e confiança excessiva voltam primeiro. Reavaliação por recuperação ativa, sem séries punitivas.</p>'
    +'<div class="osce-stats"><div><b>'+dues.length+'</b><span>vencidas</span></div><div><b>'+weak.length+'</b><span>lacunas insatisfatórias</span></div></div><div class="osce-actions"><button class="btn primary" onclick="OSCEPilot.reviewDue()">▶ Retestar agora</button><button class="btn" onclick="OSCEPilot.showPrompt()">Gerar script para IA</button></div>'
-   +'<section class="osce-case"><h2>Agendamento explicável</h2><p>Erro importante/alta confiança errada: D+1 · parcial: D+3 · boa resposta: D+7 · domínio repetido, sem dicas: D+21. O escore é produzido por marcação manual dos critérios da resposta.</p></section>'
-   +'<div class="osce-review-list">'+(weak.length?weak.map(x=>'<button onclick="OSCEPilot.start(\'rapida\',[ \''+esc(x.q.id)+'\' ],'+x.st.number+')"><b>'+displayLabel(x.st)+' — '+esc(x.q.competence)+' · '+x.a.score+'%</b><span>'+esc(x.q.prompt)+'</span><small>Reteste: '+formatDate(x.a.due)+'</small></button>').join(''):'<div class="card pad"><p>Nenhum erro insatisfatório registrado. Comece por uma das duas estações.</p></div>')+'</div>';
+    +competencyRadar()+'<section class="osce-case"><h2>Agendamento explicável</h2><p>Erro importante/alta confiança errada: D+1 · parcial: D+3 · boa resposta: D+7 · domínio repetido, sem dicas: D+21. O escore é produzido por marcação manual dos critérios da resposta.</p></section>'
+   +'<div class="osce-review-list">'+(weak.length?weak.map(x=>'<button onclick="OSCEPilot.start(\'rapida\',[ \''+esc(x.q.id)+'\' ],'+x.st.number+')"><b>'+displayLabel(x.st)+' — '+esc(x.q.competence)+' · '+x.a.score+'%</b><span>'+esc(x.q.prompt)+'</span><small>Reteste: '+formatDate(x.a.due)+'</small></button>').join(''):'<div class="card pad"><p>Nenhum erro insatisfatório registrado. Comece por uma das estações disponíveis.</p></div>')+'</div>';
  }
  function makePrompt(){
   const weak=BANK.flatMap(st=>st.questions.map(q=>({st,q,a:last(st,q)})).filter(x=>x.a&&(x.a.score<80||x.a.overconfident))).sort((a,b)=>Number(!!b.a.overconfident)-Number(!!a.a.overconfident)||Number(b.st.priority==='alta')-Number(a.st.priority==='alta')||a.a.score-b.a.score||b.a.confidence-a.a.confidence);
   if(!weak.length)return 'Ainda não há erros ou respostas parciais. Responda uma pergunta para gerar um roteiro específico.';
   let out='Você é avaliador de Clínica Médica II (FMP), especializado em arguição prático-oral. Faça UMA pergunta por vez e aguarde minha resposta. Não trate perguntas do Master como oficiais da FMP.\n\nSeu objetivo é corrigir minhas LACUNAS REAIS: comece por erros com confiança alta ou risco clínico, não repita toda a teoria sem necessidade. Investigue diagnóstico sindrômico e etiológico, anamnese, exame físico, diferenciais, fisiopatologia, exames, gravidade e conduta conforme o assunto. Use as fontes ESPECÍFICAS DE CADA ESTAÇÃO listadas abaixo, verificando se ainda são atuais; se não puder confirmar, informe a limitação. Não invente imagens, achados, doses ou referências.\n\nDepois de cada tentativa: (1) identifique o critério não cumprido, (2) explique o mecanismo e a conduta, (3) dê mnemônico conciso, (4) apresente um caso novo semelhante, (5) aplique checklist, (6) proponha reteste espaçado D+1/D+3/D+7/D+21. Não revele o gabarito antes da minha tentativa. A nota do site é autoavaliação por critérios, não avaliação oficial.\n\nERROS PRIORIZADOS ('+weak.length+'):\n';
-  for(const x of weak.slice(0,24)){const missing=x.q.criteria.filter((_,i)=>!x.a.criteria.includes(i)),refs=(x.st.sources||[]).filter(r=>r.url&&r.label).slice(0,2).map(r=>r.label+' — '+r.url);out+='\n'+displayLabel(x.st)+' — '+x.st.title+' | '+x.q.competence+' | '+x.a.score+'% | confiança '+x.a.confidence+'/3 | dicas '+x.a.hintsUsed+'/3'+(x.a.overconfident?' | ATENÇÃO: erro com confiança alta':'')+'\nPergunta: '+x.q.prompt+'\nNão cumpriu: '+(missing.join('; ')||'reavaliar raciocínio')+'\nMinha resposta: '+x.a.answer.slice(0,900)+(refs.length?'\nFontes do tema para conferir: '+refs.join(' ; '):'\nFontes específicas não cadastradas nesta estação: procurar diretrizes verificáveis.')+'\n';}
+  for(const x of weak.slice(0,24)){const missing=x.q.criteria.filter((_,i)=>!x.a.criteria.includes(i)),refs=(x.st.sources||[]).filter(r=>r.url&&(r.label||r.title)).slice(0,2).map(r=>(r.label||r.title)+' — '+r.url);out+='\n'+displayLabel(x.st)+' — '+x.st.title+' | '+x.q.competence+' | '+x.a.score+'% | confiança '+x.a.confidence+'/3 | dicas '+x.a.hintsUsed+'/3'+(x.a.overconfident?' | ATENÇÃO: erro com confiança alta':'')+'\nPergunta: '+x.q.prompt+'\nNão cumpriu: '+(missing.join('; ')||'reavaliar raciocínio')+'\nMinha resposta: '+x.a.answer.slice(0,900)+(refs.length?'\nFontes do tema para conferir: '+refs.join(' ; '):'\nFontes específicas não cadastradas nesta estação: procurar diretrizes verificáveis.')+'\n';}
   return out+'\nComece só com a primeira pergunta, sem revelar a resposta.';
  }
  function promptPage(){return sectionTitle('Script de <em>revisão por erros.</em>')+'<button class="btn ghost" onclick="OSCEPilot.home()">← Voltar</button><p>Copie para uma IA a análise dos critérios não cumpridos. Nenhuma resposta é transmitida automaticamente.</p><section class="osce-step"><label class="osce-answer-label" for="osce-prompt">Roteiro personalizado</label><textarea readonly id="osce-prompt" rows="19">'+esc(makePrompt())+'</textarea><div class="osce-actions"><button class="btn primary" onclick="OSCEPilot.copyPrompt()">Copiar para IA</button><button class="btn" onclick="OSCEPilot.showReview()">Ver erros</button></div></section>';}
- function donePage(){const st=data(reviewStation),run=state.runs.at(-1),n=run?.results.length||0;return sectionTitle('Sessão <em>concluída.</em>')+'<p>Você concluiu '+n+' pergunta(s) da '+displayLabel(st).toLowerCase()+' ('+esc(st.title)+'). Não precisa concluir tudo em um dia.</p><section class="osce-case"><h2>Consolide sem consultar</h2><p>'+esc(st.essential.oneMinute)+'</p><p class="osce-note">Próxima ação: abra a fila de erros ou repita amanhã uma pergunta sem olhar o gabarito.</p><div class="osce-actions"><button class="btn osce-super-focus-cta" onclick="SuperFoco.open(\''+(st.pocusOrder?'pocus':'osce')+'\',\''+st.number+'\')">✦ Treinar pontos fracos</button><button class="btn primary" onclick="OSCEPilot.showReview()">Ver minha revisão</button><button class="btn" onclick="OSCEPilot.showPrompt()">Copiar script para IA</button><button class="btn" onclick="OSCEPilot.home()">Todas as estações</button></div></section>';}
+ function donePage(){const st=data(reviewStation),run=state.runs.at(-1),n=run?.results.length||0,isDaily=run?.mode==='daily',next=dailyPlan(Number(state.settings.minutes)||15)[0],nextSt=MAP.get(next?.station),nextQ=nextSt?.questions.find(q=>q.id===next?.id);return sectionTitle('Sessão <em>concluída.</em>')+'<p>'+(isDaily?'Você concluiu '+n+' pergunta(s) de diferentes estações na sessão mista.':'Você concluiu '+n+' pergunta(s) da '+displayLabel(st).toLowerCase()+' ('+esc(st.title)+').')+' Não precisa concluir tudo em um dia.</p><section class="osce-case"><h2>Consolide sem consultar</h2><p>'+esc(st.essential.oneMinute)+'</p><p class="osce-note">Próximo passo sugerido: '+(nextSt&&nextQ?displayLabel(nextSt)+' — '+esc(nextSt.title)+' · '+esc(nextQ.competence):'retome uma pergunta sem consulta')+'. Use primeiro a revisão vencida quando chegar o dia.</p><div class="osce-actions"><button class="btn osce-super-focus-cta" onclick="SuperFoco.open(\''+(st.pocusOrder?'pocus':'osce')+'\',\''+st.number+'\')">✦ Treinar pontos fracos</button><button class="btn primary" onclick="OSCEPilot.showReview()">Ver minha revisão</button><button class="btn" onclick="OSCEPilot.showPrompt()">Copiar script para IA</button><button class="btn" onclick="OSCEPilot.home()">Todas as estações</button></div></section>';}
  function page(){if(screen!=='home'&&welcomeOpen){welcomeOpen=false;welcomeDismissedThisLoad=true;}return screen==='preview'?previewPage():screen==='study'?activePage():screen==='review'?reviewPage():screen==='prompt'?promptPage():screen==='done'?donePage():homePage();}
  function showReview(){screen='review';renderAgain();}
  function showPrompt(){screen='prompt';renderAgain();}

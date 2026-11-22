@@ -355,3 +355,17 @@ body[data-theme="dark"] .osce-index-group[open] summary{background:color-mix(in 
 .osce-pocus-disclosure #osce-pocus-content>.osce-note:first-child{padding-top:14px;border-top:1px solid var(--border,#d5ded8)}
 .osce-super-focus-cta{border-color:#6e9d86!important;background:color-mix(in srgb,#6ca88b 10%,var(--card,#fff))!important}
 @media(max-width:600px){.osce-pocus-disclosure .osce-pocus-heading{padding:16px;min-height:110px;align-items:flex-start}.osce-pocus-disclosure #osce-pocus-content{padding:0 16px 17px}}
+
+
+/* OSCE audit v3: sessão mista e mapa transparente de autoavaliação. */
+.osce-session-timing{display:flex;flex-wrap:wrap;align-items:center;gap:5px;padding:11px 14px;border-radius:12px;background:color-mix(in srgb,#4e9980 8%,var(--card,#fff));border:1px solid var(--border,#ceddd4);font-size:.85rem;line-height:1.65;margin:6px 0 14px}
+.osce-session-timing b{font-weight:800}
+.osce-competence-radar>p{margin:0 0 13px;line-height:1.65}
+.osce-competence-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.osce-competence-item{border:1px solid var(--border,#d8e0d8);background:color-mix(in srgb,#e0ede4 10%,var(--card,#fff));border-radius:10px;padding:12px;min-width:0}
+.osce-competence-name{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;flex-wrap:wrap;font-size:.81rem;line-height:1.5;margin-bottom:9px}
+.osce-competence-name b{font-size:.85rem}
+.osce-competence-name span{color:var(--text-muted,#5c6a60)}
+.osce-competence-progress{height:6px;overflow:hidden;border-radius:8px;background:var(--border,#e5e6dd)}
+.osce-competence-progress>span{display:block;height:100%;border-radius:8px;background:#51856c;min-width:0}
+@media(max-width:680px){.osce-competence-grid{grid-template-columns:1fr}.osce-session-timing{font-size:.79rem;padding:9px 11px}}
