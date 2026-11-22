@@ -95,7 +95,11 @@ window.OSCEPilot=(()=>{
   const exact=/^#?(\d{1,3})$/.exec(catalogSearch.trim());
   return BANK.filter(st=>(catalogPriority==='minhas'?!!personalGroupFor(st):(catalogPriority==='todas'||(catalogPriority==='complementar'?st.number>74:st.priority===catalogPriority)))
    &&(!catalogSearch||(exact?displayNo(st.number)===Number(exact[1]):[st.title,st.subtitle,st.area,String(displayNo(st.number))].join(' ').toLocaleLowerCase('pt-BR').includes(catalogSearch.toLocaleLowerCase('pt-BR')))))
-   .sort((a,b)=>({alta:0,media:1,baixa:2}[a.priority]??3)-({alta:0,media:1,baixa:2}[b.priority]??3)||(a.pocusOrder?0:1)-(b.pocusOrder?0:1)||(a.pocusOrder||displayNo(a.number))-(b.pocusOrder||displayNo(b.number)));
+   .sort((a,b)=>catalogPriority==='minhas'
+    ? ((personalGroupFor(a)?.n??99)-(personalGroupFor(b)?.n??99)
+       ||(personalGroupFor(a)?.ids.indexOf(a.number)??99)-(personalGroupFor(b)?.ids.indexOf(b.number)??99))
+    : ({alta:0,media:1,baixa:2}[a.priority]??3)-({alta:0,media:1,baixa:2}[b.priority]??3)
+       ||(a.pocusOrder?0:1)-(b.pocusOrder?0:1)||(a.pocusOrder||displayNo(a.number))-(b.pocusOrder||displayNo(b.number)));
  }
  let catalogPaint=0;
  function filterCatalog(v){
@@ -607,7 +611,8 @@ window.OSCEPilot=(()=>{
   const limit=minutes<=5?3:minutes<=15?8:minutes<=30?14:20;
   const due=dueItems().sort((a,b)=>Number(!!b.a?.overconfident)-Number(!!a.a?.overconfident)
    ||Number(b.st.priority==='alta')-Number(a.st.priority==='alta')||new Date(a.a.due)-new Date(b.a.due));
-  const fresh=BANK.flatMap(st=>st.questions.filter(q=>!last(st,q)).slice(0,st.priority==='alta'?2:1).map(q=>({st,q})));
+  const byStudyOrder=personalIsOwner()?[...BANK].sort((a,b)=>(personalGroupFor(a)?.n??99)-(personalGroupFor(b)?.n??99)):BANK;
+  const fresh=byStudyOrder.flatMap(st=>st.questions.filter(q=>!last(st,q)).slice(0,st.priority==='alta'?2:1).map(q=>({st,q})));
   const selected=[],seen=new Set();
   function add(pool,quota){
    let count=0;
