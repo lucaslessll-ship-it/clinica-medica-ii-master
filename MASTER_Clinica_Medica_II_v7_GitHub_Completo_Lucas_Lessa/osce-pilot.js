@@ -301,11 +301,11 @@ window.OSCEPilot=(()=>{
    +'<section class="osce-step"><div class="osce-track"><span style="width:'+(r.pos/r.ids.length*100)+'%"></span></div><div class="osce-stepbar"><b>PERGUNTA '+(r.pos+1)+' DE '+r.ids.length+'</b><span>'+esc(q.competence)+'</span></div><h2>'+esc(q.prompt)+'</h2>'
    +(prev?'<p class="osce-note">Última tentativa: '+prev.score+'% de critérios · próxima revisão '+formatDate(prev.due)+'.</p>':'')
    +'<p class="osce-note"><strong>Origem:</strong> '+(q.origin==='original'?'Pergunta do banco original, com correção didática.':'Questão didática do Master; revisar conteúdo clínico crítico com as fontes.')+' Não é gabarito institucional.</p>'
-   +'<p class="osce-note"><strong>Após a tentativa você verá:</strong> resposta-modelo, checklist dos pontos essenciais, aprofundamentos, referências e memorização. Se preferir, pode <button class="osce-inline-action" onclick="OSCEPilot.preview('+st.number+')">revisar as respostas agora</button> antes de simular.</p>'+'<label class="osce-answer-label" for="osce-answer">Sua resposta (como na arguição oral)</label><textarea id="osce-answer" rows="6" placeholder="Digite seu raciocínio; pode escrever não sei para aprender pelo erro." oninput="OSCEPilot.answer(this.value)" '+(shown?'readonly':'')+'>'+esc(attemptedEntry.draft||'')+'</textarea>';
+   +'<p class="osce-note"><strong>Após a tentativa você verá:</strong> resposta-modelo, checklist dos pontos essenciais, aprofundamentos, referências e memorização. Se preferir, pode <button class="osce-inline-action" onclick="OSCEPilot.preview('+st.number+')">revisar as respostas agora</button> antes de simular.</p>'+'<label class="osce-answer-label" for="osce-answer">Sua resposta (como na arguição oral)</label><textarea id="osce-answer" rows="6" placeholder="Digite seu raciocínio; pode escrever não sei para aprender pelo erro." oninput="OSCEPilot.answer(this.value)" onkeydown="OSCEPilot.answerKey(event)" '+(shown?'readonly':'')+'>'+esc(attemptedEntry.draft||'')+'</textarea>';
   if(!shown){
    out+='<p class="osce-note">Qual é sua confiança ANTES de conferir?</p><div class="osce-confidence" role="group" aria-label="Confiança antes do gabarito">'+[[1,'Baixa'],[2,'Média'],[3,'Alta']].map(([i,txt])=>'<button type="button" aria-pressed="'+(confidence===i)+'" onclick="OSCEPilot.conf('+i+')">'+txt+'</button>').join('')+'</div>';
    if(hints)out+='<div class="osce-hint"><b>Dica '+hints+'/3:</b> '+esc(q.hints[hints-1])+'</div>';
-   out+='<div class="osce-actions"><button class="btn primary" onclick="OSCEPilot.reveal()">Conferir resposta</button><button class="btn" onclick="OSCEPilot.hint()">Preciso de dica'+(hints?' ('+hints+'/3)':'')+'</button><button class="btn ghost" onclick="OSCEPilot.home()">Salvar e sair</button></div>';
+   out+='<div class="osce-actions"><button class="btn primary" onclick="OSCEPilot.reveal()">Conferir resposta <span class="osce-key-hint" aria-hidden="true">⌘/Ctrl ↵</span></button><button class="btn" onclick="OSCEPilot.hint()">Preciso de dica'+(hints?' ('+hints+'/3)':'')+'</button><button class="btn ghost" onclick="OSCEPilot.home()">Salvar e sair</button></div>';
   }else{
    out+='<div class="osce-feedback"><p class="eyebrow">RESPOSTA DIDÁTICA · CORREÇÃO POR CRITÉRIOS</p><h3>Resposta-modelo Master</h3><p>'+mark(st,q.answer)+'</p><div class="osce-criteria"><h3>O que você realmente incluiu?</h3>'
     +q.criteria.map((txt,i)=>'<label><input type="checkbox" '+(checked.includes(i)?'checked':'')+' onchange="OSCEPilot.criterion('+i+',this.checked)"><span>'+esc(txt)+'</span></label>').join('')+'</div>'
@@ -341,7 +341,7 @@ window.OSCEPilot=(()=>{
   const st=data(number||61);if(!st?.tiers[tier])return;
   markWelcomeVisited();const chosen=(Array.isArray(ids)&&ids.length?ids:st.tiers[tier].ids).filter(id=>st.questions.some(q=>q.id===id));
   state.current={station:st.number,tier,ids:chosen,pos:0,startedAt:now(),itemStartedAt:Date.now(),prepared:screen==='preview',results:[],view:{shown:false,confidence:0,hints:0,checked:[]}};
-  screen='study';resetView();save();renderAgain();
+  screen='study';resetView();save();renderAgain('question');
  }
  function dailyPlan(minutes){
   const limit=minutes<=5?3:minutes<=15?8:minutes<=30?14:20;
@@ -374,13 +374,14 @@ window.OSCEPilot=(()=>{
   state.current={station:queue[0].station,mode:'daily',tier:'rapida',ids:queue.map(x=>x.id),queue,
    targetMinutes:minutes,pos:0,startedAt:now(),itemStartedAt:Date.now(),prepared:false,results:[],
    view:{shown:false,confidence:0,hints:0,checked:[]}};
-  screen='study';resetView();save();renderAgain();
+  screen='study';resetView();save();renderAgain('question');
  }
- function resume(){if(!state.current)return daily();screen='study';restoreView();renderAgain();}
+ function resume(){if(!state.current)return daily();screen='study';restoreView();renderAgain('question');}
  function home(){screen='home';renderAgain('top');}
  function setDate(v){state.settings.examDate=v;save();renderAgain();}
  function setMinutes(v){state.settings.minutes=Number(v);save();renderAgain();}
  function answer(v){const q=currentQ(study());if(q&&!shown){entry(study(),q).draft=String(v).slice(0,6000);save()}}
+ function answerKey(event){if(!shown&&(event.metaKey||event.ctrlKey)&&event.key==='Enter'){event.preventDefault();reveal();}}
  function conf(n){if(shown)return;confidence=n;storeView();if(typeof document!=='undefined')document.querySelectorAll('.osce-confidence button').forEach((b,i)=>b.setAttribute('aria-pressed',String(i+1===n)));}
  function hint(){if(!shown){hints=Math.min(3,hints+1);storeView();renderAgain();}}
  function reveal(){const q=currentQ(study());if(!q)return;if(!entry(study(),q).draft?.trim())return notify('Escreva sua tentativa primeiro (ou “não sei”).');if(!confidence)return notify('Registre primeiro sua confiança.');shown=true;checked=[];storeView();renderAgain('feedback');}
@@ -397,7 +398,7 @@ window.OSCEPilot=(()=>{
   const timeout=r.mode==='daily'&&Date.now()-new Date(r.startedAt).getTime()>=r.targetMinutes*60000;
   if(r.pos<r.ids.length-1&&!timeout){r.pos++;r.itemStartedAt=Date.now();r.view={shown:false,confidence:0,hints:0,checked:[]};}
   else{if(r.mode!=='daily')state.covered[st.number]={...(state.covered[st.number]||{}),[r.tier]:true};state.runs.push({...r,completedAt:now()});state.runs=state.runs.slice(-120);state.current=null;screen='done';reviewStation=st.number;}
-  save();renderAgain();
+  save();renderAgain(state.current?'question':'top');
  }
  function competencyRadar(){
   const groups=new Map();
@@ -468,5 +469,5 @@ window.OSCEPilot=(()=>{
  window.addEventListener('master-auth-ended',()=>{state=empty();screen='home';shown=false;glossary='';welcomeDismissedThisLoad=false;welcomeOpen=true;welcomeSkipNext=false;});
  window.addEventListener('master-remote-merge',e=>{if(e.detail?.key===KEY)reload()});
  window.addEventListener('storage',e=>{if(e.key===KEY)reload()});
- return {bank,weakItems,page,start,daily,resume,home,welcomePreference,showWelcome,closeWelcome,preview,previewTierSet,previewPage,filterCatalog,setCatalogPriority,moreCatalog,jumpToIndex,setDate,setMinutes,answer,conf,hint,reveal,criterion,retry,finish,showReview,showPrompt,reviewDue,term,showSources,showTerms,openLesson,showFullLesson,expandImage,focusVisualNote,toggleVisualMarks,expandVisual,copyPrompt,reload};
+ return {bank,weakItems,page,start,daily,resume,home,answerKey,welcomePreference,showWelcome,closeWelcome,preview,previewTierSet,previewPage,filterCatalog,setCatalogPriority,moreCatalog,jumpToIndex,setDate,setMinutes,answer,conf,hint,reveal,criterion,retry,finish,showReview,showPrompt,reviewDue,term,showSources,showTerms,openLesson,showFullLesson,expandImage,focusVisualNote,toggleVisualMarks,expandVisual,copyPrompt,reload};
 })();
