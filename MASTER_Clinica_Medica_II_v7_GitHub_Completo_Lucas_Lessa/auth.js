@@ -69,7 +69,7 @@
       title='Seus dados de estudo';description='Para sincronizar, armazenamos seu e-mail, respostas, anotações e progresso no Supabase. O acesso ao progresso é vinculado à sua conta. Nunca inclua dados de pacientes identificáveis.';
       fields='<label class="auth-consent"><input id="master-consent" type="checkbox" required> Li o aviso de privacidade e concordo em sincronizar meus dados de estudo.</label>';submit='Concordar e continuar';
     }else{
-      title='Seu estudo, no seu ritmo.';description='Entre para retomar suas aulas e sincronizar seu progresso.';fields=emailField()+field('master-password','Senha','password','current-password')+`<label class="auth-consent auth-remember"><input id="master-remember" type="checkbox" ${MasterSessionStorage.remembered()?'checked':''} aria-describedby="master-remember-hint"> Manter conectado neste dispositivo</label><p id="master-remember-hint" class="auth-hint">Use em um dispositivo pessoal. Desmarcado, a sessão fica apenas nesta aba. Você pode encerrar o acesso em “Sair da conta”.</p>`;submit='Entrar';
+      title='Seu estudo, no seu ritmo.';description='Entre para retomar suas aulas e sincronizar seu progresso.';fields=emailField()+field('master-password','Senha','password','current-password')+`<label class="auth-consent auth-remember"><input id="master-remember" type="checkbox" ${MasterSessionStorage.remembered()?'checked':''} aria-describedby="master-remember-hint"> Manter conectado neste dispositivo</label><p id="master-remember-hint" class="auth-hint">Recomendado em computador ou tablet pessoal. A sessão será restaurada nas próximas visitas enquanto for válida; desmarque em dispositivos compartilhados. Nenhuma senha é salva aqui.</p>`;submit='Entrar';
     }
     $('master-auth-title').textContent=title;$('master-auth-description').textContent=description;
     $('master-auth-fields').innerHTML=fields;
@@ -100,6 +100,7 @@
       show('login');
     });
     $('master-google').addEventListener('click',()=>run('Abrindo Google…',async()=>{
+      sessionStore.setRemember($('master-remember')?.checked??MasterSessionStorage.remembered());
       const {error}=await status.client.auth.signInWithOAuth({provider:'google',options:{redirectTo:redirectUrl()}});if(error)throw error;
     }));
     $('master-retry').addEventListener('click',()=>{if(!status.busy)enter(status.user);});
@@ -130,6 +131,13 @@
       $('master-avatar').innerHTML=accountAvatar(status.user.id);
       $('master-avatar-picker').querySelectorAll('[data-avatar-index]').forEach(b=>b.setAttribute('aria-pressed',String(Number(b.dataset.avatarIndex)===i)));
       btn.focus({preventScroll:true});
+    });
+    $('master-remember-device')?.addEventListener('change',event=>{
+      const checked=event.target.checked;
+      try{
+        sessionStore.setRemember(checked);
+        toast(checked?'Sessão mantida neste dispositivo. Você continua conectado até sair ou até a sessão ser invalidada.':'Sessão restrita a esta aba. Ao fechar, será necessário entrar novamente.');
+      }catch(error){event.target.checked=MasterSessionStorage.remembered();toast(errorText(error));}
     });
     $('master-change-password').addEventListener('click',()=>show('password'));
     $('master-signout').addEventListener('click',signOut);
@@ -247,6 +255,7 @@
     $('master-avatar-change')?.setAttribute('aria-expanded','false');
     $('master-avatar').setAttribute('aria-label',`Abrir menu da conta de ${name}`);
     $('master-profile-name').textContent=name;$('master-profile-email').textContent=user?.email||'';
+    const rememberToggle=$('master-remember-device');if(rememberToggle)rememberToggle.checked=MasterSessionStorage.remembered();
   }
   function hide(){
     if(!status.ready){enter(status.user);return;}
