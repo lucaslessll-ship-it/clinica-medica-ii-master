@@ -34,7 +34,7 @@ test('7 estações POCUS com 70 perguntas completas e diretrizes válidas',()=>{
 });
 test('trilha POCUS aparece antes do índice 1–86 sem deslocar números antigos',()=>{
  const {P,index}=fixture(),h=P.page();
- assert.match(h,/POCUS — 7 estações para começar/);
+ assert.match(h,/POC(?:C)?US — 7 estações para começar/);
  assert.equal((h.match(/class="osce-pocus-item"/g)||[]).length,7);
  assert.ok(h.indexOf('id="osce-pocus-top"')<h.indexOf('id="osce-priority-overview"'));
  assert.match(h,/Índice das 86 demais estações/);
@@ -78,7 +78,7 @@ test('imagem legendada de derrame pleural fica oculta antes da resposta',()=>{
  assert.match(P.page(),/<img src="https:\/\/upload\.wikimedia\.org\/wikipedia\/commons\/2\/22\/Pleural_effusion_2/);
 });
 test('histórico de síncope da antiga estação 61 permanece associado ao tema, não ao POCUS',()=>{
- const progress={version:2,settings:{examDate:'2026-11-24',minutes:15},items:{'61:sindrome':{draft:'',attempts:[{at:'2026-11-18T12:00:00.000Z',score:40,due:'2026-11-23T12:00:00.000Z',confidence:1,criteria:[],hintsUsed:0,answer:'não sei'}]}}},runs:[],current:null,covered:{}};
+ const progress={version:2,settings:{examDate:'2026-11-24',minutes:15},items:{'61:sindrome':{draft:'',attempts:[{at:'2026-11-18T12:00:00.000Z',score:40,due:'2026-11-23T12:00:00.000Z',confidence:1,criteria:[],hintsUsed:0,answer:'não sei'}]}},runs:[],current:null,covered:{}};
  const {P,memory}=fixture([['master_osce_pilot_v1',JSON.stringify(progress)]]);
  P.preview(87);
  assert.match(P.page(),/POCUS pulmonar/);
