@@ -100,13 +100,13 @@ const focused={
 };
 for(const [id,data] of Object.entries(focused))catalog[id]={...(catalog[id]||{}),...data,level:'classe',validated:false};
 
-const generic=x=>!x||/consultar a rela[cç][aã]o farmacol|conferir a indica[cç]|terapia conforme a|conferir a fonte|reposi[cç][aã]o ou alcaliniza[cç][aã]o/.test(x.toLowerCase());
+const generic=x=>!x||/consultar a rela[cç][aã]o farmacol|conferir a indica[cç]|conferir mecanismo e indica[cç][aã]o na aula|esta ficha identifica a apresenta[cç][aã]o|terapia conforme a|conferir a fonte|reposi[cç][aã]o ou alcaliniza[cç][aã]o/.test(x.toLowerCase());
 const defaultInfo={className:'Classe individual ainda não homologada',action:'O mecanismo específico não foi revisado nesta atualização. Consulte a seção de farmacologia da bula antes de utilizar.',why:'Somente a indicação explicitada na ficha e na fonte correspondente; não inferir uso pelo nome.',risks:'Efeitos adversos específicos exigem consulta da bula individual.',contra:'Contraindicações e precauções não confirmadas: conferir a referência antes de tomar decisão clínica.',interaction:'Interações particulares ainda exigem conferência por produto.',monitor:'Monitorizar conforme princípio ativo, população e indicação.',level:'pendente',validated:false};
 const exported={};
 for(const [id,d] of Object.entries(rx.drugs)){
  const p={...defaultInfo,...(catalog[id]||{})};
  // Se já existe um mecanismo específico mais preciso, não sobrescrever por uma descrição genérica de classe.
- if(!specific[id]&&!generic(d.mechanism)&&d.mechanism.length>=25)p.action=d.mechanism;
+ if(!specific[id]&&!focused[id]&&!generic(d.mechanism)&&d.mechanism.length>=25)p.action=d.mechanism;
  if(!d.mechanism||generic(d.mechanism))d.mechanism=p.action;
  d.pharmacology=p;
  exported[id]=p;
