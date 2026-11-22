@@ -145,6 +145,19 @@ body:has(.mp-root .mp-editor) .section-rail{display:none!important}
  .mp-editor .mp-topic-list{grid-template-columns:minmax(0,1fr)}
  .topbar .focus-top{flex:0 0 auto}
 }
+/* Refluxo de pré-teste clínico: a 200% no iPad a coluna de perguntas deve quebrar texto, não recortá-lo. */
+#main-content .deep-pretest li{min-width:0;max-width:100%;grid-template-columns:auto minmax(0,1fr) auto}
+#main-content .deep-pretest .deep-pre-q{
+ display:block;min-width:0;max-width:100%;
+ overflow-wrap:anywhere;word-break:normal;white-space:normal;
+}
+@media(max-width:900px), (pointer:coarse){
+ #main-content .deep-pretest li{grid-template-columns:auto minmax(0,1fr)}
+ #main-content .deep-pretest .deep-pre-btns{
+  grid-column:2;min-width:0;max-width:100%;flex-wrap:wrap;
+ }
+ #main-content .deep-pretest .deep-pre-btns button{min-height:44px;white-space:normal}
+}
 /* Aumento de texto e seleção do iPad: preservar geometria de inputs e não reduzir tamanho das fontes. */
 @media(max-width:480px){
  .topbar{gap:4px}
