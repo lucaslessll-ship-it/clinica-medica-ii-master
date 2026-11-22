@@ -613,3 +613,8 @@ body[data-theme="dark"] .osce-app-shell .osce-keyword{font-weight:760}
 .osce-pocus-item-actions .osce-reading-marked{flex:0 1 auto}
 @media(max-width:730px){.osce-reading-intro-actions{width:100%;justify-content:flex-start}.osce-reading-intro-actions .btn{flex:1 1 165px}.osce-reading-intro-actions .osce-reading-marked{flex:1 1 100%}}
 @media(max-width:450px){.osce-reading-intro-actions{flex-direction:column;align-items:stretch}.osce-reading-intro-actions .btn{width:100%;flex:auto}.osce-pocus-item-actions .osce-reading-mark{width:100%}.osce-reading-marked{font-size:.73rem}}
+
+/* Explicitly hide closed disclosures even when global grid styles override native details. */
+#osce-ecg-top:not([open]) > :not(summary),#osce-ecg-top .osce-ecg-card-details:not([open]) > :not(summary){display:none!important}
+#osce-ecg-top:not([open]){min-height:0!important;height:auto!important;padding:0!important}
+#osce-ecg-top:not([open])>.osce-ecg-summary{min-height:58px;padding:10px 16px}
