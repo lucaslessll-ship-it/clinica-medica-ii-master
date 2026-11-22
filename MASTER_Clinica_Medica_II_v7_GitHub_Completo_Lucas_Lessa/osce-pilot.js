@@ -134,7 +134,7 @@ window.OSCEPilot=(()=>{
  }
 
  function homePage(){
-  const total=BANK.reduce((n,st)=>n+attempted(st),0),dueCount=dueItems().length,weakCount=weakItems().length,shallow=BANK.filter(st=>Object.values(state.covered[st.number]||{}).some(Boolean)).length,deep=BANK.filter(st=>state.covered[st.number]?.completa).length;
+  const total=BANK.reduce((n,st)=>n+attempted(st),0),dueCount=dueItems().length,weakCount=weakItems().length,shallow=BANK.filter(st=>attempted(st)>0||Object.values(state.covered[st.number]||{}).some(Boolean)).length,deep=BANK.filter(st=>state.covered[st.number]?.completa).length;
   const d=diffDays(),selection=dueCount?dueItems()[0].st:BANK.find(st=>attempted(st)===0)||BANK[0],planCount=dailyPlan(Number(state.settings.minutes)||15).length;
   return sectionTitle('OSCE <em>Clínica Médica.</em>')+'<div class="osce-welcome-entry"><p>Treine primeiro, aprofunde ao clicar, recupere os erros e retome sem perder seu progresso.</p>'+(welcomeOpen?'':'<button type="button" class="btn ghost osce-welcome-reopen" onclick="OSCEPilot.showWelcome()">ⓘ Como estudar no OSCE</button>')+'</div>'
    +welcomeGuide()
@@ -283,6 +283,7 @@ window.OSCEPilot=(()=>{
    +'<section class="osce-case"><div class="osce-stepbar"><span>'+displayLabel(st)+'</span><span class="osce-priority osce-priority-'+esc(st.priority)+'">● PRIORIDADE '+({alta:'ALTA',media:'MÉDIA',baixa:'BAIXA'}[st.priority]||'ADICIONAL')+'</span><span>'+esc(st.tiers[r.tier].label)+' · '+(r.pos+1)+'/'+r.ids.length+'</span></div><p>'+esc(st.caseText)+'</p>'+media(st)+'</section>'
    +'<section class="osce-step"><div class="osce-track"><span style="width:'+(r.pos/r.ids.length*100)+'%"></span></div><div class="osce-stepbar"><b>PERGUNTA '+(r.pos+1)+' DE '+r.ids.length+'</b><span>'+esc(q.competence)+'</span></div><h2>'+esc(q.prompt)+'</h2>'
    +(prev?'<p class="osce-note">Última tentativa: '+prev.score+'% de critérios · próxima revisão '+formatDate(prev.due)+'.</p>':'')
+   +'<p class="osce-note"><strong>Origem:</strong> '+(q.origin==='original'?'Pergunta do banco original, com correção didática.':'Questão didática do Master; revisar conteúdo clínico crítico com as fontes.')+' Não é gabarito institucional.</p>'
    +'<p class="osce-note"><strong>Após a tentativa você verá:</strong> resposta-modelo, checklist dos pontos essenciais, aprofundamentos, referências e memorização. Se preferir, pode <button class="osce-inline-action" onclick="OSCEPilot.preview('+st.number+')">revisar as respostas agora</button> antes de simular.</p>'+'<label class="osce-answer-label" for="osce-answer">Sua resposta (como na arguição oral)</label><textarea id="osce-answer" rows="6" placeholder="Digite seu raciocínio; pode escrever não sei para aprender pelo erro." oninput="OSCEPilot.answer(this.value)" '+(shown?'readonly':'')+'>'+esc(attemptedEntry.draft||'')+'</textarea>';
   if(!shown){
    out+='<p class="osce-note">Qual é sua confiança ANTES de conferir?</p><div class="osce-confidence" role="group" aria-label="Confiança antes do gabarito">'+[[1,'Baixa'],[2,'Média'],[3,'Alta']].map(([i,txt])=>'<button type="button" aria-pressed="'+(confidence===i)+'" onclick="OSCEPilot.conf('+i+')">'+txt+'</button>').join('')+'</div>';
@@ -381,11 +382,29 @@ window.OSCEPilot=(()=>{
   else{if(r.mode!=='daily')state.covered[st.number]={...(state.covered[st.number]||{}),[r.tier]:true};state.runs.push({...r,completedAt:now()});state.runs=state.runs.slice(-120);state.current=null;screen='done';reviewStation=st.number;}
   save();renderAgain();
  }
+ function competencyRadar(){
+  const groups=new Map();
+  for(const st of BANK)for(const q of st.questions){
+   const a=last(st,q);if(!a)continue;
+   const name=(q.competence||'Raciocínio clínico').trim();
+   const g=groups.get(name)||{name,count:0,total:0,confidentErrors:0,station:st.number,question:q.id};
+   g.count++;g.total+=a.score;
+   if(a.overconfident)g.confidentErrors++;
+   if(a.score<80){g.station=st.number;g.question=q.id;}
+   groups.set(name,g);
+  }
+  const arr=[...groups.values()].map(g=>({...g,mean:Math.round(g.total/g.count)})).sort((a,b)=>b.confidentErrors-a.confidentErrors||a.mean-b.mean);
+  if(!arr.length)return '<section class="osce-case"><h2>Mapa de competências</h2><p>Seu mapa aparece após a primeira tentativa. Ele mostra médias <strong>autoavaliadas</strong> por competência, não capacidade clínica comprovada.</p></section>';
+  return '<section class="osce-case osce-competence-radar"><h2>Mapa de competências · minhas lacunas</h2><p class="osce-note">Média dos checklists marcados por você. Amostra pequena não é diagnóstico de proficiência; priorize acertos retestados sem consulta.</p><div class="osce-competence-grid">'+arr.slice(0,6).map(g=>{
+   const flag=g.confidentErrors?' · erro com alta confiança':'';
+   return '<div class="osce-competence-item"><div class="osce-competence-name"><b>'+esc(g.name)+'</b><span>'+g.mean+'% · '+g.count+' tentativa(s)'+flag+'</span></div><div class="osce-competence-progress" role="img" aria-label="Média autodeclarada de '+g.mean+' por cento"><span style="width:'+g.mean+'%"></span></div></div>';
+  }).join('')+'</div></section>';
+ }
  function reviewPage(){
   const weak=weakItems(),dues=dueItems();
   return sectionTitle('Revisão <em>adaptativa.</em>')+'<button class="btn ghost" onclick="OSCEPilot.home()">← Voltar</button><p>Erros, respostas parciais e confiança excessiva voltam primeiro. Reavaliação por recuperação ativa, sem séries punitivas.</p>'
    +'<div class="osce-stats"><div><b>'+dues.length+'</b><span>vencidas</span></div><div><b>'+weak.length+'</b><span>lacunas insatisfatórias</span></div></div><div class="osce-actions"><button class="btn primary" onclick="OSCEPilot.reviewDue()">▶ Retestar agora</button><button class="btn" onclick="OSCEPilot.showPrompt()">Gerar script para IA</button></div>'
-   +'<section class="osce-case"><h2>Agendamento explicável</h2><p>Erro importante/alta confiança errada: D+1 · parcial: D+3 · boa resposta: D+7 · domínio repetido, sem dicas: D+21. O escore é produzido por marcação manual dos critérios da resposta.</p></section>'
+    +competencyRadar()+'<section class="osce-case"><h2>Agendamento explicável</h2><p>Erro importante/alta confiança errada: D+1 · parcial: D+3 · boa resposta: D+7 · domínio repetido, sem dicas: D+21. O escore é produzido por marcação manual dos critérios da resposta.</p></section>'
    +'<div class="osce-review-list">'+(weak.length?weak.map(x=>'<button onclick="OSCEPilot.start(\'rapida\',[ \''+esc(x.q.id)+'\' ],'+x.st.number+')"><b>'+displayLabel(x.st)+' — '+esc(x.q.competence)+' · '+x.a.score+'%</b><span>'+esc(x.q.prompt)+'</span><small>Reteste: '+formatDate(x.a.due)+'</small></button>').join(''):'<div class="card pad"><p>Nenhum erro insatisfatório registrado. Comece por uma das estações disponíveis.</p></div>')+'</div>';
  }
  function makePrompt(){
