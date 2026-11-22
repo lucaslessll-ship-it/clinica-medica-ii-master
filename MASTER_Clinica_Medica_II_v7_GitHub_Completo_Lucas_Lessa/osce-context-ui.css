@@ -48,3 +48,47 @@ body[data-theme="dark"] .osce-context-source{color:#a5dbc1}
 }
 @media(prefers-reduced-motion:reduce){.osce-context-popover,.osce-context-popover *{transition:none!important;animation:none!important}}
 body.reduce-motion .osce-context-popover,body.reduce-motion .osce-context-popover *{transition:none!important;animation:none!important}
+
+/* Navegação curta, inspirada em controles segmentados do iOS. */
+.osce-app-shell .osce-quicknav{
+ display:grid;grid-template-columns:repeat(5,minmax(0,1fr));
+ gap:5px;align-items:stretch;
+ width:100%;max-width:100%;box-sizing:border-box;
+ margin:10px 0 21px;padding:6px;
+ border:1px solid var(--osce-edge,var(--border,#d5ded5));
+ background:color-mix(in srgb,#427b5a 6%,var(--card,#fff));
+ border-radius:17px;
+ box-shadow:0 1px 4px rgb(17 44 26 / .025);
+}
+.osce-app-shell .osce-quicknav button{
+ min-width:0;min-height:44px;
+ border:1px solid transparent;border-radius:12px;
+ padding:8px 10px;
+ background:transparent;color:var(--text,#234c39);
+ font:680 .86rem/1.3 -apple-system,BlinkMacSystemFont,"SF Pro Text",system-ui,sans-serif;
+ white-space:nowrap;cursor:pointer;
+ transition:background-color .17s ease,box-shadow .17s ease,transform .19s cubic-bezier(.22,1,.36,1);
+}
+.osce-app-shell .osce-quicknav button:focus-visible{outline:3px solid #378263;outline-offset:2px}
+@media(hover:hover) and (pointer:fine){
+ .osce-app-shell .osce-quicknav button:hover{
+  background:var(--card,#fff);
+  box-shadow:0 2px 7px rgb(14 47 27 / .075);
+  transform:translateY(-1px);
+ }
+}
+.osce-app-shell .osce-quicknav button:active{background:color-mix(in srgb,#579d77 14%,var(--card,#fff));transform:scale(.98)}
+.osce-app-shell :is(#osce-today,#osce-pocus-top,#osce-priority-overview,#osce-catalog-search){scroll-margin-top:clamp(80px,10vh,112px)}
+body[data-theme="dark"] .osce-app-shell .osce-quicknav button{color:var(--text,#ecf5ee)}
+@media(max-width:690px){
+ .osce-app-shell .osce-quicknav{
+  display:flex;gap:4px;
+  overflow-x:auto;overscroll-behavior-x:contain;scrollbar-width:none;
+  -webkit-overflow-scrolling:touch;
+  border-radius:15px;padding:5px;
+ }
+ .osce-app-shell .osce-quicknav::-webkit-scrollbar{display:none}
+ .osce-app-shell .osce-quicknav button{flex:0 0 auto;min-width:102px;font-size:.83rem;padding:9px 12px}
+}
+@media(prefers-reduced-motion:reduce){.osce-app-shell .osce-quicknav button{transition:none!important}}
+body.reduce-motion .osce-app-shell .osce-quicknav button{transition:none!important}
