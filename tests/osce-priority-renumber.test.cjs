@@ -47,7 +47,7 @@ test('cards, busca e treinamento usam o novo número sem alterar os IDs das esta
 test('sessão de hoje escolhe primeiro o tema de maior prioridade sem tentativas',()=>{
  const {P}=build();
  P.daily();
- assert.match(P.page(),/<span>ESTAÇÃO 7<\/span>/);
+ assert.match(P.page(),/<span>ESTAÇÃO 1<\/span>/);
 });
 test('as respostas e os retestes antigos continuam intactos, mas relatórios mostram o número novo',()=>{
  const progress={version:2,settings:{examDate:'2026-11-24',minutes:15},items:{'61:sindrome':{draft:'',attempts:[{at:'2026-11-18T12:00:00.000Z',score:40,due:'2026-11-23T12:00:00.000Z',confidence:1,criteria:[],hintsUsed:0,answer:'não sei'}]}},runs:[],current:null,covered:{},updatedAt:null};
