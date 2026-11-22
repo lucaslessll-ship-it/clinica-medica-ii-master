@@ -261,7 +261,7 @@ window.OSCEPilot=(()=>{
   const ids={today:'osce-today',mine:'osce-my-plan',pocus:'osce-pocus-top',ecg:'osce-ecg-top',priority:'osce-priority-overview',search:'osce-catalog-search'};
   const id=ids[which];if(!id||typeof document==='undefined')return;
   const el=document.getElementById(id);if(!el)return;
-  if(which==='pocus'&&el.tagName==='DETAILS')el.open=true;
+  if((which==='pocus'||which==='ecg')&&el.tagName==='DETAILS')el.open=true;
   const scroll=()=>{
    const reduced=window.OSCEContext?.reducedMotion?.()||document.body.classList.contains('reduce-motion');
    el.scrollIntoView({behavior:reduced?'auto':'smooth',block:'start'});
