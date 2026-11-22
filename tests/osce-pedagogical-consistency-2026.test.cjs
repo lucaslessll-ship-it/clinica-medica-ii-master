@@ -49,13 +49,19 @@ test('doença celíaca separa síndrome de má absorção e doença etiológica,
  assert.ok(q.criteria.some(s=>s.includes('hipótese etiológica')));
  P.preview(12);assert.match(P.page(),/síndrome disabsortiva intestinal/);
 });
-test('pré-estudo apresenta somente um lembrete por pergunta e um aprofundamento total',()=>{
+test('pré-estudo mostra uma etapa por vez, com visão geral opcional e um aprofundamento total',()=>{
  const {P}=load();P.preview(64);const html=P.page();
- assert.equal((html.match(/class="osce-step-tip"/g)||[]).length,9);
+ assert.equal((html.match(/class="osce-guided-card"/g)||[]).length,1);
+ assert.equal((html.match(/class="osce-reading-tip"/g)||[]).length,0);
  assert.equal((html.match(/Aprofundamento completo do tema/g)||[]).length,1);
+ assert.match(html,/Passo a passo/);
+ assert.match(html,/Ver todas/);
  assert.doesNotMatch(html,/Dicas para memorizar e raciocinar/);
- assert.doesNotMatch(html,/Perguntas de apoio:/);
- assert.doesNotMatch(html,/Aprofundamentos do assunto/);
+ P.previewLayoutSet('all');
+ const all=P.page();
+ assert.equal((all.match(/class="osce-reading-card"/g)||[]).length,0);
+ assert.equal((all.match(/osce-reading-card/g)||[]).length,9);
+ assert.equal((all.match(/Aprofundamento completo do tema/g)||[]).length,1);
 });
 test('simulação mostra resposta única, dica específica e mantém correção manual e tentativas',()=>{
  const {P,store}=load();P.start('completa',null,64);P.answer('não sei');P.conf(1);P.reveal();

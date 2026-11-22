@@ -18,7 +18,7 @@ window.OSCEPilot=(()=>{
  const shift=(n)=>{const d=new Date();d.setHours(12,0,0,0);d.setDate(d.getDate()+n);return d.toISOString()};
  const empty=()=>({version:2,settings:{examDate:'2026-11-24',minutes:15},items:{},runs:[],current:null,covered:{},updatedAt:null});
  function load(){try{const s=JSON.parse(localStorage.getItem(KEY));if(s&&s.items&&s.settings)return {...empty(),...s,covered:s.covered||{}}}catch{}return empty();}
- let state=load(),screen='home',shown=false,confidence=0,hints=0,checked=[],reviewStation=61,previewStation=61,previewTier='completa',glossary='',catalogSearch='',catalogPriority='alta',catalogLimit=12;
+ let state=load(),screen='home',shown=false,confidence=0,hints=0,checked=[],reviewStation=61,previewStation=61,previewTier='completa',previewStep=0,previewLayout='guided',glossary='',catalogSearch='',catalogPriority='alta',catalogLimit=12;
  let welcomeOpen=!state.settings?.hideWelcome, welcomeSkipNext=!!state.settings?.hideWelcome, welcomeDismissedThisLoad=false;
  const bank=()=>BANK;
  function study(){const r=state.current;return MAP.get(r?.mode==='daily'?r.queue?.[r.pos]?.station:r?.station)||MAP.get(61)}
@@ -41,12 +41,12 @@ window.OSCEPilot=(()=>{
  render();
  if(!hasDom)return;
  const root=document.querySelector('.osce-app-shell');if(!root)return;
- const anchors={top:root,case:root.querySelector('.osce-case'),feedback:root.querySelector('.osce-feedback'),question:root.querySelector('.osce-step'),levels:root.querySelector('.osce-study-levels')};
+ const anchors={top:root,case:root.querySelector('.osce-case'),guide:root.querySelector('.osce-reading-workspace')||root.querySelector('.osce-guided-card'),feedback:root.querySelector('.osce-feedback'),question:root.querySelector('.osce-step'),levels:root.querySelector('.osce-study-levels')};
  const target=anchors[destination];
  if(target){
   target.scrollIntoView({behavior:'auto',block:'start'});
   window.OSCEContext?.enter(target,destination);
-  if(destination==='question'||destination==='case'||destination==='feedback'||destination==='top'){const h=destination==='top'?target.querySelector('h1'):target.querySelector('h2,h3')||target;if(h){h.tabIndex=-1;h.focus({preventScroll:true});}}
+  if(destination==='question'||destination==='case'||destination==='feedback'||destination==='top'||destination==='guide'){const h=destination==='top'?target.querySelector('h1'):target.querySelector('h2,h3')||target;if(h){h.tabIndex=-1;h.focus({preventScroll:true});}}
  }else{
   window.scrollTo({top:previousY,behavior:'auto'});
   if(previousId){const field=document.getElementById(previousId);field?.focus?.({preventScroll:true});}
@@ -328,16 +328,60 @@ window.OSCEPilot=(()=>{
   return '<details id="osce-terms" class="osce-deep"><summary>Termos marcados e referências <span>toque nos conceitos</span></summary><div><p class="osce-note">Toque em um termo para abrir a definição e a fonte sem perder o ponto de leitura.</p><div class="osce-term-list">'+a.map(t=>'<button class="osce-term" type="button" onclick="OSCEPilot.term(\''+t.key+'\',this)">'+esc(t.name)+' <sup>↗</sup></button>').join('')+'</div><div id="osce-glossary-content" role="status" aria-live="polite">'+(glossary?glossary:'<p class="osce-note">Selecione um termo acima.</p>')+'</div></div></details>';
  }
  function mark(st,text){
-  let s=esc(text);
-  const terms=(st.terms||[]).filter(t=>t.name.length>=5).sort((a,b)=>b.name.length-a.name.length);
-  for(const t of terms.slice(0,8)){
-   const term=esc(t.name),pos=s.toLocaleLowerCase('pt-BR').indexOf(term.toLocaleLowerCase('pt-BR'));
-   if(pos>=0){
-    const visible=s.slice(pos,pos+term.length);
-    s=s.slice(0,pos)+'<button class="osce-term-inline" type="button" onclick="OSCEPilot.term(\''+t.key+'\',this)">'+visible+' <sup>ref</sup></button>'+s.slice(pos+term.length);
+  // Os destaques são apenas apoio de leitura, aplicados depois da resposta: NÃO são inferências clínicas.
+  // Os termos com fonte mantêm os links existentes; nenhuma parte do texto é renderizada sem escapar HTML.
+  const raw=String(text??''),isWord=c=>!!c&&/[\p{L}\p{N}_]/u.test(c);
+  const hits=[];
+  const add=(word,kind,priority,key)=>{
+   if(!word||word.length<3||word.length>90)return;
+   const needle=word.toLocaleLowerCase('pt-BR'),hay=raw.toLocaleLowerCase('pt-BR');
+   let from=0,at=-1,count=0;
+   while((at=hay.indexOf(needle,from))!==-1&&count<2){
+    const last=at+word.length;
+    if(!isWord(raw[at-1])&&!isWord(raw[last]))hits.push({start:at,end:last,kind,priority,key});
+    from=at+word.length;count++;
+   }
+  };
+  // Destacar no máximo dois conceitos com definição documentada.
+  for(const t of (st.terms||[]).filter(t=>t.name?.length>=5&&t.name.length<=65).slice(0,2)){
+   add(t.name,'dx',90,t.key);
+  }
+  if(state.settings.clinicalHighlights!==false){
+   const patterns=[
+    {kind:'dx',priority:78,rx:/diagnóstico sindrômico|hipótese etiológica|síndrome disabsortiva intestinal|bloqueio completo da condução AV|síndrome de má absorção/giu},
+    {kind:'alert',priority:74,rx:/instabilidade hemodinâmica|sinais? de gravidade|sinais? de alarme|choque|assistolia|estridor|hipotensão|hipoxemia|instável|parada cardiorrespiratória|risco de morte|refratári[oa]s?|contraindicaç[ãõ]o/giu},
+    {kind:'action',priority:67,rx:/marcapasso(?: permanente)?|estimulação (?:transcutânea|transvenosa)|cardioversão elétrica|anticoagulação|imunoglobulina(?: intravenosa)?|corticoides?|antibioticoterapia|dieta (?:rigorosa )?sem glúten|monitorização|internação|hidratação|reposição de (?:magnésio|potássio)|desfibrilação|reavaliação seriada/giu},
+    {kind:'test',priority:61,rx:/anti-transglutaminase (?:IgA|tecidual)|IgA total|biópsias? duodenais?|ecocardiograma|eletrocardiograma|ECG(?: de 12 derivações)?|ressonância magnética|hemograma|eletrólitos|endoscopia|colonoscopia|mielograma|tomografia(?: computadorizada)?|metanefrinas|eletroforese/giu},
+    {kind:'clue',priority:55,rx:/anemia ferropriva|anemia por deficiência de ferro|diarreia crônica|fraqueza (?:muscular )?proximal|atrofia de vilosidades|dissociação atrioventricular|onda P|QRS|linhas B|bradicardia|hemoptise|rash malar|poliartrite|hematúria|ortopneia|perda ponderal/giu}
+   ];
+   for(const p of patterns){
+    for(const m of raw.matchAll(p.rx)){
+     if(!isWord(raw[m.index-1])&&!isWord(raw[m.index+m[0].length]))hits.push({start:m.index,end:m.index+m[0].length,kind:p.kind,priority:p.priority});
+    }
    }
   }
-  return s;
+  const selected=[];
+  const cap=state.settings.clinicalHighlights===false?2:Math.max(3,Math.min(7,Math.ceil(raw.length/125)));
+  for(const hit of hits.sort((a,b)=>b.priority-a.priority||a.start-b.start||(b.end-b.start)-(a.end-a.start))){
+   if(selected.length>=cap)break;
+   if(selected.some(e=>hit.start<e.end&&hit.end>e.start))continue;
+   selected.push(hit);
+  }
+  selected.sort((a,b)=>a.start-b.start);
+  let html='',cursor=0;
+  for(const h of selected){
+   html+=esc(raw.slice(cursor,h.start));
+   const part=esc(raw.slice(h.start,h.end));
+   if(h.key){
+    const safeKey=String(h.key).replace(/[^a-zA-Z0-9_-]/g,'');
+    html+='<button type="button" class="osce-term-inline osce-keyword osce-keyword-dx" onclick="OSCEPilot.term(\''+safeKey+'\',this)" aria-label="'+part+': abrir definição e referência">'+part+' <sup>ref</sup></button>';
+   }else{
+    const kind=String(h.kind);
+    html+='<mark class="osce-keyword osce-keyword-'+kind+'">'+part+'</mark>';
+   }
+   cursor=h.end;
+  }
+  return html+esc(raw.slice(cursor));
  }
  function uniqueStudyTip(st,q){
   const tip=String(q.memory||'').trim(),same=String(st.essential?.mnemonic||'').trim();
@@ -418,21 +462,67 @@ window.OSCEPilot=(()=>{
   return out;
  }
  function preview(n){
-  if(!MAP.has(Number(n)))return;markWelcomeVisited();previewStation=Number(n);previewTier='completa';screen='preview';glossary='';renderAgain();
+  if(!MAP.has(Number(n)))return;
+  markWelcomeVisited();previewStation=Number(n);previewTier='completa';previewStep=0;
+  previewLayout=state.settings.previewLayout==='all'?'all':'guided';
+  screen='preview';glossary='';renderAgain();
  }
  function previewTierSet(t){
-  const st=MAP.get(previewStation);if(st?.tiers[t]){previewTier=t;renderAgain('levels');}
+  const st=MAP.get(previewStation);
+  if(st?.tiers[t]){previewTier=t;previewStep=0;renderAgain('levels');}
+ }
+ function previewStepSet(i){
+  const st=MAP.get(previewStation),tier=st?.tiers[previewTier];
+  if(!tier)return;
+  const next=Math.max(0,Math.min(tier.ids.length-1,Number(i)||0));
+  previewStep=next;previewLayout='guided';renderAgain('guide');
+ }
+ function previewLayoutSet(mode){
+  if(!['guided','all'].includes(mode))return;
+  previewLayout=mode;state.settings.previewLayout=mode;save();renderAgain('guide');
+ }
+ function toggleClinicalHighlights(){
+  state.settings.clinicalHighlights=state.settings.clinicalHighlights===false;
+  save();renderAgain(screen==='preview'?'guide':'feedback');
+ }
+ function highlightLegend(){
+  return '<div class="osce-reading-legend" aria-label="Significado dos destaques">'
+    +[['dx','Diagnóstico'],['clue','Pista'],['test','Exame'],['action','Conduta'],['alert','Atenção']].map(([k,label])=>'<span class="osce-reading-legend-item"><i class="osce-legend-mark osce-keyword-'+k+'" aria-hidden="true"></i>'+label+'</span>').join('')
+    +'</div>';
+ }
+ function readingCard(st,q,index,total){
+  const tip=uniqueStudyTip(st,q);
+  return '<article class="osce-preview-question osce-reading-card" id="osce-reading-step-'+index+'">'
+   +'<header class="osce-reading-card-head"><p class="eyebrow">ETAPA '+(index+1)+'/'+total+' · '+esc(q.competence)+'</p><h3>'+esc(q.prompt)+'</h3></header>'
+   +'<div class="osce-preview-answer osce-reading-answer"><strong>Resposta-modelo do Master</strong><p>'+mark(st,q.answer)+'</p></div>'
+   +'<div class="osce-reading-criteria"><h4>O que não posso esquecer</h4><ul>'+q.criteria.map(c=>'<li>'+esc(c)+'</li>').join('')+'</ul></div>'
+   +(tip?'<p class="osce-step-tip osce-reading-tip"><strong>Âncora desta pergunta:</strong> '+esc(tip)+'</p>':'')
+   +'</article>';
  }
  function previewPage(){
   const st=MAP.get(previewStation)||BANK[0],tier=st.tiers[previewTier]?previewTier:'completa',t=st.tiers[tier],qs=t.ids.map(id=>st.questions.find(q=>q.id===id)).filter(Boolean);
+  previewStep=Math.min(previewStep,Math.max(0,qs.length-1));
+  const toSimulate=(state.current?.station===st.number?'OSCEPilot.resume()':'OSCEPilot.start(\''+tier+'\',null,'+st.number+')');
+  const simText=state.current?.station===st.number?'Retomar simulação':'Iniciar simulação';
   let html=sectionTitle('Revisar '+displayLabel(st).toLowerCase()+' — <em>'+esc(st.title)+'.</em>');
-  html+='<button class="btn ghost" onclick="OSCEPilot.home()">← Voltar às estações</button><div class="osce-preview-note"><strong>REVISÃO ANTES DO SIMULADO · SEM NOTA</strong><p>Todas as respostas-modelo estão abertas para estudar. Percorra as perguntas, leia o essencial e abra somente os aprofundamentos de que precisar. Isso não conta como tentativa de prova.</p><button class="btn primary" onclick="'+(state.current?.station===st.number?'OSCEPilot.resume()':'OSCEPilot.start(\''+tier+'\',null,'+st.number+')')+'">'+(state.current?.station===st.number?'Retomar simulação':'Agora quero simular')+'</button></div>';
-  html+='<div class="osce-study-levels">'+Object.entries(st.tiers).map(([k,x])=>'<button type="button" class="btn '+(k===tier?'primary':'')+'" onclick="OSCEPilot.previewTierSet(\''+k+'\')">'+esc(x.label)+' · '+x.minutes+'min</button>').join('')+'</div>';
+  html+='<button class="btn ghost" onclick="OSCEPilot.home()">← Voltar às estações</button><div class="osce-preview-note osce-reading-intro"><div><strong>ESTUDO GUIADO · SEM NOTA</strong><p>Uma pergunta por vez, com resposta e pontos essenciais à vista. Navegue livremente; abra o aprofundamento completo apenas se precisar. O simulado continua sem mostrar o gabarito antes da sua tentativa.</p></div><button class="btn primary" onclick="'+toSimulate+'">'+simText+'</button></div>';
+  html+='<div class="osce-study-levels">'+Object.entries(st.tiers).map(([k,x])=>'<button type="button" class="btn '+(k===tier?'primary':'')+'" aria-pressed="'+(k===tier)+'" onclick="OSCEPilot.previewTierSet(\''+k+'\')">'+esc(x.label)+' · '+x.minutes+'min</button>').join('')+'</div>';
   html+='<section class="osce-case"><h2>Contexto e imagem do caso</h2><p>'+esc(st.caseText)+'</p>'+media(st)+'</section>';
-  html+='<section class="osce-case"><h2>Essencial — síntese para explicar em 1 minuto</h2><p>'+mark(st,st.essential.oneMinute)+'</p><p class="osce-note"><b>Âncora:</b> '+esc(st.essential.mnemonic)+'</p></section>';
-  html+='<section class="osce-preview-questions"><h2>O que preciso saber responder</h2>'+qs.map((q,i)=>'<article class="osce-preview-question"><p class="eyebrow">ETAPA '+(i+1)+'/'+qs.length+' · '+esc(q.competence)+'</p><h3>'+esc(q.prompt)+'</h3><div class="osce-preview-answer"><strong>Resposta-modelo do Master</strong><p>'+mark(st,q.answer)+'</p></div><details class="osce-deep"><summary>Checklist do que não posso esquecer <span>expandir</span></summary><div><ul>'+q.criteria.map(x=>'<li>'+esc(x)+'</li>').join('')+'</ul></div></details>' + (uniqueStudyTip(st,q)?'<p class="osce-step-tip"><strong>Para lembrar nesta etapa:</strong> '+esc(uniqueStudyTip(st,q))+'</p>':'') + '</article>').join('')+'</section>';
-  html+='<section class="osce-case osce-study-depth"><h2>Aprofundamento opcional</h2><p class="osce-note">Leia só o que ainda estiver difícil. Aprofundamentos reunidos em um único painel.</p>'+fullTopicDepth(st)+'</section>';
-  html+='<section class="osce-case osce-library-case"><details class="osce-deep osce-library" id="osce-library"><summary>Biblioteca desta estação <span>conceitos, aulas e referências</span></summary><div class="osce-deep-stack">'+termPanel(st)+lessonBar(st)+sourcePanel(st)+'</div></details><div class="osce-actions"><button type="button" class="btn primary" onclick="'+(state.current?.station===st.number?'OSCEPilot.resume()':'OSCEPilot.start(\''+tier+'\',null,'+st.number+')')+'">'+(state.current?.station===st.number?'Retomar simulação':'Iniciar simulado agora')+'</button><button type="button" class="btn" onclick="OSCEPilot.home()">Voltar ao catálogo</button></div></section>';
+  html+='<section class="osce-case osce-reading-overview"><h2>Essencial — síntese em 1 minuto</h2><p>'+mark(st,st.essential.oneMinute)+'</p><p class="osce-note"><strong>Âncora do tema:</strong> '+esc(st.essential.mnemonic)+'</p></section>';
+  html+='<section class="osce-preview-questions osce-reading-workspace" id="osce-reading-workspace"><div class="osce-reading-toolbar"><div><h2>O que preciso saber responder</h2><p class="osce-note">'+qs.length+' etapas para dominar o raciocínio deste caso</p></div><div class="osce-reading-options"><button class="btn osce-reading-view" aria-pressed="'+(previewLayout==='guided')+'" onclick="OSCEPilot.previewLayoutSet(\'guided\')">Passo a passo</button><button class="btn osce-reading-view" aria-pressed="'+(previewLayout==='all')+'" onclick="OSCEPilot.previewLayoutSet(\'all\')">Ver todas</button><button class="btn ghost osce-reading-emphasis" aria-pressed="'+(state.settings.clinicalHighlights!==false)+'" onclick="OSCEPilot.toggleClinicalHighlights()">'+(state.settings.clinicalHighlights!==false?'Destaques: ligados':'Destaques: desligados')+'</button></div></div>'
+   +(state.settings.clinicalHighlights===false?'':highlightLegend());
+  if(previewLayout==='guided'){
+   const i=previewStep;
+   html+='<div class="osce-reading-step-nav" aria-label="Escolher etapa">'+qs.map((q,n)=>'<button type="button" class="osce-reading-index'+(n===i?' is-active':'')+'" aria-label="Etapa '+(n+1)+': '+esc(q.competence)+'" aria-current="'+(n===i?'step':'false')+'" onclick="OSCEPilot.previewStepSet('+n+')">'+(n+1)+'</button>').join('')+'</div>';
+   html+='<div class="osce-reading-progress"><span style="width:'+((i+1)/qs.length*100)+'%"></span></div>';
+   html+='<div class="osce-guided-card" id="osce-guided-card">'+readingCard(st,qs[i],i,qs.length)+'</div>';
+   html+='<nav class="osce-reading-pagination" aria-label="Navegação das perguntas"><button type="button" class="btn" '+(i===0?'disabled ':'')+'onclick="OSCEPilot.previewStepSet('+(i-1)+')">← Anterior</button><span>Etapa '+(i+1)+' de '+qs.length+'</span>'+(i<qs.length-1?'<button type="button" class="btn primary" onclick="OSCEPilot.previewStepSet('+(i+1)+')">Próxima →</button>':'<button type="button" class="btn primary" onclick="'+toSimulate+'">'+simText+' →</button>')+'</nav>';
+  }else{
+   html+='<div class="osce-reading-all" id="osce-guided-card">'+qs.map((q,i)=>readingCard(st,q,i,qs.length)).join('')+'</div>';
+  }
+  html+='</section>';
+  html+='<section class="osce-case osce-study-depth"><h2>Aprofundamento opcional</h2><p class="osce-note">Sem fragmentar o conteúdo: o aprofundamento completo fica em um único painel.</p>'+fullTopicDepth(st)+'</section>';
+  html+='<section class="osce-case osce-library-case"><details class="osce-deep osce-library" id="osce-library"><summary>Biblioteca desta estação <span>conceitos, aulas e referências</span></summary><div class="osce-deep-stack">'+termPanel(st)+lessonBar(st)+sourcePanel(st)+'</div></details><div class="osce-actions"><button type="button" class="btn primary" onclick="'+toSimulate+'">'+simText+' agora</button><button type="button" class="btn" onclick="OSCEPilot.home()">Voltar ao catálogo</button></div></section>';
   return html;
  }
  function resetView(){shown=false;confidence=0;hints=0;checked=[];glossary='';}
@@ -581,5 +671,5 @@ window.OSCEPilot=(()=>{
  window.addEventListener('master-auth-ended',()=>{state=empty();screen='home';shown=false;glossary='';welcomeDismissedThisLoad=false;welcomeOpen=true;welcomeSkipNext=false;});
  window.addEventListener('master-remote-merge',e=>{if(e.detail?.key===KEY)reload()});
  window.addEventListener('storage',e=>{if(e.key===KEY)reload()});
- return {bank,weakItems,page,start,daily,resume,home,answerKey,jumpSection,welcomePreference,showWelcome,closeWelcome,preview,previewTierSet,previewPage,filterCatalog,setCatalogPriority,moreCatalog,jumpToIndex,setDate,setMinutes,answer,conf,hint,reveal,criterion,retry,finish,showReview,showPrompt,reviewDue,term,showSources,showTerms,openLesson,showFullLesson,expandImage,focusVisualNote,toggleVisualMarks,expandVisual,copyPrompt,reload};
+ return {bank,weakItems,page,start,daily,resume,home,previewStepSet,previewLayoutSet,toggleClinicalHighlights,answerKey,jumpSection,welcomePreference,showWelcome,closeWelcome,preview,previewTierSet,previewPage,filterCatalog,setCatalogPriority,moreCatalog,jumpToIndex,setDate,setMinutes,answer,conf,hint,reveal,criterion,retry,finish,showReview,showPrompt,reviewDue,term,showSources,showTerms,openLesson,showFullLesson,expandImage,focusVisualNote,toggleVisualMarks,expandVisual,copyPrompt,reload};
 })();
