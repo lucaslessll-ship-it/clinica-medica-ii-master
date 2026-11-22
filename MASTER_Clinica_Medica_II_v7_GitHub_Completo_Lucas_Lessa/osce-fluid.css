@@ -246,3 +246,38 @@ body[data-theme="dark"] .osce-app-shell .osce-visual-pin{color:#fff}
 /* Respeitar também a preferência 'Reduzir movimento' configurada dentro do Master. */
 body.reduce-motion .osce-app-shell *,body.reduce-motion .osce-app-shell *::before,body.reduce-motion .osce-app-shell *::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
 body.reduce-motion .osce-app-shell :is(.osce-depth-btn,.osce-index-entry,.osce-card):hover{transform:none!important}
+
+
+/* Coerência visual do Super Foco utilizado a partir das estações OSCE/POCUS. */
+.sf-page{
+ font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Public Sans",system-ui,sans-serif;
+ letter-spacing:-.005em;
+}
+.sf-page .page-header h1{letter-spacing:-.04em;line-height:1.16;font-weight:710}
+.sf-page :is(.sf-question,.sf-context-entry,.sf-method-guide,.sf-training,.sf-resume,.sf-stats span){
+ border-radius:18px;
+ box-shadow:0 1px 3px rgb(10 39 24 / .04),0 8px 22px rgb(10 39 24 / .035);
+}
+.sf-page :is(.sf-topics button,.sf-session-nav button,.sf-confidence button,.sf-action-row .btn){
+ border-radius:12px;
+ min-height:44px;
+ transition:transform .2s cubic-bezier(.22,1,.36,1),border-color .16s ease,background-color .16s ease;
+}
+.sf-page .sf-question textarea{
+ border-radius:14px;
+ font-size:max(16px,1rem);
+ line-height:1.65;
+ padding:16px;
+}
+.sf-page .sf-question textarea:focus-visible{outline:0;border-color:#438d69;box-shadow:0 0 0 4px color-mix(in srgb,#408965 17%,transparent)}
+.sf-page .sf-answer{border-radius:14px;border-left-width:3px}
+.sf-page :is(.sf-deep,.sf-summary-item){border-radius:13px}
+@media(hover:hover) and (pointer:fine){
+ .sf-page .sf-topics button:hover{transform:translateY(-2px);box-shadow:0 7px 18px rgb(10 39 24 / .065)}
+ .sf-page .btn:hover{transform:translateY(-1px)}
+}
+@media(prefers-reduced-motion:reduce){
+ .sf-page *, .sf-page *::before,.sf-page *::after{transition:none!important;animation:none!important;scroll-behavior:auto!important}
+ .sf-page .sf-topics button:hover{transform:none}
+}
+body.reduce-motion .sf-page *,body.reduce-motion .sf-page *::before,body.reduce-motion .sf-page *::after{transition:none!important;animation:none!important;scroll-behavior:auto!important}
