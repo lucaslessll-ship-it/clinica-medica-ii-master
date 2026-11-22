@@ -483,3 +483,16 @@ body[data-theme="dark"] .osce-app-shell .osce-keyword{font-weight:760}
 .osce-app-shell .osce-feedback .osce-criteria label:has(input:checked){background:color-mix(in srgb,#518b6d 5%,transparent)}
 .osce-app-shell .osce-feedback .osce-criteria input{min-width:18px;width:18px;height:18px;accent-color:#408062}
 .osce-app-shell #osce-criteria-count{font-variant-numeric:tabular-nums;font-weight:800}
+
+/* Cobertura por tema: checklist visual, sem confundir conclusão com domínio. */
+.osce-app-shell .osce-topic-completion{display:grid;gap:7px;margin:12px 0 15px;min-width:0}
+.osce-app-shell .osce-topic-completion-head{display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:.78rem;color:var(--text-muted,#647269);line-height:1.4}
+.osce-app-shell .osce-topic-completion-head strong{font-variant-numeric:tabular-nums;color:var(--text,#25362b)}
+.osce-app-shell .osce-topic-completion-track{height:7px;width:100%;background:color-mix(in srgb,var(--text,#24372d) 13%,transparent);border-radius:99px;overflow:hidden}
+.osce-app-shell .osce-topic-completion-track>span{display:block;height:100%;background:#438767;border-radius:inherit;transition:width .2s ease}
+.osce-app-shell .osce-topic-completion small{font-size:.74rem;color:var(--text-muted,#647269)}
+.osce-app-shell .osce-topic-completion.is-compact{grid-column:1/-1;width:100%;margin:0;gap:4px}
+.osce-app-shell .osce-topic-completion.is-compact .osce-topic-completion-head{font-size:.69rem}
+.osce-app-shell .osce-topic-completion.is-compact .osce-topic-completion-track{height:4px}
+.osce-app-shell .osce-index-entry:has(.osce-topic-completion){flex-wrap:wrap}
+@media(prefers-reduced-motion:reduce){.osce-app-shell .osce-topic-completion-track>span{transition:none}}
