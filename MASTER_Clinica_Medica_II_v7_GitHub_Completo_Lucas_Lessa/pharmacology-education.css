@@ -42,3 +42,7 @@
  .pharm-card .pharm-posology>.posology-regimen{margin:9px;padding:11px}
 }
 @media(prefers-reduced-motion:reduce){.pharm-card *, .posology-dialog *{transition:none!important;animation:none!important}}
+
+.pharm-results{margin:10px 0 15px;padding:9px 12px;font-size:.84rem;line-height:1.55;color:var(--muted,#64746a);border-left:3px solid #6e9c82;background:color-mix(in srgb,#649b76 5%,var(--white,#fff));border-radius:5px}
+.pharm-more{display:block;margin:23px auto 35px;min-height:48px;min-width:min(100%,280px);border-radius:12px;font-size:.9rem;font-weight:700}
+.pharm-more:focus-visible{outline:3px solid #358461;outline-offset:3px}
