@@ -18,7 +18,7 @@ window.OSCEPilot=(()=>{
  const shift=(n)=>{const d=new Date();d.setHours(12,0,0,0);d.setDate(d.getDate()+n);return d.toISOString()};
  const empty=()=>({version:2,settings:{examDate:'2026-11-24',minutes:15},items:{},runs:[],current:null,covered:{},updatedAt:null});
  function load(){try{const s=JSON.parse(localStorage.getItem(KEY));if(s&&s.items&&s.settings)return {...empty(),...s,covered:s.covered||{}}}catch{}return empty();}
- let state=load(),screen='home',shown=false,confidence=0,hints=0,checked=[],reviewStation=61,previewStation=61,previewTier='completa',glossary='',catalogSearch='',catalogPriority='alta',catalogLimit=12;
+ let state=load(),screen='home',shown=false,confidence=0,hints=0,checked=[],reviewStation=61,previewStation=61,previewTier='completa',previewStep=0,previewLayout='guided',glossary='',catalogSearch='',catalogPriority='alta',catalogLimit=12;
  let welcomeOpen=!state.settings?.hideWelcome, welcomeSkipNext=!!state.settings?.hideWelcome, welcomeDismissedThisLoad=false;
  const bank=()=>BANK;
  function study(){const r=state.current;return MAP.get(r?.mode==='daily'?r.queue?.[r.pos]?.station:r?.station)||MAP.get(61)}
@@ -41,12 +41,12 @@ window.OSCEPilot=(()=>{
  render();
  if(!hasDom)return;
  const root=document.querySelector('.osce-app-shell');if(!root)return;
- const anchors={top:root,case:root.querySelector('.osce-case'),feedback:root.querySelector('.osce-feedback'),question:root.querySelector('.osce-step'),levels:root.querySelector('.osce-study-levels')};
+ const anchors={top:root,case:root.querySelector('.osce-case'),guide:root.querySelector('.osce-guided-card')||root.querySelector('.osce-preview-questions'),feedback:root.querySelector('.osce-feedback'),question:root.querySelector('.osce-step'),levels:root.querySelector('.osce-study-levels')};
  const target=anchors[destination];
  if(target){
   target.scrollIntoView({behavior:'auto',block:'start'});
   window.OSCEContext?.enter(target,destination);
-  if(destination==='question'||destination==='case'||destination==='feedback'||destination==='top'){const h=destination==='top'?target.querySelector('h1'):target.querySelector('h2,h3')||target;if(h){h.tabIndex=-1;h.focus({preventScroll:true});}}
+  if(destination==='question'||destination==='case'||destination==='feedback'||destination==='top'||destination==='guide'){const h=destination==='top'?target.querySelector('h1'):target.querySelector('h2,h3')||target;if(h){h.tabIndex=-1;h.focus({preventScroll:true});}}
  }else{
   window.scrollTo({top:previousY,behavior:'auto'});
   if(previousId){const field=document.getElementById(previousId);field?.focus?.({preventScroll:true});}
@@ -328,16 +328,60 @@ window.OSCEPilot=(()=>{
   return '<details id="osce-terms" class="osce-deep"><summary>Termos marcados e referências <span>toque nos conceitos</span></summary><div><p class="osce-note">Toque em um termo para abrir a definição e a fonte sem perder o ponto de leitura.</p><div class="osce-term-list">'+a.map(t=>'<button class="osce-term" type="button" onclick="OSCEPilot.term(\''+t.key+'\',this)">'+esc(t.name)+' <sup>↗</sup></button>').join('')+'</div><div id="osce-glossary-content" role="status" aria-live="polite">'+(glossary?glossary:'<p class="osce-note">Selecione um termo acima.</p>')+'</div></div></details>';
  }
  function mark(st,text){
-  let s=esc(text);
-  const terms=(st.terms||[]).filter(t=>t.name.length>=5).sort((a,b)=>b.name.length-a.name.length);
-  for(const t of terms.slice(0,8)){
-   const term=esc(t.name),pos=s.toLocaleLowerCase('pt-BR').indexOf(term.toLocaleLowerCase('pt-BR'));
-   if(pos>=0){
-    const visible=s.slice(pos,pos+term.length);
-    s=s.slice(0,pos)+'<button class="osce-term-inline" type="button" onclick="OSCEPilot.term(\''+t.key+'\',this)">'+visible+' <sup>ref</sup></button>'+s.slice(pos+term.length);
+  // Os destaques são apenas apoio de leitura, aplicados depois da resposta: NÃO são inferências clínicas.
+  // Os termos com fonte mantêm os links existentes; nenhuma parte do texto é renderizada sem escapar HTML.
+  const raw=String(text??''),isWord=c=>!!c&&/[\p{L}\p{N}_]/u.test(c);
+  const hits=[];
+  const add=(word,kind,priority,key)=>{
+   if(!word||word.length<3||word.length>90)return;
+   const needle=word.toLocaleLowerCase('pt-BR'),hay=raw.toLocaleLowerCase('pt-BR');
+   let from=0,at=-1,count=0;
+   while((at=hay.indexOf(needle,from))!==-1&&count<2){
+    const last=at+word.length;
+    if(!isWord(raw[at-1])&&!isWord(raw[last]))hits.push({start:at,end:last,kind,priority,key});
+    from=at+word.length;count++;
+   }
+  };
+  // Destacar no máximo dois conceitos com definição documentada.
+  for(const t of (st.terms||[]).filter(t=>t.name?.length>=5&&t.name.length<=65).slice(0,2)){
+   add(t.name,'dx',90,t.key);
+  }
+  if(state.settings.clinicalHighlights!==false){
+   const patterns=[
+    {kind:'dx',priority:78,rx:/diagnóstico sindrômico|hipótese etiológica|síndrome disabsortiva intestinal|bloqueio completo da condução AV|síndrome de má absorção/giu},
+    {kind:'alert',priority:74,rx:/instabilidade hemodinâmica|sinais? de gravidade|sinais? de alarme|choque|assistolia|estridor|hipotensão|hipoxemia|instável|parada cardiorrespiratória|risco de morte|refratári[oa]s?|contraindicaç[ãõ]o/giu},
+    {kind:'action',priority:67,rx:/marcapasso(?: permanente)?|estimulação (?:transcutânea|transvenosa)|cardioversão elétrica|anticoagulação|imunoglobulina(?: intravenosa)?|corticoides?|antibioticoterapia|dieta (?:rigorosa )?sem glúten|monitorização|internação|hidratação|reposição de (?:magnésio|potássio)|desfibrilação|reavaliação seriada/giu},
+    {kind:'test',priority:61,rx:/anti-transglutaminase (?:IgA|tecidual)|IgA total|biópsias? duodenais?|ecocardiograma|eletrocardiograma|ECG(?: de 12 derivações)?|ressonância magnética|hemograma|eletrólitos|endoscopia|colonoscopia|mielograma|tomografia(?: computadorizada)?|metanefrinas|eletroforese/giu},
+    {kind:'clue',priority:55,rx:/anemia ferropriva|anemia por deficiência de ferro|diarreia crônica|fraqueza (?:muscular )?proximal|atrofia de vilosidades|dissociação atrioventricular|onda P|QRS|linhas B|bradicardia|hemoptise|rash malar|poliartrite|hematúria|ortopneia|perda ponderal/giu}
+   ];
+   for(const p of patterns){
+    for(const m of raw.matchAll(p.rx)){
+     if(!isWord(raw[m.index-1])&&!isWord(raw[m.index+m[0].length]))hits.push({start:m.index,end:m.index+m[0].length,kind:p.kind,priority:p.priority});
+    }
    }
   }
-  return s;
+  const selected=[];
+  const cap=state.settings.clinicalHighlights===false?2:Math.max(3,Math.min(7,Math.ceil(raw.length/125)));
+  for(const hit of hits.sort((a,b)=>b.priority-a.priority||a.start-b.start||(b.end-b.start)-(a.end-a.start))){
+   if(selected.length>=cap)break;
+   if(selected.some(e=>hit.start<e.end&&hit.end>e.start))continue;
+   selected.push(hit);
+  }
+  selected.sort((a,b)=>a.start-b.start);
+  let html='',cursor=0;
+  for(const h of selected){
+   html+=esc(raw.slice(cursor,h.start));
+   const part=esc(raw.slice(h.start,h.end));
+   if(h.key){
+    const safeKey=String(h.key).replace(/[^a-zA-Z0-9_-]/g,'');
+    html+='<button type="button" class="osce-term-inline osce-keyword osce-keyword-dx" onclick="OSCEPilot.term(\''+safeKey+'\',this)" aria-label="'+part+': abrir definição e referência">'+part+' <sup>ref</sup></button>';
+   }else{
+    const kind=String(h.kind);
+    html+='<mark class="osce-keyword osce-keyword-'+kind+'">'+part+'</mark>';
+   }
+   cursor=h.end;
+  }
+  return html+esc(raw.slice(cursor));
  }
  function uniqueStudyTip(st,q){
   const tip=String(q.memory||'').trim(),same=String(st.essential?.mnemonic||'').trim();
