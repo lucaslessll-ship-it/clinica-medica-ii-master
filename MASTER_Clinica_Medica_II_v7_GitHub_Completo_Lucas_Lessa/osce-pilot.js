@@ -129,8 +129,10 @@ window.OSCEPilot=(()=>{
  function personalDoneMap(){
   const previous=state.settings.personalPlanDone||{};
   if(state.settings.personalPlanVersion===window.OSCE_PERSONAL_PRIORITIES?.version)return previous;
-  const unchanged=new Set([1,2,3,4,5,6,7,10]);
-  return Object.fromEntries(Object.entries(previous).filter(([n])=>unchanged.has(Number(n))));
+  // Migrar por assunto, nunca pela posição numérica: as antigas B8/B9 eram onco-hematologia.
+  const sameSubject={1:1,2:2,3:3,4:4,5:5,6:6,7:7,10:10,11:8,12:9,13:11,14:12,15:13};
+  return Object.fromEntries(Object.entries(sameSubject).filter(([old])=>previous[old]===true)
+   .map(([old,now])=>[now,true]));
  }
  function personalPlan(){
   if(!personalIsOwner())return '';
