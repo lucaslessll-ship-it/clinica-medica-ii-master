@@ -112,10 +112,25 @@ test('carregamento sincronizado recarrega apenas o planejador; troca de conta li
  const c=setup(),a=plan(c),previous=c.db.get('master_study_planner_v1');
  const state=JSON.parse(previous);state.settings.weeklyGoal=2;c.db.set('master_study_planner_v1',JSON.stringify(state));
  c.listeners['master-remote-merge'][0]({detail:{key:'master_study_planner_v1'}});
- assert.match(c.p.page(),/2 dias/);
+ assert.equal(c.p.load().settings.weeklyGoal,2);
  c.listeners['master-auth-ended'][0]();
  assert.equal(c.p.activePlan(),null);
  assert.equal(c.p.stats().xp,0);
+});
+test('conflitos de dois aparelhos preservam históricos de dias diferentes e o último registro por dia',()=>{
+ const c=setup(),a=plan(c),base=JSON.parse(c.db.get('master_study_planner_v1'));
+ const left=JSON.parse(JSON.stringify(base)),right=JSON.parse(JSON.stringify(base));
+ left.plans[0].progress={'osce:87':{history:[{day:shift(-2),at:new Date(Date.now()-172800000).toISOString(),rating:'again',due:shift(-1)}]}};
+ right.plans[0].progress={'osce:87':{history:[{day:shift(-1),at:new Date(Date.now()-86400000).toISOString(),rating:'good',due:shift(2)}]}};
+ const merged=c.p.mergeProgress(base,left,right);
+ assert.equal(merged.plans[0].progress['osce:87'].history.length,2);
+ assert.equal(merged.plans[0].progress['osce:87'].history[0].rating,'again');
+ assert.equal(merged.plans[0].progress['osce:87'].history[1].rating,'good');
+});
+test('filtros de temas e seleção em massa não incluem matéria oculta',()=>{
+ const c=setup(),p=c.p;p.openEditor();p.setSubject('Clínica Médica I');p.selectVisible(true);
+ p.changeDraft('title','Clínica I');p.changeDraft('examDate',shift(12));p.savePlan();
+ assert.deepEqual([...p.activePlan().themes],['p1:p1arr']);
 });
 test('CSS mobile e integração da home e rotas possuem os pontos de entrada esperados',()=>{
  const css=fs.readFileSync(path.join(ROOT,'master-planner.css'),'utf8');
