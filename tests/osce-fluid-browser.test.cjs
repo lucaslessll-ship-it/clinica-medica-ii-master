@@ -105,3 +105,15 @@ test('celular: definição abre como folha contextual com botão grande e sem ro
  assert.equal(await flyout.count(),0);
  await t.close();
 });
+
+test('atalhos da página inicial abrem POCUS e chegam à busca sem rolagem manual longa',async()=>{
+ const t=await open({width:768,height:880}),p=t.page;
+ const pocus=p.locator('.osce-quicknav button').filter({hasText:'POCUS'});
+ await pocus.click();
+ assert.equal(await p.locator('#osce-pocus-top').evaluate(el=>el.open),true);
+ const search=p.locator('.osce-quicknav button').filter({hasText:'Buscar'});
+ await search.click();
+ await p.waitForTimeout(120);
+ assert.equal(await p.locator('#osce-catalog-search').evaluate(el=>el===document.activeElement),true);
+ await t.close();
+});
