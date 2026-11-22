@@ -41,7 +41,7 @@ test('as 15 prioridades têm grupos 6/6/3, os mesmos IDs do catálogo e sem troc
  assert.deepEqual(Array.from(['A','B','C'],tier=>s.filter(g=>g.tier===tier).length),[6,6,3]);
  assert.equal(s.reduce((a,g)=>a+g.minutes,0),380);
  assert.deepEqual(Array.from(s.slice(0,3),g=>g.title),['ECG e arritmias','POCUS pulmonar e cardíaco','Síncope × crise convulsiva']);
- assert.deepEqual(Array.from(index.groups,g=>g.numbers.length),[43,31,12]);
+ assert.deepEqual(Array.from(index.groups,g=>g.numbers.length),[22,35,10,19]);
  assert.equal(original.length,86);assert.equal(new Set(original).size,86);
  const bank=config.groups.flatMap(g=>g.ids);
  assert.ok(bank.includes(61));assert.ok(bank.includes(52));assert.ok(bank.includes(87));assert.ok(bank.includes(93));
