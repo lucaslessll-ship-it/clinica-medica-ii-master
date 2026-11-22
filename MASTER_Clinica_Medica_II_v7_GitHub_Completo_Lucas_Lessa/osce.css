@@ -541,3 +541,18 @@ body[data-theme="dark"] .osce-app-shell .osce-keyword{font-weight:760}
 @media(max-width:870px){.osce-personal-row{flex-wrap:wrap}.osce-personal-actions{flex:1 1 100%;justify-content:flex-start;padding-left:33px}}
 @media(max-width:620px){.osce-personal-header{flex-direction:column;gap:8px}.osce-personal-summary{padding:0;border:0;align-items:flex-start;text-align:left}.osce-personal-row{padding:11px}.osce-personal-actions{padding-left:31px}.osce-personal-actions>.btn{min-height:40px}.osce-personal-plan{padding:12px}.osce-personal-topic p{font-size:.78rem}.osce-index-entry .osce-personal-chip{font-size:.63rem;padding:2px 5px}}
 @media(prefers-reduced-motion:reduce){.osce-personal-plan *{scroll-behavior:auto}}
+
+/* Central ECG do OSCE: organização por assunto, sem duplicar banco. */
+.osce-ecg-section{margin:24px 0;padding:clamp(16px,2.5vw,26px);border:1px solid var(--border,#d9dfdc);border-radius:18px;background:var(--card,#fff);scroll-margin-top:90px}
+.osce-ecg-section>header{max-width:800px;margin-bottom:20px}
+.osce-ecg-section>header h2{margin:4px 0 10px}
+.osce-ecg-section>header p{line-height:1.55}
+.osce-ecg-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:14px}
+.osce-ecg-card{border:1px solid var(--border,#d9dfdc);border-radius:14px;padding:16px;min-width:0;display:flex;flex-direction:column;gap:9px}
+.osce-ecg-card h3{margin:0;font-size:1rem;line-height:1.3}
+.osce-ecg-card p{margin:0;font-size:.85rem;line-height:1.5}
+.osce-ecg-card-head{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.osce-ecg-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:auto}
+.osce-ecg-actions .btn{font-size:.78rem;min-height:38px;white-space:normal;text-align:center}
+.osce-ecg-card .osce-topic-completion{margin:4px 0}
+@media(max-width:600px){.osce-ecg-section{padding:14px}.osce-ecg-grid{grid-template-columns:1fr}}
