@@ -28,6 +28,8 @@ window.OSCEContext = (()=>{
   const {panel,anchor}=current;
   if(!anchor.isConnected){close();return;}
   const rect=anchor.getBoundingClientRect(),w=Math.max(320,window.innerWidth||320);
+  const visibleHeight=window.visualViewport?.height||window.innerHeight;
+  if(rect.bottom<0||rect.top>visibleHeight){close(false);return;}
   panel.classList.toggle('is-sheet',w<=620);
   panel.style.left='';panel.style.right='';panel.style.top='';panel.style.bottom='';panel.style.width='';
   if(w<=620){
