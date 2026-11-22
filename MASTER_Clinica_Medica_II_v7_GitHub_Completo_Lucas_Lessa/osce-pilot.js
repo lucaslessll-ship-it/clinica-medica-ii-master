@@ -41,7 +41,7 @@ window.OSCEPilot=(()=>{
  render();
  if(!hasDom)return;
  const root=document.querySelector('.osce-app-shell');if(!root)return;
- const anchors={top:root,case:root.querySelector('.osce-case'),guide:root.querySelector('.osce-guided-card')||root.querySelector('.osce-preview-questions'),feedback:root.querySelector('.osce-feedback'),question:root.querySelector('.osce-step'),levels:root.querySelector('.osce-study-levels')};
+ const anchors={top:root,case:root.querySelector('.osce-case'),guide:root.querySelector('.osce-reading-workspace')||root.querySelector('.osce-guided-card'),feedback:root.querySelector('.osce-feedback'),question:root.querySelector('.osce-step'),levels:root.querySelector('.osce-study-levels')};
  const target=anchors[destination];
  if(target){
   target.scrollIntoView({behavior:'auto',block:'start'});
