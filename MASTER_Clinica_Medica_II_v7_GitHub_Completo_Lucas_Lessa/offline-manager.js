@@ -13,7 +13,7 @@
  root.querySelector('#master-offline-save').addEventListener('click',async e=>{
   const button=e.currentTarget;button.disabled=true;status.textContent='Salvando arquivos desta página…';
   const prefix=new URL('./',location.href).pathname;
-  const urls=[location.href,...performance.getEntriesByType('resource').map(x=>x.name),...document.querySelectorAll('img[src],video[src],source[src],link[rel="stylesheet"][href],script[src]').values()].map(x=>typeof x==='string'?x:x.src||x.href)]
+  const urls=[location.href,...performance.getEntriesByType('resource').map(x=>x.name),...document.querySelectorAll('img[src],video[src],source[src],link[rel="stylesheet"][href],script[src]').values()].map(x=>typeof x==='string'?x:x.src||x.href)
    .filter(x=>{try{const u=new URL(x,location.href);return u.origin===location.origin&&u.pathname.startsWith(prefix)&&/\.(?:html?|css|js|mjs|json|svg|png|jpe?g|webp|gif|ico|woff2?|pdf)$/i.test(u.pathname)}catch{return false}});
   const r=await send('SAVE',[...new Set(urls)]);status.textContent=r.ok?r.saved+' arquivo(s) salvos'+(r.failed?' · '+r.failed+' indisponíveis':'')+'.':'Não foi possível salvar. Verifique a conexão e o espaço disponível.';button.disabled=false;
  });
