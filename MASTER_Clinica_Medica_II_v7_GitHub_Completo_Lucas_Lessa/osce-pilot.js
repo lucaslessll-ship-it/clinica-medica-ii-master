@@ -156,14 +156,14 @@ window.OSCEPilot=(()=>{
 
  function ecgSection(){
   const groups=[
-   {title:'Fibrilação atrial (FA)',re:/fibrila.{0,8}atrial|\\bFA\\b/i,priority:'alta',hint:'Ritmo irregular, ausência de P organizada, estabilidade e risco tromboembólico'},
-   {title:'Bloqueios atrioventriculares (BAV)',re:/bloqueio.{0,22}atrioventricular|\\bBAV\\b|mobitz/i,priority:'alta',hint:'PR, condução AV, Mobitz I × II, BAV total e marcapasso'},
+   {title:'Fibrilação atrial (FA)',re:/fibrila.{0,8}atrial|\bFA\b/i,priority:'alta',hint:'Ritmo irregular, ausência de P organizada, estabilidade e risco tromboembólico'},
+   {title:'Bloqueios atrioventriculares (BAV)',re:/bloqueio.{0,22}atrioventricular|\bBAV\b|mobitz/i,priority:'alta',hint:'PR, condução AV, Mobitz I × II, BAV total e marcapasso'},
    {title:'Torsades de pointes',re:/torsades|QT longo/i,priority:'alta',hint:'Taquicardia ventricular polimórfica, QT longo, magnésio e instabilidade'},
-   {title:'Fibrilação ventricular (FV)',re:/fibrila.{0,12}ventricular|\\bFV\\b/i,priority:'alta',hint:'Reconhecer ritmo chocável, desfibrilar e retomar RCP'},
-   {title:'Taquicardia ventricular',re:/taquicardia ventricular|\\bTV\\b/i,priority:'alta',hint:'Pulso × ausência de pulso, estabilidade e cardioversão/desfibrilação'},
+   {title:'Fibrilação ventricular (FV)',re:/fibrila.{0,12}ventricular|\bFV\b/i,priority:'alta',hint:'Reconhecer ritmo chocável, desfibrilar e retomar RCP'},
+   {title:'Taquicardia ventricular',re:/taquicardia ventricular|\bTV\b/i,priority:'alta',hint:'Pulso × ausência de pulso, estabilidade e cardioversão/desfibrilação'},
    {title:'Taquiarritmias supraventriculares',re:/supraventricular|flutter/i,priority:'media',hint:'Regularidade, QRS, manobras vagais e conduta'},
    {title:'Bradicardias e distúrbios de condução',re:/bradicardia|sinusal|condução/i,priority:'media',hint:'Sintomas, causas reversíveis e indicação de estimulação'},
-   {title:'Alterações de ST e isquemia',re:/isquemia|infarto|\\bIAM\\b|segmento ST|supradesnivelamento/i,priority:'media',hint:'Derivações contíguas, localização e conduta urgente'}
+   {title:'Alterações de ST e isquemia',re:/isquemia|infarto|\bIAM\b|segmento ST|supradesnivelamento/i,priority:'media',hint:'Derivações contíguas, localização e conduta urgente'}
   ];
   const used=new Set();
   const cards=groups.map((g,i)=>{
