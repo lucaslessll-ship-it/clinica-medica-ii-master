@@ -141,10 +141,10 @@ function status(x){
 function priority(x){
  const s=status(x),r=state.records[x.id];
  return (s==='vencida'?0:x.fromSimulationError?1:s==='nova'?2:r?.score<80?3:4)*100+
-  (x.priority==='alta'?0:15)+(r?.attempts||0);
+  (x.priority==='alta'?0:x.priority==='excluida'?70:15)+(r?.attempts||0);
 }
 function candidatePool(course,topic,mixed){
- const items=catalog().filter(x=>x.course===course&&(!topic||mixed||x.topic===topic))
+ const items=catalog().filter(x=>x.course===course&&(x.priority!=='excluida'||(topic&&x.topic===topic))&&(!topic||mixed||x.topic===topic))
   .sort((a,b)=>priority(a)-priority(b)||a.id.localeCompare(b.id));
  if(!mixed||!topic)return items;
  // Interleaving de assuntos de uma mesma disciplina, mantendo a seleção inicial pertinente.

@@ -11,16 +11,16 @@ function setup(){
  for(const file of names)vm.runInContext(fs.readFileSync(path.join(ROOT,file),'utf8'),sandbox,{filename:file});
  return {P:window.OSCEPilot,index:window.OSCE_PRIORITY_INDEX,window,memory,bank:[window.OSCE_PILOT_DATA,window.OSCE_FA_DATA,...window.OSCE_EXTRA_STATIONS]};
 }
-test('índice contém exatamente as 74 estações originais na matriz 33/29/12 + 12 curriculares',()=>{
- const {index,bank}=setup(),groups=index.groups,items=groups.flatMap(g=>g.numbers);
+test('índice mantém 86 IDs e retira 19 onco-hematológicas do plano ativo',()=>{
+ const {index,bank,P}=setup(),groups=index.groups,items=groups.flatMap(g=>g.numbers);
  assert.equal(Object.keys(index.names).length,86);
- assert.deepEqual(Array.from(groups,g=>g.numbers.length),[43,31,12]);
- assert.deepEqual(JSON.parse(JSON.stringify(index.originalDistribution)),{alta:33,media:29,baixa:12});
+ assert.deepEqual(Array.from(groups,g=>g.numbers.length),[22,35,10,19]);
+ assert.deepEqual(JSON.parse(JSON.stringify(index.originalDistribution)),{alta:22,media:29,baixa:10,excluida:13});
  assert.equal(new Set(items).size,86);
  assert.deepEqual([...items].sort((a,b)=>a-b),Array.from({length:86},(_,i)=>i+1));
  assert.equal(bank.length,86);
  assert.deepEqual([...new Set(bank.map(st=>st.number))].sort((a,b)=>a-b),Array.from({length:86},(_,i)=>i+1));
- for(const st of bank){
+ for(const st of P.bank()){
   assert.ok(index.names[st.number],st.number+' needs a title');
   assert.equal(groups.find(g=>g.numbers.includes(st.number)).key,st.priority,'priority mismatch for '+st.number);
  }

@@ -9,6 +9,7 @@ window.OSCEPilot=(()=>{
  const displayLabel=st=>st?.pocusOrder?'POCCUS '+String(st.pocusOrder).padStart(2,'0'):'ESTAÇÃO '+displayNo(st?.number);
  const BANK=[window.OSCE_PILOT_DATA,window.OSCE_FA_DATA,...(window.OSCE_EXTRA_STATIONS||[])]
   .filter(x=>x&&Number.isInteger(x.number)&&Array.isArray(x.questions))
+  .map(st=>({...st,priority:PRIORITY_GROUPS.find(g=>g.numbers.includes(st.number))?.key||st.priority}))
   .sort((a,b)=>(a.pocusOrder?0:1)-(b.pocusOrder?0:1)||(a.pocusOrder||displayNo(a.number))-(b.pocusOrder||displayNo(b.number)));
  const MAP=new Map(BANK.map(s=>[s.number,s]));
  const KEY='master_osce_pilot_v1';
@@ -27,8 +28,10 @@ window.OSCEPilot=(()=>{
  function entry(st,q){const k=qkey(st,q);return state.items[k]||(state.items[k]={draft:'',attempts:[]})}
  function last(st,q){const a=state.items[qkey(st,q)]?.attempts||[];return a[a.length-1]||null}
  function due(st,q){const r=last(st,q);return !!r?.due&&new Date(r.due).getTime()<=Date.now();}
- function weakItems(){return BANK.flatMap(st=>st.questions.filter(q=>{const a=last(st,q);return a&&a.score<80}).map(q=>({st,q,a:last(st,q)})))}
- function dueItems(){return BANK.flatMap(st=>st.questions.filter(q=>due(st,q)).map(q=>({st,q,a:last(st,q)}))).sort((a,b)=>new Date(a.a.due)-new Date(b.a.due))}
+ const inExam=st=>st?.priority!=='excluida';
+ const priorityLabel=st=>({alta:'ALTA',media:'MÉDIA',baixa:'BAIXA',excluida:'FORA DO OSCE'}[st.priority]||'ADICIONAL');
+ function weakItems(){return BANK.filter(inExam).flatMap(st=>st.questions.filter(q=>{const a=last(st,q);return a&&a.score<80}).map(q=>({st,q,a:last(st,q)})))}
+ function dueItems(){return BANK.filter(inExam).flatMap(st=>st.questions.filter(q=>due(st,q)).map(q=>({st,q,a:last(st,q)}))).sort((a,b)=>new Date(a.a.due)-new Date(b.a.due))}
  function attempted(st){return st.questions.filter(q=>!!last(st,q)).length}
  function stationCompletion(st){
   const total=st.questions.length,done=attempted(st);
@@ -71,6 +74,7 @@ window.OSCEPilot=(()=>{
  function notify(s){if(typeof toast==='function')toast(s)}
  function diffDays(){const d=new Date(state.settings.examDate+'T12:00:00'),nowday=new Date();nowday.setHours(12,0,0,0);return Number.isNaN(d.valueOf())?null:Math.ceil((d-nowday)/86400000)}
  function recommended(st){
+   if(!inExam(st))return {tier:'essencial',reason:'Fora do escopo do OSCE atual, segundo informação docente. Acesso manual opcional; não entra na sessão diária.'};
    const mins=Number(state.settings.minutes)||15,days=diffDays();
    if(dueItems().some(x=>x.st.number===st.number))return {tier:'rapida',reason:'Há itens vencidos: consolidação primeiro.'};
    if(days!==null&&days<=2||mins<=5)return {tier:'essencial',reason:'Tempo curto: começar pelo essencial.'};
@@ -80,7 +84,7 @@ window.OSCEPilot=(()=>{
  function sectionTitle(t){return '<header class="page-header osce-head"><p class="eyebrow">CLÍNICA MÉDICA II · AVALIAÇÃO PRÁTICO-ORAL</p><h1>'+t+'</h1></header>';}
  function selector(st){
   const p=recommended(st),completed=attempted(st),covered=state.covered[st.number]||{};
-  return '<article class="osce-case osce-theme-card" id="osce-station-'+st.number+'" tabindex="-1"><div class="osce-stepbar"><span>'+displayLabel(st)+'</span><span class="osce-priority osce-priority-'+esc(st.priority)+'">● PRIORIDADE '+({alta:'ALTA',media:'MÉDIA',baixa:'BAIXA'}[st.priority]||'ADICIONAL')+'</span>'+personalBadge(st)+'<strong>'+completed+'/'+st.questions.length+' questões</strong></div>'
+  return '<article class="osce-case osce-theme-card" id="osce-station-'+st.number+'" tabindex="-1"><div class="osce-stepbar"><span>'+displayLabel(st)+'</span><span class="osce-priority osce-priority-'+esc(st.priority)+'">● PRIORIDADE '+priorityLabel(st)+'</span>'+personalBadge(st)+'<strong>'+completed+'/'+st.questions.length+' questões</strong></div>'
    +'<h2>'+esc(st.title)+'</h2><p>'+esc(st.subtitle)+'</p>'
    +completionBar(st)
    +(st.images?.length?'<p class="osce-note">✓ '+st.images.length+' imagem(ns) do caso</p>':st.number===61?'<p class="osce-note">Ilustração didática identificada como tal.</p>':'<p class="osce-note">Caso sem imagem original; explicações clínicas disponíveis.</p>')
@@ -122,9 +126,17 @@ window.OSCEPilot=(()=>{
  function personalGroups(){return personalIsOwner()?window.OSCE_PERSONAL_PRIORITIES.groups:[];}
  function personalGroupFor(st){return personalGroups().find(g=>g.ids.includes(st?.number));}
  function personalBadge(st){const g=personalGroupFor(st);return g?'<span class="osce-personal-chip tier-'+g.tier.toLowerCase()+'" title="Prioridade somente desta conta">★ Minha '+g.tier+g.n+'</span>':'';}
+ function personalDoneMap(){
+  const previous=state.settings.personalPlanDone||{};
+  if(state.settings.personalPlanVersion===window.OSCE_PERSONAL_PRIORITIES?.version)return previous;
+  // Migrar por assunto, nunca pela posição numérica: as antigas B8/B9 eram onco-hematologia.
+  const sameSubject={1:1,2:2,3:3,4:4,5:5,6:6,7:7,10:10,11:8,12:9,13:11,14:12,15:13};
+  return Object.fromEntries(Object.entries(sameSubject).filter(([old])=>previous[old]===true)
+   .map(([old,now])=>[now,true]));
+ }
  function personalPlan(){
   if(!personalIsOwner())return '';
-  const groups=personalGroups(),doneMap=state.settings.personalPlanDone||{},doneCount=groups.filter(g=>doneMap[g.n]===true).length;
+  const groups=personalGroups(),doneMap=personalDoneMap(),doneCount=groups.filter(g=>doneMap[g.n]===true).length;
   const categories=[['A','Dominar · não pular'],['B','Saber o essencial'],['C','Proteção contra surpresas']];
   const sections=categories.map(([tier,caption])=>{
    const list=groups.filter(g=>g.tier===tier),completed=list.filter(g=>doneMap[g.n]===true).length;
@@ -148,9 +160,10 @@ window.OSCEPilot=(()=>{
  function personalDone(number){
   if(!personalIsOwner())return;
   const g=personalGroups().find(x=>x.n===Number(number));if(!g)return;
-  const m={...(state.settings.personalPlanDone||{})};
+  const m={...personalDoneMap()};
   m[g.n]=m[g.n]!==true;
   state.settings.personalPlanDone=m;
+  state.settings.personalPlanVersion=window.OSCE_PERSONAL_PRIORITIES.version;
   save();renderAgain();
  }
 
@@ -210,9 +223,9 @@ window.OSCEPilot=(()=>{
   const available=index.groups.flatMap(g=>g.numbers).filter(n=>MAP.has(n)).length;
   return '<section class="osce-case osce-priority-overview" aria-labelledby="osce-priority-title" id="osce-priority-overview">'
    +'<div class="osce-index-head"><div><p class="eyebrow">ROTEIRO DE PRIORIDADES</p><h2 id="osce-priority-title">Índice das '+Object.keys(index.names).length+(BANK.some(st=>st.pocusOrder)?' demais estações':' estações')+'</h2><p class="osce-note">Lista simplificada antes dos cartões, em ordem de prioridade. Toque em um tema disponível para ir ao treinamento.</p></div><span class="osce-index-available">'+available+' disponíveis</span></div>'
-   +'<div class="osce-index-legend"><span><i class="osce-index-dot osce-index-legend-high" aria-hidden="true"></i>Alta · vermelho</span><span><i class="osce-index-dot osce-index-legend-medium" aria-hidden="true"></i>Média · amarelo</span><span><i class="osce-index-dot osce-index-legend-low" aria-hidden="true"></i>Baixa · verde</span></div>'
+   +'<div class="osce-index-legend"><span><i class="osce-index-dot osce-index-legend-high" aria-hidden="true"></i>Alta · vermelho</span><span><i class="osce-index-dot osce-index-legend-medium" aria-hidden="true"></i>Média · amarelo</span><span><i class="osce-index-dot osce-index-legend-low" aria-hidden="true"></i>Baixa · verde</span><span><i class="osce-index-dot osce-index-legend-excluded" aria-hidden="true"></i>Fora do OSCE · cinza</span></div>'
    +sections
-   +'<p class="osce-note osce-index-footnote">As estações desta lista conservam a numeração de <strong>1 a 86</strong>; POCCUS usa P1–P7 separado, definida pela ordem de estudo: <strong>43 altas, 31 médias e 12 baixas.</strong> A cor indica prioridade pedagógica, não probabilidade de cair na prova.</p></section>';
+   +'<p class="osce-note osce-index-footnote">As estações desta lista conservam a numeração de <strong>1 a 86</strong>; POCCUS usa P1–P7 separado, definida pela ordem de estudo: <strong>22 altas, 35 médias, 10 baixas e 19 excluídas.</strong> As 19 estações onco-hematológicas foram deslocadas para o fim e retiradas das recomendações automáticas por relato docente, sem exclusão dos materiais. Esta informação vale para o OSCE; não foi confirmada para a prova teórica. A cor não representa probabilidade estatística.</p></section>';
  }
  function jumpToIndex(number){
   const st=MAP.get(Number(number));
@@ -280,12 +293,12 @@ window.OSCEPilot=(()=>{
    +'<section class="osce-pilot-hero" id="osce-today"><div><p class="eyebrow">SESSÃO DE HOJE · COMEÇO SEM ATRITO</p><h2>Uma pergunta já é progresso.</h2><p>'+esc(d===null?'Data não definida.':d<0?'A data registrada passou; ajuste abaixo.':d===0?'Avaliação hoje.':d+' dia(s) até a avaliação.')+' Comece pelo erro vencido ou pela próxima estação prioritária.</p><div class="osce-actions"><button class="btn primary" onclick="OSCEPilot.daily()">Sessão de hoje · '+state.settings.minutes+' min (até '+planCount+' itens)</button>'+(state.current?'<button class="btn" onclick="OSCEPilot.resume()">Retomar onde parei</button>':'')+'</div></div><div class="osce-pilot-emblem" aria-hidden="true">'+BANK.length+'<span>estações</span></div></section>'
    +personalPlan()
    +'<div class="osce-stats"><div><b>'+total+'</b><span>perguntas testadas</span></div><div><b>'+dueCount+'</b><span>revisões vencidas</span></div><div><b>'+weakCount+'</b><span>lacunas registradas</span></div><div><b>'+deep+'/'+BANK.length+'</b><span>estações completas</span></div></div>'
-   +'<section class="osce-case"><h2>Triagem e cobertura</h2><div class="osce-settings"><label>Data da APO<input type="date" value="'+esc(state.settings.examDate)+'" onchange="OSCEPilot.setDate(this.value)"></label><label>Tempo disponível<select onchange="OSCEPilot.setMinutes(this.value)">'+[5,15,30,45].map(m=>'<option value="'+m+'"'+(Number(state.settings.minutes)===m?' selected':'')+'>'+m+' min</option>').join('')+'</select></label></div><p class="osce-note">Amplitude: '+shallow+'/'+BANK.length+' · Profundidade: '+deep+'/'+BANK.length+'. O roteiro inclui '+BANK.filter(st=>st.pocusOrder).length+' POCCUS e '+BANK.filter(st=>!st.pocusOrder).length+' outras estações; a seção POCCUS fica recolhida por padrão.</p><div class="osce-track"><span style="width:'+(100*shallow/BANK.length)+'%"></span></div><div class="osce-track osce-track-secondary"><span style="width:'+(100*deep/BANK.length)+'%"></span></div></section>'
+   +'<section class="osce-case"><h2>Triagem e cobertura</h2><div class="osce-settings"><label>Data da APO<input type="date" value="'+esc(state.settings.examDate)+'" onchange="OSCEPilot.setDate(this.value)"></label><label>Tempo disponível<select onchange="OSCEPilot.setMinutes(this.value)">'+[5,15,30,45].map(m=>'<option value="'+m+'"'+(Number(state.settings.minutes)===m?' selected':'')+'>'+m+' min</option>').join('')+'</select></label></div><p class="osce-note">Amplitude: '+shallow+'/'+BANK.length+' · Profundidade: '+deep+'/'+BANK.length+'. O roteiro inclui '+BANK.filter(st=>st.pocusOrder).length+' POCUS e '+BANK.filter(st=>!st.pocusOrder&&inExam(st)).length+' outras estações para o OSCE; 19 onco-hematológicas foram retiradas do planejamento automático. A seção POCUS fica recolhida por padrão.</p><div class="osce-track"><span style="width:'+(100*shallow/BANK.length)+'%"></span></div><div class="osce-track osce-track-secondary"><span style="width:'+(100*deep/BANK.length)+'%"></span></div></section>'
    +pocusSection()
    +ecgSection()
    +priorityIndex()
-   +'<h2>Estações disponíveis</h2><p class="osce-note">Prioridade: <span class="osce-priority osce-priority-alta">● Alta</span> · <span class="osce-priority osce-priority-media">● Média</span> · <span class="osce-priority osce-priority-baixa">● Baixa</span>. Critério pedagógico, não previsão estatística da prova.</p>'
-   +'<div class="osce-filter" id="osce-catalog-filter"><label>Buscar estação<input type="search" id="osce-catalog-search" placeholder="Tema ou novo número (ex.: 1, 8, síncope)" value="'+esc(catalogSearch)+'" oninput="OSCEPilot.filterCatalog(this.value)"></label><label>Prioridade<select onchange="OSCEPilot.setCatalogPriority(this.value)">'+(personalIsOwner()?[['minhas','★ Minhas prioridades']]:[]).concat([['alta','Alta'],['media','Média'],['baixa','Baixa'],['todas','Todas']]).map(([k,l])=>'<option value="'+k+'"'+(catalogPriority===k?' selected':'')+'>'+l+'</option>').join('')+'</select></label></div>'
+   +'<h2>Estações disponíveis</h2><p class="osce-note">Prioridade: <span class="osce-priority osce-priority-alta">● Alta</span> · <span class="osce-priority osce-priority-media">● Média</span> · <span class="osce-priority osce-priority-baixa">● Baixa</span> · <span class="osce-priority osce-priority-excluida">○ Fora do OSCE</span>. O grupo excluído é conservado apenas para consulta manual.</p>'
+   +'<div class="osce-filter" id="osce-catalog-filter"><label>Buscar estação<input type="search" id="osce-catalog-search" placeholder="Tema ou novo número (ex.: 1, 8, síncope)" value="'+esc(catalogSearch)+'" oninput="OSCEPilot.filterCatalog(this.value)"></label><label>Prioridade<select onchange="OSCEPilot.setCatalogPriority(this.value)">'+(personalIsOwner()?[['minhas','★ Minhas prioridades']]:[]).concat([['alta','Alta'],['media','Média'],['baixa','Baixa'],['excluida','Fora do OSCE'],['todas','Todas']]).map(([k,l])=>'<option value="'+k+'"'+(catalogPriority===k?' selected':'')+'>'+l+'</option>').join('')+'</select></label></div>'
    +'<p class="osce-note">'+filteredCatalog().length+' estações neste filtro; exibindo até '+Math.min(catalogLimit,filteredCatalog().length)+'.</p>'
    +'<div class="osce-catalog-grid">'+filteredCatalog().slice(0,catalogLimit).map(selector).join('')+'</div>'
    +(filteredCatalog().length>catalogLimit?'<button type="button" class="btn" onclick="OSCEPilot.moreCatalog()">Mostrar mais estações</button>':'')
@@ -532,7 +545,7 @@ window.OSCEPilot=(()=>{
   const q=currentQ(st);if(!q)return homePage();
   const attemptedEntry=entry(st,q),prev=last(st,q),dailyMode=r.mode==='daily',elapsed=Math.max(0,Math.floor((Date.now()-new Date(r.startedAt))/60000));
   let out=sectionTitle(esc(st.title))+(dailyMode?'<p class="osce-session-timing"><b>Sessão mista:</b> '+(r.pos+1)+'/'+r.queue.length+' questões · meta '+r.targetMinutes+' min · '+elapsed+' min decorridos. O tempo-alvo interrompe apenas após concluir uma questão.</p>':'')+'<button class="btn ghost" onclick="OSCEPilot.home()">← Voltar e salvar</button>'+toolBar(st)
-   +'<section class="osce-case"><div class="osce-stepbar"><span>'+displayLabel(st)+'</span><span class="osce-priority osce-priority-'+esc(st.priority)+'">● PRIORIDADE '+({alta:'ALTA',media:'MÉDIA',baixa:'BAIXA'}[st.priority]||'ADICIONAL')+'</span><span>'+esc(st.tiers[r.tier].label)+' · '+(r.pos+1)+'/'+r.ids.length+'</span></div><p>'+esc(st.caseText)+'</p>'+media(st)+'</section>'
+   +'<section class="osce-case"><div class="osce-stepbar"><span>'+displayLabel(st)+'</span><span class="osce-priority osce-priority-'+esc(st.priority)+'">● PRIORIDADE '+priorityLabel(st)+'</span><span>'+esc(st.tiers[r.tier].label)+' · '+(r.pos+1)+'/'+r.ids.length+'</span></div><p>'+esc(st.caseText)+'</p>'+media(st)+'</section>'
    +'<section class="osce-step"><div class="osce-track"><span style="width:'+(r.pos/r.ids.length*100)+'%"></span></div><div class="osce-stepbar"><b>PERGUNTA '+(r.pos+1)+' DE '+r.ids.length+'</b><span>'+esc(q.competence)+'</span></div><h2>'+esc(q.prompt)+'</h2>'
    +(prev?'<p class="osce-note">Última tentativa: '+prev.score+'% de critérios · próxima revisão '+formatDate(prev.due)+'.</p>':'')
    +'<p class="osce-note"><strong>Origem:</strong> '+(q.origin==='original'?'Pergunta do banco original, com correção didática.':'Questão didática do Master; revisar conteúdo clínico crítico com as fontes.')+' Não é gabarito institucional.</p>'
@@ -641,7 +654,7 @@ window.OSCEPilot=(()=>{
   const limit=minutes<=5?3:minutes<=15?8:minutes<=30?14:20;
   const due=dueItems().sort((a,b)=>Number(!!b.a?.overconfident)-Number(!!a.a?.overconfident)
    ||Number(b.st.priority==='alta')-Number(a.st.priority==='alta')||new Date(a.a.due)-new Date(b.a.due));
-  const byStudyOrder=personalIsOwner()?[...BANK].sort((a,b)=>{const ga=personalGroupFor(a),gb=personalGroupFor(b);return (ga?.n??99)-(gb?.n??99)||(ga?.ids.indexOf(a.number)??99)-(gb?.ids.indexOf(b.number)??99);}):BANK;
+  const byStudyOrder=personalIsOwner()?[...BANK].filter(inExam).sort((a,b)=>{const ga=personalGroupFor(a),gb=personalGroupFor(b);return (ga?.n??99)-(gb?.n??99)||(ga?.ids.indexOf(a.number)??99)-(gb?.ids.indexOf(b.number)??99);}):BANK.filter(inExam);
   const fresh=byStudyOrder.flatMap(st=>st.questions.filter(q=>!last(st,q)).slice(0,st.priority==='alta'?2:1).map(q=>({st,q})));
   const selected=[],seen=new Set();
   function add(pool,quota){
@@ -721,7 +734,7 @@ window.OSCEPilot=(()=>{
    +'<div class="osce-review-list">'+(weak.length?weak.map(x=>'<button onclick="OSCEPilot.start(\'rapida\',[ \''+esc(x.q.id)+'\' ],'+x.st.number+')"><b>'+displayLabel(x.st)+' — '+esc(x.q.competence)+' · '+x.a.score+'%</b><span>'+esc(x.q.prompt)+'</span><small>Reteste: '+formatDate(x.a.due)+'</small></button>').join(''):'<div class="card pad"><p>Nenhum erro insatisfatório registrado. Comece por uma das estações disponíveis.</p></div>')+'</div>';
  }
  function makePrompt(){
-  const weak=BANK.flatMap(st=>st.questions.map(q=>({st,q,a:last(st,q)})).filter(x=>x.a&&(x.a.score<80||x.a.overconfident))).sort((a,b)=>Number(!!b.a.overconfident)-Number(!!a.a.overconfident)||Number(b.st.priority==='alta')-Number(a.st.priority==='alta')||a.a.score-b.a.score||b.a.confidence-a.a.confidence);
+  const weak=BANK.filter(inExam).flatMap(st=>st.questions.map(q=>({st,q,a:last(st,q)})).filter(x=>x.a&&(x.a.score<80||x.a.overconfident))).sort((a,b)=>Number(!!b.a.overconfident)-Number(!!a.a.overconfident)||Number(b.st.priority==='alta')-Number(a.st.priority==='alta')||a.a.score-b.a.score||b.a.confidence-a.a.confidence);
   if(!weak.length)return 'Ainda não há erros ou respostas parciais. Responda uma pergunta para gerar um roteiro específico.';
   let out='Você é avaliador de Clínica Médica II (FMP), especializado em arguição prático-oral. Faça UMA pergunta por vez e aguarde minha resposta. Não trate perguntas do Master como oficiais da FMP.\n\nSeu objetivo é corrigir minhas LACUNAS REAIS: comece por erros com confiança alta ou risco clínico, não repita toda a teoria sem necessidade. Investigue diagnóstico sindrômico e etiológico, anamnese, exame físico, diferenciais, fisiopatologia, exames, gravidade e conduta conforme o assunto. Use as fontes ESPECÍFICAS DE CADA ESTAÇÃO listadas abaixo, verificando se ainda são atuais; se não puder confirmar, informe a limitação. Não invente imagens, achados, doses ou referências.\n\nDepois de cada tentativa: (1) identifique o critério não cumprido, (2) explique o mecanismo e a conduta, (3) dê mnemônico conciso, (4) apresente um caso novo semelhante, (5) aplique checklist, (6) proponha reteste espaçado D+1/D+3/D+7/D+21. Não revele o gabarito antes da minha tentativa. A nota do site é autoavaliação por critérios, não avaliação oficial.\n\nERROS PRIORIZADOS ('+weak.length+'):\n';
   for(const x of weak.slice(0,24)){const missing=x.q.criteria.filter((_,i)=>!x.a.criteria.includes(i)),refs=(x.st.sources||[]).filter(r=>r.url&&(r.label||r.title)).slice(0,2).map(r=>(r.label||r.title)+' — '+r.url);out+='\n'+displayLabel(x.st)+' — '+x.st.title+' | '+x.q.competence+' | '+x.a.score+'% | confiança '+x.a.confidence+'/3 | dicas '+x.a.hintsUsed+'/3'+(x.a.overconfident?' | ATENÇÃO: erro com confiança alta':'')+'\nPergunta: '+x.q.prompt+'\nNão cumpriu: '+(missing.join('; ')||'reavaliar raciocínio')+'\nMinha resposta: '+x.a.answer.slice(0,900)+(refs.length?'\nFontes do tema para conferir: '+refs.join(' ; '):'\nFontes específicas não cadastradas nesta estação: procurar diretrizes verificáveis.')+'\n';}

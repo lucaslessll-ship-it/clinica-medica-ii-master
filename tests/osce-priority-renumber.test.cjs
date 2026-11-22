@@ -14,35 +14,35 @@ function build(initial){
 test('renumeração: 86 posições consecutivas na ordem pedagógica, independentemente do ID de origem',()=>{
  const {index,P}=build(),ids=index.groups.flatMap(g=>g.numbers);
  assert.equal(ids.length,86);assert.equal(new Set(ids).size,86);
- assert.deepEqual(Array.from(ids.slice(0,5)),[61,43,7,24,37]);
- assert.deepEqual(Array.from(index.groups,g=>g.numbers.length),[43,31,12]);
- assert.equal(index.displayNumberBySource['61'],1);
- assert.equal(index.displayNumberBySource['52'],10);
- assert.equal(index.sourceIdByDisplayNumber['1'],61);
+ assert.deepEqual(Array.from(ids.slice(0,5)),[52,46,64,20,70]);
+ assert.deepEqual(Array.from(index.groups,g=>g.numbers.length),[22,35,10,19]);
+ assert.equal(index.displayNumberBySource['61'],7);
+ assert.equal(index.displayNumberBySource['52'],1);
+ assert.equal(index.sourceIdByDisplayNumber['1'],52);
  const html=P.page();
  assert.match(html,/Índice das 86 estações/);
  assert.match(html,/<span class="osce-index-number">01<\/span>/);
  assert.match(html,/<span class="osce-index-number">86<\/span>/);
  assert.ok(html.indexOf('Síndrome de Guillain-Barré')>html.indexOf('Síncope × crise convulsiva'));
  assert.ok(html.indexOf('id="osce-priority-overview"')<html.indexOf('<h2>Estações disponíveis</h2>'));
- assert.match(html,/<span>ESTAÇÃO 1<\/span>/);
+ assert.match(html,/<span>ESTAÇÃO 7<\/span>/);
 });
 test('cards, busca e treinamento usam o novo número sem alterar os IDs das estações',()=>{
  const {P}=build();
  P.jumpToIndex(61);
  let html=P.page();
  assert.match(html,/id="osce-station-61"/); // âncora técnica preservada
- assert.match(html,/<span>ESTAÇÃO 1<\/span>/);
- assert.match(html,/value="#1"/);
+ assert.match(html,/<span>ESTAÇÃO 7<\/span>/);
+ assert.match(html,/value="#7"/);
  assert.doesNotMatch(html,/id="osce-station-52"/);
  P.jumpToIndex(52);
  html=P.page();
- assert.match(html,/<span>ESTAÇÃO 10<\/span>/);
- assert.match(html,/value="#10"/);
+ assert.match(html,/<span>ESTAÇÃO 1<\/span>/);
+ assert.match(html,/value="#1"/);
  P.preview(52);
- assert.match(P.page(),/Revisar estação 10/);
+ assert.match(P.page(),/Revisar estação 1/);
  P.start('essencial',null,61);
- assert.match(P.page(),/<span>ESTAÇÃO 1<\/span>/);
+ assert.match(P.page(),/<span>ESTAÇÃO 7<\/span>/);
 });
 test('sessão de hoje escolhe primeiro o tema de maior prioridade sem tentativas',()=>{
  const {P}=build();
@@ -50,12 +50,12 @@ test('sessão de hoje escolhe primeiro o tema de maior prioridade sem tentativas
  assert.match(P.page(),/<span>ESTAÇÃO 1<\/span>/);
 });
 test('as respostas e os retestes antigos continuam intactos, mas relatórios mostram o número novo',()=>{
- const progress={version:2,settings:{examDate:'2026-11-24',minutes:15},items:{'61:sindrome':{draft:'',attempts:[{at:'2026-11-18T12:00:00.000Z',score:40,due:'2026-11-23T12:00:00.000Z',confidence:1,criteria:[],hintsUsed:0,answer:'não sei'}]}}},runs:[],current:null,covered:{},updatedAt:null};
+ const progress={version:2,settings:{examDate:'2026-11-24',minutes:15},items:{'61:sindrome':{draft:'',attempts:[{at:'2026-11-18T12:00:00.000Z',score:40,due:'2026-11-23T12:00:00.000Z',confidence:1,criteria:[],hintsUsed:0,answer:'não sei'}]}},runs:[],current:null,covered:{},updatedAt:null};
  const {P,stored}=build([['master_osce_pilot_v1',JSON.stringify(progress)]]);
  P.showReview();
- assert.match(P.page(),/Estação 1 —/);
+ assert.match(P.page(),/Estação 7 —/);
  P.showPrompt();
- assert.match(P.page(),/Estação 1 —/);
+ assert.match(P.page(),/Estação 7 —/);
  P.start('essencial',null,61);
  P.answer('não sei');P.conf(1);P.reveal();P.finish();
  const saved=JSON.parse(stored.get('master_osce_pilot_v1'));
