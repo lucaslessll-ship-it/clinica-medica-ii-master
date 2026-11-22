@@ -49,6 +49,7 @@
 <link rel="stylesheet" href="lab-academy.css?v=20261116-cirurgia28">
 <link rel="stylesheet" href="scrollbars.css?v=20261117-scroll1">
 <link rel="stylesheet" href="editorial.css?v=20261121-osce-home-notice1">
+<link rel="stylesheet" href="navigation-refresh.css?v=20261122-nav-auth1">
 <link rel="stylesheet" href="osce.css?v=20261122-reading-guided-v1">
 <link rel="stylesheet" href="osce-fluid.css?v=20261122-fluid-v1">
 <link rel="stylesheet" href="osce-context-ui.css?v=20261122-context-v1">
@@ -99,6 +100,13 @@
             <section id="master-profile" class="profile-popover" aria-label="Sua conta" hidden>
               <strong id="master-profile-name">Sua conta</strong><p id="master-profile-email"></p>
               <p id="master-sync-status" role="status" aria-live="polite"></p>
+              <div class="profile-session">
+                <label for="master-remember-device">
+                  <span class="session-choice"><strong>Manter conectado</strong><small>Salvar a sessão neste navegador</small></span>
+                  <input id="master-remember-device" type="checkbox" role="switch" aria-label="Manter conectado neste dispositivo" aria-describedby="master-remember-description">
+                </label>
+                <p id="master-remember-description">Use em dispositivo pessoal. Você poderá sair da conta normalmente, e a opção não salva sua senha.</p>
+              </div>
               <button id="master-avatar-change" class="btn" type="button" aria-expanded="false" aria-controls="master-avatar-picker">Trocar avatar</button>
               <div id="master-avatar-picker" class="avatar-picker" role="group" aria-label="Escolha seu avatar" hidden></div>
               <button id="master-change-password" class="btn" type="button">Alterar senha</button>
@@ -238,7 +246,7 @@
   <script src="osce-context-ui.js?v=20261122-context-v1"></script>
   <script src="osce-pilot.js?v=20261122-reading-guided-v1"></script>
   <script src="super-foco.js?v=20261121-superfoco1"></script>
-  <script src="app.js?v=20261121-ue-bank2"></script>
+  <script src="app.js?v=20261122-nav-auth1"></script>
   <script src="ai-tutor.js?v=20261118-activity1"></script>
   <script src="dicas.js?v=20261116-cirurgia28"></script>
   <script src="route-motion.js?v=20261116-cirurgia28"></script>
@@ -281,8 +289,8 @@
 <script src="activity.js?v=20261118-activity2"></script>
 <script src="auth-config.js?v=20261116-cirurgia28"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.0/dist/umd/supabase.min.js"></script>
-<script src="auth-storage.js?v=20261116-cirurgia28"></script>
+<script src="auth-storage.js?v=20261122-persist1"></script>
 <script src="sync-merge.js?v=20261118-review1"></script>
-<script src="auth.js?v=20261118-sessions2"></script>
+<script src="auth.js?v=20261122-persist1"></script>
 </body>
 </html>
