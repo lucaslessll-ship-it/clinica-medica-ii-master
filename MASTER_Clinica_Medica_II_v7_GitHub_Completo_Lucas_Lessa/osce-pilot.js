@@ -17,8 +17,8 @@ window.OSCEPilot=(()=>{
  const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  const now=()=>new Date().toISOString();
  const shift=(n)=>{const d=new Date();d.setHours(12,0,0,0);d.setDate(d.getDate()+n);return d.toISOString()};
- const empty=()=>({version:2,settings:{examDate:'2026-11-24',minutes:15},items:{},runs:[],current:null,covered:{},updatedAt:null});
- function load(){try{const s=JSON.parse(localStorage.getItem(KEY));if(s&&s.items&&s.settings)return {...empty(),...s,covered:s.covered||{}}}catch{}return empty();}
+ const empty=()=>({version:2,settings:{examDate:'2026-11-24',minutes:15},items:{},runs:[],current:null,covered:{},readingReviews:{},updatedAt:null});
+ function load(){try{const s=JSON.parse(localStorage.getItem(KEY));if(s&&s.items&&s.settings)return {...empty(),...s,covered:s.covered||{},readingReviews:s.readingReviews||{}}}catch{}return empty();}
  let state=load(),screen='home',shown=false,confidence=0,hints=0,checked=[],reviewStation=61,previewStation=61,previewTier='completa',previewStep=0,previewLayout='guided',glossary='',catalogSearch='',catalogPriority='alta',catalogLimit=12;
  let welcomeOpen=!state.settings?.hideWelcome, welcomeSkipNext=!!state.settings?.hideWelcome, welcomeDismissedThisLoad=false;
  const bank=()=>BANK;
@@ -33,16 +33,38 @@ window.OSCEPilot=(()=>{
  function weakItems(){return BANK.filter(inExam).flatMap(st=>st.questions.filter(q=>{const a=last(st,q);return a&&a.score<80}).map(q=>({st,q,a:last(st,q)})))}
  function dueItems(){return BANK.filter(inExam).flatMap(st=>st.questions.filter(q=>due(st,q)).map(q=>({st,q,a:last(st,q)}))).sort((a,b)=>new Date(a.a.due)-new Date(b.a.due))}
  function attempted(st){return st.questions.filter(q=>!!last(st,q)).length}
+ function readingReview(st){return state.readingReviews?.[st.number]||null;}
+ function readingToday(r){return !!r?.at&&new Date(r.at).toDateString()===new Date().toDateString();}
+ function readingDueItems(){return BANK.filter(inExam).filter(st=>{const r=readingReview(st);return r?.due&&new Date(r.due).getTime()<=Date.now()}).sort((a,b)=>new Date(readingReview(a).due)-new Date(readingReview(b).due));}
+ function readingBadge(st){const r=readingReview(st);return r?'<span class="osce-reading-badge" title="Leitura registrada, não é uma nota de simulado">✓ Estudado por leitura'+(readingToday(r)?' hoje':'')+'</span>':'';}
+ function readingMarkControl(st,tier='rapida'){
+  const r=readingReview(st),rank={essencial:1,rapida:2,completa:3};
+  if(readingToday(r)&&(rank[tier]||1)<=(rank[r.tier]||1))return '<span class="osce-reading-marked" role="status">✓ Estudado hoje · próxima leitura '+formatDate(r.due)+'</span>';
+  return '<button type="button" class="btn osce-reading-mark" onclick="OSCEPilot.markStudied('+st.number+',\''+tier+'\')">'+(readingToday(r)?'✓ Registrar aprofundamento':'✓ Marcar como estudado')+'</button>';
+ }
+ function markStudied(number,tier='rapida'){
+  const st=MAP.get(Number(number));if(!st)return;
+  const depth=['essencial','rapida','completa'].includes(tier)?tier:'essencial',rank={essencial:1,rapida:2,completa:3};
+  const old=readingReview(st),sameDay=readingToday(old),count=sameDay?(old.count||1):(old?.count||0)+1;
+  const at=sameDay?old.at:now(),due=sameDay?old.due:shift([1,3,7,21][Math.min(count-1,3)]);
+  const bestTier=rank[depth]>(rank[old?.tier]||0)?depth:old?.tier||depth;
+  const history=sameDay?(old.history||[]):[...(old?.history||[]),{at,depth,due}].slice(-30);
+  state.readingReviews={...(state.readingReviews||{}),[st.number]:{at,due,count,tier:bestTier,history}};
+  state.covered[st.number]={...(state.covered[st.number]||{}),[depth]:true};
+  save();renderAgain();
+  notify(sameDay?'Aprofundamento registrado; revisão de hoje mantida.':'Revisão por leitura registrada. Próxima revisão sugerida: '+formatDate(due)+'.');
+ }
+
  function stationCompletion(st){
   const total=st.questions.length,done=attempted(st);
   const weak=st.questions.filter(q=>{const a=last(st,q);return a&&a.score<80}).length;
   const pct=total?Math.round(done/total*100):0;
-  const label=done===0?'Não iniciada':done<total?'Em andamento':weak?'Concluída · revisar':'Concluída';
+  const label=done===0?(readingReview(st)?'Estudada por leitura':'Não iniciada'):done<total?'Em andamento':weak?'Concluída · revisar':'Concluída';
   return {total,done,weak,pct,label};
  }
  function completionBar(st,compact=false){
   const p=stationCompletion(st);
-  const detail=p.done+'/'+p.total+' questões respondidas';
+  const detail=p.done+'/'+p.total+' questões respondidas'+(readingReview(st)?' · leitura registrada':'');
   return '<div class="osce-topic-completion'+(compact?' is-compact':'')+'" aria-label="Progresso da estação: '+esc(p.label)+', '+detail+'">'
    +'<div class="osce-topic-completion-head"><span>'+esc(p.label)+'</span><strong>'+p.pct+'%</strong></div>'
    +'<div class="osce-topic-completion-track" role="progressbar" aria-label="Cobertura de '+esc(st.title)+'" aria-valuemin="0" aria-valuemax="100" aria-valuenow="'+p.pct+'"><span style="width:'+p.pct+'%"></span></div>'
@@ -792,5 +814,5 @@ window.OSCEPilot=(()=>{
  window.addEventListener('master-auth-ended',()=>{state=empty();screen='home';shown=false;glossary='';if(catalogPriority==='minhas')catalogPriority='alta';welcomeDismissedThisLoad=false;welcomeOpen=true;welcomeSkipNext=false;});
  window.addEventListener('master-remote-merge',e=>{if(e.detail?.key===KEY)reload()});
  window.addEventListener('storage',e=>{if(e.key===KEY)reload()});
- return {bank,weakItems,page,start,daily,resume,home,personalIsOwner,personalDone,personalOpen,previewQuestion,previewStepSet,previewLayoutSet,toggleClinicalHighlights,answerKey,jumpSection,welcomePreference,showWelcome,closeWelcome,preview,previewTierSet,previewPage,filterCatalog,setCatalogPriority,moreCatalog,ecgToggle,jumpToIndex,setDate,setMinutes,answer,conf,hint,reveal,criterion,retry,finish,showReview,showPrompt,reviewDue,term,showSources,showTerms,openLesson,showFullLesson,expandImage,focusVisualNote,toggleVisualMarks,expandVisual,copyPrompt,reload};
+ return {bank,weakItems,page,start,daily,resume,home,markStudied,readingDueItems,personalIsOwner,personalDone,personalOpen,previewQuestion,previewStepSet,previewLayoutSet,toggleClinicalHighlights,answerKey,jumpSection,welcomePreference,showWelcome,closeWelcome,preview,previewTierSet,previewPage,filterCatalog,setCatalogPriority,moreCatalog,ecgToggle,jumpToIndex,setDate,setMinutes,answer,conf,hint,reveal,criterion,retry,finish,showReview,showPrompt,reviewDue,term,showSources,showTerms,openLesson,showFullLesson,expandImage,focusVisualNote,toggleVisualMarks,expandVisual,copyPrompt,reload};
 })();
