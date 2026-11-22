@@ -611,7 +611,7 @@ window.OSCEPilot=(()=>{
   const limit=minutes<=5?3:minutes<=15?8:minutes<=30?14:20;
   const due=dueItems().sort((a,b)=>Number(!!b.a?.overconfident)-Number(!!a.a?.overconfident)
    ||Number(b.st.priority==='alta')-Number(a.st.priority==='alta')||new Date(a.a.due)-new Date(b.a.due));
-  const byStudyOrder=personalIsOwner()?[...BANK].sort((a,b)=>(personalGroupFor(a)?.n??99)-(personalGroupFor(b)?.n??99)):BANK;
+  const byStudyOrder=personalIsOwner()?[...BANK].sort((a,b)=>{const ga=personalGroupFor(a),gb=personalGroupFor(b);return (ga?.n??99)-(gb?.n??99)||(ga?.ids.indexOf(a.number)??99)-(gb?.ids.indexOf(b.number)??99);}):BANK;
   const fresh=byStudyOrder.flatMap(st=>st.questions.filter(q=>!last(st,q)).slice(0,st.priority==='alta'?2:1).map(q=>({st,q})));
   const selected=[],seen=new Set();
   function add(pool,quota){
