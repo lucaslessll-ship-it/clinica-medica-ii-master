@@ -584,3 +584,14 @@ body[data-theme="dark"] .osce-app-shell .osce-keyword{font-weight:760}
 .osce-ecg-station-row .btn{min-height:34px;padding:6px 10px;font-size:.75rem}
 @media(max-width:600px){.osce-ecg-summary{padding:13px;gap:9px}.osce-ecg-summary-icon{width:36px;height:36px}.osce-ecg-summary-copy strong{font-size:.9rem}.osce-ecg-summary-copy small{font-size:.7rem}.osce-ecg-summary-action{font-size:0;gap:0}.osce-ecg-content{padding:0 12px 14px}}
 @media(prefers-reduced-motion:reduce){.osce-ecg-summary-action span{transition:none}}
+
+
+/* OSCE 22/11: temas onco-hematológicos excluídos deste OSCE — apenas acesso manual. */
+.osce-priority-excluida{color:var(--text-muted,#6b7370);font-weight:650}
+.osce-index-legend-excluded{background:#929b96}
+.osce-index-excluida{--osce-index-accent:#929b96;--osce-index-fill:#f1f3f1}
+.osce-index-excluida .osce-index-name{color:var(--text-muted,#69736c)}
+.osce-index-excluida .osce-index-ready:hover{background:color-mix(in srgb,#9ba6a0 9%,var(--card,#fff))}
+.osce-index-excluida>summary strong{color:var(--text-muted,#566158)}
+.osce-personal-plan .osce-personal-note{line-height:1.6}
+@media(max-width:640px){.osce-index-excluida .osce-index-entry{min-width:0}}
