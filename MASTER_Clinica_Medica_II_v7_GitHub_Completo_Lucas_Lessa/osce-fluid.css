@@ -1,0 +1,242 @@
+/* OSCE Fluid — acabamento inspirado em princípios de interfaces Apple.
+   Escopo estrito ao OSCE: sem alterações de outros módulos, sem dependências e respeitando redução de movimento. */
+.osce-app-shell{
+ --osce-ink:#193f34;
+ --osce-accent:#245e4b;
+ --osce-edge:color-mix(in srgb,var(--text,#1e3b31) 12%,transparent);
+ --osce-surface:var(--card,#fffcf7);
+ --osce-surface-quiet:color-mix(in srgb,var(--card,#fffcf7) 92%,var(--bg,#f7f4ee));
+ --osce-shadow:0 1px 2px rgb(13 34 25 / .045),0 9px 28px rgb(13 34 25 / .035);
+ --osce-ease:cubic-bezier(.22,1,.36,1);
+ font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Public Sans",system-ui,sans-serif;
+ font-size:clamp(.93rem,.15vw + .9rem,1.02rem);
+ line-height:1.6;
+ max-width:1230px;
+ margin:0 auto 75px;
+ min-width:0;
+}
+.osce-app-shell :is(.osce-case,.osce-step,.osce-pilot-hero,.osce-pocus-section,.osce-theme-card,.osce-preview-question,.osce-welcome){
+ background:var(--osce-surface);
+ border:1px solid var(--osce-edge);
+ border-radius:clamp(16px,1.5vw,22px);
+ box-shadow:var(--osce-shadow);
+ min-width:0;
+}
+.osce-app-shell .osce-case h2,
+.osce-app-shell .osce-preview-questions>h2,
+.osce-app-shell .osce-pocus-heading h2{letter-spacing:-.025em;line-height:1.3}
+.osce-app-shell .page-header h1{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Public Sans",system-ui,sans-serif;letter-spacing:-.048em;font-weight:720;line-height:1.12;font-size:clamp(1.9rem,3.55vw,3rem)}
+.osce-app-shell .page-header h1 em{font-weight:680}
+.osce-app-shell .eyebrow{letter-spacing:.09em;font-size:.71rem;font-weight:740}
+.osce-app-shell .osce-pilot-hero{
+ background:linear-gradient(125deg,color-mix(in srgb,#276651 9%,var(--osce-surface)) 0%,var(--osce-surface) 82%);
+ border-color:color-mix(in srgb,#367359 17%,var(--osce-edge));
+ padding:clamp(19px,3vw,32px);
+ gap:20px;
+}
+.osce-app-shell .osce-pilot-hero h2{
+ font-size:clamp(1.55rem,2.6vw,2.2rem);
+ font-weight:710;
+ letter-spacing:-.037em;
+ line-height:1.22;
+}
+.osce-app-shell .osce-pilot-emblem{
+ border-radius:23px;
+ background:color-mix(in srgb,#327957 8%,var(--osce-surface));
+ border-color:color-mix(in srgb,#39775a 18%,var(--osce-edge));
+ font-variant-numeric:tabular-nums;
+ font-weight:700;
+}
+.osce-app-shell .osce-stats>div{
+ border-radius:17px;
+ background:var(--osce-surface);
+ border-color:var(--osce-edge);
+ box-shadow:0 1px 7px rgb(10 32 22 / .025);
+ padding:clamp(13px,1.5vw,19px);
+}
+.osce-app-shell .osce-stats b{font-weight:730;letter-spacing:-.035em}
+.osce-app-shell :is(.osce-card,.osce-depth-btn,.osce-index-entry,.osce-pocus-item,.osce-review-list>button){
+ border-radius:15px;
+ border-color:var(--osce-edge);
+ background:var(--osce-surface);
+ transition:transform .25s var(--osce-ease),box-shadow .25s var(--osce-ease),border-color .19s ease,background-color .19s ease;
+}
+.osce-app-shell .osce-theme-card{box-shadow:var(--osce-shadow)}
+.osce-app-shell .osce-theme-card>h2{letter-spacing:-.024em;font-weight:690}
+.osce-app-shell .osce-depth-btn{min-height:98px}
+.osce-app-shell :is(.osce-index-group,.osce-deep,.osce-annotation-content){
+ border-radius:13px;
+ border-color:var(--osce-edge);
+ background:var(--osce-surface);
+}
+.osce-app-shell .osce-index-group summary{border-radius:12px}
+.osce-app-shell .osce-index-entry{min-height:46px}
+.osce-app-shell .osce-pocus-section{border-left:3px solid #a45b4b}
+.osce-app-shell .osce-pocus-item{padding:clamp(13px,1.5vw,19px)}
+.osce-app-shell .osce-pocus-item h3{letter-spacing:-.018em}
+.osce-app-shell .osce-step{
+ max-width:100%;
+ border-radius:21px;
+ padding:clamp(16px,3vw,29px);
+ scroll-margin-top:100px;
+}
+.osce-app-shell .osce-step>h2{font-size:clamp(1.18rem,1.6vw,1.55rem);letter-spacing:-.02em;line-height:1.44;font-weight:685}
+.osce-app-shell .osce-step>.osce-stepbar{
+ position:sticky;
+ top:calc(77px + env(safe-area-inset-top,0px));
+ z-index:4;
+ width:fit-content;
+ max-width:100%;
+ background:color-mix(in srgb,var(--osce-surface) 90%,transparent);
+ -webkit-backdrop-filter:blur(18px) saturate(1.25);
+ backdrop-filter:blur(18px) saturate(1.25);
+ border:1px solid var(--osce-edge);
+ border-radius:12px;
+ padding:9px 12px;
+ box-shadow:0 3px 12px rgb(0 0 0 / .035);
+ letter-spacing:.025em;
+}
+.osce-app-shell .osce-track{height:6px;background:color-mix(in srgb,#346b50 13%,var(--osce-surface))}
+.osce-app-shell .osce-track>span{
+ background:linear-gradient(90deg,#357d61,#1d5847);
+ transition:width .3s var(--osce-ease);
+}
+.osce-app-shell .osce-step textarea{
+ border:1.5px solid color-mix(in srgb,#346c54 22%,var(--osce-edge));
+ background:var(--osce-surface-quiet);
+ border-radius:15px;
+ padding:16px 17px;
+ min-height:154px;
+ line-height:1.65;
+ font-size:1rem;
+ transition:box-shadow .18s ease,border-color .18s ease,background-color .18s ease;
+}
+.osce-app-shell .osce-step textarea:focus{
+ background:var(--osce-surface);
+ outline:0;
+ border-color:#3d8565;
+ box-shadow:0 0 0 4px color-mix(in srgb,#559e79 19%,transparent);
+}
+.osce-app-shell :is(input,select){accent-color:#2b7958}
+.osce-app-shell :is(.osce-filter input,.osce-filter select,.osce-settings input,.osce-settings select){
+ min-height:45px;
+ border-radius:12px;
+ border-color:color-mix(in srgb,#4b735e 17%,var(--osce-edge));
+ transition:border-color .18s ease,box-shadow .18s ease;
+}
+.osce-app-shell :is(.osce-filter input,.osce-filter select,.osce-settings input,.osce-settings select):focus-visible{
+ outline:0;border-color:#358264;box-shadow:0 0 0 4px color-mix(in srgb,#559e79 19%,transparent);
+}
+.osce-app-shell .btn{
+ border-radius:12px;
+ font-family:inherit;
+ font-weight:660;
+ transition:transform .2s var(--osce-ease),box-shadow .2s var(--osce-ease),background-color .2s ease,border-color .2s ease;
+ min-height:44px;
+}
+.osce-app-shell .btn.primary{
+ box-shadow:0 3px 12px rgb(18 69 43 / .09);
+}
+.osce-app-shell :is(.btn,.osce-term,.osce-index-entry,.osce-visual-pin,.osce-criteria input):focus-visible,
+.osce-app-shell summary:focus-visible{outline:3px solid #468c6c;outline-offset:3px}
+.osce-app-shell .osce-confidence button{
+ border-radius:12px;
+ min-height:46px;
+ transition:border-color .16s ease,background-color .16s ease,transform .16s var(--osce-ease);
+}
+.osce-app-shell .osce-confidence button[aria-pressed="true"]{
+ background:color-mix(in srgb,#2f825c 15%,var(--osce-surface));
+ color:var(--osce-ink);
+ box-shadow:0 0 0 1px #448464 inset;
+}
+.osce-app-shell .osce-criteria label{
+ min-height:49px;
+ border-radius:12px;
+ padding:13px 14px;
+ background:var(--osce-surface-quiet);
+ transition:border-color .16s ease,background-color .16s ease;
+}
+.osce-app-shell .osce-criteria label:has(input:checked){
+ background:color-mix(in srgb,#4c936e 11%,var(--osce-surface));
+ border-color:#5b9675;
+}
+.osce-app-shell .osce-criteria input{width:20px;height:20px;margin-top:2px}
+.osce-app-shell .osce-feedback{
+ border:1px solid color-mix(in srgb,#5a9876 20%,var(--osce-edge));
+ background:color-mix(in srgb,#4f9974 5%,var(--osce-surface));
+ border-radius:17px;
+ padding:clamp(14px,2.4vw,24px);
+ scroll-margin-top:104px;
+ animation:osce-feedback-enter .24s var(--osce-ease) both;
+}
+.osce-app-shell .osce-preview-answer{border-radius:13px}
+.osce-app-shell .osce-deep summary{min-height:50px;align-items:center;line-height:1.45;transition:background-color .18s ease}
+.osce-app-shell .osce-deep[open]>summary{background:color-mix(in srgb,#5b9472 7%,var(--osce-surface))}
+.osce-app-shell .osce-deep>div{padding:12px clamp(14px,1.9vw,22px) 17px}
+.osce-app-shell .osce-term{min-height:39px;border-radius:11px}
+.osce-app-shell :is(.osce-welcome,.osce-preview-note){border-radius:17px}
+.osce-app-shell .osce-welcome{background:color-mix(in srgb,#42886a 5%,var(--osce-surface))}
+.osce-app-shell .osce-welcome-method>div{border-radius:13px}
+.osce-app-shell .osce-key-hint{
+ display:inline-flex;margin-left:6px;padding:2px 7px;
+ font-size:.72rem;line-height:1.3;font-weight:630;
+ background:color-mix(in srgb,currentColor 10%,transparent);
+ border:1px solid color-mix(in srgb,currentColor 15%,transparent);
+ border-radius:6px;vertical-align:middle;white-space:nowrap;
+}
+.osce-app-shell .osce-visual,.osce-app-shell .osce-image-frame{min-width:0}
+.osce-app-shell .osce-image-frame>img{border-radius:12px}
+.osce-app-shell .osce-visual-pin{transition:transform .2s var(--osce-ease),background-color .18s ease,box-shadow .18s ease}
+.osce-app-shell .osce-annotation-toolbar .btn{min-height:44px}
+.osce-app-shell .osce-annotation-detail>summary{min-height:47px}
+body.osce-dialog-open{overflow:hidden;touch-action:none}
+.osce-lightbox{background:rgb(11 19 17 / .89);-webkit-backdrop-filter:blur(17px);backdrop-filter:blur(17px)}
+.osce-lightbox .osce-close-image{min-height:44px;border-radius:12px;font-family:inherit;font-size:.9rem}
+.osce-visual-lightbox .osce-annotation-detail{color:var(--text,#25382f)}
+.osce-app-shell :is(.osce-preview-questions,.osce-pocus-section,.osce-priority-overview,.osce-filter,.osce-catalog-grid){scroll-margin-top:112px}
+.osce-app-shell .osce-session-timing{border-radius:13px}
+.osce-app-shell :is(p,span,label,small,li){overflow-wrap:break-word}
+@keyframes osce-feedback-enter{from{opacity:.78;transform:translateY(7px)}to{opacity:1;transform:translateY(0)}}
+@media(hover:hover) and (pointer:fine){
+ .osce-app-shell :is(.osce-card,.osce-depth-btn,.osce-index-entry,.osce-pocus-item):hover{
+  transform:translateY(-2px);
+  box-shadow:0 6px 20px rgb(10 41 26 / .075);
+  border-color:color-mix(in srgb,#4b8669 40%,var(--osce-edge));
+ }
+ .osce-app-shell .btn:hover{transform:translateY(-1px)}
+ .osce-app-shell .btn:active,.osce-app-shell .osce-confidence button:active{transform:scale(.982)}
+}
+body[data-theme="dark"] .osce-app-shell{
+ --osce-ink:#d7f3e3;
+ --osce-accent:#9cd5ba;
+ --osce-edge:color-mix(in srgb,#d5e8d9 17%,transparent);
+ --osce-shadow:0 2px 11px rgb(0 0 0 / .12);
+}
+body[data-theme="dark"] .osce-app-shell .osce-confidence button[aria-pressed="true"]{
+ color:#e4f7ea;border-color:#70b58c;
+}
+body[data-theme="dark"] .osce-app-shell .osce-track{background:#33483e}
+body[data-theme="dark"] .osce-app-shell .osce-track>span{background:linear-gradient(90deg,#5da984,#8ac1a2)}
+body[data-theme="dark"] .osce-app-shell .osce-visual-pin{color:#fff}
+@media(max-width:780px){
+ .osce-app-shell{padding:0 2px}
+ .osce-app-shell .osce-step>.osce-stepbar{top:calc(65px + env(safe-area-inset-top,0px));}
+ .osce-app-shell .osce-index-entry{min-height:47px}
+ .osce-app-shell .osce-top-links{gap:8px}
+ .osce-app-shell .osce-pocus-item-actions .btn{min-height:44px}
+}
+@media(max-width:480px){
+ .osce-app-shell{font-size:.94rem}
+ .osce-app-shell .osce-pilot-hero{gap:10px}
+ .osce-app-shell .osce-pilot-emblem{width:64px;height:64px;flex-basis:64px;font-size:1.55rem;border-radius:15px}
+ .osce-app-shell .osce-pilot-emblem span{font-size:.65rem}
+ .osce-app-shell .osce-step>.osce-stepbar{max-width:100%;top:calc(58px + env(safe-area-inset-top,0px));padding:8px}
+ .osce-app-shell .osce-key-hint{display:none}
+ .osce-app-shell .osce-actions .btn{min-height:45px}
+ .osce-app-shell .osce-step textarea{font-size:16px;min-height:142px}
+ .osce-app-shell :is(.osce-case,.osce-step){padding:16px}
+}
+@media(prefers-reduced-motion:reduce){
+ .osce-app-shell *, .osce-app-shell *::before,.osce-app-shell *::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+ .osce-app-shell :is(.osce-card,.osce-index-entry,.osce-depth-btn):hover{transform:none}
+}
