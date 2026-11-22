@@ -595,3 +595,21 @@ body[data-theme="dark"] .osce-app-shell .osce-keyword{font-weight:760}
 .osce-index-excluida>summary strong{color:var(--text-muted,#566158)}
 .osce-personal-plan .osce-personal-note{line-height:1.6}
 @media(max-width:640px){.osce-index-excluida .osce-index-entry{min-width:0}}
+
+
+/* Revisão teórica autodeclarada; progresso visual sem simular nota nem resposta. */
+.osce-reading-mark{min-height:40px!important;display:inline-flex!important;align-items:center;justify-content:center;gap:6px;border:1px solid #498c70!important;background:color-mix(in srgb,#4b9678 8%,var(--card,#fff))!important;color:var(--text,#23573e)!important;font-weight:750!important;white-space:normal}
+.osce-reading-mark:hover{background:color-mix(in srgb,#4b9678 17%,var(--card,#fff))!important}
+.osce-reading-mark:focus-visible{outline:2px solid #328563;outline-offset:3px}
+.osce-reading-marked,.osce-reading-badge{display:inline-flex;align-items:center;gap:5px;max-width:100%;border:1px solid #9bc6ad;border-radius:9px;background:color-mix(in srgb,#3c9966 9%,var(--card,#fff));padding:7px 10px;color:var(--text,#275845);font-size:.77rem;font-weight:700;line-height:1.4}
+.osce-reading-badge{margin:5px 0 8px}
+.osce-reading-marked{font-weight:650;white-space:normal}
+.osce-reading-intro-actions{display:flex;align-items:center;justify-content:flex-end;gap:9px;flex-wrap:wrap;min-width:0}
+.osce-reading-intro-actions .btn{min-height:42px;white-space:normal}
+.osce-reading-due-grid{display:flex;flex-direction:column;gap:8px;margin:11px 0}
+.osce-reading-due-grid .btn{text-align:left;justify-content:flex-start;white-space:normal;min-height:40px}
+.osce-reading-review-list{scroll-margin-top:72px}
+.osce-pocus-item-actions .osce-reading-mark{flex:0 1 auto}
+.osce-pocus-item-actions .osce-reading-marked{flex:0 1 auto}
+@media(max-width:730px){.osce-reading-intro-actions{width:100%;justify-content:flex-start}.osce-reading-intro-actions .btn{flex:1 1 165px}.osce-reading-intro-actions .osce-reading-marked{flex:1 1 100%}}
+@media(max-width:450px){.osce-reading-intro-actions{flex-direction:column;align-items:stretch}.osce-reading-intro-actions .btn{width:100%;flex:auto}.osce-pocus-item-actions .osce-reading-mark{width:100%}.osce-reading-marked{font-size:.73rem}}
