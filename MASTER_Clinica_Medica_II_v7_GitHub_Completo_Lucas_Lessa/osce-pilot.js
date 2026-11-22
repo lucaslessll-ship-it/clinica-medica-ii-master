@@ -164,9 +164,9 @@ window.OSCEPilot=(()=>{
   const sections=categories.map(([tier,caption])=>{
    const list=groups.filter(g=>g.tier===tier),completed=list.filter(g=>doneMap[g.n]===true).length;
    const rows=list.map(g=>{
-    const completedNow=doneMap[g.n]===true,touched=g.ids.filter(id=>MAP.has(id)&&attempted(MAP.get(id))>0).length;
+    const completedNow=doneMap[g.n]===true,touched=g.ids.filter(id=>MAP.has(id)&&(attempted(MAP.get(id))>0||!!readingReview(MAP.get(id)))).length;
     return '<article class="osce-personal-row'+(completedNow?' is-done':'')+'">'
-     +'<div class="osce-personal-topic"><span class="osce-personal-num">'+String(g.n).padStart(2,'0')+'</span><div><strong>'+esc(g.title)+'</strong><p>'+esc(g.hint)+'</p><small>'+g.minutes+' min sugeridos · '+touched+'/'+g.ids.length+' estações iniciadas</small></div></div>'
+     +'<div class="osce-personal-topic"><span class="osce-personal-num">'+String(g.n).padStart(2,'0')+'</span><div><strong>'+esc(g.title)+'</strong><p>'+esc(g.hint)+'</p><small>'+g.minutes+' min sugeridos · '+touched+'/'+g.ids.length+' estações estudadas ou testadas</small></div></div>'
      +'<div class="osce-personal-actions"><button type="button" class="btn" onclick="OSCEPilot.personalOpen('+g.ids[0]+')">Abrir treino</button>'
      +'<button type="button" class="btn osce-personal-done" aria-pressed="'+String(completedNow)+'" aria-label="'+(completedNow?'Desmarcar':'Marcar')+' bloco '+g.n+' como concluído" onclick="OSCEPilot.personalDone('+g.n+')">'+(completedNow?'✓ Concluído':'Marcar concluído')+'</button></div></article>';
    }).join('');
