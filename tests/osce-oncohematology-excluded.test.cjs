@@ -60,17 +60,28 @@ test('migração conserva conclusões A1–A6, B7 e B10, sem completar indevidam
  const state={version:2,settings:{examDate:'2026-11-24',minutes:15,personalPlanDone:{1:true,8:true,9:true,10:true,11:true,12:true,13:true,14:true,15:true}},items:{},runs:[],current:null,covered:{}};
  const {P,db}=fixture(true,state);
  let h=P.page();
- assert.match(h,/2\/15/);
+ assert.match(h,/7\/15/);
  P.personalDone(8);
  const saved=JSON.parse(db.get('master_osce_pilot_v1')).settings;
  assert.equal(saved.personalPlanDone[1],true);
  assert.equal(saved.personalPlanDone[10],true);
- assert.equal(saved.personalPlanDone[8],true);
- assert.ok(!saved.personalPlanDone[9]);
- assert.ok(!saved.personalPlanDone[11]);
- assert.ok(!saved.personalPlanDone[12]);
+ assert.equal(saved.personalPlanDone[8],false);
+ assert.equal(saved.personalPlanDone[9],true);
+ assert.equal(saved.personalPlanDone[11],true);
+ assert.equal(saved.personalPlanDone[12],true);
  assert.ok(saved.personalPlanVersion.includes('no-oncohemo'));
- h=P.page();assert.match(h,/3\/15/);
+ h=P.page();assert.match(h,/6\/15/);
+});
+
+test('blocos de hematologia previamente concluídos não migram para a nova B8/B9',()=>{
+ const state={version:2,settings:{examDate:'2026-11-24',minutes:15,personalPlanDone:{8:true,9:true}},items:{},runs:[],current:null,covered:{}};
+ const {P,db}=fixture(true,state);
+ assert.match(P.page(),/0\/15/);
+ P.personalDone(8);
+ const result=JSON.parse(db.get('master_osce_pilot_v1')).settings;
+ assert.equal(result.personalPlanDone['8'],true);
+ assert.ok(!result.personalPlanDone['9']);
+ assert.match(P.page(),/1\/15/);
 });
 test('usuário diferente não recebe trilha A/B/C da conta proprietária',()=>{
  const {P}=fixture(false),h=P.page();
