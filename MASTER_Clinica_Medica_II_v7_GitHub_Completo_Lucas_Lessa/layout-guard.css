@@ -46,6 +46,8 @@
  flex-shrink:0;
 }
 .topbar .account-control{flex:0 0 auto;min-width:0}
+.topbar .focus-top{flex:0 0 auto;min-width:84px;white-space:nowrap}
+.topbar #caderno-atalho-topo{flex:0 0 auto}
 /* Posições consistentes dos controles flutuantes: nunca sobre o cabeçalho. */
 .section-rail{top:calc(var(--master-header-h) + 12px);bottom:calc(var(--master-bottom-nav-h) + 12px);right:max(5px,var(--master-safe-right))}
 @media(min-width:701px) and (pointer:coarse){
@@ -90,6 +92,7 @@ body:has(.mp-root .mp-editor) .section-rail{display:none!important}
 .mp-editor .mp-weekdays{min-width:0;max-width:100%}
 .mp-editor .mp-editor-footer{min-width:0}
 @container master-plan-editor (max-width:720px){
+ .mp-editor .mp-topic-search{grid-template-columns:minmax(0,1fr)}
  .mp-form-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
  .mp-form-grid>label:first-child{grid-column:1/-1}
  .mp-topic-search{grid-template-columns:minmax(0,1fr)}
