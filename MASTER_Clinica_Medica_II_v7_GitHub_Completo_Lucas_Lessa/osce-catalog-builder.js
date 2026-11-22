@@ -116,9 +116,9 @@ function make(s){
  const risk=s.risk||'reavaliar risco e complicações', differ=s.diff||'comparar com outras causas da síndrome';
  const p=s.p||'media';
  const questions=[
-  question('sindrome','Diagnóstico sindrômico e etiológico','Qual síndrome e hipótese mais provável? Aponte ao menos três pistas deste caso.',
-  'A principal hipótese é '+s.t+'. O conjunto clínico é compatível porque '+cl+'. O diagnóstico deve ser confirmado pela investigação pertinente e não apenas por um sintoma isolado.',
-  ['Identifica '+s.t,'Usa pelo menos duas pistas do caso','Justifica hipótese principal','Evita diagnóstico automático'],cl,s.mem),
+  question('sindrome',s.syndrome?'Diagnóstico sindrômico e etiológico':'Hipótese diagnóstica',s.syndrome?'Qual é a síndrome clínica predominante? Qual doença é a hipótese etiológica mais provável? Justifique com duas pistas.':'Qual a hipótese diagnóstica mais provável? Justifique com duas pistas do caso.',
+  s.syndrome?('Diagnóstico SINDRÔMICO: '+s.syndrome+'. Hipótese ETIOLÓGICA: '+s.t+'. As pistas do caso são '+cl+'. A síndrome descreve o padrão de manifestação; a etiologia nomeia a doença que pode causá-lo. Confirme a hipótese com investigação apropriada.') :('A principal hipótese diagnóstica é '+s.t+'. O conjunto de achados que sustenta essa hipótese é '+cl+'. A investigação pertinente deve confirmar a doença, sem inferir sua presença por um único sinal.'),
+  s.syndrome?['Nomeia a síndrome clínica: '+s.syndrome,'Identifica a hipótese etiológica: '+s.t,'Relaciona duas pistas do caso','Distingue síndrome de etiologia']:['Identifica a hipótese: '+s.t,'Cita ao menos duas pistas do caso','Justifica o raciocínio diferencial','Evita concluir por achado isolado'],cl,s.mem),
   question('anamnese','Anamnese dirigida','Que perguntas você faria para confirmar sua hipótese e identificar gravidade?',
   'Cronologia e evolução dos sintomas, fatores de risco e tratamentos atuais. Neste caso, investigar especificamente: '+(s.hx||cl)+'. Perguntar também impacto funcional, medicamentos, comorbidades, sinais de alarme e antecedentes familiares quando pertinentes.',
   ['Cronologia e evolução','Perguntas específicas: '+squeeze(s.hx||cl,90),'Riscos, medicações e comorbidades'],s.hx||cl,s.mem),
@@ -144,6 +144,30 @@ function make(s){
   'Explique que a hipótese é '+s.t+' com base em '+cl+'. Diga que a investigação será '+dx+'. Oriente que o tratamento e o seguimento serão individualizados: '+pl+'. Procurar urgência diante de '+risk+'. Confirmar compreensão e evitar promessas de cura.',
   ['Explica hipótese em linguagem simples','Resume exames e plano','Informa sinais de alerta','Checa compreensão'],pl,s.mem)
  ];
+ // Cada pergunta recebe uma âncora de memória e três pistas específicas de sua competência.
+ // Não reutilizamos o mesmo mnemônico da estação em todas as etapas.
+ const clip=(v,n=170)=>String(v||'').replace(/\s+/g,' ').trim().slice(0,n);
+ const cues={
+  sindrome:{memory: 'PADRÃO → HIPÓTESE: '+clip(s.syndrome?('síndrome '+s.syndrome+'; causa suspeita '+s.t):cl,155),
+   hints:['Identifique o conjunto dominante de sinais e sintomas, não apenas um detalhe.','Quais achados discriminam essa hipótese de um diagnóstico alternativo?','Se houver síndrome e etiologia, diga cada uma separadamente antes da justificativa.']},
+  anamnese:{memory:'ANAMNESE-ALVO: '+clip(s.hx||cl),
+   hints:['Pergunte início, cronologia e evolução antes de perguntar por exames.','Busque fatores de risco, exposições e antecedentes diretamente relacionados ao problema.','Priorize perguntas que mudariam sua hipótese ou a segurança da conduta.']},
+  exame:{memory:'EXAME DIRIGIDO: '+clip(s.pe||cl),
+   hints:['Comece por estabilidade, sinais vitais e perfusão.','Que estrutura ou sistema precisa ser examinado para sustentar a hipótese?','Diga que achado de gravidade mudaria sua próxima decisão.']},
+  mecanismo:{memory:'MECANISMO: '+clip(s.path||cl),
+   hints:['Pense no tecido ou órgão inicialmente afetado.','Ligue a alteração funcional aos dois sintomas dominantes.','Complete a sequência lesão → alteração fisiológica → manifestação clínica.']},
+  investigacao:{memory:'CONFIRMAR: '+clip(dx),
+   hints:['Separe exames de triagem, confirmação e gravidade.','Qual teste responde à principal dúvida clínica deste caso?','Interprete o possível resultado e cite ao menos uma limitação do teste.']},
+  diferenciais:{memory:'CONTRASTE: '+clip(differ),
+   hints:['Escolha o diagnóstico alternativo que mais se parece com a apresentação.','Qual achado da história ou do exame diferencia as hipóteses?','Use uma pista discriminadora para cada diferencial, sem listar nomes soltos.']},
+  conduta:{memory:'CONDUTA: '+clip(pl),
+   hints:['Avalie primeiro se há instabilidade ou intervenção imediata.','Que tratamento responde ao mecanismo principal da doença?','Cite a contraindicação ou erro terapêutico que mais mudaria a segurança.']},
+  gravidade:{memory:'ALARME: '+clip(risk),
+   hints:['Que sinal vital ou alteração de consciência muda o nível de urgência?','Pense nas complicações tempo-dependentes deste quadro.','Defina o que exige reavaliação imediata, internação ou encaminhamento.']},
+  orientacoes:{memory:'EXPLICAR AO PACIENTE: '+clip(pl,100)+' | RETORNO: '+clip(risk,95),
+   hints:['Use palavras comuns para a hipótese e explique a incerteza diagnóstica.','Descreva o próximo exame ou tratamento sem prometer resultado.','Peça que o paciente repita o plano e diga quando deve procurar urgência.']}
+ };
+ questions.forEach(q=>{if(cues[q.id]){q.memory=cues[q.id].memory;q.hints=cues[q.id].hints;}});
  const deeper=[
   {title:'1. Reconhecer o padrão do caso',body:'Padrão-chave: '+cl+'. Compare cronologia, sinais dirigidos e fatores de risco; só depois formule diagnóstico sindrômico e etiológico.',tip:s.mem||'Pista → síndrome → hipótese.'},
   {title:'2. Anamnese e exame que realmente discriminam',body:'Perguntas: '+(s.hx||cl)+'. No exame: '+(s.pe||cl)+'. Evite listas sem finalidade clínica; diga como cada achado altera a hipótese.',tip:'Perguntar → examinar → interpretar.'},
@@ -164,7 +188,7 @@ function make(s){
   images:[{src:svgFor(s),kind:'illustration',alt:'Esquema autoral de raciocínio sobre '+s.t+'; não é exame clínico.',caption:'Ilustração educacional original baseada no tema; NÃO é foto, ECG ou imagem diagnóstica do caso.'}],
   essential:{oneMinute:s.t+': '+cl+'. Investigação: '+dx+'. Tratamento: '+pl+'. Atenção: '+risk+'. Diferencial importante: '+differ+'. Armadilha: não fechar diagnóstico por achado isolado nem atrasar avaliação de gravidade. Pergunta ativa: qual dado do caso mais muda sua conduta?',mnemonic:s.mem||'Pistas → exames → conduta → risco.'},
   tiers:{
-   essencial:{label:'Essencial',minutes:1,ids:['sindrome'],description:'Síndrome, pista-chave e recuperação ativa.'},
+   essencial:{label:'Essencial',minutes:1,ids:['sindrome'],description:'Hipótese, pistas-chave e recuperação ativa.'},
    rapida:{label:'Revisão rápida',minutes:5,ids:['sindrome','investigacao','conduta','gravidade'],description:'Quatro decisões centrais.'},
    completa:{label:'Completo',minutes:25,ids:questions.map(x=>x.id),description:'Nove itens: anamnese, exame, fisiopatologia, diagnóstico, tratamento e comunicação.'}
   },
