@@ -4,9 +4,9 @@ const assert=require('node:assert/strict');
 const {chromium}=require('playwright');
 const fs=require('node:fs/promises'),http=require('node:http'),path=require('node:path');
 const ROOT='MASTER_Clinica_Medica_II_v7_GitHub_Completo_Lucas_Lessa';
-const scripts=['osce-pilot-data.js','osce-fa-data.js','osce-extra-07.js','osce-extra-24.js','osce-extra-04.js','osce-extra-20.js','osce-extra-46.js','osce-catalog-builder.js','osce-high-clinical.js','osce-high-heme-endo.js','osce-endo-medium-low.js','osce-reuma-medium-low.js','osce-hemo-medium-low.js','osce-other-medium-low.js','osce-curricular-additions.js','osce-pocus.js','osce-priority-index.js','osce-visual-notes.js','osce-pilot.js'];
+const scripts=['osce-pilot-data.js','osce-fa-data.js','osce-extra-07.js','osce-extra-24.js','osce-extra-04.js','osce-extra-20.js','osce-extra-46.js','osce-catalog-builder.js','osce-high-clinical.js','osce-high-heme-endo.js','osce-endo-medium-low.js','osce-reuma-medium-low.js','osce-hemo-medium-low.js','osce-other-medium-low.js','osce-curricular-additions.js','osce-pocus.js','osce-priority-index.js','osce-visual-notes.js','osce-context-ui.js','osce-pilot.js'];
 const harness='<!doctype html><html lang="pt-BR"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">'
- +'<link rel="stylesheet" href="/'+ROOT+'/osce.css"><link rel="stylesheet" href="/'+ROOT+'/osce-fluid.css">'
+ +'<link rel="stylesheet" href="/'+ROOT+'/osce.css"><link rel="stylesheet" href="/'+ROOT+'/osce-fluid.css"><link rel="stylesheet" href="/'+ROOT+'/osce-context-ui.css">'
  +'<style>body{margin:0;padding:12px;background:#f7f4ee;color:#193f34;font:16px system-ui}.btn{cursor:pointer;background:#fff;color:inherit;border:1px solid #d1d8d1;padding:9px 14px}.btn.primary{background:#1e5c45;color:#fff}.page-header h1{font-size:2.25rem}main{max-width:1100px;margin:auto}button{cursor:pointer}</style>'
  +'<script>window.ui={route:"osce"};window.render=()=>{document.querySelector("#main").innerHTML=window.OSCEPilot.page()};</script>'
  +scripts.map(s=>'<script src="/'+ROOT+'/'+s+'"></script>').join('\n')
@@ -66,5 +66,42 @@ test('tablet: buscar estação preserva cursor, filtro e evita rolagem lateral',
  assert.equal(data.value,'síXncope');assert.equal(data.caret,3);
  const overflow=await p.evaluate(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth);
  assert.ok(overflow<=2,'OSCE horizontal overflow at tablet width: '+overflow);
+ await t.close();
+});
+
+
+test('termo clínico abre referência contextual sem deslocar a página e fecha com Escape',async()=>{
+ const t=await open(),p=t.page;
+ await p.evaluate(()=>OSCEPilot.preview(61));
+ await p.locator('#osce-terms summary').click();
+ const trigger=p.locator('#osce-terms .osce-term').first();
+ await trigger.scrollIntoViewIfNeeded();
+ const before=await p.evaluate(()=>window.scrollY);
+ await trigger.click();
+ await p.locator('.osce-context-popover').waitFor();
+ assert.match(await p.locator('.osce-context-popover').innerText(),/Síncope/);
+ assert.equal(await p.locator('.osce-context-popover a[href^="https://"]').count(),1);
+ assert.equal(await trigger.getAttribute('aria-expanded'),'true');
+ const after=await p.evaluate(()=>window.scrollY);
+ assert.ok(Math.abs(after-before)<32,'popup should not jump to remote glossary panel');
+ await p.keyboard.press('Escape');
+ assert.equal(await p.locator('.osce-context-popover').count(),0);
+ assert.equal(await trigger.getAttribute('aria-expanded'),'false');
+ assert.equal(await trigger.evaluate(x=>x===document.activeElement),true);
+ await t.close();
+});
+test('celular: definição abre como folha contextual com botão grande e sem rolagem lateral',async()=>{
+ const t=await open({width:390,height:844}),p=t.page;
+ await p.evaluate(()=>OSCEPilot.preview(61));
+ await p.locator('#osce-terms summary').click();
+ await p.locator('#osce-terms .osce-term').first().click();
+ const flyout=p.locator('.osce-context-popover');
+ assert.equal(await flyout.evaluate(x=>x.classList.contains('is-sheet')),true);
+ const dims=await flyout.evaluate(el=>{const r=el.getBoundingClientRect();return {left:r.left,right:r.right,width:r.width}});
+ assert.ok(dims.left>=0&&dims.right<=391,'mobile panel must stay inside viewport');
+ const close=p.locator('.osce-context-close');
+ assert.ok((await close.boundingBox()).width>=44);
+ await close.click();
+ assert.equal(await flyout.count(),0);
  await t.close();
 });
