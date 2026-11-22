@@ -140,7 +140,7 @@ function schedule(plan,from=localDate()){
  // Assuntos vistos sem reteste futuro ganham ao menos uma recuperação antes da prova.
  for(const t of themes.filter(t=>completed(plan,t)&&!dueOn(plan,t))){
   const last=latest(plan,t.id),ex=externalEvidence(t);
-  const when=last?.day||ex?.at?localDate(new Date(last?.day||ex.at)):from;
+  const when=last?.day||(ex?.at?localDate(new Date(ex.at)):from);
   put(shift(when,7)>from?shift(when,7):from,t,'review');
  }
  return {rows,capacity:cap,themes:themes.length,planned:rows.reduce((sum,row)=>sum+row.tasks.length,0),unplaced:overflow,afterExam:unsupported,days:days.length};
