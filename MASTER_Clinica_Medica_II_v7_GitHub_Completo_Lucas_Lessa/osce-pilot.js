@@ -40,11 +40,11 @@ window.OSCEPilot=(()=>{
  render();
  if(!hasDom)return;
  const root=document.querySelector('.osce-app-shell');if(!root)return;
- const anchors={top:root,feedback:root.querySelector('.osce-feedback'),question:root.querySelector('.osce-step'),levels:root.querySelector('.osce-study-levels')};
+ const anchors={top:root,case:root.querySelector('.osce-case'),feedback:root.querySelector('.osce-feedback'),question:root.querySelector('.osce-step'),levels:root.querySelector('.osce-study-levels')};
  const target=anchors[destination];
  if(target){
   target.scrollIntoView({behavior:'instant',block:'start'});
-  if(destination==='question'){const h=target.querySelector('h2');if(h){h.tabIndex=-1;h.focus({preventScroll:true});}}
+  if(destination==='question'||destination==='case'){const h=target.querySelector('h2')||target;if(h){h.tabIndex=-1;h.focus({preventScroll:true});}}
  }else{
   window.scrollTo({top:previousY,behavior:'instant'});
   if(previousId){const field=document.getElementById(previousId);field?.focus?.({preventScroll:true});}
@@ -370,7 +370,7 @@ window.OSCEPilot=(()=>{
   const st=data(number||61);if(!st?.tiers[tier])return;
   markWelcomeVisited();const chosen=(Array.isArray(ids)&&ids.length?ids:st.tiers[tier].ids).filter(id=>st.questions.some(q=>q.id===id));
   state.current={station:st.number,tier,ids:chosen,pos:0,startedAt:now(),itemStartedAt:Date.now(),prepared:screen==='preview',results:[],view:{shown:false,confidence:0,hints:0,checked:[]}};
-  screen='study';resetView();save();renderAgain('question');
+  screen='study';resetView();save();renderAgain('case');
  }
  function dailyPlan(minutes){
   const limit=minutes<=5?3:minutes<=15?8:minutes<=30?14:20;
@@ -403,7 +403,7 @@ window.OSCEPilot=(()=>{
   state.current={station:queue[0].station,mode:'daily',tier:'rapida',ids:queue.map(x=>x.id),queue,
    targetMinutes:minutes,pos:0,startedAt:now(),itemStartedAt:Date.now(),prepared:false,results:[],
    view:{shown:false,confidence:0,hints:0,checked:[]}};
-  screen='study';resetView();save();renderAgain('question');
+  screen='study';resetView();save();renderAgain('case');
  }
  function resume(){if(!state.current)return daily();screen='study';restoreView();renderAgain('question');}
  function home(){screen='home';renderAgain('top');}
