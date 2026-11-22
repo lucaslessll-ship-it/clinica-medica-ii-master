@@ -154,6 +154,28 @@ window.OSCEPilot=(()=>{
   save();renderAgain();
  }
 
+ function ecgSection(){
+  const groups=[
+   {title:'Fibrilação atrial (FA)',re:/fibrila.{0,8}atrial|\\bFA\\b/i,priority:'alta',hint:'Ritmo irregular, ausência de P organizada, estabilidade e risco tromboembólico'},
+   {title:'Bloqueios atrioventriculares (BAV)',re:/bloqueio.{0,22}atrioventricular|\\bBAV\\b|mobitz/i,priority:'alta',hint:'PR, condução AV, Mobitz I × II, BAV total e marcapasso'},
+   {title:'Torsades de pointes',re:/torsades|QT longo/i,priority:'alta',hint:'Taquicardia ventricular polimórfica, QT longo, magnésio e instabilidade'},
+   {title:'Fibrilação ventricular (FV)',re:/fibrila.{0,12}ventricular|\\bFV\\b/i,priority:'alta',hint:'Reconhecer ritmo chocável, desfibrilar e retomar RCP'},
+   {title:'Taquicardia ventricular',re:/taquicardia ventricular|\\bTV\\b/i,priority:'alta',hint:'Pulso × ausência de pulso, estabilidade e cardioversão/desfibrilação'},
+   {title:'Taquiarritmias supraventriculares',re:/supraventricular|flutter/i,priority:'media',hint:'Regularidade, QRS, manobras vagais e conduta'},
+   {title:'Bradicardias e distúrbios de condução',re:/bradicardia|sinusal|condução/i,priority:'media',hint:'Sintomas, causas reversíveis e indicação de estimulação'},
+   {title:'Alterações de ST e isquemia',re:/isquemia|infarto|\\bIAM\\b|segmento ST|supradesnivelamento/i,priority:'media',hint:'Derivações contíguas, localização e conduta urgente'}
+  ];
+  const used=new Set();
+  const cards=groups.map((g,i)=>{
+   const matches=BANK.filter(st=>!st.pocusOrder&&!used.has(st.number)&&g.re.test([st.title,st.subtitle,st.area].join(' '))).sort((a,b)=>(a.priority==='alta'?0:a.priority==='media'?1:2)-(b.priority==='alta'?0:b.priority==='media'?1:2));
+   matches.forEach(st=>used.add(st.number));
+   const available=matches.length,answered=matches.reduce((n,st)=>n+attempted(st),0),total=matches.reduce((n,st)=>n+st.questions.length,0),pct=total?Math.round(100*answered/total):0;
+   return '<article class="osce-ecg-card"><div class="osce-ecg-card-head"><span class="osce-priority osce-priority-'+g.priority+'">'+(g.priority==='alta'?'Alta':'Média')+'</span><small>'+String(i+1).padStart(2,'0')+'</small></div><h3>'+esc(g.title)+'</h3><p>'+esc(g.hint)+'</p>'
+    +'<div class="osce-topic-completion"><div class="osce-topic-completion-head"><span>'+(available?answered+'/'+total+' perguntas':'Estação específica não cadastrada')+'</span><strong>'+pct+'%</strong></div><div class="osce-topic-completion-track" role="progressbar" aria-label="Cobertura de '+esc(g.title)+'" aria-valuemin="0" aria-valuemax="100" aria-valuenow="'+pct+'"><span style="width:'+pct+'%"></span></div></div>'
+    +(available?'<div class="osce-ecg-actions">'+matches.slice(0,3).map(st=>'<button type="button" class="btn" onclick="OSCEPilot.preview('+st.number+')">Estudar · '+displayLabel(st)+'</button><button type="button" class="btn primary" onclick="OSCEPilot.start(\'rapida\',null,'+st.number+')">Simular</button>').join('')+'</div>':'<p class="osce-note">Tema no roteiro; sem estação específica correspondente identificada no banco atual.</p>')+'</article>';
+  }).join('');
+  return '<section class="osce-ecg-section" id="osce-ecg-top" aria-labelledby="osce-ecg-title"><header><p class="eyebrow">CENTRAL DE ECG · TREINO PRÁTICO-ORAL</p><h2 id="osce-ecg-title">ECG — estações prioritárias</h2><p>Os conteúdos relacionados a eletrocardiograma estão organizados de forma centralizada, reunindo as principais estações, achados e condutas. Os temas continuam disponíveis também no catálogo geral. A prioridade é pedagógica, não uma probabilidade confirmada da prova.</p></header><div class="osce-ecg-grid">'+cards+'</div><p class="osce-note">Treine sempre: reconhecer o traçado, avaliar estabilidade, formular diferenciais, pedir exames pertinentes e justificar a conduta. Imagens e referências originais permanecem dentro de cada estação quando cadastradas.</p></section>';
+ }
  function pocusSection(){
   const a=BANK.filter(st=>st.pocusOrder).sort((x,y)=>x.pocusOrder-y.pocusOrder);
   if(!a.length)return '';
@@ -224,12 +246,13 @@ window.OSCEPilot=(()=>{
    +'<button type="button" onclick="OSCEPilot.jumpSection(\'today\')">Hoje</button>'
    +(personalIsOwner()?'<button type="button" onclick="OSCEPilot.jumpSection(\'mine\')">★ Minha trilha</button>':'')
    +'<button type="button" onclick="OSCEPilot.jumpSection(\'pocus\')">POCCUS</button>'
+   +'<button type="button" onclick="OSCEPilot.jumpSection(\'ecg\')">ECG</button>'
    +'<button type="button" onclick="OSCEPilot.jumpSection(\'priority\')">Prioridades</button>'
    +'<button type="button" onclick="OSCEPilot.jumpSection(\'search\')">Buscar</button>'
    +'<button type="button" onclick="OSCEPilot.showReview()">Revisão</button></nav>';
  }
  function jumpSection(which){
-  const ids={today:'osce-today',mine:'osce-my-plan',pocus:'osce-pocus-top',priority:'osce-priority-overview',search:'osce-catalog-search'};
+  const ids={today:'osce-today',mine:'osce-my-plan',pocus:'osce-pocus-top',ecg:'osce-ecg-top',priority:'osce-priority-overview',search:'osce-catalog-search'};
   const id=ids[which];if(!id||typeof document==='undefined')return;
   const el=document.getElementById(id);if(!el)return;
   if(which==='pocus'&&el.tagName==='DETAILS')el.open=true;
@@ -253,6 +276,7 @@ window.OSCEPilot=(()=>{
    +'<div class="osce-stats"><div><b>'+total+'</b><span>perguntas testadas</span></div><div><b>'+dueCount+'</b><span>revisões vencidas</span></div><div><b>'+weakCount+'</b><span>lacunas registradas</span></div><div><b>'+deep+'/'+BANK.length+'</b><span>estações completas</span></div></div>'
    +'<section class="osce-case"><h2>Triagem e cobertura</h2><div class="osce-settings"><label>Data da APO<input type="date" value="'+esc(state.settings.examDate)+'" onchange="OSCEPilot.setDate(this.value)"></label><label>Tempo disponível<select onchange="OSCEPilot.setMinutes(this.value)">'+[5,15,30,45].map(m=>'<option value="'+m+'"'+(Number(state.settings.minutes)===m?' selected':'')+'>'+m+' min</option>').join('')+'</select></label></div><p class="osce-note">Amplitude: '+shallow+'/'+BANK.length+' · Profundidade: '+deep+'/'+BANK.length+'. O roteiro inclui '+BANK.filter(st=>st.pocusOrder).length+' POCCUS e '+BANK.filter(st=>!st.pocusOrder).length+' outras estações; a seção POCCUS fica recolhida por padrão.</p><div class="osce-track"><span style="width:'+(100*shallow/BANK.length)+'%"></span></div><div class="osce-track osce-track-secondary"><span style="width:'+(100*deep/BANK.length)+'%"></span></div></section>'
    +pocusSection()
+   +ecgSection()
    +priorityIndex()
    +'<h2>Estações disponíveis</h2><p class="osce-note">Prioridade: <span class="osce-priority osce-priority-alta">● Alta</span> · <span class="osce-priority osce-priority-media">● Média</span> · <span class="osce-priority osce-priority-baixa">● Baixa</span>. Critério pedagógico, não previsão estatística da prova.</p>'
    +'<div class="osce-filter" id="osce-catalog-filter"><label>Buscar estação<input type="search" id="osce-catalog-search" placeholder="Tema ou novo número (ex.: 1, 8, síncope)" value="'+esc(catalogSearch)+'" oninput="OSCEPilot.filterCatalog(this.value)"></label><label>Prioridade<select onchange="OSCEPilot.setCatalogPriority(this.value)">'+(personalIsOwner()?[['minhas','★ Minhas prioridades']]:[]).concat([['alta','Alta'],['media','Média'],['baixa','Baixa'],['todas','Todas']]).map(([k,l])=>'<option value="'+k+'"'+(catalogPriority===k?' selected':'')+'>'+l+'</option>').join('')+'</select></label></div>'
