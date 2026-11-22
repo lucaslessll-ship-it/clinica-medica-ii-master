@@ -408,7 +408,7 @@ body[data-theme="dark"] .osce-index-group[open] summary{background:color-mix(in 
 .osce-app-shell .osce-reading-legend-item{display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
 .osce-app-shell .osce-legend-mark{display:inline-block;width:18px;height:9px;border-radius:3px;border-bottom-width:2px;border-bottom-style:solid}
 .osce-app-shell .osce-reading-step-nav{display:flex;flex-wrap:nowrap;gap:7px;overflow-x:auto;max-width:100%;padding:2px 1px 10px;scrollbar-width:thin}
-.osce-app-shell .osce-reading-index{flex:0 0 37px;min-width:37px;min-height:39px;border-radius:10px;border:1px solid var(--border,#d2ddd4);background:var(--card,#fff);color:inherit;font:inherit;font-size:.8rem;font-weight:650;cursor:pointer;transition:background .14s ease,border-color .14s ease}
+.osce-app-shell .osce-reading-index{flex:0 0 44px;min-width:44px;min-height:44px;border-radius:10px;border:1px solid var(--border,#d2ddd4);background:var(--card,#fff);color:inherit;font:inherit;font-size:.8rem;font-weight:650;cursor:pointer;transition:background .14s ease,border-color .14s ease}
 .osce-app-shell .osce-reading-index.is-active{background:#1e5c48;color:#fff;border-color:#1e5c48;box-shadow:0 2px 7px #174d3220}
 .osce-app-shell .osce-reading-index:not(.is-active):hover{border-color:#4f846d;background:color-mix(in srgb,#4f846d 7%,var(--card,#fff))}
 .osce-app-shell .osce-reading-index:focus-visible,.osce-app-shell .osce-reading-options button:focus-visible,.osce-app-shell .osce-reading-pagination button:focus-visible{outline:2px solid #2d7655;outline-offset:3px}
