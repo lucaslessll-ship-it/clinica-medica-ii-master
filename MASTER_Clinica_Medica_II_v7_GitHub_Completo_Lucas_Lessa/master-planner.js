@@ -325,7 +325,7 @@ function page(){
  if(editing)out+=editor();
  if(plan){out+=htmlDays();out+=heatmap();out+=gamePanel();}
  else if(!editing)out+='<section class="mp-panel mp-empty-state"><h2>Seu planejamento começa com uma avaliação.</h2><p>Informe a data, os temas e seus minutos disponíveis. O Master distribui atividades e mostra quando a carga não cabe no prazo.</p><button class="btn primary" onclick="MasterPlanner.openEditor()">Configurar primeira avaliação</button></section>';
- if(!plan)out+=heatmap()+gamePanel();
+ // O mapa e as conquistas aparecem após criar um plano; antes disso a tela permanece enxuta.
  out+='<p class="mp-footer-note">O planejador não cria respostas nem altera o histórico original de provas, questões ou OSCE. Atividades assinaladas são autoavaliações; a revisão real deve ser realizada no módulo correspondente.</p></div>';
  return out;
 }
