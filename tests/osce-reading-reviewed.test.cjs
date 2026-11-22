@@ -66,7 +66,7 @@ test('revisão teórica vencida abre estudo antes do simulado e não entra no co
  assert.match(h,/OSCEPilot\.preview\(88\)/);
  assert.match(h,/0<\/b><span>lacunas insatisfatórias/);
  P.preview(88);
- assert.match(P.page(),/Marcar como estudado/);
+ assert.match(P.page(),/(Marcar como estudado|Registrar aprofundamento)/);
 });
 test('histórico de questões e notas anteriores permanecem intactos',()=>{
  const existing={version:2,settings:{examDate:'2026-11-24',minutes:15},items:{'61:sindrome':{draft:'',attempts:[{at:'2026-11-20T18:00:00.000Z',score:40,confidence:1,criteria:[],due:'2026-11-23T12:00:00.000Z',answer:'teste'}]}},runs:[],current:null,covered:{},updatedAt:null};
@@ -90,7 +90,7 @@ test('estações fora do OSCE permanecem disponíveis para leitura manual mas n�
  P.reload();
  assert.equal(P.readingDueItems().length,0);
  P.preview(79);
- assert.match(P.page(),/Marcar como estudado/);
+ assert.match(P.page(),/(Marcar como estudado|Registrar aprofundamento)/);
 });
 test('arquivos de interface usam versões novas no site',()=>{
  const html=fs.readFileSync(path.join(ROOT,'index.html'),'utf8');
