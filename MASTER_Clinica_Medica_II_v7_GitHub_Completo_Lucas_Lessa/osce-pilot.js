@@ -37,16 +37,18 @@ window.OSCEPilot=(()=>{
  const hasDom=typeof document!=='undefined'&&typeof window!=='undefined';
  const previousY=hasDom?window.scrollY:0;
  const previousId=hasDom?document.activeElement?.id:null;
+ if(hasDom)window.OSCEContext?.close(false);
  render();
  if(!hasDom)return;
  const root=document.querySelector('.osce-app-shell');if(!root)return;
  const anchors={top:root,case:root.querySelector('.osce-case'),feedback:root.querySelector('.osce-feedback'),question:root.querySelector('.osce-step'),levels:root.querySelector('.osce-study-levels')};
  const target=anchors[destination];
  if(target){
-  target.scrollIntoView({behavior:'instant',block:'start'});
+  target.scrollIntoView({behavior:'auto',block:'start'});
+  window.OSCEContext?.enter(target,destination);
   if(destination==='question'||destination==='case'||destination==='feedback'||destination==='top'){const h=destination==='top'?target.querySelector('h1'):target.querySelector('h2,h3')||target;if(h){h.tabIndex=-1;h.focus({preventScroll:true});}}
  }else{
-  window.scrollTo({top:previousY,behavior:'instant'});
+  window.scrollTo({top:previousY,behavior:'auto'});
   if(previousId){const field=document.getElementById(previousId);field?.focus?.({preventScroll:true});}
  }
 }
@@ -299,7 +301,7 @@ window.OSCEPilot=(()=>{
     {key:'eco',name:'Ecocardiograma',definition:'Avalia cardiopatia estrutural e valvopatia quando história e exame sugerem doença do coração.',source:'esc2018'},
     {key:'eeg',name:'EEG',definition:'Não é exame de rotina para síncope típica; indicado quando investigação sugere crise epiléptica.',source:'esc2018'}
   ];
-  return '<details id="osce-terms" class="osce-deep"><summary>Termos marcados e referências <span>toque nos conceitos</span></summary><div><p class="osce-note">Clique em qualquer termo para ver definição breve e fonte.</p><div class="osce-term-list">'+a.map(t=>'<button class="osce-term" type="button" onclick="OSCEPilot.term(\''+t.key+'\')">'+esc(t.name)+' <sup>↗</sup></button>').join('')+'</div><div id="osce-glossary-content" role="status" aria-live="polite">'+(glossary?glossary:'<p class="osce-note">Selecione um termo acima.</p>')+'</div></div></details>';
+  return '<details id="osce-terms" class="osce-deep"><summary>Termos marcados e referências <span>toque nos conceitos</span></summary><div><p class="osce-note">Toque em um termo para abrir a definição e a fonte sem perder o ponto de leitura.</p><div class="osce-term-list">'+a.map(t=>'<button class="osce-term" type="button" onclick="OSCEPilot.term(\''+t.key+'\',this)">'+esc(t.name)+' <sup>↗</sup></button>').join('')+'</div><div id="osce-glossary-content" role="status" aria-live="polite">'+(glossary?glossary:'<p class="osce-note">Selecione um termo acima.</p>')+'</div></div></details>';
  }
  function mark(st,text){
   let s=esc(text);
@@ -308,7 +310,7 @@ window.OSCEPilot=(()=>{
    const term=esc(t.name),pos=s.toLocaleLowerCase('pt-BR').indexOf(term.toLocaleLowerCase('pt-BR'));
    if(pos>=0){
     const visible=s.slice(pos,pos+term.length);
-    s=s.slice(0,pos)+'<button class="osce-term-inline" type="button" onclick="OSCEPilot.term(\''+t.key+'\')">'+visible+' <sup>ref</sup></button>'+s.slice(pos+term.length);
+    s=s.slice(0,pos)+'<button class="osce-term-inline" type="button" onclick="OSCEPilot.term(\''+t.key+'\',this)">'+visible+' <sup>ref</sup></button>'+s.slice(pos+term.length);
    }
   }
   return s;
@@ -467,8 +469,9 @@ window.OSCEPilot=(()=>{
  function showReview(){screen='review';renderAgain();}
  function showPrompt(){screen='prompt';renderAgain();}
  function reviewDue(){const list=dueItems();if(!list.length)return notify('Nenhum reteste vencido ainda.');const x=list[0];start('rapida',[x.q.id],x.st.number);}
- function term(k){
-  const st=screen==='study'?study():screen==='preview'?MAP.get(previewStation):data(reviewStation);const arr=st.terms||[
+ function term(k,anchor){
+  const st=screen==='study'?study():screen==='preview'?MAP.get(previewStation):data(reviewStation);
+  const arr=st.terms||[
    {key:'sincope',name:'Síncope',definition:'Hipoperfusão cerebral global transitória.',source:'esc2018'},
    {key:'ecg',name:'ECG',definition:'Avaliação eletrocardiográfica de 12 derivações.',source:'esc2018'},
    {key:'eco',name:'Ecocardiograma',definition:'Exame cardíaco estrutural.',source:'esc2018'},
@@ -476,10 +479,13 @@ window.OSCEPilot=(()=>{
   ];
   const t=arr.find(x=>x.key===k);if(!t)return;
   const src=(st.sources||[]).find(x=>x.id===t.source);
+  if(anchor?.isConnected&&window.OSCEContext?.open(anchor,
+   {name:t.name,definition:t.definition,url:src?.url,sourceLabel:src?.label||src?.title}))return;
   glossary='<p><strong>'+esc(t.name)+':</strong> '+esc(t.definition)+'</p>'+(src?'<p><a target="_blank" rel="noopener noreferrer" href="'+esc(src.url)+'">Fonte: '+esc(src.label||src.title)+' ↗</a></p>':'');
   const d=document.getElementById('osce-terms');if(d&&!d.open)d.open=true;
-  const area=document.getElementById('osce-glossary-content');if(area){area.innerHTML=glossary;area.scrollIntoView({block:'nearest',behavior:'smooth'});}
+  const area=document.getElementById('osce-glossary-content');if(area){area.innerHTML=glossary;area.scrollIntoView({block:'nearest',behavior:'auto'});}
  }
+
  function showSources(){const d=document.getElementById('osce-sources');if(d){d.open=true;d.scrollIntoView({block:'start',behavior:'smooth'});}}
  function showTerms(){const d=document.getElementById('osce-terms');if(d){d.open=true;d.scrollIntoView({block:'start',behavior:'smooth'});}}
  function openLesson(n){
