@@ -17,8 +17,8 @@ window.OSCEPilot=(()=>{
  const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  const now=()=>new Date().toISOString();
  const shift=(n)=>{const d=new Date();d.setHours(12,0,0,0);d.setDate(d.getDate()+n);return d.toISOString()};
- const empty=()=>({version:2,settings:{examDate:'2026-11-24',minutes:15},items:{},runs:[],current:null,covered:{},updatedAt:null});
- function load(){try{const s=JSON.parse(localStorage.getItem(KEY));if(s&&s.items&&s.settings)return {...empty(),...s,covered:s.covered||{}}}catch{}return empty();}
+ const empty=()=>({version:2,settings:{examDate:'2026-11-24',minutes:15},items:{},runs:[],current:null,covered:{},readingReviews:{},updatedAt:null});
+ function load(){try{const s=JSON.parse(localStorage.getItem(KEY));if(s&&s.items&&s.settings)return {...empty(),...s,covered:s.covered||{},readingReviews:s.readingReviews||{}}}catch{}return empty();}
  let state=load(),screen='home',shown=false,confidence=0,hints=0,checked=[],reviewStation=61,previewStation=61,previewTier='completa',previewStep=0,previewLayout='guided',glossary='',catalogSearch='',catalogPriority='alta',catalogLimit=12;
  let welcomeOpen=!state.settings?.hideWelcome, welcomeSkipNext=!!state.settings?.hideWelcome, welcomeDismissedThisLoad=false;
  const bank=()=>BANK;
@@ -33,16 +33,38 @@ window.OSCEPilot=(()=>{
  function weakItems(){return BANK.filter(inExam).flatMap(st=>st.questions.filter(q=>{const a=last(st,q);return a&&a.score<80}).map(q=>({st,q,a:last(st,q)})))}
  function dueItems(){return BANK.filter(inExam).flatMap(st=>st.questions.filter(q=>due(st,q)).map(q=>({st,q,a:last(st,q)}))).sort((a,b)=>new Date(a.a.due)-new Date(b.a.due))}
  function attempted(st){return st.questions.filter(q=>!!last(st,q)).length}
+ function readingReview(st){return state.readingReviews?.[st.number]||null;}
+ function readingToday(r){return !!r?.at&&new Date(r.at).toDateString()===new Date().toDateString();}
+ function readingDueItems(){return BANK.filter(inExam).filter(st=>{const r=readingReview(st);return r?.due&&new Date(r.due).getTime()<=Date.now()}).sort((a,b)=>new Date(readingReview(a).due)-new Date(readingReview(b).due));}
+ function readingBadge(st){const r=readingReview(st);return r?'<span class="osce-reading-badge" title="Leitura registrada, não é uma nota de simulado">✓ Estudado por leitura'+(readingToday(r)?' hoje':'')+'</span>':'';}
+ function readingMarkControl(st,tier='rapida'){
+  const r=readingReview(st),rank={essencial:1,rapida:2,completa:3};
+  if(readingToday(r)&&(rank[tier]||1)<=(rank[r.tier]||1))return '<span class="osce-reading-marked" role="status">✓ Estudado hoje · próxima leitura '+formatDate(r.due)+'</span>';
+  return '<button type="button" class="btn osce-reading-mark" onclick="OSCEPilot.markStudied('+st.number+',\''+tier+'\')">'+(readingToday(r)?'✓ Registrar aprofundamento':'✓ Marcar como estudado')+'</button>';
+ }
+ function markStudied(number,tier='rapida'){
+  const st=MAP.get(Number(number));if(!st)return;
+  const depth=['essencial','rapida','completa'].includes(tier)?tier:'essencial',rank={essencial:1,rapida:2,completa:3};
+  const old=readingReview(st),sameDay=readingToday(old),count=sameDay?(old.count||1):(old?.count||0)+1;
+  const at=sameDay?old.at:now(),due=sameDay?old.due:shift([1,3,7,21][Math.min(count-1,3)]);
+  const bestTier=rank[depth]>(rank[old?.tier]||0)?depth:old?.tier||depth;
+  const history=sameDay?(old.history||[]):[...(old?.history||[]),{at,depth,due}].slice(-30);
+  state.readingReviews={...(state.readingReviews||{}),[st.number]:{at,due,count,tier:bestTier,history}};
+  state.covered[st.number]={...(state.covered[st.number]||{}),[depth]:true};
+  save();renderAgain();
+  notify(sameDay?'Aprofundamento registrado; revisão de hoje mantida.':'Revisão por leitura registrada. Próxima revisão sugerida: '+formatDate(due)+'.');
+ }
+
  function stationCompletion(st){
   const total=st.questions.length,done=attempted(st);
   const weak=st.questions.filter(q=>{const a=last(st,q);return a&&a.score<80}).length;
   const pct=total?Math.round(done/total*100):0;
-  const label=done===0?'Não iniciada':done<total?'Em andamento':weak?'Concluída · revisar':'Concluída';
+  const label=done===0?(readingReview(st)?'Estudada por leitura':'Não iniciada'):done<total?'Em andamento':weak?'Concluída · revisar':'Concluída';
   return {total,done,weak,pct,label};
  }
  function completionBar(st,compact=false){
   const p=stationCompletion(st);
-  const detail=p.done+'/'+p.total+' questões respondidas';
+  const detail=p.done+'/'+p.total+' questões respondidas'+(readingReview(st)?' · leitura registrada':'');
   return '<div class="osce-topic-completion'+(compact?' is-compact':'')+'" aria-label="Progresso da estação: '+esc(p.label)+', '+detail+'">'
    +'<div class="osce-topic-completion-head"><span>'+esc(p.label)+'</span><strong>'+p.pct+'%</strong></div>'
    +'<div class="osce-topic-completion-track" role="progressbar" aria-label="Cobertura de '+esc(st.title)+'" aria-valuemin="0" aria-valuemax="100" aria-valuenow="'+p.pct+'"><span style="width:'+p.pct+'%"></span></div>'
@@ -86,11 +108,12 @@ window.OSCEPilot=(()=>{
   const p=recommended(st),completed=attempted(st),covered=state.covered[st.number]||{};
   return '<article class="osce-case osce-theme-card" id="osce-station-'+st.number+'" tabindex="-1"><div class="osce-stepbar"><span>'+displayLabel(st)+'</span><span class="osce-priority osce-priority-'+esc(st.priority)+'">● PRIORIDADE '+priorityLabel(st)+'</span>'+personalBadge(st)+'<strong>'+completed+'/'+st.questions.length+' questões</strong></div>'
    +'<h2>'+esc(st.title)+'</h2><p>'+esc(st.subtitle)+'</p>'
-   +completionBar(st)
+   +readingBadge(st)+completionBar(st)
    +(st.images?.length?'<p class="osce-note">✓ '+st.images.length+' imagem(ns) do caso</p>':st.number===61?'<p class="osce-note">Ilustração didática identificada como tal.</p>':'<p class="osce-note">Caso sem imagem original; explicações clínicas disponíveis.</p>')
    +'<p class="osce-note">'+esc(p.reason)+'</p>'
    +'<p class="osce-note"><strong>Depois de responder:</strong> aparece a resposta-modelo, correção passo a passo, dicas, referências e os painéis para aprofundar. Não precisa acertar para aprender: pode responder “não sei”.</p>'
    +'<div class="osce-actions"><button class="btn primary" onclick="OSCEPilot.start(\''+p.tier+'\',null,'+st.number+')">Simular esta estação</button><button class="btn" onclick="OSCEPilot.preview('+st.number+')">Revisar respostas antes</button>'+'<button type="button" class="btn osce-super-focus-cta" onclick="SuperFoco.open(\''+(st.pocusOrder?'pocus':'osce')+'\',\''+st.number+'\')">Super Foco</button>'
+   +readingMarkControl(st,'essencial')
    +'<button class="btn" onclick="OSCEPilot.start(\'essencial\',null,'+st.number+')">1 minuto</button>'
    +'<button class="btn" onclick="OSCEPilot.start(\'completa\',null,'+st.number+')">Completo</button></div>'
    +'<div class="osce-depth-grid">'+Object.entries(st.tiers).map(([tier,t])=>'<button class="osce-depth-btn '+(p.tier===tier?'suggested':'')+'" onclick="OSCEPilot.start(\''+tier+'\',null,'+st.number+')"><strong>'+esc(t.label)+'</strong><span>≈'+t.minutes+' min · '+t.ids.length+' pergunta(s)</span><small>'+esc(t.description)+'</small>'+(covered[tier]?'<em>✓ já percorrida</em>':'')+'</button>').join('')+'</div></article>';
@@ -141,9 +164,9 @@ window.OSCEPilot=(()=>{
   const sections=categories.map(([tier,caption])=>{
    const list=groups.filter(g=>g.tier===tier),completed=list.filter(g=>doneMap[g.n]===true).length;
    const rows=list.map(g=>{
-    const completedNow=doneMap[g.n]===true,touched=g.ids.filter(id=>MAP.has(id)&&attempted(MAP.get(id))>0).length;
+    const completedNow=doneMap[g.n]===true,touched=g.ids.filter(id=>MAP.has(id)&&(attempted(MAP.get(id))>0||!!readingReview(MAP.get(id)))).length;
     return '<article class="osce-personal-row'+(completedNow?' is-done':'')+'">'
-     +'<div class="osce-personal-topic"><span class="osce-personal-num">'+String(g.n).padStart(2,'0')+'</span><div><strong>'+esc(g.title)+'</strong><p>'+esc(g.hint)+'</p><small>'+g.minutes+' min sugeridos · '+touched+'/'+g.ids.length+' estações iniciadas</small></div></div>'
+     +'<div class="osce-personal-topic"><span class="osce-personal-num">'+String(g.n).padStart(2,'0')+'</span><div><strong>'+esc(g.title)+'</strong><p>'+esc(g.hint)+'</p><small>'+g.minutes+' min sugeridos · '+touched+'/'+g.ids.length+' estações estudadas ou testadas</small></div></div>'
      +'<div class="osce-personal-actions"><button type="button" class="btn" onclick="OSCEPilot.personalOpen('+g.ids[0]+')">Abrir treino</button>'
      +'<button type="button" class="btn osce-personal-done" aria-pressed="'+String(completedNow)+'" aria-label="'+(completedNow?'Desmarcar':'Marcar')+' bloco '+g.n+' como concluído" onclick="OSCEPilot.personalDone('+g.n+')">'+(completedNow?'✓ Concluído':'Marcar concluído')+'</button></div></article>';
    }).join('');
@@ -200,7 +223,7 @@ window.OSCEPilot=(()=>{
   if(!a.length)return '';
   const rows=a.map(st=>{
    const done=attempted(st),showNum='P'+st.pocusOrder;
-   return '<article class="osce-pocus-item"><div class="osce-pocus-item-head"><span class="osce-pocus-index">'+showNum+'</span><span class="osce-pocus-area">Alta prioridade sugerida</span>'+personalBadge(st)+'</div><h3>'+esc(st.title)+'</h3><p>'+esc(st.subtitle)+'</p><div class="osce-pocus-item-actions"><button type="button" class="btn primary" onclick="OSCEPilot.start(\'rapida\',null,'+st.number+')">Simular</button><button type="button" class="btn" onclick="OSCEPilot.preview('+st.number+')">Estudar</button><button type="button" class="btn" onclick="SuperFoco.open(\'pocus\',\''+st.number+'\')">Super Foco</button><small>'+done+'/'+st.questions.length+' respondidas</small></div>'+completionBar(st)+'</article>';
+   return '<article class="osce-pocus-item"><div class="osce-pocus-item-head"><span class="osce-pocus-index">'+showNum+'</span><span class="osce-pocus-area">Alta prioridade sugerida</span>'+personalBadge(st)+'</div><h3>'+esc(st.title)+'</h3><p>'+esc(st.subtitle)+'</p><div class="osce-pocus-item-actions"><button type="button" class="btn primary" onclick="OSCEPilot.start(\'rapida\',null,'+st.number+')">Simular</button><button type="button" class="btn" onclick="OSCEPilot.preview('+st.number+')">Estudar</button><button type="button" class="btn" onclick="SuperFoco.open(\'pocus\',\''+st.number+'\')">Super Foco</button><small>'+done+'/'+st.questions.length+' respondidas</small>'+readingMarkControl(st,'essencial')+'</div>'+readingBadge(st)+completionBar(st)+'</article>';
   }).join('');
    return '<details class="osce-pocus-section osce-pocus-disclosure" id="osce-pocus-top"><summary class="osce-pocus-heading" aria-controls="osce-pocus-content"><div><p class="eyebrow">TREINO PRIORITÁRIO · EXAME À BEIRA-LEITO</p><h2 id="osce-pocus-title">POCCUS — '+a.length+' estações para começar</h2><p>Toque para ampliar ou ocultar todas as estações de POCCUS. O índice de prioridades fica visível logo abaixo.</p></div><span class="osce-pocus-flag">POCCUS · MOSTRAR / OCULTAR</span></summary><div id="osce-pocus-content"><p class="osce-note">POCCUS foi indicado como conteúdo da avaliação. Os subtemas são uma seleção pedagógica, não uma lista oficial.</p><div class="osce-pocus-grid">'+rows+'</div><p class="osce-note">As imagens são referências independentes das vinhetas, com fonte identificada. Os retestes e o histórico continuam disponíveis.</p></div></details>';
  }
@@ -215,7 +238,7 @@ window.OSCEPilot=(()=>{
     const number='<span class="osce-index-number">'+String(rank).padStart(2,'0')+'</span>';
     const name='<span class="osce-index-name">'+esc(label)+'</span>';
     if(!st)return '<div class="osce-index-entry osce-index-pending" title="Estação ainda não publicada" aria-label="Estação '+rank+': '+esc(label)+', em preparação">'+number+name+'<span class="osce-index-status">Em preparação</span></div>';
-    const progress=stationCompletion(st),stateLabel=progress.done?progress.done+'/'+progress.total+' feitas':'Abrir';
+    const progress=stationCompletion(st),stateLabel=progress.done?progress.done+'/'+progress.total+' feitas':readingReview(st)?'✓ Estudada':'Abrir';
     return '<button type="button" class="osce-index-entry osce-index-ready" title="Abrir estação '+rank+'" aria-label="Abrir estação '+rank+', '+esc(label)+', prioridade '+esc(group.label)+'" onclick="OSCEPilot.jumpToIndex('+n+')">'+number+name+personalBadge(st)+'<span class="osce-index-status">'+esc(stateLabel)+'</span>'+completionBar(st,true)+'</button>';
    }).join('');
    return '<details class="osce-index-group osce-index-'+group.key+'" '+(group.key==='alta'?'open':'')+'><summary><span class="osce-index-dot" aria-hidden="true"></span><strong>'+esc(group.label)+'</strong><span class="osce-index-description">'+esc(group.description)+'</span><span class="osce-index-total">'+count+' estações</span></summary><div class="osce-index-grid">'+rows+'</div></details>';
@@ -242,7 +265,7 @@ window.OSCEPilot=(()=>{
   return '<section class="osce-welcome" id="osce-welcome" aria-labelledby="osce-welcome-title">'
    +'<div class="osce-welcome-header"><span class="osce-welcome-icon" aria-hidden="true">◎</span><div><p class="eyebrow">SEU GUIA DE ESTUDO · OSCE CLÍNICA MÉDICA</p><h2 id="osce-welcome-title">Como estudar e realmente consolidar</h2><p>O método usa <strong>recuperação ativa, tentativa antes da explicação, feedback por critérios, revisão espaçada e calibração da confiança</strong>. Intercale assuntos nas revisões; não é necessário saber a resposta para começar.</p></div></div>'
    +'<div class="osce-welcome-method">'
-    +'<div><span>01</span><strong>Revisão — aprenda primeiro</strong><p>Abra o roteiro completo, as respostas, as imagens e as condutas antes de praticar. Escolha Essencial (1 min), Rápida (5 min) ou Completo (20–30 min).</p></div>'
+    +'<div><span>01</span><strong>Revisão — aprenda primeiro</strong><p>Abra o roteiro, as respostas, as imagens e as condutas. Escolha Essencial (1 min), Rápida (5 min) ou Completo (20–30 min). Ao terminar, toque <b>Marcar como estudado</b>: isso registra sua revisão teórica, sem criar uma nota de simulado.</p></div>'
     +'<div><span>02</span><strong>Simulação — treine como na prova</strong><p>Responda sem antecipar o gabarito, registre confiança e receba correção por critérios, aprofundamento e retestes. Pode escrever <b>“não sei”</b>.</p></div>'
     +'<div><span>03</span><strong>Super Foco — aprendizagem ativa</strong><p>Faça uma sessão de 1, 5 ou 10 desafios, veja em qual pergunta está e navegue pelos números. Use recuperação ativa, alternância de assuntos, explicação sem olhar (Espelho Cego), conexões clínicas (Velcro) e retestes. A nota permanece separada da simulação.</p></div>'
     +'<div><span>04</span><strong>Escolha o método certo</strong><p>Não conhece o tema? Revisão. Quer medir seu desempenho? Simulação. Esqueceu ou errou? Super Foco, com indicação de progresso, retorno às perguntas e retestes em <b>D+1, D+3, D+7 ou D+21</b> conforme a autoavaliação.</p></div>'
@@ -285,14 +308,14 @@ window.OSCEPilot=(()=>{
  }
 
  function homePage(){
-  const total=BANK.reduce((n,st)=>n+attempted(st),0),dueCount=dueItems().length,weakCount=weakItems().length,shallow=BANK.filter(st=>attempted(st)>0||Object.values(state.covered[st.number]||{}).some(Boolean)).length,deep=BANK.filter(st=>state.covered[st.number]?.completa).length;
+  const total=BANK.reduce((n,st)=>n+attempted(st),0),dueCount=dueItems().length,weakCount=weakItems().length,readCount=BANK.filter(st=>readingReview(st)).length,readDueCount=readingDueItems().length,shallow=BANK.filter(st=>attempted(st)>0||Object.values(state.covered[st.number]||{}).some(Boolean)).length,deep=BANK.filter(st=>state.covered[st.number]?.completa).length;
   const d=diffDays(),selection=dueCount?dueItems()[0].st:BANK.find(st=>attempted(st)===0)||BANK[0],planCount=dailyPlan(Number(state.settings.minutes)||15).length;
-  return sectionTitle('OSCE <em>Clínica Médica.</em>')+'<div class="osce-welcome-entry"><p>Treine primeiro, aprofunde ao clicar, recupere os erros e retome sem perder seu progresso.</p>'+(welcomeOpen?'':'<button type="button" class="btn ghost osce-welcome-reopen" onclick="OSCEPilot.showWelcome()">ⓘ Como estudar no OSCE</button>')+'</div>'
+  return sectionTitle('OSCE <em>Clínica Médica.</em>')+'<div class="osce-welcome-entry"><p>Escolha entre simular e estudar pela teoria; marque o que estudou e revise no seu ritmo, sem perder o progresso.</p>'+(welcomeOpen?'':'<button type="button" class="btn ghost osce-welcome-reopen" onclick="OSCEPilot.showWelcome()">ⓘ Como estudar no OSCE</button>')+'</div>'
    +welcomeGuide()
    +quickNav()
    +'<section class="osce-pilot-hero" id="osce-today"><div><p class="eyebrow">SESSÃO DE HOJE · COMEÇO SEM ATRITO</p><h2>Uma pergunta já é progresso.</h2><p>'+esc(d===null?'Data não definida.':d<0?'A data registrada passou; ajuste abaixo.':d===0?'Avaliação hoje.':d+' dia(s) até a avaliação.')+' Comece pelo erro vencido ou pela próxima estação prioritária.</p><div class="osce-actions"><button class="btn primary" onclick="OSCEPilot.daily()">Sessão de hoje · '+state.settings.minutes+' min (até '+planCount+' itens)</button>'+(state.current?'<button class="btn" onclick="OSCEPilot.resume()">Retomar onde parei</button>':'')+'</div></div><div class="osce-pilot-emblem" aria-hidden="true">'+BANK.length+'<span>estações</span></div></section>'
    +personalPlan()
-   +'<div class="osce-stats"><div><b>'+total+'</b><span>perguntas testadas</span></div><div><b>'+dueCount+'</b><span>revisões vencidas</span></div><div><b>'+weakCount+'</b><span>lacunas registradas</span></div><div><b>'+deep+'/'+BANK.length+'</b><span>estações completas</span></div></div>'
+   +'<div class="osce-stats"><div><b>'+total+'</b><span>perguntas testadas</span></div><div><b>'+readCount+'</b><span>temas estudados por leitura</span></div><div><b>'+readDueCount+'</b><span>leituras para revisar</span></div><div><b>'+dueCount+'</b><span>retreinos vencidos</span></div><div><b>'+weakCount+'</b><span>lacunas registradas</span></div><div><b>'+deep+'/'+BANK.length+'</b><span>estações completas</span></div></div>'
    +'<section class="osce-case"><h2>Triagem e cobertura</h2><div class="osce-settings"><label>Data da APO<input type="date" value="'+esc(state.settings.examDate)+'" onchange="OSCEPilot.setDate(this.value)"></label><label>Tempo disponível<select onchange="OSCEPilot.setMinutes(this.value)">'+[5,15,30,45].map(m=>'<option value="'+m+'"'+(Number(state.settings.minutes)===m?' selected':'')+'>'+m+' min</option>').join('')+'</select></label></div><p class="osce-note">Amplitude: '+shallow+'/'+BANK.length+' · Profundidade: '+deep+'/'+BANK.length+'. O roteiro inclui '+BANK.filter(st=>st.pocusOrder).length+' POCUS e '+BANK.filter(st=>!st.pocusOrder&&inExam(st)).length+' outras estações para o OSCE; 19 onco-hematológicas foram retiradas do planejamento automático. A seção POCUS fica recolhida por padrão.</p><div class="osce-track"><span style="width:'+(100*shallow/BANK.length)+'%"></span></div><div class="osce-track osce-track-secondary"><span style="width:'+(100*deep/BANK.length)+'%"></span></div></section>'
    +pocusSection()
    +ecgSection()
@@ -621,7 +644,7 @@ window.OSCEPilot=(()=>{
   const toSimulate=(state.current?.station===st.number?'OSCEPilot.resume()':'OSCEPilot.start(\''+tier+'\',null,'+st.number+')');
   const simText=state.current?.station===st.number?'Retomar simulação':'Iniciar simulação';
   let html=sectionTitle('Revisar '+displayLabel(st).toLowerCase()+' — <em>'+esc(st.title)+'.</em>');
-  html+='<button class="btn ghost" onclick="OSCEPilot.home()">← Voltar às estações</button><div class="osce-preview-note osce-reading-intro"><div><strong>ESTUDO GUIADO · SEM NOTA</strong><p>Uma pergunta por vez, com resposta e pontos essenciais à vista. Navegue livremente; abra o aprofundamento completo apenas se precisar. O simulado continua sem mostrar o gabarito antes da sua tentativa.</p></div><button class="btn primary" onclick="'+toSimulate+'">'+simText+'</button></div>';
+  html+='<button class="btn ghost" onclick="OSCEPilot.home()">← Voltar às estações</button><div class="osce-preview-note osce-reading-intro"><div><strong>ESTUDO GUIADO · SEM NOTA</strong><p>Uma pergunta por vez, com resposta e pontos essenciais à vista. Navegue livremente; abra o aprofundamento completo apenas se precisar. O simulado continua sem mostrar o gabarito antes da sua tentativa. Você pode marcar como estudado sem responder às questões.</p></div><div class="osce-reading-intro-actions">'+readingMarkControl(st,tier)+'<button class="btn primary" onclick="'+toSimulate+'">'+simText+'</button></div></div>'+readingBadge(st);
   html+='<div class="osce-study-levels">'+Object.entries(st.tiers).map(([k,x])=>'<button type="button" class="btn '+(k===tier?'primary':'')+'" aria-pressed="'+(k===tier)+'" onclick="OSCEPilot.previewTierSet(\''+k+'\')">'+esc(x.label)+' · '+x.minutes+'min</button>').join('')+'</div>';
   html+='<section class="osce-case"><h2>Contexto e imagem do caso</h2><p>'+esc(st.caseText)+'</p>'+media(st)+'</section>';
   html+='<section class="osce-case osce-reading-overview"><h2>Essencial — síntese em 1 minuto</h2><p>'+mark(st,st.essential.oneMinute)+'</p><p class="osce-note"><strong>Âncora do tema:</strong> '+esc(st.essential.mnemonic)+'</p></section>';
@@ -638,7 +661,7 @@ window.OSCEPilot=(()=>{
   }
   html+='</section>';
   html+='<section class="osce-case osce-study-depth"><h2>Aprofundamento opcional</h2><p class="osce-note">Sem fragmentar o conteúdo: o aprofundamento completo fica em um único painel.</p>'+fullTopicDepth(st)+'</section>';
-  html+='<section class="osce-case osce-library-case"><details class="osce-deep osce-library" id="osce-library"><summary>Biblioteca desta estação <span>conceitos, aulas e referências</span></summary><div class="osce-deep-stack">'+termPanel(st)+lessonBar(st)+sourcePanel(st)+'</div></details><div class="osce-actions"><button type="button" class="btn primary" onclick="'+toSimulate+'">'+simText+' agora</button><button type="button" class="btn" onclick="OSCEPilot.home()">Voltar ao catálogo</button></div></section>';
+  html+='<section class="osce-case osce-library-case"><details class="osce-deep osce-library" id="osce-library"><summary>Biblioteca desta estação <span>conceitos, aulas e referências</span></summary><div class="osce-deep-stack">'+termPanel(st)+lessonBar(st)+sourcePanel(st)+'</div></details><div class="osce-actions">'+readingMarkControl(st,tier)+'<button type="button" class="btn primary" onclick="'+toSimulate+'">'+simText+' agora</button><button type="button" class="btn" onclick="OSCEPilot.home()">Voltar ao catálogo</button></div></section>';
   return html;
  }
  function resetView(){shown=false;confidence=0;hints=0;checked=[];glossary='';}
@@ -727,9 +750,10 @@ window.OSCEPilot=(()=>{
   }).join('')+'</div></section>';
  }
  function reviewPage(){
-  const weak=weakItems(),dues=dueItems();
+  const weak=weakItems(),dues=dueItems(),readDues=readingDueItems();
   return sectionTitle('Revisão <em>adaptativa.</em>')+'<button class="btn ghost" onclick="OSCEPilot.home()">← Voltar</button><p>Erros, respostas parciais e confiança excessiva voltam primeiro. Reavaliação por recuperação ativa, sem séries punitivas.</p>'
    +'<div class="osce-stats"><div><b>'+dues.length+'</b><span>vencidas</span></div><div><b>'+weak.length+'</b><span>lacunas insatisfatórias</span></div></div><div class="osce-actions"><button class="btn primary" onclick="OSCEPilot.reviewDue()">Retestar agora</button><button class="btn" onclick="OSCEPilot.showPrompt()">Gerar script para IA</button></div>'
+    +'<section class="osce-case osce-reading-review-list"><h2>Revisões por leitura</h2><p>Estudar a teoria também conta como revisão, sem criar nota ou tentativa de simulado. Para novas leituras, há sugestões em D+1, D+3, D+7 e D+21.</p><p><strong>'+readDues.length+' leitura(s) para revisar agora.</strong></p>'+(readDues.length?'<div class="osce-reading-due-grid">'+readDues.map(st=>'<button type="button" class="btn" onclick="OSCEPilot.preview('+st.number+')">'+esc(st.pocusOrder?'POCUS P'+st.pocusOrder:displayLabel(st))+' · '+esc(st.title)+' → Estudar novamente</button>').join('')+'</div>':'<p class="osce-note">Nenhuma revisão por leitura vencida.</p>')+'</section>'
     +competencyRadar()+'<section class="osce-case"><h2>Agendamento explicável</h2><p>Erro importante/alta confiança errada: D+1 · parcial: D+3 · boa resposta: D+7 · domínio repetido, sem dicas: D+21. O escore é produzido por marcação manual dos critérios da resposta.</p></section>'
    +'<div class="osce-review-list">'+(weak.length?weak.map(x=>'<button onclick="OSCEPilot.start(\'rapida\',[ \''+esc(x.q.id)+'\' ],'+x.st.number+')"><b>'+displayLabel(x.st)+' — '+esc(x.q.competence)+' · '+x.a.score+'%</b><span>'+esc(x.q.prompt)+'</span><small>Reteste: '+formatDate(x.a.due)+'</small></button>').join(''):'<div class="card pad"><p>Nenhum erro insatisfatório registrado. Comece por uma das estações disponíveis.</p></div>')+'</div>';
  }
@@ -792,5 +816,5 @@ window.OSCEPilot=(()=>{
  window.addEventListener('master-auth-ended',()=>{state=empty();screen='home';shown=false;glossary='';if(catalogPriority==='minhas')catalogPriority='alta';welcomeDismissedThisLoad=false;welcomeOpen=true;welcomeSkipNext=false;});
  window.addEventListener('master-remote-merge',e=>{if(e.detail?.key===KEY)reload()});
  window.addEventListener('storage',e=>{if(e.key===KEY)reload()});
- return {bank,weakItems,page,start,daily,resume,home,personalIsOwner,personalDone,personalOpen,previewQuestion,previewStepSet,previewLayoutSet,toggleClinicalHighlights,answerKey,jumpSection,welcomePreference,showWelcome,closeWelcome,preview,previewTierSet,previewPage,filterCatalog,setCatalogPriority,moreCatalog,ecgToggle,jumpToIndex,setDate,setMinutes,answer,conf,hint,reveal,criterion,retry,finish,showReview,showPrompt,reviewDue,term,showSources,showTerms,openLesson,showFullLesson,expandImage,focusVisualNote,toggleVisualMarks,expandVisual,copyPrompt,reload};
+ return {bank,weakItems,page,start,daily,resume,home,markStudied,readingDueItems,personalIsOwner,personalDone,personalOpen,previewQuestion,previewStepSet,previewLayoutSet,toggleClinicalHighlights,answerKey,jumpSection,welcomePreference,showWelcome,closeWelcome,preview,previewTierSet,previewPage,filterCatalog,setCatalogPriority,moreCatalog,ecgToggle,jumpToIndex,setDate,setMinutes,answer,conf,hint,reveal,criterion,retry,finish,showReview,showPrompt,reviewDue,term,showSources,showTerms,openLesson,showFullLesson,expandImage,focusVisualNote,toggleVisualMarks,expandVisual,copyPrompt,reload};
 })();
