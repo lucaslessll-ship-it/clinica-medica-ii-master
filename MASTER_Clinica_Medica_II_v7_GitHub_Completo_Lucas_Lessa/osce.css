@@ -469,3 +469,17 @@ body[data-theme="dark"] .osce-app-shell .osce-keyword{font-weight:760}
  .osce-app-shell .osce-reading-legend{gap:7px 12px}
 }
 @media(prefers-reduced-motion:reduce){.osce-app-shell .osce-reading-progress>span,.osce-app-shell .osce-reading-index{transition:none}}
+
+
+/* A correção da simulação acompanha o mesmo ritmo editorial da leitura guiada. */
+.osce-app-shell .osce-step .osce-feedback{background:var(--card,#fff);border:1px solid var(--border,#d7e1d9);border-radius:15px;padding:clamp(15px,2.5vw,26px)}
+.osce-app-shell .osce-feedback>.eyebrow{font-size:.73rem;letter-spacing:.075em;margin:0 0 8px;color:var(--text-muted,#687568)}
+.osce-app-shell .osce-feedback>h3:first-of-type{font-size:clamp(1.06rem,1.75vw,1.26rem);margin:0 0 11px;letter-spacing:-.01em}
+.osce-app-shell .osce-feedback>h3:first-of-type+p{font-size:clamp(.94rem,1.45vw,1.04rem);line-height:1.82;margin:0 0 17px;padding:1px 0 3px 16px;border-left:3px solid #6a9b83}
+.osce-app-shell .osce-feedback .osce-criteria{border-top:1px solid var(--border,#dce5dc);padding-top:17px;margin-top:15px;gap:0}
+.osce-app-shell .osce-feedback .osce-criteria>h3{font-size:.91rem;margin:0 0 8px}
+.osce-app-shell .osce-feedback .osce-criteria label{border:0;border-bottom:1px solid var(--border,#e2e9e3);border-radius:0;background:transparent;min-height:43px;padding:10px 3px;gap:11px}
+.osce-app-shell .osce-feedback .osce-criteria label:last-child{border-bottom:0}
+.osce-app-shell .osce-feedback .osce-criteria label:has(input:checked){background:color-mix(in srgb,#518b6d 5%,transparent)}
+.osce-app-shell .osce-feedback .osce-criteria input{min-width:18px;width:18px;height:18px;accent-color:#408062}
+.osce-app-shell #osce-criteria-count{font-variant-numeric:tabular-nums;font-weight:800}
