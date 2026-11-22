@@ -141,6 +141,6 @@ test('CSS mobile e integração da home e rotas possuem os pontos de entrada esp
  assert.match(css,/\.mp-heat-grid/);assert.match(css,/@media\(max-width:430px\)/);
  assert.match(app,/case 'planner':/);assert.match(app,/dashboard','planner','today/);
  assert.match(editorial,/MasterPlanner\?\.homeCard/);
- assert.match(html,/master-planner\.js\?v=20261122-planner-v1/);
+ assert.match(html,/master-planner\.js\?v=20261122-planner-v2/);
  assert.match(auth,/master_study_planner_v1/);
 });
