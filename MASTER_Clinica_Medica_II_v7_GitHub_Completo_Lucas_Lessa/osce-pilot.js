@@ -315,7 +315,7 @@ window.OSCEPilot=(()=>{
  }
  function lessonText(st){return st.lesson?.label||(st.number===61?'Clínica Médica II · Síncope e crise convulsiva':st.number===52?'Biblioteca P1 · Arritmias cardíacas':'Sem aula interna identificada');}
  function lessonBar(st){
-  if(!(st.lesson?.id||st.number===52||st.number===61))return '<details id="osce-lesson" class="osce-deep"><summary>Aula relacionada <span>não localizada nesta versão</span></summary><div><p>Não foi identificada uma aula interna específica para esta estação. Utilize as diretrizes e a revisão completa do Master sem links quebrados.</p><button type="button" class="btn" onclick="OSCEPilot.showSources()">Ver referências disponíveis</button></div></details>';
+  if(!(st.lesson?.id||st.number===52||st.number===61))return '';
   return '<details id="osce-lesson" class="osce-deep"><summary>Aula relacionada no Master <span>abrir tema</span></summary><div><p>'+esc(lessonText(st))+'</p><div class="osce-actions"><button class="btn primary" onclick="OSCEPilot.openLesson('+st.number+')">Ir para aula relacionada</button></div></details>';
  }
  function termPanel(st){
@@ -339,11 +339,57 @@ window.OSCEPilot=(()=>{
   }
   return s;
  }
- function deepPanels(st,q){
-  const blocks=(st.deeper||[]);
-  return '<div class="osce-deep-stack"><details class="osce-deep"><summary>Explicação da questão <span>aprofundar</span></summary><div><p>'+mark(st,q.answer)+'</p></div></details>'
-  +'<details class="osce-deep"><summary>Palácio da memória e armadilhas <span>memorizar</span></summary><div><p>'+esc(q.memory||st.essential.mnemonic)+'</p></div></details>'
-  +blocks.map(x=>'<details class="osce-deep"><summary>'+esc(x.title)+' <span>aprofundar</span></summary><div><p>'+mark(st,x.body)+'</p><p><strong>Memorização:</strong> '+esc(x.tip)+'</p></div></details>').join('')+'</div>';
+ function uniqueStudyTip(st,q){
+  const tip=String(q.memory||'').trim(),same=String(st.essential?.mnemonic||'').trim();
+  const repeated=tip&&st.questions.some(other=>other!==q&&String(other.memory||'').trim()===tip);
+  if(tip&&!repeated&&tip!==same)return tip;
+  // Nas estações importadas que reutilizam um mnemônico em todas as perguntas,
+  // mostramos uma pista da competência específica, sem repetir o texto geral.
+  const criteria=(q.criteria||[]).filter(Boolean);
+  const map={
+   sindrome:'Distinga o padrão de apresentação da causa e sustente a hipótese com pistas do caso.',
+   diagnostico:'Aponte a pista mais discriminadora e só depois nomeie a hipótese.',
+   interpretacao:'Descreva o sinal observado, seu significado e uma limitação da imagem.',
+   tecnica:'Identifique janela, transdutor e sequência antes de interpretar.',
+   anamnese:'Pergunte o dado que mais mudaria a hipótese ou a urgência.',
+   exame:'Examine estabilidade e o achado físico que altera a conduta.',
+   mecanismo:'Conecte a lesão ao sinal e à consequência clínica.',
+   investigacao:'Separe triagem, confirmação e gravidade.',
+   exames:'Separe confirmação de exclusão e indique quando o exame não pode atrasar conduta.',
+   diferenciais:'Para cada alternativa, cite um discriminador clínico.',
+   conduta:'Primeiro estabilizar; depois tratamento dirigido e reavaliação.',
+   gravidade:'Priorize sinais que exigem internação ou intervenção imediata.',
+   orientacoes:'Explique hipótese, plano e sinais de retorno com linguagem do paciente.',
+   sintese:'Feche com síndrome, achado, risco e próximo passo.'
+  };
+  const base=map[q.id]||map[q.competence?.toLowerCase()?.includes('fisiopatologia')?'mecanismo':''];
+  if(!base&&!criteria.length)return '';
+  const criterion=criteria.find(c=>c.length>22&&!/^Identifica /.test(c));
+  return base?(base+(criterion?' Verifique: '+criterion+'.':'')):(criterion?'Verifique nesta etapa: '+criterion+'.':'');
+ }
+ function uniqueHints(st,q){
+  const h=Array.isArray(q.hints)?q.hints:[];
+  const signature=h.join('|'),repeated=signature&&st.questions.some(other=>other!==q&&(other.hints||[]).join('|')===signature);
+  if(!repeated&&h.length>=3)return h;
+  const checks=q.criteria||[];
+  return [
+   'Pense apenas na tarefa desta etapa: '+q.competence+'.',
+   checks[0]?'Primeiro critério que você precisa demonstrar: '+checks[0]+'.':'Que dado do caso é mais discriminativo?',
+   checks[1]?'Conecte ao segundo critério: '+checks[1]+'.':'Que erro de interpretação precisa ser evitado?'
+  ];
+ }
+ function fullTopicDepth(st){
+  const blocks=st.deeper||[];
+  if(!blocks.length)return '';
+  return '<details class="osce-deep osce-topic-depth"><summary>Aprofundamento completo do tema <span>abrir somente se necessário</span></summary><div>'
+   +blocks.map(x=>'<section class="osce-depth-subtopic"><h4>'+esc(x.title)+'</h4><p>'+mark(st,x.body)+'</p></section>').join('')
+   +'</div></details>';
+ }
+ function deepPanels(st,q,lastStep=false){
+  const tip=uniqueStudyTip(st,q);
+  return '<div class="osce-deep-stack osce-deep-compact">'
+   +(tip?'<p class="osce-step-tip"><strong>Para lembrar nesta etapa:</strong> '+esc(tip)+'</p>':'')
+   +(lastStep?fullTopicDepth(st):'')+'</div>';
  }
  function currentQ(st){const r=state.current;const id=r?.mode==='daily'?r.queue?.[r.pos]?.id:r?.ids?.[r.pos];return st?.questions.find(q=>q.id===id);}
  function activePage(){
@@ -359,16 +405,16 @@ window.OSCEPilot=(()=>{
    +'<p class="osce-note"><strong>Após a tentativa você verá:</strong> resposta-modelo, checklist dos pontos essenciais, aprofundamentos, referências e memorização. Se preferir, pode <button class="osce-inline-action" onclick="OSCEPilot.preview('+st.number+')">revisar as respostas agora</button> antes de simular.</p>'+'<label class="osce-answer-label" for="osce-answer">Sua resposta (como na arguição oral)</label><textarea id="osce-answer" rows="6" placeholder="Digite seu raciocínio; pode escrever não sei para aprender pelo erro." oninput="OSCEPilot.answer(this.value)" onkeydown="OSCEPilot.answerKey(event)" '+(shown?'readonly':'')+'>'+esc(attemptedEntry.draft||'')+'</textarea>';
   if(!shown){
    out+='<p class="osce-note">Qual é sua confiança ANTES de conferir?</p><div class="osce-confidence" role="group" aria-label="Confiança antes do gabarito">'+[[1,'Baixa'],[2,'Média'],[3,'Alta']].map(([i,txt])=>'<button type="button" aria-pressed="'+(confidence===i)+'" onclick="OSCEPilot.conf('+i+')">'+txt+'</button>').join('')+'</div>';
-   if(hints)out+='<div class="osce-hint"><b>Dica '+hints+'/3:</b> '+esc(q.hints[hints-1])+'</div>';
+   if(hints)out+='<div class="osce-hint"><b>Dica '+hints+'/3:</b> '+esc(uniqueHints(st,q)[hints-1]||'Reexamine os critérios desta pergunta.')+'</div>';
    out+='<div class="osce-actions"><button class="btn primary" onclick="OSCEPilot.reveal()">Conferir resposta <span class="osce-key-hint" aria-hidden="true">⌘/Ctrl ↵</span></button><button class="btn" id="osce-hint-action" onclick="OSCEPilot.hint()">Preciso de dica'+(hints?' ('+hints+'/3)':'')+'</button><button class="btn ghost" onclick="OSCEPilot.home()">Salvar e sair</button></div>';
   }else{
    out+='<div class="osce-feedback"><p class="eyebrow">RESPOSTA DIDÁTICA · CORREÇÃO POR CRITÉRIOS</p><h3>Resposta-modelo Master</h3><p>'+mark(st,q.answer)+'</p><div class="osce-criteria"><h3>O que você realmente incluiu?</h3>'
     +q.criteria.map((txt,i)=>'<label><input type="checkbox" '+(checked.includes(i)?'checked':'')+' onchange="OSCEPilot.criterion('+i+',this.checked)"><span>'+esc(txt)+'</span></label>').join('')+'</div>'
     +'<p class="osce-note"><b id="osce-criteria-count">'+checked.length+'/'+q.criteria.length+'</b> critérios marcados; pontuação por <strong>autoavaliação manual</strong>, não por análise da resposta. Responder apenas “não sei” registra 0% mesmo se algum critério for marcado.</p><div class="osce-actions"><button class="btn primary" onclick="OSCEPilot.finish()">Registrar resultado e avançar</button><button class="btn" onclick="OSCEPilot.retry()">Voltar à resposta</button></div></div>';
    if(r.tier==='essencial')out+='<details class="osce-deep" open><summary>Essencial · illness script de 1 minuto</summary><div><p>'+esc(st.essential.oneMinute)+'</p><p><strong>Âncora:</strong> '+esc(st.essential.mnemonic)+'</p></div></details>';
-   out+=deepPanels(st,q);
+   out+=deepPanels(st,q,r.pos===r.ids.length-1);
   }
-  out+='</section><section class="osce-case"><h2>Estude mais, quando precisar</h2><div class="osce-deep-stack">'+termPanel(st)+lessonBar(st)+sourcePanel(st)+'</div></section>';
+  out+='</section><section class="osce-case osce-library-case"><details class="osce-deep osce-library" id="osce-library"><summary>Biblioteca desta estação <span>conceitos, aulas e referências</span></summary><div class="osce-deep-stack">'+termPanel(st)+lessonBar(st)+sourcePanel(st)+'</div></details></section>';
   return out;
  }
  function preview(n){
@@ -384,9 +430,9 @@ window.OSCEPilot=(()=>{
   html+='<div class="osce-study-levels">'+Object.entries(st.tiers).map(([k,x])=>'<button type="button" class="btn '+(k===tier?'primary':'')+'" onclick="OSCEPilot.previewTierSet(\''+k+'\')">'+esc(x.label)+' · '+x.minutes+'min</button>').join('')+'</div>';
   html+='<section class="osce-case"><h2>Contexto e imagem do caso</h2><p>'+esc(st.caseText)+'</p>'+media(st)+'</section>';
   html+='<section class="osce-case"><h2>Essencial — síntese para explicar em 1 minuto</h2><p>'+mark(st,st.essential.oneMinute)+'</p><p class="osce-note"><b>Âncora:</b> '+esc(st.essential.mnemonic)+'</p></section>';
-  html+='<section class="osce-preview-questions"><h2>O que preciso saber responder</h2>'+qs.map((q,i)=>'<article class="osce-preview-question"><p class="eyebrow">ETAPA '+(i+1)+'/'+qs.length+' · '+esc(q.competence)+'</p><h3>'+esc(q.prompt)+'</h3><div class="osce-preview-answer"><strong>Resposta-modelo do Master</strong><p>'+mark(st,q.answer)+'</p></div><details class="osce-deep"><summary>Checklist do que não posso esquecer <span>expandir</span></summary><div><ul>'+q.criteria.map(x=>'<li>'+esc(x)+'</li>').join('')+'</ul></div></details><details class="osce-deep"><summary>Dicas para memorizar e raciocinar <span>aprofundar</span></summary><div><p>'+esc(q.memory||'Reconheça síndrome, explique fisiopatologia e escolha a conduta.')+'</p><p><strong>Perguntas de apoio:</strong> '+esc(q.hints.join(' · '))+'</p></div></details></article>').join('')+'</section>';
-  html+='<section class="osce-case"><h2>Aprofundamentos do assunto</h2><p class="osce-note">Esses painéis permanecem recolhidos para reduzir a sobrecarga. Abra apenas quando quiser entender melhor.</p><div class="osce-deep-stack">'+(st.deeper||[]).map(d=>'<details class="osce-deep"><summary>'+esc(d.title)+' <span>abrir explicação</span></summary><div><p>'+mark(st,d.body)+'</p><p><strong>Memorização:</strong> '+esc(d.tip)+'</p></div></details>').join('')+'</div></section>';
-  html+='<section class="osce-case"><h2>Fontes, conceitos e aulas</h2><div class="osce-deep-stack">'+termPanel(st)+lessonBar(st)+sourcePanel(st)+'</div><div class="osce-actions"><button type="button" class="btn primary" onclick="'+(state.current?.station===st.number?'OSCEPilot.resume()':'OSCEPilot.start(\''+tier+'\',null,'+st.number+')')+'">'+(state.current?.station===st.number?'Retomar simulação':'Iniciar simulado agora')+'</button><button type="button" class="btn" onclick="OSCEPilot.home()">Voltar ao catálogo</button></div></section>';
+  html+='<section class="osce-preview-questions"><h2>O que preciso saber responder</h2>'+qs.map((q,i)=>'<article class="osce-preview-question"><p class="eyebrow">ETAPA '+(i+1)+'/'+qs.length+' · '+esc(q.competence)+'</p><h3>'+esc(q.prompt)+'</h3><div class="osce-preview-answer"><strong>Resposta-modelo do Master</strong><p>'+mark(st,q.answer)+'</p></div><details class="osce-deep"><summary>Checklist do que não posso esquecer <span>expandir</span></summary><div><ul>'+q.criteria.map(x=>'<li>'+esc(x)+'</li>').join('')+'</ul></div></details>' + (uniqueStudyTip(st,q)?'<p class="osce-step-tip"><strong>Para lembrar nesta etapa:</strong> '+esc(uniqueStudyTip(st,q))+'</p>':'') + '</article>').join('')+'</section>';
+  html+='<section class="osce-case osce-study-depth"><h2>Aprofundamento opcional</h2><p class="osce-note">Leia só o que ainda estiver difícil. Aprofundamentos reunidos em um único painel.</p>'+fullTopicDepth(st)+'</section>';
+  html+='<section class="osce-case osce-library-case"><details class="osce-deep osce-library" id="osce-library"><summary>Biblioteca desta estação <span>conceitos, aulas e referências</span></summary><div class="osce-deep-stack">'+termPanel(st)+lessonBar(st)+sourcePanel(st)+'</div></details><div class="osce-actions"><button type="button" class="btn primary" onclick="'+(state.current?.station===st.number?'OSCEPilot.resume()':'OSCEPilot.start(\''+tier+'\',null,'+st.number+')')+'">'+(state.current?.station===st.number?'Retomar simulação':'Iniciar simulado agora')+'</button><button type="button" class="btn" onclick="OSCEPilot.home()">Voltar ao catálogo</button></div></section>';
   return html;
  }
  function resetView(){shown=false;confidence=0;hints=0;checked=[];glossary='';}
@@ -510,8 +556,8 @@ window.OSCEPilot=(()=>{
   const area=document.getElementById('osce-glossary-content');if(area){area.innerHTML=glossary;area.scrollIntoView({block:'nearest',behavior:'auto'});}
  }
 
- function showSources(){const d=document.getElementById('osce-sources');if(d){d.open=true;d.scrollIntoView({block:'start',behavior:'smooth'});}}
- function showTerms(){const d=document.getElementById('osce-terms');if(d){d.open=true;d.scrollIntoView({block:'start',behavior:'smooth'});}}
+ function showSources(){const d=document.getElementById('osce-sources');if(d){const outer=document.getElementById('osce-library');if(outer)outer.open=true;d.open=true;d.scrollIntoView({block:'start',behavior:'smooth'});}}
+ function showTerms(){const d=document.getElementById('osce-terms');if(d){const outer=document.getElementById('osce-library');if(outer)outer.open=true;d.open=true;d.scrollIntoView({block:'start',behavior:'smooth'});}}
  function openLesson(n){
   const st=MAP.get(Number(n)),lesson=st?.lesson||({52:{kind:'p1',id:'p1arr'},61:{kind:'topic',id:'neuro1'}}[n]);
   if(lesson?.kind==='p1'&&window.P1?.openTopic){window.P1.openTopic(lesson.id);return;}

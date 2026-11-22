@@ -109,3 +109,17 @@ body[data-theme="dark"] .pocus-zoom-open{color:#7fd6c3}
 @media(max-width:600px){.clinical-comparison{padding:14px}.clinical-comparison .lesson-images-grid{grid-template-columns:1fr}}
 
 .clinical-public-media{margin:20px 0;border:1px solid var(--line);border-radius:12px;overflow:hidden}.clinical-public-media>a{display:flex;min-height:44px;background:#080b0b;justify-content:center}.clinical-public-media img{display:block;width:100%;max-width:720px;max-height:440px;object-fit:contain}.clinical-public-media figcaption{padding:16px;line-height:1.6}.clinical-public-media small{display:block;margin-top:10px;color:var(--muted)}
+
+
+/* Fontes de POCUS somente no final do próprio módulo, com abertura voluntária. */
+.pocus-refs-collapsible{padding:0;overflow:hidden}
+.pocus-refs-collapsible>summary{cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:15px 18px;font-weight:750;font-size:.91rem;list-style:none}
+.pocus-refs-collapsible>summary::-webkit-details-marker{display:none}
+.pocus-refs-collapsible>summary span{font-weight:500;font-size:.78rem;color:var(--muted,#64716c)}
+.pocus-refs-collapsible[open]>summary{border-bottom:1px solid var(--border,#d9e1d9)}
+.pocus-refs-collapsible[open]>summary span{font-size:0}
+.pocus-refs-collapsible[open]>summary span::after{content:'recolher';font-size:.78rem}
+.pocus-refs-collapsible>div{padding:12px 18px 17px}
+.pocus-refs-collapsible>div ul{margin:7px 0;padding-left:20px}
+.pocus-refs-collapsible>div p{font-size:.79rem;line-height:1.6}
+.pocus-refs-collapsible>summary:focus-visible{outline:2px solid #53856c;outline-offset:-3px}
