@@ -37,16 +37,18 @@ window.OSCEPilot=(()=>{
  const hasDom=typeof document!=='undefined'&&typeof window!=='undefined';
  const previousY=hasDom?window.scrollY:0;
  const previousId=hasDom?document.activeElement?.id:null;
+ if(hasDom)window.OSCEContext?.close(false);
  render();
  if(!hasDom)return;
  const root=document.querySelector('.osce-app-shell');if(!root)return;
  const anchors={top:root,case:root.querySelector('.osce-case'),feedback:root.querySelector('.osce-feedback'),question:root.querySelector('.osce-step'),levels:root.querySelector('.osce-study-levels')};
  const target=anchors[destination];
  if(target){
-  target.scrollIntoView({behavior:'instant',block:'start'});
+  target.scrollIntoView({behavior:'auto',block:'start'});
+  window.OSCEContext?.enter(target,destination);
   if(destination==='question'||destination==='case'||destination==='feedback'||destination==='top'){const h=destination==='top'?target.querySelector('h1'):target.querySelector('h2,h3')||target;if(h){h.tabIndex=-1;h.focus({preventScroll:true});}}
  }else{
-  window.scrollTo({top:previousY,behavior:'instant'});
+  window.scrollTo({top:previousY,behavior:'auto'});
   if(previousId){const field=document.getElementById(previousId);field?.focus?.({preventScroll:true});}
  }
 }
@@ -159,18 +161,41 @@ window.OSCEPilot=(()=>{
   save();renderAgain();
  }
 
+ function quickNav(){
+  return '<nav class="osce-quicknav" aria-label="Acesso rápido ao OSCE">'
+   +'<button type="button" onclick="OSCEPilot.jumpSection(\'today\')">Hoje</button>'
+   +'<button type="button" onclick="OSCEPilot.jumpSection(\'pocus\')">POCUS</button>'
+   +'<button type="button" onclick="OSCEPilot.jumpSection(\'priority\')">Prioridades</button>'
+   +'<button type="button" onclick="OSCEPilot.jumpSection(\'search\')">Buscar</button>'
+   +'<button type="button" onclick="OSCEPilot.showReview()">Revisão</button></nav>';
+ }
+ function jumpSection(which){
+  const ids={today:'osce-today',pocus:'osce-pocus-top',priority:'osce-priority-overview',search:'osce-catalog-search'};
+  const id=ids[which];if(!id||typeof document==='undefined')return;
+  const el=document.getElementById(id);if(!el)return;
+  if(which==='pocus'&&el.tagName==='DETAILS')el.open=true;
+  const scroll=()=>{
+   const reduced=window.OSCEContext?.reducedMotion?.()||document.body.classList.contains('reduce-motion');
+   el.scrollIntoView({behavior:reduced?'auto':'smooth',block:'start'});
+   if(which==='search')el.focus({preventScroll:true});
+  };
+  if(typeof window.requestAnimationFrame==='function')window.requestAnimationFrame(scroll);
+  else scroll();
+ }
+
  function homePage(){
   const total=BANK.reduce((n,st)=>n+attempted(st),0),dueCount=dueItems().length,weakCount=weakItems().length,shallow=BANK.filter(st=>attempted(st)>0||Object.values(state.covered[st.number]||{}).some(Boolean)).length,deep=BANK.filter(st=>state.covered[st.number]?.completa).length;
   const d=diffDays(),selection=dueCount?dueItems()[0].st:BANK.find(st=>attempted(st)===0)||BANK[0],planCount=dailyPlan(Number(state.settings.minutes)||15).length;
   return sectionTitle('OSCE <em>Clínica Médica.</em>')+'<div class="osce-welcome-entry"><p>Treine primeiro, aprofunde ao clicar, recupere os erros e retome sem perder seu progresso.</p>'+(welcomeOpen?'':'<button type="button" class="btn ghost osce-welcome-reopen" onclick="OSCEPilot.showWelcome()">ⓘ Como estudar no OSCE</button>')+'</div>'
    +welcomeGuide()
-   +'<section class="osce-pilot-hero"><div><p class="eyebrow">SESSÃO DE HOJE · COMEÇO SEM ATRITO</p><h2>Uma pergunta já é progresso.</h2><p>'+esc(d===null?'Data não definida.':d<0?'A data registrada passou; ajuste abaixo.':d===0?'Avaliação hoje.':d+' dia(s) até a avaliação.')+' Comece pelo erro vencido ou pela próxima estação prioritária.</p><div class="osce-actions"><button class="btn primary" onclick="OSCEPilot.daily()">Sessão de hoje · '+state.settings.minutes+' min (até '+planCount+' itens)</button>'+(state.current?'<button class="btn" onclick="OSCEPilot.resume()">Retomar onde parei</button>':'')+'</div></div><div class="osce-pilot-emblem" aria-hidden="true">'+BANK.length+'<span>estações</span></div></section>'
+   +quickNav()
+   +'<section class="osce-pilot-hero" id="osce-today"><div><p class="eyebrow">SESSÃO DE HOJE · COMEÇO SEM ATRITO</p><h2>Uma pergunta já é progresso.</h2><p>'+esc(d===null?'Data não definida.':d<0?'A data registrada passou; ajuste abaixo.':d===0?'Avaliação hoje.':d+' dia(s) até a avaliação.')+' Comece pelo erro vencido ou pela próxima estação prioritária.</p><div class="osce-actions"><button class="btn primary" onclick="OSCEPilot.daily()">Sessão de hoje · '+state.settings.minutes+' min (até '+planCount+' itens)</button>'+(state.current?'<button class="btn" onclick="OSCEPilot.resume()">Retomar onde parei</button>':'')+'</div></div><div class="osce-pilot-emblem" aria-hidden="true">'+BANK.length+'<span>estações</span></div></section>'
    +'<div class="osce-stats"><div><b>'+total+'</b><span>perguntas testadas</span></div><div><b>'+dueCount+'</b><span>revisões vencidas</span></div><div><b>'+weakCount+'</b><span>lacunas registradas</span></div><div><b>'+deep+'/'+BANK.length+'</b><span>estações completas</span></div></div>'
    +'<section class="osce-case"><h2>Triagem e cobertura</h2><div class="osce-settings"><label>Data da APO<input type="date" value="'+esc(state.settings.examDate)+'" onchange="OSCEPilot.setDate(this.value)"></label><label>Tempo disponível<select onchange="OSCEPilot.setMinutes(this.value)">'+[5,15,30,45].map(m=>'<option value="'+m+'"'+(Number(state.settings.minutes)===m?' selected':'')+'>'+m+' min</option>').join('')+'</select></label></div><p class="osce-note">Amplitude: '+shallow+'/'+BANK.length+' · Profundidade: '+deep+'/'+BANK.length+'. O roteiro inclui '+BANK.filter(st=>st.pocusOrder).length+' POCUS e '+BANK.filter(st=>!st.pocusOrder).length+' outras estações; a seção POCUS fica recolhida por padrão.</p><div class="osce-track"><span style="width:'+(100*shallow/BANK.length)+'%"></span></div><div class="osce-track osce-track-secondary"><span style="width:'+(100*deep/BANK.length)+'%"></span></div></section>'
    +pocusSection()
    +priorityIndex()
    +'<h2>Estações disponíveis</h2><p class="osce-note">Prioridade: <span class="osce-priority osce-priority-alta">● Alta</span> · <span class="osce-priority osce-priority-media">● Média</span> · <span class="osce-priority osce-priority-baixa">● Baixa</span>. Critério pedagógico, não previsão estatística da prova.</p>'
-   +'<div class="osce-filter"><label>Buscar estação<input type="search" id="osce-catalog-search" placeholder="Tema ou novo número (ex.: 1, 8, síncope)" value="'+esc(catalogSearch)+'" oninput="OSCEPilot.filterCatalog(this.value)"></label><label>Prioridade<select onchange="OSCEPilot.setCatalogPriority(this.value)">'+[['alta','Alta'],['media','Média'],['baixa','Baixa'],['todas','Todas']].map(([k,l])=>'<option value="'+k+'"'+(catalogPriority===k?' selected':'')+'>'+l+'</option>').join('')+'</select></label></div>'
+   +'<div class="osce-filter" id="osce-catalog-filter"><label>Buscar estação<input type="search" id="osce-catalog-search" placeholder="Tema ou novo número (ex.: 1, 8, síncope)" value="'+esc(catalogSearch)+'" oninput="OSCEPilot.filterCatalog(this.value)"></label><label>Prioridade<select onchange="OSCEPilot.setCatalogPriority(this.value)">'+[['alta','Alta'],['media','Média'],['baixa','Baixa'],['todas','Todas']].map(([k,l])=>'<option value="'+k+'"'+(catalogPriority===k?' selected':'')+'>'+l+'</option>').join('')+'</select></label></div>'
    +'<p class="osce-note">'+filteredCatalog().length+' estações neste filtro; exibindo até '+Math.min(catalogLimit,filteredCatalog().length)+'.</p>'
    +'<div class="osce-catalog-grid">'+filteredCatalog().slice(0,catalogLimit).map(selector).join('')+'</div>'
    +(filteredCatalog().length>catalogLimit?'<button type="button" class="btn" onclick="OSCEPilot.moreCatalog()">Mostrar mais estações</button>':'')
@@ -299,7 +324,7 @@ window.OSCEPilot=(()=>{
     {key:'eco',name:'Ecocardiograma',definition:'Avalia cardiopatia estrutural e valvopatia quando história e exame sugerem doença do coração.',source:'esc2018'},
     {key:'eeg',name:'EEG',definition:'Não é exame de rotina para síncope típica; indicado quando investigação sugere crise epiléptica.',source:'esc2018'}
   ];
-  return '<details id="osce-terms" class="osce-deep"><summary>Termos marcados e referências <span>toque nos conceitos</span></summary><div><p class="osce-note">Clique em qualquer termo para ver definição breve e fonte.</p><div class="osce-term-list">'+a.map(t=>'<button class="osce-term" type="button" onclick="OSCEPilot.term(\''+t.key+'\')">'+esc(t.name)+' <sup>↗</sup></button>').join('')+'</div><div id="osce-glossary-content" role="status" aria-live="polite">'+(glossary?glossary:'<p class="osce-note">Selecione um termo acima.</p>')+'</div></div></details>';
+  return '<details id="osce-terms" class="osce-deep"><summary>Termos marcados e referências <span>toque nos conceitos</span></summary><div><p class="osce-note">Toque em um termo para abrir a definição e a fonte sem perder o ponto de leitura.</p><div class="osce-term-list">'+a.map(t=>'<button class="osce-term" type="button" onclick="OSCEPilot.term(\''+t.key+'\',this)">'+esc(t.name)+' <sup>↗</sup></button>').join('')+'</div><div id="osce-glossary-content" role="status" aria-live="polite">'+(glossary?glossary:'<p class="osce-note">Selecione um termo acima.</p>')+'</div></div></details>';
  }
  function mark(st,text){
   let s=esc(text);
@@ -308,7 +333,7 @@ window.OSCEPilot=(()=>{
    const term=esc(t.name),pos=s.toLocaleLowerCase('pt-BR').indexOf(term.toLocaleLowerCase('pt-BR'));
    if(pos>=0){
     const visible=s.slice(pos,pos+term.length);
-    s=s.slice(0,pos)+'<button class="osce-term-inline" type="button" onclick="OSCEPilot.term(\''+t.key+'\')">'+visible+' <sup>ref</sup></button>'+s.slice(pos+term.length);
+    s=s.slice(0,pos)+'<button class="osce-term-inline" type="button" onclick="OSCEPilot.term(\''+t.key+'\',this)">'+visible+' <sup>ref</sup></button>'+s.slice(pos+term.length);
    }
   }
   return s;
@@ -467,8 +492,9 @@ window.OSCEPilot=(()=>{
  function showReview(){screen='review';renderAgain();}
  function showPrompt(){screen='prompt';renderAgain();}
  function reviewDue(){const list=dueItems();if(!list.length)return notify('Nenhum reteste vencido ainda.');const x=list[0];start('rapida',[x.q.id],x.st.number);}
- function term(k){
-  const st=screen==='study'?study():screen==='preview'?MAP.get(previewStation):data(reviewStation);const arr=st.terms||[
+ function term(k,anchor){
+  const st=screen==='study'?study():screen==='preview'?MAP.get(previewStation):data(reviewStation);
+  const arr=st.terms||[
    {key:'sincope',name:'Síncope',definition:'Hipoperfusão cerebral global transitória.',source:'esc2018'},
    {key:'ecg',name:'ECG',definition:'Avaliação eletrocardiográfica de 12 derivações.',source:'esc2018'},
    {key:'eco',name:'Ecocardiograma',definition:'Exame cardíaco estrutural.',source:'esc2018'},
@@ -476,10 +502,13 @@ window.OSCEPilot=(()=>{
   ];
   const t=arr.find(x=>x.key===k);if(!t)return;
   const src=(st.sources||[]).find(x=>x.id===t.source);
+  if(anchor?.isConnected&&window.OSCEContext?.open(anchor,
+   {name:t.name,definition:t.definition,url:src?.url,sourceLabel:src?.label||src?.title}))return;
   glossary='<p><strong>'+esc(t.name)+':</strong> '+esc(t.definition)+'</p>'+(src?'<p><a target="_blank" rel="noopener noreferrer" href="'+esc(src.url)+'">Fonte: '+esc(src.label||src.title)+' ↗</a></p>':'');
   const d=document.getElementById('osce-terms');if(d&&!d.open)d.open=true;
-  const area=document.getElementById('osce-glossary-content');if(area){area.innerHTML=glossary;area.scrollIntoView({block:'nearest',behavior:'smooth'});}
+  const area=document.getElementById('osce-glossary-content');if(area){area.innerHTML=glossary;area.scrollIntoView({block:'nearest',behavior:'auto'});}
  }
+
  function showSources(){const d=document.getElementById('osce-sources');if(d){d.open=true;d.scrollIntoView({block:'start',behavior:'smooth'});}}
  function showTerms(){const d=document.getElementById('osce-terms');if(d){d.open=true;d.scrollIntoView({block:'start',behavior:'smooth'});}}
  function openLesson(n){
@@ -505,5 +534,5 @@ window.OSCEPilot=(()=>{
  window.addEventListener('master-auth-ended',()=>{state=empty();screen='home';shown=false;glossary='';welcomeDismissedThisLoad=false;welcomeOpen=true;welcomeSkipNext=false;});
  window.addEventListener('master-remote-merge',e=>{if(e.detail?.key===KEY)reload()});
  window.addEventListener('storage',e=>{if(e.key===KEY)reload()});
- return {bank,weakItems,page,start,daily,resume,home,answerKey,welcomePreference,showWelcome,closeWelcome,preview,previewTierSet,previewPage,filterCatalog,setCatalogPriority,moreCatalog,jumpToIndex,setDate,setMinutes,answer,conf,hint,reveal,criterion,retry,finish,showReview,showPrompt,reviewDue,term,showSources,showTerms,openLesson,showFullLesson,expandImage,focusVisualNote,toggleVisualMarks,expandVisual,copyPrompt,reload};
+ return {bank,weakItems,page,start,daily,resume,home,answerKey,jumpSection,welcomePreference,showWelcome,closeWelcome,preview,previewTierSet,previewPage,filterCatalog,setCatalogPriority,moreCatalog,jumpToIndex,setDate,setMinutes,answer,conf,hint,reveal,criterion,retry,finish,showReview,showPrompt,reviewDue,term,showSources,showTerms,openLesson,showFullLesson,expandImage,focusVisualNote,toggleVisualMarks,expandVisual,copyPrompt,reload};
 })();
