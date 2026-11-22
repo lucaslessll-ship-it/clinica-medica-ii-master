@@ -369,3 +369,15 @@ body[data-theme="dark"] .osce-index-group[open] summary{background:color-mix(in 
 .osce-competence-progress{height:6px;overflow:hidden;border-radius:8px;background:var(--border,#e5e6dd)}
 .osce-competence-progress>span{display:block;height:100%;border-radius:8px;background:#51856c;min-width:0}
 @media(max-width:680px){.osce-competence-grid{grid-template-columns:1fr}.osce-session-timing{font-size:.79rem;padding:9px 11px}}
+
+
+/* Correção de redundância: uma dica útil por competência, sem cascata de abas repetidas. */
+.osce-step-tip{margin:12px 0 4px;padding:10px 13px;border-left:3px solid #558b73;border-radius:6px;background:color-mix(in srgb,#558b73 7%,var(--card,#fff));font-size:.85rem;line-height:1.6;color:inherit}
+.osce-step-tip strong{font-weight:750}
+.osce-deep-compact{margin-top:13px}
+.osce-depth-subtopic{margin:0;padding:12px 0;border-bottom:1px solid var(--border,#e0e4df)}
+.osce-depth-subtopic:last-child{border-bottom:0}
+.osce-depth-subtopic h4{font-size:.95rem;margin:0 0 6px}
+.osce-depth-subtopic p{margin:0;font-size:.88rem;line-height:1.68}
+.osce-study-depth{margin-top:16px}
+.osce-study-depth>.osce-note{margin:3px 0 11px}
