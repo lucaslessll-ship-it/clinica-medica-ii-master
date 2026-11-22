@@ -242,3 +242,7 @@ body[data-theme="dark"] .osce-app-shell .osce-visual-pin{color:#fff}
  .osce-app-shell *, .osce-app-shell *::before,.osce-app-shell *::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
  .osce-app-shell :is(.osce-card,.osce-index-entry,.osce-depth-btn):hover{transform:none}
 }
+
+/* Respeitar também a preferência 'Reduzir movimento' configurada dentro do Master. */
+body.reduce-motion .osce-app-shell *,body.reduce-motion .osce-app-shell *::before,body.reduce-motion .osce-app-shell *::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+body.reduce-motion .osce-app-shell :is(.osce-depth-btn,.osce-index-entry,.osce-card):hover{transform:none!important}
