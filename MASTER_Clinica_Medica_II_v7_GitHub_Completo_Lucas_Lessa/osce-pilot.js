@@ -414,7 +414,7 @@ window.OSCEPilot=(()=>{
    if(r.tier==='essencial')out+='<details class="osce-deep" open><summary>Essencial · illness script de 1 minuto</summary><div><p>'+esc(st.essential.oneMinute)+'</p><p><strong>Âncora:</strong> '+esc(st.essential.mnemonic)+'</p></div></details>';
    out+=deepPanels(st,q,r.pos===r.ids.length-1);
   }
-  out+='</section><section class="osce-case"><h2>Estude mais, quando precisar</h2><div class="osce-deep-stack">'+termPanel(st)+lessonBar(st)+sourcePanel(st)+'</div></section>';
+  out+='</section><section class="osce-case osce-library-case"><details class="osce-deep osce-library" id="osce-library"><summary>Biblioteca desta estação <span>conceitos, aulas e referências</span></summary><div class="osce-deep-stack">'+termPanel(st)+lessonBar(st)+sourcePanel(st)+'</div></details></section>';
   return out;
  }
  function preview(n){
@@ -432,7 +432,7 @@ window.OSCEPilot=(()=>{
   html+='<section class="osce-case"><h2>Essencial — síntese para explicar em 1 minuto</h2><p>'+mark(st,st.essential.oneMinute)+'</p><p class="osce-note"><b>Âncora:</b> '+esc(st.essential.mnemonic)+'</p></section>';
   html+='<section class="osce-preview-questions"><h2>O que preciso saber responder</h2>'+qs.map((q,i)=>'<article class="osce-preview-question"><p class="eyebrow">ETAPA '+(i+1)+'/'+qs.length+' · '+esc(q.competence)+'</p><h3>'+esc(q.prompt)+'</h3><div class="osce-preview-answer"><strong>Resposta-modelo do Master</strong><p>'+mark(st,q.answer)+'</p></div><details class="osce-deep"><summary>Checklist do que não posso esquecer <span>expandir</span></summary><div><ul>'+q.criteria.map(x=>'<li>'+esc(x)+'</li>').join('')+'</ul></div></details>' + (uniqueStudyTip(st,q)?'<p class="osce-step-tip"><strong>Para lembrar nesta etapa:</strong> '+esc(uniqueStudyTip(st,q))+'</p>':'') + '</article>').join('')+'</section>';
   html+='<section class="osce-case osce-study-depth"><h2>Aprofundamento opcional</h2><p class="osce-note">Leia só o que ainda estiver difícil. Aprofundamentos reunidos em um único painel.</p>'+fullTopicDepth(st)+'</section>';
-  html+='<section class="osce-case"><h2>Fontes, conceitos e aulas</h2><div class="osce-deep-stack">'+termPanel(st)+lessonBar(st)+sourcePanel(st)+'</div><div class="osce-actions"><button type="button" class="btn primary" onclick="'+(state.current?.station===st.number?'OSCEPilot.resume()':'OSCEPilot.start(\''+tier+'\',null,'+st.number+')')+'">'+(state.current?.station===st.number?'Retomar simulação':'Iniciar simulado agora')+'</button><button type="button" class="btn" onclick="OSCEPilot.home()">Voltar ao catálogo</button></div></section>';
+  html+='<section class="osce-case osce-library-case"><details class="osce-deep osce-library" id="osce-library"><summary>Biblioteca desta estação <span>conceitos, aulas e referências</span></summary><div class="osce-deep-stack">'+termPanel(st)+lessonBar(st)+sourcePanel(st)+'</div></details><div class="osce-actions"><button type="button" class="btn primary" onclick="'+(state.current?.station===st.number?'OSCEPilot.resume()':'OSCEPilot.start(\''+tier+'\',null,'+st.number+')')+'">'+(state.current?.station===st.number?'Retomar simulação':'Iniciar simulado agora')+'</button><button type="button" class="btn" onclick="OSCEPilot.home()">Voltar ao catálogo</button></div></section>';
   return html;
  }
  function resetView(){shown=false;confidence=0;hints=0;checked=[];glossary='';}
@@ -556,8 +556,8 @@ window.OSCEPilot=(()=>{
   const area=document.getElementById('osce-glossary-content');if(area){area.innerHTML=glossary;area.scrollIntoView({block:'nearest',behavior:'auto'});}
  }
 
- function showSources(){const d=document.getElementById('osce-sources');if(d){d.open=true;d.scrollIntoView({block:'start',behavior:'smooth'});}}
- function showTerms(){const d=document.getElementById('osce-terms');if(d){d.open=true;d.scrollIntoView({block:'start',behavior:'smooth'});}}
+ function showSources(){const d=document.getElementById('osce-sources');if(d){const outer=document.getElementById('osce-library');if(outer)outer.open=true;d.open=true;d.scrollIntoView({block:'start',behavior:'smooth'});}}
+ function showTerms(){const d=document.getElementById('osce-terms');if(d){const outer=document.getElementById('osce-library');if(outer)outer.open=true;d.open=true;d.scrollIntoView({block:'start',behavior:'smooth'});}}
  function openLesson(n){
   const st=MAP.get(Number(n)),lesson=st?.lesson||({52:{kind:'p1',id:'p1arr'},61:{kind:'topic',id:'neuro1'}}[n]);
   if(lesson?.kind==='p1'&&window.P1?.openTopic){window.P1.openTopic(lesson.id);return;}
