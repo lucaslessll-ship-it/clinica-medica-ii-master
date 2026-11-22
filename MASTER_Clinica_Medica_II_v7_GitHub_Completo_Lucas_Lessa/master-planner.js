@@ -55,8 +55,27 @@ function osceEvidence(theme){
  const last=attempts.slice().sort((a,b)=>time(b)-time(a))[0];
  return {attempts:attempts.length,score:n(last.score),due:last.due||null,at:last.at||null,confidence:last.confidence||null};
 }
+function superFocoEvidence(theme){
+ if(!theme)return null;
+ const uid=window.MASTER_AUTH?.user?.()?.id||'local';
+ let data;
+ try{data=JSON.parse(localStorage.getItem('master_super_foco_v1:'+uid));}catch{return null;}
+ const prefix=theme.course==='osce'?'osce:'+theme.themeId+':':theme.course+':'+theme.themeId+':';
+ const entries=Object.entries(data?.records||{}).filter(([id])=>id.startsWith(prefix)).map(([,r])=>r).filter(Boolean);
+ if(!entries.length)return null;
+ const attempts=entries.reduce((a,r)=>a+(Number(r.attempts)||0),0);
+ const latest=entries.slice().sort((a,b)=>new Date(b.lastAt||0)-new Date(a.lastAt||0))[0];
+ const due=entries.map(r=>r.due).filter(Boolean).sort()[0];
+ return {attempts,score:Number(latest?.score)||0,due:due||null,at:latest?.lastAt||null,from:'superfoco'};
+}
 function externalEvidence(theme){
- const osce=osceEvidence(theme);if(osce)return osce;
+ const osce=osceEvidence(theme),focus=superFocoEvidence(theme);
+ if(osce&&focus){
+  const due=[osce.due,focus.due].filter(Boolean).sort()[0]||null;
+  return {...osce,attempts:osce.attempts+focus.attempts,due,from:'osce+superfoco'};
+ }
+ if(osce)return osce;
+ if(focus)return focus;
  if(!theme)return null;
  // Leitura concluída no acervo é cobertura, não comprovação de recordação ativa.
  try{
@@ -128,7 +147,7 @@ function schedule(plan,from=localDate()){
 }
 function dailyTasks(plan,minutes=sessionMinutes){
  const sched=schedule(plan),row=sched.rows[0],today=localDate(),slots=Math.max(1,Math.floor(minutes/8));
- const current=row?.date===today?row: {tasks:sched.rows.find(x=>x.date>=today)?.tasks||[]};
+ const current=row?.date===today?row:{tasks:[]}; // Não antecipar um dia futuro e chamá-lo de sessão de hoje.
  const all=current.tasks.slice().sort((a,b)=>(a.kind==='review'?0:1)-(b.kind==='review'?0:1)||priority(a)-priority(b));
  return all.slice(0,slots);
 }
