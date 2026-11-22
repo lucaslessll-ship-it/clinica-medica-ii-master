@@ -348,6 +348,10 @@
     if(alheio&&key===HIGKEY&&window.MASTER_SYNC_MERGE){
       // Outro aparelho mexeu: mescla em silêncio (marcas, notas, pomodoro) em vez de sobrescrever.
       outgoing=window.MASTER_SYNC_MERGE.mesclarPrefs(status.baseObj.get(key),value,remote.payload);outCanon=canon(outgoing);merged=outCanon!==localCanon;
+    }else if(alheio&&key==='master_study_planner_v1'&&window.MasterPlanner?.mergeProgress){
+      keepConflictCopy(userId,latest);
+      outgoing=window.MasterPlanner.mergeProgress(status.baseObj.get(key),value,remote.payload);
+      outCanon=canon(outgoing);merged=outCanon!==localCanon;
     }else if(alheio&&window.QuestionHistory?.BANK_KEYS.includes(key)){keepConflictCopy(userId,latest);outgoing=QuestionHistory.mergeProgressState(status.baseObj.get(key),value,remote.payload);outCanon=canon(outgoing);merged=outCanon!==localCanon;}else if(alheio)keepConflictCopy(userId,latest);
     rememberSent(key,outCanon);
     const {error}=await status.client.from('master_progress').upsert({user_id:userId,storage_key:key,payload:outgoing,updated_at:new Date().toISOString()},{onConflict:'user_id,storage_key'});
@@ -387,7 +391,7 @@
       if(error||epoch!==status.epoch)return;
       for(const row of data||[]){
         const key=row.storage_key;
-        if(!QuestionHistory.BANK_KEYS.includes(key)||!keys.includes(key))continue;
+        if(!(QuestionHistory.BANK_KEYS.includes(key)||key==='master_study_planner_v1')||!keys.includes(key))continue;
         const rc=canon(row.payload),lc=canon(read(key)||{}),baseline=status.baseline.get(key);
         if(rc===lc){status.baseline.set(key,rc);status.baseObj.set(key,row.payload);continue;}
         if(rc===baseline||(sent.get(key)||[]).includes(rc))continue;
