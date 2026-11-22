@@ -4,17 +4,21 @@
    e aparece reunido por aula na Biblioteca pessoal. */
 (() => {
   'use strict';
-  const LEITURA = '.deep-block,.deep-lesson,.pocus-card-body,.pocus-sec,.course-body,.case-step,.insight';
-  const BLOQUEADOS = 'button,a,nav,summary,label,input,textarea,select,option,form,svg,canvas,iframe,video,audio,math,pre,code,[contenteditable],[role="button"],[role="tab"],.nota-barra,.nota-caixa,.nota-bolha,.caderno-unificado,.caderno-painel-lateral,.nota-formatbar,.nota-preview,.ai-tutor-dialog,.media-viewer,.pocus-q-options,.lab-choices,.qnav-dots,.pocus-pager';
+  const LEITURA = '.deep-block,.deep-lesson,.pocus-card-body,.pocus-sec,.course-body,.case-step,.insight,.osce-case,.osce-step,.osce-preview-questions,.osce-preview-note,.osce-reading-answer,.osce-preview-answer,.osce-feedback,.sf-page,.sf-exercise-header,.la-lesson';
+  const BLOQUEADOS = 'button,a,nav,summary,label,input,textarea,select,option,form,svg,canvas,iframe,video,audio,math,pre,code,[contenteditable],[role="button"],[role="tab"],.nota-barra,.nota-caixa,.nota-bolha,.caderno-unificado,.caderno-painel-lateral,.nota-formatbar,.nota-preview,.ai-tutor-dialog,.media-viewer,.pocus-q-options,.lab-choices,.qnav-dots,.pocus-pager,.osce-quicknav,.osce-top-links,.osce-reading-legend,.osce-visual-pin,.osce-annotation-toolbar,.osce-lightbox,.osce-context-popover,.osce-study-levels,.osce-actions,.osce-catalog-grid,.osce-index-entry,.osce-review-list,.sf-session-nav,.sf-training-top,.nota-atalho-pagina,.profile-session';
   const ROTAS_ESTUDO = new Set([
     'topic','p1topic','cirtopic','p1','cir','cirp1','cirp2','topics',
     'reverse','practice','exam','cases','discursive','oral','flashcards','sources',
     'p1practice','p1exam','p1cases','p1discursive','p1oral','p1flashcards','p1sources',
-    'cirpractice','cirexam','revisao','decisionlab','banca','prescriptions','pocus',
+    'cirpractice','cirexam','revisao','decisionlab','banca','prescriptions','osce','superfoco','planner','today',
+    'emergency','emergency-p1','emergency-p2','emergency-questions','emergency-simulado','pocus',
     'ecg','rad','hemo','atb','micro','labferro','labrenal','labmaster',
     'labmicrocitose'
   ]);
   const NOME_ROTA = {
+    osce:'OSCE · Clínica Médica',superfoco:'Super Foco',planner:'Planejador de estudos',today:'Plano de hoje',
+    emergency:'Urgência e Emergência','emergency-p1':'Urgência e Emergência · P1','emergency-p2':'Urgência e Emergência · P2',
+    'emergency-questions':'Urgência e Emergência · Questões','emergency-simulado':'Urgência e Emergência · Simulado',
     pocus:'POCUS',ecg:'ECG',rad:'Radiologia',hemo:'Hemograma',
     atb:'Antimicrobianos',micro:'Microbiologia',labferro:'Laboratório de ferro',
     labrenal:'Laboratório renal',labmaster:'Laboratório Master',
@@ -50,6 +54,34 @@
     };
     const rota = typeof ui !== 'undefined' ? ui.route : location.hash.slice(1).split('/')[0];
     if(!rota || !estudoAtivo(rota))return null;
+    // O OSCE mantém #osce ao trocar a estação e a pergunta: URL/título da página
+    // não identificam o conteúdo. Usamos o número prioritário estável.
+    if(rota==='osce'){
+      const shell=document.querySelector('#main-content .osce-app-shell');
+      if(!shell)return null;
+      const numero=Number(shell.dataset.noteStation);
+      const valido=Number.isInteger(numero)&&numero>0;
+      const view=shell.dataset.osceView||'home';
+      const titulo=valido
+        ?'Estação '+numero+' · '+(shell.dataset.noteTitle||'OSCE')
+        :view==='review'?'OSCE · Revisão adaptativa':view==='prompt'?'OSCE · Roteiro para IA':'OSCE · Índice de estações';
+      const chave=valido?'estudo_osce_estacao_'+numero:'estudo_osce_'+view;
+      return {chave,rota,raiz:shell,titulo,origem:'estudo',
+        materia:'OSCE · Clínica Médica',localizacao:'#osce',
+        indice:valido?numero:null,tipo:valido?'osce-estacao':'osce-pagina',
+        etapa:Number(shell.dataset.noteStep)||0,questao:shell.dataset.noteQuestion||null};
+    }
+    // O Super Foco é dinâmico, mas cada desafio possui um título identificável.
+    // A mesma pergunta mantém sua chave entre tentativa e feedback.
+    if(rota==='superfoco'){
+      const shell=document.querySelector('#main-content .sf-page');
+      if(!shell)return null;
+      const titulo=textoLegivel(shell.querySelector('.sf-exercise-header h1,h1'))||'Super Foco';
+      const area=textoLegivel(shell.querySelector('.sf-exercise-header .eyebrow'))||'Biblioteca';
+      return {chave:'estudo_superfoco_'+checksum(area+'|'+titulo),
+        rota,raiz:shell,titulo,origem:'estudo',materia:'Super Foco',
+        localizacao:'#superfoco',indice:null,tipo:'superfoco-desafio'};
+    }
     const raiz=document.querySelector('#main-content');
     if(!raiz || !raiz.querySelector('p,li,td,th,blockquote,h1,h2,h3'))return null;
     const titulo=textoLegivel(raiz.querySelector('.pocus-module .pocus-title,.la-lesson h1,.deep-lesson h1,h1,h2'))||NOME_ROTA[rota]||rota;
@@ -163,8 +195,8 @@
       const acao=document.createElement('button');
       acao.type='button';acao.id='nota-atalho-pagina';
       acao.className='nota-atalho-pagina';
-      acao.innerHTML='<span aria-hidden="true">▤</span> Anotações desta página';
-      acao.title='Abrir notas, comentários e marcações deste conteúdo';
+      acao.innerHTML='<span aria-hidden="true">▤</span> '+(origem.rota==='osce'?'Marca-texto e caderno':'Anotações desta página');
+      acao.title='Selecione um trecho do texto para destacar ou comentar. Abra aqui suas anotações da página.';
       acao.addEventListener('click',abrirTodas);
       const nav=document.querySelector('#main-content .study-breadcrumb');
       if(nav)nav.after(acao);
@@ -297,7 +329,7 @@
     const marca = HIGapi.marcaAdd(aula, {
       paginaEstudo:pagina?.origem==='estudo',
       pagina:pagina?.titulo||'',materia:pagina?.materia||'',
-      localizacao:pagina?.localizacao||'',indice:pagina?.indice,tipoPagina:pagina?.tipo||'',
+      localizacao:pagina?.localizacao||'',indice:pagina?.indice,tipoPagina:pagina?.tipo||'',etapa:pagina?.etapa??null,questao:pagina?.questao||null,
       id: `m${Date.now().toString(36)}${Math.random().toString(36).slice(2, 6)}`,
       texto: emEdicao.texto, antes, depois, ocorrencia, cor, comentario, rota: rotaAtual(), titulo: normal(document.querySelector('#main-content h1')?.textContent || ''), criadoEm: new Date().toISOString()
     });
@@ -637,6 +669,15 @@
       setTimeout(aoSoltar, 10);
     }, { passive: true });
     document.addEventListener('keyup', evento => { if (evento.shiftKey || evento.key === 'Shift') aoSoltar(); });
+    // iOS/Safari costuma concluir a seleção após o touchend, especialmente ao
+    // arrastar as alças. Ouvir selectionchange evita que a barra não apareça.
+    let temporizadorSelecao=null;
+    document.addEventListener('selectionchange', () => {
+      const selecionado=window.getSelection();
+      if(!selecionado || selecionado.isCollapsed || !selecionado.rangeCount)return;
+      clearTimeout(temporizadorSelecao);
+      temporizadorSelecao=setTimeout(aoSoltar,125);
+    });
 
     document.addEventListener('click', evento => {
       const bolha = evento.target.closest('.nota-bolha');
@@ -667,11 +708,20 @@
     addEventListener('scroll', () => { if (barra && !barra.hidden) esconderBarra(); }, { passive: true });
 
     const raiz = document.getElementById('main-content');
-    if (raiz) new MutationObserver(() => { if (caixa && !caixa.hidden && caixa.dataset.aula !== aulaAtual()) fecharCaixa(); if (!document.querySelector('.nota-marca')) agendar(); }).observe(raiz, { childList: true, subtree: false });
+    if (raiz) new MutationObserver(mudancas => {
+      if (caixa && !caixa.hidden && caixa.dataset.aula !== aulaAtual()) fecharCaixa();
+      // Inclui aulas e questões que redesenham apenas um painel interno.
+      // Ignora nossas próprias bolhas/marcações e fragmentos de texto, para
+      // não entrar em ciclo de reprocessamento do DOM.
+      const conteudoAlterado=mudancas.some(m=>[...m.addedNodes,...m.removedNodes].some(no=>
+        no.nodeType===1 && !no.matches?.('.nota-marca,.nota-bolha,.nota-atalho-pagina')
+      ));
+      if(conteudoAlterado)agendar();
+    }).observe(raiz, { childList: true, subtree: true });
     agendar();
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', iniciar, { once: true });
   else iniciar();
-  window.Notas = { aplicar: agendar, abrirCaixa, fecharCaixa, abrirTodas, voltarAoTrecho };
+  window.Notas = { aplicar: agendar, abrirCaixa, fecharCaixa, abrirTodas, voltarAoTrecho, contextoAtual:contextoPagina };
 })();

@@ -467,6 +467,19 @@ window.OSCEPilot=(()=>{
   previewLayout=state.settings.previewLayout==='all'?'all':'guided';
   screen='preview';glossary='';renderAgain();
  }
+ function previewQuestion(number,questionId){
+  const st=MAP.get(Number(number));if(!st)return false;
+  preview(st.number);
+  const levels=['completa','rapida','essencial'];
+  const level=levels.find(k=>st.tiers?.[k]?.ids?.includes(String(questionId)));
+  if(level){
+   previewTier=level;
+   previewStep=st.tiers[level].ids.indexOf(String(questionId));
+   previewLayout='guided';
+   renderAgain('guide');
+  }
+  return true;
+ }
  function previewTierSet(t){
   const st=MAP.get(previewStation);
   if(st?.tiers[t]){previewTier=t;previewStep=0;renderAgain('levels');}
@@ -625,7 +638,11 @@ window.OSCEPilot=(()=>{
  }
  function promptPage(){return sectionTitle('Script de <em>revisão por erros.</em>')+'<button class="btn ghost" onclick="OSCEPilot.home()">← Voltar</button><p>Copie para uma IA a análise dos critérios não cumpridos. Nenhuma resposta é transmitida automaticamente.</p><section class="osce-step"><label class="osce-answer-label" for="osce-prompt">Roteiro personalizado</label><textarea readonly id="osce-prompt" rows="19">'+esc(makePrompt())+'</textarea><div class="osce-actions"><button class="btn primary" onclick="OSCEPilot.copyPrompt()">Copiar para IA</button><button class="btn" onclick="OSCEPilot.showReview()">Ver erros</button></div></section>';}
  function donePage(){const st=data(reviewStation),run=state.runs.at(-1),n=run?.results.length||0,isDaily=run?.mode==='daily',next=dailyPlan(Number(state.settings.minutes)||15)[0],nextSt=MAP.get(next?.station),nextQ=nextSt?.questions.find(q=>q.id===next?.id);return sectionTitle('Sessão <em>concluída.</em>')+'<p>'+(isDaily?'Você concluiu '+n+' pergunta(s) de diferentes estações na sessão mista.':'Você concluiu '+n+' pergunta(s) da '+displayLabel(st).toLowerCase()+' ('+esc(st.title)+').')+' Não precisa concluir tudo em um dia.</p><section class="osce-case"><h2>Consolide sem consultar</h2><p>'+esc(st.essential.oneMinute)+'</p><p class="osce-note">Próximo passo sugerido: '+(nextSt&&nextQ?displayLabel(nextSt)+' — '+esc(nextSt.title)+' · '+esc(nextQ.competence):'retome uma pergunta sem consulta')+'. Use primeiro a revisão vencida quando chegar o dia.</p><div class="osce-actions"><button class="btn osce-super-focus-cta" onclick="SuperFoco.open(\''+(st.pocusOrder?'pocus':'osce')+'\',\''+st.number+'\')">Treinar pontos fracos</button><button class="btn primary" onclick="OSCEPilot.showReview()">Ver minha revisão</button><button class="btn" onclick="OSCEPilot.showPrompt()">Copiar script para IA</button><button class="btn" onclick="OSCEPilot.home()">Todas as estações</button></div></section>';}
- function page(){if(screen!=='home'&&welcomeOpen){welcomeOpen=false;welcomeDismissedThisLoad=true;}const html=screen==='preview'?previewPage():screen==='study'?activePage():screen==='review'?reviewPage():screen==='prompt'?promptPage():screen==='done'?donePage():homePage();return '<div class="osce-app-shell osce-view-'+screen+'" data-osce-view="'+screen+'">'+html+'</div>';}
+ function page(){if(screen!=='home'&&welcomeOpen){welcomeOpen=false;welcomeDismissedThisLoad=true;}const html=screen==='preview'?previewPage():screen==='study'?activePage():screen==='review'?reviewPage():screen==='prompt'?promptPage():screen==='done'?donePage():homePage();const stationNumber=screen==='preview'?previewStation:screen==='study'?study()?.number:screen==='done'?reviewStation:null;
+  const station=stationNumber?MAP.get(Number(stationNumber)):null;
+  const noteQ=screen==='study'?currentQ(study())?.id:screen==='preview'?station?.tiers?.[previewTier]?.ids?.[previewStep]:null;
+  const noteAttrs=station?' data-note-station="'+esc(station.number)+'" data-note-title="'+esc(station.title)+'" data-note-step="'+esc(screen==='preview'?previewStep:screen==='study'?state.current?.pos||0:0)+'" data-note-question="'+esc(noteQ||'')+'"':'';
+  return '<div class="osce-app-shell osce-view-'+screen+'" data-osce-view="'+screen+'"'+noteAttrs+'>'+html+'</div>';}
  function showReview(){screen='review';renderAgain();}
  function showPrompt(){screen='prompt';renderAgain();}
  function reviewDue(){const list=dueItems();if(!list.length)return notify('Nenhum reteste vencido ainda.');const x=list[0];start('rapida',[x.q.id],x.st.number);}
@@ -671,5 +688,5 @@ window.OSCEPilot=(()=>{
  window.addEventListener('master-auth-ended',()=>{state=empty();screen='home';shown=false;glossary='';welcomeDismissedThisLoad=false;welcomeOpen=true;welcomeSkipNext=false;});
  window.addEventListener('master-remote-merge',e=>{if(e.detail?.key===KEY)reload()});
  window.addEventListener('storage',e=>{if(e.key===KEY)reload()});
- return {bank,weakItems,page,start,daily,resume,home,previewStepSet,previewLayoutSet,toggleClinicalHighlights,answerKey,jumpSection,welcomePreference,showWelcome,closeWelcome,preview,previewTierSet,previewPage,filterCatalog,setCatalogPriority,moreCatalog,jumpToIndex,setDate,setMinutes,answer,conf,hint,reveal,criterion,retry,finish,showReview,showPrompt,reviewDue,term,showSources,showTerms,openLesson,showFullLesson,expandImage,focusVisualNote,toggleVisualMarks,expandVisual,copyPrompt,reload};
+ return {bank,weakItems,page,start,daily,resume,home,previewQuestion,previewStepSet,previewLayoutSet,toggleClinicalHighlights,answerKey,jumpSection,welcomePreference,showWelcome,closeWelcome,preview,previewTierSet,previewPage,filterCatalog,setCatalogPriority,moreCatalog,jumpToIndex,setDate,setMinutes,answer,conf,hint,reveal,criterion,retry,finish,showReview,showPrompt,reviewDue,term,showSources,showTerms,openLesson,showFullLesson,expandImage,focusVisualNote,toggleVisualMarks,expandVisual,copyPrompt,reload};
 })();
