@@ -2,7 +2,7 @@
    Somente a sessão autenticada do proprietário recebe a interface. Não usar como controle de acesso de dados. */
 window.OSCE_PERSONAL_PRIORITIES=Object.freeze({
   isOwner:()=>window.MASTER_AUTH?.user?.()?.id==='d20331a2-6724-40e9-8e01-e3e82e57924e',
-  version:'2026-11-22-user-plan-v1',
+  version:'2026-11-22-no-oncohemo-v2',
   groups:[
   {
     "n": 1,
@@ -101,34 +101,28 @@ window.OSCE_PERSONAL_PRIORITIES=Object.freeze({
   {
     "n": 8,
     "tier": "B",
-    "title": "Emergências oncológicas",
+    "title": "Vasculites",
     "minutes": 25,
     "level": "Saber o essencial",
-    "hint": "Neutropenia febril, lise tumoral, compressão medular, hipercalcemia.",
+    "hint": "Arterite temporal, GPA e PAN: sinais de gravidade, investigação e conduta.",
     "ids": [
-      79,
-      80,
-      83,
-      84,
-      82,
-      81
+      11,
+      62,
+      57,
+      40
     ]
   },
   {
     "n": 9,
     "tier": "B",
-    "title": "Leucemias, linfomas e mieloma",
+    "title": "Esclerose sistêmica, Sjögren e miopatias",
     "minutes": 20,
     "level": "Saber o essencial",
-    "hint": "Pistas clínicas, hemograma/esfregaço, exames e urgências.",
+    "hint": "Autoanticorpos, órgãos-alvo, fraqueza proximal e crise renal.",
     "ids": [
-      39,
-      59,
-      60,
-      69,
-      45,
-      8,
-      25
+      55,
+      5,
+      38
     ]
   },
   {
@@ -148,49 +142,22 @@ window.OSCE_PERSONAL_PRIORITIES=Object.freeze({
   {
     "n": 11,
     "tier": "B",
-    "title": "Vasculites",
-    "minutes": 20,
-    "level": "Saber o essencial",
-    "hint": "Arterite temporal, GPA, PAN; órgãos-alvo e gravidade.",
-    "ids": [
-      11,
-      62,
-      57,
-      40
-    ]
-  },
-  {
-    "n": 12,
-    "tier": "B",
-    "title": "Esclerose sistêmica, Sjögren e miopatias",
-    "minutes": 20,
-    "level": "Saber o essencial",
-    "hint": "Autoanticorpos, órgãos-alvo, fraqueza proximal e crise renal.",
-    "ids": [
-      55,
-      5,
-      38
-    ]
-  },
-  {
-    "n": 13,
-    "tier": "C",
     "title": "TEP e pericardite",
-    "minutes": 15,
-    "level": "Passagem rápida",
-    "hint": "Reconhecimento, exames, instabilidade e primeira conduta.",
+    "minutes": 20,
+    "level": "Saber o essencial",
+    "hint": "Reconhecimento clínico, ECG/POCUS, sinais de gravidade e conduta inicial.",
     "ids": [
       85,
       86
     ]
   },
   {
-    "n": 14,
-    "tier": "C",
+    "n": 12,
+    "tier": "B",
     "title": "Insuficiência respiratória e PCR",
-    "minutes": 15,
-    "level": "Passagem rápida",
-    "hint": "ABC, oxigenação, ritmos e reversíveis; revisar POCUS da PCR.",
+    "minutes": 20,
+    "level": "Saber o essencial",
+    "hint": "Revisão integrada: ABC, oxigênio, ritmos e POCUS durante PCR sem interromper RCP.",
     "ids": [
       93,
       70,
@@ -199,17 +166,47 @@ window.OSCE_PERSONAL_PRIORITIES=Object.freeze({
     ]
   },
   {
-    "n": 15,
+    "n": 13,
     "tier": "C",
-    "title": "Infecções e emergências clínicas",
+    "title": "Pneumonia, sepse e infecções clínicas",
     "minutes": 15,
     "level": "Passagem rápida",
-    "hint": "Pneumonia, sepse e infecções graves; reconhecer gravidade.",
+    "hint": "Reconhecer deterioração, infecção respiratória/urinária e condutas iniciais.",
     "ids": [
       75,
       76,
       77,
       78
+    ]
+  },
+  {
+    "n": 14,
+    "tier": "C",
+    "title": "Endocrinologia clínica essencial",
+    "minutes": 15,
+    "level": "Passagem rápida",
+    "hint": "Graves, hipotireoidismo e insuficiência adrenal; somente reconhecimento rápido.",
+    "ids": [
+      44,
+      41,
+      15,
+      48,
+      1
+    ]
+  },
+  {
+    "n": 15,
+    "tier": "C",
+    "title": "HAS e complicações cardiovasculares",
+    "minutes": 15,
+    "level": "Passagem rápida",
+    "hint": "HAS secundária, lesão de órgão-alvo e diferenciais não relacionados a ECG.",
+    "ids": [
+      19,
+      3,
+      53,
+      71,
+      13
     ]
   }
 ]
