@@ -10,7 +10,8 @@ window.OSCEContext = (()=>{
  };
  function close(restoreFocus=false){
   if(!current)return;
-  const {panel,anchor,onOutside,onEscape,onViewport}=current;
+  const {panel,anchor,onOutside,onEscape,onViewport,observer}=current;
+  observer?.disconnect();
   current=null;
   document.removeEventListener('pointerdown',onOutside,true);
   document.removeEventListener('keydown',onEscape,true);
@@ -18,6 +19,7 @@ window.OSCEContext = (()=>{
   window.removeEventListener('resize',onViewport);
   window.visualViewport?.removeEventListener?.('resize',onViewport);
   anchor?.setAttribute?.('aria-expanded','false');
+  anchor?.removeAttribute?.('aria-controls');
   if(panel.isConnected)panel.remove();
   if(restoreFocus&&anchor?.isConnected)anchor.focus({preventScroll:true});
  }
@@ -77,6 +79,11 @@ window.OSCEContext = (()=>{
   const onEscape=e=>{if(e.key==='Escape'){e.preventDefault();close(true);}};
   const onViewport=()=>position();
   current={panel,anchor,onOutside,onEscape,onViewport};
+  const host=anchor.closest?.('.osce-app-shell')?.parentElement;
+  if(host&&typeof MutationObserver!=='undefined'){
+   const observer=new MutationObserver(()=>{if(!anchor.isConnected)close(false);});
+   observer.observe(host,{childList:true});current.observer=observer;
+  }
   dismiss.addEventListener('click',()=>close(true));
   document.body.append(panel);
   document.addEventListener('pointerdown',onOutside,true);
