@@ -302,7 +302,7 @@ function gamePanel(){
   +'<p class="mp-small">Um dia mínimo com uma recuperação ativa já conta. Descansos e ausências não geram penalidades ou perdas de XP.</p></section>';
 }
 function editor(){
- const d=draft||createDraft(),subjects=[...new Set(catalog().map(t=>t.subject))],topics=catalog().filter(t=>subjectFilter==='all'||t.subject===subjectFilter);
+ const d=draft||createDraft(),subjects=[...new Set(catalog().map(t=>t.subject))],topics=catalog().filter(t=>(subjectFilter==='all'||t.subject===subjectFilter)&&(!searchText||(t.title+' '+t.subject).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLocaleLowerCase('pt-BR').includes(searchText)));
  return '<section class="mp-panel mp-editor"><div class="mp-panel-head"><div><p class="mp-eyebrow">'+(d.id?'EDITAR':'NOVA')+' AVALIAÇÃO</p><h2>'+ (d.id?'Ajustar':'Criar')+' plano de revisão</h2><p>Selecione os temas e informe sua data. Você pode alterar depois sem perder registros.</p></div><button class="btn ghost" onclick="MasterPlanner.closeEditor()">Fechar</button></div>'
   +'<div class="mp-form-grid"><label>Nome da avaliação<input type="text" maxlength="100" placeholder="Ex.: OSCE de Clínica Médica" value="'+esc(d.title)+'" oninput="MasterPlanner.changeDraft(\'title\',this.value)"></label>'
   +'<label>Data da avaliação<input type="date" min="'+localDate()+'" value="'+esc(d.examDate)+'" onchange="MasterPlanner.changeDraft(\'examDate\',this.value)"></label>'
