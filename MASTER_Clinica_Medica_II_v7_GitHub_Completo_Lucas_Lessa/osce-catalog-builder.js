@@ -51,18 +51,53 @@ const PALETTE={
   cardio:['#ad563a','#fce6db'],gastro:['#477899','#e3eef7'],neuro:['#596d9d','#e7e9f5'],
   has:['#68844e','#edf3dc'],pneumo:['#548fa0','#e0f2f4'],infeccao:['#36806c','#e0f4ea'],onco:['#846a98','#efeaf5']
 };
+// Textos SVG em <tspan> de altura calculada: sem recorte fixo, foreignObject ou truncamento.
+window.OSCE_DIAGRAM_LAYOUT=window.OSCE_DIAGRAM_LAYOUT||{};
 function svgFor(s){
  const [fg,bg]=PALETTE[s.a]||PALETTE.neuro;
- const clean=x=>String(x||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
- const title=clean(s.t.length>34?s.t.slice(0,34)+'…':s.t);
- const pieces=[s.cl,s.dx,s.plan].map(x=>clean(String(x||'').split(/[.;]/)[0].slice(0,49)));
- const xml='<svg xmlns="http://www.w3.org/2000/svg" width="860" height="340" viewBox="0 0 860 340">'
-  +'<rect width="860" height="340" rx="20" fill="'+bg+'"/>'
-  +'<rect x="20" y="20" width="820" height="300" rx="16" fill="white" opacity=".92"/>'
-  +'<text x="46" y="59" fill="'+fg+'" font-family="Arial,sans-serif" font-weight="700" font-size="25">'+title+'</text>'
-  +'<text x="46" y="82" fill="#546775" font-size="13" font-family="Arial,sans-serif">ESQUEMA DE RACIOCÍNIO · NÃO É EXAME / IMAGEM ORIGINAL</text>'
-  +['SINAIS','CONFIRMAÇÃO','PLANO'].map((x,i)=>'<rect x="'+(45+i*268)+'" y="113" width="241" height="144" rx="12" fill="'+(i%2?bg:'#f5f8fa')+'" stroke="'+fg+'" stroke-opacity=".35"/><text x="'+(61+i*268)+'" y="149" fill="'+fg+'" font-size="15" font-weight="700" font-family="Arial,sans-serif">'+x+'</text><foreignObject x="'+(61+i*268)+'" y="162" width="204" height="75"><div xmlns="http://www.w3.org/1999/xhtml" style="font:17px/1.35 Arial;color:#253a45;overflow-wrap:break-word">'+pieces[i]+'</div></foreignObject>').join('')
-  +'<text x="46" y="293" fill="#62727c" font-size="14" font-family="Arial,sans-serif">Fluxo didático original do Master. Confirme as decisões no texto e nas fontes.</text></svg>';
+ const clean=x=>String(x||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+ const words=(text,limit)=>{
+  const line=[],output=[];
+  function push(){if(line.length){output.push(line.join(' '));line.length=0;}}
+  for(const raw of String(text||'').trim().split(/\s+/).filter(Boolean)){
+   // Evitar conteúdo que ultrapasse a largura por palavras muito longas.
+   let chunks=[];for(let i=0;i<raw.length;i+=limit)chunks.push(raw.slice(i,i+limit));
+   for(const part of chunks){
+    const next=[...line,part].join(' ');
+    if(next.length>limit)push();
+    line.push(part);
+   }
+  }
+  push();return output.length?output:['—'];
+ };
+ const sentence=value=>String(value||'').split(/[.;](?:\s|$)/)[0].trim();
+ const titleLines=words(s.t,57);
+ const pieces=[sentence(s.cl),sentence(s.dx),sentence(s.plan)];
+ const textLines=pieces.map(x=>words(x,25));
+ const titleEnd=44+(titleLines.length-1)*31;
+ const subtitleY=titleEnd+24;
+ const boxY=subtitleY+32;
+ const maxLines=Math.max(...textLines.map(x=>x.length));
+ const boxH=Math.max(146,75+maxLines*24);
+ const footY=boxY+boxH+37;
+ const height=footY+38;
+ const tspans=(lines,x,y,dy)=>lines.map((line,i)=>'<tspan x="'+x+'" y="'+(y+i*dy)+'">'+clean(line)+'</tspan>').join('');
+ const labels=['SINAIS','CONFIRMAÇÃO','PLANO'];
+ const xml='<svg xmlns="http://www.w3.org/2000/svg" width="860" height="'+height+'" viewBox="0 0 860 '+height+'" role="img" aria-label="Esquema didático de '+clean(s.t)+'">'
+ +'<rect width="860" height="'+height+'" rx="20" fill="'+bg+'"/>'
+ +'<rect x="20" y="20" width="820" height="'+(height-40)+'" rx="16" fill="white" opacity=".94"/>'
+ +'<text fill="'+fg+'" font-family="Arial,sans-serif" font-size="25" font-weight="700">'+tspans(titleLines,46,44,31)+'</text>'
+ +'<text x="46" y="'+subtitleY+'" fill="#546775" font-size="13" font-family="Arial,sans-serif">ESQUEMA DE RACIOCÍNIO · NÃO É EXAME / IMAGEM ORIGINAL</text>'
+ +labels.map((label,i)=>{
+   const x=45+i*268;
+   return '<rect x="'+x+'" y="'+boxY+'" width="241" height="'+boxH+'" rx="12" fill="'+(i%2?bg:'#f5f8fa')+'" stroke="'+fg+'" stroke-opacity=".35"/>'
+    +'<text x="'+(x+16)+'" y="'+(boxY+32)+'" fill="'+fg+'" font-size="15" font-weight="700" font-family="Arial,sans-serif">'+label+'</text>'
+    +'<text font-size="16" font-family="Arial,sans-serif" fill="#253a45">'+tspans(textLines[i],x+16,boxY+63,24)+'</text>';
+  }).join('')
+ +'<text x="46" y="'+footY+'" fill="#62727c" font-size="14" font-family="Arial,sans-serif">Fluxo didático original do Master. Confirme as decisões no texto e nas fontes.</text>'
+ +'</svg>';
+ // O marcador aponta para o canto da caixa, sem encobrir o enunciado.
+ window.OSCE_DIAGRAM_LAYOUT[String(s.n)]={markerY:Math.round((boxY+34)/height*1000)/10,height,lines:textLines.map(a=>a.length)};
  return 'data:image/svg+xml;charset=utf-8,'+encodeURIComponent(xml);
 }
 function question(id,competence,prompt,answer,checks,hint,memory){
