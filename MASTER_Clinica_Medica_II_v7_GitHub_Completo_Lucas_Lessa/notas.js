@@ -69,7 +69,7 @@
       return {chave,rota,raiz:shell,titulo,origem:'estudo',
         materia:'OSCE · Clínica Médica',localizacao:'#osce',
         indice:valido?numero:null,tipo:valido?'osce-estacao':'osce-pagina',
-        etapa:Number(shell.dataset.noteStep)||0};
+        etapa:Number(shell.dataset.noteStep)||0,questao:shell.dataset.noteQuestion||null};
     }
     // O Super Foco é dinâmico, mas cada desafio possui um título identificável.
     // A mesma pergunta mantém sua chave entre tentativa e feedback.
@@ -329,7 +329,7 @@
     const marca = HIGapi.marcaAdd(aula, {
       paginaEstudo:pagina?.origem==='estudo',
       pagina:pagina?.titulo||'',materia:pagina?.materia||'',
-      localizacao:pagina?.localizacao||'',indice:pagina?.indice,tipoPagina:pagina?.tipo||'',etapa:pagina?.etapa??null,
+      localizacao:pagina?.localizacao||'',indice:pagina?.indice,tipoPagina:pagina?.tipo||'',etapa:pagina?.etapa??null,questao:pagina?.questao||null,
       id: `m${Date.now().toString(36)}${Math.random().toString(36).slice(2, 6)}`,
       texto: emEdicao.texto, antes, depois, ocorrencia, cor, comentario, rota: rotaAtual(), titulo: normal(document.querySelector('#main-content h1')?.textContent || ''), criadoEm: new Date().toISOString()
     });
