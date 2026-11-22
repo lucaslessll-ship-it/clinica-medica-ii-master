@@ -86,7 +86,7 @@ window.OSCEPilot=(()=>{
   const caretStart=field?.selectionStart??catalogSearch.length,caretEnd=field?.selectionEnd??caretStart;
   if(catalogPaint)window.cancelAnimationFrame?.(catalogPaint);
   catalogPaint=window.requestAnimationFrame(()=>{
-   catalogPaint=0;renderAgain();
+   catalogPaint=0;if(screen!=='home')return;renderAgain();
    const current=document.getElementById('osce-catalog-search');
    if(current){current.focus({preventScroll:true});try{current.setSelectionRange(caretStart,caretEnd)}catch{}}
   });
@@ -334,7 +334,7 @@ window.OSCEPilot=(()=>{
   if(!shown){
    out+='<p class="osce-note">Qual é sua confiança ANTES de conferir?</p><div class="osce-confidence" role="group" aria-label="Confiança antes do gabarito">'+[[1,'Baixa'],[2,'Média'],[3,'Alta']].map(([i,txt])=>'<button type="button" aria-pressed="'+(confidence===i)+'" onclick="OSCEPilot.conf('+i+')">'+txt+'</button>').join('')+'</div>';
    if(hints)out+='<div class="osce-hint"><b>Dica '+hints+'/3:</b> '+esc(q.hints[hints-1])+'</div>';
-   out+='<div class="osce-actions"><button class="btn primary" onclick="OSCEPilot.reveal()">Conferir resposta <span class="osce-key-hint" aria-hidden="true">⌘/Ctrl ↵</span></button><button class="btn" onclick="OSCEPilot.hint()">Preciso de dica'+(hints?' ('+hints+'/3)':'')+'</button><button class="btn ghost" onclick="OSCEPilot.home()">Salvar e sair</button></div>';
+   out+='<div class="osce-actions"><button class="btn primary" onclick="OSCEPilot.reveal()">Conferir resposta <span class="osce-key-hint" aria-hidden="true">⌘/Ctrl ↵</span></button><button class="btn" id="osce-hint-action" onclick="OSCEPilot.hint()">Preciso de dica'+(hints?' ('+hints+'/3)':'')+'</button><button class="btn ghost" onclick="OSCEPilot.home()">Salvar e sair</button></div>';
   }else{
    out+='<div class="osce-feedback"><p class="eyebrow">RESPOSTA DIDÁTICA · CORREÇÃO POR CRITÉRIOS</p><h3>Resposta-modelo Master</h3><p>'+mark(st,q.answer)+'</p><div class="osce-criteria"><h3>O que você realmente incluiu?</h3>'
     +q.criteria.map((txt,i)=>'<label><input type="checkbox" '+(checked.includes(i)?'checked':'')+' onchange="OSCEPilot.criterion('+i+',this.checked)"><span>'+esc(txt)+'</span></label>').join('')+'</div>'
