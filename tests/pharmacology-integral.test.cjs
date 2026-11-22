@@ -79,3 +79,13 @@ test('manual completo renderiza 18 fichas por vez para preservar fluidez',()=>{
  assert.equal((more.match(/class="rx-card pharm-card/g)||[]).length,36);
  assert.match(more,/Exibindo 36 de 279 fichas/);
 });
+
+test('nenhum medicamento mantém placeholder antigo como mecanismo; explicações individuais têm prioridade',()=>{
+ const {pharm}=fixture();
+ for(const [id,p] of Object.entries(pharm.entries)){
+  assert.doesNotMatch(p.action,/Conferir mecanismo e indicação na aula|esta ficha identifica a apresentação/i,id);
+ }
+ assert.match(pharm.entries.finerenone.action,/receptor mineralocorticoide/);
+ assert.match(pharm.entries.ceftriaxone.action,/PBPs/);
+ assert.match(pharm.entries.dapagliflozin.action,/SGLT2/);
+});
