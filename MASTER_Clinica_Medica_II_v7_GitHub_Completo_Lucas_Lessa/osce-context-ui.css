@@ -1,0 +1,50 @@
+/* Clínica Master · OSCE contextual.
+   Componentes nativos, sem bibliotecas externas, com foco em legibilidade médica.
+   Mantém a paleta existente e aplica materiais somente à ajuda, não aos enunciados. */
+.osce-context-popover{
+ position:fixed;z-index:10060;
+ box-sizing:border-box;
+ max-width:calc(100vw - 24px);
+ max-height:min(420px,70dvh);
+ overflow:auto;overscroll-behavior:contain;
+ padding:17px 18px 18px;
+ border:1px solid color-mix(in srgb,#6b8476 28%,var(--border,#d1dbd2));
+ border-radius:19px;
+ background:color-mix(in srgb,var(--card,#fffdf9) 97%,transparent);
+ color:var(--text,#18392d);
+ box-shadow:0 10px 24px rgb(9 35 22 / .12),0 27px 74px rgb(9 35 22 / .09);
+ -webkit-backdrop-filter:blur(18px) saturate(115%);
+ backdrop-filter:blur(18px) saturate(115%);
+ font:400 .93rem/1.62 -apple-system,BlinkMacSystemFont,"SF Pro Text",system-ui,sans-serif;
+ overflow-wrap:anywhere;
+}
+.osce-context-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin:0 0 10px}
+.osce-context-heading strong{font-size:1rem;font-weight:750;letter-spacing:-.014em;line-height:1.4;min-width:0;margin-top:6px}
+.osce-context-close{display:flex;align-items:center;justify-content:center;flex:0 0 44px;width:44px;height:44px;border-radius:13px;border:1px solid color-mix(in srgb,#5a826c 20%,var(--border,#d4ded6));color:inherit;background:color-mix(in srgb,#6b8e77 7%,var(--card,#fff));font-size:26px;font-weight:400;cursor:pointer;line-height:1}
+.osce-context-close:focus-visible,.osce-context-popover a:focus-visible{outline:3px solid #358665;outline-offset:3px}
+.osce-context-popover>p{font-size:.88rem;line-height:1.67;margin:0 0 14px;white-space:normal}
+.osce-context-source{font-size:.83rem;font-weight:650;line-height:1.5;color:var(--green,#226749);text-underline-offset:3px;text-decoration-thickness:1px;display:inline-flex;min-height:38px;align-items:center}
+.osce-app-shell .osce-term-inline{min-height:32px;min-width:40px;line-height:1.35;border-radius:6px;text-underline-offset:3px}
+.osce-app-shell .osce-term-inline[aria-expanded="true"],
+.osce-app-shell .osce-term[aria-expanded="true"]{background:color-mix(in srgb,#3e9970 15%,var(--card,#fff));box-shadow:0 0 0 2px color-mix(in srgb,#438866 28%,transparent)}
+.osce-app-shell .osce-term-inline:focus-visible,
+.osce-app-shell .osce-term:focus-visible{outline:3px solid #3e8365;outline-offset:3px}
+body[data-theme="dark"] .osce-context-popover{
+ background:color-mix(in srgb,var(--card,#1e2924) 98%,transparent);
+ border-color:color-mix(in srgb,#d2eee0 24%,transparent);
+ box-shadow:0 14px 34px rgb(0 0 0 / .4);
+ color:var(--text,#f3f7f3);
+}
+body[data-theme="dark"] .osce-context-source{color:#a5dbc1}
+@media(max-width:620px){
+ .osce-context-popover.is-sheet{
+  position:fixed;z-index:10060;
+  width:auto!important;max-width:none;max-height:min(52dvh,430px);
+  border-radius:22px 22px 17px 17px;
+  padding:17px 18px max(22px,env(safe-area-inset-bottom,0px));
+  box-shadow:0 0 0 100vmax rgb(0 0 0 / .075),0 18px 50px rgb(0 0 0 / .19);
+ }
+ .osce-context-popover.is-sheet::before{content:"";display:block;width:40px;height:4px;margin:0 auto 15px;border-radius:4px;background:color-mix(in srgb,currentColor 24%,transparent)}
+}
+@media(prefers-reduced-motion:reduce){.osce-context-popover,.osce-context-popover *{transition:none!important;animation:none!important}}
+body.reduce-motion .osce-context-popover,body.reduce-motion .osce-context-popover *{transition:none!important;animation:none!important}
