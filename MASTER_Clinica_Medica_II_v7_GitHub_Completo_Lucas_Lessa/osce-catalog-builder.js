@@ -111,7 +111,7 @@ function question(id,competence,prompt,answer,checks,hint,memory){
 }
 function squeeze(s,n){return String(s||'').slice(0,n)}
 function make(s){
- const refs=GUIDE[s.a]||GUIDE.neuro;
+ const refs=s.sources||GUIDE[s.a]||GUIDE.neuro;
  const cl=s.cl||'achados principais', dx=s.dx||'investigação dirigida', pl=s.plan||'tratamento individualizado';
  const risk=s.risk||'reavaliar risco e complicações', differ=s.diff||'comparar com outras causas da síndrome';
  const p=s.p||'media';
