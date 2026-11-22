@@ -330,6 +330,37 @@ function page(){
  return out;
 }
 function toggleArchived(){showArchived=!showArchived;renderPage();}
+function mergeProgress(base,local,remote){
+ // Conflictos multiplataforma: preservar planos e registros históricos de dias distintos,
+ // sem transformar dados de questões em pontuações do planejador.
+ const a=local&&Array.isArray(local.plans)?local:empty();
+ const b=remote&&Array.isArray(remote.plans)?remote:empty();
+ const plans=new Map();
+ for(const p of [...b.plans,...a.plans]){
+  if(!p||typeof p.id!=='string')continue;
+  const old=plans.get(p.id);
+  if(!old){plans.set(p.id,{...p,progress:{...(p.progress||{})}});continue;}
+  const latest=new Date(p.updatedAt||p.createdAt||0)>new Date(old.updatedAt||old.createdAt||0)?p:old;
+  const previous=latest===p?old:p,progress={};
+  for(const key of new Set([...Object.keys(old.progress||{}),...Object.keys(p.progress||{})])){
+   const aa=old.progress?.[key]?.history||[],bb=p.progress?.[key]?.history||[];
+   const history=new Map();
+   for(const event of [...aa,...bb]){
+    if(!event?.day||!dateOf(event.day))continue;
+    const prev=history.get(event.day);
+    if(!prev||new Date(event.at||0)>=new Date(prev.at||0))history.set(event.day,event);
+   }
+   progress[key]={history:[...history.values()].sort((x,y)=>x.day.localeCompare(y.day)).slice(-60)};
+  }
+  plans.set(p.id,{...previous,...latest,progress});
+ }
+ const newest=new Date(a.updatedAt||0)>=new Date(b.updatedAt||0)?a:b;
+ const settings={...empty().settings,...(b.settings||{}),...(a.settings||{})};
+ if(newest===b)Object.assign(settings,b.settings||{});
+ const all=[...plans.values()];
+ const selected=all.some(p=>p.id===newest.active&&!p.archived)?newest.active:all.find(p=>!p.archived)?.id||null;
+ return {version:VERSION,plans:all,active:selected,settings,updatedAt:new Date().toISOString()};
+}
 function resetAccount(){owner=window.MASTER_AUTH?.user?.()?.id||'guest';state=load();editing=false;draft=null;heatDay='';showArchived=false;}
 window.addEventListener('master-auth-ready',()=>{resetAccount();renderPage();});
 window.addEventListener('master-auth-ended',()=>{state=empty();editing=false;draft=null;heatDay='';owner='guest';});
@@ -337,5 +368,5 @@ window.addEventListener('master-remote-merge',e=>{if(e.detail?.key===KEY){state=
 window.addEventListener('storage',e=>{if(e.key===KEY){state=load();renderPage();}});
 return {page,homeCard,catalog,schedule,dailyTasks,stats,heatmap,openEditor,closeEditor,changeDraft,toggleTheme,toggleDay,
  setSubject,searchThemes,selectVisible,savePlan,activate,archive,setWeeklyGoal,setMetric,setSessionMinutes,
- register,inspectDay,openTheme,toggleArchived,load,activePlan,externalEvidence};
+ register,inspectDay,openTheme,toggleArchived,load,activePlan,externalEvidence,mergeProgress};
 })();
