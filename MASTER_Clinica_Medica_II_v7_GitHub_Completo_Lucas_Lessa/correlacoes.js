@@ -94,7 +94,7 @@ window.Correlacoes=(()=>{
   for(const node of nodes(root)){
    if(place.lesson>=MAX_LESSON)return;
    const text=node.textContent;
-   const found=hits(text).filter(hit=>!place.used.has(hit.index)&&!here(owner(data[hit.index].d)));
+   const found=hits(text).filter(hit=>{const target=owner(data[hit.index].d);return !place.used.has(hit.index)&&!here(target)&&!(target?.kind==='course'&&target.course==='pocus');});
    if(!found.length)continue;
    const section=node.parentElement.closest('section,article')||root;
    const fragment=document.createDocumentFragment();let offset=0,applied=false;
@@ -121,7 +121,7 @@ window.Correlacoes=(()=>{
   for(const node of nodes(root)){
    for(const hit of hits(node.textContent)){
     const entry=data[hit.index],target=owner(entry.d);
-    if(!target||here(target)||found.has(hit.index))continue;
+    if(!target||here(target)||found.has(hit.index)||(target.kind==='course'&&target.course==='pocus'))continue;
     found.set(hit.index,entry);
    }
   }
@@ -153,7 +153,11 @@ window.Correlacoes=(()=>{
  }
  function refresh(root){
   if(!ready||!data.length||root!==(window.getMain?getMain():document.getElementById('main-content'))||!root.isConnected)return;
-  if(window.ui&&['dashboard','today','notes','sources','banca','prescriptions'].includes(ui.route)){root.querySelector('.correl-guide')?.remove();return;}
+  // O OSCE possui glossário e fontes próprios. Um painel global de correlações
+  // produz links POCUS irrelevantes ao fim de cada caso e sobrecarrega a tela.
+  if((window.ui&&['dashboard','today','notes','sources','banca','prescriptions','osce','pocus'].includes(ui.route))||location.hash.split('/')[0]==='#osce'){
+   root.querySelector('.correl-guide')?.remove();return;
+  }
   if(enabled())scan(root);
   guide(root,collect(root));
  }
