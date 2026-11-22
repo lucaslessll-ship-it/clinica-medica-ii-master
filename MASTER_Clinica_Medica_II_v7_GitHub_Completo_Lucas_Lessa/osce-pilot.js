@@ -216,12 +216,13 @@ window.OSCEPilot=(()=>{
   const data=window.OSCE_VISUAL_NOTES?.[String(st.number)]?.[index];
   if(data)return data;
   if(!img.src?.startsWith('data:image/svg+xml'))return null;
-  // Os 79 SVG autorais criados pelo catálogo têm três caixas fixas: Sinais / Confirmação / Plano.
+  // A caixa SVG agora tem altura adaptativa e metadados de posição; pinos não cobrem o texto.
   const by=(ids)=>st.questions.find(q=>ids.includes(q.id))?.answer||'Relacione o conceito do quadro ao caso clínico.';
-  return {intro:'Esquema AUTORAL, não fotografia ou exame do paciente. Os três círculos assinalam as três caixas do próprio resumo visual.',notes:[
-   {name:'Sinais e síndrome',meaning:by(['sindrome','diagnostico']),limitation:'Este cartão é um resumo de sinais, não um achado ultrassonográfico ou eletrocardiográfico real.',x:19,y:55},
-   {name:'Exame e confirmação',meaning:by(['investigacao','exames','diagnostico']),limitation:'Confirmação diagnóstica depende de história, exame físico e investigação pertinente.',x:50,y:55},
-   {name:'Conduta e segurança',meaning:by(['conduta','tratamento','plano']),limitation:'Condutas dependem da gravidade e não devem ser copiadas de uma figura sem contexto.',x:81,y:55}
+  const markerY=window.OSCE_DIAGRAM_LAYOUT?.[String(st.number)]?.markerY??32;
+  return {intro:'Esquema AUTORAL, não fotografia ou exame do paciente. Os marcadores indicam o canto superior de cada caixa, sem cobrir os textos.',notes:[
+   {name:'Sinais e síndrome',meaning:by(['sindrome','diagnostico']),limitation:'Este cartão é um resumo de sinais, não um achado ultrassonográfico ou eletrocardiográfico real.',x:31,y:markerY},
+   {name:'Exame e confirmação',meaning:by(['investigacao','exames','diagnostico']),limitation:'Confirmação diagnóstica depende de história, exame físico e investigação pertinente.',x:62,y:markerY},
+   {name:'Conduta e segurança',meaning:by(['conduta','tratamento','plano']),limitation:'Condutas dependem da gravidade e não devem ser copiadas de uma figura sem contexto.',x:93,y:markerY}
   ]};
  }
  function visualAnnotated(img,st,index,showNotes,hidden){
