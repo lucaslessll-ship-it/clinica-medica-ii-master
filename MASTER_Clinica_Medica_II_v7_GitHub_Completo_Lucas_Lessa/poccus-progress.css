@@ -1,0 +1,9 @@
+/* POCCUS: progresso por módulo, separado de domínio e marcação manual. */
+.poccus-topic-progress{display:grid;gap:5px;margin:12px 0 14px;width:100%;min-width:0;text-align:left}
+.poccus-topic-progress-head{display:flex;justify-content:space-between;align-items:center;gap:10px;color:var(--text-muted,#637269);font-size:.76rem;line-height:1.35}
+.poccus-topic-progress-head strong{font-variant-numeric:tabular-nums;color:var(--text,#273a2e)}
+.poccus-topic-progress-track{height:6px;border-radius:99px;background:color-mix(in srgb,var(--text,#263b2d) 13%,transparent);overflow:hidden;width:100%}
+.poccus-topic-progress-track>span{display:block;height:100%;border-radius:inherit;background:#438767;transition:width .2s ease}
+.poccus-topic-progress small{font-size:.72rem;color:var(--text-muted,#637269);font-style:normal}
+.pocus-card .poccus-topic-progress{margin:8px 0 0}
+@media(prefers-reduced-motion:reduce){.poccus-topic-progress-track>span{transition:none}}
