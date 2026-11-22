@@ -750,9 +750,10 @@ window.OSCEPilot=(()=>{
   }).join('')+'</div></section>';
  }
  function reviewPage(){
-  const weak=weakItems(),dues=dueItems();
+  const weak=weakItems(),dues=dueItems(),readDues=readingDueItems();
   return sectionTitle('Revisão <em>adaptativa.</em>')+'<button class="btn ghost" onclick="OSCEPilot.home()">← Voltar</button><p>Erros, respostas parciais e confiança excessiva voltam primeiro. Reavaliação por recuperação ativa, sem séries punitivas.</p>'
    +'<div class="osce-stats"><div><b>'+dues.length+'</b><span>vencidas</span></div><div><b>'+weak.length+'</b><span>lacunas insatisfatórias</span></div></div><div class="osce-actions"><button class="btn primary" onclick="OSCEPilot.reviewDue()">Retestar agora</button><button class="btn" onclick="OSCEPilot.showPrompt()">Gerar script para IA</button></div>'
+    +'<section class="osce-case osce-reading-review-list"><h2>Revisões por leitura</h2><p>Estudar a teoria também conta como revisão, sem criar nota ou tentativa de simulado. Para novas leituras, há sugestões em D+1, D+3, D+7 e D+21.</p><p><strong>'+readDues.length+' leitura(s) para revisar agora.</strong></p>'+(readDues.length?'<div class="osce-reading-due-grid">'+readDues.map(st=>'<button type="button" class="btn" onclick="OSCEPilot.preview('+st.number+')">'+esc(st.pocusOrder?'POCUS P'+st.pocusOrder:displayLabel(st))+' · '+esc(st.title)+' → Estudar novamente</button>').join('')+'</div>':'<p class="osce-note">Nenhuma revisão por leitura vencida.</p>')+'</section>'
     +competencyRadar()+'<section class="osce-case"><h2>Agendamento explicável</h2><p>Erro importante/alta confiança errada: D+1 · parcial: D+3 · boa resposta: D+7 · domínio repetido, sem dicas: D+21. O escore é produzido por marcação manual dos critérios da resposta.</p></section>'
    +'<div class="osce-review-list">'+(weak.length?weak.map(x=>'<button onclick="OSCEPilot.start(\'rapida\',[ \''+esc(x.q.id)+'\' ],'+x.st.number+')"><b>'+displayLabel(x.st)+' — '+esc(x.q.competence)+' · '+x.a.score+'%</b><span>'+esc(x.q.prompt)+'</span><small>Reteste: '+formatDate(x.a.due)+'</small></button>').join(''):'<div class="card pad"><p>Nenhum erro insatisfatório registrado. Comece por uma das estações disponíveis.</p></div>')+'</div>';
  }
