@@ -1,0 +1,177 @@
+/* Clínica Master — Layout Guard 2026-11-22
+   Padrão único de dimensionamento e áreas seguras para tablet, iPhone, desktop e navegador interno.
+   Mantém a identidade editorial, evita alvos sobrepostos e não mascara overflow global. */
+:root{
+ --master-header-h:74px;
+ --master-bottom-nav-h:69px;
+ --master-layout-gap:clamp(6px,.85vw,12px);
+ --master-action-size:44px;
+ --master-safe-right:env(safe-area-inset-right,0px);
+ --master-safe-bottom:env(safe-area-inset-bottom,0px);
+}
+:where(.app-shell,.app-body,.topbar,.topbar-left,.topbar-right,#main-content){min-width:0;box-sizing:border-box}
+html{scroll-padding-top:calc(var(--master-header-h) + 12px)}
+#main-content :is(.mp-editor,.osce-step,.mp-panel){scroll-margin-top:calc(var(--master-header-h) + 12px)}
+.app-shell,.app-body{max-width:100%;width:auto}
+.app-body{flex:1 1 auto}
+#main-content{width:100%;min-width:0;max-width:1560px;margin-inline:auto}
+#main-content :is(.mp-root,.osce-app-shell,.mp-panel,.mp-editor,.mp-topic-tools,.mp-topic-selector,.mp-topic-search,.mp-topic-list,.mp-form-grid){min-width:0;max-width:100%;box-sizing:border-box}
+#main-content :is(.mp-editor,.mp-panel) :is(input,select,textarea,button){box-sizing:border-box}
+/* Topbar deve ser uma linha de controles, não uma camada que passa sobre outras. */
+.topbar{
+ display:flex;align-items:center;justify-content:space-between;
+ gap:var(--master-layout-gap);
+ padding-inline:clamp(8px,1.5vw,24px);
+ min-height:var(--master-header-h);
+ height:var(--master-header-h);
+ min-width:0;
+}
+.topbar .topbar-left{flex:0 0 auto;min-width:0;display:flex;align-items:center}
+.topbar .topbar-right{
+ flex:1 1 auto;min-width:0;max-width:100%;
+ display:flex;align-items:center;justify-content:flex-end;
+ gap:var(--master-layout-gap);
+ flex-wrap:nowrap;
+}
+.topbar .topbar-right>*,.topbar .topbar-left>*{min-width:0}
+.topbar .search-trigger{
+ flex:1 1 180px;
+ width:auto;min-width:0;max-width:510px;
+ overflow:hidden;
+}
+.topbar .search-trigger>span:nth-child(2){
+ min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+.topbar :is(.icon-button,.focus-trigger,.settings-trigger,.menu-button,.desktop-sidebar-button),
+.topbar .ai-tutor-launch,.topbar .ai-tutor-restore,
+.topbar #caderno-atalho-topo,.topbar .avatar{
+ flex-shrink:0;
+}
+.topbar .account-control{flex:0 0 auto;min-width:0}
+.topbar .focus-top{flex:0 0 auto;min-width:84px;white-space:nowrap}
+.topbar #caderno-atalho-topo{flex:0 0 auto}
+/* Posições consistentes dos controles flutuantes: nunca sobre o cabeçalho. */
+.section-rail{top:calc(var(--master-header-h) + 12px);bottom:calc(var(--master-bottom-nav-h) + 12px);right:max(5px,var(--master-safe-right))}
+@media(min-width:701px) and (pointer:coarse){
+ .section-rail-toggle{
+  top:12px;bottom:auto;
+  width:40px;height:40px;
+  z-index:1;
+ }
+ .section-rail-menu{
+  top:calc(var(--master-header-h) + 20px);
+  max-height:min(65dvh,520px);
+ }
+}
+/* No planejador aberto, a régua flutuante não cobre os campos. Os títulos seguem navegáveis pelo scroll nativo. */
+body:has(.mp-root .mp-editor) .section-rail{display:none!important}
+/* Master Planner: inputs empilhados precisam altura explícita; flex-basis vertical causava campo de ~220px. */
+.mp-editor{container-type:inline-size;container-name:master-plan-editor}
+.mp-editor .mp-form-grid{min-width:0}
+.mp-editor .mp-form-grid>label{min-width:0}
+.mp-editor .mp-form-grid :is(input,select),.mp-editor .mp-topic-search :is(input,select){
+ display:block;
+ width:100%;min-width:0;
+ max-width:100%;height:46px;min-height:46px;max-height:46px;
+ padding:9px 12px;
+ line-height:normal;
+ flex:none;
+}
+.mp-editor .mp-topic-search{
+ display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr);
+ gap:10px;width:100%;min-width:0;
+ align-items:stretch;
+}
+.mp-editor .mp-topic-search :is(input,select){align-self:stretch;flex:none}
+.mp-editor .mp-topic-selector{min-width:0;overflow-wrap:anywhere}
+.mp-editor .mp-topic-tools{min-width:0}
+.mp-editor .mp-topic-list{
+ width:100%;min-width:0;
+ max-height:min(370px,52dvh);
+ overscroll-behavior:contain;
+}
+.mp-editor .mp-topic-list label{min-width:0;overflow-wrap:anywhere}
+.mp-editor .mp-weekdays{min-width:0;max-width:100%}
+.mp-editor .mp-editor-footer{min-width:0}
+@container master-plan-editor (max-width:720px){
+ .mp-editor .mp-topic-search{grid-template-columns:minmax(0,1fr)}
+ .mp-form-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .mp-form-grid>label:first-child{grid-column:1/-1}
+ .mp-topic-search{grid-template-columns:minmax(0,1fr)}
+ .mp-topic-list{grid-template-columns:minmax(0,1fr)}
+ .mp-weekdays{display:flex;flex-wrap:wrap;gap:7px}
+}
+@container master-plan-editor (max-width:440px){
+ .mp-form-grid{grid-template-columns:minmax(0,1fr)}
+ .mp-form-grid>label:first-child{grid-column:auto}
+ .mp-weekdays label{flex:1 1 54px;min-width:0}
+ .mp-weekdays span{min-width:0}
+ .mp-editor-footer .btn{width:100%;min-width:0}
+}
+/* O viewport físico não mede a largura útil do iPad em Split View: restringir também por tela. */
+@media(max-width:800px){
+ :root{--master-header-h:65px}
+ #main-content{padding-bottom:calc(var(--master-bottom-nav-h) + var(--master-safe-bottom) + 38px)!important}
+ #main-content :is(.mp-editor-footer .btn,.mp-topic-search input,.mp-topic-search select,.osce-step textarea){scroll-margin-bottom:calc(var(--master-bottom-nav-h) + var(--master-safe-bottom) + 20px)}
+ .mobile-tabbar{
+  box-sizing:border-box;
+  position:fixed;inset-inline:0;bottom:0;
+  width:100%;min-width:0;
+  height:calc(var(--master-bottom-nav-h) + var(--master-safe-bottom));
+  padding:0 max(4px,env(safe-area-inset-right,0px)) var(--master-safe-bottom) max(4px,env(safe-area-inset-left,0px));
+  display:flex;align-items:stretch;justify-content:space-around;
+  gap:2px;
+  z-index:55;
+ }
+ .mobile-tabbar button{
+  flex:1 1 0;min-width:0;max-width:100%;
+  height:var(--master-bottom-nav-h);min-height:0;
+  padding:6px 2px;
+  line-height:1.25;overflow-wrap:normal;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
+ }
+ .mobile-tabbar button span{display:flex;align-items:center;justify-content:center;flex:none;height:28px;line-height:28px}
+ .mobile-tabbar button:focus-visible{outline-offset:-3px}
+ .topbar{padding-inline:clamp(7px,1.5vw,16px)}
+ .topbar .topbar-right{gap:clamp(3px,.6vw,8px)}
+ .topbar :is(.search-trigger,.icon-button,.focus-trigger,.settings-trigger,.menu-button,.desktop-sidebar-button){min-height:44px}
+ .section-rail{top:auto;bottom:calc(var(--master-bottom-nav-h) + var(--master-safe-bottom) + 112px);right:max(8px,var(--master-safe-right));height:44px;width:44px}
+ .section-rail .section-rail-toggle{position:static;min-width:44px;min-height:44px;top:auto}
+ .section-rail .section-rail-menu{top:auto;bottom:calc(var(--master-bottom-nav-h) + var(--master-safe-bottom) + 150px);max-height:50dvh}
+}
+@media(max-width:700px){
+ /* Oculta o índice lateral enquanto um formulário extenso está aberto, sem perder acesso aos temas. */
+ .mp-editor .mp-topic-search{grid-template-columns:minmax(0,1fr)}
+ .mp-editor .mp-topic-list{grid-template-columns:minmax(0,1fr)}
+ .topbar .focus-top{flex:0 0 auto}
+}
+/* Refluxo de pré-teste clínico: a 200% no iPad a coluna de perguntas deve quebrar texto, não recortá-lo. */
+#main-content .deep-pretest li{min-width:0;max-width:100%;grid-template-columns:auto minmax(0,1fr) auto}
+#main-content .deep-pretest .deep-pre-q{
+ display:block;min-width:0;max-width:100%;
+ overflow-wrap:anywhere;word-break:normal;white-space:normal;
+}
+@media(max-width:900px), (pointer:coarse){
+ #main-content .deep-pretest li{grid-template-columns:auto minmax(0,1fr)}
+ #main-content .deep-pretest .deep-pre-btns{
+  grid-column:2;min-width:0;max-width:100%;flex-wrap:wrap;
+ }
+ #main-content .deep-pretest .deep-pre-btns button{min-height:44px;white-space:normal}
+}
+/* Aumento de texto e seleção do iPad: preservar geometria de inputs e não reduzir tamanho das fontes. */
+@media(max-width:480px){
+ .topbar{gap:4px}
+ .topbar .topbar-right{gap:3px}
+ .topbar .search-trigger{flex:0 0 44px}
+ .topbar .search-trigger>span:nth-child(2),.topbar .search-trigger kbd{display:none}
+ .mp-editor .mp-topic-search :is(input,select){font-size:16px}
+}
+@media(prefers-reduced-motion:reduce){
+ .topbar *, .mobile-tabbar *{transition:none!important}
+}
+body.reduce-motion .topbar *,body.reduce-motion .mobile-tabbar *{transition:none!important}
+@media print{
+ .section-rail,.mobile-tabbar{display:none!important}
+ .mp-editor{container-type:normal}
+ #main-content{padding-bottom:0!important}
+}
