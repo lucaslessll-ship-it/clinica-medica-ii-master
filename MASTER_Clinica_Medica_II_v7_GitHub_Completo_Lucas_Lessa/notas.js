@@ -195,8 +195,8 @@
       const acao=document.createElement('button');
       acao.type='button';acao.id='nota-atalho-pagina';
       acao.className='nota-atalho-pagina';
-      acao.innerHTML='<span aria-hidden="true">▤</span> Anotações desta página';
-      acao.title='Abrir notas, comentários e marcações deste conteúdo';
+      acao.innerHTML='<span aria-hidden="true">▤</span> '+(origem.rota==='osce'?'Marca-texto e caderno':'Anotações desta página');
+      acao.title='Selecione um trecho do texto para destacar ou comentar. Abra aqui suas anotações da página.';
       acao.addEventListener('click',abrirTodas);
       const nav=document.querySelector('#main-content .study-breadcrumb');
       if(nav)nav.after(acao);
@@ -705,5 +705,5 @@
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', iniciar, { once: true });
   else iniciar();
-  window.Notas = { aplicar: agendar, abrirCaixa, fecharCaixa, abrirTodas, voltarAoTrecho };
+  window.Notas = { aplicar: agendar, abrirCaixa, fecharCaixa, abrirTodas, voltarAoTrecho, contextoAtual:contextoPagina };
 })();
