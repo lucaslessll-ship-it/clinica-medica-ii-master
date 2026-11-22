@@ -381,3 +381,10 @@ body[data-theme="dark"] .osce-index-group[open] summary{background:color-mix(in 
 .osce-depth-subtopic p{margin:0;font-size:.88rem;line-height:1.68}
 .osce-study-depth{margin-top:16px}
 .osce-study-depth>.osce-note{margin:3px 0 11px}
+
+/* Uma única biblioteca opcional substitui a pilha de três accordions em cada etapa. */
+.osce-library-case{padding-top:12px;padding-bottom:12px}
+.osce-library-case>.osce-library{margin:0}
+.osce-library>summary{font-weight:750}
+.osce-library>.osce-deep-stack{padding:10px 13px 14px}
+.osce-library .osce-deep-stack{gap:8px}
