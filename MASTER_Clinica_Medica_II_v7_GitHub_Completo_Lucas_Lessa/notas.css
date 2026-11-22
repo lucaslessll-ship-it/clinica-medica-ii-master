@@ -389,3 +389,11 @@ body[data-theme="dark"] .caderno-icone-3d{color:#c6ede1;background:linear-gradie
 /* Destaques existentes também são controles de edição acessíveis ao teclado. */
 .nota-marca[role="button"]{cursor:pointer}
 .nota-marca[role="button"]:focus-visible{outline:2px solid var(--focus,#0b5f57);outline-offset:3px}
+
+/* Anotações em todas as estações OSCE / módulos práticos: descoberta e acessibilidade. */
+.osce-app-shell .nota-marca,.sf-page .nota-marca{box-decoration-break:clone;-webkit-box-decoration-break:clone}
+#main-content .nota-atalho-pagina{min-height:44px;white-space:normal;line-height:1.35}
+body:has(.osce-app-shell) #nota-atalho-pagina{border-color:color-mix(in srgb,#327b5d 32%,var(--line,#d5dfd9));font-weight:700}
+.nota-barra button{width:44px;height:44px;min-width:44px;min-height:44px}
+.nota-painel-controles button{width:44px;height:44px;min-width:44px;min-height:44px}
+@media(max-width:480px){.nota-barra{gap:2px;padding:4px;max-width:calc(100vw - 14px)!important}.nota-barra button{min-width:40px;width:40px;min-height:44px;height:44px}.nota-atalho-pagina{min-height:44px!important}}
