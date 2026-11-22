@@ -249,18 +249,38 @@ window.OSCEPilot=(()=>{
   const show=root.classList.toggle('is-marked');
   btn.setAttribute('aria-pressed',String(show));btn.textContent=show?'Ocultar marcações':'Mostrar marcações';
  }
+ function openOSCEDialog(overlay,opener){
+  const previous=document.activeElement;
+  const close=()=>{
+   if(!overlay.isConnected)return;
+   overlay.remove();document.body.classList.remove('osce-dialog-open');
+   const target=opener?.isConnected?opener:previous;
+   if(target?.isConnected&&typeof target.focus==='function')target.focus({preventScroll:true});
+  };
+  overlay.addEventListener('click',event=>{if(event.target===overlay)close();});
+  overlay.addEventListener('keydown',event=>{
+   if(event.key==='Escape'){event.preventDefault();close();return;}
+   if(event.key!=='Tab')return;
+   const focusables=[...overlay.querySelectorAll('button:not([disabled]),a[href],[tabindex]:not([tabindex="-1"])')].filter(x=>!x.hidden&&x.getClientRects().length);
+   if(!focusables.length){event.preventDefault();return;}
+   const first=focusables[0],last=focusables[focusables.length-1];
+   if(event.shiftKey&&document.activeElement===first){event.preventDefault();last.focus();}
+   else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first.focus();}
+  });
+  overlay.querySelector('.osce-close-image')?.addEventListener('click',close);
+  document.body.append(overlay);document.body.classList.add('osce-dialog-open');
+  overlay.querySelector('.osce-close-image')?.focus();
+ }
  function expandVisual(btn){
   const root=btn?.closest('.osce-annotated');if(!root||typeof document==='undefined')return;
   const overlay=document.createElement('div');overlay.className='osce-lightbox osce-visual-lightbox';overlay.setAttribute('role','dialog');overlay.setAttribute('aria-modal','true');overlay.setAttribute('aria-label','Imagem ampliada com marcações');
-  const close=document.createElement('button');close.type='button';close.textContent='✕ Fechar';close.setAttribute('aria-label','Fechar imagem ampliada');
-  close.addEventListener('click',()=>overlay.remove());
+  const close=document.createElement('button');close.className='osce-close-image';close.type='button';close.textContent='✕ Fechar';close.setAttribute('aria-label','Fechar imagem ampliada');
   const content=root.cloneNode(true);
   content.querySelector('.osce-annotation-toolbar')?.remove();
-  // A imagem é uma referência; o desenho SVG não é alterado e as marcações continuam reversíveis.
-  overlay.append(close,content);
-  overlay.addEventListener('click',e=>{if(e.target===overlay)overlay.remove()});
-  overlay.addEventListener('keydown',e=>{if(e.key==='Escape'){overlay.remove();btn.focus()}});
-  document.body.append(overlay);close.focus();
+  // Evita abrir uma segunda janela ao tocar de novo na imagem ampliada.
+  const image=content.querySelector('.osce-image-frame img');
+  if(image){image.removeAttribute('onclick');image.style.cursor='default';}
+  overlay.append(close,content);openOSCEDialog(overlay,btn);
  }
 
  function sourcePanel(st){
@@ -470,7 +490,14 @@ window.OSCEPilot=(()=>{
  }
  function showFullLesson(n){openLesson(n);}
  function expandImage(img){
-  if(!img?.src)return;const overlay=document.createElement('div');overlay.className='osce-lightbox';overlay.setAttribute('role','dialog');overlay.setAttribute('aria-modal','true');overlay.innerHTML='<button type="button" aria-label="Fechar imagem" onclick="this.parentElement.remove()">✕ Fechar</button><img src="'+esc(img.src)+'" alt="'+esc(img.alt)+'" /><p>Imagem de referência usada nesta estação · ampliação</p>';overlay.addEventListener('click',e=>{if(e.target===overlay)overlay.remove();});document.body.append(overlay);overlay.querySelector('button').focus();
+  if(!img?.src||typeof document==='undefined')return;
+  const annot=img.closest?.('.osce-annotated');
+  const zoom=annot?.querySelector('.osce-annotated-zoom');
+  if(zoom){expandVisual(zoom);return;}
+  const overlay=document.createElement('div');
+  overlay.className='osce-lightbox';overlay.setAttribute('role','dialog');overlay.setAttribute('aria-modal','true');overlay.setAttribute('aria-label','Imagem clínica ampliada');
+  overlay.innerHTML='<button class="osce-close-image" type="button" aria-label="Fechar imagem">✕ Fechar</button><img src="'+esc(img.src)+'" alt="'+esc(img.alt)+'" /><p>Imagem de referência usada nesta estação · ampliação</p>';
+  openOSCEDialog(overlay,img);
  }
  async function copyPrompt(){const x=document.getElementById('osce-prompt');if(!x)return;try{await navigator.clipboard.writeText(x.value);notify('Roteiro copiado.');}catch{x.focus();x.select();notify('Selecione e copie o roteiro.');}}
  function reload(){state=load();screen='home';shown=false;confidence=0;hints=0;checked=[];glossary='';welcomeOpen=!state.settings.hideWelcome&&!welcomeDismissedThisLoad;welcomeSkipNext=!!state.settings.hideWelcome;renderAgain();}
