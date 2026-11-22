@@ -78,9 +78,18 @@ window.OSCEPilot=(()=>{
    &&(!catalogSearch||(exact?displayNo(st.number)===Number(exact[1]):[st.title,st.subtitle,st.area,String(displayNo(st.number))].join(' ').toLocaleLowerCase('pt-BR').includes(catalogSearch.toLocaleLowerCase('pt-BR')))))
    .sort((a,b)=>({alta:0,media:1,baixa:2}[a.priority]??3)-({alta:0,media:1,baixa:2}[b.priority]??3)||(a.pocusOrder?0:1)-(b.pocusOrder?0:1)||(a.pocusOrder||displayNo(a.number))-(b.pocusOrder||displayNo(b.number)));
  }
+ let catalogPaint=0;
  function filterCatalog(v){
-  catalogSearch=String(v||'').slice(0,120);catalogLimit=12;renderAgain();
-  if(typeof document!=='undefined'){const field=document.getElementById('osce-catalog-search');if(field){field.focus();try{field.setSelectionRange(field.value.length,field.value.length)}catch{}}}
+  catalogSearch=String(v||'').slice(0,120);catalogLimit=12;
+  if(typeof document==='undefined'||typeof window==='undefined'||typeof window.requestAnimationFrame!=='function'){renderAgain();return;}
+  const field=document.getElementById('osce-catalog-search');
+  const caretStart=field?.selectionStart??catalogSearch.length,caretEnd=field?.selectionEnd??caretStart;
+  if(catalogPaint)window.cancelAnimationFrame?.(catalogPaint);
+  catalogPaint=window.requestAnimationFrame(()=>{
+   catalogPaint=0;renderAgain();
+   const current=document.getElementById('osce-catalog-search');
+   if(current){current.focus({preventScroll:true});try{current.setSelectionRange(caretStart,caretEnd)}catch{}}
+  });
  }
  function setCatalogPriority(v){catalogPriority=String(v);catalogLimit=12;renderAgain();}
  function moreCatalog(){catalogLimit+=12;renderAgain();}
