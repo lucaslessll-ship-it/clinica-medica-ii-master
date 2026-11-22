@@ -669,6 +669,15 @@
       setTimeout(aoSoltar, 10);
     }, { passive: true });
     document.addEventListener('keyup', evento => { if (evento.shiftKey || evento.key === 'Shift') aoSoltar(); });
+    // iOS/Safari costuma concluir a seleção após o touchend, especialmente ao
+    // arrastar as alças. Ouvir selectionchange evita que a barra não apareça.
+    let temporizadorSelecao=null;
+    document.addEventListener('selectionchange', () => {
+      const selecionado=window.getSelection();
+      if(!selecionado || selecionado.isCollapsed || !selecionado.rangeCount)return;
+      clearTimeout(temporizadorSelecao);
+      temporizadorSelecao=setTimeout(aoSoltar,125);
+    });
 
     document.addEventListener('click', evento => {
       const bolha = evento.target.closest('.nota-bolha');
