@@ -76,5 +76,5 @@ test('POCUS: referências no próprio módulo recolhidas e painel global proibid
  assert.match(course,/Referências e diretrizes deste módulo de POCUS/);
  assert.doesNotMatch(course,/<section class="pocus-sec pocus-refs">/);
  const html=fs.readFileSync(path.join(ROOT,'index.html'),'utf8');
- for(const n of ['osce-catalog-builder.js','osce-high-clinical.js','osce-pilot.js','osce.css','correlacoes.js','pocus-course.js','pocus.css'])assert.match(html,new RegExp(n.replace('.','\\\\.')+'\\\\?v=20261122-osce-fix-r1'));
+ for(const n of ['osce-catalog-builder.js','osce-high-clinical.js','osce-pilot.js','osce.css','correlacoes.js','pocus-course.js','pocus.css'])assert.ok(html.includes(n+'?v=20261122-osce-fix-r1'),n);
 });
