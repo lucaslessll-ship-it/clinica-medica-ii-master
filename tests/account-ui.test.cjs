@@ -275,8 +275,8 @@ test('account illustration is stable, changes with the account and never interpo
 test('all existing reference cards expose worked unit calculations in the manual and lesson',async()=>{
  const t=await open({session:true,viewport:{width:390,height:844}}),p=t.page;await p.waitForFunction(()=>document.getElementById('master-auth').hidden);
  await p.evaluate(()=>navigate('prescriptions'));assert.equal(await p.locator('.rx-card').count(),18,'o manual carrega o primeiro lote sem travar o celular');const catalog=await p.evaluate(()=>({total:Object.keys(MASTER_RX.drugs).length,calculations:Object.keys(MASTER_RX.drugs).filter(id=>Clinical.card(id).includes('class="rx-calculation"')).length}));assert.equal(catalog.total,279);assert.equal(catalog.calculations,16);
- const ivig=p.locator('[data-drug=ivig]');await ivig.locator('summary').click();assert.match(await ivig.innerText(),/140 g/);assert.match(await ivig.innerText(),/280 mL/);
- const atra=p.locator('[data-drug=tretinoin]');await atra.locator('summary').click();assert.match(await atra.innerText(),/90 mg\/dia/);
+ const ivig=p.locator('[data-drug=ivig]');await ivig.locator('.rx-calculation summary').click();assert.match(await ivig.innerText(),/140 g/);assert.match(await ivig.innerText(),/280 mL/);
+ const atra=p.locator('[data-drug=tretinoin]');await atra.locator('.rx-calculation summary').click();assert.match(await atra.innerText(),/90 mg\/dia/);
  assert.ok(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));
  await p.evaluate(()=>openTopic('neuro2'));await p.locator('.clinical-lab>summary').click();await p.getByRole('tab',{name:'Prescrição e seguimento'}).click();assert.equal(await p.locator('[role=tabpanel]:visible .rx-calculation').count(),1);await t.close();
 });
