@@ -169,7 +169,7 @@ function make(s){
  };
  questions.forEach(q=>{if(cues[q.id]){q.memory=cues[q.id].memory;q.hints=cues[q.id].hints;}});
  const deeper=[
-  {title:'1. Reconhecer o padrão do caso',body:'Padrão-chave: '+cl+'. Compare cronologia, sinais dirigidos e fatores de risco; só depois formule diagnóstico sindrômico e etiológico.',tip:s.mem||'Pista → síndrome → hipótese.'},
+  {title:'1. Reconhecer o padrão do caso',body:'Padrão-chave: '+cl+'. Compare cronologia, sinais dirigidos e fatores de risco. Diferencie manifestação sindrômica e hipótese etiológica quando forem conceitos distintos.',tip:s.mem||'Pista → síndrome → hipótese.'},
   {title:'2. Anamnese e exame que realmente discriminam',body:'Perguntas: '+(s.hx||cl)+'. No exame: '+(s.pe||cl)+'. Evite listas sem finalidade clínica; diga como cada achado altera a hipótese.',tip:'Perguntar → examinar → interpretar.'},
   {title:'3. Mecanismo e diferencial',body:(s.path||'Descreva a fisiopatologia da síndrome.')+' Diferenciais: '+differ+'. Explique em voz alta qual dado favorece cada hipótese.',tip:'Mecanismo explica sinal; contraste evita confusão.'},
   {title:'4. Sequência de investigação',body:dx+'. Identifique teste inicial, teste confirmatório quando pertinente e o que não se pode concluir de exame normal ou inespecífico.',tip:'Triagem ≠ confirmação ≠ estadiamento.'},
@@ -186,7 +186,7 @@ function make(s){
   revision:'Versão de estudo 21/11/2026. Condutas resumidas: verificar documentos específicos e protocolo local antes de aplicação clínica.',
   caseText:s.case,
   images:[{src:svgFor(s),kind:'illustration',alt:'Esquema autoral de raciocínio sobre '+s.t+'; não é exame clínico.',caption:'Ilustração educacional original baseada no tema; NÃO é foto, ECG ou imagem diagnóstica do caso.'}],
-  essential:{oneMinute:s.t+': '+cl+'. Investigação: '+dx+'. Tratamento: '+pl+'. Atenção: '+risk+'. Diferencial importante: '+differ+'. Armadilha: não fechar diagnóstico por achado isolado nem atrasar avaliação de gravidade. Pergunta ativa: qual dado do caso mais muda sua conduta?',mnemonic:s.mem||'Pistas → exames → conduta → risco.'},
+  essential:{oneMinute:(s.syndrome?'Síndrome clínica: '+s.syndrome+'. Hipótese etiológica: ':'')+s.t+': '+cl+'. Investigação: '+dx+'. Tratamento: '+pl+'. Atenção: '+risk+'. Diferencial importante: '+differ+'. Armadilha: não fechar diagnóstico por achado isolado nem atrasar avaliação de gravidade. Pergunta ativa: qual dado do caso mais muda sua conduta?',mnemonic:s.mem||'Pistas → exames → conduta → risco.'},
   tiers:{
    essencial:{label:'Essencial',minutes:1,ids:['sindrome'],description:'Hipótese, pistas-chave e recuperação ativa.'},
    rapida:{label:'Revisão rápida',minutes:5,ids:['sindrome','investigacao','conduta','gravidade'],description:'Quatro decisões centrais.'},
