@@ -44,7 +44,7 @@ window.OSCEPilot=(()=>{
  const target=anchors[destination];
  if(target){
   target.scrollIntoView({behavior:'instant',block:'start'});
-  if(destination==='question'||destination==='case'){const h=target.querySelector('h2')||target;if(h){h.tabIndex=-1;h.focus({preventScroll:true});}}
+  if(destination==='question'||destination==='case'||destination==='feedback'||destination==='top'){const h=destination==='top'?target.querySelector('h1'):target.querySelector('h2,h3')||target;if(h){h.tabIndex=-1;h.focus({preventScroll:true});}}
  }else{
   window.scrollTo({top:previousY,behavior:'instant'});
   if(previousId){const field=document.getElementById(previousId);field?.focus?.({preventScroll:true});}
