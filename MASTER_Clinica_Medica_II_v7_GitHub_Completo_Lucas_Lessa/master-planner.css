@@ -21,3 +21,15 @@
 @media(max-width:650px){.mp-panel{padding:15px}.mp-task-actions,.mp-self-grade{justify-content:flex-start}.mp-topic-list,.mp-agenda,.mp-missions{grid-template-columns:1fr}.mp-topic-search{flex-direction:column}.mp-topic-search select{flex:1 1 auto}}
 @media(max-width:430px){.mp-form-grid{grid-template-columns:1fr}.mp-form-grid>label:first-child{grid-column:auto}.mp-editor-footer>.btn{width:100%}.mp-task-actions>.btn,.mp-self-grade button{flex:1 1 auto}}
 @media(prefers-reduced-motion:reduce){.mp-progress span{transition:none}}
+
+/* Radar de competências por matéria e banca surpresa discreta. */
+.mp-radar-list{display:grid;gap:13px}
+.mp-radar-row{display:grid;grid-template-columns:minmax(165px,1fr) minmax(210px,2fr);align-items:center;gap:16px}
+.mp-radar-row b{font-size:.86rem;display:block;line-height:1.45}
+.mp-radar-row small{font-size:.74rem;color:var(--muted,#64736b)}
+.mp-radar-bar{display:flex;align-items:stretch;height:12px;border-radius:99px;overflow:hidden;background:#e0e5dd}
+.mp-radar-bar .novo{background:#d5ded4}.mp-radar-bar .consolidando{background:#9abdac}.mp-radar-bar .consistente{background:#388464}
+.mp-radar-legend{display:flex;flex-wrap:wrap;gap:9px 18px;margin-top:15px;font-size:.73rem;color:var(--muted,#64736b)}
+.mp-surprise{border-top:1px solid var(--mp-line);padding:16px 0 5px;margin-top:15px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.mp-surprise strong,.mp-surprise small{display:block}.mp-surprise strong{font-size:.88rem}.mp-surprise small{font-size:.75rem;color:var(--muted,#64736b);line-height:1.5;margin-top:3px}.mp-surprise button{min-height:43px}
+@media(max-width:600px){.mp-radar-row{grid-template-columns:1fr;gap:6px}.mp-radar-bar{min-height:12px}}
