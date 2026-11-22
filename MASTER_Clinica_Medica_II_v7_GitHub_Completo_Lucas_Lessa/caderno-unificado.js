@@ -161,6 +161,18 @@
     // Reabrimos o mesmo módulo pelo índice indicado no momento da citação.
     const indice=Number.isInteger(meta.indice)?meta.indice:0;
     const tipo=meta.tipo||meta.tipoPagina||'pagina';
+    // O índice do OSCE é o número prioritário da estação, não uma página de aula.
+    // Uma marca individual também preserva o ID da pergunta para abrir o
+    // aprofundamento correspondente, mesmo após uma sessão mista.
+    if(rota==='osce'&&tipo==='osce-estacao'&&Number.isInteger(meta.indice)){
+      const registro=(ux.marcas?.[chave]||[]).find(m=>m.id===id);
+      const questao=registro?.questao;
+      if(questao && window.OSCEPilot?.previewQuestion){
+        window.OSCEPilot.previewQuestion(meta.indice,questao);
+      }else{
+        window.OSCEPilot?.preview?.(meta.indice);
+      }
+    }else{
     const modulos={
       pocus:window.PocusCourse,ecg:window.ECGCourse,
       rad:window.RadCourse,hemo:window.HemoCourse,atb:window.AtbCourse
@@ -173,6 +185,7 @@
     }else if(hash!=='#'+rota&&hash.startsWith('#'+rota+'/')){
       location.hash=hash;
       if(typeof parseHash==='function')parseHash();
+    }
     }
     if(id)window.Notas?.voltarAoTrecho?.(id,chave);
   }
