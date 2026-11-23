@@ -353,14 +353,14 @@ window.OSCEPilot=(()=>{
  }
  function visualAnnotated(img,st,index,showNotes,hidden){
   const raw=visualNotes(st,img,index),canMark=showNotes&&raw?.notes?.length;
-  const isMoving=!!raw?.moving,keys=raw?.notes||[];
+  const isMoving=!!raw?.moving,keys=raw?.notes||[],hasPins=canMark&&!isMoving&&keys.some(n=>Number.isFinite(n.x)&&Number.isFinite(n.y));
   const imgSrc=esc(img.src),caption=hidden?'Observe a imagem antes de revelar as informações clínicas sobre o achado.':esc(img.caption||'Imagem de referência para estudo');
   const markType=img.kind==='illustration'?'ILUSTRAÇÃO DIDÁTICA — NÃO É EXAME':img.kind==='reference'?'IMAGEM REAL DE REFERÊNCIA — NÃO DO PACIENTE':'IMAGEM ORIGINAL RECEBIDA';
   const lessonIntro=canMark?'<p class="osce-note osce-annotation-intro">'+esc(raw.intro||'Aponte os achados e conecte-os à conduta.')+'</p>':'';
   const pins=canMark&&!isMoving?keys.map((n,i)=>Number.isFinite(n.x)&&Number.isFinite(n.y)?
     '<button type="button" class="osce-visual-pin" data-step="'+i+'" style="left:'+n.x+'%;top:'+n.y+'%" aria-label="Achado '+(i+1)+': '+esc(n.name)+'" title="'+esc(n.name)+'" onclick="OSCEPilot.focusVisualNote(this)">'+(i+1)+'</button>':'').join(''):'';
   const notes=canMark?
-   '<div class="osce-annotation-content"><div class="osce-annotation-note-heading"><strong>Identifique na imagem</strong><small>'+(isMoving?'Imagem dinâmica: guia por texto, sem pinos fixos':'Toque nos números sobre a imagem ou abra os tópicos abaixo')+'</small></div>'
+   '<div class="osce-annotation-content"><div class="osce-annotation-note-heading"><strong>Identifique na imagem</strong><small>'+(isMoving?'Imagem dinâmica: guia por texto, sem pinos fixos':hasPins?'Toque nos números sobre a imagem ou abra os tópicos abaixo':'Abra os tópicos explicativos abaixo (sem marcações de posição não verificadas)')+'</small></div>'
     +keys.map((n,i)=>'<details class="osce-annotation-detail" data-step="'+i+'" '+(i===0?'open':'')+'>'
       +'<summary>'+(i+1)+'. '+esc(n.name)+'</summary>'
       +'<div><p><strong>O que você está vendo:</strong> '+esc(n.meaning)+'</p>'
@@ -379,11 +379,20 @@ window.OSCEPilot=(()=>{
   if(!st.images?.length)return '<p class="osce-note">Nenhuma imagem de referência disponível nesta estação.</p>';
   const hidden=screen==='study'&&!shown,showNotes=screen==='preview'||(screen==='study'&&shown);
   const mediaTitle=st.pocusOrder?'<p class="osce-note osce-pocus-disclaimer"><strong>POCCUS:</strong> as imagens de referência podem mostrar pessoas ou condições diferentes das descritas na vinheta. As anotações distinguem achado observável de interpretação clínica.</p>':'';
-  return mediaTitle+st.images.map((img,index)=>{
-   if(hidden&&img.src?.startsWith('data:image/svg+xml'))return '<div class="osce-pocus-image-locked"><span aria-hidden="true">📖</span><strong>Esquema com sinais, exames e condutas</strong><p>Este esquema didático já contém parte do gabarito e aparecerá com marcações explicativas depois da tentativa. No pré-estudo, fica aberto desde o início.</p></div>';
-   if(img.revealedOnly&&hidden)return '<div class="osce-pocus-image-locked"><span aria-hidden="true">🔒</span><strong>Imagem de referência com a resposta sinalizada</strong><p>Será revelada depois da tentativa. No estudo, pode ser explorada com marcações e explicações.</p></div>';
+  const renderOne=(img,index)=>{
+   if(hidden&&img.src?.startsWith('data:image/svg+xml'))return '<div class="osce-pocus-image-locked"><strong>Esquema didático</strong><p>Disponível depois da tentativa.</p></div>';
+   if(img.revealedOnly&&hidden)return '<div class="osce-pocus-image-locked"><strong>Imagem de referência</strong><p>Revelada depois da tentativa.</p></div>';
    return visualAnnotated(img,st,index,showNotes,hidden);
-  }).join('');
+  };
+  if(st.id==='pocus-rush'){
+   const blocks=[['bomba','BOMBA · Coração','Função VE/VD e derrame pericárdico'],['tanque','TANQUE · Volume e cavidades','VCI, FAST, pulmão e pleura'],['canos','CANOS · Vasos','Aorta abdominal e trombose venosa profunda']];
+   return mediaTitle+'<p class="osce-rush-provenance"><strong>Atenção:</strong> as imagens reais são de pacientes diferentes e NÃO são exames do paciente descrito na vinheta. Abra somente o grupo que deseja revisar; nenhuma imagem isolada confirma a causa do choque.</p>'
+    +'<div class="osce-rush-image-groups">'+blocks.map(([key,label,desc])=>{
+      const included=st.images.map((img,i)=>({img,i})).filter(x=>x.img.rushGroup===key);
+      return '<details class="osce-rush-image-group"'+(key==='bomba'?' open':'')+'><summary><span class="osce-rush-group-icon" aria-hidden="true">'+({bomba:'♥',tanque:'◉',canos:'⌁'}[key])+'</span><span><strong>'+label+'</strong><small>'+desc+' · '+included.length+' exame(s) real(is)</small></span><span class="osce-rush-chevron" aria-hidden="true">⌄</span></summary><div class="osce-rush-gallery">'+included.map(({img,i})=>renderOne(img,i)).join('')+'</div></details>';
+    }).join('')+'</div>';
+  }
+  return mediaTitle+st.images.map(renderOne).join('');
  }
  function focusVisualNote(button){
   const root=button?.closest('.osce-annotated');if(!root)return;
