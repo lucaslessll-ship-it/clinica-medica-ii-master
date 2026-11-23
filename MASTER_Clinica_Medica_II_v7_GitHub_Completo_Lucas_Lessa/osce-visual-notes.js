@@ -347,3 +347,113 @@ window.OSCE_VISUAL_NOTES={
     }
   ]
 };
+
+/* P8 RUSH: explicações verificáveis, sem pinos arbitrários sobre imagens de outros pacientes. */
+window.OSCE_VISUAL_NOTES[94]=[
+  {
+    "intro": "BOMBA: derrame pericárdico real, de um paciente diferente; imagem estática não demonstra tamponamento.",
+    "notes": [
+      {
+        "name": "Coleção pericárdica",
+        "meaning": "Região escura líquida adjacente ao coração; descreva ecogenicidade, localização e repercussões se houver registro dinâmico.",
+        "limitation": "Derrame por si só não comprova tamponamento, nem causa de choque."
+      },
+      {
+        "name": "Pergunta clínica",
+        "meaning": "Procure sinais dinâmicos de repercussão nas cavidades, VCI e dados hemodinâmicos.",
+        "limitation": "Foto única não fornece colapso diastólico nem condições de ventilação."
+      }
+    ]
+  },
+  {
+    "intro": "TANQUE: vídeo REAL de veia cava inferior normal em pessoa independente.",
+    "moving": true,
+    "notes": [
+      {
+        "name": "Eixo e variação respiratória",
+        "meaning": "Identifique o trajeto da VCI e sua modificação no ciclo respiratório, quando visível.",
+        "limitation": "Não faça uma medida numérica a partir deste GIF sem escala de calibração."
+      },
+      {
+        "name": "O que a VCI pode e não pode dizer",
+        "meaning": "Diâmetro e variabilidade podem apoiar interpretação de pressão de enchimento.",
+        "limitation": "Uma VCI fina/colapsável não garante responsividade a fluidos; ventilação e esforço confundem."
+      }
+    ]
+  },
+  {
+    "intro": "TANQUE: imagem REAL de líquido livre no espaço de Morison em paciente com gravidez ectópica, não relacionada à vinheta.",
+    "notes": [
+      {
+        "name": "Espaço hepatorrenal",
+        "meaning": "Localize interface fígado/rim e a região com conteúdo anecoico compatível com líquido livre.",
+        "limitation": "FAST não determina se é sangue, ascite ou outra composição."
+      },
+      {
+        "name": "Relação com choque",
+        "meaning": "No trauma instável, líquido livre aumenta suspeita de hemorragia e exige decisão urgente.",
+        "limitation": "A mesma imagem de gravidez ectópica não é um FAST traumático e não pode ser transferida como diagnóstico."
+      }
+    ]
+  },
+  {
+    "intro": "TANQUE: imagem REAL de linhas B em pessoa com fibrose pulmonar.",
+    "notes": [
+      {
+        "name": "Artefatos verticais",
+        "meaning": "Linhas B partem da pleura e alcançam fundo, com apagamento das linhas A.",
+        "limitation": "Não conclua edema pulmonar cardiogênico de um único quadro ou somente por linhas B."
+      },
+      {
+        "name": "Distribuição e clínica",
+        "meaning": "Padrão bilateral simétrico, pleura e função do VE ajudam a refinar hipóteses.",
+        "limitation": "Linhas B também ocorrem em pneumonia, SDRA e fibrose."
+      }
+    ]
+  },
+  {
+    "intro": "TANQUE: imagem REAL de M-mode com sinal barcode; ausência de deslizamento num ponto.",
+    "notes": [
+      {
+        "name": "Padrão de linhas paralelas",
+        "meaning": "Estratos horizontais do M-mode podem expressar ausência de movimento pleural sob o feixe.",
+        "limitation": "Ausência de sliding também ocorre fora do pneumotórax."
+      },
+      {
+        "name": "Conduta em pneumotórax hipertensivo",
+        "meaning": "Suspeita clínica em paciente instável deve acionar descompressão sem aguardar ultrassom.",
+        "limitation": "O sinal em foto não demonstra pneumotórax hipertensivo no paciente da vinheta."
+      }
+    ]
+  },
+  {
+    "intro": "CANOS: ultrassom axial REAL de aneurisma de aorta abdominal (imagem CC0).",
+    "notes": [
+      {
+        "name": "Aorta em corte transversal",
+        "meaning": "Localize a aorta anterior à coluna e meça diâmetro externo a externo com plano adequado.",
+        "limitation": "Imagem de aneurisma não permite confirmar ruptura ou estimar taxa de sangramento."
+      },
+      {
+        "name": "Correlação com choque",
+        "meaning": "Dor abdominal/lombar e hipotensão com aneurisma exigem atenção vascular imediata.",
+        "limitation": "Outras causas de choque coexistem, e aorta normal não exclui todas as emergências vasculares."
+      }
+    ]
+  },
+  {
+    "intro": "CANOS: Doppler REAL de trombose venosa femoral (imagem CC0 de outra pessoa).",
+    "notes": [
+      {
+        "name": "Vaso com trombose ao Doppler",
+        "meaning": "Observe ausência de fluxo e ecogenicidade intraluminal, comparando artéria e veias.",
+        "limitation": "O recorte Doppler não demonstra compressibilidade, que exige teste dinâmico apropriado."
+      },
+      {
+        "name": "Conexão com TEP",
+        "meaning": "TVP somada a dispneia súbita, choque e VD aumentado fortalece suspeita de embolia.",
+        "limitation": "TVP isolada não demonstra que o choque seja devido a TEP."
+      }
+    ]
+  }
+];
