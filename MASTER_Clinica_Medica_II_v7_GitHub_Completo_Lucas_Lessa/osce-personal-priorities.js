@@ -2,7 +2,7 @@
    Somente a sessão autenticada do proprietário recebe a interface. Não usar como controle de acesso de dados. */
 window.OSCE_PERSONAL_PRIORITIES=Object.freeze({
   isOwner:()=>window.MASTER_AUTH?.user?.()?.id==='d20331a2-6724-40e9-8e01-e3e82e57924e',
-  version:'2026-11-22-no-oncohemo-v2',
+  version:'2026-11-23-rush-p8',
   groups:[
   {
     "n": 1,
@@ -29,7 +29,7 @@ window.OSCE_PERSONAL_PRIORITIES=Object.freeze({
     "title": "POCUS pulmonar e cardíaco",
     "minutes": 50,
     "level": "Dominar",
-    "hint": "Linhas B, derrame pleural, tamponamento e pneumotórax; depois VCI e VD.",
+    "hint": "Linhas B, derrame, tamponamento, pneumotórax, VCI, VD e RUSH no choque.",
     "ids": [
       87,
       88,
@@ -37,7 +37,8 @@ window.OSCE_PERSONAL_PRIORITIES=Object.freeze({
       90,
       91,
       92,
-      93
+      93,
+      94
     ]
   },
   {
