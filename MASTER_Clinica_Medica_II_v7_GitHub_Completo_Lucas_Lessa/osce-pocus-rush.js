@@ -5,7 +5,7 @@ window.OSCE_EXTRA_STATIONS=(window.OSCE_EXTRA_STATIONS||[]).concat({
   "pocusOrder": 8,
   "title": "Protocolo RUSH — avaliação do choque (bomba, tanque e canos)",
   "subtitle": "Choque indiferenciado: coração, VCI/FAST/pulmão, aorta e trombose venosa — 7 exames reais de referência",
-  "area": "POCUS · Emergência e hemodinâmica",
+  "area": "POCCUS · Emergência e hemodinâmica",
   "priority": "alta",
   "status": "A REVISAR · banco autoral",
   "provenance": "Estação autoral de treinamento, não prova oficial da FMP. Protocolo apoiado em ACEP/Perera/ASRA. As sete imagens são exames reais de PACIENTES DIFERENTES publicados na Wikimedia Commons e não constituem exames do caso fictício.",
@@ -18,7 +18,7 @@ window.OSCE_EXTRA_STATIONS=(window.OSCE_EXTRA_STATIONS||[]).concat({
       "alt": "Ecocardiograma REAL com líquido pericárdico",
       "caption": "BOMBA: derrame pericárdico real de referência. Isoladamente NÃO confirma tamponamento nem corresponde ao paciente hipotenso da vinheta.",
       "creditUrl": "https://commons.wikimedia.org/wiki/File:PericardialeffusionUS.PNG",
-      "credit": "Wikimedia Commons; verificar licença no arquivo original.",
+      "credit": "James Heilman, MD — CC BY-SA 3.0; imagem original, sem modificações.",
       "kind": "reference"
     },
     {
@@ -27,7 +27,7 @@ window.OSCE_EXTRA_STATIONS=(window.OSCE_EXTRA_STATIONS||[]).concat({
       "alt": "Ultrassom REAL em movimento da veia cava inferior",
       "caption": "TANQUE: VCI de pessoa diferente, com variação durante o ciclo respiratório. NÃO é medida hemodinâmica do caso; ventilação e esforço modificam a interpretação.",
       "creditUrl": "https://commons.wikimedia.org/wiki/File:Inferior_vena_cava_ultrasound.gif",
-      "credit": "Wikimedia Commons; conferir licença na fonte.",
+      "credit": "Tinss — CC BY-SA 4.0; GIF original, sem modificações.",
       "kind": "reference"
     },
     {
@@ -45,7 +45,7 @@ window.OSCE_EXTRA_STATIONS=(window.OSCE_EXTRA_STATIONS||[]).concat({
       "alt": "Ultrassom REAL com artefatos de linhas B",
       "caption": "TANQUE / PULMÃO: linhas B registradas em pessoa com FIBROSE pulmonar, não com edema agudo cardiogênico. O achado é inespecífico.",
       "creditUrl": "https://commons.wikimedia.org/wiki/File:B_lines_on_a_lung_ultrasound_of_a_patient_with_fibrosis.jpg",
-      "credit": "Wikimedia Commons; licença indicada na fonte.",
+      "credit": "Tinss — CC BY-SA 4.0; imagem original, sem modificações.",
       "kind": "reference"
     },
     {
@@ -54,7 +54,7 @@ window.OSCE_EXTRA_STATIONS=(window.OSCE_EXTRA_STATIONS||[]).concat({
       "alt": "Modo M REAL com sinal de código de barras no pneumotórax",
       "caption": "TANQUE / PULMÃO: sinal barcode/stratosphere na imagem de referência. Ausência de deslizamento não é específica de pneumotórax; interpretar com clínica e técnica.",
       "creditUrl": "https://commons.wikimedia.org/wiki/File:Barcode-Zeichen.jpg",
-      "credit": "Schomynv — domínio público, conforme arquivo original.",
+      "credit": "Schomynv — domínio público.",
       "kind": "reference"
     },
     {
