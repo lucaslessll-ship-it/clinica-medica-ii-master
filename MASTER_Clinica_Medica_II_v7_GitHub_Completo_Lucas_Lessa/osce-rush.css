@@ -1,0 +1,23 @@
+/* POCCUS P8 — Galeria RUSH por blocos: acessível, compacta, responsiva. */
+.osce-rush-provenance{padding:12px 14px;border:1px solid var(--line,#d7ddd2);border-radius:12px;background:var(--soft,#f3f0e9);color:var(--ink,#203b36);font-size:.88rem;line-height:1.6}
+.osce-rush-image-groups{display:grid;gap:12px;margin:18px 0}
+.osce-rush-image-group{border:1px solid var(--line,#d7ddd2);background:var(--white,#fff);border-radius:16px;overflow:hidden}
+.osce-rush-image-group>summary{display:flex;align-items:center;gap:12px;padding:14px 16px;cursor:pointer;list-style:none;min-height:68px;color:var(--ink,#203b36)}
+.osce-rush-image-group>summary::-webkit-details-marker{display:none}
+.osce-rush-image-group>summary::marker{content:''}
+.osce-rush-image-group>summary:focus-visible{outline:3px solid var(--focus,#98613d);outline-offset:-3px}
+.osce-rush-group-icon{width:40px;height:40px;flex:none;display:grid;place-items:center;border-radius:11px;color:var(--green2,#16483e);background:var(--mint,#e8eee5);font-size:1.3rem;font-weight:850}
+.osce-rush-image-group>summary>span:nth-child(2){display:grid;gap:3px;flex:1;min-width:0}
+.osce-rush-image-group>summary strong{font-size:.96rem;line-height:1.3}
+.osce-rush-image-group>summary small{font-size:.76rem;line-height:1.45;color:var(--muted,#5c6861)}
+.osce-rush-chevron{font-size:1.45rem;line-height:1;color:var(--green2,#16483e);transition:transform .18s}
+.osce-rush-image-group[open] .osce-rush-chevron{transform:rotate(180deg)}
+.osce-rush-image-group:not([open])>:not(summary){display:none!important}
+.osce-rush-gallery{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,310px),1fr));align-items:start;gap:14px;padding:14px;border-top:1px solid var(--line,#d7ddd2)}
+.osce-rush-gallery .osce-visual{min-width:0;max-width:100%;margin:0;overflow-wrap:anywhere}
+.osce-rush-gallery .osce-image-frame{max-width:100%;overflow:hidden}
+.osce-rush-gallery .osce-image-frame img{width:100%;max-width:100%;height:auto;object-fit:contain;max-height:380px;cursor:zoom-in}
+.osce-rush-gallery figcaption{font-size:.8rem;line-height:1.55;color:var(--muted,#5c6861)}
+.osce-rush-gallery .osce-annotation-content{max-width:100%}
+@media(max-width:640px){.osce-rush-gallery{grid-template-columns:minmax(0,1fr);padding:10px}.osce-rush-image-group>summary{padding:12px}.osce-rush-image-group>summary strong{font-size:.88rem}.osce-rush-image-group>summary small{font-size:.72rem}}
+@media(prefers-reduced-motion:reduce){.osce-rush-chevron{transition:none}}
