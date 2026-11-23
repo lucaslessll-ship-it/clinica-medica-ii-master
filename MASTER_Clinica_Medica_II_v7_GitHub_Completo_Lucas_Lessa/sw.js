@@ -7,18 +7,21 @@ self.addEventListener('activate',event=>{event.waitUntil((async()=>{for(const ke
 self.addEventListener('fetch',event=>{
  const req=event.request;if(req.method!=='GET'||!eligible(new URL(req.url)))return;
  event.respondWith((async()=>{
-  const saved=await caches.open(PINNED),hit=await saved.match(req);if(hit)return hit;
+  const saved=await caches.open(PINNED),pinned=await saved.match(req);
   const runtime=await caches.open(RUNTIME),cached=await runtime.match(req);
   try{
+   // Online: rede primeiro. Conteúdo salvo serve de fallback quando não houver internet,
+   // não como bloqueio permanente de novos commits.
    const response=await fetch(req);
    if(response.ok&&response.type==='basic'&&!response.headers.has('set-cookie')&&response.headers.get('cache-control')?.includes('private')!==true){
-    // Não salvar documentos HTML personalizados; apenas a estrutura pública.
+    // Nunca gravar HTML personalizado; somente a estrutura pública index.html.
     if(!/\.html?$/i.test(new URL(req.url).pathname)||new URL(req.url).pathname.endsWith('/index.html')){
-     runtime.put(req,response.clone()).then(async()=>{const keys=await runtime.keys();if(keys.length>220)await runtime.delete(keys[0]);}).catch(()=>{});
+     const target=pinned?saved:runtime;
+     target.put(req,response.clone()).then(async()=>{if(!pinned){const keys=await runtime.keys();if(keys.length>220)await runtime.delete(keys[0]);}}).catch(()=>{});
     }
    }
    return response;
-  }catch{return cached||Response.error();}
+  }catch{return pinned||cached||Response.error();}
  })());
 });
 self.addEventListener('message',event=>{
