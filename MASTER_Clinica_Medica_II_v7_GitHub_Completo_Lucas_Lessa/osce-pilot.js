@@ -366,11 +366,11 @@ window.OSCEPilot=(()=>{
       +'<div><p><strong>O que você está vendo:</strong> '+esc(n.meaning)+'</p>'
       +'<p class="osce-annotation-caution"><strong>Não conclua apenas por este achado:</strong> '+esc(n.limitation)+'</p></div></details>').join('')
     +'</div>':'';
-  const zoom=canMark?' <button type="button" class="btn osce-annotated-zoom" onclick="OSCEPilot.expandVisual(this)">'+(isMoving?'Ampliar imagem com explicações':'Ampliar com marcações')+'</button>':'';
+  const zoom=canMark?' <button type="button" class="btn osce-annotated-zoom" onclick="OSCEPilot.expandVisual(this)">'+(!hasPins?'Ampliar com explicações':'Ampliar com marcações')+'</button>':'';
   return '<figure class="osce-visual osce-annotated'+(canMark?' is-marked':'')+'">'
     +'<div class="osce-image-frame"><img src="'+imgSrc+'" loading="lazy" alt="'+(hidden?'Exame clínico a interpretar — diagnóstico oculto até a tentativa':esc(img.alt||'Imagem clínica'))+'" onclick="OSCEPilot.expandImage(this)" onerror="this.hidden=true;this.nextElementSibling.hidden=false;this.closest(\'.osce-annotated\')?.classList.remove(\'is-marked\')"><p hidden>Imagem não carregada; use a legenda e a referência. As marcações não substituem o exame original.</p>'+pins+'</div>'
     +'<figcaption><strong>'+markType+'</strong> · '+caption+(img.creditUrl?' · <a href="'+esc(img.creditUrl)+'" target="_blank" rel="noopener noreferrer">Fonte e crédito da imagem</a>':'')+(img.credit?' · '+esc(img.credit):'')+'</figcaption>'
-    +(canMark?'<div class="osce-annotation-toolbar"><button type="button" class="btn" aria-pressed="true" onclick="OSCEPilot.toggleVisualMarks(this)">Ocultar marcações</button>'+zoom+'</div>':'')
+    +(canMark?'<div class="osce-annotation-toolbar"><button type="button" class="btn" aria-pressed="true" onclick="OSCEPilot.toggleVisualMarks(this)">'+(hasPins?'Ocultar marcações':'Ocultar explicações')+'</button>'+zoom+'</div>':'')
     +(!showNotes&&raw?.notes?.length?'<p class="osce-note"><strong>Após responder:</strong> aparecem marcações numeradas e explicações de cada achado. Em “Revisar respostas antes”, elas ficam disponíveis imediatamente.</p>':'')
     +lessonIntro+notes+'</figure>';
  }
@@ -408,7 +408,7 @@ window.OSCEPilot=(()=>{
  function toggleVisualMarks(btn){
   const root=btn?.closest('.osce-annotated');if(!root)return;
   const show=root.classList.toggle('is-marked');
-  btn.setAttribute('aria-pressed',String(show));btn.textContent=show?'Ocultar marcações':'Mostrar marcações';
+  btn.setAttribute('aria-pressed',String(show));const label=root.querySelector('.osce-visual-pin')?'marcações':'explicações';btn.textContent=(show?'Ocultar ':'Mostrar ')+label;
  }
  function openOSCEDialog(overlay,opener){
   const previous=document.activeElement;
