@@ -5,7 +5,7 @@ on:
     paths:
       - '.github/workflows/qa-master-question-bank.yml'
       - 'question-bank/**'
-      - 'supabase/migrations/*_master_question_bank.sql'
+      - 'supabase/migrations/*_master_question_bank*.sql'
       - 'tests/master-question-bank*'
 
 permissions:
@@ -51,6 +51,7 @@ jobs:
           grant usage on schema auth to authenticated,anon;
           SQL
           psql "$MASTER_QB_DATABASE_URL" -v ON_ERROR_STOP=1 -f supabase/migrations/20261125151122_master_question_bank.sql
+          psql "$MASTER_QB_DATABASE_URL" -v ON_ERROR_STOP=1 -f supabase/migrations/*_master_question_bank_multi_topics.sql
           psql "$MASTER_QB_DATABASE_URL" -f tests/master-question-bank.sql
       - name: Importar o legado duas vezes
         run: |
