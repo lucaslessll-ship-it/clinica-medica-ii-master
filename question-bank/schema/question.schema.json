@@ -1,0 +1,435 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "discipline",
+    "period",
+    "theme",
+    "lesson_ids",
+    "stem",
+    "origin",
+    "profiles",
+    "difficulty",
+    "bibliography",
+    "medical_status",
+    "rights_status",
+    "revision_history"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "hash": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "discipline": {
+      "enum": [
+        "clinica_medica"
+      ]
+    },
+    "period": {
+      "enum": [
+        "P1",
+        "P2"
+      ]
+    },
+    "theme": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S"
+    },
+    "subtheme": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S"
+    },
+    "lesson_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "pattern": "\\S"
+      },
+      "uniqueItems": true
+    },
+    "stem": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S"
+    },
+    "options": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "text"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          },
+          "text": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          },
+          "comment": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          }
+        }
+      },
+      "minItems": 2,
+      "maxItems": 10
+    },
+    "original_answer": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S"
+    },
+    "reviewed_answer": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S"
+    },
+    "comment": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S"
+    },
+    "institution": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S"
+    },
+    "board": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S"
+    },
+    "year": {
+      "type": "integer",
+      "minimum": 1900,
+      "maximum": 2200
+    },
+    "number": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S"
+    },
+    "reference": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S"
+    },
+    "page": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "origin": {
+      "enum": [
+        "fmp_oswaldo",
+        "sao_paulo",
+        "enamed",
+        "enare",
+        "outras_residencias",
+        "autoral_master",
+        "banco_cm2"
+      ]
+    },
+    "profiles": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "fixacao",
+          "estilo_fmp",
+          "estilo_residencia",
+          "raciocinio_clinico",
+          "diagnostico_diferencial",
+          "interpretacao_exames",
+          "farmacologia",
+          "conduta_terapeutica"
+        ]
+      },
+      "uniqueItems": true
+    },
+    "difficulty": {
+      "enum": [
+        "N1",
+        "N2",
+        "N3"
+      ]
+    },
+    "bibliography": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "pattern": "\\S"
+      },
+      "uniqueItems": true
+    },
+    "medical_status": {
+      "enum": [
+        "pendente",
+        "validada",
+        "rejeitada"
+      ]
+    },
+    "rights_status": {
+      "enum": [
+        "pendente",
+        "autorizada",
+        "restrita"
+      ]
+    },
+    "rights_reference": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S"
+    },
+    "revision_history": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "by",
+          "date",
+          "action"
+        ],
+        "properties": {
+          "by": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          },
+          "date": {
+            "type": "string",
+            "format": "date"
+          },
+          "action": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          }
+        }
+      }
+    },
+    "legacy_key": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S"
+    },
+    "source_level": {
+      "enum": [
+        "R1",
+        "R+"
+      ]
+    },
+    "source_style": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source_mentions": {
+      "type": "string",
+      "minLength": 1
+    },
+    "model_answer": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "medical_status": {
+            "const": "validada"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "subtheme",
+          "comment"
+        ],
+        "properties": {
+          "lesson_ids": {
+            "minItems": 1
+          },
+          "profiles": {
+            "minItems": 1
+          },
+          "bibliography": {
+            "minItems": 1
+          },
+          "revision_history": {
+            "minItems": 1
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "rights_status": {
+            "const": "autorizada"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "rights_reference"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "origin": {
+            "not": {
+              "enum": [
+                "autoral_master",
+                "banco_cm2"
+              ]
+            }
+          },
+          "medical_status": {
+            "const": "validada"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "institution",
+          "board",
+          "year",
+          "number",
+          "reference",
+          "original_answer"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "origin": {
+            "const": "banco_cm2"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "source_level",
+          "source_style",
+          "reference",
+          "page",
+          "number"
+        ]
+      }
+    },
+    {
+      "if": {
+        "required": [
+          "model_answer"
+        ]
+      },
+      "then": {
+        "properties": {
+          "origin": {
+            "const": "banco_cm2"
+          }
+        },
+        "not": {
+          "anyOf": [
+            {
+              "required": [
+                "options"
+              ]
+            },
+            {
+              "required": [
+                "original_answer"
+              ]
+            },
+            {
+              "required": [
+                "reviewed_answer"
+              ]
+            }
+          ]
+        }
+      },
+      "else": {
+        "required": [
+          "options"
+        ],
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "medical_status": {
+                  "const": "validada"
+                }
+              }
+            },
+            "then": {
+              "required": [
+                "reviewed_answer"
+              ]
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "origin": {
+                  "const": "banco_cm2"
+                }
+              }
+            },
+            "then": {
+              "required": [
+                "original_answer"
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "medical_status": {
+            "const": "validada"
+          },
+          "origin": {
+            "not": {
+              "const": "banco_cm2"
+            }
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "options": {
+            "items": {
+              "required": [
+                "comment"
+              ]
+            }
+          }
+        }
+      }
+    }
+  ]
+}

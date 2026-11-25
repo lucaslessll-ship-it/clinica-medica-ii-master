@@ -1,0 +1,6 @@
+inbox/*
+review/*
+rejected/*
+reports/*
+!*/.gitkeep
+__pycache__/

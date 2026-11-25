@@ -6,7 +6,7 @@ const fs=require('node:fs/promises');
 const path=require('node:path');
 const APP='/MASTER_Clinica_Medica_II_v7_GitHub_Completo_Lucas_Lessa/index.html';
 const keys=['master_p2_lucas_v1','master_p1_lucas_v4','master_p2_hig_v2','master_clinica_banca_v7','MASTER_EVIDENCE_UI_v5'];
-const user={id:'user-a',email:'ana@example.test',user_metadata:{full_name:'Ana Lima'}};
+const user={id:'user-a',email:'ana@example.test',user_metadata:{master_welcome_tour_v1:true,full_name:'Ana Lima'}};
 const empty={results:{},review:{},completed:{},caseDone:{},discursive:{},examHistory:[]};
 let server,browser,base;
 before(async()=>{
@@ -64,7 +64,7 @@ test('login validates, blocks duplicate sends, and shows actionable errors',asyn
 });
 test('registration is separate, validates confirmation, and requests email confirmation',async()=>{
  const t=await open(),p=t.page;await p.locator('#master-register-tab').click();await p.locator('#master-email').fill(user.email);await p.locator('#master-password').fill('strong-password');await p.locator('#master-confirm').fill('different');await p.locator('#master-submit').click();await text(p,'#master-auth-message',/não coincidem/);assert.equal((await calls(p,'register')).length,0);
- await p.locator('#master-confirm').fill('strong-password');await p.locator('#master-submit').click();await text(p,'#master-auth-message',/confirmar o cadastro/);assert.equal((await calls(p,'register')).length,1);await t.close();
+ await p.locator('#master-confirm').fill('strong-password');await p.locator('#master-submit').click();await p.getByRole('dialog',{name:'Cadastro realizado!'}).waitFor();await p.getByRole('button',{name:'OK, vou confirmar meu e-mail'}).click();await text(p,'#master-auth-message',/Confirme seu e-mail/);assert.equal((await calls(p,'register')).length,1);await t.close();
 });
 test('forgot password validates email and retains a neutral success message',async()=>{
  const t=await open(),p=t.page;assert.equal(await p.locator('#master-google').isHidden(),true);await p.locator('#master-forgot').click();assert.equal(await p.locator('#master-password').count(),0);await p.locator('#master-email').fill(user.email);await p.locator('#master-submit').click();await text(p,'#master-auth-message',/Se o endereço estiver cadastrado/);assert.equal((await calls(p,'forgot')).length,1);await t.close();
@@ -102,7 +102,7 @@ test('expired recovery link and expired session stay locked, login remains usabl
 test('account changes replace all in-memory modules and prevent progress leaking',async()=>{
  const t=await open({session:true,remote:[{storage_key:keys[0],payload:{...empty,completed:{neuro1_0:true}}},{storage_key:keys[2],payload:{notes:{neuro1_0:'private-a'},lastTopic:'neuro2',lastChapter:1}}]}),p=t.page;
  await p.waitForFunction(()=>document.getElementById('master-auth').hidden);assert.equal(await p.evaluate(()=>store.completed.neuro1_0),true);
- await p.evaluate(()=>{fixture.remote=[{storage_key:'master_p2_lucas_v1',payload:{results:{},completed:{gastro_0:true}}}];const user={id:'user-b',email:'bia@example.test',user_metadata:{full_name:'Bia'}};__authTest.emit('SIGNED_IN',{user});});
+ await p.evaluate(()=>{fixture.remote=[{storage_key:'master_p2_lucas_v1',payload:{results:{},completed:{gastro_0:true}}}];const user={id:'user-b',email:'bia@example.test',user_metadata:{master_welcome_tour_v1:true,full_name:'Bia'}};__authTest.emit('SIGNED_IN',{user});});
  await text(p,'#master-profile-email',/bia@example.test/);await p.waitForFunction(()=>document.getElementById('master-auth').hidden);
  assert.equal(await p.evaluate(()=>store.completed.neuro1_0),undefined);assert.equal(await p.evaluate(()=>store.completed.gastro_0),true);assert.equal(await p.evaluate(()=>HIG.resumeInfo().title.includes('Guillain')),false);
  await p.evaluate(()=>{store.completed.gastro_1=true;stateSave();});await p.waitForFunction(()=>calls.some(c=>c.name==='upsert'&&c.args.user_id==='user-b'));assert.equal((await calls(p,'upsert')).filter(c=>c.args.user_id==='user-b').some(c=>c.args.payload.notes?.neuro1_0==='private-a'),false);await t.close();
@@ -268,7 +268,7 @@ test('account illustration is stable, changes with the account and never interpo
  const t=await open({session:true}),p=t.page;await p.waitForFunction(()=>document.getElementById('master-auth').hidden);
  const first=await p.locator('#master-avatar').innerHTML();assert.equal(await p.locator('#master-avatar').innerText(),'');assert.equal(await p.locator('#master-avatar svg').count(),1);
  await p.reload();await p.waitForFunction(()=>document.getElementById('master-auth').hidden);assert.equal(await p.locator('#master-avatar').innerHTML(),first);
- await p.evaluate(()=>__authTest.emit('SIGNED_IN',{user:{id:'user-b',email:'bia@example.test',user_metadata:{full_name:'<img src=x onerror=alert(1)>'}}}));
+ await p.evaluate(()=>__authTest.emit('SIGNED_IN',{user:{id:'user-b',email:'bia@example.test',user_metadata:{master_welcome_tour_v1:true,full_name:'<img src=x onerror=alert(1)>'}}}));
  await p.waitForFunction(()=>document.getElementById('master-auth').hidden&&document.getElementById('master-profile-email').textContent==='bia@example.test');
  assert.notEqual(await p.locator('#master-avatar').innerHTML(),first);assert.equal(await p.locator('#master-profile-name img').count(),0);assert.equal(await p.locator('#master-profile-name').textContent(),'<img src=x onerror=alert(1)>');await t.close();
 });
@@ -301,7 +301,7 @@ test('pomodoro splits midnight and keeps accounts isolated during a running sess
  const t=await open({session:true}),p=t.page;await p.waitForFunction(()=>document.getElementById('master-auth').hidden);await freezeTime(p,'2026-11-11T23:59:50Z');
  await p.locator('#focus-top').click();await p.locator('[data-focus-toggle]').click();await p.waitForFunction(()=>FocusTimer.status().running);await p.clock.fastForward(30000);await p.keyboard.press('Escape');
  let days=await p.evaluate(()=>FocusTimer.status().days);assert.equal(days['2026-11-11'].ms,10000);assert.equal(days['2026-11-12'].ms,20000);
- await p.evaluate(()=>__authTest.emit('SIGNED_IN',{user:{id:'user-b',email:'bia@example.test',user_metadata:{}}}));await p.clock.runFor(1);await text(p,'#master-profile-email',/bia@example.test/);await p.waitForFunction(()=>document.getElementById('master-auth').hidden);
+ await p.evaluate(()=>__authTest.emit('SIGNED_IN',{user:{id:'user-b',email:'bia@example.test',user_metadata:{master_welcome_tour_v1:true}}}));await p.clock.runFor(1);await text(p,'#master-profile-email',/bia@example.test/);await p.waitForFunction(()=>document.getElementById('master-auth').hidden);
  assert.equal(await p.evaluate(()=>FocusTimer.status().running),false);assert.deepEqual(await p.evaluate(()=>FocusTimer.status().days),{});await p.clock.fastForward(60000);assert.deepEqual(await p.evaluate(()=>FocusTimer.status().days),{});await t.close();
 });
 test('a second tab cannot double-count a running pomodoro for the same account',async()=>{

@@ -1,0 +1,68 @@
+.master-qb {
+  margin-block: 1rem;
+  overflow-wrap: anywhere;
+}
+.qb-filters {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr));
+  align-items: end;
+  gap: .8rem;
+  margin-block: 1rem;
+}
+.qb-filters label {
+  display: grid;
+  gap: .25rem;
+}
+.qb-filters :is(select, input) {
+  font: inherit;
+  color: inherit;
+  background: transparent;
+  border: 1px solid currentColor;
+  border-radius: .45rem;
+  min-height: 2.75rem;
+  width: 100%;
+  padding: .4rem;
+}
+.qb-filters option {
+  color: CanvasText;
+  background: Canvas;
+}
+.qb-list-item {
+  padding-block: 1rem;
+  border-top: 1px solid var(--line, currentColor);
+}
+.qb-stem {
+  white-space: pre-wrap;
+}
+.qb-actions, .qb-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .6rem;
+  margin-block: .8rem;
+}
+.qb-options {
+  flex-direction: column;
+}
+.master-qb button {
+  min-height: 2.75rem;
+  max-width: 100%;
+  white-space: normal;
+  text-align: start;
+}
+.master-qb button[aria-pressed="true"] {
+  outline: 2px solid currentColor;
+  outline-offset: -3px;
+}
+.qb-stat {
+  display: block;
+  margin-block: .8rem;
+}
+
+.qb-options textarea {
+  box-sizing: border-box;
+  width: 100%;
+  padding: .7rem;
+  color: inherit;
+  background: transparent;
+  font: inherit;
+}
