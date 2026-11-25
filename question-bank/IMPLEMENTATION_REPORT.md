@@ -10,6 +10,8 @@ O lote legado tem 56 questões da P1 e 80 da P2, todas preservadas no site. Uma 
 
 A curadoria deve revisar os gabaritos e confirmar os direitos da coleção legada antes de liberá-la no banco novo. A meta de 600 itens depende dos lotes científicos. O pipeline aceita candidatos de PDFs com a estrutura documentada. A detecção de paráfrases depende do modelo multilíngue escolhido pela equipe.
 
+Os testes de navegador do banco passaram em larguras de 390, 768 e 1.440 px com autenticação e RPC simuladas. O build e os testes de histórico e sincronização passaram. Três falhas dos testes gerais de conta também ocorreram ao executá-los diretamente na `main` de origem. A suíte geral precisa ficar verde antes de liberar o PR.
+
 ## Homologação
 
 A migração e os testes de acesso rodaram em PostgreSQL 17 local, com as funções e papéis de autenticação Supabase simulados. A aplicação da migração, os advisors e a verificação de ponta a ponta com usuários reais ainda dependem da instância Supabase de homologação do Clínica Master. Nenhuma migração foi aplicada em produção. O cronômetro da sessão roda no navegador, e as sessões novas em andamento são mantidas em memória até o recarregamento da página.

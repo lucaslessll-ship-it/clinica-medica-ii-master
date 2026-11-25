@@ -296,7 +296,14 @@ def main():
     args = parser.parse_args()
     if args.command == "import" and args.batch_size < 1:
         parser.error("--batch-size precisa ser positivo")
-    return extract(args) if args.command == "extract" else process(args)
+    try:
+        return extract(args) if args.command == "extract" else process(args)
+    except (OSError, KeyError, ValueError, subprocess.SubprocessError, ImportError) as error:
+        failure = json.dumps({"errors": [{"error": str(error)}]}, ensure_ascii=False, indent=2)
+        if args.report:
+            args.report.write_text(failure + "\n", encoding="utf-8")
+        print(failure)
+        return 1
 
 
 if __name__ == "__main__":

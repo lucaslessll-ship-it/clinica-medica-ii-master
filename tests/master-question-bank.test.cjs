@@ -9,7 +9,7 @@ const {exportLegacy} = require('../question-bank/export-legacy.cjs');
 const app = 'MASTER_Clinica_Medica_II_v7_GitHub_Completo_Lucas_Lessa';
 
 function authFixture() {
-  const user = {id: 'question-bank-test', email: 'fixture@example.test'};
+  const user = {id: 'question-bank-test', email: 'fixture@example.test', user_metadata: {master_welcome_tour_v1: true}};
   const question = {
     id: '10000000-0000-4000-8000-000000000001',
     stem: 'Enunciado sintético do teste', period: 'P2', difficulty: 'N2', origin: 'autoral_master',
