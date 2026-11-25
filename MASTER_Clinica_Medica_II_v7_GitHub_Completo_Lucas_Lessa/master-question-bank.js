@@ -144,6 +144,17 @@
       question.source_level, origins[question.origin], question.source_style].filter(Boolean).join(' · ');
   }
 
+  function questionTags(question) {
+    const tags = node('div', undefined, 'qb-question-tags');
+    const style = question.origin === 'banco_cm2' && question.source_style?.match(/\b(USP|UNICAMP|FMP)\b/i)?.[1];
+    const origin = style ? 'CM2 · Estilo ' + style.toUpperCase() : origins[question.origin];
+    if (origin) tags.append(node('span', origin, 'qb-question-tag'));
+    if (question.difficulty) {
+      tags.append(node('span', question.difficulty, 'qb-question-tag qb-level-tag'));
+    }
+    return tags;
+  }
+
   function addProvenance(parent, question, includeMetadata = false) {
     if (!includeMetadata && !question.reference && !question.source_mentions) return;
     const source = node('details', undefined, 'qb-source');
@@ -203,7 +214,7 @@
       const progress = node('div', undefined, 'qb-progress');
       progress.append(node('h2', 'Questão ' + (state.position + 1) + ' de ' + state.items.length));
       if (state.timed) progress.append(status);
-      holder.append(progress, node('p', question.stem, 'qb-stem qb-stem-primary'));
+      holder.append(progress, questionTags(question), node('p', question.stem, 'qb-stem qb-stem-primary'));
       const answers = node('div', undefined, 'qb-options');
       for (const [index, option] of question.options.entries()) {
         const choice = button(undefined, () => answer(question, option));
