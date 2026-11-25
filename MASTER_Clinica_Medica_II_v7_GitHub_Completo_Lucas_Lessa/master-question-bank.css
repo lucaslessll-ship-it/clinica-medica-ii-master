@@ -128,3 +128,13 @@
   background: transparent;
   font: inherit;
 }
+
+#questoes-da-aula {
+  scroll-margin-block-start: 6rem;
+}
+.qb-history-notice {
+  margin-block: 1rem;
+}
+.qb-history-notice p {
+  margin: 0 0 .5rem;
+}
