@@ -80,12 +80,12 @@ function navMarkup(){
  const groups=[
   ['Início','home',['dashboard','planner','today'],'dashboard','COMEÇAR'],
   ['OSCE · Clínica Médica','osce',['osce'],'osce','TREINO EM DESTAQUE'],
-  ['Clínica Médica','book',['topics','p1'],'topics','DISCIPLINAS'],
+  ['Clínica Médica','book',['topics','p1','practice','exam','p1practice','p1exam','revisao'],'topics','DISCIPLINAS'],
   ['Urgência e Emergência','emergency',['emergency-p1','emergency-p2','emergency-questions','emergency-simulado'],'emergency'],
   ['Cirurgia','scalpel',['cirp2','cirp1','cirpractice','cirexam'],'cir'],
   ['Super Foco','train',['superfoco'],'superfoco','PRATICAR E REVISAR'],
   ['Casos clínicos','practice',['cases','oral'],'cases'],
-  ['Questões e revisões','train',['practice','flashcards','discursive','revisao','exam'],'practice'],
+  ['Flashcards e discursivas','train',['flashcards','discursive'],'flashcards'],
   ['Raciocínio clínico','lab',['decisionlab','banca','reverse'],'decisionlab'],
   ['ECG','pulse',['ecg'],'ecg','INTERPRETAR EXAMES'],
   ['POCCUS','probe',['pocus'],'pocus'],
@@ -96,7 +96,7 @@ function navMarkup(){
   ['Biblioteca','library',['notes','sources'],'notes','CONSULTAR']
  ];
  const belongs=ids=>ids[0]==='emergency-p1'&&ui.route==='emergency'||ids.includes(ui.route)||['micro','labferro','hemo','labrenal','labmicrocitose'].includes(ui.route)&&ids.includes('labmaster')||ui.route==='topic'&&ids.includes('topics')||ui.route.startsWith('p1')&&ids.includes('p1')||ui.route.startsWith('cir')&&ids.includes('cirp1');
- const navLabels={topics:'Clínica Médica II · P2',p1:'Clínica Médica I · P1',today:'Plano de hoje',cirp2:'Cirurgia · P2',cirp1:'Cirurgia · P1','emergency-p1':'P1 · Aulas e casos','emergency-p2':'P2 · Aulas e prova','emergency-questions':'Questões','emergency-simulado':'Simulados',labmaster:'Percurso completo · 20 trilhas',p1:'Matérias P1',topics:'Matérias P2',cirp1:'Matérias P1',cirp2:'Matérias P2',cirpractice:'Questões',cirexam:'Simulado',revisao:'Revisão das erradas'};
+ const navLabels={practice:'Questões · P2',exam:'Simulado · P2',p1practice:'Questões · P1',p1exam:'Simulado · P1',topics:'Clínica Médica II · P2',p1:'Clínica Médica I · P1',today:'Plano de hoje',cirp2:'Cirurgia · P2',cirp1:'Cirurgia · P1','emergency-p1':'P1 · Aulas e casos','emergency-p2':'P2 · Aulas e prova','emergency-questions':'Questões','emergency-simulado':'Simulados',labmaster:'Percurso completo · 20 trilhas',p1:'Matérias P1',topics:'Matérias P2',cirp1:'Matérias P1',cirp2:'Matérias P2',cirpractice:'Questões',cirexam:'Simulado',revisao:'Revisão das erradas'};
  if(navLastRoute!==ui.route){navOpenGroups.clear();groups.forEach((g,i)=>{if(belongs(g[2]))navOpenGroups.add(i)});navLastRoute=ui.route;}
  document.getElementById('sidebar-nav').innerHTML=groups.map(([label,icon,ids,home,sectionLabel],i)=>{home=home||ids[0];
  const active=belongs(ids),open=navOpenGroups.has(i),children=ids.length>1;
