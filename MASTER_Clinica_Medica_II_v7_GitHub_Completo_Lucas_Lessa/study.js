@@ -9,7 +9,7 @@ function state(){return store.study||(store.study={version:1,since:new Date().to
 function settings(){return {...{intervals:[1,3,7],dailyLimit:20},...state().settings}}
 function today(now=new Date()){return now.toLocaleDateString('en-CA')}
 function due(now=new Date()){return Object.entries(state().reviews||{}).filter(([i,r])=>QUESTION_BANK[i]&&r.correct===false&&!!r.due&&store.results[i]?.correct!==true&&r.due<=today(now)).map(([i])=>Number(i)).slice(0,settings().dailyLimit)}
-function selectQuestions(filter){const all=QUESTION_BANK.map((_,i)=>i);if(filter==='errors')return all.filter(i=>store.results[i]&&!store.results[i].correct);if(filter==='unanswered')return all.filter(i=>!store.results[i]);if(filter==='due')return due();return filter==='all'?all:all.filter(i=>QUESTION_BANK[i].t===filter)}
+function selectQuestions(filter){const all=QUESTION_BANK.map((_,i)=>i);if(filter==='errors')return all.filter(i=>store.results[i]&&!store.results[i].correct);if(filter==='unanswered')return all.filter(i=>!store.results[i]);if(filter==='due')return due();return filter==='all'?all:all.filter(i=>QUESTION_BANK[i].t===filter&&QUESTION_BANK[i].training)}
 function record(i,answer,confidence,helped,now=new Date()){
  const st=state();st.reviews=st.reviews||{};const previous=st.reviews[i],correct=answer===QUESTION_BANK[i].a;
  const level=correct&&!helped?Math.min((previous?.level??-1)+1,2):0,days=correct?settings().intervals[level]:1;

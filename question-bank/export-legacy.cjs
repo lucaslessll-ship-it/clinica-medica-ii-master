@@ -6,7 +6,7 @@ const directory = path.resolve(__dirname, '../MASTER_Clinica_Medica_II_v7_GitHub
 
 function exportLegacy() {
   const context = vm.createContext({window: {}});
-  for (const file of ['questions.js', 'banca_questions.js', 'p1_questions.js']) {
+  for (const file of ['questions.js', 'banca_questions.js', 'p1_questions.js', 'topic-training-questions.js']) {
     vm.runInContext(fs.readFileSync(path.join(directory, file), 'utf8'), context, {filename: file});
   }
   return ['P1', 'P2'].flatMap(period => {
@@ -21,7 +21,7 @@ function exportLegacy() {
       original_answer: q.a >= 0 && q.a < q.o.length ? String.fromCharCode(65 + q.a) : '',
       comment: q.why,
       origin: 'autoral_master',
-      profiles: [],
+      profiles: q.profile ? [q.profile] : [],
       difficulty: 'N' + q.level,
       bibliography: [],
       medical_status: 'pendente',

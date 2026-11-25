@@ -108,6 +108,17 @@ test('banco, filtros, aula, simulado e progresso legado em três tamanhos', {tim
       await page.getByText('1 questão disponível para esta aula').waitFor();
       assert.ok(await page.evaluate(() => window.qbTestCalls.some(call => call.args?.filters?.lesson === 'neuro1_0')));
       assert.equal(await page.evaluate(() => JSON.parse(localStorage.getItem('master_p2_lucas_v1')).results[0].correct), true);
+      if (viewport.width === 1440) {
+        await page.evaluate(() => navigate('p1practice'));
+        await page.locator('.topic-grid').getByRole('button', {name: /Diabetes em situações especiais/}).click();
+        await page.locator('.p1-question').waitFor();
+        assert.match(await page.locator('#main-content h1').textContent(), /1 de 3/);
+
+        await page.evaluate(() => startPractice('neuro1'));
+        await page.locator('.question-stem').waitFor();
+        assert.deepEqual(await page.evaluate(() =>
+          ui.practice.ids.map(id => QUESTION_BANK[id].level).sort()), [1, 2, 3]);
+      }
       assert.deepEqual(errors, []);
       await page.close();
     }
