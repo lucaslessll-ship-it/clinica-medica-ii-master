@@ -67,12 +67,14 @@ test('Barra lateral: categorias inteligíveis, OSCE à frente, todas as rotas ú
  const source=read('app.js');
  const m=source.match(/ const groups=\[([\s\S]*?)\n \];\n const belongs=/);
  assert.ok(m,'grupos de navegação');
- const groups=vm.runInNewContext('['+m[1]+']');
+ const window={addEventListener(){}};
+ vm.runInNewContext(read('master-question-bank.js'),{window});
+ const groups=vm.runInNewContext('['+m[1]+']',{MasterQuestionBank:window.MasterQuestionBank});
  const names=groups.map(g=>g[0]),ids=groups.flatMap(g=>g[2]);
  assert.equal(groups.length,16);
  assert.equal(groups[1][0],'OSCE · Clínica Médica');
  assert.equal(new Set(ids).size,ids.length);
- for(const id of ['dashboard','today','topics','p1','osce','superfoco','practice','revisao','ecg','pocus','labmaster','atb','prescriptions','notes','sources'])
+ for(const id of ['dashboard','today','topics','p1','osce','superfoco','practice','revisao','ecg','pocus','labmaster','atb','prescriptions','notes','sources','qb-bank','qb-exam','qb-errors','qb-favorites','qb-stats'])
   assert.ok(ids.includes(id),'Rota não pode desaparecer: '+id);
  for(const title of ['DISCIPLINAS','PRATICAR E REVISAR','INTERPRETAR EXAMES','CONDUTAS E TERAPÊUTICA','CONSULTAR'])
   assert.ok(groups.some(g=>g[4]===title),'Categoria ausente: '+title);
