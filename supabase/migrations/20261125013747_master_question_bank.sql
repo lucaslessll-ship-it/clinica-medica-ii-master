@@ -13,18 +13,22 @@ create table master_question_bank.questions (
       and content->>'rights_status' = 'autorizada', false)
   ) stored not null,
   check (content->>'discipline' is not distinct from 'clinica_medica'),
-  check (jsonb_typeof(content->'options') is not distinct from 'array'),
+  check (case when content ? 'model_answer' then
+    content->>'origin' = 'banco_cm2' and not (content ? 'options')
+      and nullif(btrim(content->>'model_answer'), '') is not null
+    else jsonb_typeof(content->'options') is not distinct from 'array' end),
   check (not published or (
     nullif(btrim(content->>'rights_reference'), '') is not null
     and nullif(btrim(content->>'comment'), '') is not null
     and jsonb_array_length(content->'revision_history') > 0
     and jsonb_array_length(content->'bibliography') > 0
     and jsonb_array_length(content->'lesson_ids') > 0
-    and content->'options' @> jsonb_build_array(jsonb_build_object('id',content->>'reviewed_answer'))
-    and not jsonb_path_exists(content, '$.options[*] ? (!exists(@.comment) || @.comment == "")')
+    and ((content ? 'model_answer') or content->'options' @> jsonb_build_array(jsonb_build_object('id',content->>'reviewed_answer')))
+    and (content->>'origin' = 'banco_cm2' or not jsonb_path_exists(content, '$.options[*] ? (!exists(@.comment) || @.comment == "")'))
     and (content->>'origin' = 'autoral_master' or (
       content->>'origin' = 'banco_cm2'
-      and content ?& array['source_level','source_style','reference','page','number','original_answer']
+      and content ?& array['source_level','source_style','reference','page','number']
+      and (content ? 'model_answer' or content ? 'original_answer')
     ) or (
       content->>'origin' in ('fmp_oswaldo','sao_paulo','enamed','enare','outras_residencias')
       and content ?& array['institution','board','year','number','reference','original_answer']
@@ -74,6 +78,8 @@ returns jsonb language sql volatile security definer set search_path = '' as $$
       and (filters->>'subtheme' is null or q.content->>'subtheme'=filters->>'subtheme')
       and (filters->>'origin' is null or q.content->>'origin'=filters->>'origin'
         or (filters->>'origin'='bancos_e_provas' and q.content->>'origin'<>'autoral_master'))
+      and case filters->>'format' when 'discursive' then q.content ? 'model_answer'
+        when 'objective' then not (q.content ? 'model_answer') else true end
       and (filters->>'difficulty' is null or q.content->>'difficulty'=filters->>'difficulty')
       and (filters->>'profile' is null or q.content->'profiles' ? (filters->>'profile'))
       and (filters->>'lesson' is null or q.content->'lesson_ids' ? (filters->>'lesson')
@@ -100,9 +106,9 @@ returns jsonb language sql volatile security definer set search_path = '' as $$
       'origin',content->>'origin','difficulty',content->>'difficulty','stem',content->>'stem',
       'favorite',favorite,'reference',content->>'reference',
       'source_level',content->>'source_level','source_style',content->>'source_style',
-      'source_mentions',content->>'source_mentions',
-      'options',(select jsonb_agg(jsonb_build_object('id',item->>'id','text',item->>'text') order by position)
-        from jsonb_array_elements(content->'options') with ordinality as options(item,position))
+      'source_mentions',content->>'source_mentions','discursive',(content ? 'model_answer'),
+      'options',coalesce((select jsonb_agg(jsonb_build_object('id',item->>'id','text',item->>'text') order by position)
+        from jsonb_array_elements(content->'options') with ordinality as options(item,position)),'[]'::jsonb)
     ) order by priority, shuffle_order, id) from page),'[]'::jsonb)
   );
 $$;
@@ -123,6 +129,13 @@ begin
       values (student,qid,favorite_value)
       on conflict (user_id,question_id) do update set favorite=excluded.favorite;
     return jsonb_build_object('favorite',favorite_value);
+  end if;
+  if question ? 'model_answer' then
+    if choice is distinct from 'discursive' or submission is null then
+      raise exception 'Invalid discursive submission' using errcode='22023';
+    end if;
+    return jsonb_build_object('id',qid,'correct',null,'model_answer',question->>'model_answer',
+      'comment',question->>'comment','bibliography',question->'bibliography');
   end if;
   if choice is null or submission is null or not (question->'options' @> jsonb_build_array(jsonb_build_object('id',choice))) then
     raise exception 'Invalid answer or submission' using errcode='22023';

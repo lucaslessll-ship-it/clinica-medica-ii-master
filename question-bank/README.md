@@ -57,6 +57,5 @@ provas mencionadas para o tema. Os estilos de banca indicam a abordagem editoria
 As menções de recorrência informam onde o tema apareceu segundo o PDF.
 
 Os níveis R1 e R+ do PDF são preservados e mapeados para N2 e N3. Questões sem aula
-específica associada ficam vinculadas ao assunto. O arquivo de discursivas mantém a resposta-modelo
-para curadoria e uso futuro em um fluxo próprio. O fluxo atual de simulados corrigidos recebe
-múltipla escolha. A liberação exige revisão médica e autorização de reprodução do material.
+específica associada ficam vinculadas ao assunto. As discursivas mantêm a resposta-modelo para autocorreção, no treino e ao entregar o simulado.
+O total de acertos considera as objetivas. A liberação exige revisão médica e autorização de reprodução do material.

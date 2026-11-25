@@ -8,7 +8,6 @@
     "theme",
     "lesson_ids",
     "stem",
-    "options",
     "origin",
     "profiles",
     "difficulty",
@@ -243,6 +242,11 @@
     "source_mentions": {
       "type": "string",
       "minLength": 1
+    },
+    "model_answer": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S"
     }
   },
   "allOf": [
@@ -257,7 +261,6 @@
       "then": {
         "required": [
           "subtheme",
-          "reviewed_answer",
           "comment"
         ],
         "properties": {
@@ -272,13 +275,6 @@
           },
           "revision_history": {
             "minItems": 1
-          },
-          "options": {
-            "items": {
-              "required": [
-                "comment"
-              ]
-            }
           }
         }
       }
@@ -338,9 +334,101 @@
           "source_style",
           "reference",
           "page",
-          "number",
-          "original_answer"
+          "number"
         ]
+      }
+    },
+    {
+      "if": {
+        "required": [
+          "model_answer"
+        ]
+      },
+      "then": {
+        "properties": {
+          "origin": {
+            "const": "banco_cm2"
+          }
+        },
+        "not": {
+          "anyOf": [
+            {
+              "required": [
+                "options"
+              ]
+            },
+            {
+              "required": [
+                "original_answer"
+              ]
+            },
+            {
+              "required": [
+                "reviewed_answer"
+              ]
+            }
+          ]
+        }
+      },
+      "else": {
+        "required": [
+          "options"
+        ],
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "medical_status": {
+                  "const": "validada"
+                }
+              }
+            },
+            "then": {
+              "required": [
+                "reviewed_answer"
+              ]
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "origin": {
+                  "const": "banco_cm2"
+                }
+              }
+            },
+            "then": {
+              "required": [
+                "original_answer"
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "medical_status": {
+            "const": "validada"
+          },
+          "origin": {
+            "not": {
+              "const": "banco_cm2"
+            }
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "options": {
+            "items": {
+              "required": [
+                "comment"
+              ]
+            }
+          }
+        }
       }
     }
   ]

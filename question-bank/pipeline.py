@@ -28,7 +28,7 @@ def tokens(text):
 
 def prepare(question):
     VALIDATOR.validate(question)
-    options = question["options"]
+    options = question.get("options", [])
     ids = [item["id"] for item in options]
     texts = [" ".join(tokens(item["text"])) for item in options]
     if len(set(ids)) != len(ids) or len(set(texts)) != len(texts):

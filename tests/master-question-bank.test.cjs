@@ -21,6 +21,10 @@ function authFixture() {
     options: [{...question.options[0], comment: 'Comentário da A'}, {...question.options[1], comment: 'Comentário da B'}],
     bibliography: ['Referência de teste'],
   };
+  const essay = {...question, id: '10000000-0000-4000-8000-000000000002',
+    stem: 'Discursiva de teste', options: [], discursive: true, origin: 'banco_cm2'};
+  const model = {id: essay.id, correct: null, model_answer: 'Modelo discursivo de teste',
+    comment: 'Comentário discursivo', bibliography: []};
   localStorage.setItem('master_auth_local_owner', user.id);
   localStorage.setItem('master_dicas_v1', JSON.stringify({desligado: true, focoUsado: true}));
   localStorage.setItem('master_p2_lucas_v1', JSON.stringify({results: {0: {correct: true, answer: 0}}}));
@@ -42,11 +46,11 @@ function authFixture() {
     },
     async rpc(name, args) {
       window.qbTestCalls.push({name, args});
-      if (name === 'master_qb_record_batch') return {data: [result]};
+      if (name === 'master_qb_record_batch') return {data: args.answers.map(item => item.qid === essay.id ? model : result)};
       if (name === 'master_qb_record') return {data: result};
       if (name !== 'master_qb_catalog') return {data: {}};
       return {data: {total: 1, attempts: 0, hits: 0, themes: ['neuro1'], subthemes: ['fixture'],
-        items: args.take ? [question] : []}};
+        items: args.take ? [args.filters?.format === "discursive" ? essay : question] : []}};
     },
   })};
 }
@@ -115,6 +119,19 @@ test('banco, filtros, aula, simulado e progresso legado em três tamanhos', {tim
         await lesson.getByText('1 questão disponível para esta aula').waitFor();
         await lesson.getByRole('button', {name: 'Iniciar sessão'}).click();
         await lesson.getByRole('button', {name: 'Entregar simulado'}).waitFor();
+        await lesson.getByRole('button', {name: 'Entregar simulado'}).click();
+        await lesson.getByRole('button', {name: 'Voltar aos filtros'}).click();
+        await lesson.getByLabel('Formato da questão', {exact: true}).selectOption('discursive');
+        await lesson.getByText('Discursiva de teste', {exact: true}).waitFor();
+        await lesson.getByRole('button', {name: 'Iniciar sessão'}).click();
+        await lesson.getByRole('textbox', {name: 'Sua resposta discursiva'}).fill('Rascunho privado');
+        assert.equal(await lesson.getByText('Modelo discursivo de teste').count(), 0);
+        await lesson.getByRole('button', {name: 'Entregar simulado'}).click();
+        await lesson.locator('.qb-player summary').click();
+        await lesson.getByText('Modelo discursivo de teste').waitFor();
+        await lesson.getByText('Rascunho privado').waitFor();
+        assert.ok(await page.evaluate(() => window.qbTestCalls.some(call =>
+          call.args?.answers?.some(item => item.choice === 'discursive'))));
         assert.ok(await page.evaluate(() => window.qbTestCalls.some(call =>
           call.args?.filters?.lesson === 'neuro1_0' &&
           call.args.filters.origin === 'bancos_e_provas' && call.args.filters.random)));

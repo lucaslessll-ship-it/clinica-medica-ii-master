@@ -107,14 +107,21 @@
     }
   }
 
-  function feedback(result, options) {
+  function feedback(result, options, draft) {
     const block = node('div', undefined, 'qb-feedback');
     block.setAttribute('role', 'status');
-    block.append(node('strong', result.correct ? 'Resposta correta' : 'Resposta incorreta'), node('p', result.comment));
+    if (result.model_answer) {
+      if (draft) block.append(node('strong', 'Sua resposta'), node('p', draft, 'qb-stem'));
+      block.append(node('strong', 'Resposta-modelo · autocorreção'), node('p', result.model_answer));
+    } else {
+      block.append(node('strong', result.correct ? 'Resposta correta' : 'Resposta incorreta'));
+    }
+    block.append(node('p', result.comment));
     for (const [index, option] of options.entries()) {
       const explanation = result.options.find(item => item.id === option.id);
       const mark = result.answer === option.id ? ' (correta)' : '';
-      block.append(node('p', String.fromCharCode(65 + index) + mark + '. ' + explanation.comment));
+      if (mark || explanation?.comment) block.append(node('p',
+        String.fromCharCode(65 + index) + mark + '. ' + (explanation?.comment || option.text)));
     }
     if (result.bibliography.length) block.append(node('p', 'Referências — ' + result.bibliography.join(' · ')));
     return block;
@@ -138,7 +145,7 @@
           const result = state.results.get(item.id);
           if (!result) continue;
           const detail = node('details');
-          detail.append(node('summary', item.stem), feedback(result, item.options));
+          detail.append(node('summary', item.stem), feedback(result, item.options, state.drafts.get(item.id)));
           holder.append(detail);
         }
         holder.append(button('Voltar aos filtros', onExit));
@@ -156,8 +163,29 @@
           (pending && state.choices.get(question.id) !== option.id);
         answers.append(choice);
       }
+      if (question.discursive && !state.results.has(question.id)) {
+        const draft = node('textarea');
+        draft.setAttribute('aria-label', 'Sua resposta discursiva');
+        draft.rows = 6;
+        draft.value = state.drafts.get(question.id) || '';
+        draft.disabled = state.busy || state.expired;
+        draft.addEventListener('input', () => {
+          if (state.expired || (state.timed && Date.now() >= state.deadline)) return;
+          state.drafts.set(question.id, draft.value);
+          if (state.timed) {
+            if (draft.value.trim()) state.choices.set(question.id, 'discursive');
+            else state.choices.delete(question.id);
+          }
+        });
+        answers.append(draft);
+        if (!state.timed) {
+          const reveal = button('Comparar com a resposta-modelo', () => answer(question, {id: 'discursive'}));
+          reveal.disabled = state.busy || state.expired;
+          answers.append(reveal);
+        }
+      }
       holder.append(answers, error);
-      if (state.results.has(question.id)) holder.append(feedback(state.results.get(question.id), question.options));
+      if (state.results.has(question.id)) holder.append(feedback(state.results.get(question.id), question.options, state.drafts.get(question.id)));
       const controls = node('div', undefined, 'qb-actions');
       if (state.position > 0 && state.timed) controls.append(button('Anterior', () => move(-1)));
       if (state.position + 1 < state.items.length) {
@@ -256,7 +284,7 @@
     return {
       items: items.map(item => ({...item, options: seedShuffle(item.options)})),
       owner: activeOwner, timed, deadline: Date.now() + items.length * 120_000, position: 0,
-      choices: new Map(), results: new Map(), submissions: new Map(),
+      choices: new Map(), results: new Map(), submissions: new Map(), drafts: new Map(),
     };
   }
 
@@ -276,6 +304,7 @@
     field(form, 'period', 'Período', {P1: 'P1', P2: 'P2'}, initial.period);
     const themes = field(form, 'theme', 'Tema', {}, initial.theme);
     const subthemes = field(form, 'subtheme', 'Subtema', {}, initial.subtheme);
+    field(form, 'format', 'Formato da questão', {objective: 'Objetiva', discursive: 'Discursiva'}, initial.format);
     field(form, 'origin', 'Origem', {bancos_e_provas: 'Bancos e provas', ...origins}, initial.origin);
     field(form, 'difficulty', 'Dificuldade', {N1: 'N1', N2: 'N2', N3: 'N3'}, initial.difficulty);
     const profile = field(form, 'profile', 'Perfil pedagógico', profiles, initial.profile);

@@ -57,3 +57,12 @@
   display: block;
   margin-block: .8rem;
 }
+
+.qb-options textarea {
+  box-sizing: border-box;
+  width: 100%;
+  padding: .7rem;
+  color: inherit;
+  background: transparent;
+  font: inherit;
+}

@@ -21,6 +21,11 @@ select '10000000-0000-4000-8000-000000005004',lpad('5004',64,'0'),content || '{
   "source_mentions":"Tema presente em outra prova","difficulty":"N3","lesson_ids":["tema-fixture"]
 }'::jsonb
 from master_question_bank.questions where id='10000000-0000-4000-8000-000000000001';
+insert into master_question_bank.questions(id,hash,content)
+select '10000000-0000-4000-8000-000000005005',lpad('5005',64,'0'),
+  (content - 'options' - 'original_answer' - 'reviewed_answer')
+    || '{"model_answer":"Resposta-modelo fixture","number":"Q2"}'::jsonb
+from master_question_bank.questions where id='10000000-0000-4000-8000-000000005004';
 
 set local role anon;
 do $$begin
@@ -54,11 +59,20 @@ begin
     raise exception 'lesson linkage failed';
   end if;
   result := public.master_qb_catalog(
-    '{"lesson":"tema-fixture_1","legacy_topic":"tema-fixture","origin":"bancos_e_provas","difficulty":"N3"}',12);
+    '{"lesson":"tema-fixture_1","legacy_topic":"tema-fixture","origin":"bancos_e_provas","difficulty":"N3","format":"objective"}',12);
   if (result->>'total')::int <> 1 or result #>> '{items,0,origin}' is distinct from 'banco_cm2'
       or result #>> '{items,0,reference}' is distinct from 'PDF de teste, p. 2, Q1'
       or result #>> '{items,0,source_level}' is distinct from 'R+' then
     raise exception 'reconstructed source, topic fallback or grouped origin filter failed';
+  end if;
+  result := public.master_qb_catalog('{"format":"discursive"}',12);
+  if (result->>'total')::int <> 1 or (result#>'{items,0}') ? 'model_answer'
+      or result#>>'{items,0,discursive}' is distinct from 'true' then
+    raise exception 'discursive catalog or answer visibility failed';
+  end if;
+  result := public.master_qb_record('10000000-0000-4000-8000-000000005005','discursive',null,submission);
+  if result->>'model_answer' is distinct from 'Resposta-modelo fixture' or result->>'correct' is not null then
+    raise exception 'discursive self-correction failed';
   end if;
   result := public.master_qb_record(question,'A',null,submission);
   if (result->>'correct')::boolean or result->>'answer'<>'B'
