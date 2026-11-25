@@ -22,7 +22,7 @@ before(async()=>{
 after(async()=>{await browser?.close();await new Promise(resolve=>server.close(resolve))});
 
 function authFixture(){
- const user={id:'ux-smoke-fixture',email:'ux-fixture@example.test',user_metadata:{full_name:'Teste UX'}};
+ const user={id:'ux-smoke-fixture',email:'ux-fixture@example.test',user_metadata:{master_welcome_tour_v1:true,full_name:'Teste UX'}};
  localStorage.setItem('master_auth_local_owner',user.id);
  localStorage.setItem('master_dicas_v1',JSON.stringify({desligado:true,focoUsado:true}));
  window.supabase={createClient:()=>({
