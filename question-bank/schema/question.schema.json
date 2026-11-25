@@ -142,7 +142,8 @@
         "enamed",
         "enare",
         "outras_residencias",
-        "autoral_master"
+        "autoral_master",
+        "banco_cm2"
       ]
     },
     "profiles": {
@@ -228,6 +229,20 @@
       "type": "string",
       "minLength": 1,
       "pattern": "\\S"
+    },
+    "source_level": {
+      "enum": [
+        "R1",
+        "R+"
+      ]
+    },
+    "source_style": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source_mentions": {
+      "type": "string",
+      "minLength": 1
     }
   },
   "allOf": [
@@ -287,7 +302,10 @@
         "properties": {
           "origin": {
             "not": {
-              "const": "autoral_master"
+              "enum": [
+                "autoral_master",
+                "banco_cm2"
+              ]
             }
           },
           "medical_status": {
@@ -302,6 +320,25 @@
           "year",
           "number",
           "reference",
+          "original_answer"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "origin": {
+            "const": "banco_cm2"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "source_level",
+          "source_style",
+          "reference",
+          "page",
+          "number",
           "original_answer"
         ]
       }

@@ -15,6 +15,7 @@
     conduta_terapeutica: 'Conduta terapêutica',
   };
   const origins = {
+    banco_cm2: 'Banco CM2 reconstruído',
     fmp_oswaldo: 'FMP / Oswaldo — prova real', sao_paulo: 'Provas de São Paulo', enamed: 'ENAMED',
     enare: 'ENARE', outras_residencias: 'Outras provas de residência', autoral_master: 'Autoral Master',
   };
@@ -95,7 +96,15 @@
   }
 
   function questionTitle(question) {
-    return [question.period, question.theme, question.difficulty, origins[question.origin]].join(' · ');
+    return [question.period, question.subtheme || question.theme, question.difficulty,
+      question.source_level, origins[question.origin], question.source_style].filter(Boolean).join(' · ');
+  }
+
+  function addProvenance(parent, question) {
+    if (question.reference) parent.append(node('p', question.reference, 'subtle'));
+    if (question.source_mentions) {
+      parent.append(node('p', 'Provas mencionadas para o tema no PDF — ' + question.source_mentions, 'subtle'));
+    }
   }
 
   function feedback(result, options) {
@@ -137,6 +146,7 @@
       }
       holder.append(node('h2', 'Questão ' + (state.position + 1) + ' de ' + state.items.length), status,
         node('p', questionTitle(question)), node('p', question.stem, 'qb-stem'));
+      addProvenance(holder, question);
       const answers = node('div', undefined, 'qb-options');
       for (const [index, option] of question.options.entries()) {
         const choice = button(String.fromCharCode(65 + index) + '. ' + option.text, () => answer(question, option));
@@ -251,7 +261,10 @@
   }
 
   function catalogScreen(root, route) {
-    if (basket?.route !== route) basket = {route};
+    const lesson = root.dataset.qbLesson;
+    const scope = lesson ? {lesson, legacy_topic: lesson.split('_')[0]} : {};
+    const key = lesson ? route + ':' + lesson : route;
+    if (basket?.key !== key) basket = {key};
     const state = basket;
     const form = node('form', undefined, 'qb-filters');
     const pane = node('div');
@@ -263,7 +276,7 @@
     field(form, 'period', 'Período', {P1: 'P1', P2: 'P2'}, initial.period);
     const themes = field(form, 'theme', 'Tema', {}, initial.theme);
     const subthemes = field(form, 'subtheme', 'Subtema', {}, initial.subtheme);
-    field(form, 'origin', 'Origem', origins, initial.origin);
+    field(form, 'origin', 'Origem', {bancos_e_provas: 'Bancos e provas', ...origins}, initial.origin);
     field(form, 'difficulty', 'Dificuldade', {N1: 'N1', N2: 'N2', N3: 'N3'}, initial.difficulty);
     const profile = field(form, 'profile', 'Perfil pedagógico', profiles, initial.profile);
     const performance = field(form, 'performance', 'Desempenho',
@@ -285,7 +298,7 @@
     let total = 0;
 
     function begin(items, selectedMode) {
-      session = {route, value: createSession(items, selectedMode)};
+      session = {key, value: createSession(items, selectedMode)};
       pane.hidden = true;
       player(content, session.value, () => {
         session = null;
@@ -298,6 +311,7 @@
     function listItem(item) {
       const article = node('article', undefined, 'qb-list-item');
       article.append(node('p', questionTitle(item)), node('p', item.stem, 'qb-stem'));
+      addProvenance(article, item);
       article.append(button('Treinar questão', () => begin([item], 'practice')));
       const favorite = button(item.favorite ? 'Remover dos favoritos' : 'Favoritar', async () => {
         favorite.disabled = true;
@@ -333,7 +347,7 @@
       count.textContent = 'Consultando questões…';
       try {
         const selected = saved || Object.fromEntries(new FormData(form));
-        const filters = filterSet(form);
+        const filters = {...filterSet(form), ...scope};
         const facets = {...filters};
         delete facets.theme;
         delete facets.subtheme;
@@ -343,7 +357,7 @@
         const subfacet = themes.value ? await catalog({...facets, theme: themes.value}, 0) : base;
         if (!root.isConnected || generation !== request) return;
         fill(subthemes, subfacet.subthemes, selected.subtheme);
-        const data = await catalog(filterSet(form), pageSize, offset);
+        const data = await catalog({...filterSet(form), ...scope}, pageSize, offset);
         if (!root.isConnected || generation !== request) return;
         if (offset && offset >= data.total) {
           offset = 0;
@@ -353,7 +367,8 @@
         state.offset = offset;
         state.values = Object.fromEntries(Array.from(form.elements).filter(control => control.name)
           .map(control => [control.name, control.value]));
-        count.textContent = total + (total === 1 ? ' questão disponível' : ' questões disponíveis');
+        count.textContent = total + (total === 1 ? ' questão disponível' : ' questões disponíveis') +
+          (lesson ? ' para esta aula' : '');
         start.disabled = total === 0;
         listing.replaceChildren(...data.items.map(listItem));
         const controls = node('div', undefined, 'qb-actions');
@@ -381,7 +396,7 @@
       const selectedMode = mode.value;
       try {
         const limit = Math.min(total, Number(quantity.value), selectedMode === 'focus' ? 5 : 100);
-        const data = await catalog({...filterSet(form), random: true}, limit);
+        const data = await catalog({...filterSet(form), ...scope, random: true}, limit);
         if (!root.isConnected || generation !== request) return;
         if (data.items.length) begin(data.items, selectedMode);
         else await load();
@@ -392,7 +407,7 @@
         }
       }
     });
-    if (session?.route === route) {
+    if (session?.key === key) {
       pane.hidden = true;
       player(content, session.value, () => {
         session = null;
@@ -401,31 +416,6 @@
         void load(initial);
       });
     } else void load(initial);
-  }
-
-  async function loadLesson(root) {
-    const lesson = root.dataset.qbLesson;
-    const status = node('p', 'Consultando questões vinculadas…');
-    status.setAttribute('role', 'status');
-    const playerHost = node('div');
-    root.append(status, playerHost);
-    let offset = 0;
-    async function show() {
-      try {
-        const data = await catalog({lesson, legacy_topic: lesson.split('_')[0]}, pageSize, offset);
-        if (!root.isConnected) return;
-        status.textContent = data.total + (data.total === 1 ? ' questão disponível para esta aula' : ' questões disponíveis para esta aula');
-        const items = data.items.map(item => button(item.stem, () => {
-          player(playerHost, createSession([item], 'practice'), show);
-        }));
-        if (offset) items.push(button('Página anterior', () => { offset -= pageSize; void show(); }));
-        if (offset + pageSize < data.total) items.push(button('Próxima página', () => { offset += pageSize; void show(); }));
-        playerHost.replaceChildren(...items);
-      } catch (failure) {
-        if (root.isConnected) status.textContent = failure.message;
-      }
-    }
-    await show();
   }
 
   async function stats(root) {
@@ -455,8 +445,7 @@
       root.append(node('p', 'Entre com sua conta para acessar o banco.'));
       return;
     }
-    if (root.dataset.qbLesson) void loadLesson(root);
-    else if (root.dataset.qbRoute === 'qb-stats') void stats(root);
+    if (root.dataset.qbRoute === 'qb-stats') void stats(root);
     else catalogScreen(root, root.dataset.qbRoute);
   }
 

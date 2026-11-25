@@ -23,6 +23,9 @@ create table master_question_bank.questions (
     and content->'options' @> jsonb_build_array(jsonb_build_object('id',content->>'reviewed_answer'))
     and not jsonb_path_exists(content, '$.options[*] ? (!exists(@.comment) || @.comment == "")')
     and (content->>'origin' = 'autoral_master' or (
+      content->>'origin' = 'banco_cm2'
+      and content ?& array['source_level','source_style','reference','page','number','original_answer']
+    ) or (
       content->>'origin' in ('fmp_oswaldo','sao_paulo','enamed','enare','outras_residencias')
       and content ?& array['institution','board','year','number','reference','original_answer']
     ))
@@ -69,11 +72,12 @@ returns jsonb language sql volatile security definer set search_path = '' as $$
       and (filters->>'period' is null or q.period=filters->>'period')
       and (filters->>'theme' is null or q.theme=filters->>'theme')
       and (filters->>'subtheme' is null or q.content->>'subtheme'=filters->>'subtheme')
-      and (filters->>'origin' is null or q.content->>'origin'=filters->>'origin')
+      and (filters->>'origin' is null or q.content->>'origin'=filters->>'origin'
+        or (filters->>'origin'='bancos_e_provas' and q.content->>'origin'<>'autoral_master'))
       and (filters->>'difficulty' is null or q.content->>'difficulty'=filters->>'difficulty')
       and (filters->>'profile' is null or q.content->'profiles' ? (filters->>'profile'))
       and (filters->>'lesson' is null or q.content->'lesson_ids' ? (filters->>'lesson')
-        or (q.content ? 'legacy_key' and q.content->'lesson_ids' ? (filters->>'legacy_topic')))
+        or (q.theme=filters->>'legacy_topic' and q.content->'lesson_ids' ? (filters->>'legacy_topic')))
       and case filters->>'performance' when 'wrong' then p.last_correct=false
         when 'correct' then p.last_correct=true
         when 'focus' then p.last_correct=false or p.due_at<=now() or p.attempts=0 or p.attempts is null
@@ -94,7 +98,9 @@ returns jsonb language sql volatile security definer set search_path = '' as $$
     'items',coalesce((select jsonb_agg(jsonb_build_object(
       'id',id,'period',period,'theme',theme,'subtheme',content->>'subtheme',
       'origin',content->>'origin','difficulty',content->>'difficulty','stem',content->>'stem',
-      'favorite',favorite,
+      'favorite',favorite,'reference',content->>'reference',
+      'source_level',content->>'source_level','source_style',content->>'source_style',
+      'source_mentions',content->>'source_mentions',
       'options',(select jsonb_agg(jsonb_build_object('id',item->>'id','text',item->>'text') order by position)
         from jsonb_array_elements(content->'options') with ordinality as options(item,position))
     ) order by priority, shuffle_order, id) from page),'[]'::jsonb)

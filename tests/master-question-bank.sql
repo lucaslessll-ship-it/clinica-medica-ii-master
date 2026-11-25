@@ -14,6 +14,13 @@ select ('10000000-0000-4000-8000-'||lpad(i::text,12,'0'))::uuid, lpad(to_hex(i),
     'medical_status',case when i=5002 then 'pendente' else 'validada' end,
     'rights_status',case when i=5003 then 'restrita' else 'autorizada' end,'rights_reference','fixture')
 from generate_series(1,5003) i;
+insert into master_question_bank.questions(id,hash,content)
+select '10000000-0000-4000-8000-000000005004',lpad('5004',64,'0'),content || '{
+  "origin":"banco_cm2","source_level":"R+","source_style":"estilo USP","number":"Q1","page":2,
+  "reference":"PDF de teste, p. 2, Q1","original_answer":"B",
+  "source_mentions":"Tema presente em outra prova","difficulty":"N3","lesson_ids":["tema-fixture"]
+}'::jsonb
+from master_question_bank.questions where id='10000000-0000-4000-8000-000000000001';
 
 set local role anon;
 do $$begin
@@ -45,6 +52,13 @@ begin
   end if;
   if (public.master_qb_catalog('{"lesson":"unrelated"}',0)->>'total')::int <> 0 then
     raise exception 'lesson linkage failed';
+  end if;
+  result := public.master_qb_catalog(
+    '{"lesson":"tema-fixture_1","legacy_topic":"tema-fixture","origin":"bancos_e_provas","difficulty":"N3"}',12);
+  if (result->>'total')::int <> 1 or result #>> '{items,0,origin}' is distinct from 'banco_cm2'
+      or result #>> '{items,0,reference}' is distinct from 'PDF de teste, p. 2, Q1'
+      or result #>> '{items,0,source_level}' is distinct from 'R+' then
+    raise exception 'reconstructed source, topic fallback or grouped origin filter failed';
   end if;
   result := public.master_qb_record(question,'A',null,submission);
   if (result->>'correct')::boolean or result->>'answer'<>'B'

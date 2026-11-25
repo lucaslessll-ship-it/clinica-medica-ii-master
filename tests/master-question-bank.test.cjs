@@ -109,6 +109,15 @@ test('banco, filtros, aula, simulado e progresso legado em três tamanhos', {tim
       assert.ok(await page.evaluate(() => window.qbTestCalls.some(call => call.args?.filters?.lesson === 'neuro1_0')));
       assert.equal(await page.evaluate(() => JSON.parse(localStorage.getItem('master_p2_lucas_v1')).results[0].correct), true);
       if (viewport.width === 1440) {
+        const lesson = page.locator('[data-qb-lesson="neuro1_0"]');
+        await lesson.getByLabel('Origem', {exact: true}).selectOption('bancos_e_provas');
+        await lesson.getByLabel('Modalidade', {exact: true}).selectOption('timed');
+        await lesson.getByText('1 questão disponível para esta aula').waitFor();
+        await lesson.getByRole('button', {name: 'Iniciar sessão'}).click();
+        await lesson.getByRole('button', {name: 'Entregar simulado'}).waitFor();
+        assert.ok(await page.evaluate(() => window.qbTestCalls.some(call =>
+          call.args?.filters?.lesson === 'neuro1_0' &&
+          call.args.filters.origin === 'bancos_e_provas' && call.args.filters.random)));
         await page.evaluate(() => navigate('p1practice'));
         await page.locator('.topic-grid').getByRole('button', {name: /Diabetes em situações especiais/}).click();
         await page.locator('.p1-question').waitFor();

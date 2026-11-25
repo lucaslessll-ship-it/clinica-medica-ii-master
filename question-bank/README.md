@@ -47,3 +47,16 @@ A API retorna apenas questões com validação médica e autorização de reprod
 - `node --test tests/master-question-bank.test.cjs` verifica navegação e simulado em três tamanhos de tela com a API simulada.
 - `python -m unittest discover -s question-bank` verifica estrutura, gabaritos, interpretação do texto extraído, hash e similaridade lexical.
 - Execute `tests/master-question-bank.sql` com `psql` contra uma instância local migrada. O teste cria 5.003 registros sintéticos dentro de uma transação revertida e verifica filtros, vínculos, gabarito e isolamento por conta.
+
+## Banco CM2 reconstruído
+
+Execute `python question-bank/import-cm2.py caminho/para/Banco_CM2_por_assunto_e_dificuldade.pdf`
+para produzir dois arquivos privados em `question-bank/review/`. A extração preserva código e
+página do PDF, alternativas na ordem do documento, gabarito informado, comentário, estilo e
+provas mencionadas para o tema. Os estilos de banca indicam a abordagem editorial.
+As menções de recorrência informam onde o tema apareceu segundo o PDF.
+
+Os níveis R1 e R+ do PDF são preservados e mapeados para N2 e N3. Questões sem aula
+específica associada ficam vinculadas ao assunto. O arquivo de discursivas mantém a resposta-modelo
+para curadoria e uso futuro em um fluxo próprio. O fluxo atual de simulados corrigidos recebe
+múltipla escolha. A liberação exige revisão médica e autorização de reprodução do material.
