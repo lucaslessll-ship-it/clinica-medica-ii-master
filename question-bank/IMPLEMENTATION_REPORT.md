@@ -15,3 +15,11 @@ Os testes de navegador do banco passaram em larguras de 390, 768 e 1.440 px com 
 ## Homologação
 
 A migração e os testes de acesso rodaram em PostgreSQL 17 local, com as funções e papéis de autenticação Supabase simulados. O Supabase CLI executou os advisors contra o banco local sem encontrar avisos ou erros. A aplicação da migração e a verificação de ponta a ponta com usuários reais dependem da instância Supabase de homologação do Clínica Master. Nenhuma migração foi aplicada em produção. O cronômetro da sessão roda no navegador, e as sessões novas em andamento são mantidas em memória até o recarregamento da página.
+
+## Revisão para publicação
+
+- **Acesso e correção.** As tabelas privadas têm RLS e acesso direto revogado para os papéis cliente. O catálogo exige usuário autenticado e só retorna itens com aprovação e autorização. A correção guarda a tentativa por usuário e usa o identificador original da alternativa. As retentativas da mesma entrega são idempotentes.
+- **Importação.** A extração gera candidatos para curadoria. O hash normalizado, a chave legada e o UUID foram verificados na importação repetida. A similaridade semântica depende de um modelo local escolhido e validado pela equipe.
+- **Interface.** O simulado agora confere o prazo ao receber a resposta, inclusive se a aba em segundo plano atrasar o relógio. Uma consulta de catálogo com erro limpa a lista anterior para que ela não seja confundida com os resultados dos filtros atuais. O relógio continua sendo um controle da interface.
+- **CI.** A revisão anterior passou nas checagens de pipeline e banco, leitura e layout. As checagens gerais de qualidade e filtros falharam. No ensaio local de leitura e questões, 14 de 15 testes passaram. A falha restante reproduzida nesse ensaio envolve a abertura do controle de exclusão de uma marcação em uma aula.
+- **Publicação.** O GitHub Pages publica após integração à `main`. A criação da branch Supabase de homologação foi recusada, e a pasta `approved/` ainda não contém lotes. A checagem de ponta a ponta com o Supabase do projeto continua pendente.

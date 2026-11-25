@@ -177,6 +177,10 @@
     async function answer(question, option) {
       if (state.busy || state.expired) return;
       if (state.timed) {
+        if (Date.now() >= state.deadline) {
+          await submit();
+          return;
+        }
         state.choices.set(question.id, option.id);
         for (const element of holder.querySelectorAll('.qb-options button')) {
           element.setAttribute('aria-pressed', String(element.textContent.slice(0, 1) ===
@@ -357,8 +361,11 @@
         if (offset + pageSize < total) controls.append(button('Próxima página', () => { offset += pageSize; void load(); }));
         listing.append(controls);
       } catch (failure) {
-        if (root.isConnected && generation === request) count.replaceChildren(
-          document.createTextNode(failure.message + ' '), button('Tentar novamente', () => load(saved)));
+        if (root.isConnected && generation === request) {
+          listing.replaceChildren();
+          count.replaceChildren(document.createTextNode(failure.message + ' '),
+            button('Tentar novamente', () => load(saved)));
+        }
       }
     }
 
