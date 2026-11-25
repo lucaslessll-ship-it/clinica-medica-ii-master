@@ -14,6 +14,7 @@ function authFixture() {
     id: '10000000-0000-4000-8000-000000000001',
     stem: 'Enunciado sintético do teste', period: 'P2', difficulty: 'N2', origin: 'autoral_master',
     theme: 'neuro1', subtheme: 'fixture', favorite: false,
+    reference: 'Questões de teste, p. 2', source_mentions: 'Prova de teste P2',
     options: [{id: 'A', text: 'Alternativa A'}, {id: 'B', text: 'Alternativa B'}],
   };
   const result = {
@@ -125,6 +126,18 @@ test('banco, filtros, aula, simulado e progresso legado em três tamanhos', {tim
       assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1));
       await page.getByRole('button', {name: 'Gerar simulado'}).click();
       await page.getByRole('heading', {name: 'Questão 1 de 2', exact: true}).waitFor();
+      const player = page.locator('.qb-player');
+      const source = player.getByText('Fonte e detalhes', {exact: true});
+      const reference = player.getByText('Questões de teste, p. 2', {exact: true});
+      assert.equal(await reference.isVisible(), false);
+      assert.ok(await player.evaluate(element =>
+        parseFloat(getComputedStyle(element.querySelector('.qb-stem-primary')).fontSize) >
+        parseFloat(getComputedStyle(element.querySelector('.qb-clock')).fontSize)));
+      assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1));
+      await source.click();
+      await reference.waitFor();
+      await player.getByText(/Provas mencionadas.*Prova de teste P2/).waitFor();
+      await source.click();
       await page.getByRole('button', {name: /Alternativa B/}).click();
       assert.equal(await page.getByText('Comentário geral de teste').count(), 0);
       await page.getByRole('button', {name: 'Entregar simulado'}).click();

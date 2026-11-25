@@ -144,11 +144,16 @@
       question.source_level, origins[question.origin], question.source_style].filter(Boolean).join(' · ');
   }
 
-  function addProvenance(parent, question) {
-    if (question.reference) parent.append(node('p', question.reference, 'subtle'));
+  function addProvenance(parent, question, includeMetadata = false) {
+    if (!includeMetadata && !question.reference && !question.source_mentions) return;
+    const source = node('details', undefined, 'qb-source');
+    source.append(node('summary', 'Fonte e detalhes'));
+    if (includeMetadata) source.append(node('p', questionTitle(question)));
+    if (question.reference) source.append(node('p', question.reference));
     if (question.source_mentions) {
-      parent.append(node('p', 'Provas mencionadas para o tema no PDF — ' + question.source_mentions, 'subtle'));
+      source.append(node('p', 'Provas mencionadas para o tema no PDF — ' + question.source_mentions));
     }
+    parent.append(source);
   }
 
   function feedback(result, options, draft) {
@@ -175,7 +180,7 @@
     clearInterval(ticker);
     const holder = node('section', undefined, 'qb-player');
     parent.replaceChildren(holder);
-    const status = node('p');
+    const status = node('span', undefined, 'qb-clock');
     const error = node('p');
     error.setAttribute('role', 'alert');
 
@@ -195,12 +200,17 @@
         holder.append(button('Voltar aos filtros', onExit));
         return;
       }
-      holder.append(node('h2', 'Questão ' + (state.position + 1) + ' de ' + state.items.length), status,
-        node('p', questionTitle(question)), node('p', question.stem, 'qb-stem'));
-      addProvenance(holder, question);
+      const progress = node('div', undefined, 'qb-progress');
+      progress.append(node('h2', 'Questão ' + (state.position + 1) + ' de ' + state.items.length));
+      if (state.timed) progress.append(status);
+      holder.append(progress, node('p', question.stem, 'qb-stem qb-stem-primary'));
       const answers = node('div', undefined, 'qb-options');
       for (const [index, option] of question.options.entries()) {
-        const choice = button(String.fromCharCode(65 + index) + '. ' + option.text, () => answer(question, option));
+        const choice = button(undefined, () => answer(question, option));
+        choice.classList.add('qb-choice');
+        choice.dataset.option = option.id;
+        choice.append(node('span', String.fromCharCode(65 + index) + '.', 'qb-choice-letter'),
+          node('span', option.text));
         choice.setAttribute('aria-pressed', String(state.choices.get(question.id) === option.id));
         const pending = state.submissions.has(question.id) && !state.timed;
         choice.disabled = state.busy || state.results.has(question.id) || state.expired ||
@@ -241,6 +251,7 @@
       finish.disabled = state.busy;
       controls.append(finish);
       holder.append(controls);
+      addProvenance(holder, question, true);
     }
 
     function move(step) {
@@ -264,9 +275,8 @@
           return;
         }
         state.choices.set(question.id, option.id);
-        for (const element of holder.querySelectorAll('.qb-options button')) {
-          element.setAttribute('aria-pressed', String(element.textContent.slice(0, 1) ===
-            String.fromCharCode(65 + question.options.indexOf(option))));
+        for (const element of holder.querySelectorAll('[data-option]')) {
+          element.setAttribute('aria-pressed', String(element.dataset.option === option.id));
         }
         return;
       }
@@ -417,8 +427,8 @@
 
     function listItem(item) {
       const article = node('article', undefined, 'qb-list-item');
-      article.append(node('p', questionTitle(item)), node('p', item.stem, 'qb-stem'));
-      addProvenance(article, item);
+      article.append(node('p', item.stem, 'qb-stem qb-list-stem'),
+        node('p', questionTitle(item), 'qb-list-meta'));
       article.append(button('Treinar questão', () => begin([item], 'practice')));
       const favorite = button(item.favorite ? 'Remover dos favoritos' : 'Favoritar', async () => {
         favorite.disabled = true;
@@ -432,6 +442,7 @@
       });
       favorite.setAttribute('aria-pressed', String(item.favorite));
       article.append(favorite);
+      addProvenance(article, item);
       return article;
     }
 
