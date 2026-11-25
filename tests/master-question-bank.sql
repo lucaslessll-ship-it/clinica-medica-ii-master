@@ -26,6 +26,10 @@ select '10000000-0000-4000-8000-000000005005',lpad('5005',64,'0'),
   (content - 'options' - 'original_answer' - 'reviewed_answer')
     || '{"model_answer":"Resposta-modelo fixture","number":"Q2"}'::jsonb
 from master_question_bank.questions where id='10000000-0000-4000-8000-000000005004';
+insert into master_question_bank.questions(id,hash,content)
+select '10000000-0000-4000-8000-000000005006',lpad('5006',64,'0'),
+  content || '{"theme":"outro-tema"}'::jsonb
+from master_question_bank.questions where id='10000000-0000-4000-8000-000000000001';
 
 set local role anon;
 do $$begin
@@ -73,6 +77,15 @@ begin
   result := public.master_qb_record('10000000-0000-4000-8000-000000005005','discursive',null,submission);
   if result->>'model_answer' is distinct from 'Resposta-modelo fixture' or result->>'correct' is not null then
     raise exception 'discursive self-correction failed';
+  end if;
+  result := public.master_qb_catalog(
+    '{"themes":["tema-fixture","outro-tema"],"period":"P2","format":"objective","random":true}',2);
+  if (result->>'total')::int <> 2503 or jsonb_array_length(result->'items') <> 2
+      or result#>>'{items,0,theme}' is not distinct from result#>>'{items,1,theme}' then
+    raise exception 'multi-topic count or balanced sample failed';
+  end if;
+  if (public.master_qb_catalog('{"themes":["outro-tema","missing"]}',0)->>'total')::int <> 1 then
+    raise exception 'multi-topic OR filter failed';
   end if;
   result := public.master_qb_record(question,'A',null,submission);
   if (result->>'correct')::boolean or result->>'answer'<>'B'

@@ -279,8 +279,12 @@
     }
   }
 
+  function isTimed(mode) {
+    return ['timed', 'fmp', 'residency'].includes(mode);
+  }
+
   function createSession(items, mode) {
-    const timed = ['timed', 'fmp', 'residency'].includes(mode);
+    const timed = isTimed(mode);
     return {
       items: items.map(item => ({...item, options: seedShuffle(item.options)})),
       owner: activeOwner, timed, deadline: Date.now() + items.length * 120_000, position: 0,
@@ -300,25 +304,46 @@
     count.setAttribute('role', 'status');
     const listing = node('div', undefined, 'qb-list');
     const initial = state.values || {};
-    const mode = field(form, 'mode', 'Modalidade', modes, initial.mode || (route === 'qb-exam' ? 'timed' : 'practice'), false);
-    field(form, 'period', 'Período', {P1: 'P1', P2: 'P2'}, initial.period);
-    const themes = field(form, 'theme', 'Tema', {}, initial.theme);
-    const subthemes = field(form, 'subtheme', 'Subtema', {}, initial.subtheme);
-    field(form, 'format', 'Formato da questão', {objective: 'Objetiva', discursive: 'Discursiva'}, initial.format);
-    field(form, 'origin', 'Origem', {bancos_e_provas: 'Bancos e provas', ...origins}, initial.origin);
-    field(form, 'difficulty', 'Dificuldade', {N1: 'N1', N2: 'N2', N3: 'N3'}, initial.difficulty);
-    const profile = field(form, 'profile', 'Perfil pedagógico', profiles, initial.profile);
-    const performance = field(form, 'performance', 'Desempenho',
+    const selectedTopics = new Set(state.topics || []);
+    const topics = node('details', undefined, 'qb-disclosure qb-topic-picker');
+    const topicSummary = node('summary', 'Matérias · Todas');
+    const topicList = node('div', undefined, 'qb-topic-list');
+    const clearTopics = button('Usar todas as matérias', () => {
+      selectedTopics.clear();
+      for (const input of topicList.querySelectorAll('input')) input.checked = false;
+      refreshSelection();
+    });
+    clearTopics.classList.add('ghost');
+    topics.append(topicSummary, topicList, clearTopics);
+    if (!lesson) form.append(topics);
+
+    const essentials = node('div', undefined, 'qb-essentials');
+    const mode = field(essentials, 'mode', 'Modalidade', modes, initial.mode || (route === 'qb-exam' ? 'timed' : 'practice'), false);
+    const quantity = field(essentials, 'quantity', 'Questões', null, initial.quantity || '20');
+    Object.assign(quantity, {type: 'number', min: 1, max: 100, required: true});
+    form.append(essentials);
+
+    const advanced = node('details', undefined, 'qb-disclosure qb-advanced');
+    const advancedFields = node('div', undefined, 'qb-advanced-grid');
+    advanced.append(node('summary', 'Mais filtros'), advancedFields);
+    field(advancedFields, 'period', 'Período', {P1: 'P1', P2: 'P2'}, initial.period);
+    const subthemes = field(advancedFields, 'subtheme', 'Subtema', {}, initial.subtheme);
+    field(advancedFields, 'format', 'Formato da questão', {objective: 'Objetiva', discursive: 'Discursiva'}, initial.format);
+    field(advancedFields, 'origin', 'Origem', {bancos_e_provas: 'Bancos e provas', ...origins}, initial.origin);
+    field(advancedFields, 'difficulty', 'Dificuldade', {N1: 'N1', N2: 'N2', N3: 'N3'}, initial.difficulty);
+    const profile = field(advancedFields, 'profile', 'Perfil pedagógico', profiles, initial.profile);
+    const performance = field(advancedFields, 'performance', 'Desempenho',
       {wrong: 'Erros', correct: 'Acertos'}, initial.performance || (route === 'qb-errors' ? 'wrong' : ''));
-    const situation = field(form, 'status', 'Situação',
+    const situation = field(advancedFields, 'status', 'Situação',
       {favorites: 'Favoritas', new: 'Não respondidas', due: 'Revisão vencida'},
       initial.status || (route === 'qb-favorites' ? 'favorites' : ''));
-    const quantity = field(form, 'quantity', 'Quantidade', null, initial.quantity || '20');
-    Object.assign(quantity, {type: 'number', min: 1, max: 100, required: true});
-    const start = node('button', 'Iniciar sessão', 'btn primary');
+    const start = node('button', undefined, 'btn primary');
     start.type = 'submit';
-    form.append(start);
-    pane.append(form, count, listing);
+    count.className = 'qb-count';
+    const launch = node('div', undefined, 'qb-launch');
+    launch.append(count, start);
+    form.append(advanced, launch);
+    pane.append(form, listing);
     root.append(pane);
     const content = node('div');
     root.append(content);
@@ -357,14 +382,56 @@
       return article;
     }
 
-    function fill(select, values, prior) {
-      select.replaceChildren(new Option('Qualquer', ''));
-      for (const value of values.filter(Boolean).sort((a, b) => a.localeCompare(b, 'pt-BR'))) {
-        const topic = [...(window.MASTER_DATA?.topics || []), ...(window.MASTER_P1_DATA?.topics || [])]
-          .find(item => item.id === value);
-        select.append(new Option(topic?.title || value, value));
+    function activeFilters() {
+      const themes = Array.from(selectedTopics);
+      return {...filterSet(form), ...scope, ...(themes.length ? {themes} : {})};
+    }
+
+    function topicLabel(id) {
+      const topic = [...(window.MASTER_DATA?.topics || []), ...(window.MASTER_P1_DATA?.topics || [])]
+        .find(item => item.id === id);
+      return topic?.title || (id === 'pocus' ? 'POCUS' : id);
+    }
+
+    function updateTopicSummary() {
+      const count = selectedTopics.size;
+      topicSummary.textContent = count === 1 ? 'Matérias · ' + topicLabel(selectedTopics.values().next().value)
+        : count > 1 ? 'Matérias · ' + count + ' selecionadas' : 'Matérias · Todas';
+      clearTopics.hidden = !count;
+    }
+
+    function refreshSelection() {
+      state.topics = Array.from(selectedTopics);
+      updateTopicSummary();
+      offset = 0;
+      void load();
+    }
+
+    function renderTopics(ids) {
+      topicList.replaceChildren();
+      for (const id of ids.filter(Boolean).sort((a, b) => topicLabel(a).localeCompare(topicLabel(b), 'pt-BR'))) {
+        const label = node('label', undefined, 'qb-topic-option');
+        const input = node('input');
+        input.type = 'checkbox';
+        input.checked = selectedTopics.has(id);
+        input.addEventListener('change', event => {
+          event.stopPropagation();
+          if (input.checked) selectedTopics.add(id);
+          else selectedTopics.delete(id);
+          refreshSelection();
+        });
+        label.append(input, node('span', topicLabel(id)));
+        topicList.append(label);
       }
-      if (Array.from(select.options).some(option => option.value === prior)) select.value = prior;
+      updateTopicSummary();
+    }
+
+    function fillSubthemes(values, prior) {
+      subthemes.replaceChildren(new Option('Qualquer', ''));
+      for (const value of values.filter(Boolean).sort((a, b) => a.localeCompare(b, 'pt-BR'))) {
+        subthemes.append(new Option(value, value));
+      }
+      if (values.includes(prior)) subthemes.value = prior;
     }
 
     async function load(saved) {
@@ -373,20 +440,24 @@
       performance.disabled = ['focus', 'wrong'].includes(mode.value);
       situation.disabled = mode.value === 'due';
       start.disabled = true;
+      start.textContent = isTimed(mode.value) ? 'Gerar simulado' : 'Iniciar treino';
       count.textContent = 'Consultando questões…';
       try {
         const selected = saved || Object.fromEntries(new FormData(form));
-        const filters = {...filterSet(form), ...scope};
-        const facets = {...filters};
-        delete facets.theme;
+        if (!lesson && !topicList.childElementCount) {
+          const available = state.availableTopics || (await catalog({}, 0)).themes;
+          if (!root.isConnected || generation !== request) return;
+          state.availableTopics = available;
+          renderTopics(available);
+        }
+        const facets = activeFilters();
         delete facets.subtheme;
-        const base = await catalog(facets, 0);
+        const base = await catalog(facets, selected.subtheme ? 0 : pageSize, offset);
         if (!root.isConnected || generation !== request) return;
-        fill(themes, base.themes, selected.theme);
-        const subfacet = themes.value ? await catalog({...facets, theme: themes.value}, 0) : base;
-        if (!root.isConnected || generation !== request) return;
-        fill(subthemes, subfacet.subthemes, selected.subtheme);
-        const data = await catalog({...filterSet(form), ...scope}, pageSize, offset);
+        fillSubthemes(base.subthemes, selected.subtheme);
+        const data = selected.subtheme
+          ? await catalog(activeFilters(), pageSize, offset)
+          : base;
         if (!root.isConnected || generation !== request) return;
         if (offset && offset >= data.total) {
           offset = 0;
@@ -425,7 +496,7 @@
       const selectedMode = mode.value;
       try {
         const limit = Math.min(total, Number(quantity.value), selectedMode === 'focus' ? 5 : 100);
-        const data = await catalog({...filterSet(form), ...scope, random: true}, limit);
+        const data = await catalog({...activeFilters(), random: true}, limit);
         if (!root.isConnected || generation !== request) return;
         if (data.items.length) begin(data.items, selectedMode);
         else await load();

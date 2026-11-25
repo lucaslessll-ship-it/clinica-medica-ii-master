@@ -21,6 +21,8 @@ function authFixture() {
     options: [{...question.options[0], comment: 'Comentário da A'}, {...question.options[1], comment: 'Comentário da B'}],
     bibliography: ['Referência de teste'],
   };
+  const otherTopic = {...question, id: '10000000-0000-4000-8000-000000000003',
+    theme: 'gastro', stem: 'Enunciado de Gastroenterologia'};
   const essay = {...question, id: '10000000-0000-4000-8000-000000000002',
     stem: 'Discursiva de teste', options: [], discursive: true, origin: 'banco_cm2'};
   const model = {id: essay.id, correct: null, model_answer: 'Modelo discursivo de teste',
@@ -49,8 +51,11 @@ function authFixture() {
       if (name === 'master_qb_record_batch') return {data: args.answers.map(item => item.qid === essay.id ? model : result)};
       if (name === 'master_qb_record') return {data: result};
       if (name !== 'master_qb_catalog') return {data: {}};
-      return {data: {total: 1, attempts: 0, hits: 0, themes: ['neuro1'], subthemes: ['fixture'],
-        items: args.take ? [args.filters?.format === "discursive" ? essay : question] : []}};
+      const items = args.filters?.format === 'discursive' ? [essay]
+        : args.filters?.themes ? [question, otherTopic].filter(item => args.filters.themes.includes(item.theme))
+          : [question];
+      return {data: {total: items.length, attempts: 0, hits: 0, themes: ['neuro1', 'gastro'], subthemes: ['fixture'],
+        items: items.slice(0, args.take)}};
     },
   })};
 }
@@ -94,11 +99,20 @@ test('banco, filtros, aula, simulado e progresso legado em três tamanhos', {tim
       await page.waitForFunction(() => document.getElementById('master-auth')?.hidden);
       await page.getByText('1 questão disponível', {exact: true}).waitFor();
       assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1));
+      assert.equal(await page.locator('.qb-advanced').evaluate(details => details.open), false);
+      await page.getByText('Mais filtros', {exact: true}).click();
       await page.getByLabel('Período', {exact: true}).selectOption('P2');
       await page.getByText('1 questão disponível', {exact: true}).waitFor();
       await page.getByLabel('Dificuldade', {exact: true}).selectOption('N2');
       await page.getByText('1 questão disponível', {exact: true}).waitFor();
-      await page.getByRole('button', {name: 'Iniciar sessão'}).click();
+      await page.getByText('Matérias · Todas', {exact: true}).click();
+      await page.getByRole('checkbox', {name: /Síncope e [Cc]rise [Cc]onvulsiva/}).check();
+      await page.getByRole('checkbox', {name: /DII, doença celíaca e câncer colorretal/i}).check();
+      await page.getByText('Matérias · 2 selecionadas', {exact: true}).waitFor();
+      await page.getByText('2 questões disponíveis', {exact: true}).waitFor();
+      assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1));
+      await page.getByRole('button', {name: 'Gerar simulado'}).click();
+      await page.getByRole('heading', {name: 'Questão 1 de 2', exact: true}).waitFor();
       await page.getByRole('button', {name: /Alternativa B/}).click();
       assert.equal(await page.getByText('Comentário geral de teste').count(), 0);
       await page.getByRole('button', {name: 'Entregar simulado'}).click();
@@ -106,7 +120,8 @@ test('banco, filtros, aula, simulado e progresso legado em três tamanhos', {tim
       await page.locator('.qb-player summary').click();
       await page.getByText(/\(correta\).*Comentário da B/).waitFor();
       const calls = await page.evaluate(() => window.qbTestCalls);
-      assert.ok(calls.some(call => call.args?.filters?.period === 'P2' && call.args?.filters?.difficulty === 'N2'));
+      assert.ok(calls.some(call => call.args?.filters?.period === 'P2' && call.args?.filters?.difficulty === 'N2'
+        && call.args?.filters?.random && call.args.filters.themes?.join(',') === 'neuro1,gastro'));
       assert.equal(calls.find(call => call.name === 'master_qb_record_batch').args.answers[0].choice, 'B');
       await page.evaluate(() => navigate('topic', 'neuro1'));
       await page.getByText('1 questão disponível para esta aula').waitFor();
@@ -114,16 +129,20 @@ test('banco, filtros, aula, simulado e progresso legado em três tamanhos', {tim
       assert.equal(await page.evaluate(() => JSON.parse(localStorage.getItem('master_p2_lucas_v1')).results[0].correct), true);
       if (viewport.width === 1440) {
         const lesson = page.locator('[data-qb-lesson="neuro1_0"]');
+        await lesson.getByText('Mais filtros', {exact: true}).click();
         await lesson.getByLabel('Origem', {exact: true}).selectOption('bancos_e_provas');
         await lesson.getByLabel('Modalidade', {exact: true}).selectOption('timed');
         await lesson.getByText('1 questão disponível para esta aula').waitFor();
-        await lesson.getByRole('button', {name: 'Iniciar sessão'}).click();
+        await lesson.getByRole('button', {name: 'Gerar simulado'}).click();
         await lesson.getByRole('button', {name: 'Entregar simulado'}).waitFor();
         await lesson.getByRole('button', {name: 'Entregar simulado'}).click();
         await lesson.getByRole('button', {name: 'Voltar aos filtros'}).click();
+        if (!(await lesson.locator('.qb-advanced').evaluate(details => details.open))) {
+          await lesson.getByText('Mais filtros', {exact: true}).click();
+        }
         await lesson.getByLabel('Formato da questão', {exact: true}).selectOption('discursive');
         await lesson.getByText('Discursiva de teste', {exact: true}).waitFor();
-        await lesson.getByRole('button', {name: 'Iniciar sessão'}).click();
+        await lesson.getByRole('button', {name: 'Gerar simulado'}).click();
         await lesson.getByRole('textbox', {name: 'Sua resposta discursiva'}).fill('Rascunho privado');
         assert.equal(await lesson.getByText('Modelo discursivo de teste').count(), 0);
         await lesson.getByRole('button', {name: 'Entregar simulado'}).click();
