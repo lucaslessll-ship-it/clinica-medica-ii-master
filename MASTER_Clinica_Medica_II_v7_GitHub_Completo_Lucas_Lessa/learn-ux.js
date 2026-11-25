@@ -89,7 +89,7 @@ window.LearnUX=(()=>{
       c('Revisar perguntas vencidas',dueList().length+' para hoje',()=>dueList().length?openDue():toast('Nenhuma pergunta vencida hoje.'),'revisao espacada evocacao'),
       c('Abrir plano de hoje','Aula, questões e cartões do dia',()=>navigate('today'),'hoje plano'),
       c('Revisar flashcards','Cartões da P2',()=>navigate('flashcards'),'cartoes anki'),
-      c('Fazer simulado','20 questões com correção ao final',()=>navigate('exam'),'prova teste'),
+      c('Fazer simulado','Banco completo com correção ao final',()=>navigate('qb-p2-exam'),'prova teste'),
       c('Abrir curso de POCUS','Módulos e figuras anotadas',()=>navigate('pocus'),'ultrassom'),
       c('Abrir Decision Lab','Casos de decisão clínica',()=>navigate('decisionlab'),'casos'),
       c('Alternar tema claro e escuro','Aparência',()=>HIG.setTheme(document.body.dataset.theme==='dark'?'light':'dark'),'dark mode noturno'),

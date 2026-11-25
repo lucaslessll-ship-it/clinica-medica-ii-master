@@ -25,6 +25,8 @@ function authFixture() {
     theme: 'gastro', stem: 'Enunciado de Gastroenterologia'};
   const essay = {...question, id: '10000000-0000-4000-8000-000000000002',
     stem: 'Discursiva de teste', options: [], discursive: true, origin: 'banco_cm2'};
+  const importedP1 = {...question, id: '10000000-0000-4000-8000-000000000004',
+    period: 'P1', theme: 'p1dm', origin: 'banco_cm2', stem: 'Questão CM2 de diabetes'};
   const model = {id: essay.id, correct: null, model_answer: 'Modelo discursivo de teste',
     comment: 'Comentário discursivo', bibliography: []};
   localStorage.setItem('master_auth_local_owner', user.id);
@@ -51,6 +53,16 @@ function authFixture() {
       if (name === 'master_qb_record_batch') return {data: args.answers.map(item => item.qid === essay.id ? model : result)};
       if (name === 'master_qb_record') return {data: result};
       if (name !== 'master_qb_catalog') return {data: {}};
+      if (window.qbRouteCoverage) {
+        const filters = args.filters;
+        const matches = [importedP1, question, otherTopic, essay].filter(item =>
+          (!filters.period || filters.period === item.period) &&
+          (!filters.themes || filters.themes.includes(item.theme)) &&
+          (!filters.lesson || {p1dm_0: ['p1dm'], neuro1_0: ['neuro1']}[filters.lesson]?.includes(item.theme)));
+        return {data: {total: matches.length, attempts: 0, hits: 0,
+          themes: Array.from(new Set(matches.map(item => item.theme))), subthemes: ['fixture'],
+          items: matches.slice(0, args.take)}};
+      }
       const items = args.filters?.format === 'discursive' ? [essay]
         : args.filters?.themes ? [question, otherTopic].filter(item => args.filters.themes.includes(item.theme))
           : [question];
@@ -163,6 +175,41 @@ test('banco, filtros, aula, simulado e progresso legado em três tamanhos', {tim
         await page.locator('.question-stem').waitFor();
         assert.deepEqual(await page.evaluate(() =>
           ui.practice.ids.map(id => QUESTION_BANK[id].level).sort()), [1, 2, 3]);
+
+        await page.evaluate(() => { window.qbRouteCoverage = true; });
+        await page.locator('.qb-history-notice').getByRole('link', {name: /Abrir banco completo · P2/}).waitFor();
+        if (await page.evaluate(() => document.body.classList.contains('side-collapsed'))) {
+          await page.getByRole('button', {name: 'Recolher ou expandir navegação'}).click();
+        }
+        const nav = page.locator('#sidebar-nav');
+        const clinical = nav.locator('.nav-group[data-nav-key="topics"]');
+        const expand = clinical.locator('.nav-expand');
+        if ((await expand.getAttribute('aria-expanded')) !== 'true') await expand.click();
+        const p2Questions = clinical.locator('button.nav-child').filter({hasText: 'Questões · P2'});
+        assert.equal(await p2Questions.count(), 1, await clinical.textContent());
+        await p2Questions.click({timeout: 6000});
+        await page.waitForURL(/#qb-p2$/);
+        await page.getByText('3 questões disponíveis', {exact: true}).waitFor();
+        await page.locator(".qb-list").getByText(/Banco CM2 reconstruído/).waitFor();
+        await page.getByRole('button', {name: 'Iniciar treino', exact: true}).waitFor();
+        await page.getByRole('link', {name: 'Histórico e sessões anteriores'}).waitFor();
+        await nav.getByRole('button', {name: 'Simulado · P2', exact: true}).click();
+        await page.getByRole('button', {name: 'Gerar simulado', exact: true}).waitFor();
+
+        await page.evaluate(() => P1.openTopic('p1dm'));
+        await page.getByRole('button', {name: 'Questões desta aula', exact: true}).first().click();
+        await page.getByRole('heading', {name: 'Questões vinculadas à aula'}).waitFor();
+        await page.getByText('Questão CM2 de diabetes', {exact: true}).waitFor();
+        assert.equal(await page.getByRole('heading', {name: 'Questões vinculadas à aula'}).evaluate(
+          heading => document.activeElement === heading), true);
+        await page.getByRole('button', {name: 'Treinar este tema', exact: true}).click();
+        await page.waitForURL(/#qb-p1\/p1dm$/);
+        await page.getByText('Questão CM2 de diabetes', {exact: true}).waitFor();
+        assert.ok(await page.evaluate(() => window.qbTestCalls.some(call =>
+          call.args?.filters?.period === 'P1' && call.args.filters.themes?.includes('p1dm'))));
+        await nav.getByRole('button', {name: 'Simulado · P1', exact: true}).click();
+        await page.getByText('Questão CM2 de diabetes', {exact: true}).waitFor();
+        await page.getByRole('button', {name: 'Gerar simulado', exact: true}).waitFor();
       }
       assert.deepEqual(errors, []);
       await page.close();

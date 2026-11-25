@@ -4,10 +4,16 @@
   const routes = {
     'qb-bank': 'Banco de questões',
     'qb-exam': 'Simulados personalizados',
+    'qb-p2': 'Questões · P2',
+    'qb-p2-exam': 'Simulado · P2',
+    'qb-p1': 'Questões · P1',
+    'qb-p1-exam': 'Simulado · P1',
     'qb-errors': 'Revisão dos erros',
     'qb-favorites': 'Favoritos',
     'qb-stats': 'Estatísticas de desempenho',
   };
+  const periods = {'qb-p1': 'P1', 'qb-p1-exam': 'P1', 'qb-p2': 'P2', 'qb-p2-exam': 'P2'};
+  const historical = {'qb-p1': 'p1practice', 'qb-p1-exam': 'p1exam', 'qb-p2': 'practice', 'qb-p2-exam': 'exam'};
   const profiles = {
     fixacao: 'Fixação', estilo_fmp: 'Estilo FMP', estilo_residencia: 'Estilo residência',
     raciocinio_clinico: 'Raciocínio clínico', diagnostico_diferencial: 'Diagnóstico diferencial',
@@ -56,12 +62,50 @@
     return rpc('catalog', {filters, take, skip});
   }
 
-  function section(route, lesson) {
+  function topicForRoute(route, value) {
+    if (!value) return '';
+    const period = periods[route];
+    const topics = period === 'P1' ? window.MASTER_P1_DATA?.topics : window.MASTER_DATA?.topics;
+    return period && (topics?.some(topic => topic.id === value) || (period === 'P2' && value === 'pocus'))
+      ? value : '';
+  }
+
+  function section(route, lesson, topic) {
     const element = node('section', undefined, 'card pad master-qb');
     element.dataset.qbRoute = route;
-    if (lesson) element.dataset.qbLesson = lesson;
-    element.append(node(lesson ? 'h2' : 'h1', lesson ? 'Questões vinculadas à aula' : routes[route]));
+    if (lesson) {
+      element.dataset.qbLesson = lesson;
+      element.id = 'questoes-da-aula';
+    }
+    if (topicForRoute(route, topic)) element.dataset.qbTopic = topic;
+    const heading = node(lesson ? 'h2' : 'h1', lesson ? 'Questões vinculadas à aula' : routes[route]);
+    if (lesson) heading.tabIndex = -1;
+    element.append(heading);
     return element.outerHTML;
+  }
+
+  function jumpToLesson() {
+    const section = document.getElementById('questoes-da-aula');
+    section?.scrollIntoView({block: 'start'});
+    section?.querySelector('h2')?.focus({preventScroll: true});
+  }
+
+  function previousLink(route) {
+    if (!historical[route]) return null;
+    const link = node('a', 'Histórico e sessões anteriores', 'btn ghost');
+    link.href = '#' + historical[route];
+    return link;
+  }
+
+  function updatedLink(route) {
+    const entry = Object.keys(historical).find(key => historical[key] === route);
+    if (!entry) return '';
+    const banner = node('div', undefined, 'card pad qb-history-notice');
+    const destination = entry.endsWith('-exam') ? 'Abrir simulados' : 'Abrir banco completo';
+    const link = node('a', destination + ' · ' + periods[entry], 'btn primary');
+    link.href = '#' + entry;
+    banner.append(node('p', 'Histórico e sessões do treino anterior'), link);
+    return banner.outerHTML;
   }
 
   function field(form, key, title, values, initial = '', any = true) {
@@ -294,8 +338,10 @@
 
   function catalogScreen(root, route) {
     const lesson = root.dataset.qbLesson;
-    const scope = lesson ? {lesson, legacy_topic: lesson.split('_')[0]} : {};
-    const key = lesson ? route + ':' + lesson : route;
+    const period = periods[route];
+    const entryTopic = root.dataset.qbTopic;
+    const scope = lesson ? {lesson, legacy_topic: lesson.split('_')[0]} : period ? {period} : {};
+    const key = [route, lesson, entryTopic].filter(Boolean).join(':');
     if (basket?.key !== key) basket = {key};
     const state = basket;
     const form = node('form', undefined, 'qb-filters');
@@ -304,7 +350,7 @@
     count.setAttribute('role', 'status');
     const listing = node('div', undefined, 'qb-list');
     const initial = state.values || {};
-    const selectedTopics = new Set(state.topics || []);
+    const selectedTopics = new Set(state.topics || (entryTopic ? [entryTopic] : []));
     const topics = node('details', undefined, 'qb-disclosure qb-topic-picker');
     const topicSummary = node('summary', 'Matérias · Todas');
     const topicList = node('div', undefined, 'qb-topic-list');
@@ -318,7 +364,11 @@
     if (!lesson) form.append(topics);
 
     const essentials = node('div', undefined, 'qb-essentials');
-    const mode = field(essentials, 'mode', 'Modalidade', modes, initial.mode || (route === 'qb-exam' ? 'timed' : 'practice'), false);
+    const examRoute = route.endsWith('-exam');
+    const catalogModes = lesson ? modes : Object.fromEntries(Object.entries(modes)
+      .filter(([name]) => isTimed(name) === examRoute));
+    const mode = field(essentials, 'mode', 'Modalidade', catalogModes,
+      initial.mode || (examRoute ? 'timed' : 'practice'), false);
     const quantity = field(essentials, 'quantity', 'Questões', null, initial.quantity || '20');
     Object.assign(quantity, {type: 'number', min: 1, max: 100, required: true});
     form.append(essentials);
@@ -326,7 +376,7 @@
     const advanced = node('details', undefined, 'qb-disclosure qb-advanced');
     const advancedFields = node('div', undefined, 'qb-advanced-grid');
     advanced.append(node('summary', 'Mais filtros'), advancedFields);
-    field(advancedFields, 'period', 'Período', {P1: 'P1', P2: 'P2'}, initial.period);
+    if (!period && !lesson) field(advancedFields, 'period', 'Período', {P1: 'P1', P2: 'P2'}, initial.period);
     const subthemes = field(advancedFields, 'subtheme', 'Subtema', {}, initial.subtheme);
     field(advancedFields, 'format', 'Formato da questão', {objective: 'Objetiva', discursive: 'Discursiva'}, initial.format);
     field(advancedFields, 'origin', 'Origem', {bancos_e_provas: 'Bancos e provas', ...origins}, initial.origin);
@@ -343,7 +393,10 @@
     const launch = node('div', undefined, 'qb-launch');
     launch.append(count, start);
     form.append(advanced, launch);
-    pane.append(form, listing);
+    pane.append(form);
+    const previous = previousLink(route);
+    if (previous) pane.append(previous);
+    pane.append(listing);
     root.append(pane);
     const content = node('div');
     root.append(content);
@@ -445,7 +498,7 @@
       try {
         const selected = saved || Object.fromEntries(new FormData(form));
         if (!lesson && !topicList.childElementCount) {
-          const available = state.availableTopics || (await catalog({}, 0)).themes;
+          const available = state.availableTopics || (await catalog(scope, 0)).themes;
           if (!root.isConnected || generation !== request) return;
           state.availableTopics = available;
           renderTopics(available);
@@ -556,5 +609,5 @@
     activeOwner = null;
   }
   window.addEventListener('master-auth-ended', reset);
-  window.MasterQuestionBank = {routes, section, afterRender};
+  window.MasterQuestionBank = {routes, section, afterRender, topicForRoute, jumpToLesson, updatedLink};
 })();
