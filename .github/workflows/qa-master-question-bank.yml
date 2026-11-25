@@ -1,0 +1,68 @@
+name: Banco de questões de Clínica Médica
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/qa-master-question-bank.yml'
+      - 'question-bank/**'
+      - 'supabase/migrations/*_master_question_bank.sql'
+      - 'tests/master-question-bank*'
+
+permissions:
+  contents: read
+
+jobs:
+  pipeline-and-database:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    env:
+      MASTER_QB_DATABASE_URL: postgresql://postgres:local-test@127.0.0.1:5432/postgres
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_PASSWORD: local-test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install -r question-bank/requirements.txt
+      - run: python -m unittest discover -s question-bank
+      - name: Testar migração, autorização e catálogo com 5.001 questões
+        run: |
+          psql "$MASTER_QB_DATABASE_URL" -v ON_ERROR_STOP=1 <<'SQL'
+          create role anon;
+          create role authenticated;
+          create schema auth;
+          create table auth.users(id uuid primary key);
+          create function auth.uid() returns uuid language sql stable as
+            $$ select nullif(current_setting('request.jwt.claim.sub',true),'')::uuid $$;
+          grant usage on schema auth to authenticated,anon;
+          SQL
+          psql "$MASTER_QB_DATABASE_URL" -v ON_ERROR_STOP=1 -f supabase/migrations/20261125013747_master_question_bank.sql
+          psql "$MASTER_QB_DATABASE_URL" -f tests/master-question-bank.sql
+      - name: Importar o legado duas vezes
+        run: |
+          node question-bank/export-legacy.cjs > question-bank/review/legacy.jsonl
+          python question-bank/pipeline.py import question-bank/review/legacy.jsonl --report question-bank/reports/first.json
+          python question-bank/pipeline.py import question-bank/review/legacy.jsonl --report question-bank/reports/second.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          first, second = (json.loads(Path(f"question-bank/reports/{name}.json").read_text())
+                           for name in ("first", "second"))
+          assert first["accepted"] > 0
+          assert second["accepted"] == 0
+          assert len(second["duplicates"]) == first["accepted"]
+          PY
