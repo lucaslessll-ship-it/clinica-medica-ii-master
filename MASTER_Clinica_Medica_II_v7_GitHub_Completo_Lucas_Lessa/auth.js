@@ -104,6 +104,7 @@
       const {error}=await status.client.auth.signInWithOAuth({provider:'google',options:{redirectTo:redirectUrl()}});if(error)throw error;
     }));
     $('master-retry').addEventListener('click',()=>{if(!status.busy)enter(status.user);});
+    const tourButton=document.createElement('button');tourButton.type='button';tourButton.className='btn';tourButton.textContent='Guia de uso da plataforma';tourButton.addEventListener('click',()=>openMasterTour(true));$('master-profile').appendChild(tourButton);
     $('master-avatar').addEventListener('click',()=>{
       const profile=$('master-profile');
       const open=profile.hidden || window.MasterWindowMotion?.isClosing(profile);
@@ -257,6 +258,75 @@
     $('master-profile-name').textContent=name;$('master-profile-email').textContent=user?.email||'';
     const rememberToggle=$('master-remember-device');if(rememberToggle)rememberToggle.checked=MasterSessionStorage.remembered();
   }
+
+  const tourSteps=[
+    ['✦','Bem-vindo ao Estudo Master','Seu ambiente de aprendizagem clínica. Explore a teoria, pratique e acompanhe sua evolução no mesmo lugar.','Comece pela página inicial e escolha sua disciplina.'],
+    ['📚','Aulas e revisão','Estude os conteúdos por tema, consulte resumos, dicas de memorização e correlações clínicas.','Use a navegação lateral para encontrar os conteúdos.'],
+    ['🩺','Prática clínica','Treine OSCE, casos clínicos, POCUS, urgências e interpretação de exames.','Simule uma estação antes de consultar a explicação.'],
+    ['✓','Questões e Super Foco','Pratique a recuperação ativa com questões e feedback. Revise seus erros e acompanhe o desempenho.','Alterne teoria e exercícios para consolidar o conteúdo.'],
+    ['✧','Tutor de inteligência artificial','Use o tutor de IA para esclarecer dúvidas e aprofundar seu raciocínio clínico.','Confira as respostas com as referências de estudo.'],
+    ['📝','Caderno e anotações','Destaque textos, registre comentários e consulte suas anotações no caderno digital. Organize seus materiais também no Notion, quando disponível.','Anote os pontos que precisa revisar, em vez de copiar tudo.'],
+    ['▦','Planejamento e progresso','Organize metas e revisões, acompanhe seu progresso e use o temporizador de foco.','Defina uma meta de estudo e retome de onde parou.']
+  ];
+  const tourSeen=new Set();
+  function openMasterTour(manual=false){
+    const user=status.user;
+    if(!status.ready||!user||!$('master-auth').hidden||$('master-welcome-tour'))return;
+    const key='master_welcome_tour_v1_'+user.id;
+    let saved=false;try{saved=localStorage.getItem(key)==='yes';}catch{}
+    if(!manual&&(saved||tourSeen.has(user.id)||user.user_metadata?.master_welcome_tour_v1===true))return;
+    tourSeen.add(user.id);
+    // Mark at first display so a reload or an interrupted tour does not repeat it.
+    if(!manual){
+      try{originalSet.call(localStorage,key,'yes');}catch{}
+      status.client.auth.updateUser({data:{master_welcome_tour_v1:true}}).catch(()=>{});
+    }
+    closeProfile(true);
+    const d=document.createElement('dialog');d.id='master-welcome-tour';
+    d.setAttribute('aria-labelledby','master-tour-title');d.setAttribute('aria-describedby','master-tour-description');
+    d.innerHTML=`<style>
+      #master-welcome-tour{box-sizing:border-box;width:min(510px,calc(100% - 28px));max-height:88vh;max-height:88dvh;overflow:auto;margin:auto;border:1px solid #dbe3ee;border-radius:26px;padding:clamp(18px,4vw,30px);background:#fff;color:#172033;box-shadow:0 24px 90px #0005;font:inherit}
+      #master-welcome-tour::backdrop{background:#0f172ab8;backdrop-filter:blur(5px)}
+      #master-welcome-tour button{font:inherit;cursor:pointer;min-height:44px;border-radius:12px;padding:10px 14px;border:0}
+      #master-welcome-tour .tour-primary{background:#2563eb;color:#fff;font-weight:700}
+      #master-welcome-tour .tour-secondary{background:#eef2f7;color:#334155}
+      #master-welcome-tour .tour-dots{display:flex;justify-content:center;gap:6px;margin:18px 0}
+      #master-welcome-tour .tour-dots span{height:7px;width:7px;border-radius:9px;background:#cbd5e1}
+      #master-welcome-tour .tour-dots span.active{width:24px;background:#2563eb}
+      #master-welcome-tour .tour-body{animation:masterTourIn .22s ease-out}
+      @keyframes masterTourIn{from{opacity:.3;transform:translateX(8px)}to{opacity:1;transform:none}}
+      @media(prefers-reduced-motion:reduce){#master-welcome-tour .tour-body{animation:none}}
+      </style><div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><small style="font-weight:700;color:#475569">ESTUDO MASTER · GUIA</small><button class="tour-secondary" data-tour="skip">Pular</button></div>
+      <div class="tour-body" style="text-align:center;margin-top:18px"><div id="master-tour-icon" aria-hidden="true" style="display:grid;place-items:center;margin:auto;width:82px;height:82px;border-radius:24px;background:#eaf1ff;color:#2563eb;font-size:38px"></div><h2 id="master-tour-title" tabindex="-1" style="font-size:clamp(22px,5vw,28px);margin:16px 0 8px"></h2><p id="master-tour-description" style="line-height:1.55"></p><p id="master-tour-tip" style="background:#f1f5f9;border-radius:14px;padding:13px;color:#334155;font-size:14px"></p></div>
+      <div class="tour-dots" aria-hidden="true"></div><p id="master-tour-count" aria-live="polite" style="text-align:center;font-size:13px;color:#475569"></p>
+      <label style="display:flex;align-items:center;gap:9px;margin:16px 0;font-size:14px"><input type="checkbox" checked id="master-tour-never"> Não exibir novamente</label>
+      <div style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap"><button class="tour-secondary" data-tour="back">Anterior</button><button class="tour-primary" data-tour="next">Continuar →</button></div><p style="font-size:12px;color:#475569;margin-bottom:0">Você pode rever este guia pelo menu Perfil.</p>`;
+    let page=0;
+    const q=s=>d.querySelector(s);
+    function render(){
+      const step=tourSteps[page];
+      q('#master-tour-icon').textContent=step[0];q('#master-tour-title').textContent=step[1];q('#master-tour-description').textContent=step[2];q('#master-tour-tip').textContent='Dica: '+step[3];
+      q('.tour-dots').replaceChildren(...tourSteps.map((_,i)=>{const dot=document.createElement('span');if(i===page)dot.className='active';return dot;}));
+      q('#master-tour-count').textContent=(page+1)+' de '+tourSteps.length;
+      q('[data-tour=back]').disabled=page===0;q('[data-tour=next]').textContent=page===tourSteps.length-1?'Começar a estudar':'Continuar →';
+      q('#master-tour-title').focus({preventScroll:true});
+    }
+    function finish(){
+      if(q('#master-tour-never').checked){
+        try{originalSet.call(localStorage,key,'yes');}catch{}
+        if(status.user?.id===user.id)status.client.auth.updateUser({data:{master_welcome_tour_v1:true}}).catch(()=>{});
+      }
+      d.close();
+    }
+    q('[data-tour=skip]').onclick=finish;
+    q('[data-tour=back]').onclick=()=>{if(page>0){page--;render();}};
+    q('[data-tour=next]').onclick=()=>{if(page===tourSteps.length-1)finish();else{page++;render();}};
+    d.addEventListener('cancel',e=>{e.preventDefault();finish();});
+    d.addEventListener('close',()=>{d.remove();$('master-avatar')?.focus({preventScroll:true});},{once:true});
+    document.body.appendChild(d);d.showModal();render();
+  }
+  window.addEventListener('master-auth-ended',()=>{const d=$('master-welcome-tour');if(d?.open)d.close();});
+
   function hide(){
     if(!status.ready){enter(status.user);return;}
     $('master-auth-form').reset();$('master-auth').hidden=true;lock(false);updateProfile();(document.getElementById('main-content')||$('master-avatar')).focus({preventScroll:true});
@@ -489,7 +559,7 @@
       if(epoch!==status.epoch)return;
       // Refresh every module before exposing any account data; no reload or stale user state.
       window.dispatchEvent(new Event('master-auth-ready'));
-      clearAuthUrl();hide();if(conflicts.length)toast('Alterações locais recuperadas. Uma cópia da versão do servidor foi preservada neste dispositivo.');if(!Object.keys(pending(user.id)).length)syncNotice('Progresso carregado da sua conta.');
+      clearAuthUrl();hide();setTimeout(()=>{if(status.user?.id===user.id)openMasterTour();},350);if(conflicts.length)toast('Alterações locais recuperadas. Uma cópia da versão do servidor foi preservada neste dispositivo.');if(!Object.keys(pending(user.id)).length)syncNotice('Progresso carregado da sua conta.');
     }catch(e){
       if(epoch!==status.epoch)return;status.ready=false;show('login','Não foi possível carregar seu progresso. '+errorText(e),true);$('master-retry').hidden=false;
     }finally{if(status.entering?.epoch===epoch)status.entering=null;}
