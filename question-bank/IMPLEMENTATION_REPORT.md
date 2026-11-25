@@ -14,4 +14,4 @@ Os testes de navegador do banco passaram em larguras de 390, 768 e 1.440 px com 
 
 ## Homologação
 
-A migração e os testes de acesso rodaram em PostgreSQL 17 local, com as funções e papéis de autenticação Supabase simulados. A aplicação da migração, os advisors e a verificação de ponta a ponta com usuários reais ainda dependem da instância Supabase de homologação do Clínica Master. Nenhuma migração foi aplicada em produção. O cronômetro da sessão roda no navegador, e as sessões novas em andamento são mantidas em memória até o recarregamento da página.
+A migração e os testes de acesso rodaram em PostgreSQL 17 local, com as funções e papéis de autenticação Supabase simulados. O Supabase CLI executou os advisors contra o banco local sem encontrar avisos ou erros. A aplicação da migração e a verificação de ponta a ponta com usuários reais dependem da instância Supabase de homologação do Clínica Master. Nenhuma migração foi aplicada em produção. O cronômetro da sessão roda no navegador, e as sessões novas em andamento são mantidas em memória até o recarregamento da página.
