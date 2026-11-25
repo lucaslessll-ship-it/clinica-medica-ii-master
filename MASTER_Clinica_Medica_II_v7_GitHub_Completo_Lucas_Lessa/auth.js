@@ -278,7 +278,20 @@
         if(result.error)throw result.error;
         $('master-password').value='';if($('master-confirm'))$('master-confirm').value='';
         if(result.data.session)setTimeout(()=>handleSession('SIGNED_IN',result.data.session),0);
-        else notice('Verifique sua caixa de entrada para confirmar o cadastro e depois entre na sua conta.');
+        else if(mode==='register'){
+          show('login','Confirme seu e-mail antes de entrar na sua conta.');
+          const dialog=document.createElement('dialog');
+          dialog.setAttribute('aria-labelledby','master-confirm-email-title');
+          dialog.setAttribute('aria-describedby','master-confirm-email-description');
+          dialog.style.cssText='box-sizing:border-box;width:min(440px,calc(100% - 32px));max-height:85vh;overflow:auto;border:1px solid #dbe3ee;border-radius:24px;padding:28px;background:#fff;color:#172033;box-shadow:0 24px 80px #0005;text-align:center;margin:auto;font:inherit';
+          dialog.innerHTML='<style>dialog.master-email-confirm::backdrop{background:rgba(15,23,42,.65)}</style><div aria-hidden="true" style="font-size:38px">✉</div><h2 id="master-confirm-email-title" style="font-size:24px;margin:12px 0">Cadastro realizado!</h2><p id="master-confirm-email-description">Falta apenas confirmar seu e-mail. Confira a mensagem de confirmação enviada para:</p><p style="font-weight:700;overflow-wrap:anywhere;background:#eef4ff;padding:12px;border-radius:12px">'+esc(email)+'</p><p><strong>Abra seu e-mail e clique no link para ativar sua conta.</strong></p><p style="font-size:14px;color:#475569">Não encontrou? Confira o spam e o lixo eletrônico. Depois de confirmar, volte para entrar.</p><button type="button" autofocus style="width:100%;min-height:48px;border:0;border-radius:12px;background:#2563eb;color:white;font:inherit;font-weight:700;padding:12px;cursor:pointer">OK, vou confirmar meu e-mail</button>';
+          dialog.className='master-email-confirm';
+          dialog.addEventListener('cancel',event=>event.preventDefault());
+          dialog.querySelector('button').addEventListener('click',()=>dialog.close());
+          dialog.addEventListener('close',()=>{dialog.remove();$('master-email')?.focus();},{once:true});
+          document.body.appendChild(dialog);
+          dialog.showModal();
+        }else notice('Confirme seu e-mail antes de entrar.');
         return;
       }
       const attrs={password};
