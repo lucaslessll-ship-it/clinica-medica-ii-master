@@ -23,9 +23,9 @@ function authFixture() {
     bibliography: ['Referência de teste'],
   };
   const otherTopic = {...question, id: '10000000-0000-4000-8000-000000000003',
-    theme: 'gastro', stem: 'Enunciado de Gastroenterologia'};
+    theme: 'gastro', origin: 'banco_cm2', source_style: 'estilo USP', stem: 'Enunciado de Gastroenterologia'};
   const essay = {...question, id: '10000000-0000-4000-8000-000000000002',
-    stem: 'Discursiva de teste', options: [], discursive: true, origin: 'banco_cm2'};
+    stem: 'Discursiva de teste', difficulty: 'N3', options: [], discursive: true, origin: 'banco_cm2'};
   const importedP1 = {...question, id: '10000000-0000-4000-8000-000000000004',
     period: 'P1', theme: 'p1dm', origin: 'banco_cm2', stem: 'Questão CM2 de diabetes'};
   const model = {id: essay.id, correct: null, model_answer: 'Modelo discursivo de teste',
@@ -127,6 +127,13 @@ test('banco, filtros, aula, simulado e progresso legado em três tamanhos', {tim
       await page.getByRole('button', {name: 'Gerar simulado'}).click();
       await page.getByRole('heading', {name: 'Questão 1 de 2', exact: true}).waitFor();
       const player = page.locator('.qb-player');
+      const tags = player.locator('.qb-question-tags');
+      await tags.getByText('Autoral Master', {exact: true}).waitFor();
+      await tags.getByText('N2', {exact: true}).waitFor();
+      await player.getByRole('button', {name: 'Próxima', exact: true}).click();
+      await tags.getByText('CM2 · Estilo USP', {exact: true}).waitFor();
+      await tags.getByText('N2', {exact: true}).waitFor();
+      await player.getByRole('button', {name: 'Anterior', exact: true}).click();
       const source = player.getByText('Fonte e detalhes', {exact: true});
       const reference = player.getByText('Questões de teste, p. 2', {exact: true});
       assert.equal(await reference.isVisible(), false);
@@ -168,6 +175,7 @@ test('banco, filtros, aula, simulado e progresso legado em três tamanhos', {tim
         await lesson.getByLabel('Formato da questão', {exact: true}).selectOption('discursive');
         await lesson.getByText('Discursiva de teste', {exact: true}).waitFor();
         await lesson.getByRole('button', {name: 'Gerar simulado'}).click();
+        await lesson.locator('.qb-question-tags').getByText('N3', {exact: true}).waitFor();
         await lesson.getByRole('textbox', {name: 'Sua resposta discursiva'}).fill('Rascunho privado');
         assert.equal(await lesson.getByText('Modelo discursivo de teste').count(), 0);
         await lesson.getByRole('button', {name: 'Entregar simulado'}).click();
@@ -203,7 +211,8 @@ test('banco, filtros, aula, simulado e progresso legado em três tamanhos', {tim
         await p2Questions.click({timeout: 6000});
         await page.waitForURL(/#qb-p2$/);
         await page.getByText('3 questões disponíveis', {exact: true}).waitFor();
-        await page.locator(".qb-list").getByText(/Banco CM2 reconstruído/).waitFor();
+        await page.locator('.qb-list-item').filter({hasText: 'Enunciado de Gastroenterologia'})
+          .getByText(/Banco CM2 reconstruído/).waitFor();
         await page.getByRole('button', {name: 'Iniciar treino', exact: true}).waitFor();
         await page.getByRole('link', {name: 'Histórico e sessões anteriores'}).waitFor();
         await nav.getByRole('button', {name: 'Simulado · P2', exact: true}).click();

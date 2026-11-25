@@ -170,6 +170,24 @@
 .qb-clock {
   font-variant-numeric: tabular-nums;
 }
+.qb-question-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .45rem;
+  margin-block: 0 .65rem;
+}
+.qb-question-tag {
+  padding: .2rem .65rem;
+  border-radius: 99px;
+  background: var(--soft);
+  color: var(--green2);
+  font-size: .875rem;
+  font-weight: 750;
+}
+.qb-level-tag {
+  background: color-mix(in srgb, var(--green) 12%, var(--white));
+  color: var(--ink);
+}
 .qb-stem-primary {
   margin: 0;
   padding: clamp(.85rem, 2.6vw, 1.25rem);
