@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 360" role="img" aria-labelledby="title desc">
+<title id="title">Mapa didático de territórios no ECG</title><desc id="desc">O infarto inferior aparece nas derivações II, III e aVF. Anterior e septal em V1 a V4. Lateral em I, aVL, V5 e V6. Estude também V7 a V9 para parede posterior e V3R a V4R para ventrículo direito.</desc>
+<rect width="760" height="360" rx="18" fill="#f6f5ea"/>
+<text x="32" y="48" font-family="system-ui" font-size="26" font-weight="700" fill="#173d3a">Localização orientada pelas derivações</text>
+<g font-family="system-ui" fill="#102f2d">
+<g fill="#dcebea"><rect x="32" y="86" width="215" height="92" rx="12"/><rect x="272" y="86" width="215" height="92" rx="12"/><rect x="512" y="86" width="215" height="92" rx="12"/></g>
+<g fill="#f0dfce"><rect x="151" y="203" width="215" height="92" rx="12"/><rect x="394" y="203" width="215" height="92" rx="12"/></g>
+<g font-size="18" font-weight="700"><text x="49" y="116">Inferior</text><text x="289" y="116">Anterior e septal</text><text x="529" y="116">Lateral</text><text x="169" y="235">Posterior</text><text x="411" y="235">Ventrículo direito</text></g>
+<g font-size="22"><text x="49" y="152">II · III · aVF</text><text x="289" y="152">V1–V4</text><text x="529" y="152">I · aVL · V5–V6</text><text x="169" y="270">V7–V9</text><text x="411" y="270">V3R–V4R</text></g>
+<text x="32" y="330" font-size="15">Esquema didático · Derivações adicionais conforme cenário</text>
+</g></svg>

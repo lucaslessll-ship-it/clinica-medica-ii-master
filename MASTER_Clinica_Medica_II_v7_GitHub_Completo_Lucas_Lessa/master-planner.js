@@ -35,6 +35,13 @@ function catalog(){
   TOPICS.forEach(t=>add('p2','Clínica Médica II',t.id,t.title,'alta'));
  if(window.P1?.topics)window.P1.topics.forEach(t=>add('p1','Clínica Médica I',t.id,t.title,'media'));
  if(window.CIR?.topics)window.CIR.topics.forEach(t=>add('cir','Clínica Cirúrgica',t.id,t.title||t.short,'media'));
+ const emergency=window.Emergency;
+ if(emergency?.priorities)emergency.priorities.forEach(p=>
+  add('ue','Urgência e Emergência · P2',p.id,p.title,p.tier==='Alta'?'alta':p.tier==='Intermediária'?'media':'baixa',{ueOrder:p.order})
+ );
+ if(emergency?.all)emergency.ordered(emergency.all.filter(m=>m.stage==='P1')).forEach((m,index)=>
+  add('ue','Urgência e Emergência · P1',m.id,m.title,'media',{ueOrder:index+11})
+ );
  if(window.OSCEPilot?.bank)window.OSCEPilot.bank().forEach(st=>{
   add('osce',st.pocusOrder?'POCUS · OSCE':'OSCE · Clínica Médica',st.number,st.title,st.pocusOrder?'alta':st.priority||'media',{pocusOrder:st.pocusOrder||0});
  });
@@ -93,7 +100,7 @@ function externalEvidence(theme){
  return null;
 }
 function priority(t){return t?.priority==='alta'?0:t?.priority==='media'?1:2;}
-function topicList(plan){return (plan?.themes||[]).map(getTheme).filter(Boolean).sort((a,b)=>priority(a)-priority(b)||a.title.localeCompare(b.title,'pt-BR'));}
+function topicList(plan){return (plan?.themes||[]).map(getTheme).filter(Boolean).sort((a,b)=>priority(a)-priority(b)||((a.ueOrder||0)-(b.ueOrder||0))||a.title.localeCompare(b.title,'pt-BR'));}
 function completed(plan,theme){return !!latest(plan,theme.id)||!!externalEvidence(theme)?.attempts;}
 function mastery(plan,theme){
  const hist=progressOf(plan,theme.id).history||[],clean=hist.filter(x=>x.rating==='good');
@@ -265,6 +272,9 @@ function openTheme(themeId,mode='study'){
   else if(typeof navigate==='function')navigate('topics');
  }else if(t.course==='p1'){
   if(window.P1?.openTopic)window.P1.openTopic(t.themeId);
+ }else if(t.course==='ue'){
+  if(mode==='practice')window.UEQuestions?.openQuestions(t.themeId);
+  else window.Emergency?.openLesson(t.themeId);
  }else if(t.course==='cir'){
   if(window.CIR?.openTopic)window.CIR.openTopic(t.themeId);
  }

@@ -5,6 +5,77 @@ const all=(window.EMERGENCY_CONTENT||[]).filter(x=>x&&x.id&&x.stage&&Array.isArr
 const P1=all.filter(x=>x.stage==='P1');
 const P2=all.filter(x=>x.stage==='P2');
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const priorities=[
+ ['arritmias','Arritmias cardíacas',100],['sca','Dor torácica e síndrome coronariana aguda',98],
+ ['hipertensiva','Emergência hipertensiva e edema agudo pulmonar',96],['acidobase','Gasometria e distúrbios acidobásicos',94],
+ ['eletrolitos','Distúrbios eletrolíticos graves',92],['glicemia','Emergências glicêmicas',90],
+ ['intox','Intoxicações exógenas',75],['tireoide','Emergências tireoidianas',70],
+ ['catastrofes','Atendimento a catástrofes',45],['paliativos','Cuidados paliativos',40]
+].map(([id,title,score],index)=>({id,title,score,order:index+1,tier:index<6?'Alta':index<8?'Intermediária':'Menor'}));
+const priorityById=Object.fromEntries(priorities.map(p=>[p.id,p]));
+const p1Order=['pcr','sepse','choque','irpa','vm','avci','trauma','trauma-especifico','asma','adrenal','afogamento','queimado','sensorio'];
+const ordered=items=>[...items].sort((a,b)=>a.stage===b.stage?
+ (a.stage==='P2'?priorityById[a.id]?.order-priorityById[b.id]?.order:p1Order.indexOf(a.id)-p1Order.indexOf(b.id)):
+ a.stage.localeCompare(b.stage));
+const titleFor=id=>priorityById[id]?.title||all.find(m=>m.id===id)?.title||id;
+function openCourse(stage){
+ examOpen=false;
+ navigate(stage==='P1'?'emergency-p1':'emergency-p2');
+ (stage==='P1'?p1:p2).open(null);
+}
+function openLesson(id){
+ const module=all.find(m=>m.id===id);if(!module)return;
+ if(window.UE_MASTERY_CONTENT?.[id]&&window.EmergencyMastery){navigate(id==='arritmias'?'emergency-arritmias':'emergency-lesson',id);return;}
+ examOpen=false;
+ navigate(module.stage==='P1'?'emergency-p1':'emergency-p2');
+ const course=module.stage==='P1'?p1:p2;
+ course.open(course.findId(id));
+}
+const moduleFor=id=>all.find(m=>m.id===id);
+const priorityFor=id=>priorityById[id];
+const lessonRoutes=['emergency-lesson','emergency-legacy','emergency-flashcards'];
+function routeTopic(route,id){return lessonRoutes.includes(route)&&moduleFor(id)?id:null;}
+function openLegacyModule(modules,stage,index){
+ if(typeof ui==='undefined'||ui.route!=='emergency-legacy')return false;
+ const next=modules[index];
+ if(next)navigate('emergency-legacy',next.id);
+ else openCourse(stage);
+ return true;
+}
+function mastery(params){return window.UE_MASTERY_CONTENT?.[params.module.id]?window.EmergencyMastery?.page(params):null;}
+function topicList(stage){
+ const modules=ordered(stage==='P2'?P2:P1),key=stage==='P2'?'uep2':'uep1';
+ const count=modules.filter(m=>store.study?.[key]?.done?.[m.id]).length;
+ return '<section class="ue-master-block ue-topic-list"><header><div><h2>'+ (stage==='P2'?'P2 · Temas prioritários':'P1 — Revisão complementar') +'</h2><p>'+count+' de '+modules.length+' aulas estudadas</p></div></header>'+
+ (stage==='P2'?'<p class="ue-priority-note">Índice estratégico de prioridade educacional. A pontuação é uma estimativa pedagógica.</p>':'')+
+ '<ol>'+modules.map(m=>{
+  const p=priorityById[m.id],done=!!store.study?.[key]?.done?.[m.id];
+  return '<li><button class="ue-topic-link" onclick="Emergency.openLesson(\''+m.id+'\')">'+(p?'<span class="ue-rank">'+String(p.order).padStart(2,'0')+'</span>':'')+
+   '<strong>'+esc(titleFor(m.id))+'</strong>'+(p?'<span class="ue-tier ue-tier-'+p.tier.toLowerCase()+'">'+p.tier+' · '+p.score+'/100</span>':'')+'</button>'+
+   '<label class="ue-topic-check"><input type="checkbox" '+(done?'checked':'')+' onchange="Emergency.markStudied(\''+m.id+'\',this.checked)" aria-label="Marcar '+esc(titleFor(m.id))+' como estudado"> Estudei</label></li>';
+ }).join('')+'</ol></section>';
+}
+function openCards(id){
+ if(window.UE_MASTERY_CONTENT?.[id]){window.EmergencyMastery.openCards(id);return;}
+ document.getElementById('ue-lesson-flashcards')?.scrollIntoView({block:'start'});
+}
+function markStudied(id,value){
+ const module=all.find(m=>m.id===id);if(!module)return;
+ (module.stage==='P1'?p1:p2).complete(id,value);
+ render();
+}
+function sidebar(){
+ const expanded=['emergency-p2','emergency-arritmias','emergency-lesson'].includes(ui.route);
+ return '<div class="ue-nav-topics"><button type="button" class="nav-child ue-nav-priority" aria-expanded="'+expanded+'" aria-controls="ue-nav-order" onclick="Emergency.toggleSidebarOrder(this)">Ordem de estudo · P2</button><ol id="ue-nav-order" '+(expanded?'':'hidden')+'>'+
+ priorities.map(p=>'<li><button class="nav-child" type="button" '+((p.id==='arritmias'&&ui.route==='emergency-arritmias'||ui.route==='emergency-lesson'&&ui.ueTopic===p.id)?'aria-current="page"':'')+' onclick="Emergency.openLesson(\''+p.id+'\')"><span class="ue-nav-dot ue-tier-'+p.tier.toLowerCase()+'" aria-hidden="true"></span>'+esc(p.title)+'</button></li>').join('')+
+ '</ol></div>';
+}
+function toggleSidebarOrder(button){
+ const list=document.getElementById(button.getAttribute('aria-controls'));
+ if(!list)return;
+ list.hidden=!list.hidden;
+ button.setAttribute('aria-expanded',String(!list.hidden));
+}
 const REFS={
  aha:{t:"American Heart Association — Adult BLS/ACLS, 2025",u:"https://cpr.heart.org/en/resuscitation-science/cpr-and-ecc-guidelines/adult-advanced-life-support"},
  ahaSpecial:{t:"AHA 2025 — Circunstâncias especiais da ressuscitação",u:"https://cpr.heart.org/en/resuscitation-science/cpr-and-ecc-guidelines/adult-and-pediatric-special-circumstances-of-resuscitation/"},
@@ -46,7 +117,7 @@ function addOn(m){
  const memory=(m.memory||[]).length?'<section class="pocus-sec ue-memory"><h3>Pódio da memória · quatro frases essenciais</h3><ol>'+m.memory.map(x=>'<li>'+esc(x)+'</li>').join('')+'</ol></section>':'';
  const alerts=(m.alerts||[]).length?'<p class="ue-disclaimer">'+m.alerts.map(esc).join(' ')+'</p>':'';
  const depthCards=memory+alerts;
- return '<section class="pocus-sec ue-flow-block"><h3>Fluxograma de raciocínio e conduta</h3><p>Reconhecimento → decisão → ação → reavaliação. Se a primeira resposta falhar, reinicie o ciclo de avaliação.</p><div class="ue-flow">'+flows+'</div></section>'+scheme(m)+'<section class="pocus-sec"><h3>Evocação ativa — pódio da memória</h3><p class="subtle">Tente responder sem consultar a aula antes de expandir cada cartão.</p><div class="ue-flashes">'+cards+'</div></section>'+depthCards;
+ return '<div class="ue-master-actions"><button class="btn primary" onclick="UEQuestions.openQuestions(\''+m.id+'\')">Treinar este tema</button><button class="btn secondary" onclick="Emergency.openCards(\''+m.id+'\')">Flashcards deste tema</button></div><section class="pocus-sec ue-flow-block"><h3>Fluxograma de raciocínio e conduta</h3><p>Reconhecimento → decisão → ação → reavaliação. Se a primeira resposta falhar, reinicie o ciclo de avaliação.</p><div class="ue-flow">'+flows+'</div></section>'+scheme(m)+'<section id="ue-lesson-flashcards" class="pocus-sec"><h3>Evocação ativa — pódio da memória</h3><p class="subtle">Tente responder sem consultar a aula antes de expandir cada cartão.</p><div class="ue-flashes">'+cards+'</div></section>'+depthCards;
 }
 const base={
  label:"Urgência e Emergência",
@@ -59,8 +130,9 @@ const base={
  sectionAddon:(module,index)=>window.EmergencyFigureAtlas?.afterSection(module,index)||''
 };
 const p1=CourseKit.create({
- ...base,key:"uep1",global:"Emergency.p1",route:"emergency-p1",
- moduleOverride:params=>params.module.id==='pcr'&&window.EmergencyPCR?window.EmergencyPCR.page(params):null,
+ ...base,key:"uep1",global:"Emergency.p1",route:"emergency-p1",openOverride:i=>openLegacyModule(P1,'P1',i),
+ homeOverview:()=>topicList('P1'),
+ moduleOverride:params=>(typeof ui==='undefined'||ui.route!=='emergency-legacy')&&mastery(params)|| (params.module.id==='pcr'&&window.EmergencyPCR?window.EmergencyPCR.page(params):null),
  onAnswer:({module,questionIndex,correct})=>{if(module.id==='pcr')window.PCRAdaptive?.record('pcr_'+questionIndex,correct,{type:'recall',critical:!correct});},
  title:"Urgência e Emergência — P1",heading:"Fundamentos e ressuscitação · P1",lead:"Reconhecimento de emergências, ABCDE, suporte vital, sepse, trauma e falência orgânica.",
  notice:"Revisão cumulativa: este conteúdo também pode ser exigido na P2.",
@@ -68,11 +140,13 @@ const p1=CourseKit.create({
  extraHome:()=>'<div class="ue-pcr-pilot-promo"><div><span class="kicker">NOVA EXPERIÊNCIA DE APRENDIZAGEM</span><strong>PCR · primeira aula interativa</strong><p>Escolha 2, 5, 15 ou 30 minutos. Decida, descubra o algoritmo e conduza um caso progressivo.</p></div><button class="btn primary" type="button" onclick="Emergency.p1.open(0)">Iniciar PCR →</button></div><p class="ue-shortcut"><button type="button" class="btn secondary" onclick="navigate(\'emergency-p2\')">Seguir para P2 →</button></p>'
 });
 const p2=CourseKit.create({
- ...base,key:"uep2",global:"Emergency.p2",route:"emergency-p2",
+ ...base,key:"uep2",global:"Emergency.p2",route:"emergency-p2",openOverride:i=>openLegacyModule(P2,'P2',i),
+ moduleOrder:priorities.map(p=>p.id),homeOverview:()=>topicList('P2'),
+ moduleOverride:params=>(typeof ui==='undefined'||ui.route!=='emergency-legacy')?mastery(params):null,
  title:"Urgência e Emergência — P2",heading:"Decisões clínicas em emergência · P2",lead:"Cardiovascular, metabólico, eletrolítico, toxicológico, comunicação e prova cumulativa.",
- notice:"P2 cumulativa: 20 questões, 4 alternativas, 90 minutos, conforme plano de ensino 2026.2.",
+ notice:"Os simulados de Urgência incluem opção pronta e geração personalizada.",
  bankTitle:"Casos clínicos P2",bankHeading:"Do sintoma à conduta",bankLead:"Cenários para treinar decisão e reavaliação.",MODULES:P2,CASES:P2.flatMap(x=>[x.case,...(x.moreCases||[])]),REFS,
- extraHome:()=>'<div class="ue-exam-card"><strong>Modo prova · 20 questões · 90 minutos</strong><p>Simulado autoral, alinhado ao formato institucional. Não é reprodução de provas oficiais.</p><button type="button" class="btn primary" onclick="Emergency.startExam()">Iniciar ou retomar simulado P2</button></div>'
+ extraHome:()=>'<p><button type="button" class="btn primary" onclick="navigate(\'emergency-simulado\')">Abrir simulados de Urgência</button></p>'
 });
 let examOpen=false;
 /* P2 é cumulativa: amostra autoral estruturada com 8 itens P1 e 12 itens P2. */
@@ -109,9 +183,10 @@ function eState(){
  s.history=s.history||[];
  return s;
 }
-function startExam(){
+function startExam(restoreOnly=false){
  const s=eState();
- if(!s.active||s.active.submitted){s.active={startedAt:Date.now(),deadline:Date.now()+90*60000,items:sampleExam(),answers:{},submitted:false,score:null};stateSave();}
+ if(restoreOnly&&!s.active){window.toast?.('Nenhuma sessão anterior ativa.');return;}
+ if(!s.active||s.active.submitted&&!restoreOnly){s.active={startedAt:Date.now(),deadline:Date.now()+90*60000,items:sampleExam(),answers:{},submitted:false,score:null};stateSave();}
  examOpen=true;navigate('emergency-p2');
 }
 function examAnswer(i,choice){
@@ -151,22 +226,26 @@ setInterval(()=>{
  if(time<=0)finishExam();
 },1000);
 function landing(){
- const state=store.study||{},done=(key,mods)=>mods.filter(m=>state[key]?.done?.[m.id]).length;
- const tile=(stage,mods,key,desc)=>'<button class="ue-stage-card" type="button" onclick="navigate(\'emergency-'+stage.toLowerCase()+'\')"><span class="kicker">'+stage+'</span><strong>'+esc(desc)+'</strong><span>'+mods.length+' aulas · '+mods.reduce((n,m)=>n+m.quiz.length,0)+' questões · '+mods.length+' casos</span><small>'+done(key,mods)+' de '+mods.length+' aulas marcadas como estudadas</small><em>Entrar no curso →</em></button>';
- return '<section class="emergency-page"><header class="emergency-hero"><div class="emergency-hero-icon">'+(window.StudyIcons?StudyIcons.emergency():'✚')+'</div><div><span class="kicker">8º PERÍODO · 2026.2</span><h1>Urgência e Emergência</h1><p>Reconhecer a emergência, decidir em sequência e reavaliar. Curso nativo do Estudo Master.</p></div></header>'+
- '<div class="info-notice"><strong>Formato de estudo:</strong> P2 cumulativa com 20 questões de múltipla escolha; questões autorais, fluxogramas e casos de decisão clínica.</div>'+
- '<div class="ue-stage-grid">'+tile('P1',P1,'uep1','Ressuscitação, síndromes críticas e trauma')+tile('P2',P2,'uep2','Decisões cardiovasculares, metabólicas e toxicológicas')+'</div>'+
- '<section class="card pad ue-bank-landing"><div class="ue-bank-heading"><div><span class="kicker">BANCO DE QUESTÕES · RESIDÊNCIA</span><h2>Pratique e simule a prova</h2><p>Questões de fixação, modelos clínicos e adaptações de provas verificadas. Escolha temas, dificuldade, quantidade e duração; histórico de cada sessão e correção comentada.</p></div></div><div class="btn-row"><button type="button" class="btn primary" onclick="navigate(\'emergency-questions\')">Abrir questões →</button><button type="button" class="btn secondary" onclick="navigate(\'emergency-simulado\')">Montar simulado →</button></div></section>'+'<div class="ue-pcr-pilot-promo"><div><span class="kicker">AULA-PILOTO DISPONÍVEL</span><strong>Comece pela PCR interativa</strong><p>Questão inicial, fluxograma de ritmos, RCP, caso evolutivo e revisão adaptada ao seu desempenho.</p></div><button class="btn primary" type="button" onclick="navigate(\'emergency-p1\');Emergency.p1.open(0)">Experimentar a aula →</button></div>'+
- '<section class="pocus-sec"><h2>Como estudar em alto rendimento</h2><div class="ue-flow"><div class="ue-flow-step"><span class="ue-flow-n">1</span><strong>Pré-teste clínico</strong><span>O que mata primeiro?</span></div><div class="ue-flow-step"><span class="ue-flow-n">2</span><strong>Algoritmo de decisão</strong><span>Se X, faço Y.</span></div><div class="ue-flow-step"><span class="ue-flow-n">3</span><strong>Caso e questões</strong><span>Decidir antes de revelar.</span></div><div class="ue-flow-step"><span class="ue-flow-n">4</span><strong>Revisão D+1/D+7</strong><span>Revisar erros e reavaliar domínio.</span></div></div></section></section>';
+ return '<section class="emergency-page ue-master"><header class="ue-master-hero"><span class="kicker">CLÍNICA MASTER</span><h1>Urgência e Emergência</h1><p>Estude os temas da prova, pratique decisões clínicas e revise seus erros.</p><div class="ue-master-actions">'+
+ '<button class="btn primary" onclick="Emergency.openLesson(\'arritmias\')">Abrir Arritmias cardíacas</button><button class="btn secondary" onclick="navigate(\'emergency-questions\')">Exercícios</button><button class="btn secondary" onclick="navigate(\'emergency-flashcards\')">Flashcards</button><button class="btn secondary" onclick="navigate(\'emergency-simulado\')">Simulados</button></div></header>'+
+ topicList('P2')+topicList('P1')+'</section>';
 }
 function page(){
  const route=typeof ui==='undefined'?'emergency':ui.route;
  if(route==='emergency-p1')return p1.page();
  if(route==='emergency-p2')return examOpen?examPage():p2.page();
+ if(route==='emergency-arritmias')return p2.modulePage(p2.findId('arritmias'));
+ if(route==='emergency-lesson'||route==='emergency-legacy'){
+  const m=moduleFor(ui.ueTopic);
+  if(!m)return landing();
+  const course=m.stage==='P1'?p1:p2;
+  const contents=course.modulePage(course.findId(m.id));
+  return route==='emergency-legacy'?'<div class="ue-master-actions"><button class="btn primary" onclick="Emergency.openLesson(\''+esc(m.id)+'\')">Voltar ao Mastery</button></div>'+contents:contents;
+ }
  return landing();
 }
 function card(){
  return '<section class="emergency-preview"><div class="emergency-preview-symbol">'+(window.StudyIcons?StudyIcons.emergency():'✚')+'</div><div><span class="kicker">CURSO COMPLETO · 8º PERÍODO</span><h3>Urgência e Emergência</h3><p>'+all.length+' aulas, '+all.reduce((s,m)=>s+m.quiz.length,0)+' questões e '+all.length+' casos clínicos. P1 + P2 cumulativa.</p></div><button class="btn secondary" type="button" onclick="navigate(\'emergency\')">Abrir curso ↗</button></section>';
 }
-window.Emergency={page,card,p1,p2,startExam,examAnswer,finishExam,exitExam,refs:REFS,all};
+window.Emergency={page,card,p1,p2,startExam,examAnswer,finishExam,exitExam,refs:REFS,all,priorities,ordered,titleFor,moduleFor,priorityFor,routeTopic,openLesson,openCourse,openCards,markStudied,sidebar,toggleSidebarOrder};
 })();
