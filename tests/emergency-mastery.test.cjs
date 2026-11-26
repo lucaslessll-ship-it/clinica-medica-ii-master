@@ -124,6 +124,8 @@ test('sidebar simulados has preset and generator, saves edits and reveals result
   await p.waitForURL('**#emergency-simulado');
   await main.getByRole('heading',{name:'Simulados prontos'}).waitFor();
   await main.getByRole('heading',{name:'Gerar simulado'}).waitFor();
+  await main.getByRole('button',{name:'Gerar simulado',exact:true}).click();
+  assert.equal(await p.evaluate(()=>document.activeElement.textContent),'Gerar simulado');
   assert.equal(await main.locator('[data-qb-route]').count(),0);
   await main.getByRole('button',{name:'P2',exact:true}).click();
   const shown=await main.locator('.ue-bank-themes label').allTextContents();

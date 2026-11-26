@@ -265,12 +265,14 @@ function setupView(){
  const countByTheme={};for(const q of eligible())countByTheme[q.t]=(countByTheme[q.t]||0)+1;
  const mastery=questions().filter(q=>q.kind==='mastery'&&q.t==='arritmias').length;
  return '<section class="emergency-page ue-bank-page ue-master"><header class="ue-master-hero"><span class="kicker">URGÊNCIA E EMERGÊNCIA</span><h1>'+(exam?'Simulados':'Exercícios')+'</h1><p>'+(exam?'Escolha uma prova pronta ou gere um simulado com seus filtros. O gabarito aparece após a entrega.':'Responda uma questão por vez e veja a correção em seguida.')+'</p>'+
- (session?'<div class="ue-master-actions"><button class="btn primary" onclick="UEQuestions.openQuestionSession(\''+esc(session.id)+'\')">Retomar '+(exam?'simulado':'treino')+'</button></div>':'')+'</header>'+
+ (exam||session?'<div class="ue-master-actions">'+
+  (exam?'<button type="button" class="btn secondary" onclick="UEQuestions.goGenerator()">Gerar simulado</button>':'')+
+  (session?'<button class="btn primary" onclick="UEQuestions.openQuestionSession(\''+esc(session.id)+'\')">Retomar '+(exam?'simulado':'treino')+'</button>':'')+'</div>':'')+'</header>'+
  (exam?'<section class="ue-master-block"><header><div><h2>Simulados prontos</h2></div></header>'+
  (mastery?'<div class="ue-ready-exam"><div><strong>Arritmias cardíacas · P2</strong><p>'+mastery+' questões Mastery · 30 minutos</p></div><button class="btn primary" onclick="UEQuestions.ready()">Iniciar simulado pronto</button></div>':'')+
  (legacy?'<p><button class="btn secondary" onclick="Emergency.startExam(true)">Abrir sessão P2 anterior</button></p>':'')+'</section>':'')+
  '<div class="ue-bank-stats"><div><strong>'+s.total+'</strong><span>Questões avaliáveis</span></div><div><strong>'+s.answered+'</strong><span>Respondidas</span></div><div><strong>'+s.correct+'</strong><span>Acertos</span></div><div><strong>'+s.sessions+'</strong><span>Sessões</span></div></div>'+
- '<section class="card pad ue-bank-config"><div class="ue-bank-heading"><div><h2>'+(exam?'Gerar simulado':'Montar treino')+'</h2><p>Filtre por prova, tema, origem, nível e histórico.</p></div><span role="status">'+available.length+' questões disponíveis</span></div>'+
+ '<section class="card pad ue-bank-config" id="ue-bank-config"><div class="ue-bank-heading"><div><h2 tabindex="-1">'+(exam?'Gerar simulado':'Montar treino')+'</h2><p>Filtre por prova, tema, origem, nível e histórico.</p></div><span role="status">'+available.length+' questões disponíveis</span></div>'+
  '<div class="ue-bank-filter-group"><strong>Período</strong><div class="ue-bank-choices">'+[['P1','P1'],['P2','P2'],['all','Cumulativa']].map(([key,label])=>selected('UEQuestions.selectStage('+JSON.stringify(key)+')',label,selectedStage===key)).join('')+'</div></div>'+
  group('types','Origem das questões',types,'UEQuestions.toggleType')+
  group('levels','Dificuldade editorial',[[1,'N1 · Essencial'],[2,'N2 · Aplicação'],[3,'N3 · Decisão'],[null,'Não auditada']],'UEQuestions.toggleLevel')+
@@ -280,6 +282,11 @@ function setupView(){
  (exam?'<label>Tempo do simulado (min; 0 = sem limite)<input type="number" min="0" max="300" value="'+filter.minutes+'" onchange="UEQuestions.setFilter(\'minutes\',this.value)"></label>':'')+'</div>'+
  '<div class="ue-bank-buttons"><button class="btn primary" '+(!available.length?'disabled':'')+' onclick="UEQuestions.create(\''+expected+'\')">'+(exam?'Gerar simulado':'Iniciar exercícios')+' · '+Math.min(filter.count,available.length)+' questões</button></div></section>'+
  history()+externalSources()+'</section>';
+}
+function goGenerator(){
+ const config=document.getElementById('ue-bank-config');
+ config?.scrollIntoView({block:'start'});
+ config?.querySelector('h2')?.focus({preventScroll:true});
 }
 function page(){
  setup(ui.route);
@@ -300,7 +307,7 @@ const openQuestions=id=>open('emergency-questions',id);
 function setup(route){
  if(scope!==route){filter=defaultFilter();scope=route;}
 }
-const exposed={page,openExam,openQuestions,create,answer,jump,finish,setMode,setFilter,allThemes,noThemes,toggleTheme,selectStage,ready,favorite,flag,retest,refazerErros,
+const exposed={page,openExam,openQuestions,create,answer,jump,finish,setMode,setFilter,allThemes,noThemes,toggleTheme,selectStage,ready,goGenerator,favorite,flag,retest,refazerErros,
  toggleType:v=>toggleValue('types',v),toggleStage:v=>toggleValue('stages',v),toggleLevel:v=>toggleValue('levels',v),
  openQuestionSession:resume,clearQuestionHistory,metrics,pool,filtered,originals:ORIGINALS,history};
 window.UEQuestions=exposed;
