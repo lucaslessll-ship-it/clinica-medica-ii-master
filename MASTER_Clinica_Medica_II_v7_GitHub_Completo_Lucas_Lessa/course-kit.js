@@ -8,6 +8,7 @@ const CourseKit=(()=>{
 function create(cfg){
   const {global:G,key,route,label,REFS,MODULES,CASES}=cfg;
   let view=null,current=null;
+  const order=cfg.moduleOrder?.map(id=>MODULES.findIndex(m=>m.id===id)).filter(i=>i>=0)||MODULES.map((_,i)=>i);
   // Distribui a posição da alternativa correta, para a resposta não cair sempre na mesma letra.
   MODULES.forEach(m=>{if(window.ReadingTime)m.min=ReadingTime.minutes(m);});
   MODULES.forEach((m,mi)=>m.quiz.forEach((x,qi)=>{const to=(mi+qi*2+1)%x.o.length;if(to===x.a)return;const o=x.o.slice();[o[to],o[x.a]]=[o[x.a],o[to]];x.o=o;x.a=to;}));
@@ -36,9 +37,10 @@ function create(cfg){
       const custom=cfg.moduleOverride({module:m,index:mi,done,global:G,courseKey:key,quizItem:qi=>quizItem(mi,qi),refs:m.refs.map(refItem).join(''),state:st()});
       if(typeof custom==='string')return custom;
     }
-    return `<nav class="pocus-crumb" aria-label="${cfg.title}"><button type="button" class="btn" onclick="${G}.open(null)">← Todos os módulos</button><span>Módulo ${mi+1} de ${MODULES.length}</span></nav>
+    const position=order.indexOf(mi),previous=order[position-1],next=order[position+1];
+    return `<nav class="pocus-crumb" aria-label="${cfg.title}"><button type="button" class="btn" onclick="${G}.open(null)">← Todos os módulos</button><span>Módulo ${position+1} de ${MODULES.length}</span></nav>
     <article class="card pad pocus-module"><span class="kicker">${m.layer}</span><h1 class="pocus-title">${m.title}</h1><p class="pocus-lead">${m.summary}</p>
-    ${mi?`<p class="info-notice">Este módulo usa o que foi visto em "${MODULES[mi-1].title}". Se algo parecer novo, volte um passo.</p>`:''}
+    ${previous!==undefined&&!cfg.moduleOrder?`<p class="info-notice">Este módulo usa o que foi visto em "${MODULES[previous].title}". Se algo parecer novo, volte um passo.</p>`:''}
     <section class="pocus-goals"><h3>Ao final, você deve conseguir</h3><ul>${m.goals.map(g=>`<li>${g}</li>`).join('')}</ul></section>
     ${m.sections.map((section,si)=>sectionMarkup(section)+(typeof cfg.sectionAddon==='function'?cfg.sectionAddon(m,si):'')).join('')}
     ${typeof cfg.extraModule==='function'?cfg.extraModule(m,mi):''}
@@ -47,7 +49,7 @@ function create(cfg){
     <section class="pocus-sec"><h3>Fixação</h3><p class="subtle">Responda antes de ver o comentário. As respostas ficam salvas no seu progresso.</p>${m.quiz.map((_,qi)=>quizItem(mi,qi)).join('')}</section>
     <section class="pocus-sec pocus-refs"><h3>Fontes deste módulo</h3><ul>${m.refs.map(refItem).join('')}</ul><p>${cfg.refNote}</p></section>
     <label class="pocus-done"><input type="checkbox" ${done?'checked':''} onchange="${G}.complete('${m.id}',this.checked)"> Estudei este módulo e respondi às questões</label>
-    <div class="pocus-pager">${mi?`<button type="button" class="btn" onclick="${G}.open(${mi-1})">← ${MODULES[mi-1].title}</button>`:'<span></span>'}${mi<MODULES.length-1?`<button type="button" class="btn primary" onclick="${G}.open(${mi+1})">${MODULES[mi+1].title} →</button>`:`<button type="button" class="btn primary" onclick="${G}.open(null)">Concluir e voltar ao curso</button>`}</div></article>`;
+    <div class="pocus-pager">${previous!==undefined?`<button type="button" class="btn" onclick="${G}.open(${previous})">← ${MODULES[previous].title}</button>`:'<span></span>'}${next!==undefined?`<button type="button" class="btn primary" onclick="${G}.open(${next})">${MODULES[next].title} →</button>`:`<button type="button" class="btn primary" onclick="${G}.open(null)">Concluir e voltar ao curso</button>`}</div></article>`;
   }
   function caseView(ci){
     const c=CASES[ci],seen=!!st().seen[c.id];window.MasterActivity?.setContext(key+':'+c.id,'case_open');
@@ -71,8 +73,8 @@ function create(cfg){
     return header('CURSO',cfg.heading,cfg.lead)
     +`<div class="info-notice">${MODULES.length} módulos e ${total} questões, mais ${CASES.length} casos com resolução comentada. ${cfg.notice}</div>`
     +(typeof cfg.extraHome==='function'?cfg.extraHome():'')
-    +section('Seu percurso',`<div class="card pad pocus-progress"><div class="pocus-progress-head"><strong>${n} de ${MODULES.length} módulos concluídos</strong><span>${pct}%</span></div><div class="progress-track" role="progressbar" aria-label="Progresso no ${cfg.title}" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${pct}"><div class="progress-fill" style="width:${pct}%"></div></div><p class="subtle">${cfg.pathHint}</p></div>
-    <ol class="pocus-grid">${MODULES.map((m,i)=>{const q=quizScore(m),d=!!st().done[m.id];return `<li><button type="button" class="pocus-card${d?' done':''}" onclick="${G}.open(${i})"><span class="pocus-card-n">${i+1}</span><span class="pocus-card-body"><small>${m.layer}</small><strong>${m.title}</strong><span>${m.summary}</span><em>${m.min} min · ${q.answered?`${q.right}/${q.total} questões certas`:`${q.total} questões`}${d?' · concluído':''}</em></span></button></li>`}).join('')}</ol>`)
+    +(cfg.homeOverview?.()||section('Seu percurso',`<div class="card pad pocus-progress"><div class="pocus-progress-head"><strong>${n} de ${MODULES.length} módulos concluídos</strong><span>${pct}%</span></div><div class="progress-track" role="progressbar" aria-label="Progresso no ${cfg.title}" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${pct}"><div class="progress-fill" style="width:${pct}%"></div></div><p class="subtle">${cfg.pathHint}</p></div>
+    <ol class="pocus-grid">${MODULES.map((m,i)=>{const q=quizScore(m),d=!!st().done[m.id];return `<li><button type="button" class="pocus-card${d?' done':''}" onclick="${G}.open(${i})"><span class="pocus-card-n">${i+1}</span><span class="pocus-card-body"><small>${m.layer}</small><strong>${m.title}</strong><span>${m.summary}</span><em>${m.min} min · ${q.answered?`${q.right}/${q.total} questões certas`:`${q.total} questões`}${d?' · concluído':''}</em></span></button></li>`}).join('')}</ol>`))
     +section(cfg.bankTitle,`<div class="card pad"><p>${cfg.bankLead} ${seenCount()} de ${CASES.length} resolvidos até agora.</p><button type="button" class="btn primary" onclick="${G}.bank()">Abrir os casos</button></div>`)
     +section('Fontes e curadoria',`<div class="card pad pocus-refs"><p>${cfg.sourcesNote}</p><ul>${Object.keys(REFS).map(refItem).join('')}</ul></div>`);
   }

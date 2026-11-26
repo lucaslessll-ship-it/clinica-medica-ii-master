@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 540 410" role="img" aria-labelledby="title desc">
+<title id="title">Condução elétrica cardíaca</title><desc id="desc">Esquema dos nós sinusal e atrioventricular, do feixe de His e dos ramos ventriculares.</desc>
+<defs>
+ <radialGradient id="paper" cx=".62" cy=".25" r=".82"><stop stop-color="#1a4e54"/><stop offset="1" stop-color="#122d37"/></radialGradient>
+ <pattern id="grid" width="24" height="24" patternUnits="userSpaceOnUse"><path d="M24 0H0V24" fill="none" stroke="#ffffff" opacity=".08"/></pattern>
+</defs>
+<rect width="540" height="410" fill="url(#paper)" rx="28"/><rect width="540" height="410" fill="url(#grid)" rx="28"/>
+<path d="M269 340c-36-40-143-109-150-188-5-56 36-85 77-82 40 2 66 20 75 43 47-72 144-39 146 31 3 69-79 157-148 196Z" fill="#d5a09b" fill-opacity=".16" stroke="#f0a697" stroke-opacity=".7" stroke-width="2"/>
+<path d="M127 196c61-39 107 29 144-8 50-37 94 8 137 8M270 190c-15 53-3 109-1 150" stroke="#f0a697" stroke-opacity=".4" stroke-width="2" fill="none"/>
+<path d="M167 126q37 11 61 54l32 39q3 52 12 80m-15-75q-17 62-62 68m68-69q38 60 78 59" fill="none" stroke="#80e9cc" stroke-width="4" stroke-linecap="round"/>
+<g fill="#b8ffe9" stroke="#183e42" stroke-width="3"><circle cx="167" cy="126" r="9"/><circle cx="228" cy="180" r="8"/><circle cx="260" cy="219" r="7"/><circle cx="195" cy="292" r="5"/><circle cx="341" cy="282" r="5"/></g>
+<g fill="none" stroke="#aef4e2" stroke-opacity=".65"><path d="M160 120l-34-28H44m178 84-61-17H44m221 60 52-26h174m-144 93 32 14h112"/></g>
+<g fill="#effcf8" font-family="system-ui,sans-serif" font-weight="600" font-size="17">
+<text x="44" y="85">Nó sinusal</text><text x="44" y="152">Nó AV</text><text x="356" y="185">Feixe de His</text><text x="380" y="324">Purkinje</text>
+</g>
+<path d="M47 367h48l13-9 12 9h35l9 14 14-45 14 31h44l15-15 17 15h35" fill="none" stroke="#7bddcb" stroke-width="2" stroke-linejoin="round"/>
+<text x="491" y="373" fill="#b5e2dc" text-anchor="end" font-family="system-ui,sans-serif" font-size="12">Traçado esquemático</text>
+</svg>

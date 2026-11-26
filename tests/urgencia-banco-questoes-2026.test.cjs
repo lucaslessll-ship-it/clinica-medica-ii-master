@@ -30,10 +30,13 @@ test('172 itens corrigíveis (115 aulas, 46 autorais e 11 adaptações), 25 orig
  assert.match(win.UE_BANK_SOURCES.fgv.keyUrl,/hubrasil2026_gabaritos_definitivo/);
 });
 test('configurador contém temas, níveis N1–N3, tipo, tempo e quantidade',()=>{
- const {q}=setup(),html=q.page();
+ const {q,ui}=setup(),html=q.page();
  for(const x of ['Temas (23 de 23)','N1 · Essencial','N2 · Aplicação','N3 · Decisão','Provas reais · adaptadas',
-  'Quantidade de questões','Tempo do simulado','Modelo residência'])assert.ok(html.includes(x),x);
+  'Quantidade de questões','Modelo residência','Não auditada'])assert.ok(html.includes(x),x);
  assert.match(html,/Questões reais de provas/);
+ assert.doesNotMatch(html,/Tempo do simulado/);
+ ui.route='emergency-simulado';assert.match(q.page(),/Tempo do simulado/);
+ assert.ok(q.pool().every(q=>q.level===null));
 });
 test('treino salva cada resposta, pinta bolinhas e mantém histórico/restauração',()=>{
  const a=setup();a.q.create('practice');const b=a.store.study.ueQuestions,s=b.questionSessions[0],id=s.run.ids[0],correct=a.q.pool().find(x=>x.id===id).a;
@@ -73,7 +76,7 @@ test('limpar histórico não interfere em progresso de aulas de outras disciplin
 test('menu lateral expõe novas rotas e os scripts estão antes do controlador principal',()=>{
  const app=fs.readFileSync(path.join(root,'app.js'),'utf8');
  const index=fs.readFileSync(path.join(root,'index.html'),'utf8');
- assert.match(app,/'emergency-questions':'Questões'/);
+ assert.match(app,/'emergency-questions':'Exercícios'/);
  assert.match(app,/'emergency-simulado':'Simulados'/);
  assert.match(app,/case 'emergency-simulado'/);
  assert.ok(index.indexOf('<script src="emergency-bank.js')<index.indexOf('<script src="app.js'));

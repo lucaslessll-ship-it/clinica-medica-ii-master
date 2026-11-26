@@ -11,7 +11,7 @@
     'reverse','practice','exam','cases','discursive','oral','flashcards','sources',
     'p1practice','p1exam','p1cases','p1discursive','p1oral','p1flashcards','p1sources',
     'cirpractice','cirexam','revisao','decisionlab','banca','prescriptions','osce','superfoco','planner','today',
-    'emergency','emergency-p1','emergency-p2','emergency-questions','emergency-simulado','pocus',
+    'emergency','emergency-p1','emergency-p2','emergency-arritmias','emergency-flashcards','emergency-questions','emergency-simulado','pocus',
     'ecg','rad','hemo','atb','micro','labferro','labrenal','labmaster',
     'labmicrocitose'
   ]);

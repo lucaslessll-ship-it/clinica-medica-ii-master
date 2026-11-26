@@ -19,3 +19,10 @@ Foram selecionadas três regras de interpretação da reprodução EUCAST 16.1. 
 - Promptfoo 0.125.1 — MIT — https://github.com/promptfoo/promptfoo. Usado para avaliar perguntas sintéticas com o handler real do tutor.
 
 As dependências de auditoria e avaliação não são incluídas no JavaScript enviado aos visitantes.
+
+## ECG do caderno Mastery de Arritmias
+
+Os traçados em `assets/urgencia/mastery/ecg-*.svg` são recortes do canal MLII da MIT-BIH Arrhythmia Database v1.0.0, de Moody e Mark, distribuída pelo PhysioNet sob Open Data Commons Attribution License 1.0. Foram convertidos em curvas vetoriais, com escala vertical de 38 px/mV, deslocamento vertical pela mediana do recorte, grade e marcas derivadas das anotações da base. Os recortes e a interpretação estão identificados no caderno.
+
+- [MIT-BIH Arrhythmia Database v1.0.0](https://physionet.org/content/mitdb/1.0.0/)
+- [Licença ODC-BY 1.0](https://physionet.org/content/mitdb/view-license/1.0.0/)
