@@ -47,6 +47,13 @@
         tipo:primeira?.tipoPagina||'pagina',indice:primeira?.indice??null
       };
     }
+    for(const module of window.Emergency?.all||[]){
+      const chave=(module.stage==='P1'?'uep1_':'uep2_')+module.id;
+      if(paginas[chave]||!window.UE_MASTERY_CONTENT?.[module.id])continue;
+      const rota=module.id==='arritmias'?'emergency-arritmias':'emergency-lesson';
+      paginas[chave]={titulo:window.Emergency.titleFor(module.id),materia:'Urgência e Emergência',
+        rota,localizacao:'#'+rota+(rota==='emergency-lesson'?'/'+module.id:''),tipo:'caderno-mastery'};
+    }
     const outras=new Map();
     for(const [chave,meta] of Object.entries(paginas)){
       const marcas=Array.isArray(ux.marcas?.[chave])?ux.marcas[chave]:[];

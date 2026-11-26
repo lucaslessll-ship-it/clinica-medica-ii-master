@@ -211,7 +211,9 @@ const HIG = (() => {
   // Todas as marcações de texto reunidas por aula, com o trecho e o comentário.
   // Abre a aula certa, qualquer que seja o módulo, e reaplica as marcas.
   function abrirAula(rota,id,indice){
-    if(rota==='p1topic'&&window.P1){P1.openTopic(id);if(indice)P1.chapter(indice);}
+    if(rota==='emergency-arritmias')navigate(rota);
+    else if(rota?.startsWith('emergency-lesson/'))navigate('emergency-lesson',rota.split('/')[1]);
+    else if(rota==='p1topic'&&window.P1){P1.openTopic(id);if(indice)P1.chapter(indice);}
     else if(rota==='cirtopic'&&window.CIR){CIR.openTopic(id,indice);}
     else{openTopic(id);if(indice)switchChapter(indice);}
     closeOverlay?.();

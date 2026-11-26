@@ -104,9 +104,26 @@ function create(kind,preset){
  window.QuestionReview?.begin?.('ue',kind==='exam'?'Simulado de Urgência':'Questões de Urgência');
  persist();view='run';navigate(kind==='exam'?'emergency-simulado':'emergency-questions');
 }
-function ready(){
- const items=questions().filter(q=>q.kind==='mastery'&&q.t==='arritmias');
- if(items.length)create('exam',{items:randomize(items),balanced:true,minutes:30,label:'Arritmias cardíacas · Simulado Mastery'});
+function ready(id='arritmias'){
+ const stage=id==='mastery-p1'?'P1':id==='mastery-p2'?'P2':null;
+ const pool=questions().filter(q=>q.kind==='mastery'&&(stage?q.stage===stage:q.t===id));
+ const groups=stage?DATA().filter(m=>m.stage===stage).map(m=>randomize(pool.filter(q=>q.t===m.id))):[];
+ // Cobertura por assunto antes de repetir tópicos na mesma prova.
+ const rounds=Math.max(0,...groups.map(group=>group.length));
+ const ordered=Array.from({length:rounds},(_,i)=>groups.map(group=>group[i]).filter(Boolean)).flat();
+ const items=stage?randomize(ordered.slice(0,20)):randomize(pool);
+ if(items.length)create('exam',{items,balanced:true,minutes:readyMinutes(items.length),label:(stage?stage+' · Revisão':title(id))+' · Simulado Mastery'});
+}
+const readyMinutes=count=>Math.max(5,Math.ceil(count*1.5));
+function readyOptions(){
+ const counts={};
+ for(const q of questions())if(q.kind==='mastery')counts[q.t]=(counts[q.t]||0)+1;
+ const modules=DATA().filter(m=>counts[m.id]);if(!modules.length)return '';
+ const preferred=filter.themes.length===1&&counts[filter.themes[0]]?filter.themes[0]:filter.stages.length===1?'mastery-'+filter.stages[0].toLowerCase():'arritmias';
+ const ordered=[...modules.filter(m=>m.stage==='P2'),...modules.filter(m=>m.stage==='P1')];
+ return '<div class="ue-ready-exam"><label>Tema do simulado pronto<select id="ue-ready-theme">'+['P2','P1'].filter(stage=>modules.filter(m=>m.stage===stage).reduce((total,m)=>total+counts[m.id],0)>=20).map(stage=>'<option value="mastery-'+stage.toLowerCase()+'" '+(preferred==='mastery-'+stage.toLowerCase()?'selected':'')+'>'+stage+' · Revisão multitemática · 20 questões · 30 min</option>').join('')+ordered.map(m=>
+  '<option value="'+esc(m.id)+'" '+(m.id===preferred?'selected':'')+'>'+esc(title(m.id))+' · '+m.stage+' · '+counts[m.id]+' questões · '+readyMinutes(counts[m.id])+' min</option>'
+ ).join('')+'</select></label><button class="btn primary" onclick="UEQuestions.ready(document.getElementById(\'ue-ready-theme\').value)">Iniciar simulado pronto</button></div>';
 }
 function retest(id){
  const q=get(id);if(!q||q.kind!=='mastery')return;
@@ -246,10 +263,11 @@ function summary(r){
   const q=get(id);if(!q)continue;
   const key=q.competency||title(q.t),b=buckets[key]||(buckets[key]=[0,0]);b[1]++;b[0]+=Number(r.ans[id]===q.a);
  }
- const target=window.EmergencyMastery?.target('arritmias')||90;
- const onlyArr=r.ids.every(id=>get(id)?.t==='arritmias'&&get(id)?.kind==='mastery');
+ const topic=get(r.ids[0])?.t;
+ const singleTopic=r.ids.every(id=>get(id)?.t===topic&&get(id)?.kind==='mastery');
+ const target=singleTopic?window.EmergencyMastery?.target(topic):null;
  const wrong=r.ids.filter(id=>r.ans[id]!==undefined&&r.ans[id]!==get(id)?.a);
- return '<div class="card pad ue-bank-summary"><h2>Seu desempenho</h2><p><strong>'+r.score+' de '+r.ids.length+'</strong> acertos ('+Math.round(r.score/r.ids.length*100)+ '%).'+(onlyArr?' Meta: '+target+'%.':'')+'</p>'+
+ return '<div class="card pad ue-bank-summary"><h2>Seu desempenho</h2><p><strong>'+r.score+' de '+r.ids.length+'</strong> acertos ('+Math.round(r.score/r.ids.length*100)+ '%).'+(target?' Meta: '+target+'%.':'')+'</p>'+
  '<ul>'+Object.entries(buckets).map(([label,[correct,total]])=>'<li>'+esc(label)+' · '+correct+' / '+total+'</li>').join('')+'</ul>'+
  (wrong.length?'<p>Questões erradas: '+wrong.map(id=>r.ids.indexOf(id)+1).join(', ')+'.</p><button class="btn secondary" onclick="UEQuestions.refazerErros()">Refazer só os erros</button>':'')+
  '<button class="btn primary" onclick="UEQuestions.setMode(\'setup\')">Gerar novo simulado</button></div>';
@@ -263,13 +281,12 @@ function setupView(){
  const shown=DATA().filter(m=>filter.stages.includes(m.stage));
  const legacy=store.study?.ueExam?.active;
  const countByTheme={};for(const q of eligible())countByTheme[q.t]=(countByTheme[q.t]||0)+1;
- const mastery=questions().filter(q=>q.kind==='mastery'&&q.t==='arritmias').length;
  return '<section class="emergency-page ue-bank-page ue-master"><header class="ue-master-hero"><span class="kicker">URGÊNCIA E EMERGÊNCIA</span><h1>'+(exam?'Simulados':'Exercícios')+'</h1><p>'+(exam?'Escolha uma prova pronta ou gere um simulado com seus filtros. O gabarito aparece após a entrega.':'Responda uma questão por vez e veja a correção em seguida.')+'</p>'+
  (exam||session?'<div class="ue-master-actions">'+
   (exam?'<button type="button" class="btn secondary" onclick="UEQuestions.goGenerator()">Gerar simulado</button>':'')+
   (session?'<button class="btn primary" onclick="UEQuestions.openQuestionSession(\''+esc(session.id)+'\')">Retomar '+(exam?'simulado':'treino')+'</button>':'')+'</div>':'')+'</header>'+
  (exam?'<section class="ue-master-block"><header><div><h2>Simulados prontos</h2></div></header>'+
- (mastery?'<div class="ue-ready-exam"><div><strong>Arritmias cardíacas · P2</strong><p>'+mastery+' questões Mastery · 30 minutos</p></div><button class="btn primary" onclick="UEQuestions.ready()">Iniciar simulado pronto</button></div>':'')+
+ readyOptions()+
  (legacy?'<p><button class="btn secondary" onclick="Emergency.startExam(true)">Abrir sessão P2 anterior</button></p>':'')+'</section>':'')+
  '<div class="ue-bank-stats"><div><strong>'+s.total+'</strong><span>Questões avaliáveis</span></div><div><strong>'+s.answered+'</strong><span>Respondidas</span></div><div><strong>'+s.correct+'</strong><span>Acertos</span></div><div><strong>'+s.sessions+'</strong><span>Sessões</span></div></div>'+
  '<section class="card pad ue-bank-config" id="ue-bank-config"><div class="ue-bank-heading"><div><h2 tabindex="-1">'+(exam?'Gerar simulado':'Montar treino')+'</h2><p>Filtre por prova, tema, origem, nível e histórico.</p></div><span role="status">'+available.length+' questões disponíveis</span></div>'+

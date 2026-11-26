@@ -26,3 +26,9 @@ Os traçados em `assets/urgencia/mastery/ecg-*.svg` são recortes do canal MLII 
 
 - [MIT-BIH Arrhythmia Database v1.0.0](https://physionet.org/content/mitdb/1.0.0/)
 - [Licença ODC-BY 1.0](https://physionet.org/content/mitdb/view-license/1.0.0/)
+
+## Exames clínicos na expansão Mastery de Urgência
+
+- `rx-congestao.jpg` é uma radiografia anotada de congestão, de Mikael Häggström, reproduzida sem alterações. [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Chest_radiograph_with_signs_of_congestive_heart_failure_-_annotated.jpg) · [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/)
+- `pocus-linhas-b.jpg` mostra linhas B em um caso de fibrose, de Tinss. A faixa técnica superior foi removida e os metadados foram retirados. O recorte permanece sob CC BY-SA 4.0. [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:B_lines_on_a_lung_ultrasound_of_a_patient_with_fibrosis.jpg) · [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/)
+- `rx-afogamento.png` é uma radiografia em caso de aspiração de água salgada, de Dr. Terence McManus, reproduzida sem alterações. [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Salt_water_aspiration_syndrome_chest_x-ray,_before_treatment.png) · [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/)

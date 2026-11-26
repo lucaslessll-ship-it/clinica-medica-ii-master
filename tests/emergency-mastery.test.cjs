@@ -170,3 +170,72 @@ test('mobile and tablet show the notebook without overflow and validate QT input
   await main.locator('output').getByText(/Confira as unidades/).waitFor();
  }finally{await context.close();}
 });
+test('all 23 themes open dedicated notebooks with stable cards, and selected themes persist in routes',async()=>{
+ const {page:p,context,errors}=await open(390);
+ try{
+  const audit=await p.evaluate(()=>{
+   const topics=Emergency.ordered(Emergency.all),ids=new Set(),result=[];
+   for(const topic of topics){
+    Emergency.openLesson(topic.id);
+    const data=UE_MASTERY_CONTENT[topic.id],root=document.querySelector('.ue-master.deep-lesson');
+    result.push({id:topic.id,title:root?.querySelector('h1')?.textContent,expected:Emergency.titleFor(topic.id),cards:data.cards.length,stage:topic.stage,questionCount:data.questions.length,questionKeys:new Set(data.questions.map(q=>q.id)).size,
+     unique:data.cards.every(card=>!ids.has(card.id)&&ids.add(card.id)&&card.front&&card.back),masterclass:!!root?.querySelector('#mastery-masterclass'),
+     valid:data.questions.every(q=>q.o.length===5&&q.rationales.length===5&&q.why===q.rationales[q.a]&&data.chapters.some(c=>c[0]===q.chapter)),
+     overflow:document.documentElement.scrollWidth>innerWidth+1});
+   }
+   return result;
+  });
+  assert.equal(audit.length,23);
+  for(const row of audit){
+   assert.equal(row.title,row.expected,row.id);
+   assert.equal(row.cards,20,row.id);
+   assert.equal(row.questionCount,row.stage==='P2'?20:2,row.id);
+   assert.equal(row.questionKeys,row.questionCount,row.id);
+   assert.ok(row.unique&&row.masterclass&&row.valid&&!row.overflow,JSON.stringify(row));
+  }
+  assert.equal(await p.evaluate(()=>UEQuestions.pool().length),398);
+  await p.evaluate(()=>Emergency.openLesson('acidobase'));
+  await p.waitForURL('**#emergency-lesson/acidobase');
+  await p.reload();
+  await p.getByRole('heading',{name:'Gasometria e distúrbios acidobásicos',exact:true}).waitFor();
+  await p.locator('[name=ph]').fill('7.12');await p.locator('[name=hco]').fill('13');
+  await p.locator('[name=co]').fill('40');await p.locator('[name=na]').fill('140');
+  await p.locator('[name=cl]').fill('102');await p.locator('[name=alb]').fill('4');
+  await p.getByRole('button',{name:'Calcular',exact:true}).click();
+  await p.locator('[data-calculator] output').getByText(/Componente respiratório acidificante/).waitFor();
+  await p.locator('article.ue-master').getByRole('button',{name:'Flashcards',exact:true}).click();
+  await p.waitForURL('**#emergency-flashcards/acidobase');
+  await p.reload();
+  await p.waitForFunction(()=>document.querySelector('#mastery-deck select')?.value==='acidobase');
+  await p.getByRole('button',{name:'Voltar à aula'}).click();
+  await p.locator('article.ue-master').getByRole('button',{name:'Simulados',exact:true}).click();
+  assert.equal(await p.locator('#ue-ready-theme').inputValue(),'acidobase');
+  await p.getByRole('button',{name:'Iniciar simulado pronto'}).click();
+  assert.equal(await p.locator('.ue-bank-dot').count(),20);
+  assert.equal(await p.evaluate(()=>QuestionHistory.restore(store.study.ueQuestions,'exam').ids.every(id=>id.startsWith('ue-mastery-acidobase-'))),true);
+  await p.evaluate(()=>Emergency.openLesson('acidobase'));
+  await p.getByRole('link',{name:'Aula e fixação original'}).click();
+  await p.waitForURL('**#emergency-legacy/acidobase');
+  await p.getByRole('heading',{name:'Fixação',exact:true}).waitFor();
+  await p.getByRole('button',{name:'Voltar ao Mastery'}).click();
+  await p.waitForURL('**#emergency-lesson/acidobase');
+  await p.evaluate(()=>Emergency.openLesson('catastrofes'));
+  const triage=p.locator('[data-calculator=start]');
+  await triage.locator('[name=walk]').selectOption('no');
+  await triage.locator('[name=breath]').selectOption('spontaneous');
+  await triage.locator('[name=rate]').fill('24');
+  await triage.locator('[name=perfusion]').selectOption('adequate');
+  await triage.locator('[name=commands]').selectOption('no');
+  await triage.getByRole('button',{name:'Classificar cenário'}).click();
+  await triage.locator('output').getByText(/Imediata pelo critério de comandos/).waitFor();
+  await p.evaluate(()=>UEQuestions.openExam());
+  await p.locator('#ue-ready-theme').selectOption('mastery-p1');
+  await p.getByRole('button',{name:'Iniciar simulado pronto'}).click();
+  assert.equal(await p.evaluate(()=>{
+   const run=QuestionHistory.restore(store.study.ueQuestions,'exam');
+   const items=run.ids.map(id=>UEQuestions.pool().find(q=>q.id===id));
+   return items.length===20&&items.every(q=>q.stage==='P1')&&new Set(items.map(q=>q.t)).size===13;
+  }),true);
+  assert.deepEqual(errors,[]);
+ }finally{await context.close();}
+});

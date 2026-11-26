@@ -39,6 +39,9 @@ function catalog(){
  if(emergency?.priorities)emergency.priorities.forEach(p=>
   add('ue','Urgência e Emergência · P2',p.id,p.title,p.tier==='Alta'?'alta':p.tier==='Intermediária'?'media':'baixa',{ueOrder:p.order})
  );
+ if(emergency?.all)emergency.ordered(emergency.all.filter(m=>m.stage==='P1')).forEach((m,index)=>
+  add('ue','Urgência e Emergência · P1',m.id,m.title,'media',{ueOrder:index+11})
+ );
  if(window.OSCEPilot?.bank)window.OSCEPilot.bank().forEach(st=>{
   add('osce',st.pocusOrder?'POCUS · OSCE':'OSCE · Clínica Médica',st.number,st.title,st.pocusOrder?'alta':st.priority||'media',{pocusOrder:st.pocusOrder||0});
  });

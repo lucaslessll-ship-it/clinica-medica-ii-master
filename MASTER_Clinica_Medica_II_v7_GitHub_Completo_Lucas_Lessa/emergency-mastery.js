@@ -6,21 +6,26 @@ const esc=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;
 const day=86400000;
 const defaultIntervals=[0,1,3,7,14];
 const personalPriorities=['','Alta','Intermediária','Menor'];
-const ids=()=>Object.keys(notebooks);
+const ids=()=>{
+ const modules=window.Emergency.ordered(window.Emergency.all).filter(m=>notebooks[m.id]);
+ return [...modules.filter(m=>m.stage==='P2'),...modules.filter(m=>m.stage==='P1')].map(m=>m.id);
+};
 const state=()=>{
  const root=store.study||(store.study={});
  return root.ueMastery||(root.ueMastery={});
 };
 const lesson=id=>state()[id]||(state()[id]={});
 const ref=(data,key)=>{const [label,url]=data.refs[key];return '<a href="'+esc(url)+'" target="_blank" rel="noopener noreferrer">'+esc(label)+'</a>';};
-const url='\'arritmias\'';
-const link=(label,section)=>'<button class="btn secondary" onclick="EmergencyMastery.openChapter(\''+section+'\')">'+label+'</button>';
+const quoted=id=>"'"+esc(id)+"'";
+const locationFor=id=>id==='arritmias'?'emergency-arritmias':'emergency-lesson/'+id;
+const link=(label,section,id)=>'<button class="btn secondary" onclick="EmergencyMastery.openChapter('+quoted(section)+','+quoted(id)+')">'+label+'</button>';
 const chapter=(data,id)=>data.chapters.find(c=>c[0]===id);
 const block=(id,title,lead,body)=>'<section id="mastery-'+id+'" class="ue-master-block"><header><div><h2>'+esc(title)+'</h2>'+(lead?'<p>'+esc(lead)+'</p>':'')+'</div></header>'+body+'</section>';
 const save=()=>stateSave();
-function openChapter(id){
- if(!['essencial','revisao','masterclass','atlas','algoritmo','casos','farmacos','qt','desempenho','referencias',...notebooks.arritmias.chapters.map(c=>c[0])].includes(id))return;
- if(ui.route!=='emergency-arritmias')navigate('emergency-arritmias');
+function openChapter(id,topic='arritmias'){
+ const data=notebooks[topic];if(!data)return;
+ if(!['essencial','revisao','masterclass','atlas','algoritmo','casos','farmacos','qt','desempenho','referencias',...data.chapters.map(c=>c[0])].includes(id))return;
+ if(location.hash!=='#'+locationFor(topic))window.Emergency.openLesson(topic);
  requestAnimationFrame(()=>{
   const el=document.getElementById('mastery-'+id);
   el?.scrollIntoView({block:'start'});
@@ -66,7 +71,7 @@ function stats(id){
  const d=notebooks[id],s=lesson(id),result=store.study?.ueQuestions?.results||{};
  const answered=d.questions.filter(q=>result[q.id]),correct=answered.filter(q=>result[q.id].correct);
  const cards=d.cards.filter(c=>s.cards?.[c.id]).length;
- const stages=[!!s.read,!!s.quick,answered.length>=(s.meta||10),cards===d.cards.length];
+ const stages=[!!s.read,!!s.quick,answered.length>=(s.meta||Math.min(10,d.questions.length)),cards===d.cards.length];
  return {answered:answered.length,correct:correct.length,cards,stages,percent:stages.filter(Boolean).length*25,accuracy:answered.length?Math.round(correct.length/answered.length*100):null};
 }
 function check(id,key,value){
@@ -80,6 +85,23 @@ function atlas(data){
   '<small>ECG real · '+ref(data,'mit')+' · <a href="https://physionet.org/content/mitdb/view-license/1.0.0/" target="_blank" rel="noopener noreferrer">ODC-BY 1.0</a></small></figcaption></figure>'
  ).join('')+'</div></div>';
 }
+function topicAtlas(id,module){
+ const media=window.UE_MASTERY_MEDIA?.[id]||[];
+ const original=window.EmergencyFigureAtlas?.figure(id,{licensedOnly:true})||'';
+ const steps=module.flow.map(([title,action],i)=>'<div class="ue-atlas-step"><span class="ue-atlas-stepno">'+(i+1)+'</span><strong>'+esc(title)+'</strong><span>'+esc(action)+'</span></div>').join('');
+ const path=original||'<div class="ue-atlas-steps" aria-label="Mapa de decisões">'+steps+'</div>';
+ const figures=media.map(([file,title,desc,credit,source,license,licenseUrl])=>
+  '<figure class="ue-atlas-card"><button type="button" class="ue-zoom-trigger" aria-label="Ampliar exame: '+esc(title)+'"><img loading="lazy" src="assets/urgencia/mastery/'+esc(file)+'" alt="'+esc(title)+'"></button>'+
+  '<figcaption><strong>'+esc(title)+'</strong><span>'+esc(desc)+'</span><small>Exame clínico real · <a target="_blank" rel="noopener noreferrer" href="https://commons.wikimedia.org/wiki/File:'+esc(source)+'">'+esc(credit)+'</a> · <a target="_blank" rel="noopener noreferrer" href="'+esc(licenseUrl)+'">'+esc(license)+'</a></small></figcaption></figure>').join('');
+ const map=id==='sca'?'<h3>Territórios no ECG</h3>'+table(['Território','Derivações','Correlação frequente'],[
+  ['Inferior','DII, DIII, aVF','Coronária direita ou circunflexa, conforme dominância'],
+  ['Anterior e septal','V1–V4','Descendente anterior'],
+  ['Lateral','DI, aVL, V5–V6','Circunflexa ou ramos diagonais'],
+  ['Posterior','V7–V9, ou imagem recíproca em V1–V3','Circunflexa ou coronária direita'],
+  ['Ventrículo direito','V3R–V4R no contexto de infarto inferior','Coronária direita proximal']
+ ])+'<p>A distribuição ajuda a orientar a investigação. Variação anatômica e achados concorrentes limitam predição do vaso pelo ECG.</p>':'';
+ return map+path+(figures?'<div class="ue-atlas ue-master-atlas"><div class="ue-atlas-grid">'+figures+'</div></div>':'');
+}
 function table(headers,rows){
  return '<div class="ue-master-table"><table><thead><tr>'+headers.map(h=>'<th scope="col">'+esc(h)+'</th>').join('')+'</tr></thead><tbody>'+
  rows.map(row=>'<tr>'+row.map((cell,i)=>i?'<td>'+esc(cell)+'</td>':'<th scope="row">'+esc(cell)+'</th>').join('')+'</tr>').join('')+'</tbody></table></div>';
@@ -90,9 +112,9 @@ const branches=[
  ['Taquicardia com pulso e perfusão preservada','Classifique regularidade e largura do QRS. No regular estreito, considere manobras vagais. No largo, avalie TV e procure apoio especializado.','tachy'],
  ['Bradicardia com comprometimento','Trate causas reversíveis e siga o algoritmo. Se atropina falhar, considere estimulação transcutânea e/ou infusão vasoativa.','brady']
 ];
-function algorithm(data){
- return '<div class="ue-master-branches" role="group" aria-label="Selecione uma apresentação do paciente">'+branches.map(([label,detail,source],i)=>
- '<details class="ue-master-choice" name="ue-arritmia-ramo" '+(i===1?'open':'')+'><summary>'+esc(label)+'</summary><p>'+esc(detail)+'</p><p>'+ref(data,source)+'</p></details>').join('')+'</div>';
+function algorithm(data,id){
+ return '<div class="ue-master-branches" role="group" aria-label="Selecione uma apresentação do paciente">'+(data.branches||branches).map(([label,detail,source],i)=>
+ '<details class="ue-master-choice" name="ue-ramo-'+esc(id)+'" '+(i===1?'open':'')+'><summary>'+esc(label)+'</summary><p>'+esc(detail)+'</p>'+(source?'<p>'+ref(data,source)+'</p>':'')+'</details>').join('')+'</div>';
 }
 function calculateQT(form){
  const qt=form.elements.qt.valueAsNumber,rr=form.elements.rr.valueAsNumber;
@@ -114,7 +136,7 @@ function qtChart(){
 }
 const qtForm=()=>'<form class="ue-master-qt" novalidate onsubmit="event.preventDefault();EmergencyMastery.calculateQT(this)"><label>QT (ms)<input name="qt" type="number" min="100" max="1000" step="1" inputmode="numeric"></label><label>RR (s)<input name="rr" type="number" min="0.20" max="3" step="0.01" inputmode="decimal"></label><button class="btn primary">Calcular QTc</button><output aria-live="polite"></output></form><p><b>Bazett:</b> QT ÷ √RR. <b>Fridericia:</b> QT ÷ ∛RR. Use QT medido em milissegundos e RR em segundos. Bazett pode supercorrigir em taquicardia e subcorrigir em bradicardia. RR variável, QRS largo e artefatos exigem abordagem própria. Ferramenta de estudo.</p><p><a href="https://doi.org/10.1016/j.jacc.2008.12.014" target="_blank" rel="noopener noreferrer">AHA/ACCF/HRS · Padronização de QT no ECG</a></p>';
 function performance(data,id){
- const s=lesson(id),p=stats(id),review=s.review||{},pending=Object.entries(review).filter(([,v])=>!v.done).sort(([,a],[,b])=>a.due-b.due);
+ const url=quoted(id),s=lesson(id),p=stats(id),review=s.review||{},pending=Object.entries(review).filter(([,v])=>!v.done).sort(([,a],[,b])=>a.due-b.due);
  const byChapter=data.chapters.map(([key,title])=>{
   const results=data.questions.filter(q=>q.chapter===key).map(q=>store.study?.ueQuestions?.results?.[q.id]).filter(Boolean);
   return [title,results.length?results.filter(r=>r.correct).length+' / '+results.length:'Sem respostas'];
@@ -122,7 +144,7 @@ function performance(data,id){
  const unsure=data.questions.filter(q=>{const result=store.study?.ueQuestions?.results?.[q.id];return result?.correct&&['duvida','tentativa'].includes(result.confidence);}).length;
  return '<div class="ue-mastery-metrics"><div><strong>'+p.percent+'%</strong><span>Percurso concluído</span></div><div><strong>'+p.answered+' / '+data.questions.length+'</strong><span>Exercícios distintos respondidos</span></div><div><strong>'+(p.accuracy===null?'—':p.accuracy+'%')+'</strong><span>Acerto nas últimas respostas · meta '+(s.target||90)+'%</span></div></div>'+
  (unsure?'<p>'+unsure+' acerto(s) com dúvida ou por tentativa declarada. Use os retestes para verificar retenção.</p>':'')+
- '<div class="ue-master-settings"><label>Exercícios para concluir a etapa <input type="number" min="1" max="'+data.questions.length+'" value="'+(s.meta||10)+'" onchange="EmergencyMastery.config('+url+',\'meta\',this.value)"></label>'+
+ '<div class="ue-master-settings"><label>Exercícios para concluir a etapa <input type="number" min="1" max="'+data.questions.length+'" value="'+(s.meta||Math.min(10,data.questions.length))+'" onchange="EmergencyMastery.config('+url+',\'meta\',this.value)"></label>'+
  '<label>Meta de acerto (%) <input type="number" min="1" max="100" value="'+(s.target||90)+'" onchange="EmergencyMastery.config('+url+',\'target\',this.value)"></label>'+
  '<label>Prioridade pessoal <select onchange="EmergencyMastery.config('+url+',\'personalPriority\',this.value)">'+personalPriorities.map(value=>'<option value="'+esc(value)+'" '+((s.personalPriority||'')===value?'selected':'')+'>'+esc(value||'Sem preferência')+'</option>').join('')+'</select></label>'+
  '<label>Dias de revisão após erro <input value="'+(s.intervals||defaultIntervals).join(', ')+'" onchange="EmergencyMastery.config('+url+',\'intervals\',this.value)"></label></div>'+
@@ -131,42 +153,55 @@ function performance(data,id){
    const due=v.due<=Date.now(),isCard=key.startsWith('card:');
    return '<li><div><strong>'+esc(chapter(data,v.concept)?.[1]||'Revisão')+'</strong><p>'+esc(v.label)+'</p><small>'+(due?'Disponível agora':'Agendado para '+new Date(v.due).toLocaleDateString('pt-BR'))+'</small></div>'+
    (due?'<button class="btn secondary" onclick="'+(isCard?'EmergencyMastery.openCards('+url+',true)':'UEQuestions.retest(\''+esc(key.slice(2))+'\')')+'">Retestar</button>':'')+'</li>';
- }).join('')+'</ol>':'<p>Seus erros de Arritmias entram aqui após a correção.</p>')+
- '<div class="ue-master-actions">'+link('Revisar essencial','essencial')+link('Revisar alto rendimento','revisao')+link('Voltar à Masterclass','masterclass')+'</div>'+
- '<details><summary>Gerar roteiro para estudo dialogado</summary><label for="ue-study-prompt">Copie e use em uma conversa de estudo</label><textarea id="ue-study-prompt" rows="4" readonly>'+esc('Guie meu estudo de Arritmias cardíacas em português. Faça uma pergunta clínica por vez, peça minha justificativa e dê feedback com base nas diretrizes AHA 2025 e ACC/AHA 2023. '+(pending.length?'Foque em: '+[...new Set(pending.map(([,v])=>chapter(data,v.concept)?.[1]).filter(Boolean))].join(', ')+'.':'Comece por pulso, estabilidade e interpretação do ritmo.')+' Ao final, reteste com um cenário diferente.')+'</textarea></details>'+
+ }).join('')+'</ol>':'<p>Seus erros neste tema entram aqui após a correção.</p>')+
+ '<div class="ue-master-actions">'+link('Revisar essencial','essencial',id)+link('Revisar alto rendimento','revisao',id)+link('Voltar à Masterclass','masterclass',id)+'</div>'+
+ '<details><summary>Gerar roteiro para estudo dialogado</summary><label for="ue-study-prompt">Copie e use em uma conversa de estudo</label><textarea id="ue-study-prompt" rows="4" readonly>'+esc('Guie meu estudo de '+window.Emergency.titleFor(id)+' em português. Faça uma pergunta clínica por vez, peça minha justificativa e dê feedback com base nas referências da aula. '+(pending.length?'Foque em: '+[...new Set(pending.map(([,v])=>chapter(data,v.concept)?.[1]).filter(Boolean))].join(', ')+'.':'Comece pelo reconhecimento, gravidade e primeira decisão.')+' Ao final, reteste com um cenário diferente.')+'</textarea></details>'+
  '<h3>Desempenho por subtema</h3>'+table(['Subtema','Acertos / respondidas'],byChapter);
 }
-function page({done}){
- const id='arritmias',d=notebooks[id],p=stats(id),s=lesson(id);
+function page({module,done,courseKey}){
+ const id=module.id,d=notebooks[id],p=stats(id),s=lesson(id),url=quoted(id);
+ const arr=id==='arritmias',title=window.Emergency.titleFor(id),priority=window.Emergency.priorityFor(id);
+ const path=locationFor(id),next=window.Emergency.ordered(window.Emergency.all.filter(item=>item.stage===module.stage));
+ const follow=next[next.findIndex(item=>item.id===id)+1];
+ const art=arr?['assets/urgencia/mastery/conducao.svg','Diagrama esquemático do trajeto elétrico do nó sinusal aos ventrículos']:
+  d.art;
+ const visual=arr?atlas(d):topicAtlas(id,module);
+ const calculator=arr?['Calculadora de QT corrigido','Compare duas fórmulas com o mesmo QT e RR.',qtForm()+qtChart()]:window.UEClinicalCalculators?.tool(id);
+
  const actions='<div class="ue-master-actions"><button class="btn primary" onclick="UEQuestions.openQuestions('+url+')">Fazer exercícios</button>'+
- '<button class="btn secondary" onclick="UEQuestions.openExam('+url+')">Simulados</button><button class="btn secondary" onclick="EmergencyMastery.openCards('+url+')">Flashcards</button><button class="btn ghost" aria-pressed="false" onclick="HIG.toggleFocus()">Modo foco</button></div>';
- const sections=[['essencial','Essencial'],['revisao','Alto rendimento'],['atlas','Atlas de ECG'],['masterclass','Masterclass'],['algoritmo','Condutas'],['casos','Casos clínicos'],['farmacos','Farmacologia'],['qt','QT corrigido'],['desempenho','Desempenho'],['referencias','Referências']];
+ '<button class="btn secondary" onclick="UEQuestions.openExam('+url+')">Simulados</button><button class="btn secondary" onclick="EmergencyMastery.openCards('+url+')">Flashcards</button><button class="btn ghost" aria-pressed="false" onclick="HIG.toggleFocus()">Modo foco</button><button class="btn ghost" onclick="Notas.abrirTodas()">Anotações</button></div>';
+ const sections=[['essencial','Essencial'],['revisao','Alto rendimento'],['atlas',arr?'Atlas de ECG':'Atlas visual'],['masterclass','Masterclass'],['algoritmo','Condutas'],['casos','Casos clínicos'],['farmacos','Farmacologia'],['qt',arr?'QT corrigido':'Calculadora'],['desempenho','Desempenho'],['referencias','Referências']];
  const stages=['Leitura e preparação','Revisão rápida','Exercícios','Flashcards'];
- return '<article class="emergency-page ue-master deep-lesson" data-posology-inline-only data-lesson-key="uep2_arritmias" data-lesson-route="emergency-arritmias"><header class="ue-master-hero ue-arr-hero"><div><span class="kicker">MASTERY · URGÊNCIA E EMERGÊNCIA · P2</span><h1>Arritmias cardíacas</h1><p>Do traçado à conduta. Aprenda a distinguir instabilidade causada pelo ritmo, reconhecer padrões no ECG e escolher a intervenção.</p><span class="ue-tier ue-tier-alta">Prioridade 01 · 100/100</span>'+actions+'</div>'+
- '<figure class="ue-master-hero-art"><img src="assets/urgencia/mastery/conducao.svg" alt="Diagrama esquemático do trajeto elétrico do nó sinusal aos ventrículos"><figcaption>Representação esquemática · condução cardíaca</figcaption></figure></header>'+
- '<nav class="ue-master-jumps" aria-label="Seções da aula">'+sections.map(([key,label])=>'<a href="#emergency-arritmias" onclick="event.preventDefault();EmergencyMastery.openChapter(\''+key+'\')">'+label+'</a>').join('')+'</nav>'+
+ return '<article class="emergency-page ue-master deep-lesson" data-posology-inline-only data-lesson-key="'+esc(courseKey+'_'+id)+'" data-lesson-route="'+esc(path)+'"><header class="ue-master-hero '+(art?'ue-arr-hero':'')+'"><div><span class="kicker">MASTERY · URGÊNCIA E EMERGÊNCIA · '+esc(module.stage)+'</span><h1>'+esc(title)+'</h1><p>'+esc(arr?'Do traçado à conduta. Aprenda a distinguir instabilidade causada pelo ritmo, reconhecer padrões no ECG e escolher a intervenção.':module.summary)+'</p>'+
+ (priority?'<span class="ue-tier ue-tier-'+priority.tier.toLowerCase()+'">Prioridade '+String(priority.order).padStart(2,'0')+' · '+priority.score+'/100</span>':'')+actions+'</div>'+
+ (art?'<figure class="ue-master-hero-art"><img src="'+esc(art[0])+'" alt="'+esc(art[1])+'"><figcaption>Representação esquemática</figcaption></figure>':'')+'</header>'+
+ '<nav class="ue-master-jumps" aria-label="Seções da aula">'+sections.filter(([key])=>key!=='atlas'||visual).filter(([key])=>key!=='qt'||calculator).map(([key,label])=>'<a href="#'+esc(path)+'" onclick="event.preventDefault();EmergencyMastery.openChapter('+quoted(key)+','+url+')">'+label+'</a>').join('')+'</nav>'+
  '<section class="ue-master-block ue-master-path"><header><div><h2>Seu percurso</h2><p>'+p.percent+'% concluído · '+p.stages.filter(Boolean).length+' de 4 etapas</p></div><label><input type="checkbox" '+(done?'checked':'')+' onchange="Emergency.markStudied('+url+',this.checked)"> Marcar tema como estudado</label></header><progress aria-label="Progresso no percurso" value="'+p.percent+'" max="100"></progress><ol>'+
- stages.map((label,i)=>'<li><div><b>'+label+'</b><small>'+(i===2?p.answered+' de '+(s.meta||10)+' da meta':i===3?p.cards+' de '+d.cards.length+' revisados':(p.stages[i]?'Concluída':'Marcação manual'))+'</small></div>'+
+ stages.map((label,i)=>'<li><div><b>'+label+'</b><small>'+(i===2?p.answered+' de '+(s.meta||Math.min(10,d.questions.length))+' da meta':i===3?p.cards+' de '+d.cards.length+' revisados':(p.stages[i]?'Concluída':'Marcação manual'))+'</small></div>'+
  (i<2?'<label><input type="checkbox" '+(p.stages[i]?'checked':'')+' aria-label="Concluir '+label+'" onchange="EmergencyMastery.check('+url+',\''+(i?'quick':'read')+'\',this.checked)"> Concluir</label>':'<span>'+(p.stages[i]?'Concluída':'Pendente')+'</span>')+'</li>').join('')+'</ol></section>'+
  block('essencial','Essencial','1 minuto', '<div class="ue-master-grid">'+d.essential.map(([label,text])=>'<div class="ue-master-tile"><h3>'+esc(label)+'</h3><p>'+esc(text)+'</p></div>').join('')+'</div>')+
- block('revisao','Revisão de alto rendimento','5–10 minutos · Ritmo, sinal de alarme e conduta',table(['Ritmo','Pista no ECG','Hipótese','Conduta a considerar'],d.table)+
- '<aside class="ue-memory-podium"><h3>Pódio da memória</h3><ol><li>Pulso e perfusão definem o primeiro ramo.</li><li>Ritmo largo regular sugere TV até esclarecimento.</li><li>Ritmo largo irregular pré-excitado exige evitar bloqueadores nodais.</li></ol></aside>')+
- block('atlas','Atlas de ECG','Observe o traçado antes de abrir a interpretação. Toque na imagem para ampliar.',atlas(d))+
+ block('revisao','Revisão de alto rendimento','5–10 minutos · Ritmo, sinal de alarme e conduta',table(d.tableHeaders||['Ritmo','Pista no ECG','Hipótese','Conduta a considerar'],d.table)+
+ '<aside class="ue-memory-podium"><h3>Pódio da memória</h3><ol>'+(d.memory||['Pulso e perfusão definem o primeiro ramo.','Ritmo largo regular sugere TV até esclarecimento.','Ritmo largo irregular pré-excitado exige evitar bloqueadores nodais.']).map(entry=>'<li>'+esc(entry)+'</li>').join('')+'</ol></aside>')+
+ (visual?block('atlas',arr?'Atlas de ECG':'Atlas visual','Toque nas imagens para ampliar. Cada figura identifica o tipo de representação.',visual):'')+
  block('masterclass','Masterclass','Aprofundamento completo',d.chapters.map(([key,title,first,detail,source])=>
- '<section class="deep-block ue-master-chapter" id="mastery-'+key+'"><h3>'+esc(title)+'</h3><p>'+esc(first)+'</p><p>'+esc(detail)+'</p><p class="ue-ref-line">'+ref(d,source)+'</p></section>').join(''))+
- block('algoritmo','Algoritmo de conduta','Selecione a apresentação para ver a primeira decisão.',algorithm(d))+
+ '<section class="deep-block ue-master-chapter" id="mastery-'+key+'"><h3>'+esc(title)+'</h3><p>'+esc(first)+'</p>'+(detail?'<p>'+esc(detail)+'</p>':'')+(source?'<p class="ue-ref-line">'+ref(d,source)+'</p>':'')+detailedLists(d,key)+'</section>').join(''))+
+ block('algoritmo','Algoritmo de conduta','Selecione a apresentação para ver a primeira decisão.',algorithm(d,id))+
  block('casos','Casos clínicos','Explique sua decisão antes de revelar a resposta.',d.cases.map(([title,stem,prompt,answer,key])=>
- '<div class="ue-master-case"><h3>'+esc(title)+'</h3><p>'+esc(stem)+'</p><p><strong>'+esc(prompt)+'</strong></p><details><summary>Ver raciocínio e conduta</summary><p>'+esc(answer)+'</p>'+link('Rever a seção',''+key)+'</details></div>').join(''))+
+ '<div class="ue-master-case"><h3>'+esc(title)+'</h3><p>'+esc(stem)+'</p><p><strong>'+esc(prompt)+'</strong></p><details><summary>Ver raciocínio e conduta</summary><p>'+esc(answer)+'</p>'+link('Rever a seção',key,id)+'</details></div>').join(''))+
  block('farmacos','Farmacologia contextualizada','Adultos · use o protocolo institucional e confira as doses no contexto clínico.',d.drugs.map(([name,mechanism,dose,care,source])=>
  '<div class="ue-master-drug"><h3>'+esc(name)+'</h3><p>'+esc(mechanism)+'</p><p><strong>Uso no algoritmo</strong> '+esc(dose)+'</p><p><strong>Segurança e monitorização</strong> '+esc(care)+'</p><p class="ue-ref-line">'+ref(d,source)+'</p></div>').join(''))+
- block('qt','Calculadora de QT corrigido','Compare duas fórmulas com o mesmo QT e RR.',qtForm()+qtChart())+
+ (calculator?block('qt',...calculator):'')+
  block('desempenho','Desempenho e revisão','O percurso mede atividades concluídas. O desempenho mede acertos nas questões respondidas.',performance(d,id))+
- block('referencias','Referências','Revisão editorial '+d.scientificReview.split('-').reverse().join('/')+' · edição '+d.edition,'<ul>'+Object.keys(d.refs).map(key=>'<li>'+ref(d,key)+'</li>').join('')+'</ul><p>Escopo educacional. Em ambiente assistencial, siga protocolos locais e supervisão clínica.</p>')+
- '<footer class="ue-master-actions"><button class="btn primary" onclick="UEQuestions.openQuestions('+url+')">Começar exercícios</button><button class="btn secondary" onclick="Emergency.openLesson(\'sca\')">Próxima aula · Dor torácica e SCA →</button></footer></article>';
+ block('referencias','Referências','Revisão editorial '+(d.scientificReview?d.scientificReview.split('-').reverse().join('/')+' · edição ':'Edição ')+d.edition,'<ul>'+Object.keys(d.refs).map(key=>'<li>'+ref(d,key)+'</li>').join('')+'</ul><p>Escopo educacional. Em ambiente assistencial, siga protocolos locais e supervisão clínica.</p>')+
+ '<footer class="ue-master-actions"><button class="btn primary" onclick="UEQuestions.openQuestions('+url+')">Começar exercícios</button><a class="btn secondary" href="#emergency-legacy/'+esc(id)+'">Aula e fixação original</a>'+(follow?'<button class="btn secondary" onclick="Emergency.openLesson('+quoted(follow.id)+')">Próxima aula · '+esc(window.Emergency.titleFor(follow.id))+' →</button>':'')+'</footer></article>';
+}
+function detailedLists(data,key){
+ const extras=data.extras?.[key];
+ return extras?.length?'<ul>'+extras.map(item=>'<li>'+esc(item)+'</li>').join('')+'</ul>':'';
 }
 function explanation(q){
  const d=notebooks[q.t],entry=chapter(d,q.chapter);
- return '<div class="ue-master-rationale"><h3>Aprenda com esta questão</h3><p>'+esc(entry[2])+' '+esc(entry[3])+'</p><aside><strong>Para memorizar</strong><p>'+esc(q.memory)+'</p></aside><p>'+ref(d,entry[4])+'</p>'+link('Ler na Masterclass',q.chapter)+'</div>';
+ return '<div class="ue-master-rationale"><h3>Aprenda com esta questão</h3><p>'+esc(entry[2])+' '+esc(entry[3])+'</p><aside><strong>Para memorizar</strong><p>'+esc(q.memory)+'</p></aside><p>'+ref(d,entry[4])+'</p>'+link('Ler na Masterclass',q.chapter,q.t)+'</div>';
 }
 let flashId='arritmias',face=false;
 function cardRun(id){return lesson(id).flashRun;}
@@ -174,11 +209,11 @@ function openCards(id,due=false){
  if(!notebooks[id])return;
  flashId=id;face=false;
  if(due)startCards('due',false,false);
- navigate('emergency-flashcards');
+ navigate('emergency-flashcards',id);
 }
 function openConcept(id,concept,retestKey){
  if(!notebooks[id])return;
- flashId=id;startCards('concept',false,false,concept,retestKey);navigate('emergency-flashcards');
+ flashId=id;startCards('concept',false,false,concept,retestKey);navigate('emergency-flashcards',id);
 }
 function startCards(mode,shuffle=false,draw=true,concept,retestKey){
  const s=lesson(flashId),now=Date.now();
@@ -199,7 +234,8 @@ function rate(label){
  document.getElementById('ue-flash-front')?.focus();
 }
 function flashPage(){
- const data=notebooks[flashId],s=lesson(flashId),run=cardRun(flashId);
+ if(ui.ueTopic&&notebooks[ui.ueTopic]&&flashId!==ui.ueTopic){flashId=ui.ueTopic;face=false;}
+ const url=quoted(flashId),data=notebooks[flashId],s=lesson(flashId),run=cardRun(flashId);
  const card=data.cards.find(c=>c.id===run?.order[run.index]);
  const due=Object.entries(s.review||{}).filter(([key,v])=>key.startsWith('card:')&&!v.done&&v.due<=Date.now()).length;
  return '<section class="emergency-page ue-master"><header class="ue-master-hero"><span class="kicker">URGÊNCIA E EMERGÊNCIA</span><h1>Flashcards</h1><p>Recupere a resposta antes de revelar o verso.</p></header>'+block('deck',window.Emergency.titleFor(flashId),stats(flashId).cards+' de '+data.cards.length+' cartões revisados · '+due+' a retestar agora',

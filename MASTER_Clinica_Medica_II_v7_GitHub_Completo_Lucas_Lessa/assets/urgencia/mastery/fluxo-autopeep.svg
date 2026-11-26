@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 375" role="img" aria-labelledby="title desc">
+<title id="title">Curva esquemática de fluxo e tempo na auto-PEEP</title><desc id="desc">Na linha verde, a expiração retorna à linha zero antes da inspiração. Na curva tracejada o fluxo ainda é expiratório antes de iniciar a próxima inspiração.</desc>
+<rect width="760" height="375" rx="18" fill="#f6f5ea"/>
+<g font-family="system-ui" fill="#173d3a"><text x="30" y="48" font-size="25" font-weight="700">Expiração incompleta e aprisionamento</text><text x="70" y="87" font-size="16">Fluxo (L/min)</text><text x="642" y="246" font-size="16">Tempo (s)</text><text x="33" y="194" font-size="15">Zero</text></g>
+<g stroke="#77918b" fill="none"><path d="M73 100V292M73 188H697"/><path d="M70 254H697" stroke="#b1b7a8" stroke-dasharray="4 6"/></g>
+<path d="M78 188H100V109H167V188C181 294 245 188 330 188H433V109H491V188C512 294 560 188 646 188H694" fill="none" stroke="#2a7468" stroke-width="4"/>
+<path d="M78 188H100V109H167V188C176 285 274 247 372 220L372 109H443V188C461 291 572 247 688 222" fill="none" stroke="#9d4a23" stroke-width="4" stroke-dasharray="11 6"/>
+<circle cx="372" cy="220" r="8" fill="#9d4a23"/>
+<g font-family="system-ui" font-size="17"><text x="90" y="326" fill="#1d5d54">Linha contínua · fluxo chega a zero</text><text x="90" y="352" fill="#853e1c">Tracejado · ainda existe fluxo expiratório na inspiração seguinte</text></g>
+</svg>

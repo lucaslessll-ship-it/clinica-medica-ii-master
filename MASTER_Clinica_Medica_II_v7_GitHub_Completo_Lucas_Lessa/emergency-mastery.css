@@ -111,3 +111,7 @@ body[data-theme=dark] .ue-tier-menor,body[data-theme=dark] .ue-bank-page .ue-ban
 .ue-qt-chart .ue-qt-bazett{fill:var(--green2)}
 .ue-qt-chart .ue-qt-fridericia{fill:#855214}
 body[data-theme=dark] .ue-qt-chart .ue-qt-fridericia{fill:#f3ca8e}
+
+.ue-ready-exam label{flex:1 1 230px;min-width:0}
+.ue-ready-exam select{max-width:100%;text-overflow:ellipsis}
+.ue-master-card #ue-flash-front,.ue-master-card #ue-flash-answer{white-space:pre-line}

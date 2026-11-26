@@ -84,7 +84,7 @@ function create(cfg){
     return view===null||!MODULES[view]?home():moduleView(view);
   }
   function focusTop(){window.scrollTo({top:0,behavior:'instant'});const h=document.querySelector('#main-content h1');if(h){h.tabIndex=-1;h.focus({preventScroll:true});}}
-  function open(i){current=null;view=i===null?null:Math.max(0,Math.min(MODULES.length-1,Number(i)||0));render();focusTop();}
+  function open(i){if(cfg.openOverride?.(i))return;current=null;view=i===null?null:Math.max(0,Math.min(MODULES.length-1,Number(i)||0));render();focusTop();}
   function bank(){current=null;view='bank';render();focusTop();}
   function caseOpen(i){current=Math.max(0,Math.min(CASES.length-1,Number(i)||0));render();focusTop();}
   function answer(mi,qi,oi){const m=MODULES[mi];if(!m||!m.quiz[qi])return;const qid=m.id+'_'+qi;const previous=st().quiz[qid];st().quiz[qid]=oi;window.QNav?.registrar(key,qid,oi===m.quiz[qi].a,{tid:m.id,tema:m.title,q:m.quiz[qi].q,resource:key+':'+m.id+':'+qi});if(typeof cfg.onAnswer==='function'&&!Number.isInteger(previous)){cfg.onAnswer({module:m,index:mi,questionIndex:qi,option:oi,correct:oi===m.quiz[qi].a});}stateSave();const el=document.getElementById(`${key}q-${mi}-${qi}`);if(el)el.outerHTML=quizItem(mi,qi);}
